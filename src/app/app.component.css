@@ -9,4 +9,5 @@
 .content {
     flex: 1;
     background-color: rgb(243, 243, 243);
+    overflow: hidden;
 }

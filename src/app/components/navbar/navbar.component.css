@@ -1,5 +1,11 @@
 .body {
-
+    box-shadow: 0 0 4px #848484;
+    z-index: 1;
+    position: relative;
+    height: 100%;
+    overflow: hidden;
+    background-color: #3a3a3a;
+    color: white;
 }
 
 .label {
@@ -13,4 +19,22 @@
     justify-content: center;
     height: 80px;
     width: 80px;
+    cursor: pointer;
+    transition: all .2s;
+}
+
+.option:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+    transform: scale(1.05);
+}
+
+.option .icon {
+    font-size: 1.5rem;
+    height: auto;
+    width: auto;
+}
+
+.option .text {
+    font-size: .6rem;
+    font-weight: 100;
 }
