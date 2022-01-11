@@ -24,6 +24,7 @@
               "src/assets"
             ],
             "styles": [
+              "src/custom-theme.scss",
               "src/styles.css"
             ],
             "scripts": []
@@ -120,5 +121,8 @@
       }
     }
   },
-  "defaultProject": "storage-manager"
+  "defaultProject": "storage-manager",
+  "cli": {
+    "analytics": false
+  }
 }
