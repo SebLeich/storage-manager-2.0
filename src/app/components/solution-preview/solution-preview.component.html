@@ -1,7 +1,78 @@
-<div class="body">
+<div class="body" @show>
 
-    <div class="headline">
-        Lösung
+    <div class="general-wrapper">
+
+        <mat-expansion-panel expanded="true">
+
+            <mat-expansion-panel-header>
+                <mat-panel-title class="expansion-panel-headline">
+
+                    {{headline? headline: 'Lösung'}}
+
+                </mat-panel-title>
+
+                <mat-panel-description>
+                    Übersicht
+                </mat-panel-description>
+
+            </mat-expansion-panel-header>
+
+            <div class="general-inner">
+
+                <div class="calculated" *ngIf="calculated">
+                    {{'Berechnet: ' + (calculated|date:'dd.MM.yyyy HH:mm') + ' Uhr'}} 
+                </div>
+
+                <div class="algorithm" *ngIf="algorithm">
+                    {{'Algorithmus: ' + algorithm}}
+                </div>
+
+            </div>
+
+        </mat-expansion-panel>
+
+    </div>
+
+    <div class="goods-wrapper">
+
+        <mat-expansion-panel>
+
+            <mat-expansion-panel-header>
+                <mat-panel-title class="expansion-panel-headline">
+
+                    Güter
+
+                </mat-panel-title>
+
+                <mat-panel-description>
+                    Eingeräumte Güter
+                </mat-panel-description>
+
+            </mat-expansion-panel-header>
+
+        </mat-expansion-panel>
+
+    </div>
+
+    <div class="groups-wrapper">
+
+        <mat-expansion-panel>
+
+            <mat-expansion-panel-header>
+                <mat-panel-title class="expansion-panel-headline">
+
+                    Gruppen
+
+                </mat-panel-title>
+
+                <mat-panel-description>
+                    Vorgesehene Gruppen
+                </mat-panel-description>
+
+            </mat-expansion-panel-header>
+
+        </mat-expansion-panel>
+
     </div>
 
 </div>

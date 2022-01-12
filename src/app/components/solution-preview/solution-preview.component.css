@@ -5,3 +5,12 @@
 .headline {
     font-size: 1.5rem;
 }
+
+.goods-wrapper, .groups-wrapper {
+    margin-top: 1rem;
+}
+
+.expansion-panel-headline {
+    font-weight: 500;
+    font-size: 1.2rem;
+}

@@ -1,11 +1,17 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject } from 'rxjs';
-import { Container, Dimension, Good } from '../classes';
+import { BehaviorSubject, ReplaySubject } from 'rxjs';
+import { distinctUntilChanged } from 'rxjs/operators';
+import { Container, Dimension, Good, Solution } from '../classes';
 
 @Injectable({
   providedIn: 'root'
 })
 export class DataService {
+
+  private _currentSolution: ReplaySubject<Solution> = new ReplaySubject<Solution>(1);
+  currentSolution$ = this._currentSolution.pipe(distinctUntilChanged());
+
+  private _solutions: BehaviorSubject<Solution[]> = new BehaviorSubject<Solution[]>([]);
 
   private _unit: BehaviorSubject<'mm' | 'cm' | 'dm' | 'm'> = new BehaviorSubject('mm');
   unit$ = this._unit.asObservable();
@@ -15,6 +21,11 @@ export class DataService {
   }
 
   constructor() { }
+
+  setCurrentSolution(solution: Solution){
+    if(this._solutions.value.findIndex(x => x._Id === solution._Id) === -1) this._solutions.next([...this._solutions.value, solution]);
+    this._currentSolution.next(solution);
+  }
 
   static getContainerDimension(container: Container): Dimension {
     return {

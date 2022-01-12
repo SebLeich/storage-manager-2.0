@@ -46,7 +46,10 @@ export class VisualizerComponentService {
     private _meshes: { preview: string, groupColor: string, groupId: number, seqNr: number, goodId: number, mesh: ThreeJS.Mesh, edges: ThreeJS.LineSegments }[] = [];
     private _subscriptions: Subscription[] = [];
 
-    constructor(private _httpClient: HttpClient) {
+    constructor(
+        private _httpClient: HttpClient,
+        private _dataService: DataService
+    ) {
         this._setUp();
     }
 
@@ -75,11 +78,11 @@ export class VisualizerComponentService {
         let updateProjection = false;
         switch (event.key) {
             case 'w':
-                this.camera.position.y -= 100;
+                this.camera.position.y -= keyboardControlMoveStep;
                 updateProjection = true;
                 break;
             case 's':
-                this.camera.position.y += 100;
+                this.camera.position.y += keyboardControlMoveStep;
                 updateProjection = true;
                 break;
             case 'a':
@@ -239,7 +242,7 @@ export class VisualizerComponentService {
         this.renderer.domElement.id = this._sceneBodyId;
         this._httpClient.get('/assets/defaultSolution.json').subscribe((solution: Solution) => {
             this.defaultSolution = solution;
-            this.addContainerToScene(solution._Container);
+            this._dataService.setCurrentSolution(solution);
         });
         this._subscriptions.push(...[
             combineLatest([this.hoverIntersections$, this.visualizerWrapper$]).subscribe(([event, wrapper]) => this._highightIntersections(event, wrapper)),
@@ -250,6 +253,9 @@ export class VisualizerComponentService {
                         (mesh.edges.material as ThreeJS.LineBasicMaterial).color = new ThreeJS.Color(color);
                     }
                 }
+            }),
+            this._dataService.currentSolution$.subscribe((solution: Solution) => {
+                this.addContainerToScene(solution._Container);
             })
         ]);
     }

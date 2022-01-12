@@ -8,7 +8,7 @@
 .solution-wrapper {
     flex: 1;
     max-width: 400px;
-    background-color: white;
+    background-color: #fbfbfb;
     box-shadow: 0 0 4px #848484;
     z-index: 1;
 }

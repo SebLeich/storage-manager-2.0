@@ -53,10 +53,13 @@ export class Position {
 }
 
 export class Solution {
+    _Id: string;
     _Container: Container;
     _Algorithm: string;
     _Groups: Group;
     _Steps: Step[];
+    _Calculated: string;
+    _Description: string;
 }
 
 export class Step {
