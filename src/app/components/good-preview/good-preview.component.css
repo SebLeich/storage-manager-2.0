@@ -1,0 +1,41 @@
+.property {
+    flex: 1;
+    display: inline-flex;
+    flex-direction: column;
+    align-items: baseline;
+    margin-right: .5rem;
+}
+
+.property-row {
+    display: flex;
+    align-items: center;
+    margin-bottom: 1rem;
+}
+
+.description {
+    display: flex;
+    align-items: center;
+}
+
+.description .text {
+    font-size: 1.2rem;
+    line-height: 1.2rem;
+    font-weight: 500;
+    margin-right: .5rem;
+}
+
+.property .attribute {
+    margin-right: .2rem;
+    font-size: .8rem;
+}
+
+.property .value {
+    white-space: nowrap;
+    padding: 0.2rem;
+    background-color: #ececec;
+    border-radius: 3px;
+}
+
+.no-good-hint {
+    font-family: monospace;
+}

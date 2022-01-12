@@ -1,20 +1,20 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { VizualizerComponent } from './vizualizer.component';
+import { GoodPreviewComponent } from './good-preview.component';
 
-describe('VizualizerComponent', () => {
-  let component: VizualizerComponent;
-  let fixture: ComponentFixture<VizualizerComponent>;
+describe('GoodPreviewComponent', () => {
+  let component: GoodPreviewComponent;
+  let fixture: ComponentFixture<GoodPreviewComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ VizualizerComponent ]
+      declarations: [ GoodPreviewComponent ]
     })
     .compileComponents();
   });
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(VizualizerComponent);
+    fixture = TestBed.createComponent(GoodPreviewComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

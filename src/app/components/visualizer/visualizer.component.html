@@ -1,0 +1,57 @@
+<div class="body">
+
+    <div class="visualizer-wrapper" #visualizerWrapper (mousemove)="visualizerComponentService.mousemove($event)" (click)="visualizerComponentService.mouseclick($event)"></div>
+
+    <div class="information-wrapper">
+
+        <mat-expansion-panel>
+
+            <mat-expansion-panel-header>
+                <mat-panel-title>
+
+                    <span *ngIf="(visualizerComponentService.hoveredElement$|async); else noElement">
+                        {{(visualizerComponentService.hoveredElement$|async).preview}}
+                    </span>
+
+                </mat-panel-title>
+
+                <mat-panel-description>
+                    Hervorgehobenes Element
+                </mat-panel-description>
+
+            </mat-expansion-panel-header>
+            
+            <app-good-preview [good]="(visualizerComponentService.hoveredGood$|async)"></app-good-preview>
+
+        </mat-expansion-panel>
+
+        <mat-expansion-panel expanded="true">
+
+            <mat-expansion-panel-header>
+                <mat-panel-title>
+
+                    <span [style.color]="selectedGoodEdgeColor" *ngIf="(visualizerComponentService.selectedElement$|async); else noElement">
+                        {{(visualizerComponentService.selectedElement$|async).preview}}
+                    </span>
+
+                </mat-panel-title>
+
+                <mat-panel-description>
+                    Gewähltes Element
+                </mat-panel-description>
+
+            </mat-expansion-panel-header>
+            
+            <app-good-preview [good]="(visualizerComponentService.selectedGood$|async)"></app-good-preview>
+
+        </mat-expansion-panel>
+
+    </div>
+
+</div>
+
+<ng-template #noElement>
+
+    <span class="no-element-hint">Kein Element</span>
+
+</ng-template>

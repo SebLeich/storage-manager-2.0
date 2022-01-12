@@ -1,0 +1,22 @@
+.body {
+    height: 100%;
+    width: 100%;
+    position: relative;
+}
+
+.visualizer-wrapper {
+    height: 100%;
+    width: 100%;
+}
+
+.information-wrapper {
+    right: 1rem;
+    bottom: 1rem;
+    position: absolute;
+    width: 400px;
+}
+
+.information-wrapper > * {
+    margin-bottom: .5rem;
+}
+

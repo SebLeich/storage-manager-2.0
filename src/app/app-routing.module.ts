@@ -1,10 +1,10 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
-import { VizualizerComponent } from './components/vizualizer/vizualizer.component';
+import { VisualizerComponent } from './components/visualizer/visualizer.component';
 
 const routes: Routes = [
   { path: '', pathMatch: 'full', redirectTo: 'home' },
-  { path: 'home', component: VizualizerComponent }
+  { path: 'home', component: VisualizerComponent }
 ];
 
 @NgModule({

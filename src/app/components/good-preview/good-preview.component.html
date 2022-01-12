@@ -1,0 +1,83 @@
+<div class="body">
+
+    <ng-container *ngIf="good; else noGood">
+
+        <div class="description">
+
+            <div class="text">{{good._Desc}}</div>
+            <button mat-icon-button>
+                <mat-icon>search</mat-icon>
+            </button>
+    
+        </div>
+
+        <div class="property-row">
+
+            <div class="property">
+
+                <div class="attribute">Breite</div>
+                <div class="value">{{good._Width|prettyLength}}</div>
+    
+            </div>
+    
+            <div class="property">
+    
+                <div class="attribute">Höhe</div>
+                <div class="value">{{good._Height|prettyLength}}</div>
+    
+            </div>
+    
+            <div class="property">
+    
+                <div class="attribute">Länge</div>
+                <div class="value">{{good._Length|prettyLength}}</div>
+    
+            </div>
+
+            <div class="property">
+    
+                <div class="attribute">Volumen</div>
+                <div class="value">{{(good._Length * good._Height * good._Width)|prettyVolume:true}}</div>
+    
+            </div>
+
+        </div>
+
+        <div class="property-row">
+
+            <div class="property">
+
+                <div class="attribute">x-Koordinate</div>
+                <div class="value">{{good._X}}</div>
+    
+            </div>
+    
+            <div class="property">
+    
+                <div class="attribute">y-Koordinate</div>
+                <div class="value">{{good._Y}}</div>
+    
+            </div>
+    
+            <div class="property">
+    
+                <div class="attribute">z-Koordinate</div>
+                <div class="value">{{good._Z}}</div>
+    
+            </div>
+
+        </div>
+
+    </ng-container>
+
+</div>
+
+<ng-template #noGood>
+
+    <div class="no-good-hint">
+
+        Kein Element
+
+    </div>
+
+</ng-template>

@@ -15,6 +15,7 @@ export class Dimension {
 }
 
 export class Good {
+    _Id: number;
     _Desc: string;
     _Height: number;
     _Group: number;
