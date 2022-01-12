@@ -1,8 +1,17 @@
 export class Container {
-    _Heigth: number;
+    _Height: number;
     _Width: number;
     _Length: number;
     _Goods: Good[];
+}
+
+export class Dimension {
+    height: number;
+    width: number;
+    length: number;
+    x: number;
+    y: number;
+    z: number;
 }
 
 export class Good {
