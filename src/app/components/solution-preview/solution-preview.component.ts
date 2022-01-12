@@ -3,13 +3,19 @@ import { Subscription } from 'rxjs';
 import { filter } from 'rxjs/operators';
 import { showAnimation } from 'src/app/animations';
 import { Container, Solution } from 'src/app/classes';
+import { GOODS_PROVIDER, GROUPS_PROVIDER } from 'src/app/interfaces';
 import { DataService } from 'src/app/services/data.service';
+import { SolutionPreviewComponentService } from './solution-preview-component.service';
 
 @Component({
   selector: 'app-solution-preview',
   templateUrl: './solution-preview.component.html',
   styleUrls: ['./solution-preview.component.css'],
-  animations: [ showAnimation ]
+  providers: [
+    { provide: GOODS_PROVIDER, useClass: SolutionPreviewComponentService },
+    { provide: GROUPS_PROVIDER, useExisting: GOODS_PROVIDER }
+  ],
+  animations: [showAnimation]
 })
 export class SolutionPreviewComponent implements OnDestroy, OnInit {
 

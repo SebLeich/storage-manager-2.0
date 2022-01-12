@@ -20,7 +20,7 @@
             <div class="general-inner">
 
                 <div class="calculated" *ngIf="calculated">
-                    {{'Berechnet: ' + (calculated|date:'dd.MM.yyyy HH:mm') + ' Uhr'}} 
+                    {{'Berechnet: ' + (calculated|date:'dd.MM.yyyy HH:mm') + ' Uhr'}}
                 </div>
 
                 <div class="algorithm" *ngIf="algorithm">
@@ -30,7 +30,7 @@
                 <div class="container-wrapper">
 
                     <app-container-preview [container]="container"></app-container-preview>
-                    
+
                 </div>
 
             </div>
@@ -56,6 +56,8 @@
 
             </mat-expansion-panel-header>
 
+            <app-goods-panel></app-goods-panel>
+
         </mat-expansion-panel>
 
     </div>
@@ -76,6 +78,8 @@
                 </mat-panel-description>
 
             </mat-expansion-panel-header>
+
+            <app-groups-panel></app-groups-panel>
 
         </mat-expansion-panel>
 

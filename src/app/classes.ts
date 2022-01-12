@@ -32,6 +32,7 @@ export class Good {
 export class Group {
     _Color: string;
     _Id: number;
+    _Desc: string;
 }
 
 export class Position {
@@ -56,7 +57,7 @@ export class Solution {
     _Id: string;
     _Container: Container;
     _Algorithm: string;
-    _Groups: Group;
+    _Groups: Group[];
     _Steps: Step[];
     _Calculated: string;
     _Description: string;

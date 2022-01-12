@@ -1,6 +1,7 @@
 import { Component, ElementRef, HostListener, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { switchMap, take } from 'rxjs/operators';
+import { showAnimation } from 'src/app/animations';
 import { selectedGoodEdgeColor } from 'src/app/globals';
 import { VisualizerComponentService } from './visualizer-component-service';
 
@@ -10,7 +11,8 @@ import { VisualizerComponentService } from './visualizer-component-service';
   styleUrls: ['./visualizer.component.css'],
   providers: [
     VisualizerComponentService
-  ]
+  ],
+  animations: [ showAnimation ]
 })
 export class VisualizerComponent implements OnDestroy, OnInit {
 

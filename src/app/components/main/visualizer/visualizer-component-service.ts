@@ -2,7 +2,7 @@ import { HttpClient } from "@angular/common/http";
 import { ElementRef, Injectable } from "@angular/core";
 import { BehaviorSubject, combineLatest, ReplaySubject, Subject, Subscription } from "rxjs";
 import { debounceTime, map, take } from "rxjs/operators";
-import { Container, Dimension, Group, Solution } from "src/app/classes";
+import { Container, Dimension, Good, Group, Solution } from "src/app/classes";
 import { defaultGoodEdgeColor, generateGuid, keyboardControlMoveStep, selectedGoodEdgeColor } from "src/app/globals";
 import { DataService } from "src/app/services/data.service";
 import * as ThreeJS from 'three';
@@ -74,6 +74,16 @@ export class VisualizerComponentService {
         this._subscriptions = [];
     }
 
+    highlightGood(good: Good){
+
+        let meshes = this.scene.children.filter(x => x instanceof ThreeJS.Mesh) as ThreeJS.Mesh[];
+
+        meshes.forEach(x => {
+            let meshWrapper = this._meshes.find(y => y.mesh === x);
+            ((x as ThreeJS.Mesh).material as ThreeJS.MeshBasicMaterial).color.set(meshWrapper ? meshWrapper.goodId === good._Id? 'white': meshWrapper.groupColor : null);
+        });
+    }
+
     keydown(event: KeyboardEvent) {
         let updateProjection = false;
         switch (event.key) {
@@ -124,6 +134,11 @@ export class VisualizerComponentService {
     render() {
         requestAnimationFrame(() => this.render());
         this.renderer.render(this.scene, this.camera);
+    }
+
+    selectGood(good: Good){
+        let wrapper = this._meshes.find(x => x.goodId === good._Id);
+        if(wrapper) this._selectedElement.next(wrapper);
     }
 
     setSceneDimensions(width: number, height: number) {
@@ -222,7 +237,7 @@ export class VisualizerComponentService {
         return found;
     }
 
-    private _highightIntersections(event: MouseEvent, wrapper: ElementRef<HTMLDivElement>) {
+    private _highlightIntersections(event: MouseEvent, wrapper: ElementRef<HTMLDivElement>) {
 
         let meshes = this.scene.children.filter(x => x instanceof ThreeJS.Mesh) as ThreeJS.Mesh[];
 
@@ -234,6 +249,7 @@ export class VisualizerComponentService {
         let found = this._getPointedElement(event, wrapper, meshes);
 
         if (found != null) (found.object as any).material.color.set("white");
+
         this._hoveredElement.next(found && found.object ? this._meshes.find(x => x.mesh === found.object) : null);
     }
 
@@ -245,7 +261,9 @@ export class VisualizerComponentService {
             this._dataService.setCurrentSolution(solution);
         });
         this._subscriptions.push(...[
-            combineLatest([this.hoverIntersections$, this.visualizerWrapper$]).subscribe(([event, wrapper]) => this._highightIntersections(event, wrapper)),
+            combineLatest([this.hoverIntersections$, this.visualizerWrapper$]).subscribe(([event, wrapper]) => {
+                this._highlightIntersections(event, wrapper);
+            }),
             this._selectedElement.subscribe(element => {
                 for (let mesh of this._meshes) {
                     if (mesh && mesh.edges) {

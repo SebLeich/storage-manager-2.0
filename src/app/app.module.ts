@@ -24,6 +24,9 @@ import { ErrorComponent } from './components/main/error/error.component';
 import { SolutionPreviewComponent } from './components/solution-preview/solution-preview.component';
 import { ContainerPreviewComponent } from './components/container-preview/container-preview.component';
 import { ChartsModule } from 'ng2-charts';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { GoodsPanelComponent } from './components/goods-panel/goods-panel.component';
+import { GroupsPanelComponent } from './components/groups-panel/groups-panel.component';
 
 @NgModule({
   declarations: [
@@ -36,7 +39,9 @@ import { ChartsModule } from 'ng2-charts';
     EditDataDialogComponent,
     ErrorComponent,
     SolutionPreviewComponent,
-    ContainerPreviewComponent
+    ContainerPreviewComponent,
+    GoodsPanelComponent,
+    GroupsPanelComponent
   ],
   imports: [
     BrowserModule,
@@ -49,6 +54,7 @@ import { ChartsModule } from 'ng2-charts';
     MatDialogModule,
     MatTooltipModule,
     MatToolbarModule,
+    MatSnackBarModule,
     HttpClientModule,
     ChartsModule
   ],
