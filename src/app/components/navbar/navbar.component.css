@@ -1,6 +1,6 @@
 .body {
     box-shadow: 0 0 4px #848484;
-    z-index: 1;
+    z-index: 2;
     position: relative;
     height: 100%;
     overflow: hidden;
@@ -12,6 +12,10 @@
 
 }
 
+.option-wrapper {
+    overflow: hidden;
+}
+
 .option {
     display: flex;
     flex-direction: column;
@@ -21,6 +25,11 @@
     width: 80px;
     cursor: pointer;
     transition: all .2s;
+    overflow: hidden;
+}
+
+.option.active {
+    background-color: rgba(255, 255, 255, 0.2);
 }
 
 .option:hover {

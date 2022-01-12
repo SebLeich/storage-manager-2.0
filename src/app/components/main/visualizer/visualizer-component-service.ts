@@ -205,7 +205,7 @@ export class VisualizerComponentService {
 
         if (!Array.isArray(meshes)) meshes = this.scene.children.filter(x => x instanceof ThreeJS.Mesh) as ThreeJS.Mesh[];
 
-        let x = ((event.clientX - (wrapper.nativeElement.offsetParent as HTMLDivElement).offsetLeft) / (event.target as HTMLCanvasElement).offsetWidth) * 2 - 1;
+        let x = ((event.clientX - (wrapper.nativeElement.offsetParent as HTMLDivElement).offsetLeft - (wrapper.nativeElement as HTMLDivElement).offsetLeft) / (event.target as HTMLCanvasElement).offsetWidth) * 2 - 1;
         let y = -((event.clientY - (event.target as HTMLCanvasElement).offsetTop) / (event.target as HTMLCanvasElement).offsetHeight) * 2 + 1;
 
         this.ray.setFromCamera({ x: x, y: y }, this.camera);

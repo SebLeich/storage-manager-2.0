@@ -1,5 +1,9 @@
 <div class="body">
 
+    <div class="solution-wrapper">
+        <app-solution-preview></app-solution-preview>
+    </div>
+
     <div class="visualizer-wrapper" #visualizerWrapper (mousemove)="visualizerComponentService.mousemove($event)" (click)="visualizerComponentService.mouseclick($event)"></div>
 
     <div class="information-wrapper">

@@ -2,11 +2,22 @@
     height: 100%;
     width: 100%;
     position: relative;
+    display: flex;
+}
+
+.solution-wrapper {
+    flex: 1;
+    max-width: 400px;
+    background-color: white;
+    box-shadow: 0 0 4px #848484;
+    z-index: 1;
 }
 
 .visualizer-wrapper {
     height: 100%;
     width: 100%;
+    flex: 1;
+    overflow: hidden;
 }
 
 .information-wrapper {
