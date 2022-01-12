@@ -2,7 +2,7 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { filter } from 'rxjs/operators';
 import { showAnimation } from 'src/app/animations';
-import { Solution } from 'src/app/classes';
+import { Container, Solution } from 'src/app/classes';
 import { DataService } from 'src/app/services/data.service';
 
 @Component({
@@ -16,6 +16,7 @@ export class SolutionPreviewComponent implements OnDestroy, OnInit {
   headline: string = null;
   calculated: string = null;
   algorithm: string = null;
+  container: Container = null;
 
   private _subscriptions: Subscription[] = [];
 
@@ -29,6 +30,7 @@ export class SolutionPreviewComponent implements OnDestroy, OnInit {
         this.headline = solution._Description;
         this.calculated = solution._Calculated;
         this.algorithm = solution._Algorithm;
+        this.container = solution._Container;
       })
     ]);
   }

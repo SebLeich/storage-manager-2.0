@@ -1,0 +1,68 @@
+<div class="body">
+
+    <ng-container *ngIf="container; else noContainer">
+
+        <div class="description">
+
+            <div class="text">Container</div>
+
+        </div>
+
+        <div class="property-row">
+
+            <div class="property">
+
+                <div class="attribute">Breite</div>
+                <div class="value">{{container._Width|prettyLength}}</div>
+
+            </div>
+
+            <div class="property">
+
+                <div class="attribute">Höhe</div>
+                <div class="value">{{container._Height|prettyLength}}</div>
+
+            </div>
+
+            <div class="property">
+
+                <div class="attribute">Länge</div>
+                <div class="value">{{container._Length|prettyLength}}</div>
+
+            </div>
+
+            <div class="property">
+
+                <div class="attribute">Volumen</div>
+                <div class="value">{{(container._Length * container._Height * container._Width)|prettyVolume:true}}
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="chart-wrapper">
+
+            <div class="chart-inner">
+                <canvas baseChart [datasets]="datasets" [labels]="labels" chartType="doughnut" [options]="options"></canvas>
+            </div>
+
+            <div class="percentage">
+                {{percentage}} %
+            </div>
+
+        </div>
+
+    </ng-container>
+
+</div>
+
+<ng-template #noContainer>
+
+    <div class="no-container-hint">
+
+        Kein Container
+
+    </div>
+
+</ng-template>

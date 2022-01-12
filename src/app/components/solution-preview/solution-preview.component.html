@@ -27,6 +27,12 @@
                     {{'Algorithmus: ' + algorithm}}
                 </div>
 
+                <div class="container-wrapper">
+
+                    <app-container-preview [container]="container"></app-container-preview>
+                    
+                </div>
+
             </div>
 
         </mat-expansion-panel>
@@ -67,6 +73,48 @@
 
                 <mat-panel-description>
                     Vorgesehene Gruppen
+                </mat-panel-description>
+
+            </mat-expansion-panel-header>
+
+        </mat-expansion-panel>
+
+    </div>
+
+    <div class="animation-wrapper">
+
+        <mat-expansion-panel>
+
+            <mat-expansion-panel-header>
+                <mat-panel-title class="expansion-panel-headline">
+
+                    Animation
+
+                </mat-panel-title>
+
+                <mat-panel-description>
+                    Vorgehen animieren
+                </mat-panel-description>
+
+            </mat-expansion-panel-header>
+
+        </mat-expansion-panel>
+
+    </div>
+
+    <div class="validator-wrapper">
+
+        <mat-expansion-panel>
+
+            <mat-expansion-panel-header>
+                <mat-panel-title class="expansion-panel-headline">
+
+                    Validator
+
+                </mat-panel-title>
+
+                <mat-panel-description>
+                    Lösungsvalidierung
                 </mat-panel-description>
 
             </mat-expansion-panel-header>

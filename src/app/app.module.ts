@@ -22,6 +22,8 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { ErrorComponent } from './components/main/error/error.component';
 import { SolutionPreviewComponent } from './components/solution-preview/solution-preview.component';
+import { ContainerPreviewComponent } from './components/container-preview/container-preview.component';
+import { ChartsModule } from 'ng2-charts';
 
 @NgModule({
   declarations: [
@@ -33,7 +35,8 @@ import { SolutionPreviewComponent } from './components/solution-preview/solution
     PrettyVolumePipe,
     EditDataDialogComponent,
     ErrorComponent,
-    SolutionPreviewComponent
+    SolutionPreviewComponent,
+    ContainerPreviewComponent
   ],
   imports: [
     BrowserModule,
@@ -46,7 +49,8 @@ import { SolutionPreviewComponent } from './components/solution-preview/solution
     MatDialogModule,
     MatTooltipModule,
     MatToolbarModule,
-    HttpClientModule
+    HttpClientModule,
+    ChartsModule
   ],
   providers: [],
   bootstrap: [AppComponent]
