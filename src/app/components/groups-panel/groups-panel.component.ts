@@ -1,6 +1,8 @@
 import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
 import { Subscription } from 'rxjs';
+import { Group } from 'src/app/classes';
 import { GROUPS_PROVIDER, IGroupsProvider } from 'src/app/interfaces';
+import { VisualizerComponentService } from '../main/visualizer/visualizer-component-service';
 
 @Component({
   selector: 'app-groups-panel',
@@ -14,7 +16,8 @@ export class GroupsPanelComponent implements OnDestroy, OnInit {
   private _subscriptions: Subscription[] = [];
 
   constructor(
-    @Inject(GROUPS_PROVIDER) public groupsProvider: IGroupsProvider
+    @Inject(GROUPS_PROVIDER) public groupsProvider: IGroupsProvider,
+    private _visualizerComponentService: VisualizerComponentService
   ) { }
 
   ngOnDestroy(): void {
@@ -24,6 +27,11 @@ export class GroupsPanelComponent implements OnDestroy, OnInit {
 
   ngOnInit(): void {
 
+  }
+
+  setGroupColor(event: InputEvent, group: Group){
+    group._Color = (event.target as HTMLInputElement).value;
+    this._visualizerComponentService.updateGroupColors();
   }
 
 }

@@ -49,10 +49,19 @@
     overflow: hidden;
 }
 
-.chart-wrapper .percentage {
+.chart-wrapper .percentage-wrapper {
     max-width: 100px;
     display: flex;
     align-items: center;
     justify-content: center;
+    flex-direction: column;
+}
+
+.chart-wrapper .percentage-wrapper .percentage {
     font-size: 2rem;
+}
+
+.chart-wrapper .percentage-wrapper .text {
+    margin-top: .2rem;
+    font-size: .8rem;
 }

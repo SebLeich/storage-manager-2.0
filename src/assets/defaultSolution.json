@@ -136,7 +136,7 @@
                 "_Id": 10,
                 "_Desc": "EuroPallet4",
                 "_Height": 389,
-                "_Group": 1,
+                "_Group": 2,
                 "_Width": 814,
                 "_Length": 1231,
                 "_Rotate": false,
@@ -151,9 +151,14 @@
     "_Algorithm": "SuperFlo",
     "_Groups": [
         {
-            "_Color": "#45EB50",
-            "_Desc": "Beispielgruppe",
+            "_Color": "#2755a0",
+            "_Desc": "Mustermann GmbH",
             "_Id": 1
+        },
+        {
+            "_Color": "#00ffbf",
+            "_Desc": "Beispiel AG",
+            "_Id": 2
         }
     ],
     "_Steps": [

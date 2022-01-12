@@ -53,7 +53,7 @@ export class VisualizerComponentService {
         this._setUp();
     }
 
-    addContainerToScene(container: Container) {
+    addContainerToScene(container: Container, groups: Group[]) {
         this._container.next(container);
         while (this.scene.children.length > 0) this.scene.remove(this.scene.children[0]);
         var from = new ThreeJS.Vector3(0, (container._Height / -2), (container._Length / 2));
@@ -66,7 +66,10 @@ export class VisualizerComponentService {
         gridHelper.position.set(0, (container._Height / -2), 0);
         this.scene.add(gridHelper);
         this._addElementToScene(DataService.getContainerDimension(container), 'Container', 'bordered', null, null, null, null)
-        for (var index in container._Goods) this._addElementToScene(DataService.getGoodDimension(container._Goods[index]), `${container._Goods[index]._Desc}`, 'filled', container._Goods[index]._SequenceNr, container._Goods[index]._Id, null, DataService.getContainerDimension(container));
+        for (var good of container._Goods) {
+            let group = groups.find(x => x._Id === good._Group);
+            this._addElementToScene(DataService.getGoodDimension(good), `${good._Desc}`, 'filled', good._SequenceNr, good._Id, group, DataService.getContainerDimension(container));
+        }
     }
 
     dispose() {
@@ -74,13 +77,13 @@ export class VisualizerComponentService {
         this._subscriptions = [];
     }
 
-    highlightGood(good: Good){
+    highlightGood(good: Good) {
 
         let meshes = this.scene.children.filter(x => x instanceof ThreeJS.Mesh) as ThreeJS.Mesh[];
 
         meshes.forEach(x => {
             let meshWrapper = this._meshes.find(y => y.mesh === x);
-            ((x as ThreeJS.Mesh).material as ThreeJS.MeshBasicMaterial).color.set(meshWrapper ? meshWrapper.goodId === good._Id? 'white': meshWrapper.groupColor : null);
+            ((x as ThreeJS.Mesh).material as ThreeJS.MeshBasicMaterial).color.set(meshWrapper ? meshWrapper.goodId === good._Id ? 'white' : meshWrapper.groupColor : null);
         });
     }
 
@@ -136,9 +139,9 @@ export class VisualizerComponentService {
         this.renderer.render(this.scene, this.camera);
     }
 
-    selectGood(good: Good){
+    selectGood(good: Good) {
         let wrapper = this._meshes.find(x => x.goodId === good._Id);
-        if(wrapper) this._selectedElement.next(wrapper);
+        if (wrapper) this._selectedElement.next(wrapper);
     }
 
     setSceneDimensions(width: number, height: number) {
@@ -165,6 +168,16 @@ export class VisualizerComponentService {
     }
 
     triggerResizeEvent = () => this._resized.next();
+
+    updateGroupColors(){
+        this._dataService.currentGroups$.pipe(take(1)).subscribe((groups: Group[]) => {
+            this._meshes.forEach(x => {
+                let group = groups.find(y => y._Id === x.groupId);
+                x.groupColor = group?._Color ?? null;
+                ((x.mesh as ThreeJS.Mesh).material as ThreeJS.MeshBasicMaterial).color.set(x.groupColor);
+            })
+        });
+    }
 
     private _addElementToScene(dimension: Dimension, preview: string, type: null | 'bordered' | 'filled', sequenceNumber: number = null, goodId: number = null, group: Group = null, parentDimension: Dimension = null) {
 
@@ -273,7 +286,7 @@ export class VisualizerComponentService {
                 }
             }),
             this._dataService.currentSolution$.subscribe((solution: Solution) => {
-                this.addContainerToScene(solution._Container);
+                this.addContainerToScene(solution._Container, solution._Groups);
             })
         ]);
     }

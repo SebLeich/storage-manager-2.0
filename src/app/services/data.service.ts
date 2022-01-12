@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, ReplaySubject } from 'rxjs';
-import { distinctUntilChanged } from 'rxjs/operators';
+import { distinctUntilChanged, map } from 'rxjs/operators';
 import { Container, Dimension, Good, Solution } from '../classes';
 
 @Injectable({
@@ -10,6 +10,7 @@ export class DataService {
 
   private _currentSolution: ReplaySubject<Solution> = new ReplaySubject<Solution>(1);
   currentSolution$ = this._currentSolution.pipe(distinctUntilChanged());
+  currentGroups$ = this._currentSolution.pipe(map(x => x._Groups));
 
   private _solutions: BehaviorSubject<Solution[]> = new BehaviorSubject<Solution[]>([]);
 
