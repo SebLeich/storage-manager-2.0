@@ -1,0 +1,82 @@
+.body {
+    display: flex;
+    flex-direction: column;
+    background-color: white;
+}
+
+.headline {
+    padding: 2rem;
+    background-color: #ffffff;
+    color: #464646;
+}
+
+.control-row {
+    display: flex;
+    padding: 0px 2rem;
+    background-color: white;
+    align-items: flex-start;
+}
+
+.control-row > .option {
+    width: 60px;
+    height: 60px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    user-select: none;
+    border-radius: 3px;
+    margin-bottom: .3rem;
+}
+
+.control-row > .option.disabled {
+    opacity: .5;
+    cursor: not-allowed;
+}
+
+.control-row > .option.enabled {
+    background-color: #dcffdd;
+    color: white !important;
+    box-shadow: 0 0 4px #848484;
+}
+
+.control-row > .option:hover {
+    background-color: #f1f1f1;
+}
+
+.control-row > .option > .icon {
+    color: #3a3a3a;
+}
+
+.control-row > .option > .text {
+    font-size: .6rem;
+    color: #464646;
+    font-weight: 500;
+}
+
+.content {
+    flex: 1;
+    display: flex;
+    overflow-y: auto;
+    margin-right: 0.5rem;
+    padding-right: 0.5rem;
+}
+
+.container-wrapper {
+    display: flex;
+    flex-direction: column;
+    padding: 0.2rem 0.4rem;
+    margin-bottom: 1rem;
+}
+
+.container-wrapper .input-wrapper {
+    display: flex;
+}
+
+.container-wrapper .input-wrapper input {
+    width: 5rem;
+    margin-right: .2rem;
+    padding: .2rem;
+    flex: 1;
+}

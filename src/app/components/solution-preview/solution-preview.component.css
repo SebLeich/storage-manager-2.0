@@ -1,4 +1,13 @@
 .body {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    overflow-y: scroll;
+    background-color: #fbfbfb;
+}
+
+.panel-wrapper {
+    flex: 1;
     padding: 2rem 1rem;
 }
 
@@ -17,4 +26,8 @@
 
 .container-wrapper {
     margin-top: 1rem;
+}
+
+.footer {
+    text-align: center;
 }

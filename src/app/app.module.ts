@@ -27,6 +27,16 @@ import { ChartsModule } from 'ng2-charts';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { GoodsPanelComponent } from './components/goods-panel/goods-panel.component';
 import { GroupsPanelComponent } from './components/groups-panel/groups-panel.component';
+import { OrdersComponent } from './components/main/orders/orders.component';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { SortedFormArrayPipe } from './pipes/sorted-form-array.pipe';
+import { MatSortModule } from '@angular/material/sort';
+import { MatInputModule } from '@angular/material/input';
+import { MatCheckboxModule } from '@angular/material/checkbox';
+import { SelectGroupComponent } from './components/select-group/select-group.component';
+import { MatSelectModule } from '@angular/material/select';
+import { SelectProductComponent } from './components/select-product/select-product.component';
+import { SelectUnitComponent } from './components/select-unit/select-unit.component';
 
 @NgModule({
   declarations: [
@@ -41,7 +51,12 @@ import { GroupsPanelComponent } from './components/groups-panel/groups-panel.com
     SolutionPreviewComponent,
     ContainerPreviewComponent,
     GoodsPanelComponent,
-    GroupsPanelComponent
+    GroupsPanelComponent,
+    OrdersComponent,
+    SortedFormArrayPipe,
+    SelectGroupComponent,
+    SelectProductComponent,
+    SelectUnitComponent
   ],
   imports: [
     BrowserModule,
@@ -56,6 +71,12 @@ import { GroupsPanelComponent } from './components/groups-panel/groups-panel.com
     MatToolbarModule,
     MatSnackBarModule,
     HttpClientModule,
+    FormsModule,
+    ReactiveFormsModule,
+    MatSortModule,
+    MatInputModule,
+    MatCheckboxModule,
+    MatSelectModule,
     ChartsModule
   ],
   providers: [],

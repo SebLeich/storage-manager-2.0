@@ -35,6 +35,18 @@ export class Group {
     _Desc: string;
 }
 
+export class Order {
+    orderId: number = null;
+    description: string = null;
+    quantity: number = null;
+    length: number = null;
+    width: number = null;
+    height: number = null;
+    turningAllowed: boolean = true;
+    stackingAllowed: boolean = false;
+    group: number = null;
+}
+
 export class Position {
     _Id: string;
     _IsSumedUp: boolean;
@@ -51,6 +63,13 @@ export class Position {
     index: number;
     area: number;
     _GroupRestrictionBy: number;
+}
+
+export class Product {
+    description: string;
+    height: number;
+    length: number;
+    width: number;
 }
 
 export class Solution {

@@ -1,0 +1,12 @@
+<div class="body">
+
+    <mat-label class="label">Einheit wählen</mat-label>
+    <mat-select [formControl]="valueControl">
+
+        <mat-option *ngFor="let unit of units" [value]="unit">
+            {{unit}}
+        </mat-option>
+
+    </mat-select>
+
+</div>

@@ -5,6 +5,17 @@ export function generateGuid() {
     });
 }
 
+export function compare(a: number | string, b: number | string, isAsc: boolean = true) {
+    if (!a) a = '';
+    if (!b) b = '';
+    if (typeof (a) === 'string') a = a.trim().toLocaleLowerCase();
+    if (typeof (b) === 'string') b = b.trim().toLocaleLowerCase();
+    let result = (a < b ? -1 : a > b ? 1 : 0) * (isAsc ? 1 : -1);
+    return result;
+}
+
+export const nameOf = <T>(name: Extract<keyof T, string>): string => name;
+
 export const nextUnitSize = [
     { unit: 'mm', next: 10, threshold: 1000 },
     { unit: 'cm', next: 10, threshold: 1000 },

@@ -1,14 +1,30 @@
 /* You can add global styles to this file, and also import other style files */
 
 body {
-
 }
 
-html, body { height: 100%; }
-body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+html,
+body {
+    height: 100%;
+}
+body {
+    margin: 0;
+    font-family: Roboto, "Helvetica Neue", sans-serif;
+}
 
 .spacer {
     flex: 1;
+}
+
+.main-component-body {
+    height: 100%;
+    width: 100%;
+    position: relative;
+}
+
+.main-component-headline {
+    font-size: 2rem;
+    line-height: 2rem;
 }
 
 .smgr-table {
@@ -24,7 +40,7 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 }
 
 .smgr-table.small td {
-    font-size: .7rem;
+    font-size: 0.7rem;
 }
 
 .smgr-table .smgr-table-body-row:nth-child(odd) {
@@ -34,4 +50,64 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 .smgr-table .smgr-table-body-row.hoverable:hover {
     cursor: pointer;
     background-color: rgb(255, 249, 231);
+}
+
+.smgr-table input {
+    background-color: transparent;
+    outline: none;
+    border: none;
+}
+
+.smgr-table input:focus {
+    border-bottom: 1px solid blue;
+}
+
+.smgr-table.unsparing tr {
+    height: 60px !important;
+}
+
+.smgr-table input.width {
+    width: 100%;
+}
+
+.smgr-table input[type='number'] {
+    width: 4rem;
+}
+
+.smgr-manual-select-add-input-option {
+    padding: 0px !important;
+    height: auto;
+    width: auto;
+    line-height: initial !important;
+}
+
+.smgr-manual-select-add-input {
+    width: 100%;
+    border: none;
+    padding: 0.5rem;
+    font-size: 1rem;
+    outline: none;
+}
+
+/* width */
+::-webkit-scrollbar {
+    width: 0.5rem;
+    height: 0.5rem;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+    box-shadow: inset 0 0 5px rgb(218, 218, 218);
+    border-radius: 2px;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+    background: rgb(193 193 193);
+    border-radius: 2px;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+    background: #3b3b3b;
 }

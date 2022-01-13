@@ -1,0 +1,41 @@
+.body {
+    display: flex;
+    flex: 1;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    height: 100%;
+    width: 100%;
+    background-color: #ececec;
+}
+
+.message {
+    margin: 2rem;
+    line-height: 2rem;
+    font-size: 2rem;
+    color: #a21818;
+}
+
+.inner {
+    overflow: hidden;
+    border-radius: 3px;
+    position: relative;
+    box-shadow: 0 0 4px #848484;
+}
+
+iframe {
+    pointer-events: none;
+}
+
+.via-giphy {
+    background-color: #ffffff;
+    position: absolute;
+    right: 0px;
+    bottom: 0px;
+    margin: 0px;
+    display: block;
+    padding: 0.5rem 1rem;
+    border-radius: 2px;
+    font-weight: 700;
+}
+

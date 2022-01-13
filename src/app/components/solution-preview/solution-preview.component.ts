@@ -30,6 +30,8 @@ export class SolutionPreviewComponent implements OnDestroy, OnInit {
     private _dataService: DataService
   ) { }
 
+  downloadSolution = () => this._dataService.downloadCurrentSolution();
+
   ngOnInit(): void {
     this._subscriptions.push(...[
       this._dataService.currentSolution$.pipe(filter(x => x ? true : false)).subscribe((solution: Solution) => {

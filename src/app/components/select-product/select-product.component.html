@@ -1,0 +1,18 @@
+<div class="body">
+
+    <mat-label class="label">Produkt wählen</mat-label>
+    <mat-select [formControl]="valueControl">
+
+        <mat-option *ngFor="let product of (dataService.products$|async)" [value]="product.description">
+            {{product.description}}
+        </mat-option>
+
+        <mat-option class="smgr-manual-select-add-input-option">
+            
+            <input class="smgr-manual-select-add-input" type="text" (click)="$event.stopPropagation()" (keydown)="$event.stopPropagation()" (keydown.enter)="addProduct($event)" placeholder="Weiteres Produkt angeben" />
+
+        </mat-option>
+
+    </mat-select>
+
+</div>

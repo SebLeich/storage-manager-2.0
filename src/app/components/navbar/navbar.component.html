@@ -1,10 +1,19 @@
 <div class="body">
+
+   <div class="option-wrapper">
+      <div class="option" routerLink="route-planning" [class.active]="router.url === '/route-planning'">
+
+         <mat-icon class="icon">map</mat-icon>
+         <div class="text">Tourenplan</div>
+   
+      </div>
+   </div>
    
    <div class="option-wrapper">
-      <div class="option" routerLink="input-data" [class.active]="router.url === '/input-data'">
+      <div class="option" routerLink="orders" [class.active]="router.url === '/orders'">
 
          <mat-icon class="icon">edit</mat-icon>
-         <div class="text">Datensatz</div>
+         <div class="text">Bestellungen</div>
    
       </div>
    </div>
