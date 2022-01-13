@@ -37,6 +37,7 @@ import { SelectGroupComponent } from './components/select-group/select-group.com
 import { MatSelectModule } from '@angular/material/select';
 import { SelectProductComponent } from './components/select-product/select-product.component';
 import { SelectUnitComponent } from './components/select-unit/select-unit.component';
+import { CalculationComponent } from './components/main/calculation/calculation.component';
 
 @NgModule({
   declarations: [
@@ -56,7 +57,8 @@ import { SelectUnitComponent } from './components/select-unit/select-unit.compon
     SortedFormArrayPipe,
     SelectGroupComponent,
     SelectProductComponent,
-    SelectUnitComponent
+    SelectUnitComponent,
+    CalculationComponent
   ],
   imports: [
     BrowserModule,

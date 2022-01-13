@@ -1,8 +1,16 @@
+import * as moment from "moment";
+import { algorithms, generateGuid } from "./globals";
+
 export class Container {
-    _Height: number;
-    _Width: number;
-    _Length: number;
-    _Goods: Good[];
+    _Height: number = null;
+    _Width: number = null;
+    _Length: number = null;
+    _Goods: Good[] = [];
+    constructor(height: number = null, width: number = null, length: number = null) {
+        this._Height = height;
+        this._Width = width;
+        this._Length = length;
+    }
 }
 
 export class Dimension {
@@ -15,18 +23,34 @@ export class Dimension {
 }
 
 export class Good {
-    _Id: number;
-    _Desc: string;
-    _Height: number;
-    _Group: number;
-    _Width: number;
-    _Length: number;
-    _Rotate: boolean;
-    _Stack: boolean;
-    _X: number;
-    _Y: number;
-    _Z: number;
-    _SequenceNr: number;
+    _Id: number = null;
+    _Desc: string = null;
+    _Height: number = null;
+    _Group: number = null;
+    _Width: number = null;
+    _Length: number = null;
+    _Rotate: boolean = null;
+    _Stack: boolean = null;
+    _X: number = null;
+    _Y: number = null;
+    _Z: number = null;
+    _SequenceNr: number = null;
+    constructor(x: number = null, y: number = null, z: number = null, sequenceNumber: number = null, description: string = null){
+        this._X = x;
+        this._Y = y;
+        this._Z = z;
+        this._SequenceNr = sequenceNumber;
+        this._Desc = description;
+    }
+    setOrderDimensions(order: Order){
+        this._Height = order.height;
+        this._Width = order.width;
+        this._Length = order.length;
+        this._Id = order.orderId;
+        this._Rotate = order.turningAllowed;
+        this._Stack = order.stackingAllowed;
+        this._Group = order.group;
+    }
 }
 
 export class Group {
@@ -73,13 +97,18 @@ export class Product {
 }
 
 export class Solution {
-    _Id: string;
-    _Container: Container;
-    _Algorithm: string;
-    _Groups: Group[];
-    _Steps: Step[];
-    _Calculated: string;
-    _Description: string;
+    _Id: string = null;
+    _Container: Container = null;
+    _Algorithm: string = null;
+    _Groups: Group[] = [];
+    _Steps: Step[] = [];
+    _Calculated: string = null;
+    _Description: string = null;
+    constructor(id: string = generateGuid(), algorithm: string = null, calculated: string = moment().format('YYYY-MM-DDTHH:mm:ss')) {
+        this._Id = id;
+        this._Algorithm = algorithm;
+        this._Calculated = calculated;
+    }
 }
 
 export class Step {

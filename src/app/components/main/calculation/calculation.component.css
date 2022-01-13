@@ -1,0 +1,40 @@
+.body {
+    display: grid;
+    grid-template-columns: 1fr;
+    overflow-y: auto;
+    grid-gap: 1rem;
+    padding: 1rem;
+}
+
+.algorithm-overview {
+    background-color: white;
+    height: 100%;
+    border-radius: 3px;
+    overflow: hidden;
+}
+
+.algorithm-overview .headline {
+    font-size: 1.5rem;
+    padding: 2rem 2rem .5rem 2rem;
+    background-color: #ffffff;
+    color: #363636;
+}
+
+.algorithm-overview .description {
+    padding: 0px 2rem 1rem 2rem;
+    /* background-color: #747474; */
+    color: #444444;
+    font-weight: 100;
+}
+
+@media screen and (min-width: 900px) {
+    .body {
+        grid-template-columns: 1fr 1fr;
+    }
+}
+
+@media screen and (min-width: 1200px) {
+    .body {
+        grid-template-columns: 1fr 1fr 1fr;
+    }
+}

@@ -5,6 +5,21 @@ export function generateGuid() {
     });
 }
 
+export const algorithms = [
+    {
+        title: 'All In One Row',
+        description: 'Dieser Algorithmus sortiert alle Güter an der linken Seite des Containers direkt voreinander.'
+    },
+    {
+        title: 'Start Left Bottom',
+        description: 'Dieser Algorithmus sortiert alle Güter entsprechend der vorgegebenen Sortierung, schiebt die Güter möglichst weit hinter und ermöglicht das Stapeln'
+    },
+    {
+        title: 'Super-Flo',
+        description: 'Dieser Algorithmus ...'
+    }
+]
+
 export function compare(a: number | string, b: number | string, isAsc: boolean = true) {
     if (!a) a = '';
     if (!b) b = '';

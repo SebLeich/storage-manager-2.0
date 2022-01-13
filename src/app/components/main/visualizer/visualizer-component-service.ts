@@ -269,10 +269,12 @@ export class VisualizerComponentService {
     private _setUp() {
         this.scene.background = new ThreeJS.Color('rgb(238,238,238)');
         this.renderer.domElement.id = this._sceneBodyId;
+        /*
         this._httpClient.get('/assets/defaultSolution.json').subscribe((solution: Solution) => {
             this.defaultSolution = solution;
             this._dataService.setCurrentSolution(solution);
         });
+        */
         this._subscriptions.push(...[
             combineLatest([this.hoverIntersections$, this.visualizerWrapper$]).subscribe(([event, wrapper]) => {
                 this._highlightIntersections(event, wrapper);

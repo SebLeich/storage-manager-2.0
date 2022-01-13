@@ -1,0 +1,19 @@
+<div class="body">
+
+    <div class="algorithm-overview" *ngFor="let algorithm of algorithms">
+
+        <div class="headline">
+            {{algorithm.title}}
+        </div>
+
+        <div class="description">
+            {{algorithm.description}}
+        </div>
+
+        <button mat-raised-button color="primary" (click)="calculationService.allInOneRow()">
+            Berechnen
+        </button>
+
+    </div>
+
+</div>
