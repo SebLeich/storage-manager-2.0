@@ -20,13 +20,15 @@ export class CalculationService {
         solution._Container = new Container(height, width, 0);
         let currentPosition = { x: 0, y: 0, z: 0 };
         let sequenceNumber = 0;
-        for(let order of orders){
-          let good = new Good(currentPosition.x, currentPosition.y, currentPosition.z, sequenceNumber, order.description);
-          good.setOrderDimensions(order);
-          solution._Container._Goods.push(good);
-          sequenceNumber++;
-          currentPosition.z += order.length;
-          solution._Container._Length += order.length;
+        for (let order of orders) {
+          for (let i = 0; i < order.quantity; i++) {
+            let good = new Good(currentPosition.x, currentPosition.y, currentPosition.z, sequenceNumber, order.description);
+            good.setOrderDimensions(order);
+            solution._Container._Goods.push(good);
+            sequenceNumber++;
+            currentPosition.z += order.length;
+            solution._Container._Length += order.length;
+          }
         }
         solution._Groups = groups;
         console.log(solution);
