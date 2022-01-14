@@ -2,7 +2,8 @@
     display: grid;
     grid-template-columns: 1fr;
     overflow-y: auto;
-    grid-gap: 1rem;
+    grid-column-gap: 1rem;
+    grid-row-gap: 1rem;
     padding: 1rem;
 }
 
@@ -11,20 +12,61 @@
     height: 100%;
     border-radius: 3px;
     overflow: hidden;
+    display: flex;
+    flex-direction: column;
 }
 
 .algorithm-overview .headline {
     font-size: 1.5rem;
-    padding: 2rem 2rem .5rem 2rem;
+    padding: 2rem 2rem 0.5rem 2rem;
     background-color: #ffffff;
     color: #363636;
 }
 
 .algorithm-overview .description {
     padding: 0px 2rem 1rem 2rem;
-    /* background-color: #747474; */
     color: #444444;
     font-weight: 100;
+}
+
+.content {
+    display: flex;
+    flex-direction: column;
+    padding: 0px 2rem;
+    margin-bottom: 2rem;
+    height: 100%;
+}
+
+.footer-button-wrapper {
+    vertical-align: top;
+}
+
+.footer-button {
+    margin-top: .5rem;
+    margin-right: .5rem;
+    display: inline-block;
+}
+
+.progress-status {
+    flex: 1;
+    padding: 1rem;
+    align-items: center;
+    justify-content: center;
+    display: flex;
+    flex-direction: column;
+}
+
+.calculation-error {
+    margin-top: 0.2rem;
+    background-color: #ffd2d2;
+    color: #b01010;
+    padding: 0.4rem 0.5rem;
+    width: 100%;
+    border-radius: 2px;
+}
+
+.width {
+    width: 100%;
 }
 
 @media screen and (min-width: 900px) {

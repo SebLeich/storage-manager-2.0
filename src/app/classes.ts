@@ -1,5 +1,5 @@
 import * as moment from "moment";
-import { algorithms, generateGuid } from "./globals";
+import { generateGuid } from "./globals";
 
 export class Container {
     _Height: number = null;

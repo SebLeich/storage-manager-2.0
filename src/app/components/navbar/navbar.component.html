@@ -1,6 +1,7 @@
 <div class="body">
 
-   <div class="option-wrapper">
+   <div class="option-wrapper disabled">
+
       <div class="option" routerLink="route-planning" [class.active]="router.url === '/route-planning'">
 
          <mat-icon class="icon">map</mat-icon>
@@ -27,7 +28,7 @@
       </div>
    </div>
 
-   <div class="option-wrapper">
+   <div class="option-wrapper" [class.disabled]="!(dataService.currentSolutionAvailable$|async)">
       <div class="option" routerLink="visualizer" [class.active]="router.url === '/visualizer'">
 
          <mat-icon class="icon">view_in_ar</mat-icon>

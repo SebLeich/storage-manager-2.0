@@ -5,18 +5,25 @@ export function generateGuid() {
     });
 }
 
+export enum ALGORITHMS {
+    ALL_IN_ONE_ROW, START_LEFT_BOTTOM, SUPER_FLO
+}
+
 export const algorithms = [
     {
         title: 'All In One Row',
-        description: 'Dieser Algorithmus sortiert alle Güter an der linken Seite des Containers direkt voreinander.'
+        description: 'Dieser Algorithmus sortiert alle Güter an der linken Seite des Containers direkt voreinander.',
+        code: ALGORITHMS.ALL_IN_ONE_ROW
     },
     {
         title: 'Start Left Bottom',
-        description: 'Dieser Algorithmus sortiert alle Güter entsprechend der vorgegebenen Sortierung, schiebt die Güter möglichst weit hinter und ermöglicht das Stapeln'
+        description: 'Dieser Algorithmus sortiert alle Güter entsprechend der vorgegebenen Sortierung, schiebt die Güter möglichst weit hinter und ermöglicht das Stapeln',
+        code: ALGORITHMS.START_LEFT_BOTTOM
     },
     {
         title: 'Super-Flo',
-        description: 'Dieser Algorithmus ...'
+        description: 'Dieser Algorithmus ...',
+        code: ALGORITHMS.SUPER_FLO
     }
 ]
 

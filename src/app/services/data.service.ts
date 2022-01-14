@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, combineLatest, ReplaySubject } from 'rxjs';
+import { BehaviorSubject, combineLatest, Observable, ReplaySubject } from 'rxjs';
 import { distinctUntilChanged, map, take } from 'rxjs/operators';
 import { Container, Dimension, Good, Group, Order, Product, Solution } from '../classes';
 
@@ -8,21 +8,22 @@ import { Container, Dimension, Good, Group, Order, Product, Solution } from '../
 })
 export class DataService {
 
-  private _currentSolution: ReplaySubject<Solution> = new ReplaySubject<Solution>(1);
+  private _currentSolution: BehaviorSubject<Solution> = new BehaviorSubject<Solution>(null);
   currentSolution$ = this._currentSolution.pipe(distinctUntilChanged());
   currentGroups$ = this._currentSolution.pipe(map(x => x._Groups));
+  currentSolutionAvailable$ = this._currentSolution.pipe(map(x => x? true: false));
 
   private _groups = new BehaviorSubject<Group[]>([]);
   groups$ = this._groups.asObservable();
-  get groups(){
+  get groups() {
     return this._groups.value;
   }
 
   private _orders = new BehaviorSubject<Order[]>([]);
   orders$ = this._orders.asObservable();
 
-  private _containerWidth = new ReplaySubject<number>(1);
-  private _containerHeight = new ReplaySubject<number>(1);
+  private _containerWidth = new BehaviorSubject<number>(null);
+  private _containerHeight = new BehaviorSubject<number>(null);
   containerWidth$ = this._containerWidth.asObservable();
   containerHeight$ = this._containerHeight.asObservable();
   containerValid$ = combineLatest([this.containerHeight$, this.containerWidth$]).pipe(map(([height, width]) => typeof height === 'number' && typeof width === 'number' && height > 0 && width > 0));
@@ -31,6 +32,7 @@ export class DataService {
   products$ = this._products.asObservable();
 
   private _solutions: BehaviorSubject<Solution[]> = new BehaviorSubject<Solution[]>([]);
+  solutions$ = this._solutions.asObservable();
 
   private _unit: BehaviorSubject<'mm' | 'cm' | 'dm' | 'm'> = new BehaviorSubject('mm');
   unit$ = this._unit.asObservable();
@@ -69,6 +71,10 @@ export class DataService {
       element.click();
       document.body.removeChild(element);
     });
+  }
+
+  getSolutionByAlgorithm(algorithm: string): Observable<Solution> {
+    return this._solutions.pipe(map(x => x.find(y => y._Algorithm === algorithm)));
   }
 
   setContainerHeight = (height: number) => this._containerHeight.next(height);

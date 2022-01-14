@@ -1,17 +1,22 @@
 import { Component, OnInit } from '@angular/core';
-import { algorithms } from 'src/app/globals';
-import { CalculationService } from 'src/app/services/calculation.service';
+import { showAnimation } from 'src/app/animations';
+import { ALGORITHM_CALCULATION_STATUS } from './calculation-component.classes';
+import { CalculationComponentService } from './calculation-component.service';
 
 @Component({
   selector: 'app-calculation',
   templateUrl: './calculation.component.html',
-  styleUrls: ['./calculation.component.css']
+  styleUrls: ['./calculation.component.css'],
+  providers: [
+    CalculationComponentService
+  ],
+  animations: [ showAnimation ]
 })
 export class CalculationComponent implements OnInit {
 
-  algorithms = algorithms;
+  ALGORITHM_CALCULATION_STATUS = ALGORITHM_CALCULATION_STATUS;
 
-  constructor(public calculationService: CalculationService) { }
+  constructor(public calculationComponentService: CalculationComponentService) { }
 
   ngOnInit(): void {
   }

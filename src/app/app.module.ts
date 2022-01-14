@@ -38,6 +38,7 @@ import { MatSelectModule } from '@angular/material/select';
 import { SelectProductComponent } from './components/select-product/select-product.component';
 import { SelectUnitComponent } from './components/select-unit/select-unit.component';
 import { CalculationComponent } from './components/main/calculation/calculation.component';
+import { CalculationErrorPipe } from './pipes/calculation-error.pipe';
 
 @NgModule({
   declarations: [
@@ -58,7 +59,8 @@ import { CalculationComponent } from './components/main/calculation/calculation.
     SelectGroupComponent,
     SelectProductComponent,
     SelectUnitComponent,
-    CalculationComponent
+    CalculationComponent,
+    CalculationErrorPipe
   ],
   imports: [
     BrowserModule,

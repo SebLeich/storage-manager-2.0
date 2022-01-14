@@ -18,6 +18,11 @@
     overflow: hidden;
 }
 
+.option-wrapper.disabled {
+    opacity: .2;
+    pointer-events: none;
+}
+
 .option {
     display: flex;
     flex-direction: column;
