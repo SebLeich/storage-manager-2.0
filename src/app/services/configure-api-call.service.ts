@@ -1,7 +1,9 @@
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, combineLatest } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { BehaviorSubject, combineLatest, Observable } from 'rxjs';
+import { filter, map, switchMap, take } from 'rxjs/operators';
 import { BasicAuthConfiguration, Configuration, JWTTokenLoginConfiguration, StolenJWTTokenConfiguration } from '../classes/api-call-configuration';
+import { ApiAuthorizationResponse } from '../classes/api-response';
 import { API_CALL_AUTHORIZATION, CONFIGURATION_ERROR } from '../globals/api-call-configuration';
 
 @Injectable({
@@ -50,7 +52,23 @@ export class ConfigureApiCallService {
     return { valid: errors.length === 0, invalid: errors.length > 0, errors: errors };
   }));
 
-  constructor() { }
+  constructor(
+    private _httpClient: HttpClient
+  ) { }
+
+  loginBearerToken(): Observable<ApiAuthorizationResponse> {
+    return combineLatest([this.authType$, this.configuration$]).pipe(
+      take(1),
+      filter(([authType, configuration]: [API_CALL_AUTHORIZATION, Configuration]) => authType === API_CALL_AUTHORIZATION.JWT_BEARER_LOGIN),
+      switchMap(([authType, configuration]: [API_CALL_AUTHORIZATION, JWTTokenLoginConfiguration]) => {
+        return this._httpClient.post(configuration.loginEndpoint, new HttpParams()
+          .set('userName', configuration.userName)
+          .set('password', configuration.password)
+          .set('grant_type', 'password')
+        );
+      })
+    ) as Observable<ApiAuthorizationResponse>;
+  }
 
   setAuthType = (type: API_CALL_AUTHORIZATION) => this._authType.next(type);
   setConfiguration = (configuration: Configuration) => this._configuration.next(configuration);

@@ -1,0 +1,14 @@
+.response-preview {
+    margin-bottom: 0.5rem;
+    padding: 1rem;
+}
+
+.response-preview.success {
+    background-color: #f4fff4;
+    border-radius: 3px;
+}
+
+.response-preview.error {
+    background-color: #fff4f4;
+    border-radius: 3px;
+}

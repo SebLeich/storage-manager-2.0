@@ -1,8 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { MatDialogRef } from '@angular/material/dialog';
-import { Configuration } from 'src/app/classes/api-call-configuration';
-import { CONFIGURATION_FORM_GROUP_PROVIDER, FORM_GROUP_PROVIDER } from 'src/app/interfaces';
-import { ConfigureApiCallService } from 'src/app/services/configure-api-call.service';
+import { CONFIGURATION_FORM_GROUP_PROVIDER, FORM_GROUP_PROVIDER, SUBMIT_CONFIGURATION_PROVIDER } from 'src/app/interfaces';
 import { ApiCallConfiguratorComponentService } from './api-call-configuration-dialog-component.service';
 
 @Component({
@@ -12,13 +10,13 @@ import { ApiCallConfiguratorComponentService } from './api-call-configuration-di
   providers: [
     ApiCallConfiguratorComponentService,
     { provide: FORM_GROUP_PROVIDER, useExisting: ApiCallConfiguratorComponentService },
-    { provide: CONFIGURATION_FORM_GROUP_PROVIDER, useExisting: ApiCallConfiguratorComponentService }
+    { provide: CONFIGURATION_FORM_GROUP_PROVIDER, useExisting: ApiCallConfiguratorComponentService },
+    { provide: SUBMIT_CONFIGURATION_PROVIDER, useExisting: ApiCallConfiguratorComponentService }
   ]
 })
 export class ApiCallConfiguratorDialogComponent implements OnInit {
 
   constructor(
-    private _configureApiCallService: ConfigureApiCallService,
     private _apiCallConfiguratorComponentService: ApiCallConfiguratorComponentService,
     private _ref: MatDialogRef<ApiCallConfiguratorDialogComponent>
   ) { }
@@ -29,12 +27,7 @@ export class ApiCallConfiguratorDialogComponent implements OnInit {
   }
 
   takeConfiguration() {
-    if (this._apiCallConfiguratorComponentService.configurationFormGroup) {
-      let config = this._apiCallConfiguratorComponentService.configurationFormGroup.value as Configuration;
-      config.calculationEndpoint = this._apiCallConfiguratorComponentService.formGroup.controls['endpoint'].value;
-      this._configureApiCallService.setAuthType(this._apiCallConfiguratorComponentService.formGroup.controls['authorization'].value);
-      this._configureApiCallService.setConfiguration(config);
-    }
+    this._apiCallConfiguratorComponentService.takeConfiguration();
     this.close();
   }
 

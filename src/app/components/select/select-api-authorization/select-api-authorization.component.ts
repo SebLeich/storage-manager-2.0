@@ -1,7 +1,7 @@
 import { Component, forwardRef, Input, OnDestroy, OnInit } from '@angular/core';
 import { ControlValueAccessor, FormControl, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { Subscription } from 'rxjs';
-import { API_CALL_AUTHORIZATION } from 'src/app/globals/api-call-configuration';
+import { apiCallAuthorizationTypeToString, API_CALL_AUTHORIZATION } from 'src/app/globals/api-call-configuration';
 import { DataService } from 'src/app/services/data.service';
 
 @Component({
@@ -20,26 +20,10 @@ export class SelectApiAuthorizationComponent implements ControlValueAccessor, On
 
   @Input() appearance: null | 'fill' | 'outline' | 'standard' = null;
 
-  valueControl: FormControl = new FormControl();
+  valueControl: FormControl = new FormControl(API_CALL_AUTHORIZATION.NO_AUTH);
 
-  authorizationTypes = Object.values(API_CALL_AUTHORIZATION).filter(x => typeof x === 'number').map(x => {
-    console.log(x);
-    let type = { display: null, type: x.valueOf() };
-    switch (x.valueOf()) {
-      case API_CALL_AUTHORIZATION.BASIC:
-        type.display = 'Basic Auth';
-        break;
-      case API_CALL_AUTHORIZATION.JWT_BEARER_LOGIN:
-        type.display = 'JWT Bearer (mit Login Endpunkt)';
-        break;
-      case API_CALL_AUTHORIZATION.OAUTH2:
-        type.display = 'OAuth2';
-        break;
-      case API_CALL_AUTHORIZATION.STOLEN_JWT_BEARER:
-        type.display = 'JWT Bearer (nur Token)';
-        break;
-    }
-    return type;
+  authorizationTypes = Object.values(API_CALL_AUTHORIZATION).filter(x => typeof x === 'number').map((x: API_CALL_AUTHORIZATION) => {
+    return { display: apiCallAuthorizationTypeToString(x), type: x.valueOf() };
   });
 
   private _subscriptions: Subscription[] = [];

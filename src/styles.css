@@ -110,6 +110,12 @@ body {
     flex: 1;
 }
 
+.dialog-content {
+    overflow-y: auto;
+    max-height: 80vh;
+    padding: 1rem 2rem;
+}
+
 .width {
     width: 100%;
 }

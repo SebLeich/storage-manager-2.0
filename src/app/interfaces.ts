@@ -26,3 +26,11 @@ export const CONFIGURATION_FORM_GROUP_PROVIDER = new InjectionToken("CONFIGURATI
 export interface IConfigurationFormGroupProvider {
     configurationFormGroup: FormGroup;
 }
+
+export const SUBMIT_CONFIGURATION_PROVIDER = new InjectionToken("SUBMIT_CONFIGURATION_PROVIDER");
+export interface ISubmitConfigurationProvider {
+    loginResponse$: Observable<any>;
+    succeeded$: Observable<boolean>;
+    setLoginResponse(succeeded: boolean, result: any);
+    takeConfiguration();
+}

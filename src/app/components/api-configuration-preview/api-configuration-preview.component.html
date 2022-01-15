@@ -1,0 +1,11 @@
+<div class="body">
+
+    <div class="endpoint">
+        {{(configureApiCallService.configuration$|async)?.calculationEndpoint}}
+    </div>
+
+    <div class="request">
+        {{configureApiCallService.authType$|async|apiAuthorizationType}}
+    </div>
+
+</div>

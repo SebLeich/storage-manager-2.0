@@ -1,12 +1,15 @@
 import { Component, ComponentFactoryResolver, Inject, Injector, OnDestroy, OnInit, ViewChild, ViewContainerRef } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
-import { Subscription } from 'rxjs';
-import { BasicAuthConfiguration, JWTTokenLoginConfiguration, OAuth2Configuration, StolenJWTTokenConfiguration } from 'src/app/classes/api-call-configuration';
+import { combineLatest, ReplaySubject, Subscription } from 'rxjs';
+import { distinctUntilChanged } from 'rxjs/operators';
+import { BasicAuthConfiguration, Configuration, JWTTokenLoginConfiguration, OAuth2Configuration, StolenJWTTokenConfiguration } from 'src/app/classes/api-call-configuration';
 import { API_CALL_AUTHORIZATION } from 'src/app/globals/api-call-configuration';
-import { CONFIGURATION_FORM_GROUP_PROVIDER, FORM_GROUP, FORM_GROUP_PROVIDER, IConfigurationFormGroupProvider, IFormGroupProvider } from 'src/app/interfaces';
-import { AccessTokenInputComponent } from '../access-token-input/access-token-input.component';
-import { EndpointInputComponent } from '../endpoint-input/endpoint-input.component';
-import { UsernamePasswordCombinationComponent } from '../username-password-combination/username-password-combination.component';
+import { CONFIGURATION_FORM_GROUP_PROVIDER, FORM_GROUP, FORM_GROUP_PROVIDER, IConfigurationFormGroupProvider, IFormGroupProvider, ISubmitConfigurationProvider, SUBMIT_CONFIGURATION_PROVIDER } from 'src/app/interfaces';
+import { ConfigureApiCallService } from 'src/app/services/configure-api-call.service';
+import { AccessTokenInputComponent } from '../dynamic-input/access-token-input/access-token-input.component';
+import { ApiLoginTestComponent } from '../dynamic-input/api-login-test/api-login-test.component';
+import { EndpointInputComponent } from '../dynamic-input/endpoint-input/endpoint-input.component';
+import { UsernamePasswordCombinationComponent } from '../dynamic-input/username-password-combination/username-password-combination.component';
 
 @Component({
   selector: 'app-api-call-configurator',
@@ -15,19 +18,24 @@ import { UsernamePasswordCombinationComponent } from '../username-password-combi
 })
 export class ApiCallConfiguratorComponent implements OnDestroy, OnInit {
 
-  @ViewChild('dynamicContent', { read: ViewContainerRef }) private _ref: ViewContainerRef;
+  @ViewChild('dynamicContent', { read: ViewContainerRef }) public set ref(ref: ViewContainerRef){
+    this._ref.next(ref);
+  }
+  private _ref = new ReplaySubject<ViewContainerRef>(1);
 
   private _subscriptions: Subscription[] = [];
 
   constructor(
     @Inject(FORM_GROUP_PROVIDER) public formGroupProvider: IFormGroupProvider,
     @Inject(CONFIGURATION_FORM_GROUP_PROVIDER) private _configurationFormGroupProvider: IConfigurationFormGroupProvider,
+    @Inject(SUBMIT_CONFIGURATION_PROVIDER) private _submitConfigurationProvider: ISubmitConfigurationProvider,
     private _formBuilder: FormBuilder,
-    private _componentFactoryResolver: ComponentFactoryResolver
+    private _componentFactoryResolver: ComponentFactoryResolver,
+    private _configureApiCallService: ConfigureApiCallService
   ) {
     this.formGroupProvider.formGroup = this._formBuilder.group({
       endpoint: null,
-      authorization: null
+      authorization: API_CALL_AUTHORIZATION.NO_AUTH
     });
   }
 
@@ -38,12 +46,22 @@ export class ApiCallConfiguratorComponent implements OnDestroy, OnInit {
 
   ngOnInit(): void {
     this._subscriptions.push(...[
-      this.formGroupProvider.formGroup.controls['authorization']
-        .valueChanges
-        .subscribe((type: API_CALL_AUTHORIZATION) => {
+      combineLatest([this._ref, this.formGroupProvider.formGroup.controls['authorization'].valueChanges.pipe(distinctUntilChanged())])
+        .subscribe(([ref, type]: [ViewContainerRef, API_CALL_AUTHORIZATION]) => {
           this.setConfigurationForm(type);
-          this.setDynamicInner(type);
-        })
+          this.setDynamicInner(ref, type);
+        }),
+      combineLatest([this._ref, this._configureApiCallService.authType$, this._configureApiCallService.configuration$]).subscribe({
+        next: ([ref, authType, configuration]: [ViewContainerRef, API_CALL_AUTHORIZATION, Configuration]) => {
+          this.formGroupProvider.formGroup.patchValue({
+            endpoint: configuration?.calculationEndpoint,
+            authorization: authType
+          });
+          this.setConfigurationForm(authType);
+          this.setDynamicInner(ref, authType);
+          if(this._configurationFormGroupProvider.configurationFormGroup) this._configurationFormGroupProvider.configurationFormGroup.patchValue(configuration);
+        }
+      })
     ]);
   }
 
@@ -64,28 +82,35 @@ export class ApiCallConfiguratorComponent implements OnDestroy, OnInit {
     }
   }
 
-  setDynamicInner(type: API_CALL_AUTHORIZATION) {
-    this._ref.clear();
+  setDynamicInner(ref: ViewContainerRef, type: API_CALL_AUTHORIZATION) {
+    if(!ref) return;
+    ref.clear();
     if (typeof type !== 'number') return;
     let injector = Injector.create({
       providers: [
-        { provide: FORM_GROUP, useValue: this._configurationFormGroupProvider.configurationFormGroup }
+        { provide: FORM_GROUP, useValue: this._configurationFormGroupProvider.configurationFormGroup },
+        { provide: SUBMIT_CONFIGURATION_PROVIDER, useValue: this._submitConfigurationProvider }
       ]
     });
     let index = 0;
     if (type === API_CALL_AUTHORIZATION.BASIC || type === API_CALL_AUTHORIZATION.JWT_BEARER_LOGIN) {
       let factory = this._componentFactoryResolver.resolveComponentFactory(UsernamePasswordCombinationComponent);
-      this._ref.createComponent<UsernamePasswordCombinationComponent>(factory, index, injector);
+      ref.createComponent<UsernamePasswordCombinationComponent>(factory, index, injector);
       index++;
     }
     if (type === API_CALL_AUTHORIZATION.JWT_BEARER_LOGIN) {
       let factory = this._componentFactoryResolver.resolveComponentFactory(EndpointInputComponent);
-      this._ref.createComponent<EndpointInputComponent>(factory, index, injector);
+      ref.createComponent<EndpointInputComponent>(factory, index, injector);
       index++;
     }
     if (type === API_CALL_AUTHORIZATION.STOLEN_JWT_BEARER) {
       let factory = this._componentFactoryResolver.resolveComponentFactory(AccessTokenInputComponent);
-      this._ref.createComponent<AccessTokenInputComponent>(factory, index, injector);
+      ref.createComponent<AccessTokenInputComponent>(factory, index, injector);
+      index++;
+    }
+    if (type === API_CALL_AUTHORIZATION.BASIC || type === API_CALL_AUTHORIZATION.JWT_BEARER_LOGIN) {
+      let factory = this._componentFactoryResolver.resolveComponentFactory(ApiLoginTestComponent);
+      ref.createComponent<ApiLoginTestComponent>(factory, index, injector);
       index++;
     }
   }
