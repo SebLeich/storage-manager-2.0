@@ -33,12 +33,18 @@ import { SortedFormArrayPipe } from './pipes/sorted-form-array.pipe';
 import { MatSortModule } from '@angular/material/sort';
 import { MatInputModule } from '@angular/material/input';
 import { MatCheckboxModule } from '@angular/material/checkbox';
-import { SelectGroupComponent } from './components/select-group/select-group.component';
 import { MatSelectModule } from '@angular/material/select';
-import { SelectProductComponent } from './components/select-product/select-product.component';
-import { SelectUnitComponent } from './components/select-unit/select-unit.component';
+import { SelectUnitComponent } from './components/select/select-unit/select-unit.component';
 import { CalculationComponent } from './components/main/calculation/calculation.component';
 import { CalculationErrorPipe } from './pipes/calculation-error.pipe';
+import { ApiCallConfiguratorDialogComponent } from './components/dialog/api-call-configurator-dialog/api-call-configurator-dialog.component';
+import { SelectGroupComponent } from './components/select/select-group/select-group.component';
+import { SelectProductComponent } from './components/select/select-product/select-product.component';
+import { SelectApiAuthorizationComponent } from './components/select/select-api-authorization/select-api-authorization.component';
+import { ApiCallConfiguratorComponent } from './components/api-call-configurator/api-call-configurator.component';
+import { UsernamePasswordCombinationComponent } from './components/username-password-combination/username-password-combination.component';
+import { EndpointInputComponent } from './components/endpoint-input/endpoint-input.component';
+import { AccessTokenInputComponent } from './components/access-token-input/access-token-input.component';
 
 @NgModule({
   declarations: [
@@ -60,7 +66,13 @@ import { CalculationErrorPipe } from './pipes/calculation-error.pipe';
     SelectProductComponent,
     SelectUnitComponent,
     CalculationComponent,
-    CalculationErrorPipe
+    CalculationErrorPipe,
+    ApiCallConfiguratorDialogComponent,
+    SelectApiAuthorizationComponent,
+    ApiCallConfiguratorComponent,
+    UsernamePasswordCombinationComponent,
+    EndpointInputComponent,
+    AccessTokenInputComponent
   ],
   imports: [
     BrowserModule,

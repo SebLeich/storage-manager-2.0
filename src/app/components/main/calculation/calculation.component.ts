@@ -1,5 +1,8 @@
 import { Component, OnInit } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
 import { showAnimation } from 'src/app/animations';
+import { ConfigureApiCallService } from 'src/app/services/configure-api-call.service';
+import { ApiCallConfiguratorDialogComponent } from '../../dialog/api-call-configurator-dialog/api-call-configurator-dialog.component';
 import { ALGORITHM_CALCULATION_STATUS } from './calculation-component.classes';
 import { CalculationComponentService } from './calculation-component.service';
 
@@ -10,13 +13,23 @@ import { CalculationComponentService } from './calculation-component.service';
   providers: [
     CalculationComponentService
   ],
-  animations: [ showAnimation ]
+  animations: [showAnimation]
 })
 export class CalculationComponent implements OnInit {
 
   ALGORITHM_CALCULATION_STATUS = ALGORITHM_CALCULATION_STATUS;
 
-  constructor(public calculationComponentService: CalculationComponentService) { }
+  constructor(
+    public calculationComponentService: CalculationComponentService,
+    private _matDialog: MatDialog,
+    public configureApiCallService: ConfigureApiCallService
+  ) { }
+
+  configureAPICall() {
+    this._matDialog.open(ApiCallConfiguratorDialogComponent, {
+      panelClass: 'no-padding-dialog'
+    });
+  }
 
   ngOnInit(): void {
   }

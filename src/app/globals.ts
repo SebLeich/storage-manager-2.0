@@ -1,3 +1,5 @@
+import { InjectionToken } from "@angular/core";
+
 export function generateGuid() {
     return 'axxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
         var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
@@ -6,7 +8,7 @@ export function generateGuid() {
 }
 
 export enum ALGORITHMS {
-    ALL_IN_ONE_ROW, START_LEFT_BOTTOM, SUPER_FLO
+    ALL_IN_ONE_ROW, START_LEFT_BOTTOM, SUPER_FLO, AI_SUPPORTED_SOLVER
 }
 
 export const algorithms = [
@@ -24,6 +26,11 @@ export const algorithms = [
         title: 'Super-Flo',
         description: 'Dieser Algorithmus ...',
         code: ALGORITHMS.SUPER_FLO
+    },
+    {
+        title: 'AI Supported Solver',
+        description: 'Dieser Algorithmus ...',
+        code: ALGORITHMS.AI_SUPPORTED_SOLVER
     }
 ]
 

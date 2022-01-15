@@ -1,5 +1,35 @@
 <div class="body" @show>
 
+    <div class="algorithm-overview" (click)="configureAPICall()">
+
+        <div class="headline">
+            Eigene API verwenden
+        </div>
+
+        <div class="description">
+            Konfigurieren Sie einen eigenen API-Call. Die Engine kann RESTful Web-Interfaces ansprechen und unterstützt Authorization (Basic, JWT Bearer Token, OAuth2), Model-Crawling, Model-Mapping und Requests gegen localhost.
+        </div>
+
+        <div class="content">
+
+
+
+            <div class="footer-button-wrapper">
+
+                <button class="footer-button" mat-raised-button color="primary" [disabled]="(configureApiCallService.configurationValid$|async)?.invalid ?? true">
+                    Daten senden
+                </button>
+    
+                <button class="footer-button" mat-raised-button color="accent">
+                    Visualisieren
+                </button>
+
+            </div>
+            
+        </div>
+
+    </div>
+
     <div class="algorithm-overview" *ngFor="let wrapper of calculationComponentService.algorithms">
 
         <div class="headline">
@@ -71,7 +101,7 @@
                     Berechnen
                 </button>
     
-                <button class="footer-button" mat-raised-button color="primary" (click)="calculationComponentService.visualizeSolution(wrapper.solution)" [disabled]="wrapper.status !== ALGORITHM_CALCULATION_STATUS.CALCULATED">
+                <button class="footer-button" mat-raised-button color="accent" (click)="calculationComponentService.visualizeSolution(wrapper.solution)" [disabled]="wrapper.status !== ALGORITHM_CALCULATION_STATUS.CALCULATED">
                     Visualisieren
                 </button>
 

@@ -1,0 +1,29 @@
+<div class="body dialog-body">
+
+    <div class="dialog-nav-bar">
+
+        <mat-icon class="icon">build</mat-icon>
+        <span class="text">
+            API Request konfigurieren
+        </span>
+        <button mat-icon-button color="warn" (click)="close()">
+            <mat-icon>clear</mat-icon>
+        </button>
+
+    </div>
+
+    <div class="content">
+
+        <app-api-call-configurator></app-api-call-configurator>
+
+    </div>
+
+    <div class="footer">
+
+        <button mat-raised-button color="primary" (click)="takeConfiguration()">
+            Übernehmen
+        </button>
+
+    </div>
+
+</div>

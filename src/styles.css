@@ -70,7 +70,7 @@ body {
     width: 100%;
 }
 
-.smgr-table input[type='number'] {
+.smgr-table input[type="number"] {
     width: 4rem;
 }
 
@@ -87,6 +87,31 @@ body {
     padding: 0.5rem;
     font-size: 1rem;
     outline: none;
+}
+
+.no-padding-dialog > .mat-dialog-container {
+    padding: 0px;
+}
+
+.dialog-nav-bar {
+    display: flex;
+    align-items: center;
+    padding: .8rem 1rem;
+}
+
+.dialog-nav-bar .icon {
+    margin-right: 1rem;
+    color: #5c5c5c;
+}
+
+.dialog-nav-bar .text {
+    font-size: 1.2rem;
+    margin-right: 1rem;
+    flex: 1;
+}
+
+.width {
+    width: 100%;
 }
 
 /* width */

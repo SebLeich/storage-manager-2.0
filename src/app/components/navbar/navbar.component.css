@@ -36,12 +36,16 @@
 }
 
 .option.active {
-    background-color: rgba(255, 255, 255, 0.2);
+    background-color: #0097a7;
 }
 
 .option:hover {
     background-color: rgba(255, 255, 255, 0.1);
     transform: scale(1.05);
+}
+
+.option.active:hover {
+    background-color: #00a791;
 }
 
 .option .icon {

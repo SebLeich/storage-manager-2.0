@@ -10,13 +10,13 @@ export class CalculationErrorPipe implements PipeTransform {
     switch (code) {
 
       case CALCULATION_ERROR.CONTAINER_NOT_READY:
-        return 'der Container ist nicht bereit für die Berechnung';
+        return 'Der Container ist nicht bereit für die Berechnung: es müssen Höhe und Breite angegeben werden und größer als 0 sein.';
 
       case CALCULATION_ERROR.ALGORITHM_NOT_IMPLEMENTED:
-        return 'der Algorithmus ist momentan nicht verfügbar';
+        return 'Der Algorithmus ist momentan nicht verfügbar.';
 
       default:
-        return `unbekannter Fehler (${code})`
+        return `Unbekannter Fehler (Code: ${code})`
     }
   }
 

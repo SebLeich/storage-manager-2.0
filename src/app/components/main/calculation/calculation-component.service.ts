@@ -1,7 +1,7 @@
 import { Injectable } from "@angular/core";
 import { Router } from "@angular/router";
-import { combineLatest, of, ReplaySubject, throwError, timer } from "rxjs";
-import { catchError, map, switchMap, take, tap } from "rxjs/operators";
+import { combineLatest, of, throwError, timer } from "rxjs";
+import { catchError, switchMap, take } from "rxjs/operators";
 import { Solution } from "src/app/classes";
 import { ALGORITHMS, algorithms } from "src/app/globals";
 import { CalculationService } from "src/app/services/calculation.service";
