@@ -45,12 +45,14 @@ export class DataService {
 
   addGroup(group: Group) {
     let existing = this._groups.value;
+    if(existing.findIndex(x => x._Desc === group._Desc) > -1) return;
     if (typeof group._Id !== 'number' || existing.findIndex(x => x._Id === group._Id) > -1) group._Id = Math.max(...existing.map(x => x._Id), 0) + 1;
     this._groups.next([...existing, group]);
   }
 
   addGroups(groups: Group[]) {
     let existing = this._groups.value;
+    groups = groups.filter(x => existing.findIndex(y => y._Desc === x._Desc) === -1);
     for (let group of groups) {
       if (typeof group._Id !== 'number' || existing.findIndex(x => x._Id === group._Id) > -1) group._Id = Math.max(...existing.map(x => x._Id), 0) + 1;
     }

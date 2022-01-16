@@ -144,9 +144,11 @@ export class VisualizerComponentService {
         if (wrapper) this._selectedElement.next(wrapper);
     }
 
-    setSceneDimensions(width: number, height: number) {
-        this.camera = new ThreeJS.PerspectiveCamera(20, width / height, 1, 10000000);
-        this.camera.position.set(12000, 5000, 10000);
+    setSceneDimensions(width: number, height: number, preventCameraPositionReset: boolean = false) {
+        if(!this.camera || !preventCameraPositionReset) {
+            this.camera = new ThreeJS.PerspectiveCamera(20, width / height, 1, 10000000);
+            this.camera.position.set(12000, 5000, 10000);
+        }
         this.camera.aspect = width / height;
         this.camera.updateProjectionMatrix();
         this.renderer.setSize(width, height);

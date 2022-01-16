@@ -44,7 +44,7 @@ export class CalculationComponentService {
         })).subscribe(this._calculationCallback);
     }
 
-    visualizeSolution(solution: Solution){
+    visualizeSolution(solution: Solution) {
         this._dataService.setCurrentSolution(solution);
         this._router.navigate(['/visualizer']);
     }
@@ -53,7 +53,6 @@ export class CalculationComponentService {
         next: ([wrapper, solution]: [AlgorihmStatusWrapper, Solution]) => {
             wrapper.solution = solution;
             wrapper.status = ALGORITHM_CALCULATION_STATUS.CALCULATED;
-            console.log(wrapper, solution);
         },
         error: (error: { wrapper: AlgorihmStatusWrapper, errorCode: CALCULATION_ERROR }) => {
             error.wrapper.status = ALGORITHM_CALCULATION_STATUS.ERROR;
@@ -74,15 +73,17 @@ export class CalculationComponentService {
                 'solution': null
             } as AlgorihmStatusWrapper)
         }
-        this._dataService.solutions$.pipe(take(1)).subscribe((solutions: Solution[]) => {
-            for (let solution of solutions) {
-                let wrapper = this.algorithms.find(x => x.algorithm.title === solution._Algorithm);
-                if(wrapper) {
-                    wrapper.status = ALGORITHM_CALCULATION_STATUS.CALCULATED;
-                    wrapper.solution = solution;
+        this._dataService.solutions$
+            .pipe(take(1))
+            .subscribe((solutions: Solution[]) => {
+                for (let solution of solutions) {
+                    let wrapper = this.algorithms.find(x => x.algorithm.title === solution._Algorithm);
+                    if (wrapper) {
+                        wrapper.status = ALGORITHM_CALCULATION_STATUS.CALCULATED;
+                        wrapper.solution = solution;
+                    }
                 }
-            }
-        });
+            });
     }
 
 }

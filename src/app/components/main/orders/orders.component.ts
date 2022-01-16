@@ -1,7 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormArray, FormControl, FormGroup } from '@angular/forms';
 import { SortDirection } from '@angular/material/sort';
-import { Subscription } from 'rxjs';
+import { interval, Subscription } from 'rxjs';
 import { filter, map } from 'rxjs/operators';
 import { showAnimation } from 'src/app/animations';
 import { Order, Product } from 'src/app/classes';

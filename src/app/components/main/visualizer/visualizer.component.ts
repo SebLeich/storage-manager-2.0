@@ -35,7 +35,7 @@ export class VisualizerComponent implements OnDestroy, OnInit {
   ngOnInit(): void {
     this._subscriptions.push(...[
       this.visualizerComponentService.resized$.pipe(switchMap(() => this.visualizerComponentService.visualizerWrapper$.pipe(take(1)))).subscribe((ref: ElementRef<HTMLDivElement>) => {
-        this.visualizerComponentService.setSceneDimensions(ref.nativeElement.clientWidth, ref.nativeElement.clientHeight);
+        this.visualizerComponentService.setSceneDimensions(ref.nativeElement.clientWidth, ref.nativeElement.clientHeight, true);
       })
     ]);
   }

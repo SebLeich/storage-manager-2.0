@@ -76,7 +76,6 @@ export class OrdersComponentService {
             this.formGroup.controls['unit'].valueChanges.pipe(distinctUntilChanged()).subscribe((value) => this._dataService.setUnit(value)),
             this._dataService.orders$.subscribe((orders: Order[]) => {
                 this.ordersControl.clear();
-                console.log(orders);
                 for (let order of orders) {
                     let group = this._formBuilder.group(order);
                     [nameOf<Order>('height'), nameOf<Order>('length'), nameOf<Order>('width')].forEach(x => group.controls[x].setValidators(Validators.required));
