@@ -2,10 +2,10 @@ import { Component, ComponentFactoryResolver, Inject, Injector, OnDestroy, OnIni
 import { FormBuilder } from '@angular/forms';
 import { combineLatest, ReplaySubject, Subscription } from 'rxjs';
 import { distinctUntilChanged } from 'rxjs/operators';
-import { BasicAuthConfiguration, Configuration, JWTTokenLoginConfiguration, OAuth2Configuration, StolenJWTTokenConfiguration } from 'src/app/classes/api-call-configuration';
-import { API_CALL_AUTHORIZATION } from 'src/app/globals/api-call-configuration';
-import { CONFIGURATION_FORM_GROUP_PROVIDER, FORM_GROUP, FORM_GROUP_PROVIDER, IConfigurationFormGroupProvider, IFormGroupProvider, ISubmitConfigurationProvider, SUBMIT_CONFIGURATION_PROVIDER } from 'src/app/interfaces';
-import { ConfigureApiCallService } from 'src/app/services/configure-api-call.service';
+import { BasicAuthConfiguration, Configuration, JWTTokenLoginConfiguration, OAuth2Configuration, StolenJWTTokenConfiguration } from 'src/lib/automation/classes/api-call-configuration';
+import { API_CALL_AUTHORIZATION } from 'src/lib/automation/globals';
+import { ConfigureApiCallService } from 'src/lib/automation/services/configure-api-call.service';
+import { CONFIGURATION_FORM_GROUP_PROVIDER, FORM_GROUP, FORM_GROUP_PROVIDER, IConfigurationFormGroupProvider, IFormGroupProvider, ISubmitConfigurationProvider, SUBMIT_CONFIGURATION_PROVIDER } from '../../interfaces';
 import { AccessTokenInputComponent } from '../dynamic-input/access-token-input/access-token-input.component';
 import { ApiLoginTestComponent } from '../dynamic-input/api-login-test/api-login-test.component';
 import { EndpointInputComponent } from '../dynamic-input/endpoint-input/endpoint-input.component';

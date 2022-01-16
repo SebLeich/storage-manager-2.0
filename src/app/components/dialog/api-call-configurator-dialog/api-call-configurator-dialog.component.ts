@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { MatDialogRef } from '@angular/material/dialog';
-import { CONFIGURATION_FORM_GROUP_PROVIDER, FORM_GROUP_PROVIDER, SUBMIT_CONFIGURATION_PROVIDER } from 'src/app/interfaces';
+import { CONFIGURATION_FORM_GROUP_PROVIDER, FORM_GROUP_PROVIDER, SUBMIT_CONFIGURATION_PROVIDER } from 'src/lib/automation/interfaces';
 import { ApiCallConfiguratorComponentService } from './api-call-configuration-dialog-component.service';
 
 @Component({

@@ -5,7 +5,6 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { NavbarComponent } from './components/navbar/navbar.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { NgxJsonViewerModule } from 'ngx-json-viewer';
 
 import { MatIconModule } from '@angular/material/icon';
 import { MatExpansionModule } from '@angular/material/expansion';
@@ -37,18 +36,11 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatSelectModule } from '@angular/material/select';
 import { SelectUnitComponent } from './components/select/select-unit/select-unit.component';
 import { CalculationComponent } from './components/main/calculation/calculation.component';
-import { CalculationErrorPipe } from './pipes/calculation-error.pipe';
 import { ApiCallConfiguratorDialogComponent } from './components/dialog/api-call-configurator-dialog/api-call-configurator-dialog.component';
 import { SelectGroupComponent } from './components/select/select-group/select-group.component';
 import { SelectProductComponent } from './components/select/select-product/select-product.component';
-import { SelectApiAuthorizationComponent } from './components/select/select-api-authorization/select-api-authorization.component';
-import { ApiCallConfiguratorComponent } from './components/api-call-configurator/api-call-configurator.component';
-import { AccessTokenInputComponent } from './components/dynamic-input/access-token-input/access-token-input.component';
-import { EndpointInputComponent } from './components/dynamic-input/endpoint-input/endpoint-input.component';
-import { UsernamePasswordCombinationComponent } from './components/dynamic-input/username-password-combination/username-password-combination.component';
-import { ApiConfigurationPreviewComponent } from './components/api-configuration-preview/api-configuration-preview.component';
-import { ApiAuthorizationTypePipe } from './pipes/api-authorization-type.pipe';
-import { ApiLoginTestComponent } from './components/dynamic-input/api-login-test/api-login-test.component';
+import { AutomationModule } from 'src/lib/automation/automation.module';
+import { CalculationErrorPipe } from './pipes/calculation-error.pipe';
 
 @NgModule({
   declarations: [
@@ -70,22 +62,13 @@ import { ApiLoginTestComponent } from './components/dynamic-input/api-login-test
     SelectProductComponent,
     SelectUnitComponent,
     CalculationComponent,
-    CalculationErrorPipe,
     ApiCallConfiguratorDialogComponent,
-    SelectApiAuthorizationComponent,
-    ApiCallConfiguratorComponent,
-    UsernamePasswordCombinationComponent,
-    EndpointInputComponent,
-    AccessTokenInputComponent,
-    ApiConfigurationPreviewComponent,
-    ApiAuthorizationTypePipe,
-    ApiLoginTestComponent
+    CalculationErrorPipe
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     BrowserAnimationsModule,
-    NgxJsonViewerModule,
     MatIconModule,
     MatExpansionModule,
     MatTableModule,
@@ -101,7 +84,8 @@ import { ApiLoginTestComponent } from './components/dynamic-input/api-login-test
     MatInputModule,
     MatCheckboxModule,
     MatSelectModule,
-    ChartsModule
+    ChartsModule,
+    AutomationModule
   ],
   providers: [],
   bootstrap: [AppComponent]

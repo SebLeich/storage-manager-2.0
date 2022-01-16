@@ -6,7 +6,7 @@ export enum CONFIGURATION_ERROR {
     NO_AUTH_TYPE, NO_CONFIGURATION, NO_CALCULATION_ENDPOINT, NO_USERNAME, NO_PASSWORD, NO_AUTH_ENDPOINT
 }
 
-export enum JWT_TOKEN_LOGIN_VALIDATION_STATUS {
+export enum ACCESS_GRANTED_STATUS {
     NOT_TESTED, SUCCEEDED, FAILED
 }
 
@@ -14,7 +14,7 @@ export function apiCallAuthorizationTypeToString(type: API_CALL_AUTHORIZATION) {
     if (typeof type !== 'number') return null;
     switch (type.valueOf()) {
         case API_CALL_AUTHORIZATION.NO_AUTH:
-            return 'Ohne Authentisierung';
+            return 'Ohne Autorisierung';
 
         case API_CALL_AUTHORIZATION.BASIC:
             return 'Basic Auth';

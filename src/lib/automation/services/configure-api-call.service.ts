@@ -1,10 +1,10 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, combineLatest, Observable } from 'rxjs';
+import { BehaviorSubject, combineLatest, Observable, ReplaySubject } from 'rxjs';
 import { filter, map, switchMap, take } from 'rxjs/operators';
 import { BasicAuthConfiguration, Configuration, JWTTokenLoginConfiguration, StolenJWTTokenConfiguration } from '../classes/api-call-configuration';
+import { ACCESS_GRANTED_STATUS, API_CALL_AUTHORIZATION, CONFIGURATION_ERROR } from '../globals';
 import { ApiAuthorizationResponse } from '../classes/api-response';
-import { API_CALL_AUTHORIZATION, CONFIGURATION_ERROR } from '../globals/api-call-configuration';
 
 @Injectable({
   providedIn: 'root'
@@ -13,6 +13,8 @@ export class ConfigureApiCallService {
 
   private _authType = new BehaviorSubject<API_CALL_AUTHORIZATION>(null);
   private _configuration = new BehaviorSubject<Configuration>(null);
+  private _accessGrantedStatus = new BehaviorSubject<ACCESS_GRANTED_STATUS>(ACCESS_GRANTED_STATUS.NOT_TESTED);
+  private _loginResponse = new ReplaySubject<ApiAuthorizationResponse | Error>(1);
 
   public authType$ = this._authType.asObservable();
   public configuration$ = this._configuration.asObservable();
@@ -51,6 +53,8 @@ export class ConfigureApiCallService {
 
     return { valid: errors.length === 0, invalid: errors.length > 0, errors: errors };
   }));
+  public accessGrantedStatus$ = this._accessGrantedStatus.asObservable();
+  public loginResponse$ = this._loginResponse.asObservable();
 
   constructor(
     private _httpClient: HttpClient
@@ -70,6 +74,8 @@ export class ConfigureApiCallService {
     ) as Observable<ApiAuthorizationResponse>;
   }
 
+  setAccessGrantedStatus = (status: ACCESS_GRANTED_STATUS) => this._accessGrantedStatus.next(status);
   setAuthType = (type: API_CALL_AUTHORIZATION) => this._authType.next(type);
   setConfiguration = (configuration: Configuration) => this._configuration.next(configuration);
+  setLoginResponse = (response: ApiAuthorizationResponse | Error) => this._loginResponse.next(response);
 }

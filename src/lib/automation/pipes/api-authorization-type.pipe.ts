@@ -1,5 +1,5 @@
 import { Pipe, PipeTransform } from '@angular/core';
-import { apiCallAuthorizationTypeToString, API_CALL_AUTHORIZATION } from '../globals/api-call-configuration';
+import { apiCallAuthorizationTypeToString, API_CALL_AUTHORIZATION } from '../globals';
 
 @Pipe({
   name: 'apiAuthorizationType'

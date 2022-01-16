@@ -1,6 +1,6 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { FormGroup } from '@angular/forms';
-import { FORM_GROUP } from 'src/app/interfaces';
+import { FORM_GROUP } from 'src/lib/automation/interfaces';
 
 @Component({
   selector: 'app-endpoint-input',

@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { showAnimation } from 'src/app/animations';
-import { ConfigureApiCallService } from 'src/app/services/configure-api-call.service';
+import { ConfigureApiCallService } from 'src/lib/automation/services/configure-api-call.service';
 import { ApiCallConfiguratorDialogComponent } from '../../dialog/api-call-configurator-dialog/api-call-configurator-dialog.component';
 import { ALGORITHM_CALCULATION_STATUS } from './calculation-component.classes';
 import { CalculationComponentService } from './calculation-component.service';

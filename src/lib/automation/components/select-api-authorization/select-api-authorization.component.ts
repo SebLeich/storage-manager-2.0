@@ -1,8 +1,8 @@
 import { Component, forwardRef, Input, OnDestroy, OnInit } from '@angular/core';
 import { ControlValueAccessor, FormControl, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { Subscription } from 'rxjs';
-import { apiCallAuthorizationTypeToString, API_CALL_AUTHORIZATION } from 'src/app/globals/api-call-configuration';
 import { DataService } from 'src/app/services/data.service';
+import { apiCallAuthorizationTypeToString, API_CALL_AUTHORIZATION } from '../../globals';
 
 @Component({
   selector: 'app-select-api-authorization',

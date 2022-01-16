@@ -1,0 +1,14 @@
+<div class="body">
+
+    <div class="response-preview" *ngIf="configureApiCallService.loginResponse$|async" [ngClass]="{
+        'success': (configureApiCallService.accessGrantedStatus$|async) === ACCESS_GRANTED_STATUS.SUCCEEDED,
+        'error': (configureApiCallService.accessGrantedStatus$|async) === ACCESS_GRANTED_STATUS.FAILED
+    }">
+
+        <ngx-json-viewer [json]="configureApiCallService.loginResponse$|async"></ngx-json-viewer>
+
+    </div>
+
+    <button mat-raised-button color="primary" (click)="testLogin()">Test Login</button>
+
+</div>

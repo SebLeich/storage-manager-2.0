@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ConfigureApiCallService } from 'src/app/services/configure-api-call.service';
+import { ConfigureApiCallService } from '../../services/configure-api-call.service';
 
 @Component({
   selector: 'app-api-configuration-preview',
