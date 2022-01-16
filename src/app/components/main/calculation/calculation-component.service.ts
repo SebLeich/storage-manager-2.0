@@ -4,8 +4,9 @@ import { combineLatest, of, throwError, timer } from "rxjs";
 import { catchError, switchMap, take } from "rxjs/operators";
 import { Solution } from "src/app/classes";
 import { ALGORITHMS, algorithms } from "src/app/globals";
-import { CalculationService } from "src/app/services/calculation.service";
 import { DataService } from "src/app/services/data.service";
+import { AllInOneRowSolver } from "src/app/solvers/all-in-one-row";
+import { StartLeftBottomSolver } from "src/app/solvers/start-left-bottom";
 import { AlgorihmStatusWrapper, ALGORITHM_CALCULATION_STATUS, CALCULATION_ERROR } from "./calculation-component.classes";
 
 @Injectable()
@@ -14,7 +15,6 @@ export class CalculationComponentService {
     algorithms: AlgorihmStatusWrapper[] = [];
 
     constructor(
-        private _calculationService: CalculationService,
         private _dataService: DataService,
         private _router: Router
     ) {
@@ -28,7 +28,16 @@ export class CalculationComponentService {
             switch (wrapper.algorithm.code) {
                 case ALGORITHMS.ALL_IN_ONE_ROW:
                     wrapper.status = ALGORITHM_CALCULATION_STATUS.CALCULATING;
-                    return combineLatest([of(wrapper), this._calculationService.allInOneRow(wrapper.solutionDescription).pipe(catchError((errorCode) => {
+                    return combineLatest([of(wrapper), new AllInOneRowSolver(this._dataService, wrapper.solutionDescription).solve().pipe(catchError((errorCode) => {
+                        return throwError({
+                            wrapper: wrapper,
+                            errorCode: errorCode
+                        });
+                    }))]);
+
+                case ALGORITHMS.START_LEFT_BOTTOM:
+                    wrapper.status = ALGORITHM_CALCULATION_STATUS.CALCULATING;
+                    return combineLatest([of(wrapper), new StartLeftBottomSolver(this._dataService, wrapper.solutionDescription).solve().pipe(catchError((errorCode) => {
                         return throwError({
                             wrapper: wrapper,
                             errorCode: errorCode

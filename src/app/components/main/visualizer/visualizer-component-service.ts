@@ -29,11 +29,11 @@ export class VisualizerComponentService {
     hoverIntersections$ = this._hoverIntersections.pipe(debounceTime(5));
     hoveredElement$ = this._hoveredElement.asObservable();
     hoveredGood$ = combineLatest([this.container$, this.hoveredElement$]).pipe(map(([container, element]) => {
-        return element ? container._Goods.find(x => x._Id === element.goodId) : null;
+        return element ? container._Goods.find(x => x.id === element.goodId) : null;
     }));
     selectedElement$ = this._selectedElement.asObservable();
     selectedGood$ = combineLatest([this.container$, this.selectedElement$]).pipe(map(([container, element]) => {
-        return element ? container._Goods.find(x => x._Id === element.goodId) : null;
+        return element ? container._Goods.find(x => x.id === element.goodId) : null;
     }));
 
     private _sceneBodyId: string = generateGuid();
@@ -67,8 +67,8 @@ export class VisualizerComponentService {
         this.scene.add(gridHelper);
         this._addElementToScene(DataService.getContainerDimension(container), 'Container', 'bordered', null, null, null, null)
         for (var good of container._Goods) {
-            let group = groups.find(x => x._Id === good._Group);
-            this._addElementToScene(DataService.getGoodDimension(good), `${good._Desc}`, 'filled', good._SequenceNr, good._Id, group, DataService.getContainerDimension(container));
+            let group = groups.find(x => x._Id === good.group);
+            this._addElementToScene(DataService.getGoodDimension(good), `${good.desc}`, 'filled', good.sequenceNr, good.id, group, DataService.getContainerDimension(container));
         }
     }
 
@@ -81,9 +81,11 @@ export class VisualizerComponentService {
 
         let meshes = this.scene.children.filter(x => x instanceof ThreeJS.Mesh) as ThreeJS.Mesh[];
 
+        console.log(good);
+
         meshes.forEach(x => {
             let meshWrapper = this._meshes.find(y => y.mesh === x);
-            ((x as ThreeJS.Mesh).material as ThreeJS.MeshBasicMaterial).color.set(meshWrapper ? meshWrapper.goodId === good._Id ? 'white' : meshWrapper.groupColor : null);
+            ((x as ThreeJS.Mesh).material as ThreeJS.MeshBasicMaterial).color.set(meshWrapper ? meshWrapper.goodId === good.id ? 'white' : meshWrapper.groupColor : null);
         });
     }
 
@@ -140,7 +142,7 @@ export class VisualizerComponentService {
     }
 
     selectGood(good: Good) {
-        let wrapper = this._meshes.find(x => x.goodId === good._Id);
+        let wrapper = this._meshes.find(x => x.goodId === good.id);
         if (wrapper) this._selectedElement.next(wrapper);
     }
 

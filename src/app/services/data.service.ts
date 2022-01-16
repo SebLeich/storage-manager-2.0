@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { BehaviorSubject, combineLatest, Observable, ReplaySubject } from 'rxjs';
 import { distinctUntilChanged, map, take } from 'rxjs/operators';
 import { Container, Dimension, Good, Group, Order, Product, Solution } from '../classes';
+import { compare } from '../globals';
 
 @Injectable({
   providedIn: 'root'
@@ -15,6 +16,8 @@ export class DataService {
 
   private _groups = new BehaviorSubject<Group[]>([]);
   groups$ = this._groups.asObservable();
+  ascSortedGroups$ = this.groups$.pipe(map((groups: Group[]) => groups.sort((a, b) => compare(a._Id, b._Id, true))));
+  descSortedGroups$ = this.groups$.pipe(map((groups: Group[]) => groups.sort((a, b) => compare(a._Id, b._Id, false))));
   get groups() {
     return this._groups.value;
   }
@@ -106,12 +109,12 @@ export class DataService {
 
   static getGoodDimension(good: Good): Dimension {
     return {
-      height: good._Height,
-      width: good._Width,
-      length: good._Length,
-      x: good._X,
-      y: good._Y,
-      z: good._Z
+      height: good.height,
+      width: good.width,
+      length: good.length,
+      x: good.x,
+      y: good.y,
+      z: good.z
     };
   }
 }

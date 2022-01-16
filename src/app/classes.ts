@@ -23,33 +23,35 @@ export class Dimension {
 }
 
 export class Good {
-    _Id: number = null;
-    _Desc: string = null;
-    _Height: number = null;
-    _Group: number = null;
-    _Width: number = null;
-    _Length: number = null;
-    _Rotate: boolean = null;
-    _Stack: boolean = null;
-    _X: number = null;
-    _Y: number = null;
-    _Z: number = null;
-    _SequenceNr: number = null;
-    constructor(x: number = null, y: number = null, z: number = null, sequenceNumber: number = null, description: string = null){
-        this._X = x;
-        this._Y = y;
-        this._Z = z;
-        this._SequenceNr = sequenceNumber;
-        this._Desc = description;
+    id: number = null;
+    desc: string = null;
+    height: number = null;
+    group: number = null;
+    width: number = null;
+    length: number = null;
+    turningAllowed: boolean = null;
+    turned: boolean = null;
+    stackingAllowed: boolean = null;
+    stackedOnGood: number = null;
+    x: number = null;
+    y: number = null;
+    z: number = null;
+    sequenceNr: number = null;
+    constructor(id: number, x: number = null, y: number = null, z: number = null, sequenceNumber: number = null, description: string = null){
+        this.id = id;
+        this.x = x;
+        this.y = y;
+        this.z = z;
+        this.sequenceNr = sequenceNumber;
+        this.desc = description;
     }
     setOrderDimensions(order: Order){
-        this._Height = order.height;
-        this._Width = order.width;
-        this._Length = order.length;
-        this._Id = order.orderId;
-        this._Rotate = order.turningAllowed;
-        this._Stack = order.stackingAllowed;
-        this._Group = order.group;
+        this.height = order.height;
+        this.width = order.width;
+        this.length = order.length;
+        this.turningAllowed = order.turningAllowed;
+        this.stackingAllowed = order.stackingAllowed;
+        this.group = order.group;
     }
 }
 
@@ -94,6 +96,12 @@ export class Product {
     height: number;
     length: number;
     width: number;
+}
+
+export class Space {
+    width: number;
+    height: number;
+    length: number;
 }
 
 export class Solution {
