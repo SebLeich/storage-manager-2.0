@@ -33,6 +33,7 @@
     cursor: pointer;
     transition: all .2s;
     overflow: hidden;
+    user-select: none;
 }
 
 .option.active {

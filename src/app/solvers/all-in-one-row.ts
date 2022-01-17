@@ -21,21 +21,23 @@ export class AllInOneRowSolver extends Solver implements ISolver {
             switchMap((valid: boolean) => {
                 if (!valid) return throwError(CALCULATION_ERROR.CONTAINER_NOT_READY);
                 let subject = new ReplaySubject<Solution>(1);
-                combineLatest([this._dataService.orders$, this._dataService.containerHeight$, this._dataService.containerWidth$, this._dataService.groups$])
+                combineLatest([this._dataService.orders$, this._dataService.containerHeight$, this._dataService.containerWidth$, this._dataService.descSortedGroups$])
                     .pipe(take(1))
                     .subscribe(([orders, height, width, groups]) => {
                         let solution = new Solution(generateGuid(), this._description);
                         solution._Container = new Container(height, width, 0);
                         let currentPosition = { x: 0, y: 0, z: 0 };
                         let sequenceNumber = 0;
-                        for (let order of orders) {
-                            for (let i = 0; i < order.quantity; i++) {
-                                let good = new Good(sequenceNumber+1, currentPosition.x, currentPosition.y, currentPosition.z, sequenceNumber, order.description);
-                                good.setOrderDimensions(order);
-                                solution._Container._Goods.push(good);
-                                sequenceNumber++;
-                                currentPosition.z += order.length;
-                                solution._Container._Length += order.length;
+                        for (let group of groups) {
+                            for (let order of orders.filter(x => x.group === group._Id)) {
+                                for (let i = 0; i < order.quantity; i++) {
+                                    let good = new Good(sequenceNumber + 1, currentPosition.x, currentPosition.y, currentPosition.z, sequenceNumber, order.description);
+                                    good.setOrderDimensions(order);
+                                    solution._Container._Goods.push(good);
+                                    sequenceNumber++;
+                                    currentPosition.z += order.length;
+                                    solution._Container._Length += order.length;
+                                }
                             }
                         }
                         solution._Groups = groups;
