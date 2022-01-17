@@ -44,7 +44,6 @@ export class ContainerPreviewComponent implements OnChanges, OnInit {
     let used = this.container._Goods.reduce((x, curr) => x += (curr.length * curr.width * curr.height), 0);
     let total = this.container._Height * this.container._Length * this.container._Width;
     this.datasets[0].data = [used, total - used];
-    debugger;
     this.percentage = ((used / total) * 100).toFixed(0);
   }
 

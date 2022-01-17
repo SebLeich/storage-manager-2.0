@@ -7,6 +7,7 @@ import { ALGORITHMS, algorithms } from "src/app/globals";
 import { DataService } from "src/app/services/data.service";
 import { AllInOneRowSolver } from "src/app/solvers/all-in-one-row";
 import { StartLeftBottomSolver } from "src/app/solvers/start-left-bottom";
+import { SuperFloSolver } from "src/app/solvers/super-flo";
 import { AlgorihmStatusWrapper, ALGORITHM_CALCULATION_STATUS, CALCULATION_ERROR } from "./calculation-component.classes";
 
 @Injectable()
@@ -26,6 +27,7 @@ export class CalculationComponentService {
         wrapper.status = ALGORITHM_CALCULATION_STATUS.PREPARE_CALCULATION;
         timer(1000).pipe(switchMap(_ => {
             switch (wrapper.algorithm.code) {
+
                 case ALGORITHMS.ALL_IN_ONE_ROW:
                     wrapper.status = ALGORITHM_CALCULATION_STATUS.CALCULATING;
                     return combineLatest([of(wrapper), new AllInOneRowSolver(this._dataService, wrapper.solutionDescription).solve().pipe(catchError((errorCode) => {
@@ -38,6 +40,15 @@ export class CalculationComponentService {
                 case ALGORITHMS.START_LEFT_BOTTOM:
                     wrapper.status = ALGORITHM_CALCULATION_STATUS.CALCULATING;
                     return combineLatest([of(wrapper), new StartLeftBottomSolver(this._dataService, wrapper.solutionDescription).solve().pipe(catchError((errorCode) => {
+                        return throwError({
+                            wrapper: wrapper,
+                            errorCode: errorCode
+                        });
+                    }))]);
+
+                case ALGORITHMS.SUPER_FLO:
+                    wrapper.status = ALGORITHM_CALCULATION_STATUS.CALCULATING;
+                    return combineLatest([of(wrapper), new SuperFloSolver(this._dataService, wrapper.solutionDescription).solve().pipe(catchError((errorCode) => {
                         return throwError({
                             wrapper: wrapper,
                             errorCode: errorCode

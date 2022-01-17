@@ -54,3 +54,7 @@ export const nextUnitSize = [
 export const defaultGoodEdgeColor = '#2a2a2a';
 export const selectedGoodEdgeColor = '#ff7e00';
 export const keyboardControlMoveStep = 2000;
+
+export enum MinimizationFunction {
+    MIN_X, MIN_Y, MIN_Z, MIN_VOLUME
+}

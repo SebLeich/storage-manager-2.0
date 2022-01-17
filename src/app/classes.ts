@@ -11,15 +11,13 @@ export class Container {
         this._Width = width;
         this._Length = length;
     }
-}
-
-export class Dimension {
-    height: number;
-    width: number;
-    length: number;
-    x: number;
-    y: number;
-    z: number;
+    getUnusedDimension(): UnusedDimension {
+        let unusedDimension = new UnusedDimension(this._Width, this._Height, Infinity, null);
+        unusedDimension.x = 0;
+        unusedDimension.y = 0;
+        unusedDimension.z = 0;
+        return unusedDimension;
+    }
 }
 
 export class Good {
@@ -99,9 +97,31 @@ export class Product {
 }
 
 export class Space {
-    width: number;
-    height: number;
-    length: number;
+    width: number = null;
+    height: number = null;
+    length: number = null;
+    constructor(width: number = null, height: number = null, length: number = null){
+        this.width = width;
+        this.height = height;
+        this.length = length;
+    }
+}
+
+export class Dimension extends Space {
+    x: number = null;
+    y: number = null;
+    z: number = null;
+    constructor(width: number = null, height: number = null, length: number = null){
+        super(width, height, length);
+    }
+}
+
+export class UnusedDimension extends Dimension {
+    stackedOn: number = null;
+    constructor(width: number = null, height: number = null, length: number = null, stackedOn: number = null){
+        super(width, height, length);
+        this.stackedOn = stackedOn;
+    }
 }
 
 export class Solution {
