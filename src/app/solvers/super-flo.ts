@@ -33,17 +33,18 @@ export class SuperFloSolver extends Solver implements ISolver {
                         let sequenceNumber = 0;
                         for (let order of orders) {
                             for (let i = 0; i < order.quantity; i++) {
-                                let space = this.getBestUnusedDimensionsForMinimizationFunction(this._unusedDimensions, this._minimizationFunction);
+                                let space = this.getBestUnusedDimensionsForMinimizationFunction(this._unusedDimensions.filter(x => this.canPlaceOrderIntoSpace(order, x).notTurned), this._minimizationFunction);
                                 let unusedDimensions = this.putOrderAndCreateUnusedDimensions(order, space);
                                 this._unusedDimensions.push(...unusedDimensions);
                                 this._unusedDimensions.splice(this._unusedDimensions.findIndex(x => x === space), 1);
                                 let good = new Good(sequenceNumber+1, space.x, space.y, space.z, sequenceNumber, order.description);
+                                good.setOrderDimensions(order);
                                 solution._Steps.push({
                                     sequenceNumber: sequenceNumber,
                                     messages: [`put good ${good.id} into space (${space.x}/${space.y}/${space.z}) (order ${order.orderId} element ${i+1})`],
-                                    unusedDimensions: unusedDimensions
+                                    unusedDimensions: unusedDimensions,
+                                    dimension: DataService.getGoodDimension(good)
                                 } as Step);
-                                good.setOrderDimensions(order);
                                 solution._Container._Goods.push(good);
                                 sequenceNumber++;
                             }
@@ -51,7 +52,6 @@ export class SuperFloSolver extends Solver implements ISolver {
                         solution._Container._Length = Math.max(...solution._Container._Goods.map(x => x.z + x.length), 0);
                         solution._Groups = groups;
                         this._dataService.setCurrentSolution(solution);
-                        console.log(solution._Steps);
                         subject.next(solution);
                         subject.complete();
                     });

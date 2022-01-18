@@ -12,10 +12,15 @@
     display: flex;
     align-items: center;
     border-top: 1px solid lightgray;
+    cursor: pointer;
 }
 
 .step-wrapper:nth-child(odd) {
     background-color: #f8f8f8;
+}
+
+.step-wrapper:hover {
+    background-color: rgb(255, 249, 231);
 }
 
 .sequence-number {

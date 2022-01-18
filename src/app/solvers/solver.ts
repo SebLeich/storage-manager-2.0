@@ -37,7 +37,7 @@ export class Solver {
             unusedDimensions.push(above);
         }
         if(order.width < unusedDimension.width){
-            let next = new UnusedDimension(order.width - unusedDimension.width, unusedDimension.height, order.length);
+            let next = new UnusedDimension(unusedDimension.width - order.width, unusedDimension.height, order.length);
             next.x = unusedDimension.x + order.width;
             next.y = unusedDimension.y;
             next.z = unusedDimension.z;

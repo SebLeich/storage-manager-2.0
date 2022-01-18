@@ -127,4 +127,5 @@ export class Step {
     sequenceNumber: number;
     messages: string[];
     unusedDimensions: UnusedDimension[];
+    dimension: Dimension;
 }

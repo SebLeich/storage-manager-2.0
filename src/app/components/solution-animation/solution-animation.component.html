@@ -18,10 +18,10 @@
 
     <div class="step-overview">
 
-        <div class="step-wrapper" *ngFor="let step of (dataService.currentSteps$|async)">
+        <div class="step-wrapper" *ngFor="let step of (dataService.currentSteps$|async)" (mouseenter)="visualizerComponentService.animateStep(step)">
 
             <div class="sequence-number">
-                {{step.sequenceNumber}}
+                {{step.sequenceNumber+1}}
             </div>
 
             <div class="message-wrapper">

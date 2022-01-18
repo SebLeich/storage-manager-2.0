@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, combineLatest, Observable, ReplaySubject } from 'rxjs';
+import { BehaviorSubject, combineLatest, Observable } from 'rxjs';
 import { distinctUntilChanged, filter, map, take } from 'rxjs/operators';
 import { Container, Dimension, Good, Group, Order, Product, Solution } from '../classes';
 import { compare } from '../globals';
@@ -11,6 +11,7 @@ export class DataService {
 
   private _currentSolution: BehaviorSubject<Solution> = new BehaviorSubject<Solution>(null);
   currentSolution$ = this._currentSolution.pipe(distinctUntilChanged());
+  currentContainer$ = this.currentSolution$.pipe(map(x => x._Container));
   currentGroups$ = this._currentSolution.pipe(map(x => x._Groups));
   currentSolutionAvailable$ = this._currentSolution.pipe(map(x => x? true: false));
   currentSteps$ = this.currentSolution$.pipe(filter(x => x? true: false), map((solution: Solution) => solution._Steps));

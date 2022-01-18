@@ -2,8 +2,8 @@ import { HttpClient } from "@angular/common/http";
 import { ElementRef, Injectable } from "@angular/core";
 import { BehaviorSubject, combineLatest, ReplaySubject, Subject, Subscription } from "rxjs";
 import { debounceTime, filter, map, take } from "rxjs/operators";
-import { Container, Dimension, Good, Group, Solution } from "src/app/classes";
-import { defaultGoodEdgeColor, generateGuid, keyboardControlMoveStep, selectedGoodEdgeColor } from "src/app/globals";
+import { Container, Dimension, Good, Group, Solution, Step } from "src/app/classes";
+import { defaultGoodEdgeColor, generateGuid, infinityReplacement, keyboardControlMoveStep, selectedGoodEdgeColor } from "src/app/globals";
 import { DataService } from "src/app/services/data.service";
 import * as ThreeJS from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
@@ -54,22 +54,33 @@ export class VisualizerComponentService {
     }
 
     addContainerToScene(container: Container, groups: Group[]) {
+        this.clearScene();
+        this._addUnloadingArrowToScene(container._Height, container._Length);
+        this._addBaseGridToScene(container._Height, container._Length);
+        this._addContainerToScene(DataService.getContainerDimension(container));
         this._container.next(container);
-        while (this.scene.children.length > 0) this.scene.remove(this.scene.children[0]);
-        var from = new ThreeJS.Vector3(0, (container._Height / -2), (container._Length / 2));
-        var to = new ThreeJS.Vector3(0, (container._Height / -2), (container._Length / 2) + 1000);
-        var direction = to.clone().sub(from);
-        var length = direction.length();
-        var arrowHelper = new ThreeJS.ArrowHelper(direction.normalize(), from, length, "red");
-        this.scene.add(arrowHelper);
-        var gridHelper = new ThreeJS.GridHelper(1.5 * container._Length, 15);
-        gridHelper.position.set(0, (container._Height / -2), 0);
-        this.scene.add(gridHelper);
-        this._addElementToScene(DataService.getContainerDimension(container), 'Container', 'bordered', null, null, null, null)
+        this._addElementToScene(DataService.getContainerDimension(container), 'Container', 'bordered', null, null, null, null);
         for (var good of container._Goods) {
             let group = groups.find(x => x._Id === good.group);
             this._addElementToScene(DataService.getGoodDimension(good), `${good.desc}`, 'filled', good.sequenceNr, good.id, group, DataService.getContainerDimension(container));
         }
+    }
+
+    animateStep(step: Step) {
+        this._dataService.currentContainer$.pipe(take(1)).subscribe((container: Container) => {
+            this.clearScene();
+            this._addUnloadingArrowToScene(container._Height, container._Length);
+            this._addBaseGridToScene(container._Height, container._Length);
+            this._addContainerToScene(DataService.getContainerDimension(container));
+            this._addElementToScene(step.dimension, null, 'filled', step.sequenceNumber, null, null, DataService.getContainerDimension(container));
+            for (let unusedDimension of step.unusedDimensions) {
+                this._addElementToScene(unusedDimension, null, unusedDimension.length === Infinity ? 'infiniteSpace' : 'unusedSpace', step.sequenceNumber, null, null, DataService.getContainerDimension(container));
+            }
+        });
+    }
+
+    clearScene() {
+        while (this.scene.children.length > 0) this.scene.remove(this.scene.children[0]);
     }
 
     dispose() {
@@ -147,7 +158,7 @@ export class VisualizerComponentService {
     }
 
     setSceneDimensions(width: number, height: number, preventCameraPositionReset: boolean = false) {
-        if(!this.camera || !preventCameraPositionReset) {
+        if (!this.camera || !preventCameraPositionReset) {
             this.camera = new ThreeJS.PerspectiveCamera(20, width / height, 1, 10000000);
             this.camera.position.set(12000, 5000, 10000);
         }
@@ -173,7 +184,7 @@ export class VisualizerComponentService {
 
     triggerResizeEvent = () => this._resized.next();
 
-    updateGroupColors(){
+    updateGroupColors() {
         this._dataService.currentGroups$.pipe(take(1)).subscribe((groups: Group[]) => {
             this._meshes.forEach(x => {
                 let group = groups.find(y => y._Id === x.groupId);
@@ -183,7 +194,17 @@ export class VisualizerComponentService {
         });
     }
 
-    private _addElementToScene(dimension: Dimension, preview: string, type: null | 'bordered' | 'filled', sequenceNumber: number = null, goodId: number = null, group: Group = null, parentDimension: Dimension = null) {
+    private _addBaseGridToScene(containerHeight: number, containerLength: number) {
+        var gridHelper = new ThreeJS.GridHelper(1.5 * containerLength, 15);
+        gridHelper.position.set(0, (containerHeight / -2), 0);
+        this.scene.add(gridHelper);
+    }
+
+    private _addContainerToScene(dimension: Dimension) {
+        this._addElementToScene(dimension, 'Container', 'bordered', null, null, null, null);
+    }
+
+    private _addElementToScene(dimension: Dimension, preview: string, type: null | 'bordered' | 'filled' | 'infiniteSpace' | 'unusedSpace', sequenceNumber: number = null, goodId: number = null, group: Group = null, parentDimension: Dimension = null) {
 
         var length = dimension.length;
         if (!length) length = (parentDimension.length - dimension.z); // rotation
@@ -217,23 +238,36 @@ export class VisualizerComponentService {
                 break;
 
             default:
-                var geometry = new ThreeJS.BoxBufferGeometry(dimension.width, dimension.height, dimension.length);
-                edges = new ThreeJS.LineSegments(new ThreeJS.EdgesGeometry(geometry), new ThreeJS.LineBasicMaterial({ color: 0x333333, linewidth: 1 }));
+                let edgeColor = type === 'infiniteSpace' ? 'orange' : type === 'unusedSpace' ? 'red' : 'black';
+                var geometry = new ThreeJS.BoxBufferGeometry(dimension.width, dimension.height, dimension.length === Infinity? infinityReplacement: dimension.length);
+                edges = new ThreeJS.LineSegments(new ThreeJS.EdgesGeometry(geometry), new ThreeJS.LineBasicMaterial({ color: edgeColor, linewidth: 1 }));
                 break;
         }
+
         var x = parentDimension ? dimension.x - (parentDimension.width / 2) + (dimension.width / 2) : dimension.x;
         var y = parentDimension ? dimension.y - (parentDimension.height / 2) + (dimension.height / 2) : dimension.y;
-        var z = parentDimension ? dimension.z - (parentDimension.length / 2) + (dimension.length / 2) : dimension.z;
+        var z = parentDimension ? dimension.z - (parentDimension.length / 2) + ((dimension.length === Infinity ? infinityReplacement : dimension.length) / 2) : dimension.z;
+
         if (mesh) {
             mesh.position.x = x;
             mesh.position.y = y;
             mesh.position.z = z;
             this.scene.add(mesh);
         }
+
         if (edges != null) {
             edges.position.set(x, y, z);
             this.scene.add(edges);
         }
+    }
+
+    private _addUnloadingArrowToScene(containerHeight: number, containerLength: number) {
+        var from = new ThreeJS.Vector3(0, (containerHeight / -2), (containerLength / 2));
+        var to = new ThreeJS.Vector3(0, (containerHeight / -2), (containerLength / 2) + 1000);
+        var direction = to.clone().sub(from);
+        var length = direction.length();
+        var arrowHelper = new ThreeJS.ArrowHelper(direction.normalize(), from, length, "red");
+        this.scene.add(arrowHelper);
     }
 
     private _getPointedElement(event: MouseEvent, wrapper: ElementRef<HTMLDivElement>, meshes: ThreeJS.Mesh[] = null) {
@@ -273,12 +307,14 @@ export class VisualizerComponentService {
     private _setUp() {
         this.scene.background = new ThreeJS.Color('rgb(238,238,238)');
         this.renderer.domElement.id = this._sceneBodyId;
-        
+
+        /*
         this._httpClient.get('/assets/defaultSolution.json').subscribe((solution: Solution) => {
             this.defaultSolution = solution;
             this._dataService.setCurrentSolution(solution);
         });
-        
+        */
+
         this._subscriptions.push(...[
             combineLatest([this.hoverIntersections$, this.visualizerWrapper$]).subscribe(([event, wrapper]) => {
                 this._highlightIntersections(event, wrapper);
@@ -291,7 +327,7 @@ export class VisualizerComponentService {
                     }
                 }
             }),
-            this._dataService.currentSolution$.pipe(filter(x => x? true: false)).subscribe((solution: Solution) => {
+            this._dataService.currentSolution$.pipe(filter(x => x ? true : false)).subscribe((solution: Solution) => {
                 this.addContainerToScene(solution._Container, solution._Groups);
             })
         ]);

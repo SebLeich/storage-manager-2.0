@@ -58,3 +58,5 @@ export const keyboardControlMoveStep = 2000;
 export enum MinimizationFunction {
     MIN_X, MIN_Y, MIN_Z, MIN_VOLUME
 }
+
+export const infinityReplacement = 100;
