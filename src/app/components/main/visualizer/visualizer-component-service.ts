@@ -152,6 +152,11 @@ export class VisualizerComponentService {
         this.renderer.render(this.scene, this.camera);
     }
 
+    reRenderCurrentContainer() {
+        combineLatest([this._dataService.currentContainer$, this._dataService.currentGroups$]).pipe(take(1))
+            .subscribe(([container, groups]: [Container, Group[]]) => this.addContainerToScene(container, groups));
+    }
+
     selectGood(good: Good) {
         let wrapper = this._meshes.find(x => x.goodId === good.id);
         if (wrapper) this._selectedElement.next(wrapper);
@@ -239,7 +244,7 @@ export class VisualizerComponentService {
 
             default:
                 let edgeColor = type === 'infiniteSpace' ? 'orange' : type === 'unusedSpace' ? 'red' : 'black';
-                var geometry = new ThreeJS.BoxBufferGeometry(dimension.width, dimension.height, dimension.length === Infinity? infinityReplacement: dimension.length);
+                var geometry = new ThreeJS.BoxBufferGeometry(dimension.width, dimension.height, dimension.length === Infinity ? infinityReplacement : dimension.length);
                 edges = new ThreeJS.LineSegments(new ThreeJS.EdgesGeometry(geometry), new ThreeJS.LineBasicMaterial({ color: edgeColor, linewidth: 1 }));
                 break;
         }

@@ -16,7 +16,7 @@
 
     </div>
 
-    <div class="step-overview">
+    <div class="step-overview" (mouseleave)="visualizerComponentService.reRenderCurrentContainer()">
 
         <div class="step-wrapper" *ngFor="let step of (dataService.currentSteps$|async)" (mouseenter)="visualizerComponentService.animateStep(step)">
 
