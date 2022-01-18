@@ -44,7 +44,7 @@
     display: flex;
 }
 
-.chart-wrapper > * {
+.chart-wrapper>* {
     flex: 1;
     overflow: hidden;
 }
