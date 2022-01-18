@@ -1,1 +1,39 @@
-<p>solution-animation works!</p>
+<div class="body">
+
+    <div class="headline">
+        Lösung in {{(dataService.currentSteps$|async)?.length ?? 0}} Schritten berechnet
+    </div>
+
+    <div class="control-wrapper">
+
+        <button mat-icon-button>
+            <mat-icon>play_arrow</mat-icon>
+        </button>
+
+        <button mat-icon-button>
+            <mat-icon>pause</mat-icon>
+        </button>
+
+    </div>
+
+    <div class="step-overview">
+
+        <div class="step-wrapper" *ngFor="let step of (dataService.currentSteps$|async)">
+
+            <div class="sequence-number">
+                {{step.sequenceNumber}}
+            </div>
+
+            <div class="message-wrapper">
+
+                <div class="message" *ngFor="let message of step.messages">
+                    {{message}}
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>

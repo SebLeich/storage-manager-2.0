@@ -1,7 +1,7 @@
 import { HttpClient } from "@angular/common/http";
 import { ElementRef, Injectable } from "@angular/core";
 import { BehaviorSubject, combineLatest, ReplaySubject, Subject, Subscription } from "rxjs";
-import { debounceTime, map, take } from "rxjs/operators";
+import { debounceTime, filter, map, take } from "rxjs/operators";
 import { Container, Dimension, Good, Group, Solution } from "src/app/classes";
 import { defaultGoodEdgeColor, generateGuid, keyboardControlMoveStep, selectedGoodEdgeColor } from "src/app/globals";
 import { DataService } from "src/app/services/data.service";
@@ -273,12 +273,12 @@ export class VisualizerComponentService {
     private _setUp() {
         this.scene.background = new ThreeJS.Color('rgb(238,238,238)');
         this.renderer.domElement.id = this._sceneBodyId;
-        /*
+        
         this._httpClient.get('/assets/defaultSolution.json').subscribe((solution: Solution) => {
             this.defaultSolution = solution;
             this._dataService.setCurrentSolution(solution);
         });
-        */
+        
         this._subscriptions.push(...[
             combineLatest([this.hoverIntersections$, this.visualizerWrapper$]).subscribe(([event, wrapper]) => {
                 this._highlightIntersections(event, wrapper);
@@ -291,7 +291,7 @@ export class VisualizerComponentService {
                     }
                 }
             }),
-            this._dataService.currentSolution$.subscribe((solution: Solution) => {
+            this._dataService.currentSolution$.pipe(filter(x => x? true: false)).subscribe((solution: Solution) => {
                 this.addContainerToScene(solution._Container, solution._Groups);
             })
         ]);

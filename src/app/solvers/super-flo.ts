@@ -35,14 +35,14 @@ export class SuperFloSolver extends Solver implements ISolver {
                             for (let i = 0; i < order.quantity; i++) {
                                 let space = this.getBestUnusedDimensionsForMinimizationFunction(this._unusedDimensions, this._minimizationFunction);
                                 let unusedDimensions = this.putOrderAndCreateUnusedDimensions(order, space);
-                                solution._Steps.push({
-                                    sequenceNumber: sequenceNumber,
-                                    messages: [`put order ${order.orderId} into space (${space.x}/${space.y}/${space.z})`],
-                                    unusedDimensions: unusedDimensions
-                                } as Step);
                                 this._unusedDimensions.push(...unusedDimensions);
                                 this._unusedDimensions.splice(this._unusedDimensions.findIndex(x => x === space), 1);
                                 let good = new Good(sequenceNumber+1, space.x, space.y, space.z, sequenceNumber, order.description);
+                                solution._Steps.push({
+                                    sequenceNumber: sequenceNumber,
+                                    messages: [`put good ${good.id} into space (${space.x}/${space.y}/${space.z}) (order ${order.orderId} element ${i+1})`],
+                                    unusedDimensions: unusedDimensions
+                                } as Step);
                                 good.setOrderDimensions(order);
                                 solution._Container._Goods.push(good);
                                 sequenceNumber++;
