@@ -1,6 +1,6 @@
 import { combineLatest, Observable, ReplaySubject, throwError } from "rxjs";
 import { switchMap, take } from "rxjs/operators";
-import { Container, Good, Solution, UnusedDimension } from "../classes";
+import { Container, Good, Solution, Step, UnusedDimension } from "../classes";
 import { CALCULATION_ERROR } from "../components/main/calculation/calculation-component.classes";
 import { generateGuid, MinimizationFunction } from "../globals";
 import { ISolver } from "../interfaces";
@@ -34,7 +34,13 @@ export class SuperFloSolver extends Solver implements ISolver {
                         for (let order of orders) {
                             for (let i = 0; i < order.quantity; i++) {
                                 let space = this.getBestUnusedDimensionsForMinimizationFunction(this._unusedDimensions, this._minimizationFunction);
-                                this._unusedDimensions.push(...this.putOrderAndCreateUnusedDimensions(order, space));
+                                let unusedDimensions = this.putOrderAndCreateUnusedDimensions(order, space);
+                                solution._Steps.push({
+                                    sequenceNumber: sequenceNumber,
+                                    messages: [`put order ${order.orderId} into space (${space.x}/${space.y}/${space.z})`],
+                                    unusedDimensions: unusedDimensions
+                                } as Step);
+                                this._unusedDimensions.push(...unusedDimensions);
                                 this._unusedDimensions.splice(this._unusedDimensions.findIndex(x => x === space), 1);
                                 let good = new Good(sequenceNumber+1, space.x, space.y, space.z, sequenceNumber, order.description);
                                 good.setOrderDimensions(order);
@@ -45,6 +51,7 @@ export class SuperFloSolver extends Solver implements ISolver {
                         solution._Container._Length = Math.max(...solution._Container._Goods.map(x => x.z + x.length), 0);
                         solution._Groups = groups;
                         this._dataService.setCurrentSolution(solution);
+                        console.log(solution._Steps);
                         subject.next(solution);
                         subject.complete();
                     });

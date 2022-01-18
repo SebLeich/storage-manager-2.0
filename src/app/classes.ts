@@ -71,24 +71,6 @@ export class Order {
     group: number = null;
 }
 
-export class Position {
-    _Id: string;
-    _IsSumedUp: boolean;
-    _X: number;
-    _Y: number;
-    _Z: number;
-    _L: number;
-    _W: number;
-    _H: number;
-    _R: number;
-    _T: number;
-    _F: number;
-    IsRotated: boolean;
-    index: number;
-    area: number;
-    _GroupRestrictionBy: number;
-}
-
 export class Product {
     description: string;
     height: number;
@@ -118,9 +100,11 @@ export class Dimension extends Space {
 
 export class UnusedDimension extends Dimension {
     stackedOn: number = null;
-    constructor(width: number = null, height: number = null, length: number = null, stackedOn: number = null){
+    groupRestrictedBy: number = null;
+    constructor(width: number = null, height: number = null, length: number = null, stackedOn: number = null, groupRestrictedBy: number = null){
         super(width, height, length);
         this.stackedOn = stackedOn;
+        this.groupRestrictedBy = groupRestrictedBy;
     }
 }
 
@@ -140,8 +124,7 @@ export class Solution {
 }
 
 export class Step {
-    _SequenceNumber: number;
-    _Messages: string[];
-    _Positions: Position[];
-    _RecursiveGroupRestricted: [];
+    sequenceNumber: number;
+    messages: string[];
+    unusedDimensions: UnusedDimension[];
 }

@@ -41,6 +41,7 @@ import { SelectGroupComponent } from './components/select/select-group/select-gr
 import { SelectProductComponent } from './components/select/select-product/select-product.component';
 import { AutomationModule } from 'src/lib/automation/automation.module';
 import { CalculationErrorPipe } from './pipes/calculation-error.pipe';
+import { SolutionAnimationComponent } from './components/solution-animation/solution-animation.component';
 
 @NgModule({
   declarations: [
@@ -63,7 +64,8 @@ import { CalculationErrorPipe } from './pipes/calculation-error.pipe';
     SelectUnitComponent,
     CalculationComponent,
     ApiCallConfiguratorDialogComponent,
-    CalculationErrorPipe
+    CalculationErrorPipe,
+    SolutionAnimationComponent
   ],
   imports: [
     BrowserModule,
