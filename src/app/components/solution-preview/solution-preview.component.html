@@ -21,12 +21,24 @@
     
                 <div class="general-inner">
     
-                    <div class="calculated" *ngIf="calculated">
-                        {{'Berechnet: ' + (calculated|date:'dd.MM.yyyy HH:mm') + ' Uhr'}}
-                    </div>
-    
-                    <div class="algorithm" *ngIf="algorithm">
-                        {{'Algorithmus: ' + algorithm}}
+                    <div class="metadata-wrapper">
+
+                        <div class="metadata">
+                            <div class="calculated" *ngIf="calculated">
+                                {{'Berechnet: ' + (calculated|date:'dd.MM.yyyy HH:mm') + ' Uhr'}}
+                            </div>
+            
+                            <div class="algorithm" *ngIf="algorithm">
+                                {{'Algorithmus: ' + algorithm}}
+                            </div>
+                        </div>
+
+                        <div class="next-solution-wrapper">
+                            <button mat-icon-button [disabled]="(dataService.solutions$|async).length < 2" (click)="solutionPreviewComponentService.nextSolution()" matTooltip="Nächste Lösung anzeigen">
+                                <mat-icon>chevron_right</mat-icon>
+                            </button>
+                        </div>
+
                     </div>
     
                     <div class="container-wrapper">
@@ -115,7 +127,7 @@
             <mat-expansion-panel>
     
                 <mat-expansion-panel-header>
-                    <mat-panel-title class="expansion-panel-headline">
+                    <mat-panel-title class="expansion-panel-headline" [class.error]="(dataService.currentSolutionValidation$|async)?.length > 0">
     
                         Validator
     

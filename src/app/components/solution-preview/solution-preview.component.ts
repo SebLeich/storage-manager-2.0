@@ -1,5 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { Subscription } from 'rxjs';
+import { combineLatest, Subscription } from 'rxjs';
 import { filter } from 'rxjs/operators';
 import { showAnimation } from 'src/app/animations';
 import { Container, Solution } from 'src/app/classes';
@@ -12,8 +12,9 @@ import { SolutionPreviewComponentService } from './solution-preview-component.se
   templateUrl: './solution-preview.component.html',
   styleUrls: ['./solution-preview.component.css'],
   providers: [
-    { provide: GOODS_PROVIDER, useClass: SolutionPreviewComponentService },
-    { provide: GROUPS_PROVIDER, useExisting: GOODS_PROVIDER }
+    SolutionPreviewComponentService,
+    { provide: GOODS_PROVIDER, useExisting: SolutionPreviewComponentService },
+    { provide: GROUPS_PROVIDER, useExisting: SolutionPreviewComponentService }
   ],
   animations: [showAnimation]
 })
@@ -27,14 +28,15 @@ export class SolutionPreviewComponent implements OnDestroy, OnInit {
   private _subscriptions: Subscription[] = [];
 
   constructor(
-    private _dataService: DataService
+    public solutionPreviewComponentService: SolutionPreviewComponentService,
+    public dataService: DataService
   ) { }
 
-  downloadSolution = () => this._dataService.downloadCurrentSolution();
+  downloadSolution = () => this.dataService.downloadCurrentSolution();
 
   ngOnInit(): void {
     this._subscriptions.push(...[
-      this._dataService.currentSolution$.pipe(filter(x => x ? true : false)).subscribe((solution: Solution) => {
+      this.dataService.currentSolution$.pipe(filter(x => x ? true : false)).subscribe((solution: Solution) => {
         this.headline = solution._Description;
         this.calculated = solution._Calculated;
         this.algorithm = solution._Algorithm;

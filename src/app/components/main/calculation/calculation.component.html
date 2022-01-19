@@ -2,7 +2,7 @@
 
     <div class="content">
 
-        <div class="algorithm-overview" (click)="configureAPICall()">
+        <div class="algorithm-overview unavailable" (click)="configureAPICall()">
 
             <div class="headline">
                 Eigene API verwenden
@@ -84,11 +84,11 @@
                             </span>
         
                         </ng-container>
-
-                        <span *ngIf="wrapper.status === ALGORITHM_CALCULATION_STATUS.CALCULATED">
-                            Länge: {{wrapper.solution._Container._Length|prettyLength}}
-                        </span>
     
+                    </div>
+
+                    <div *ngIf="wrapper.status === ALGORITHM_CALCULATION_STATUS.CALCULATED">
+                        Länge: {{wrapper.solution._Container._Length|prettyLength}}
                     </div>
     
                     <ng-container *ngIf="wrapper.status === ALGORITHM_CALCULATION_STATUS.ERROR">

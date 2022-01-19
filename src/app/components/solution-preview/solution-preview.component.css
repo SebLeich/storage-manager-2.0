@@ -7,6 +7,14 @@
     padding-bottom: 2rem;
 }
 
+.metadata-wrapper {
+    display: flex;
+}
+
+.metadata-wrapper .metadata {
+    flex: 1;
+}
+
 .panel-wrapper {
     flex: 1;
     padding: 2rem 1rem;
@@ -23,6 +31,10 @@
 .expansion-panel-headline {
     font-weight: 500;
     font-size: 1.2rem;
+}
+
+.expansion-panel-headline.error {
+    color: red;
 }
 
 .container-wrapper {

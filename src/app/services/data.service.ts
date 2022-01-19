@@ -1,5 +1,6 @@
+import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, combineLatest, Observable } from 'rxjs';
+import { BehaviorSubject, combineLatest, Observable, Subject } from 'rxjs';
 import { distinctUntilChanged, filter, map, take } from 'rxjs/operators';
 import { Container, Dimension, Good, Group, Order, Product, Solution, UnusedDimension } from '../classes';
 import { compare } from '../globals';
@@ -15,8 +16,8 @@ export class DataService {
   currentSolutionValidation$ = this.currentSolution$.pipe(distinctUntilChanged(), map(solution => this._solutionValidationService.validateSolution(solution)));
   currentContainer$ = this.currentSolution$.pipe(map(x => x._Container));
   currentGroups$ = this._currentSolution.pipe(map(x => x._Groups));
-  currentSolutionAvailable$ = this._currentSolution.pipe(map(x => x? true: false));
-  currentSteps$ = this.currentSolution$.pipe(filter(x => x? true: false), map((solution: Solution) => solution._Steps));
+  currentSolutionAvailable$ = this._currentSolution.pipe(map(x => x ? true : false));
+  currentSteps$ = this.currentSolution$.pipe(filter(x => x ? true : false), map((solution: Solution) => solution._Steps));
 
   private _groups = new BehaviorSubject<Group[]>([]);
   groups$ = this._groups.asObservable();
@@ -49,12 +50,15 @@ export class DataService {
   }
 
   constructor(
-    private _solutionValidationService: SolutionValidationService
-  ) { }
+    private _solutionValidationService: SolutionValidationService,
+    private _httpClient: HttpClient
+  ) {
+    this._setUp();
+  }
 
   addGroup(group: Group) {
     let existing = this._groups.value;
-    if(existing.findIndex(x => x._Desc === group._Desc) > -1) return;
+    if (existing.findIndex(x => x._Desc === group._Desc) > -1) return;
     if (typeof group._Id !== 'number' || existing.findIndex(x => x._Id === group._Id) > -1) group._Id = Math.max(...existing.map(x => x._Id), 0) + 1;
     this._groups.next([...existing, group]);
   }
@@ -88,6 +92,20 @@ export class DataService {
     return this._solutions.pipe(map(x => x.find(y => y._Algorithm === algorithm)));
   }
 
+  loadDefaultSolution(): Observable<Solution> {
+    let subject = new Subject<Solution>();
+    this._httpClient.get('/assets/exampleSolution.json')
+      .subscribe(
+        (solution: Solution) => {
+          this.setCurrentSolution(solution);
+          subject.next(solution);
+          subject.complete();
+        },
+        (error) => subject.error(error)
+      );
+    return subject.asObservable();
+  }
+
   setContainerHeight = (height: number) => this._containerHeight.next(height);
   setContainerWidth = (width: number) => this._containerWidth.next(width);
   setUnit = (unit: 'mm' | 'cm' | 'dm' | 'm') => this._unit.next(unit);
@@ -116,5 +134,12 @@ export class DataService {
     dimension.y = good.y;
     dimension.z = good.z;
     return dimension;
+  }
+
+  private _setUp(){
+    this.orders$.pipe(distinctUntilChanged()).subscribe((orders: Order[]) => {
+      this._solutions.next([]);
+      this._currentSolution.next(null);
+    });
   }
 }

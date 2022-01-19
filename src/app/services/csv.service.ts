@@ -71,10 +71,19 @@ export class CsvService {
     this._fileToString(files[0]).subscribe((result: string) => this._importCSVToOrderCollection(result));
   }
 
-  uploadDefaultOrders() {
+  uploadDefaultOrders(): Observable<string> {
+    let subject = new Subject<string>();
     this._httpClient.get('/assets/exampleOrders.csv', {
       responseType: 'text'
-    }).subscribe((csv: string) => this._importCSVToOrderCollection(csv));
+    }).subscribe(
+      (csv: string) => {
+        this._importCSVToOrderCollection(csv);
+        subject.next(csv);
+        subject.complete();
+      },
+      (error) => subject.error(error)
+    );
+    return subject.asObservable();
   }
 
   private _fileToString(file: File): Observable<string> {

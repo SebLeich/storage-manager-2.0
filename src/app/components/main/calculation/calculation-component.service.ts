@@ -91,12 +91,16 @@ export class CalculationComponentService {
                 'status': ALGORITHM_CALCULATION_STATUS.UNCHECKED,
                 'solutionDescription': algorithm.title,
                 'solution': null,
-                'available': algorithm.code === ALGORITHMS.AI_SUPPORTED_SOLVER? false: true
+                'available': algorithm.code === ALGORITHMS.AI_SUPPORTED_SOLVER ? false : true
             } as AlgorihmStatusWrapper);
         }
-        this._dataService.solutions$
-            .pipe(take(1))
+        this._dataService
+            .solutions$
             .subscribe((solutions: Solution[]) => {
+                for(let algorithm of this.algorithms) {
+                    algorithm.solution = null;
+                    algorithm.status = ALGORITHM_CALCULATION_STATUS.UNCHECKED;
+                }
                 for (let solution of solutions) {
                     let wrapper = this.algorithms.find(x => x.algorithm.title === solution._Algorithm);
                     if (wrapper) {

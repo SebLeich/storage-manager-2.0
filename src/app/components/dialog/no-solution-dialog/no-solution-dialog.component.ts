@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { MatDialogRef } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { CsvService } from 'src/app/services/csv.service';
+import { DataService } from 'src/app/services/data.service';
 import { VisualizerComponentService } from '../../main/visualizer/visualizer-component-service';
 
 @Component({
@@ -14,7 +15,7 @@ export class NoSolutionDialogComponent implements OnInit {
   constructor(
     private _ref: MatDialogRef<NoSolutionDialogComponent>,
     private _router: Router,
-    private _visualizerComponentService: VisualizerComponentService,
+    private _dataService: DataService,
     private _csvService: CsvService
   ) { }
 
@@ -30,13 +31,12 @@ export class NoSolutionDialogComponent implements OnInit {
 
   useExampleData(){
     this.close();
-    this._csvService.uploadDefaultOrders();
-    this._router.navigate(['/calculation']);
+    this._csvService.uploadDefaultOrders().subscribe(() => this._router.navigate(['/calculation']));
   }
 
   useExampleSolution(){
     this.close();
-    this._visualizerComponentService.loadDefaultSolution();
+    this._dataService.loadDefaultSolution().subscribe(() => this._router.navigate(['/visualizer']));
   }
 
 }

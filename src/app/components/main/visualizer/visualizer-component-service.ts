@@ -1,4 +1,3 @@
-import { HttpClient } from "@angular/common/http";
 import { ElementRef, Injectable } from "@angular/core";
 import { BehaviorSubject, combineLatest, ReplaySubject, Subject, Subscription } from "rxjs";
 import { debounceTime, filter, map, take } from "rxjs/operators";
@@ -41,14 +40,11 @@ export class VisualizerComponentService {
     private _resized = new Subject<void>();
     resized$ = this._resized.pipe(debounceTime(300));
 
-    defaultSolution: Solution = null;
-
     private _meshes: { preview: string, groupColor: string, groupId: number, seqNr: number, goodId: number, mesh: ThreeJS.Mesh, edges: ThreeJS.LineSegments }[] = [];
     private _subscriptions: Subscription[] = [];
 
     constructor(
-        private _dataService: DataService,
-        private _httpClient: HttpClient
+        private _dataService: DataService
     ) {
         this._setUp();
     }
@@ -141,13 +137,6 @@ export class VisualizerComponentService {
             this.camera.updateProjectionMatrix();
             this.controls.update();
         }
-    }
-
-    loadDefaultSolution() {
-        this._httpClient.get('/assets/exampleSolution.json').subscribe((solution: Solution) => {
-            this.defaultSolution = solution;
-            this._dataService.setCurrentSolution(solution);
-        });
     }
 
     mouseclick(event: MouseEvent) {
