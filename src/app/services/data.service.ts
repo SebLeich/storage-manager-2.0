@@ -94,7 +94,7 @@ export class DataService {
 
   loadDefaultSolution(): Observable<Solution> {
     let subject = new Subject<Solution>();
-    this._httpClient.get('/assets/exampleSolution.json')
+    this._httpClient.get('./assets/exampleSolution.json')
       .subscribe(
         (solution: Solution) => {
           this.setCurrentSolution(solution);

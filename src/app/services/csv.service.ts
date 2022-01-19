@@ -73,7 +73,7 @@ export class CsvService {
 
   uploadDefaultOrders(): Observable<string> {
     let subject = new Subject<string>();
-    this._httpClient.get('/assets/exampleOrders.csv', {
+    this._httpClient.get('./assets/exampleOrders.csv', {
       responseType: 'text'
     }).subscribe(
       (csv: string) => {
