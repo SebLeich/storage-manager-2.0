@@ -110,6 +110,9 @@
               "devServerTarget": "storage-manager:serve:production"
             }
           }
+        },
+        "deploy": {
+          "builder": "angular-cli-ghpages:deploy"
         }
       }
     }
