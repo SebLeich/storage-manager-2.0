@@ -28,6 +28,8 @@ The algorithm uses temporary stored unused spaces to place orders.
 In future, the algorithms need to be improved. 
 For instance, the Start Left Bottom algorithm produces invalid solutions. 
 Furthermore, the group restriction is ignored in the Super Flo algorithm yet.
+In addition, all algorithms should support the animation feature. 
+Currently, only the Super Flo algorithm enables to animate the calculation steps.
 
 Next, the custom API feature for connecting self created solvers via a RESTful interface will be introduced.
 
