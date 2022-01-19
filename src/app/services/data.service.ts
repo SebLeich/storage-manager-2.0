@@ -3,6 +3,7 @@ import { BehaviorSubject, combineLatest, Observable } from 'rxjs';
 import { distinctUntilChanged, filter, map, take } from 'rxjs/operators';
 import { Container, Dimension, Good, Group, Order, Product, Solution, UnusedDimension } from '../classes';
 import { compare } from '../globals';
+import { SolutionValidationService } from './solution-validation.service';
 
 @Injectable({
   providedIn: 'root'
@@ -11,6 +12,7 @@ export class DataService {
 
   private _currentSolution: BehaviorSubject<Solution> = new BehaviorSubject<Solution>(null);
   currentSolution$ = this._currentSolution.pipe(distinctUntilChanged());
+  currentSolutionValidation$ = this.currentSolution$.pipe(distinctUntilChanged(), map(solution => this._solutionValidationService.validateSolution(solution)));
   currentContainer$ = this.currentSolution$.pipe(map(x => x._Container));
   currentGroups$ = this._currentSolution.pipe(map(x => x._Groups));
   currentSolutionAvailable$ = this._currentSolution.pipe(map(x => x? true: false));
@@ -46,7 +48,9 @@ export class DataService {
     return this._unit.value;
   }
 
-  constructor() { }
+  constructor(
+    private _solutionValidationService: SolutionValidationService
+  ) { }
 
   addGroup(group: Group) {
     let existing = this._groups.value;

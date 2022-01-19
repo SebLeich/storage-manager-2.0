@@ -84,7 +84,6 @@ export class VisualizerComponentService {
             (keepPreviousGoods && child.userData.type === 'good')
             || (keepPreviousUnusedSpaces && (child.userData.type === 'infiniteSpace' || child.userData.type === 'unusedSpace'))
         ));
-        console.log(remove, this.scene.children.filter(x => removeDimensionsAnyway.indexOf(x.userData.dimensionGuid) > -1), this.scene.children, removeDimensionsAnyway);
         for (let child of remove) this.scene.remove(child);
     }
 
@@ -94,14 +93,19 @@ export class VisualizerComponentService {
     }
 
     highlightGood(good: Good) {
-
         let meshes = this.scene.children.filter(x => x instanceof ThreeJS.Mesh) as ThreeJS.Mesh[];
-
-        console.log(good);
-
         meshes.forEach(x => {
             let meshWrapper = this._meshes.find(y => y.mesh === x);
             ((x as ThreeJS.Mesh).material as ThreeJS.MeshBasicMaterial).color.set(meshWrapper ? meshWrapper.goodId === good.id ? 'white' : meshWrapper.groupColor : null);
+        });
+    }
+    
+    highlightGoods(goods: Good[]) {
+        let goodIds = goods.map(x => x.id);
+        let meshes = this.scene.children.filter(x => x instanceof ThreeJS.Mesh) as ThreeJS.Mesh[];
+        meshes.forEach(x => {
+            let meshWrapper = this._meshes.find(y => y.mesh === x);
+            ((x as ThreeJS.Mesh).material as ThreeJS.MeshBasicMaterial).color.set(meshWrapper ? goodIds.indexOf(meshWrapper.goodId) > -1 ? 'white' : meshWrapper.groupColor : null);
         });
     }
 
@@ -140,7 +144,7 @@ export class VisualizerComponentService {
     }
 
     loadDefaultSolution() {
-        this._httpClient.get('/assets/defaultSolution.json').subscribe((solution: Solution) => {
+        this._httpClient.get('/assets/exampleSolution.json').subscribe((solution: Solution) => {
             this.defaultSolution = solution;
             this._dataService.setCurrentSolution(solution);
         });

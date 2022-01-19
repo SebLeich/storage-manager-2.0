@@ -9,10 +9,10 @@ import { DataService } from "src/app/services/data.service";
 export class SolutionPreviewComponentService implements IGroupsProvider, IGoodsProvider {
 
     constructor(
-        private _dataService: DataService
+        public dataService: DataService
     ){ }
 
-    groups$: Observable<Group[]> = this._dataService.currentSolution$.pipe(filter(x => x? true: false), map(x => x._Groups));
-    goods$: Observable<Good[]> = this._dataService.currentSolution$.pipe(filter(x => x? true: false), map(x => x._Container._Goods));
+    groups$: Observable<Group[]> = this.dataService.currentSolution$.pipe(filter(x => x? true: false), map(x => x._Groups));
+    goods$: Observable<Good[]> = this.dataService.currentSolution$.pipe(filter(x => x? true: false), map(x => x._Container._Goods));
 
 }

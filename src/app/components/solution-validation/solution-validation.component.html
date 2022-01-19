@@ -1,0 +1,33 @@
+<div class="body">
+
+    <ng-container *ngIf="(dataService.currentSolutionValidation$|async).length > 0; else noValidationErrors">
+
+        <div class="error-wrapper" *ngFor="let error of ((dataService.currentSolutionValidation$|async) ?? [])">
+
+            <div class="error-title">
+                {{error.error|solutionValidationError}}
+            </div>
+
+            <div class="control">
+
+                <button color="warn" mat-icon-button (mouseenter)="hoverError(error)" (mouseleave)="mouseleave()">
+                    <mat-icon>search</mat-icon>
+                </button>
+
+            </div>
+
+        </div>
+
+    </ng-container>
+
+</div>
+
+<ng-template #noValidationErrors>
+
+    <div class="no-content-available">
+
+        Diese Lösung ist zulässig
+
+    </div>
+
+</ng-template>

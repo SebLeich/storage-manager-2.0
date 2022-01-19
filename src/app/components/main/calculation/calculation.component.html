@@ -84,6 +84,10 @@
                             </span>
         
                         </ng-container>
+
+                        <span *ngIf="wrapper.status === ALGORITHM_CALCULATION_STATUS.CALCULATED">
+                            Länge: {{wrapper.solution._Container._Length|prettyLength}}
+                        </span>
     
                     </div>
     

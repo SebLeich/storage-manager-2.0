@@ -1,0 +1,16 @@
+.error-wrapper {
+    margin-bottom: 1rem;
+    background-color: #ffeaea;
+    padding: 0.5rem;
+    border-radius: 2px;
+    color: #980808;
+    font-size: .8rem;
+    line-height: 1.2rem;
+    display: flex;
+    align-items: center;
+}
+
+.error-wrapper > .error-title {
+    margin-right: .5rem;
+    flex: 1;
+}

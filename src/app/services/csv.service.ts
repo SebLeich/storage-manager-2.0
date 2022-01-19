@@ -1,3 +1,4 @@
+import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import * as moment from 'moment';
 import { combineLatest, Observable, Subject } from 'rxjs';
@@ -25,7 +26,10 @@ export class CsvService {
     'GroupName': (order: Order) => this._dataService.groups.find(x => x._Id === order.group)?._Desc
   };
 
-  constructor(private _dataService: DataService) { }
+  constructor(
+    private _dataService: DataService,
+    private _httpClient: HttpClient
+  ) { }
 
   downloadOrderCollectionToCSV() {
     this._dataService.containerValid$
@@ -38,8 +42,8 @@ export class CsvService {
         let colCount = this.headers.length;
         let csv: string[] = ['', '', this.headers.join(',')];
         for (let i = 0; i < colCount; i++) {
-          csv[0] += i === 0 ? 'ContainerWidth' : i === 1 ? 'ContainerHeight': i === 2? 'Unit' : '';
-          csv[1] += i === 0 ? width : i === 1 ? height: i === 2? unit: '';
+          csv[0] += i === 0 ? 'ContainerWidth' : i === 1 ? 'ContainerHeight' : i === 2 ? 'Unit' : '';
+          csv[1] += i === 0 ? width : i === 1 ? height : i === 2 ? unit : '';
           if (i < (colCount - 1)) {
             csv[0] += ',';
             csv[1] += ',';
@@ -64,52 +68,13 @@ export class CsvService {
   uploadCSVToOrderCollection(event: Event) {
     let files = (event.target as HTMLInputElement).files;
     if (files.length === 0) return;
-    this._fileToString(files[0]).subscribe((result: string) => {
-      try {
-        let rows = result.split('\n');
-        let containerRow = rows[1].split(',');
-        this._dataService.setContainerWidth(parseFloat(containerRow[0]));
-        this._dataService.setContainerHeight(parseFloat(containerRow[1]));
-        this._dataService.setUnit(containerRow[2] as any ?? 'mm');
-        let properties = [];
-        for (let column of rows[2].split(',')) properties.push(this.headerOrderMap[column]);
-        let orders: Order[] = [];
-        let groups: Group[] = [];
-        for (let row of rows.splice(3)) {
-          let order: Order = new Order();
-          properties.filter(x => typeof x === 'string').forEach((property: string, index: number) => {
-            let converted: any = row.split(',')[index];
-            if ([nameOf<Order>('height'), nameOf<Order>('width'), nameOf<Order>('length'), nameOf<Order>('orderId'), nameOf<Order>('quantity')].indexOf(property) > -1) converted = parseFloat(converted);
-            else if (nameOf<Order>('group') === property) {
-              converted = parseInt(converted);
-              if (groups.findIndex(x => x._Id === converted) === -1) {
-                
-                groups.push({
-                  '_Id': converted,
-                  '_Color': null,
-                  '_Desc': row.split(',')[rows[2].split(',').indexOf('GroupName')]
-                });
-              }
-            }
-            else if ([nameOf<Order>('stackingAllowed'), nameOf<Order>('turningAllowed')].indexOf(property) > -1) converted = converted === 'true';
-            order[property] = converted;
-          });
-          orders.push(order);
-        }
-        this._dataService.addGroups(groups);
-        this._dataService.addProducts(orders.filter((x, index: number) => orders.findIndex(y => y.description === x.description) === index).map(x => {
-          return {
-            description: x.description,
-            height: x.height,
-            length: x.length,
-            width: x.width
-          };
-        }));
-        this._dataService.setOrders(orders);
-      } catch (e) {
-        console.error(e);
-      }
-    });
+    this._fileToString(files[0]).subscribe((result: string) => this._importCSVToOrderCollection(result));
+  }
+
+  uploadDefaultOrders() {
+    this._httpClient.get('/assets/exampleOrders.csv', {
+      responseType: 'text'
+    }).subscribe((csv: string) => this._importCSVToOrderCollection(csv));
   }
 
   private _fileToString(file: File): Observable<string> {
@@ -121,6 +86,53 @@ export class CsvService {
     }
     reader.readAsText(file);
     return subject.asObservable();
+  }
+
+  private _importCSVToOrderCollection(csvString: string) {
+    try {
+      let rows = csvString.split('\n');
+      let containerRow = rows[1].split(',');
+      this._dataService.setContainerWidth(parseFloat(containerRow[0]));
+      this._dataService.setContainerHeight(parseFloat(containerRow[1]));
+      this._dataService.setUnit(containerRow[2] as any ?? 'mm');
+      let properties = [];
+      for (let column of rows[2].split(',')) properties.push(this.headerOrderMap[column]);
+      let orders: Order[] = [];
+      let groups: Group[] = [];
+      for (let row of rows.splice(3)) {
+        let order: Order = new Order();
+        properties.filter(x => typeof x === 'string').forEach((property: string, index: number) => {
+          let converted: any = row.split(',')[index];
+          if ([nameOf<Order>('height'), nameOf<Order>('width'), nameOf<Order>('length'), nameOf<Order>('orderId'), nameOf<Order>('quantity')].indexOf(property) > -1) converted = parseFloat(converted);
+          else if (nameOf<Order>('group') === property) {
+            converted = parseInt(converted);
+            if (groups.findIndex(x => x._Id === converted) === -1) {
+
+              groups.push({
+                '_Id': converted,
+                '_Color': null,
+                '_Desc': row.split(',')[rows[2].split(',').indexOf('GroupName')]
+              });
+            }
+          }
+          else if ([nameOf<Order>('stackingAllowed'), nameOf<Order>('turningAllowed')].indexOf(property) > -1) converted = converted === 'true';
+          order[property] = converted;
+        });
+        orders.push(order);
+      }
+      this._dataService.addGroups(groups);
+      this._dataService.addProducts(orders.filter((x, index: number) => orders.findIndex(y => y.description === x.description) === index).map(x => {
+        return {
+          description: x.description,
+          height: x.height,
+          length: x.length,
+          width: x.width
+        };
+      }));
+      this._dataService.setOrders(orders);
+    } catch (e) {
+      console.error(e);
+    }
   }
 
 }
