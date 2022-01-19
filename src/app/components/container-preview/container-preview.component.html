@@ -1,6 +1,6 @@
 <div class="body">
 
-    <ng-container *ngIf="container; else noContainer">
+    <ng-container *ngIf="container; else noContainerAvailable">
 
         <div class="description">
 
@@ -61,11 +61,11 @@
 
 </div>
 
-<ng-template #noContainer>
+<ng-template #noContainerAvailable>
 
-    <div class="no-container-hint">
+    <div class="no-content-available">
 
-        Kein Container
+        Kein Container verfügbar
 
     </div>
 

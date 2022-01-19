@@ -90,6 +90,7 @@ export class Space {
 }
 
 export class Dimension extends Space {
+    guid: string = generateGuid();
     x: number = null;
     y: number = null;
     z: number = null;
@@ -128,4 +129,5 @@ export class Step {
     messages: string[];
     unusedDimensions: UnusedDimension[];
     dimension: Dimension;
+    usedDimension: UnusedDimension;
 }

@@ -142,3 +142,10 @@ body {
 ::-webkit-scrollbar-thumb:hover {
     background: #3b3b3b;
 }
+
+.no-content-available {
+    text-align: center;
+    color: grey;
+    font-weight: 100;
+    font-size: .8rem;
+}

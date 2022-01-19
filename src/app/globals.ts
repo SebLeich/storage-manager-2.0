@@ -22,12 +22,12 @@ export const algorithms = [
     },
     {
         title: 'Super-Flo',
-        description: 'Dieser Algorithmus ...',
+        description: 'Dieser Algorithmus berechnet Lösungen mit Hilfe von zwischengespeicherten Räumen. Diese werden entsprechend definierter Minimierungsfunktionen für das Einräumen ausgewählt und anschließend in Teilfreiräume zerlegt.',
         code: ALGORITHMS.SUPER_FLO
     },
     {
         title: 'AI Supported Solver',
-        description: 'Dieser Algorithmus ...',
+        description: 'Dieser Algorithmus berechnet Lösungen mit Hilfe von heuristischen und AI-basierten Ansätzen.',
         code: ALGORITHMS.AI_SUPPORTED_SOLVER
     }
 ]

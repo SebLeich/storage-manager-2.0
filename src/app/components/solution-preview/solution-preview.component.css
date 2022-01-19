@@ -4,6 +4,7 @@
     flex-direction: column;
     overflow-y: scroll;
     background-color: #fbfbfb;
+    padding-bottom: 2rem;
 }
 
 .panel-wrapper {

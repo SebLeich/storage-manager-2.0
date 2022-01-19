@@ -1,8 +1,12 @@
-import { Component, ElementRef, HostListener, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, HostListener, OnDestroy, OnInit, ViewChild, ViewContainerRef } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
 import { Subscription } from 'rxjs';
-import { switchMap, take } from 'rxjs/operators';
+import { filter, switchMap, take } from 'rxjs/operators';
 import { showAnimation } from 'src/app/animations';
+import { Solution } from 'src/app/classes';
 import { selectedGoodEdgeColor } from 'src/app/globals';
+import { DataService } from 'src/app/services/data.service';
+import { NoSolutionDialogComponent } from '../../dialog/no-solution-dialog/no-solution-dialog.component';
 import { VisualizerComponentService } from './visualizer-component-service';
 
 @Component({
@@ -12,7 +16,7 @@ import { VisualizerComponentService } from './visualizer-component-service';
   providers: [
     VisualizerComponentService
   ],
-  animations: [ showAnimation ]
+  animations: [showAnimation]
 })
 export class VisualizerComponent implements OnDestroy, OnInit {
 
@@ -23,7 +27,10 @@ export class VisualizerComponent implements OnDestroy, OnInit {
   private _subscriptions: Subscription[] = [];
 
   constructor(
-    public visualizerComponentService: VisualizerComponentService
+    public visualizerComponentService: VisualizerComponentService,
+    private _dataService: DataService,
+    private _dialog: MatDialog,
+    private _viewContainerRef: ViewContainerRef
   ) { }
 
   ngOnDestroy(): void {
@@ -36,8 +43,19 @@ export class VisualizerComponent implements OnDestroy, OnInit {
     this._subscriptions.push(...[
       this.visualizerComponentService.resized$.pipe(switchMap(() => this.visualizerComponentService.visualizerWrapper$.pipe(take(1)))).subscribe((ref: ElementRef<HTMLDivElement>) => {
         this.visualizerComponentService.setSceneDimensions(ref.nativeElement.clientWidth, ref.nativeElement.clientHeight, true);
-      })
+      }),
+      this._dataService.currentSolution$
+        .pipe(filter((solution: Solution) => solution === null ? true : false))
+        .subscribe(() => this.showNoSolutionDialog())
     ]);
+  }
+
+  showNoSolutionDialog() {
+    this._dialog.open(NoSolutionDialogComponent, {
+      panelClass: 'no-padding-dialog',
+      disableClose: true,
+      viewContainerRef: this._viewContainerRef
+    });
   }
 
   @HostListener('window:resize', ['$event'])

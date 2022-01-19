@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, combineLatest, Observable } from 'rxjs';
 import { distinctUntilChanged, filter, map, take } from 'rxjs/operators';
-import { Container, Dimension, Good, Group, Order, Product, Solution } from '../classes';
+import { Container, Dimension, Good, Group, Order, Product, Solution, UnusedDimension } from '../classes';
 import { compare } from '../globals';
 
 @Injectable({
@@ -99,24 +99,18 @@ export class DataService {
   }
 
   static getContainerDimension(container: Container): Dimension {
-    return {
-      height: container._Height,
-      width: container._Width,
-      length: container._Length,
-      x: 0,
-      y: 0,
-      z: 0
-    };
+    let dimension = new Dimension(container._Width, container._Height, container._Length);
+    dimension.x = 0;
+    dimension.y = 0;
+    dimension.z = 0;
+    return dimension;
   }
 
   static getGoodDimension(good: Good): Dimension {
-    return {
-      height: good.height,
-      width: good.width,
-      length: good.length,
-      x: good.x,
-      y: good.y,
-      z: good.z
-    };
+    let dimension = new Dimension(good.width, good.height, good.length);
+    dimension.x = good.x;
+    dimension.y = good.y;
+    dimension.z = good.z;
+    return dimension;
   }
 }

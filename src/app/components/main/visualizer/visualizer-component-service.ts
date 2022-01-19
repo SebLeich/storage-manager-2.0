@@ -47,8 +47,8 @@ export class VisualizerComponentService {
     private _subscriptions: Subscription[] = [];
 
     constructor(
-        private _httpClient: HttpClient,
-        private _dataService: DataService
+        private _dataService: DataService,
+        private _httpClient: HttpClient
     ) {
         this._setUp();
     }
@@ -62,25 +62,30 @@ export class VisualizerComponentService {
         this._addElementToScene(DataService.getContainerDimension(container), 'Container', 'bordered', null, null, null, null);
         for (var good of container._Goods) {
             let group = groups.find(x => x._Id === good.group);
-            this._addElementToScene(DataService.getGoodDimension(good), `${good.desc}`, 'filled', good.sequenceNr, good.id, group, DataService.getContainerDimension(container));
+            this._addElementToScene(DataService.getGoodDimension(good), `${good.desc}`, 'good', good.sequenceNr, good.id, group, DataService.getContainerDimension(container));
         }
     }
 
-    animateStep(step: Step) {
+    animateStep(step: Step, keepPreviousGoods: boolean = false, keepPreviousUnusedSpaces: boolean = false) {
         this._dataService.currentContainer$.pipe(take(1)).subscribe((container: Container) => {
-            this.clearScene();
+            this.clearScene(keepPreviousGoods, keepPreviousUnusedSpaces, [step.usedDimension.guid]);
             this._addUnloadingArrowToScene(container._Height, container._Length);
             this._addBaseGridToScene(container._Height, container._Length);
             this._addContainerToScene(DataService.getContainerDimension(container));
-            this._addElementToScene(step.dimension, null, 'filled', step.sequenceNumber, null, null, DataService.getContainerDimension(container));
+            this._addElementToScene(step.dimension, null, 'good', step.sequenceNumber, null, null, DataService.getContainerDimension(container));
             for (let unusedDimension of step.unusedDimensions) {
-                this._addElementToScene(unusedDimension, null, unusedDimension.length === Infinity ? 'infiniteSpace' : 'unusedSpace', step.sequenceNumber, null, null, DataService.getContainerDimension(container));
+                this._addElementToScene(unusedDimension, null, unusedDimension.length === Infinity ? 'infiniteSpace' : 'unusedSpace', step.sequenceNumber, null, null, DataService.getContainerDimension(container), unusedDimension.guid);
             }
         });
     }
 
-    clearScene() {
-        while (this.scene.children.length > 0) this.scene.remove(this.scene.children[0]);
+    clearScene(keepPreviousGoods: boolean = false, keepPreviousUnusedSpaces: boolean = false, removeDimensionsAnyway: string[] = []) {
+        let remove = this.scene.children.filter(child => removeDimensionsAnyway.indexOf(child.userData.dimensionGuid) > -1 || !(
+            (keepPreviousGoods && child.userData.type === 'good')
+            || (keepPreviousUnusedSpaces && (child.userData.type === 'infiniteSpace' || child.userData.type === 'unusedSpace'))
+        ));
+        console.log(remove, this.scene.children.filter(x => removeDimensionsAnyway.indexOf(x.userData.dimensionGuid) > -1), this.scene.children, removeDimensionsAnyway);
+        for (let child of remove) this.scene.remove(child);
     }
 
     dispose() {
@@ -132,6 +137,13 @@ export class VisualizerComponentService {
             this.camera.updateProjectionMatrix();
             this.controls.update();
         }
+    }
+
+    loadDefaultSolution() {
+        this._httpClient.get('/assets/defaultSolution.json').subscribe((solution: Solution) => {
+            this.defaultSolution = solution;
+            this._dataService.setCurrentSolution(solution);
+        });
     }
 
     mouseclick(event: MouseEvent) {
@@ -209,7 +221,7 @@ export class VisualizerComponentService {
         this._addElementToScene(dimension, 'Container', 'bordered', null, null, null, null);
     }
 
-    private _addElementToScene(dimension: Dimension, preview: string, type: null | 'bordered' | 'filled' | 'infiniteSpace' | 'unusedSpace', sequenceNumber: number = null, goodId: number = null, group: Group = null, parentDimension: Dimension = null) {
+    private _addElementToScene(dimension: Dimension, preview: string, type: null | 'bordered' | 'good' | 'infiniteSpace' | 'unusedSpace', sequenceNumber: number = null, goodId: number = null, group: Group = null, parentDimension: Dimension = null, dimensionGuid: string = null) {
 
         var length = dimension.length;
         if (!length) length = (parentDimension.length - dimension.z); // rotation
@@ -219,14 +231,16 @@ export class VisualizerComponentService {
 
         switch (type) {
 
-            case "filled":
+            case "good":
                 var color = group && group._Color ? group._Color : "rgb(200, 200, 200)";
                 var groupId = group && group._Id ? group._Id : null;
 
                 var geometry = new ThreeJS.BoxGeometry(dimension.width, dimension.height, length, 4, 4, 4);  // rotation
                 var material = new ThreeJS.MeshBasicMaterial({ color: color });
                 mesh = new ThreeJS.Mesh(geometry, material);
+                mesh.userData = { type: type };
                 edges = new ThreeJS.LineSegments(new ThreeJS.EdgesGeometry(mesh.geometry), new ThreeJS.LineBasicMaterial({ color: defaultGoodEdgeColor, linewidth: 1 }));
+                edges.userData = { type: type, dimensionGuid: dimensionGuid };
 
                 var meshWrapper = {
                     preview: preview,
@@ -246,6 +260,8 @@ export class VisualizerComponentService {
                 let edgeColor = type === 'infiniteSpace' ? 'orange' : type === 'unusedSpace' ? 'red' : 'black';
                 var geometry = new ThreeJS.BoxBufferGeometry(dimension.width, dimension.height, dimension.length === Infinity ? infinityReplacement : dimension.length);
                 edges = new ThreeJS.LineSegments(new ThreeJS.EdgesGeometry(geometry), new ThreeJS.LineBasicMaterial({ color: edgeColor, linewidth: 1 }));
+                edges.userData = { type: type, dimensionGuid: dimensionGuid };
+                if (type === 'infiniteSpace') console.log(edges);
                 break;
         }
 
@@ -312,13 +328,6 @@ export class VisualizerComponentService {
     private _setUp() {
         this.scene.background = new ThreeJS.Color('rgb(238,238,238)');
         this.renderer.domElement.id = this._sceneBodyId;
-
-        /*
-        this._httpClient.get('/assets/defaultSolution.json').subscribe((solution: Solution) => {
-            this.defaultSolution = solution;
-            this._dataService.setCurrentSolution(solution);
-        });
-        */
 
         this._subscriptions.push(...[
             combineLatest([this.hoverIntersections$, this.visualizerWrapper$]).subscribe(([event, wrapper]) => {

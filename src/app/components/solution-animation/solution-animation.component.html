@@ -1,39 +1,63 @@
 <div class="body">
 
-    <div class="headline">
-        Lösung in {{(dataService.currentSteps$|async)?.length ?? 0}} Schritten berechnet
-    </div>
+    <ng-container *ngIf="(dataService.currentSteps$|async)?.length > 0; else noCalculationStepsAvailable">
 
-    <div class="control-wrapper">
-
-        <button mat-icon-button>
-            <mat-icon>play_arrow</mat-icon>
-        </button>
-
-        <button mat-icon-button>
-            <mat-icon>pause</mat-icon>
-        </button>
-
-    </div>
-
-    <div class="step-overview" (mouseleave)="visualizerComponentService.reRenderCurrentContainer()">
-
-        <div class="step-wrapper" *ngFor="let step of (dataService.currentSteps$|async)" (mouseenter)="visualizerComponentService.animateStep(step)">
-
-            <div class="sequence-number">
-                {{step.sequenceNumber+1}}
-            </div>
-
-            <div class="message-wrapper">
-
-                <div class="message" *ngFor="let message of step.messages">
-                    {{message}}
-                </div>
-
-            </div>
-
+        <div class="headline">
+            Lösung in {{(dataService.currentSteps$|async)?.length ?? 0}} Schritten berechnet
         </div>
-
-    </div>
+    
+        <div class="control-wrapper">
+    
+            <button mat-icon-button>
+                <mat-icon>fast_rewind</mat-icon>
+            </button>
+    
+            <button [disabled]="solutionAnimationComponentService.animationRunning$|async" mat-icon-button (click)="solutionAnimationComponentService.startAnimation()">
+                <mat-icon>play_arrow</mat-icon>
+            </button>
+    
+            <button [disabled]="!(solutionAnimationComponentService.animationRunning$|async)" mat-icon-button (click)="solutionAnimationComponentService.stopAnimation()">
+                <mat-icon>pause</mat-icon>
+            </button>
+    
+            <input type="number" matInput [value]="solutionAnimationComponentService.animationSpeed$|async" (input)="solutionAnimationComponentService.setAnimationSpeed($event.value)" min="1" max="60" />
+    
+            <button mat-icon-button>
+                <mat-icon>fast_forward</mat-icon>
+            </button>
+    
+        </div>
+    
+        <div class="step-overview" (mouseleave)="mouseleave()">
+    
+            <div class="step-wrapper" *ngFor="let step of (dataService.currentSteps$|async)" (mouseenter)="visualizerComponentService.animateStep(step)">
+    
+                <div class="sequence-number">
+                    {{step.sequenceNumber+1}}
+                </div>
+    
+                <div class="message-wrapper">
+    
+                    <div class="message" *ngFor="let message of step.messages">
+                        {{message}}
+                    </div>
+    
+                </div>
+    
+            </div>
+    
+        </div>
+        
+    </ng-container>
 
 </div>
+
+<ng-template #noCalculationStepsAvailable>
+
+    <div class="no-content-available">
+
+        Keine Berechnungsschritte verfügbar
+
+    </div>
+
+</ng-template>

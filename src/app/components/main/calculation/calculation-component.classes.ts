@@ -7,6 +7,7 @@ export class AlgorihmStatusWrapper {
     algorithm: { title: string, description: string, code: ALGORITHMS };
     solution: Solution;
     solutionDescription: string;
+    available: boolean;
 }
 
 export enum ALGORITHM_CALCULATION_STATUS {

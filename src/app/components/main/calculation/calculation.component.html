@@ -1,112 +1,116 @@
 <div class="body" @show>
 
-    <div class="algorithm-overview" (click)="configureAPICall()">
+    <div class="content">
 
-        <div class="headline">
-            Eigene API verwenden
-        </div>
+        <div class="algorithm-overview" (click)="configureAPICall()">
 
-        <div class="description">
-            Konfigurieren Sie einen eigenen API-Call. Die Engine kann RESTful Web-Interfaces ansprechen und unterstützt Authorization (Basic, JWT Bearer Token, OAuth2), Model-Crawling, Model-Mapping und Requests gegen localhost.
-        </div>
-
-        <div class="content">
-
-            <app-api-configuration-preview></app-api-configuration-preview>
-
-            <div class="footer-button-wrapper">
-
-                <button class="footer-button" mat-raised-button color="primary" [disabled]="(configureApiCallService.configurationValid$|async)?.invalid ?? true">
-                    Daten senden
-                </button>
-    
-                <button class="footer-button" mat-raised-button color="accent">
-                    Visualisieren
-                </button>
-
+            <div class="headline">
+                Eigene API verwenden
             </div>
-            
+    
+            <div class="description">
+                Konfigurieren Sie einen eigenen API-Call. Die Engine kann RESTful Web-Interfaces ansprechen und unterstützt Authorization (Basic, JWT Bearer Token, OAuth2), Model-Crawling, Model-Mapping und Requests gegen localhost.
+            </div>
+    
+            <div class="algorithm-content">
+    
+                <app-api-configuration-preview></app-api-configuration-preview>
+    
+                <div class="footer-button-wrapper">
+    
+                    <button class="footer-button" mat-raised-button color="primary" [disabled]="(configureApiCallService.configurationValid$|async)?.invalid ?? true">
+                        Daten senden
+                    </button>
+        
+                    <button class="footer-button" mat-raised-button color="accent">
+                        Visualisieren
+                    </button>
+    
+                </div>
+                
+            </div>
+    
         </div>
-
-    </div>
-
-    <div class="algorithm-overview" *ngFor="let wrapper of calculationComponentService.algorithms">
-
-        <div class="headline">
-            {{wrapper.algorithm.title}}
-        </div>
-
-        <div class="description">
-            {{wrapper.algorithm.description}}
-        </div>
-
-        <div class="content">
-
-            <mat-form-field class="width">
-
-                <mat-label>Bezeichnung Lösung</mat-label>
-                <input type="text" #input [value]="wrapper.solutionDescription" (keyup)="wrapper.solutionDescription = input.value" matInput />
-
-            </mat-form-field>
-
-            <div class="progress-status">
-
-                <div class="progress-status-label">
-
-                    <span class="status">Status: </span>
-
-                    <ng-container [ngSwitch]="wrapper.status">
-
-                        <span *ngSwitchCase="ALGORITHM_CALCULATION_STATUS.PENDING">
-                            Nicht berechnet
-                        </span>
     
-                        <span *ngSwitchCase="ALGORITHM_CALCULATION_STATUS.PREPARE_CALCULATION">
-                            Bereite vor ...
-                        </span>
+        <div class="algorithm-overview" *ngFor="let wrapper of calculationComponentService.algorithms" [class.unavailable]="!wrapper.available">
     
-                        <span *ngSwitchCase="ALGORITHM_CALCULATION_STATUS.CALCULATING">
-                            Berechnet ...
-                        </span>
+            <div class="headline">
+                {{wrapper.algorithm.title}}
+            </div>
     
-                        <span *ngSwitchCase="ALGORITHM_CALCULATION_STATUS.CALCULATED">
-                            Berechnet {{wrapper.solution._Calculated|date:'dd.MM.yyyy HH:mm'}} Uhr
-                        </span>
+            <div class="description">
+                {{wrapper.algorithm.description}}
+            </div>
     
-                        <span *ngSwitchCase="ALGORITHM_CALCULATION_STATUS.ERROR">
-                            Fehler
-                        </span>
+            <div class="algorithm-content">
     
-                        <span *ngSwitchDefault>
-                            Nicht berechnet
-                        </span>
+                <mat-form-field class="width">
+    
+                    <mat-label>Bezeichnung Lösung</mat-label>
+                    <input type="text" #input [value]="wrapper.solutionDescription" (keyup)="wrapper.solutionDescription = input.value" matInput />
+    
+                </mat-form-field>
+    
+                <div class="progress-status">
+    
+                    <div class="progress-status-label">
+    
+                        <span class="status">Status: </span>
+    
+                        <ng-container [ngSwitch]="wrapper.status">
+    
+                            <span *ngSwitchCase="ALGORITHM_CALCULATION_STATUS.PENDING">
+                                Nicht berechnet
+                            </span>
+        
+                            <span *ngSwitchCase="ALGORITHM_CALCULATION_STATUS.PREPARE_CALCULATION">
+                                Bereite vor ...
+                            </span>
+        
+                            <span *ngSwitchCase="ALGORITHM_CALCULATION_STATUS.CALCULATING">
+                                Berechnet ...
+                            </span>
+        
+                            <span *ngSwitchCase="ALGORITHM_CALCULATION_STATUS.CALCULATED">
+                                Berechnet {{wrapper.solution._Calculated|date:'dd.MM.yyyy HH:mm'}} Uhr
+                            </span>
+        
+                            <span *ngSwitchCase="ALGORITHM_CALCULATION_STATUS.ERROR">
+                                Fehler
+                            </span>
+        
+                            <span *ngSwitchDefault>
+                                Nicht berechnet
+                            </span>
+        
+                        </ng-container>
+    
+                    </div>
+    
+                    <ng-container *ngIf="wrapper.status === ALGORITHM_CALCULATION_STATUS.ERROR">
+    
+                        <div class="calculation-error" *ngFor="let error of wrapper.errors">
+                            {{error|calculationError}}
+                        </div>
     
                     </ng-container>
-
-                </div>
-
-                <ng-container *ngIf="wrapper.status === ALGORITHM_CALCULATION_STATUS.ERROR">
-
-                    <div class="calculation-error" *ngFor="let error of wrapper.errors">
-                        {{error|calculationError}}
-                    </div>
-
-                </ng-container>
-
-            </div>
-
-            <div class="footer-button-wrapper">
-
-                <button class="footer-button" mat-raised-button color="primary" (click)="calculationComponentService.calculateAlgorithm(wrapper)">
-                    Berechnen
-                </button>
     
-                <button class="footer-button" mat-raised-button color="accent" (click)="calculationComponentService.visualizeSolution(wrapper.solution)" [disabled]="wrapper.status !== ALGORITHM_CALCULATION_STATUS.CALCULATED">
-                    Visualisieren
-                </button>
-
+                </div>
+    
+                <div class="footer-button-wrapper">
+    
+                    <button class="footer-button" mat-raised-button color="primary" (click)="calculationComponentService.calculateAlgorithm(wrapper)">
+                        Berechnen
+                    </button>
+        
+                    <button class="footer-button" mat-raised-button color="accent" (click)="calculationComponentService.visualizeSolution(wrapper.solution)" [disabled]="wrapper.status !== ALGORITHM_CALCULATION_STATUS.CALCULATED">
+                        Visualisieren
+                    </button>
+    
+                </div>
+                
             </div>
-            
+    
         </div>
 
     </div>

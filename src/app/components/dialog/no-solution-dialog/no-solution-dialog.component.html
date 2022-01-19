@@ -1,0 +1,79 @@
+<div class="body dialog-body">
+
+    <div class="dialog-nav-bar">
+
+        <mat-icon class="icon">block</mat-icon>
+        <span class="text">
+            Keine Lösung zum Anzeigen
+        </span>
+        <button mat-icon-button color="warn" [disabled]="true" (click)="close()">
+            <mat-icon>clear</mat-icon>
+        </button>
+
+    </div>
+
+    <div class="content dialog-content">
+
+        <div class="user-hint">
+            
+            Auf dieser Seite können Lösungen visualisiert werden. 
+            Momentan steht keine Lösung bereit. 
+            Bitte wählen Sie eine der folgenden Optionen um fortzufahren.
+
+        </div>
+
+        <div class="suggeston-wrapper">
+
+            <div class="suggestion" (click)="gotoOrders()">
+
+                <div class="headline">
+                    Daten bereitstellen
+                </div>
+
+                <div class="sub-title">
+                    Zur Bestellungsübersicht wechseln und eigene Daten verwenden.
+                </div>
+
+                <div class="footer">
+                    <mat-icon>edit</mat-icon>
+                </div>
+
+            </div>
+
+            <div class="suggestion" (click)="useExampleData()">
+
+                <div class="headline">
+                    Beispieldaten verwenden
+                </div>
+
+                <div class="sub-title">
+                    Beispieldaten verwenden und zur Algorithmenübersicht wechseln. 
+                </div>
+
+                <div class="footer">
+                    <mat-icon>upload</mat-icon>
+                </div>
+
+            </div>
+
+            <div class="suggestion" (click)="useExampleSolution()">
+
+                <div class="headline">
+                    Beispiellösung verwenden
+                </div>
+
+                <div class="sub-title">
+                    Beispiellösung verwenden um Visualisierungstool zu testen.
+                </div>
+
+                <div class="footer">
+                    <mat-icon>view_in_ar</mat-icon>
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>

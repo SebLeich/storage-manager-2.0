@@ -43,7 +43,8 @@ export class SuperFloSolver extends Solver implements ISolver {
                                     sequenceNumber: sequenceNumber,
                                     messages: [`put good ${good.id} into space (${space.x}/${space.y}/${space.z}) (order ${order.orderId} element ${i+1})`],
                                     unusedDimensions: unusedDimensions,
-                                    dimension: DataService.getGoodDimension(good)
+                                    dimension: DataService.getGoodDimension(good),
+                                    usedDimension: space
                                 } as Step);
                                 solution._Container._Goods.push(good);
                                 sequenceNumber++;

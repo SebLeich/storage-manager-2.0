@@ -36,3 +36,12 @@
 .message:not(:last-child) {
     margin-bottom: .2rem;
 }
+
+.control-wrapper {
+    display: flex;
+}
+
+.control-wrapper input {
+    flex: 1;
+    max-width: 3rem;
+}

@@ -90,8 +90,9 @@ export class CalculationComponentService {
                 'errors': [],
                 'status': ALGORITHM_CALCULATION_STATUS.UNCHECKED,
                 'solutionDescription': algorithm.title,
-                'solution': null
-            } as AlgorihmStatusWrapper)
+                'solution': null,
+                'available': algorithm.code === ALGORITHMS.AI_SUPPORTED_SOLVER? false: true
+            } as AlgorihmStatusWrapper);
         }
         this._dataService.solutions$
             .pipe(take(1))

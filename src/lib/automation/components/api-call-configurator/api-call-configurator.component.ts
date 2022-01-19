@@ -108,7 +108,7 @@ export class ApiCallConfiguratorComponent implements OnDestroy, OnInit {
       ref.createComponent<AccessTokenInputComponent>(factory, index, injector);
       index++;
     }
-    if (type === API_CALL_AUTHORIZATION.BASIC || type === API_CALL_AUTHORIZATION.JWT_BEARER_LOGIN) {
+    if (type === API_CALL_AUTHORIZATION.JWT_BEARER_LOGIN) {
       let factory = this._componentFactoryResolver.resolveComponentFactory(ApiLoginTestComponent);
       ref.createComponent<ApiLoginTestComponent>(factory, index, injector);
       index++;

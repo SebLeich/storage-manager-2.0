@@ -1,10 +1,14 @@
 .body {
+    overflow-y: auto;
+    height: 100%;
+}
+
+.content {
+    margin: 1rem;
     display: grid;
     grid-template-columns: 1fr;
-    overflow-y: auto;
     grid-column-gap: 1rem;
     grid-row-gap: 1rem;
-    padding: 1rem;
 }
 
 .algorithm-overview {
@@ -15,6 +19,11 @@
     display: flex;
     flex-direction: column;
     box-shadow: 0px 3px 1px -2px rgb(0 0 0 / 20%), 0px 2px 2px 0px rgb(0 0 0 / 14%), 0px 1px 5px 0px rgb(0 0 0 / 12%);
+}
+
+.algorithm-overview.unavailable {
+    opacity: .6;
+    pointer-events: none;
 }
 
 .algorithm-overview .headline {
@@ -30,7 +39,7 @@
     font-weight: 100;
 }
 
-.content {
+.algorithm-content {
     display: flex;
     flex-direction: column;
     padding: 0px 2rem;
@@ -71,13 +80,13 @@
 }
 
 @media screen and (min-width: 900px) {
-    .body {
+    .content {
         grid-template-columns: 1fr 1fr;
     }
 }
 
 @media screen and (min-width: 1200px) {
-    .body {
+    .content {
         grid-template-columns: 1fr 1fr 1fr;
     }
 }
