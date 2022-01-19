@@ -21,7 +21,7 @@ The algorihm supports stacking and placing orders next to each other.
 
 ### Super Flo
 
-The algorithm stores temporary free spaces to solve the issue.
+The algorithm uses temporary stored unused spaces to place orders.
 
 ## Future plans
 
