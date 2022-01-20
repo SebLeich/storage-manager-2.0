@@ -64,11 +64,11 @@ export class VisualizerComponentService {
 
     animateStep(step: Step, keepPreviousGoods: boolean = false, keepPreviousUnusedSpaces: boolean = false) {
         this._dataService.currentContainer$.pipe(take(1)).subscribe((container: Container) => {
-            this.clearScene(keepPreviousGoods, keepPreviousUnusedSpaces, [step.usedDimension.guid]);
+            this.clearScene(keepPreviousGoods, keepPreviousUnusedSpaces, [step.usedDimension?.guid ?? null].filter(x=> x != null));
             this._addUnloadingArrowToScene(container._Height, container._Length);
             this._addBaseGridToScene(container._Height, container._Length);
             this._addContainerToScene(DataService.getContainerDimension(container));
-            this._addElementToScene(step.dimension, null, 'good', step.sequenceNumber, null, null, DataService.getContainerDimension(container));
+            if(step.dimension) this._addElementToScene(step.dimension, null, 'good', step.sequenceNumber, null, null, DataService.getContainerDimension(container));
             for (let unusedDimension of step.unusedDimensions) {
                 this._addElementToScene(unusedDimension, null, unusedDimension.length === Infinity ? 'infiniteSpace' : 'unusedSpace', step.sequenceNumber, null, null, DataService.getContainerDimension(container), unusedDimension.guid);
             }

@@ -13,9 +13,7 @@ export class Container {
     }
     getUnusedDimension(): UnusedDimension {
         let unusedDimension = new UnusedDimension(this._Width, this._Height, Infinity, null);
-        unusedDimension.x = 0;
-        unusedDimension.y = 0;
-        unusedDimension.z = 0;
+        unusedDimension.setPosition(0, 0, 0);
         return unusedDimension;
     }
 }
@@ -71,6 +69,17 @@ export class Order {
     group: number = null;
 }
 
+export class Point {
+    x: number = null;
+    y: number = null;
+    z: number = null;
+    constructor(x: number = null, y: number = null, z: number = null){
+        this.x = x;
+        this.y = y;
+        this.z = z;
+    }
+}
+
 export class Product {
     description: string;
     height: number;
@@ -94,8 +103,30 @@ export class Dimension extends Space {
     x: number = null;
     y: number = null;
     z: number = null;
+    r: number = null;
+    t: number = null;
+    f: number = null;
+    points: Point[] = [];
     constructor(width: number = null, height: number = null, length: number = null){
         super(width, height, length);
+    }
+    setPosition(x: number, y: number, z: number){
+        this.x = x;
+        this.y = y;
+        this.z = z;
+        this.r = x + this.width;
+        this.t = y + this.height;
+        this.f = z + this.length;
+        this.points = [
+            new Point(this.x, this.y, this.z),
+            new Point(this.r, this.y, this.z),
+            new Point(this.x, this.y, this.f),
+            new Point(this.r, this.y, this.f),
+            new Point(this.x, this.t, this.z),
+            new Point(this.r, this.t, this.z),
+            new Point(this.x, this.t, this.f),
+            new Point(this.r, this.t, this.f),
+        ];
     }
 }
 

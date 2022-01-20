@@ -37,17 +37,32 @@ export class SuperFloSolver extends Solver implements ISolver {
                                 let unusedDimensions = this.putOrderAndCreateUnusedDimensions(order, space);
                                 this._unusedDimensions.push(...unusedDimensions);
                                 this._unusedDimensions.splice(this._unusedDimensions.findIndex(x => x === space), 1);
-                                let good = new Good(sequenceNumber+1, space.x, space.y, space.z, sequenceNumber, order.description);
+                                let good = new Good(sequenceNumber + 1, space.x, space.y, space.z, sequenceNumber, order.description);
                                 good.setOrderDimensions(order);
                                 solution._Steps.push({
                                     sequenceNumber: sequenceNumber,
-                                    messages: [`put good ${good.id} into space (${space.x}/${space.y}/${space.z}) (order ${order.orderId} element ${i+1})`],
+                                    messages: [`put good ${good.id} into space (${space.x}/${space.y}/${space.z}) (order ${order.orderId} element ${i + 1})`],
                                     unusedDimensions: unusedDimensions,
                                     dimension: DataService.getGoodDimension(good),
                                     usedDimension: space
                                 } as Step);
                                 solution._Container._Goods.push(good);
                                 sequenceNumber++;
+                                let combinable = this.getCombinableSpacePairs(this._unusedDimensions, true);
+                                while (combinable.length > 0) {
+                                    let combined = this.combineSpaces(combinable[0]);
+                                    let spaces = [...this._unusedDimensions.filter(x => combinable[0].indexOf(x) === -1), combined];
+                                    this._unusedDimensions = spaces;
+                                    solution._Steps.push({
+                                        sequenceNumber: sequenceNumber,
+                                        messages: [`combined unused spaces: ${combinable[0].map(x => x.guid).join(', ')}`],
+                                        unusedDimensions: [combined],
+                                        dimension: null,
+                                        usedDimension: null
+                                    } as Step);
+                                    sequenceNumber++;
+                                    combinable = this.getCombinableSpacePairs(this._unusedDimensions, true);
+                                }
                             }
                         }
                         solution._Container._Length = Math.max(...solution._Container._Goods.map(x => x.z + x.length), 0);
