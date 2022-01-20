@@ -107,36 +107,38 @@ export class VisualizerComponentService {
 
     keydown(event: KeyboardEvent) {
         let updateProjection = false;
+        let updateControls = false;
         switch (event.key) {
             case 'w':
-                this.camera.position.y -= keyboardControlMoveStep;
-                updateProjection = true;
+                this.controls.target.set(this.controls.target.x, this.controls.target.y - keyboardControlMoveStep, this.controls.target.z);
+                updateControls = true;
                 break;
             case 's':
-                this.camera.position.y += keyboardControlMoveStep;
-                updateProjection = true;
+                this.controls.target.set(this.controls.target.x, this.controls.target.y + keyboardControlMoveStep, this.controls.target.z);
+                updateControls = true;
                 break;
             case 'a':
-                this.camera.position.x += keyboardControlMoveStep;
-                updateProjection = true;
+                this.controls.target.set(this.controls.target.x + keyboardControlMoveStep, this.controls.target.y, this.controls.target.z);
+                updateControls = true;
                 break;
             case 'd':
-                this.camera.position.x -= keyboardControlMoveStep;
-                updateProjection = true;
+                this.controls.target.set(this.controls.target.x - keyboardControlMoveStep, this.controls.target.y, this.controls.target.z);
+                updateControls = true;
                 break;
             case 'y':
-                this.camera.position.z += keyboardControlMoveStep;
-                updateProjection = true;
+                this.controls.target.set(this.controls.target.x, this.controls.target.y, this.controls.target.z + keyboardControlMoveStep);
+                updateControls = true;
                 break;
             case 'x':
-                this.camera.position.z -= keyboardControlMoveStep;
-                updateProjection = true;
+                this.controls.target.set(this.controls.target.x, this.controls.target.y, this.controls.target.z - keyboardControlMoveStep);
+                updateControls = true;
                 break;
         }
         if (updateProjection) {
             this.camera.updateProjectionMatrix();
             this.controls.update();
         }
+        if(updateControls) this.controls.update();
     }
 
     mouseclick(event: MouseEvent) {
