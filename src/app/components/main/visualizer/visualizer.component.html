@@ -1,12 +1,17 @@
 <div class="body main-component-body">
 
-    <div class="solution-wrapper">
+    <div class="solution-wrapper" *ngIf="(menuVisible$|async)">
         <app-solution-preview></app-solution-preview>
     </div>
 
-    <div @show class="visualizer-wrapper" #visualizerWrapper (mousemove)="visualizerComponentService.mousemove($event)" (click)="visualizerComponentService.mouseclick($event)"></div>
+    <div @show class="visualizer-wrapper" #visualizerWrapper (mousemove)="visualizerComponentService.mousemove($event)"
+        (click)="visualizerComponentService.mouseclick($event)">
+        <button mat-icon-button class="menu-toggler" (click)="toggleMenu()">
+            <mat-icon>{{(menuVisible$|async)? 'chevron_left': 'chevron_right'}}</mat-icon>
+        </button>
+    </div>
 
-    <div class="information-wrapper">
+    <div class="information-wrapper" *ngIf="(displayDetails$|async)">
 
         <mat-expansion-panel>
 
@@ -24,7 +29,7 @@
                 </mat-panel-description>
 
             </mat-expansion-panel-header>
-            
+
             <app-good-preview [good]="(visualizerComponentService.hoveredGood$|async)"></app-good-preview>
 
         </mat-expansion-panel>
@@ -34,7 +39,8 @@
             <mat-expansion-panel-header>
                 <mat-panel-title>
 
-                    <span [style.color]="selectedGoodEdgeColor" *ngIf="(visualizerComponentService.selectedElement$|async); else noElement">
+                    <span [style.color]="selectedGoodEdgeColor"
+                        *ngIf="(visualizerComponentService.selectedElement$|async); else noElement">
                         {{(visualizerComponentService.selectedElement$|async).preview}}
                     </span>
 
@@ -45,7 +51,7 @@
                 </mat-panel-description>
 
             </mat-expansion-panel-header>
-            
+
             <app-good-preview [good]="(visualizerComponentService.selectedGood$|async)"></app-good-preview>
 
         </mat-expansion-panel>

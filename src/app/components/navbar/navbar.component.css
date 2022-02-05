@@ -60,3 +60,16 @@
     font-size: .6rem;
     font-weight: 100;
 }
+
+@media screen and (max-height: 500px) {
+    
+    .option {
+        width: 40px;
+        height: 40px;
+    }
+
+    .option .text {
+        display: none;
+    }
+
+}

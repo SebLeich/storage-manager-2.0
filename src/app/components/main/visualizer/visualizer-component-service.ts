@@ -38,7 +38,7 @@ export class VisualizerComponentService {
     private _sceneBodyId: string = generateGuid();
 
     private _resized = new Subject<void>();
-    resized$ = this._resized.pipe(debounceTime(300));
+    resized$ = this._resized.pipe(debounceTime(100));
 
     private _meshes: { preview: string, groupColor: string, groupId: number, seqNr: number, goodId: number, mesh: ThreeJS.Mesh, edges: ThreeJS.LineSegments }[] = [];
     private _subscriptions: Subscription[] = [];

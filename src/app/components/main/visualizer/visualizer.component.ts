@@ -1,6 +1,6 @@
 import { Component, ElementRef, HostListener, OnDestroy, OnInit, ViewChild, ViewContainerRef } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { Subscription } from 'rxjs';
+import { BehaviorSubject, Subscription } from 'rxjs';
 import { filter, switchMap, take } from 'rxjs/operators';
 import { showAnimation } from 'src/app/animations';
 import { Solution } from 'src/app/classes';
@@ -19,6 +19,12 @@ import { VisualizerComponentService } from './visualizer-component-service';
   animations: [showAnimation]
 })
 export class VisualizerComponent implements OnDestroy, OnInit {
+
+  private _menuVisible = new BehaviorSubject<boolean>(true);
+  menuVisible$ = this._menuVisible.asObservable();
+
+  private _displayDetails = new BehaviorSubject<boolean>(true);
+  displayDetails$ = this._displayDetails.asObservable();
 
   @ViewChild('visualizerWrapper', { static: false }) set visualizerWrapperRef(ref: ElementRef<HTMLDivElement>) {
     this.visualizerComponentService.setVisualizerWrapper(ref);
@@ -46,7 +52,8 @@ export class VisualizerComponent implements OnDestroy, OnInit {
       }),
       this._dataService.currentSolution$
         .pipe(filter((solution: Solution) => solution === null ? true : false))
-        .subscribe(() => this.showNoSolutionDialog())
+        .subscribe(() => this.showNoSolutionDialog()),
+      this.menuVisible$.subscribe(() => this.visualizerComponentService.triggerResizeEvent())
     ]);
   }
 
@@ -58,11 +65,21 @@ export class VisualizerComponent implements OnDestroy, OnInit {
     });
   }
 
+  toggleMenu = () => this._menuVisible.next(!this._menuVisible.value);
+
   @HostListener('window:resize', ['$event'])
-  onResize = (event) => this.visualizerComponentService.triggerResizeEvent();
+  onResize(event: Event) {
+    this.visualizerComponentService.triggerResizeEvent();
+    this.validateClient();
+  }
 
   @HostListener('document:keypress', ['$event'])
   onKeydown = (event) => this.visualizerComponentService.keydown(event);
 
   selectedGoodEdgeColor = selectedGoodEdgeColor;
+  
+  validateClient(){
+    this._displayDetails.next(window.innerWidth >= 1000);
+    this._menuVisible.next(window.innerWidth >= 1000);
+  }
 }
