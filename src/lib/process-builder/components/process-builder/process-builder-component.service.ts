@@ -1,7 +1,6 @@
 import { Inject, Injectable, Injector } from '@angular/core';
 
 import BPMNJSModules from 'src/lib/bpmn-io/bpmn-js-modules';
-import BPMNJSEventTypes from 'src/lib/bpmn-io/bpmn-js-event-types';
 
 // @ts-ignore
 import * as BpmnJS from 'bpmn-js/dist/bpmn-modeler.production.min.js';
@@ -20,7 +19,6 @@ import * as fromIFuncState from '../../store/reducers/i-function.reducer';
 import * as fromIBpmnJSModelState from '../../store/reducers/i-bpmn-js-model.reducer';
 
 import { selectIParams } from '../../store/selectors/i-param.selectors';
-import { IEvent } from 'src/lib/bpmn-io/i-event';
 import { validateBPMNConfig } from 'src/lib/core/config-validator';
 import { selectIFunctions } from '../../store/selectors/i-function.selector';
 import { IBpmnJS } from '../../globals/i-bpmn-js';
@@ -65,7 +63,8 @@ export class ProcessBuilderComponentService {
   public funcs$ = this._funcStore.select(selectIFunctions());
   public models$ = this._bpmnJSModelStore.select(selectIBpmnJSModels());
   public init$ = this._init.pipe(delay(1));
-  public noPendingChanges$ = this._pendingChanges.pipe(map(x => !x));
+  public pendingChanges$ = this._pendingChanges.asObservable();
+  public noPendingChanges$ = this.pendingChanges$.pipe(map(x => !x));
   public currentIBpmnJSModelGuid$ = this._currentIBpmnJSModelGuid.pipe(distinctUntilChanged());
   public currentIBpmnJSModel$ = combineLatest(
     [
@@ -135,13 +134,18 @@ export class ProcessBuilderComponentService {
       });
   }
 
-  removeModel() {
-    this._currentIBpmnJSModelGuid.pipe(take(1))
-      .subscribe((bpmnJSModelGuid: string | null) => {
+  removeModel(bpmnJsModel?: IBpmnJSModel) {
+    let callback = (model: IBpmnJSModel | string) => {
+      this._bpmnJSModelStore.dispatch(removeIBpmnJSModel(model));
+      this.setDefaultModel();
+    }
+    if (bpmnJsModel) callback(bpmnJsModel);
+    else {
+      this._currentIBpmnJSModelGuid.pipe(take(1)).subscribe((bpmnJSModelGuid: string | null) => {
         if (typeof bpmnJSModelGuid !== 'string') return;
-        this._bpmnJSModelStore.dispatch(removeIBpmnJSModel(bpmnJSModelGuid));
-        this.setNextModel();
+        callback(bpmnJSModelGuid);
       });
+    }
   }
 
   saveModel() {
@@ -164,7 +168,7 @@ export class ProcessBuilderComponentService {
           this._snackBar.open(`the state was successfully saved`, 'Ok', {
             duration: 2000
           });
-          this._pendingChanges.next(true);
+          this._pendingChanges.next(false);
 
         });
     })
@@ -200,6 +204,8 @@ export class ProcessBuilderComponentService {
     return subject.asObservable();
   }
 
+  setModel = (arg: string | IBpmnJSModel) => this._currentIBpmnJSModelGuid.next(typeof arg === 'string'? arg: arg.guid);
+
   setNextModel() {
     combineLatest([
       this._bpmnJSModelStore.select(selectIBpmnJSModels()),
@@ -214,14 +220,6 @@ export class ProcessBuilderComponentService {
     });
   }
 
-  setBpmnModel(xml: string, viewbox: IViewbox | null = null) {
-    this.bpmnJS.importXML(xml)
-      .then(() => {
-        if (viewbox) getCanvasModule(this.bpmnJS).viewbox(viewbox);
-      })
-      .catch((err) => console.log('error rendering', err));
-  }
-
   tryExecute() {
 
     try {
@@ -234,6 +232,15 @@ export class ProcessBuilderComponentService {
 
   undo = () => (window as any).cli.undo();
   redo = () => (window as any).cli.redo();
+
+  
+  private _setBpmnModel(xml: string, viewbox: IViewbox | null = null) {
+    this.bpmnJS.importXML(xml)
+      .then(() => {
+        if (viewbox) getCanvasModule(this.bpmnJS).viewbox(viewbox);
+      })
+      .catch((err) => console.log('error rendering', err));
+  }
 
   private _setUp() {
 
@@ -250,11 +257,11 @@ export class ProcessBuilderComponentService {
     this._subscriptions.push(...[
       this.currentIBpmnJSModel$.subscribe((model: IBpmnJSModel | undefined) => {
         if (!model) return;
-        this.setBpmnModel(model.xml, model.viewbox);
+        this._setBpmnModel(model.xml, model.viewbox);
       }),
       validateBPMNConfig(this.bpmnJS, this._injector).subscribe(() => {
         this._modelChanged.next();
-        this._pendingChanges.next(false);
+        this._pendingChanges.next(true);
       })
     ]);
 

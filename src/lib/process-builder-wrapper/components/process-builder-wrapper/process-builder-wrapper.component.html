@@ -1,0 +1,80 @@
+<div>
+
+    <app-process-builder></app-process-builder>
+
+    <div class="control-wrapper">
+
+        <div class="option-wrapper">
+
+            <div class="headline" (click)="toggleModules()">
+                <span class="text">Models</span>
+                <span class="counter">
+                    {{(service.models$|async).length}}
+                </span>
+            </div>
+
+            <div [@showList]="(service.models$|async).length" *ngIf="modelsVisible$|async">
+
+                <div class="option" [class.active]="model.guid === (service.currentIBpmnJSModelGuid$|async)" *ngFor="let model of (service.models$|async)">
+
+                    <div class="text" (click)="service.setModel(model)">{{model.name ?? 'unnamed draft'}}</div>
+                    <mat-icon class="control" color="warn" (click)="service.removeModel(model)">delete_forever</mat-icon>
+    
+                </div>
+
+                <div class="option" (click)="service.saveModel()">
+                    {{(service.pendingChanges$|async)? 'save': 'no changes'}}
+                </div>
+                <div class="option" (click)="service.createModel()">new draft</div>
+
+            </div>
+
+        </div>
+
+        <div class="option-wrapper">
+
+            <div class="headline" (click)="toggleMethods()">
+                <span class="text">Methods</span>
+                <span class="counter">
+                    {{(service.funcs$|async).length}}
+                </span>
+            </div>
+
+            <div [@showList]="(service.funcs$|async).length" *ngIf="methodsVisible$|async">
+
+                <div class="option" *ngFor="let func of (service.funcs$|async)">
+
+                    <div class="text">{{func.name ?? 'unnamed function'}}</div>
+                    <mat-icon class="control" color="warn">delete_forever</mat-icon>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="option-wrapper">
+
+            <div class="headline" (click)="toggleParams()">
+                <span class="text">Params</span>
+                <span class="counter">
+                    {{(service.params$|async).length}}
+                </span>
+            </div>
+
+            <div [@showList]="(service.params$|async).length" *ngIf="paramsVisible$|async">
+
+                <div class="option" *ngFor="let param of (service.params$|async)">
+
+                    <div class="text">{{param.name ?? 'unnamed param'}}</div>
+                    <mat-icon class="control" color="warn">delete_forever</mat-icon>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>

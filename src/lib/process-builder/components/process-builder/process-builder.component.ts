@@ -9,9 +9,6 @@ import { ProcessBuilderComponentService } from './process-builder-component.serv
   styleUrls: ['./process-builder.component.sass'],
   animations: [
     showAnimation
-  ],
-  providers: [
-    ProcessBuilderComponentService
   ]
 })
 export class ProcessBuilderComponent implements AfterContentInit, OnDestroy, OnInit {

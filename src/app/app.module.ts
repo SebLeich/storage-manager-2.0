@@ -24,7 +24,6 @@ import { PrettyVolumePipe } from './pipes/pretty-volume.pipe';
 import { EditDataDialogComponent } from './components/dialog/edit-data-dialog/edit-data-dialog.component';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatToolbarModule } from '@angular/material/toolbar';
-import { ErrorComponent } from './components/main/error/error.component';
 import { SolutionPreviewComponent } from './components/solution-preview/solution-preview.component';
 import { ContainerPreviewComponent } from './components/container-preview/container-preview.component';
 import { ChartsModule } from 'ng2-charts';
@@ -54,6 +53,7 @@ import { EffectsModule } from '@ngrx/effects';
 import { PROCESS_BUILDER_CONFIG_TOKEN } from 'src/lib/process-builder/globals/i-process-builder-config';
 import { PARAMS_CONFIG_TOKEN } from 'src/lib/process-builder/globals/i-param';
 import { FUNCTIONS_CONFIG_TOKEN } from 'src/lib/process-builder/globals/i-function';
+import { SharedModule } from 'src/lib/shared/shared.module';
 
 @NgModule({
   declarations: [
@@ -64,7 +64,6 @@ import { FUNCTIONS_CONFIG_TOKEN } from 'src/lib/process-builder/globals/i-functi
     PrettyLengthPipe,
     PrettyVolumePipe,
     EditDataDialogComponent,
-    ErrorComponent,
     SolutionPreviewComponent,
     ContainerPreviewComponent,
     GoodsPanelComponent,
@@ -103,6 +102,8 @@ import { FUNCTIONS_CONFIG_TOKEN } from 'src/lib/process-builder/globals/i-functi
     MatSelectModule,
     ChartsModule,
     AutomationModule,
+    SharedModule,
+
     StoreModule.forRoot({}, {}),
     EffectsModule.forRoot([])
   ],

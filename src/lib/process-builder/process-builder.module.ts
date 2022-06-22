@@ -1,7 +1,6 @@
 import { Injector, NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ProcessBuilderComponent } from './components/process-builder/process-builder.component';
-import { RouterModule } from '@angular/router';
 import { HttpClientModule } from '@angular/common/http';
 import { Store, StoreModule } from '@ngrx/store';
 import { EffectsModule } from '@ngrx/effects';
@@ -43,6 +42,7 @@ import { loadIParams } from './store/actions/i-param.actions';
 import { ValidationErrorPipe } from './pipes/validation-error.pipe';
 import { EmbeddedFunctionInputSelectionComponent } from './components/embedded/embedded-function-input-selection/embedded-function-input-selection.component';
 import { ParamPreviewComponent } from './components/previews/param-preview/param-preview.component';
+import { ProcessBuilderComponentService } from './components/process-builder/process-builder-component.service';
 
 
 @NgModule({
@@ -78,9 +78,6 @@ import { ParamPreviewComponent } from './components/previews/param-preview/param
     MatTabsModule,
     MatSlideToggleModule,
     ReactiveFormsModule,
-    RouterModule.forChild([
-      { path: '**', component: ProcessBuilderComponent }
-    ]),
 
     StoreModule.forFeature(fromIParamState.featureKey, fromIParamState.reducer),
     EffectsModule.forFeature([IParamEffects]),
@@ -92,8 +89,12 @@ import { ParamPreviewComponent } from './components/previews/param-preview/param
     EffectsModule.forFeature([IBpmnJSModelEffects]),
 
   ],
+  exports: [
+    ProcessBuilderComponent
+  ],
   providers: [
     ParamPipe,
+    ProcessBuilderComponentService,
     { provide: fromIParamState.PARAM_STORE_TOKEN, useExisting: Store },
     { provide: fromIFunctionState.FUNCTION_STORE_TOKEN, useExisting: Store },
     { provide: fromIBpmnJSModelState.BPMN_JS_MODEL_STORE_TOKEN, useExisting: Store }
