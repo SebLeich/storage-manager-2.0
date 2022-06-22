@@ -13,13 +13,12 @@ import { esLint, javascript } from '@codemirror/lang-javascript';
 import { CodemirrorRepository } from 'src/lib/core/codemirror-repository';
 import { MethodEvaluationStatus } from 'src/lib/process-builder/globals/method-evaluation-status';
 import { IProcessBuilderConfig, PROCESS_BUILDER_CONFIG_TOKEN } from 'src/lib/process-builder/globals/i-process-builder-config';
-import { FormControl, FormGroup } from '@angular/forms';
 import { linter, lintGutter } from '@codemirror/lint';
-// @ts-ignore
 import Linter from "eslint4b-prebuilt";
 import { INJECTOR_INTERFACE_TOKEN } from 'src/lib/process-builder/globals/injector';
 import defaultImplementation from 'src/lib/process-builder/globals/default-implementation';
 import { debounceTime, tap } from 'rxjs/operators';
+import { FormControl, FormGroup } from '@angular/forms';
 
 @Component({
   selector: 'app-embedded-function-implementation',

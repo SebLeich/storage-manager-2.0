@@ -22,10 +22,11 @@
     
                 </div>
 
-                <div class="option" (click)="service.saveModel()">
-                    {{(service.pendingChanges$|async)? 'save': 'no changes'}}
+                <div class="quick-interaction-wrapper">
+
+                    <app-method-quick-interaction></app-method-quick-interaction>
+                    
                 </div>
-                <div class="option" (click)="service.createModel()">new draft</div>
 
             </div>
 
@@ -34,7 +35,7 @@
         <div class="option-wrapper">
 
             <div class="headline" (click)="toggleMethods()">
-                <span class="text">Methods</span>
+                <span class="text">Functions</span>
                 <span class="counter">
                     {{(service.funcs$|async).length}}
                 </span>
@@ -45,7 +46,7 @@
                 <div class="option" *ngFor="let func of (service.funcs$|async)">
 
                     <div class="text">{{func.name ?? 'unnamed function'}}</div>
-                    <mat-icon class="control" color="warn">delete_forever</mat-icon>
+                    <mat-icon *ngIf="func.customImplementation" (click)="service.removeFunction(func)" class="control" color="warn">delete_forever</mat-icon>
 
                 </div>
 
@@ -67,7 +68,6 @@
                 <div class="option" *ngFor="let param of (service.params$|async)">
 
                     <div class="text">{{param.name ?? 'unnamed param'}}</div>
-                    <mat-icon class="control" color="warn">delete_forever</mat-icon>
 
                 </div>
 

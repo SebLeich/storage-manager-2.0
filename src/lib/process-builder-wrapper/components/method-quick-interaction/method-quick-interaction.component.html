@@ -1,0 +1,9 @@
+<div class="body" [formGroup]="formGroup">
+
+    <input class="function-name" type="text" formControlName="name" placeholder="function name" />
+
+    <div class="option" (click)="service.createModel()">add draft</div>
+    <div class="option" [class.disabled]="(service.noPendingChanges$|async)" (click)="service.saveModel()">save changes</div>
+    <div class="option reset-all" (click)="service.resetAll()">reset defaults</div>
+
+</div>

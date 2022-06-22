@@ -20,13 +20,6 @@ export class ProcessBuilderComponent implements AfterContentInit, OnDestroy, OnI
     public processBuilderComponentService: ProcessBuilderComponentService
   ) { }
 
-  clearState(){
-    localStorage.removeItem('params');
-    localStorage.removeItem('funcs');
-    localStorage.removeItem('models');
-    location.reload();
-  }
-
   ngAfterContentInit(): void {
     this.processBuilderComponentService.init(this.diagramWrapper.nativeElement);
   }

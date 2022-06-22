@@ -22,7 +22,7 @@ import { selectIParams } from '../../store/selectors/i-param.selectors';
 import { validateBPMNConfig } from 'src/lib/core/config-validator';
 import { selectIFunctions } from '../../store/selectors/i-function.selector';
 import { IBpmnJS } from '../../globals/i-bpmn-js';
-import { addIBpmnJSModel, removeIBpmnJSModel, upsertIBpmnJSModel } from '../../store/actions/i-bpmn-js-model.actions';
+import { addIBpmnJSModel, removeIBpmnJSModel, updateIBpmnJSModel, upsertIBpmnJSModel } from '../../store/actions/i-bpmn-js-model.actions';
 import * as moment from 'moment';
 import { IProcessBuilderConfig, PROCESS_BUILDER_CONFIG_TOKEN } from '../../globals/i-process-builder-config';
 import { Guid } from '../../globals/guid';
@@ -43,6 +43,10 @@ import { ValidationErrorPipe } from '../../pipes/validation-error.pipe';
 import { IProcessValidationResult } from '../../classes/validation-result';
 import { ProcessBuilderRepository } from 'src/lib/core/process-builder-repository';
 import { debounceTime, delay, distinctUntilChanged, map, shareReplay, switchMap, take, throttleTime } from 'rxjs/operators';
+import { IFunction } from '../../globals/i-function';
+import { removeIFunction, updateIFunction } from '../../store/actions/i-function.actions';
+import { IParam } from '../../globals/i-param';
+import { removeIParam } from '../../store/actions/i-param.actions';
 
 @Injectable()
 export class ProcessBuilderComponentService {
@@ -148,6 +152,21 @@ export class ProcessBuilderComponentService {
     }
   }
 
+  removeFunction(func: IFunction) {
+    this._funcStore.dispatch(removeIFunction(func));
+  }
+
+  removeParameter(param: IParam) {
+    this._funcStore.dispatch(removeIParam(param));
+  }
+
+  resetAll() {
+    localStorage.removeItem('params');
+    localStorage.removeItem('funcs');
+    localStorage.removeItem('models');
+    location.reload();
+  }
+
   saveModel() {
     this.currentIBpmnJSModel$.pipe(take(1)).subscribe((model: IBpmnJSModel | undefined) => {
       this.bpmnJS.saveXML()
@@ -204,7 +223,7 @@ export class ProcessBuilderComponentService {
     return subject.asObservable();
   }
 
-  setModel = (arg: string | IBpmnJSModel) => this._currentIBpmnJSModelGuid.next(typeof arg === 'string'? arg: arg.guid);
+  setModel = (arg: string | IBpmnJSModel) => this._currentIBpmnJSModelGuid.next(typeof arg === 'string' ? arg : arg.guid);
 
   setNextModel() {
     combineLatest([
@@ -230,10 +249,18 @@ export class ProcessBuilderComponentService {
 
   }
 
+  updateIBpmnJSModel(model: IBpmnJSModel){
+    this._bpmnJSModelStore.dispatch(updateIBpmnJSModel(model));
+  }
+
+  updateIFunction(func: IFunction){
+    this._bpmnJSModelStore.dispatch(updateIFunction(func));
+  }
+
   undo = () => (window as any).cli.undo();
   redo = () => (window as any).cli.redo();
 
-  
+
   private _setBpmnModel(xml: string, viewbox: IViewbox | null = null) {
     this.bpmnJS.importXML(xml)
       .then(() => {

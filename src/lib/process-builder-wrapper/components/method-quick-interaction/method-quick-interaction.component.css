@@ -1,0 +1,38 @@
+.body {
+    width: 100%;
+}
+
+.function-name {
+    box-sizing: border-box;
+    outline: none;
+    border: none;
+    border-bottom: 1px solid grey;
+    width: 100%;
+    padding: .2rem;
+    margin-bottom: .5rem;
+}
+
+.option {
+    cursor: pointer;
+    padding-bottom: 0.2rem;
+    margin: 0px 0.5rem 0.2rem 0.5rem;
+}
+
+.option:not(:last-child) {
+    border-bottom: 1px solid #efefef;
+}
+
+.option.disabled {
+    opacity: .5;
+    pointer-events: none;
+    cursor: default;
+}
+
+.option:hover {
+    opacity: .8;
+}
+
+.option.reset-all {
+    color: rgb(179, 57, 57);
+    font-weight: 500;
+}

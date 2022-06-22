@@ -2,7 +2,7 @@ import { IProcessBuilderConfig } from "src/lib/process-builder/globals/i-process
 
 export default {
     'editable': true,
-    'hideDataObjectReferences': true,
+    'hideDataObjectReferences': false,
     'hideDatabases': true,
     'hideEvents': false,
     'hideGateways': false,
