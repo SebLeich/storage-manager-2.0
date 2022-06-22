@@ -145,7 +145,7 @@ export const validateBPMNConfig = (bpmnJS: any, injector: Injector) => {
             if (connector) modelingModule.updateLabel(connector, taskCreationComponentOutput.entranceGatewayType === ErrorGatewayEvent.Success ? config.errorGatewayConfig.successConnectionName : config.errorGatewayConfig.errorConnectionName);
         }
 
-        let inputParams = taskCreationComponentOutput.implementation ? CodemirrorRepository.getUsedInputParams(undefined, taskCreationComponentOutput.implementation) : [];
+        let inputParams: { varName: string, propertyName: string }[] = taskCreationComponentOutput.implementation ? CodemirrorRepository.getUsedInputParams(undefined, taskCreationComponentOutput.implementation) : [];
 
         combineLatest([
             funcStore.select(fromIFunctionSelector.selectIFunction(taskCreationComponentOutput.functionIdentifier)),
@@ -162,7 +162,7 @@ export const validateBPMNConfig = (bpmnJS: any, injector: Injector) => {
             )
             .subscribe(([func, paramId, funcId, usedInputParams, outputParam]: [(IFunction | undefined | null), number, number, IParam[], IParam | 'dynamic' | undefined | null]) => {
 
-                if (!func) {
+                if (!func || (func.useDynamicInputParams && typeof taskCreationComponentOutput.functionIdentifier !== 'number')) {
 
                     if (payload.configureActivity && typeof BPMNJsRepository.getSLPBExtension(payload.configureActivity.businessObject, 'ActivityExtension', (ext) => ext.activityFunctionId) !== 'number') {
                         getModelingModule(bpmnJS).removeElements([payload.configureActivity]);
@@ -173,7 +173,7 @@ export const validateBPMNConfig = (bpmnJS: any, injector: Injector) => {
 
                 let type = typeof func.output?.param;
                 let f: IFunction = func!, outputParamId: number = type === 'number' ? func.output?.param as number : paramId;
-                if (func.requireCustomImplementation || func.customImplementation) {
+                if (func.requireCustomImplementation || func.customImplementation || func.useDynamicInputParams) {
 
                     let methodEvaluation = CodemirrorRepository.evaluateCustomMethod(undefined, taskCreationComponentOutput.implementation ?? defaultImplementation);
                     if (methodEvaluation === MethodEvaluationStatus.ReturnValueFound) {
@@ -193,21 +193,29 @@ export const validateBPMNConfig = (bpmnJS: any, injector: Injector) => {
                         outputParam = undefined;
                     }
 
+                    let inputParams: { optional: boolean, param: number }[] = [];
+                    if (func.useDynamicInputParams && typeof taskCreationComponentOutput.inputParam === 'number') inputParams.push({ optional: false, param: taskCreationComponentOutput.inputParam });
+                    else if (func.requireCustomImplementation || func.customImplementation) {
+                        inputParams.push(...usedInputParams.map(x => {
+                            return { 'optional': false, 'param': x.identifier }
+                        }));
+                    }
+
                     f = {
-                        'customImplementation': taskCreationComponentOutput.implementation ?? [],
+                        'customImplementation': taskCreationComponentOutput.implementation ?? null,
                         'canFail': taskCreationComponentOutput.canFail ?? false,
                         'name': taskCreationComponentOutput.name ?? config.defaultFunctionName,
                         'identifier': func.requireCustomImplementation ? funcId : func.identifier,
                         'normalizedName': taskCreationComponentOutput.normalizedName ?? ProcessBuilderRepository.normalizeName(taskCreationComponentOutput.name ?? undefined),
                         'output': methodEvaluation === MethodEvaluationStatus.ReturnValueFound ? { param: outputParamId } : null,
-                        'pseudoImplementation': () => { },
-                        'inputParams': usedInputParams.map(x => {
-                            return { 'optional': false, 'param': x.identifier }
-                        }),
-                        'requireCustomImplementation': false
+                        'pseudoImplementation': func.pseudoImplementation,
+                        'inputParams': inputParams,
+                        'requireCustomImplementation': false,
+                        'requireDynamicInput': false,
+                        'useDynamicInputParams': func.useDynamicInputParams
                     };
 
-                    func.requireCustomImplementation ? funcStore.dispatch(addIFunction(f)) : funcStore.dispatch(updateIFunction(f));
+                    func.requireCustomImplementation || func.requireDynamicInput ? funcStore.dispatch(addIFunction(f)) : funcStore.dispatch(updateIFunction(f));
 
                 }
 
@@ -247,8 +255,8 @@ export const validateBPMNConfig = (bpmnJS: any, injector: Injector) => {
 
                     modelingModule.removeElements(payload.configureActivity.incoming.filter(x => x.type === shapeTypes.DataInputAssociation));
                     if (f.inputParams || func.useDynamicInputParams) {
-                        let inputParams = f.inputParams? Array.isArray(f.inputParams) ? f.inputParams : [f.inputParams] : [];
-                        if(typeof taskCreationComponentOutput.inputParam === 'number') inputParams.push({ optional: false, param: taskCreationComponentOutput.inputParam });
+                        let inputParams = f.inputParams ? Array.isArray(f.inputParams) ? [...f.inputParams] : [f.inputParams] : [];
+                        if (typeof taskCreationComponentOutput.inputParam === 'number') inputParams.push({ optional: false, param: taskCreationComponentOutput.inputParam });
 
                         let availableInputParamsIElements = BPMNJsRepository.getAvailableInputParamsIElements(payload.configureActivity);
                         for (let param of inputParams.filter(x => !(payload.configureActivity as IElement).incoming.some(y => BPMNJsRepository.sLPBExtensionSetted(y.source.businessObject, 'DataObjectExtension', (ext) => ext.outputParam === x.param)))) {

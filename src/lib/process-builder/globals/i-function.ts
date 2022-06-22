@@ -11,10 +11,11 @@ export interface IFunction {
     inputParams: IInputParam | IInputParam[] | null;
     useDynamicInputParams?: undefined | boolean | IDynamicInputParamsConfig;
     output: IOutputParam | null;
-    pseudoImplementation: (args?: any) => any;
+    pseudoImplementation?: (args?: any) => Promise<any>;
     canFail: boolean;
     customImplementation?: string[];
     requireCustomImplementation?: boolean;
+    requireDynamicInput?: boolean;
 }
 
 export const FUNCTIONS_CONFIG_TOKEN: InjectionToken<IFunction[]> = new InjectionToken<IFunction[]>("FUNCTION_CONFIG");

@@ -56,6 +56,7 @@ export const reducer = createReducer(
         'customImplementation': func.customImplementation,
         'pseudoImplementation': func.pseudoImplementation,
         'requireCustomImplementation': func.requireCustomImplementation,
+        'requireDynamicInput': func.requireDynamicInput,
         'useDynamicInputParams': func.useDynamicInputParams
       }
     }

@@ -43,6 +43,7 @@ import { ValidationErrorPipe } from './pipes/validation-error.pipe';
 import { EmbeddedFunctionInputSelectionComponent } from './components/embedded/embedded-function-input-selection/embedded-function-input-selection.component';
 import { ParamPreviewComponent } from './components/previews/param-preview/param-preview.component';
 import { ProcessBuilderComponentService } from './components/process-builder/process-builder-component.service';
+import { ValidationWarningPipe } from './pipes/validation-warning.pipe';
 
 
 @NgModule({
@@ -61,7 +62,8 @@ import { ProcessBuilderComponentService } from './components/process-builder/pro
     EmbeddedParamEditorComponent,
     ValidationErrorPipe,
     EmbeddedFunctionInputSelectionComponent,
-    ParamPreviewComponent
+    ParamPreviewComponent,
+    ValidationWarningPipe
   ],
   imports: [
     CodemirrorModule,
@@ -90,7 +92,9 @@ import { ProcessBuilderComponentService } from './components/process-builder/pro
 
   ],
   exports: [
-    ProcessBuilderComponent
+    ProcessBuilderComponent,
+    ValidationErrorPipe,
+    ValidationWarningPipe
   ],
   providers: [
     ParamPipe,

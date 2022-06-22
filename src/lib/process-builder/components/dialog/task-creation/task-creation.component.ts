@@ -75,12 +75,13 @@ export class TaskCreationComponent implements OnDestroy, OnInit {
   private _customImplementation = new BehaviorSubject<IElement | null>(null);
   private _hasOutputParam = new BehaviorSubject<boolean>(false);
   private _hasDynamicInputParam = new BehaviorSubject<IElement | null>(null);
+  private _hasDynamicOutputParam = new BehaviorSubject<IElement | null>(null);
 
   hasOutputParam$ = this._hasOutputParam.asObservable();
-  steps$ = combineLatest([this._configureGateway.asObservable(), this._customImplementation.asObservable(), this._hasDynamicInputParam.asObservable()])
+  steps$ = combineLatest([this._configureGateway.asObservable(), this._customImplementation.asObservable(), this._hasDynamicInputParam.asObservable(), this._hasDynamicOutputParam.asObservable()])
     .pipe(
       debounceTime(10),
-      map(([gatewayConfig, customImplementation, hasDynamicInputParam]: [IConnector | null, IElement | null, IElement | null]) => {
+      map(([gatewayConfig, customImplementation, hasDynamicInputParam, dynamicOutputParam]: [IConnector | null, IElement | null, IElement | null, IElement | null]) => {
         let availableSteps: ITaskCreationConfig[] = [];
         if (gatewayConfig) {
           availableSteps.push({
@@ -94,24 +95,23 @@ export class TaskCreationComponent implements OnDestroy, OnInit {
             'element': this.data.data.payload.configureActivity
           } as ITaskCreationConfig);
         }
-        if(hasDynamicInputParam){
+        if (hasDynamicInputParam) {
           availableSteps.push({
             'taskCreationStep': TaskCreationStep.ConfigureFunctionInput,
             'element': hasDynamicInputParam
           } as ITaskCreationConfig);
         }
         if (customImplementation) {
-          availableSteps.push(...[
-            {
-              'taskCreationStep': TaskCreationStep.ConfigureFunctionImplementation,
-              'element': customImplementation
-            } as ITaskCreationConfig,
-            {
-              'taskCreationStep': TaskCreationStep.ConfigureFunctionOutput,
-              'element': customImplementation,
-              'disabled$': this.hasOutputParam$.pipe(map(x => x === true ? false : true))
-            } as ITaskCreationConfig
-          ]);
+          availableSteps.push({
+            'taskCreationStep': TaskCreationStep.ConfigureFunctionImplementation,
+            'element': customImplementation
+          } as ITaskCreationConfig);
+        }
+        if (customImplementation || dynamicOutputParam) {
+          availableSteps.push({
+            'taskCreationStep': TaskCreationStep.ConfigureFunctionOutput,
+            'element': dynamicOutputParam
+          } as ITaskCreationConfig);
         }
         return availableSteps;
       }),
@@ -251,15 +251,29 @@ export class TaskCreationComponent implements OnDestroy, OnInit {
 
   testImplementation() {
     let customImplementation = this.formGroup.controls['implementation']?.value;
-    if (!customImplementation) return;
-    let result = ProcessBuilderRepository.testMethodAndGetResponse(customImplementation, this._injector);
-    result.subscribe({
-      'next': (result: any) => {
-        let parsed: string = typeof result === 'object' ? JSON.stringify(result) : typeof result === 'number' ? result.toString() : result;
-        this._statusMessage.next(`succeeded! received: ${parsed}`);
-        this.formGroup.controls['outputParamValue'].setValue(ProcessBuilderRepository.extractObjectIParams(result));
-      }
-    });
+    if (customImplementation) {
+      let result = ProcessBuilderRepository.testMethodAndGetResponse(customImplementation, this._injector);
+      result.subscribe({
+        'next': (result: any) => {
+          let parsed: string = typeof result === 'object' ? JSON.stringify(result) : typeof result === 'number' ? result.toString() : result;
+          this._statusMessage.next(`succeeded! received: ${parsed}`);
+          this.formGroup.controls['outputParamValue'].setValue(ProcessBuilderRepository.extractObjectIParams(result));
+        }
+      });
+      return;
+    } else if (typeof this.functionIdentifierControl.value === 'number') {
+      this._funcStore.select(selectIFunction(this.functionIdentifierControl.value))
+        .pipe(take(1))
+        .subscribe((func: IFunction) => {
+          if (typeof func.pseudoImplementation === 'function') {
+            func.pseudoImplementation()
+              .then((result: object) => {
+                this.formGroup.controls['outputParamValue'].setValue(ProcessBuilderRepository.extractObjectIParams(result));
+              })
+              .catch((reason: string) => alert(reason));
+          }
+        });
+    }
   }
 
   validateFunctionSelection() {
@@ -268,6 +282,7 @@ export class TaskCreationComponent implements OnDestroy, OnInit {
       filter(x => x ? true : false),
       switchMap((fun: IFunction | null | undefined) => combineLatest([of(fun), this._paramStore.select(selectIParam(fun?.output?.param))]))
     ).subscribe(([fun, outputParam]: [IFunction | null | undefined, IParam | null | undefined]) => {
+      let inputParams = fun.useDynamicInputParams && fun.inputParams ? Array.isArray(fun.inputParams) ? [...fun.inputParams] : [fun.inputParams] : [];
       this.formGroup.patchValue({
         'canFail': fun?.canFail,
         'implementation': fun?.customImplementation,
@@ -276,11 +291,14 @@ export class TaskCreationComponent implements OnDestroy, OnInit {
         'normalizedName': fun?.normalizedName,
         'normalizedOutputParamName': outputParam?.normalizedName,
         'outputParamName': outputParam?.name,
-        'outputParamValue': outputParam?.value
+        'outputParamValue': outputParam?.value,
+        'entranceGatewayType': null,
+        'inputParam': inputParams.length === 1 ? inputParams[0].param : null
       } as IEmbeddedFunctionImplementationData);
-      let hasCustomImplementation = (this.requireCustomImplementationControl.value || this.implementationControl.value) && this.data.data.payload.configureActivity? true: false;
-      this._customImplementation.next(hasCustomImplementation? this.data.data.payload.configureActivity ?? null: null);
-      this._hasDynamicInputParam.next(fun?.useDynamicInputParams && !hasCustomImplementation? this.data.data.payload.configureActivity ?? null: null);
+      let hasCustomImplementation = (this.requireCustomImplementationControl.value || this.implementationControl.value) && this.data.data.payload.configureActivity ? true : false;
+      this._customImplementation.next(hasCustomImplementation ? this.data.data.payload.configureActivity ?? null : null);
+      this._hasDynamicInputParam.next(fun?.useDynamicInputParams ?? false ? this.data.data.payload.configureActivity : null);
+      this._hasDynamicOutputParam.next(fun?.output?.param === 'dynamic' ?? false ? this.data.data.payload.configureActivity : null);
     });
   }
 

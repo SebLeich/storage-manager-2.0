@@ -36,3 +36,24 @@
     color: rgb(179, 57, 57);
     font-weight: 500;
 }
+
+.hint-wrapper {
+    margin-bottom: .5rem;
+}
+
+.hint {
+    padding: .2rem;
+    font-size: .7rem;
+    line-height: .9rem;
+    margin-bottom: .05rem;
+}
+
+.hint.error {
+    background-color: rgb(136, 26, 26);
+    color: white;
+}
+
+.hint.warning {
+    background-color: #ffb200;
+    color: white;
+}

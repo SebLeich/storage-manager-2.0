@@ -1,3 +1,3 @@
 export enum ValidationWarning {
-    NoEndEvent, CyclicAccess
+    NoEndEvent, CyclicAccess, UnusedOutputParam, UnreachableElement
 }

@@ -2,6 +2,18 @@
 
     <input class="function-name" type="text" formControlName="name" placeholder="function name" />
 
+    <div class="hint-wrapper">
+
+        <div class="hint error" *ngFor="let error of (service.validation$|async)?.errors" (mouseenter)="service.showError(error)" (mouseleave)="service.hideAllHints()">
+            {{error.error|validationError}}
+        </div>
+    
+        <div class="hint warning" *ngFor="let warning of (service.validation$|async)?.warnings" (mouseenter)="service.showWarning(warning)" (mouseleave)="service.hideAllHints()">
+            {{warning.warning|validationWarning}}
+        </div>
+
+    </div>
+
     <div class="option" (click)="service.createModel()">add draft</div>
     <div class="option" [class.disabled]="(service.noPendingChanges$|async)" (click)="service.saveModel()">save changes</div>
     <div class="option reset-all" (click)="service.resetAll()">reset defaults</div>

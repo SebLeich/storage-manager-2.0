@@ -12,7 +12,7 @@ export class ValidationErrorPipe implements PipeTransform {
     this.naming[ValidationError.MultipleOutgoingSequenceFlowsFromNoneGatewayShape] = 'multiple outgoing sequence flows';
     this.naming[ValidationError.NoEndEvent] = 'no end event';
     this.naming[ValidationError.NoStartEvent] = 'no start event';
-    this.naming[ValidationError.SequenceEndWithoutEndEvent] = 'sequence ends without end event';
+    this.naming[ValidationError.SequenceEndWithoutEndEvent] = 'sequence ends without an end event';
     this.naming[ValidationError.MultipleStartEvents] = 'multiple start events';
   }
 

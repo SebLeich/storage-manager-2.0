@@ -21,7 +21,12 @@ export class AppComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    this._snackBar.open('that application uses cookies', 'Cookies', { duration: 2000, horizontalPosition: 'right', verticalPosition: 'top' });
+    if (localStorage.getItem('cookie_consent') !== 'true') {
+      this._snackBar.open(
+        'In addition to cookies which are necessary for the proper functioning of websites, we use cookies on your browser to improve your experience.', 'Consent', { horizontalPosition: 'right', verticalPosition: 'top' })
+        .afterDismissed()
+        .subscribe(() => localStorage.setItem('cookie_consent', 'true'));
+    }
     this._router
       .events
       .subscribe(event => {

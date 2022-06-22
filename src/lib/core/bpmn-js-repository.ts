@@ -122,6 +122,8 @@ export class BPMNJsRepository {
         if (startEvents.length === 0) errors.push({ error: ValidationError.NoStartEvent });
         else if (startEvents.length > 1) startEvents.forEach(x => errors.push({ error: ValidationError.MultipleStartEvents, element: x }));
 
+        let fullPath: IElement[] = [];
+
         for (let startEvent of startEvents) {
 
             if (startEvent.incoming.filter(x => x.type === shapeTypes.SequenceFlow).length > 0) {
@@ -130,6 +132,10 @@ export class BPMNJsRepository {
 
             let cursor: IElement | null = startEvent, stack: IElement[] = [], path: IElement[] = [];
             while (cursor) {
+
+                let outputParams = cursor.outgoing.filter(x => x.type === shapeTypes.DataOutputAssociation).map(x => x.target);
+                let unusedOutputParams = outputParams.filter(x => x.outgoing.filter(x => x.type === shapeTypes.DataInputAssociation).length === 0);
+                unusedOutputParams.forEach(x => warnings.push({ 'element': x, 'warning': ValidationWarning.UnusedOutputParam }));
 
                 let response: IElement[] = this.getNextNodes(cursor);
                 path.push(cursor);
@@ -157,11 +163,14 @@ export class BPMNJsRepository {
 
             }
 
+            fullPath.push(...path);
+
         }
 
-        if (endEvents.length === 0) {
-            warnings.push({ warning: ValidationWarning.NoEndEvent });
-        }
+        let unreachableElements = elementRegistry.getAll().filter(x => (x.type === shapeTypes.ExclusiveGateway || x.type === shapeTypes.ParallelGateway || x.type === shapeTypes.Task) && fullPath.indexOf(x) === -1);
+        unreachableElements.forEach(x => warnings.push({ element: x, warning: ValidationWarning.UnreachableElement }));
+
+        if (endEvents.length === 0) warnings.push({ warning: ValidationWarning.NoEndEvent });
 
         return { warnings: warnings, errors: errors };
     }

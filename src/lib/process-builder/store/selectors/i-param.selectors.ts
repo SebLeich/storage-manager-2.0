@@ -7,7 +7,7 @@ export const selectIParamState = createFeatureSelector<fromIParam.State>(
     fromIParam.featureKey,
 );
 
-export const selectIParam = (arg: ParamCodes | 'dynamic' | undefined | (() => ParamCodes | 'dynamic' | undefined)) => createSelector(
+export const selectIParam = (arg: number | 'dynamic' | undefined | null | (() => number | 'dynamic' | null | undefined)) => createSelector(
     selectIParamState,
     (state: fromIParam.State) => {
         if (!state || !state.entities || !arg || arg === 'dynamic') return null;

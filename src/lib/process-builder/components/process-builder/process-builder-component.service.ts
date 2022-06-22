@@ -47,6 +47,9 @@ import { IFunction } from '../../globals/i-function';
 import { removeIFunction, updateIFunction } from '../../store/actions/i-function.actions';
 import { IParam } from '../../globals/i-param';
 import { removeIParam } from '../../store/actions/i-param.actions';
+import { ValidationError } from '../../globals/validation-error';
+import { ValidationWarning } from '../../globals/validation-warning';
+import { ValidationWarningPipe } from '../../pipes/validation-warning.pipe';
 
 @Injectable()
 export class ProcessBuilderComponentService {
@@ -122,6 +125,8 @@ export class ProcessBuilderComponentService {
     for (let sub of this._subscriptions) sub.unsubscribe();
     this._subscriptions = [];
   }
+
+  hideAllHints = () => ProcessBuilderRepository.clearAllTooltips(this.bpmnJS);
 
   init(parent: HTMLDivElement) {
     // attach BpmnJS instance to DOM element
@@ -236,6 +241,32 @@ export class ProcessBuilderComponentService {
       let index = models.findIndex(x => x.guid === modelGuid);
       index = index >= (models.length - 1) ? 0 : index + 1;
       this._currentIBpmnJSModelGuid.next(models[index].guid);
+    });
+  }
+
+  showError(error: { element: IElement, error: ValidationError }) {
+    this.hideAllHints();
+    var tooltipModule = getTooltipModule(this.bpmnJS);
+    tooltipModule.add({
+      position: {
+        x: error.element.x,
+        y: error.element.y + error.element.height + 3
+      },
+      html:
+        `<div style="width: 120px; background: #f44336de; color: white; font-size: .7rem; padding: .2rem .3rem; border-radius: 2px; line-height: .8rem;">${new ValidationErrorPipe().transform(error.error)}</div>`
+    });
+  }
+
+  showWarning(warning: { element: IElement, warning: ValidationWarning }) {
+    this.hideAllHints();
+    var tooltipModule = getTooltipModule(this.bpmnJS);
+    tooltipModule.add({
+      position: {
+        x: warning.element.x,
+        y: warning.element.y + warning.element.height + 3
+      },
+      html:
+        `<div style="width: 120px; background: #ffb200; color: white; font-size: .7rem; padding: .2rem .3rem; border-radius: 2px; line-height: .8rem;">${new ValidationWarningPipe().transform(warning.warning)}</div>`
     });
   }
 

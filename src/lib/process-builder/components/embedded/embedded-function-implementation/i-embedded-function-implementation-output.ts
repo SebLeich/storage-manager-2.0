@@ -1,4 +1,3 @@
-import { Text } from "@codemirror/state";
 import { IParamKeyValue } from "src/lib/process-builder/globals/i-param-key-value";
 
 export interface IEmbeddedFunctionImplementationData {
@@ -9,4 +8,5 @@ export interface IEmbeddedFunctionImplementationData {
     outputParamName: string;
     normalizedOutputParamName: string;
     outputParamValue: IParamKeyValue[];
+    inputParam: number | null;
 }
