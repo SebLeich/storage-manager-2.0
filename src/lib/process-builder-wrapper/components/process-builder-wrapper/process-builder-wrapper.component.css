@@ -1,3 +1,16 @@
+.body {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    width: 100%;
+}
+
+.control-footer {
+    height: 100px;
+    background-color: white;
+    box-shadow: 0 0 4px #848484;
+}
+
 .control-wrapper {
     position: absolute;
     background-color: white;

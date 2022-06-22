@@ -22,6 +22,7 @@ export interface ITaskCreationData {
     normalizedOutputParamName: string | null;
     outputParamValue: IParamKeyValue[] | null;
     entranceGatewayType: number | null;
+    inputParam: number | null;
 }
 
 export interface ITaskCreationPayload {

@@ -10,7 +10,7 @@ import { TaskCreationStep } from 'src/lib/process-builder/globals/task-creation-
 import { EmbeddedConfigureErrorGatewayEntranceConnectionComponent } from '../../embedded/embedded-configure-error-gateway-entrance-connection/embedded-configure-error-gateway-entrance-connection.component';
 import { EmbeddedFunctionImplementationComponent } from '../../embedded/embedded-function-implementation/embedded-function-implementation.component';
 import { EmbeddedFunctionSelectionComponent } from '../../embedded/embedded-function-selection/embedded-function-selection.component';
-import { ITaskCreationComponentInput, ITaskCreationDataWrapper } from './i-task-creation-component-input';
+import { ITaskCreationComponentInput } from './i-task-creation-component-input';
 import * as fromIFunction from 'src/lib/process-builder/store/reducers/i-function.reducer';
 import * as fromIParam from 'src/lib/process-builder/store/reducers/i-param.reducer';
 import { selectIFunction } from 'src/lib/process-builder/store/selectors/i-function.selector';
@@ -154,7 +154,8 @@ export class TaskCreationComponent implements OnDestroy, OnInit {
       'outputParamName': config.dynamicParamDefaultNaming,
       'normalizedOutputParamName': ProcessBuilderRepository.normalizeName(config.dynamicParamDefaultNaming),
       'outputParamValue': this._formBuilder.control(null),
-      'entranceGatewayType': null
+      'entranceGatewayType': null,
+      'inputParam': null
     });
     this.formGroup.patchValue(this.data.data.data);
   }

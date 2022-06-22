@@ -6,6 +6,10 @@
     overflow: hidden;
 }
 
+.body.loading { 
+    opacity: .5;
+}
+
 .content {
     flex: 1;
     background-color: rgb(243, 243, 243);

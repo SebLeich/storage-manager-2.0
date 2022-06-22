@@ -1,8 +1,8 @@
 <div class="body">
 
-    <div class="param-wrapper" *ngFor="let param of (availableInputParams$|async)">
+    <div class="param-wrapper" *ngFor="let param of (availableInputParams$|async)" (click)="paramClicked(param)">
 
-        <mat-slide-toggle></mat-slide-toggle>
+        <mat-slide-toggle [checked]="inputParamControl.value === param.identifier"></mat-slide-toggle>
         <app-param-preview [param]="param"></app-param-preview>
 
     </div>

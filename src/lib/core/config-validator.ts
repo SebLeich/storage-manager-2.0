@@ -22,7 +22,7 @@ import { MethodEvaluationStatus } from "../process-builder/globals/method-evalua
 import { TaskCreationStep } from "../process-builder/globals/task-creation-step";
 import { DialogService } from "../process-builder/services/dialog.service";
 import { addIFunction, updateIFunction } from "../process-builder/store/actions/i-function.actions";
-import { removeIParam, updateIParam, upsertIParam, upsertIParams } from "../process-builder/store/actions/i-param.actions";
+import { removeIParam, upsertIParam } from "../process-builder/store/actions/i-param.actions";
 import { FUNCTION_STORE_TOKEN } from "../process-builder/store/reducers/i-function.reducer";
 import { PARAM_STORE_TOKEN } from "../process-builder/store/reducers/i-param.reducer";
 import * as fromIFunctionSelector from "../process-builder/store/selectors/i-function.selector";
@@ -246,8 +246,10 @@ export const validateBPMNConfig = (bpmnJS: any, injector: Injector) => {
                     } else if (!f.canFail && gatewayShape) modelingModule.removeElements([gatewayShape]);
 
                     modelingModule.removeElements(payload.configureActivity.incoming.filter(x => x.type === shapeTypes.DataInputAssociation));
-                    if (f.inputParams) {
-                        let inputParams = Array.isArray(f.inputParams) ? f.inputParams : [f.inputParams];
+                    if (f.inputParams || func.useDynamicInputParams) {
+                        let inputParams = f.inputParams? Array.isArray(f.inputParams) ? f.inputParams : [f.inputParams] : [];
+                        if(typeof taskCreationComponentOutput.inputParam === 'number') inputParams.push({ optional: false, param: taskCreationComponentOutput.inputParam });
+
                         let availableInputParamsIElements = BPMNJsRepository.getAvailableInputParamsIElements(payload.configureActivity);
                         for (let param of inputParams.filter(x => !(payload.configureActivity as IElement).incoming.some(y => BPMNJsRepository.sLPBExtensionSetted(y.source.businessObject, 'DataObjectExtension', (ext) => ext.outputParam === x.param)))) {
                             let element = availableInputParamsIElements.find(x => BPMNJsRepository.sLPBExtensionSetted(x.businessObject, 'DataObjectExtension', (ext) => ext.outputParam === param.param));
@@ -263,6 +265,6 @@ export const validateBPMNConfig = (bpmnJS: any, injector: Injector) => {
 
     }
 
-    return validationFinishedSubject.pipe(debounceTime(500));
+    return validationFinishedSubject.asObservable();
 
 }
