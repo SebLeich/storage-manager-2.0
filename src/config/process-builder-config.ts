@@ -3,13 +3,13 @@ import { IProcessBuilderConfig } from "src/lib/process-builder/globals/i-process
 export default {
     'editable': true,
     'hideDataObjectReferences': true,
-    'hideDatabases': false,
+    'hideDatabases': true,
     'hideEvents': false,
-    'hideGateways': true,
+    'hideGateways': false,
     'hideGroups': true,
     'hidePools': true,
     'hideSubProcesses': true,
-    'hideTasks': true,
+    'hideTasks': false,
     'statusConfig': {
         'initialStatus': 'initial',
         'finalStatus': 'final'

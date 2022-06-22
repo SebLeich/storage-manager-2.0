@@ -15,7 +15,7 @@ export class AppComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    this._snackBar.open('Diese App verzichtet auf Cookies', 'Cookies', { duration: 2000, horizontalPosition: 'right', verticalPosition: 'top' });
+    this._snackBar.open('that application uses cookies', 'Cookies', { duration: 2000, horizontalPosition: 'right', verticalPosition: 'top' });
   }
 
 }

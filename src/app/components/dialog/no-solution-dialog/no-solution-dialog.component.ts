@@ -26,6 +26,11 @@ export class NoSolutionDialogComponent implements OnInit {
     this._router.navigate(['/orders']);
   }
 
+  gotoPipelineDesigner(){
+    this._ref.close();
+    this._router.navigate(['/data-pipeline-designer']);
+  }
+
   ngOnInit(): void {
   }
 

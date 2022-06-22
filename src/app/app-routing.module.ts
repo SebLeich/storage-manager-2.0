@@ -8,7 +8,7 @@ import { VisualizerComponent } from './components/main/visualizer/visualizer.com
 const routes: Routes = [
   { path: '', pathMatch: 'full', redirectTo: 'visualizer' },
   { path: 'calculation', component: CalculationComponent },
-  { path: 'data-flow', loadChildren: () => import('src/lib/process-builder-wrapper/process-builder-wrapper.module').then(m => m.ProcessBuilderWrapperModule) },
+  { path: 'data-pipeline-designer', loadChildren: () => import('src/lib/process-builder-wrapper/process-builder-wrapper.module').then(m => m.ProcessBuilderWrapperModule) },
   { path: 'orders', component: OrdersComponent },
   { path: 'visualizer', component: VisualizerComponent },
   { path: '**', component: ErrorComponent }

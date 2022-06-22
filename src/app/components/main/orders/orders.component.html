@@ -1,7 +1,7 @@
 <div class="body main-component-body" @show>
 
     <div class="headline main-component-headline">
-        Bestellungen
+        Orders
     </div>
 
     <div class="control-row">
@@ -10,7 +10,7 @@
 
             <mat-icon class="icon">add</mat-icon>
             <div class="text">
-                Neu
+                create
             </div>
 
         </div>
@@ -19,7 +19,7 @@
 
             <mat-icon class="icon">adb</mat-icon>
             <div class="text">
-                Assistent
+                assist
             </div>
 
         </div>
@@ -28,7 +28,7 @@
 
             <mat-icon class="icon">format_list_numbered</mat-icon>
             <div class="text">
-                Id norm.
+                norm ID
             </div>
 
         </div>
@@ -37,7 +37,7 @@
 
             <mat-icon class="icon">upload</mat-icon>
             <div class="text">
-                Import
+                import
             </div>
 
         </div>
@@ -46,7 +46,7 @@
 
             <mat-icon class="icon">download</mat-icon>
             <div class="text">
-                Export
+                export
             </div>
 
         </div>
@@ -56,7 +56,7 @@
             <div class="container-wrapper">
 
                 <div class="container-wrapper-headline">
-                    Container
+                    container
                 </div>
                 <div class="input-wrapper">
 
@@ -77,7 +77,7 @@
         <div class="spacer"></div>
 
         <button mat-raised-button color="primary" [disabled]="ordersComponentService.formGroup.pristine"
-            (click)="ordersComponentService.takeOrders()">Übernehmen</button>
+            (click)="ordersComponentService.takeOrders()">confirm</button>
 
     </div>
 
@@ -87,19 +87,19 @@
             [dataSource]="ordersControl.controls|sortedFormArray:active:direction:ordersControl.value.length">
 
             <ng-container matColumnDef="order">
-                <th mat-header-cell *matHeaderCellDef>Best.-Nr.</th>
+                <th mat-header-cell *matHeaderCellDef>Ord.-No.</th>
                 <td mat-cell *matCellDef="let element" [formGroup]="element.value">
 
                     <input autocomplete="off" formControlName="orderId" matInput #ref type="number" />
 
                 </td>
                 <td mat-footer-cell *matFooterCellDef class="footer-cell">
-                    {{ordersControl.value.length}} Bestellungen
+                    {{ordersControl.value.length}} orders
                 </td>
             </ng-container>
 
             <ng-container matColumnDef="group">
-                <th mat-header-cell *matHeaderCellDef>Gruppe / Ziel</th>
+                <th mat-header-cell *matHeaderCellDef>group / target</th>
                 <td mat-cell *matCellDef="let element" [formGroup]="element.value">
 
                     <app-select-group formControlName="group"></app-select-group>
@@ -109,7 +109,7 @@
             </ng-container>
 
             <ng-container matColumnDef="description">
-                <th mat-header-cell *matHeaderCellDef>Bezeichnung Ware / Gut</th>
+                <th mat-header-cell *matHeaderCellDef>name</th>
                 <td mat-cell *matCellDef="let element">
 
                     <app-select-product [ngModel]="element.value.controls['description'].value"
@@ -120,7 +120,7 @@
             </ng-container>
 
             <ng-container matColumnDef="quantity">
-                <th mat-header-cell *matHeaderCellDef>Zahl</th>
+                <th mat-header-cell *matHeaderCellDef>count</th>
                 <td mat-cell *matCellDef="let element" [formGroup]="element.value">
 
                     <input autocomplete="off" formControlName="quantity" matInput #ref type="number" />
@@ -130,7 +130,7 @@
             </ng-container>
 
             <ng-container matColumnDef="length">
-                <th mat-header-cell *matHeaderCellDef>Länge</th>
+                <th mat-header-cell *matHeaderCellDef>length</th>
                 <td mat-cell *matCellDef="let element">
 
                     <input autocomplete="off" [disabled]="!element.value.controls['description'].value"
@@ -143,7 +143,7 @@
             </ng-container>
 
             <ng-container matColumnDef="width">
-                <th mat-header-cell *matHeaderCellDef>Breite</th>
+                <th mat-header-cell *matHeaderCellDef>width</th>
                 <td mat-cell *matCellDef="let element">
 
                     <input autocomplete="off" [disabled]="!element.value.controls['description'].value"
@@ -156,7 +156,7 @@
             </ng-container>
 
             <ng-container matColumnDef="height">
-                <th mat-header-cell *matHeaderCellDef>Höhe</th>
+                <th mat-header-cell *matHeaderCellDef>height</th>
                 <td mat-cell *matCellDef="let element">
 
                     <input autocomplete="off" [disabled]="!element.value.controls['description'].value"
@@ -169,7 +169,7 @@
             </ng-container>
 
             <ng-container matColumnDef="turningAllowed">
-                <th mat-header-cell *matHeaderCellDef>Drehbar</th>
+                <th mat-header-cell *matHeaderCellDef>turnable</th>
                 <td mat-cell *matCellDef="let element" [formGroup]="element.value">
 
                     <mat-checkbox formControlName="turningAllowed"></mat-checkbox>
@@ -179,7 +179,7 @@
             </ng-container>
 
             <ng-container matColumnDef="stackingAllowed">
-                <th mat-header-cell *matHeaderCellDef>Stapelbar</th>
+                <th mat-header-cell *matHeaderCellDef>stackable</th>
                 <td mat-cell *matCellDef="let element" [formGroup]="element.value">
 
                     <mat-checkbox formControlName="stackingAllowed"></mat-checkbox>
