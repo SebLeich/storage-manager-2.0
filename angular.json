@@ -24,7 +24,13 @@
             ],
             "styles": [
               "src/custom-theme.scss",
-              "src/styles.css"
+              "src/styles.css",
+              "./node_modules/bpmn-js/dist/assets/diagram-js.css",
+              "./node_modules/bpmn-js/dist/assets/bpmn-font/css/bpmn.css",
+              "./node_modules/jsoneditor/dist/jsoneditor.min.css",
+              "./node_modules/codemirror/lib/codemirror.css",
+              "./node_modules/codemirror/addon/fold/foldgutter.css",
+              "./node_modules/codemirror/addon/hint/show-hint.css"
             ],
             "scripts": [],
             "vendorChunk": true,
@@ -61,20 +67,32 @@
                   "maximumError": "10kb"
                 }
               ]
+            },
+            "development": {
+              "buildOptimizer": false,
+              "optimization": false,
+              "vendorChunk": true,
+              "extractLicenses": false,
+              "sourceMap": true,
+              "namedChunks": true
             }
           },
-          "defaultConfiguration": ""
+          "defaultConfiguration": "production"
         },
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
-          "options": {
-            "browserTarget": "storage-manager:build"
-          },
           "configurations": {
             "production": {
               "browserTarget": "storage-manager:build:production"
+            },
+            "development": {
+              "browserTarget": "storage-manager:build:development",
+              "sslKey": "ssl/localhost.key",
+              "sslCert": "ssl/localhost.crt",
+              "ssl": true
             }
-          }
+          },
+          "defaultConfiguration": "development"
         },
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
@@ -94,7 +112,14 @@
               "src/assets"
             ],
             "styles": [
-              "src/styles.css"
+              "src/custom-theme.scss",
+              "src/styles.css",
+              "./node_modules/bpmn-js/dist/assets/diagram-js.css",
+              "./node_modules/bpmn-js/dist/assets/bpmn-font/css/bpmn.css",
+              "./node_modules/jsoneditor/dist/jsoneditor.min.css",
+              "./node_modules/codemirror/lib/codemirror.css",
+              "./node_modules/codemirror/addon/fold/foldgutter.css",
+              "./node_modules/codemirror/addon/hint/show-hint.css"
             ],
             "scripts": []
           }

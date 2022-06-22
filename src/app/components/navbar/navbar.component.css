@@ -68,6 +68,11 @@
         height: 40px;
     }
 
+
+    .option .icon {
+        font-size: 1rem;
+    }
+
     .option .text {
         display: none;
     }

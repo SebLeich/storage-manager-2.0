@@ -1,0 +1,61 @@
+<div class="PB_diagram-body" [ngClass]="{
+       'not-editable': (processBuilderService.editable$|async) === true? false: true,
+       'hide-events': (processBuilderService.hideEvents$|async) === true? true: false,
+       'hide-tasks': (processBuilderService.hideTasks$|async) === true? true: false,
+       'hide-gateways': (processBuilderService.hideGateways$|async) === true? true: false,
+       'hide-sub-processes': (processBuilderService.hideSubProcesses$|async) === true? true: false,
+       'hide-data-object-references': (processBuilderService.hideDataObjectReferences$|async) === true? true: false,
+       'hide-databases': (processBuilderService.hideDatabases$|async) === true? true: false,
+       'hide-pools': (processBuilderService.hidePools$|async) === true? true: false,
+       'hide-groups': (processBuilderService.hideGroups$|async) === true? true: false
+     }" @show>
+
+  <div #diagramWrapper class="diagram-wrapper"></div>
+
+  <div class="info">
+
+    <div>
+      {{(processBuilderComponentService.models$|async)?.length ?? 0}} Models
+    </div>
+    <div>
+      {{(processBuilderComponentService.params$|async)?.length ?? 0}} Params
+    </div>
+    <div>
+      {{(processBuilderComponentService.funcs$|async)?.length ?? 0}} Funcs
+    </div>
+
+    <button mat-raised-button color="primary" (click)="processBuilderComponentService.createModel()">
+      New model
+    </button>
+
+    <button mat-raised-button color="primary" (click)="processBuilderComponentService.setNextModel()" [disabled]="((processBuilderComponentService.models$|async)?.length ?? 0) < 2">
+      Next model
+    </button>
+
+    <button mat-raised-button color="primary" (click)="processBuilderComponentService.undo()">
+      Undo
+    </button>
+
+    <button mat-raised-button color="primary" (click)="processBuilderComponentService.redo()">
+      Redo
+    </button>
+
+    <button mat-raised-button color="primary" (click)="processBuilderComponentService.saveModel()">
+      Save model
+    </button>
+
+    <button mat-raised-button color="primary" (click)="processBuilderComponentService.tryExecute()">
+      Try execute
+    </button>
+
+    <button mat-raised-button color="warn" (click)="processBuilderComponentService.removeModel()">
+      Remove model
+    </button>
+
+    <button mat-raised-button color="warn" (click)="clearState()">
+      Clear state
+    </button>
+
+  </div>
+
+</div>

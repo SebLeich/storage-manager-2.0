@@ -1,0 +1,11 @@
+<div class="body">
+
+    <div class="function-wrapper" *ngFor="let func of (availableFunctions$|async)" (click)="selectFunction(func)" [ngClass]="{
+        'active': func.identifier === functionIdentifierControl.value
+    }">
+    
+        <app-function-preview [func]="func" [attr.active]="func.identifier === functionIdentifierControl.value? true: undefined"></app-function-preview>
+    
+    </div>
+
+</div>

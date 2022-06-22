@@ -1,0 +1,53 @@
+<div class="body">
+
+    <div class="dialog-navbar">
+
+        <mat-icon class="icon">account_tree</mat-icon>
+        <div class="text">
+            Modify task
+        </div>
+        <button mat-icon-button color="warn" (click)="abort()">
+            <mat-icon>clear</mat-icon>
+        </button>
+
+    </div>
+
+    <div class="dialog-body">
+
+        <mat-tab-group mat-align-tabs="start" (selectedIndexChange)="setStep($event)" [selectedIndex]="currentStepIndex$|async">
+
+            <mat-tab [label]=(tab.taskCreationStep|taskCreationStep) *ngFor="let tab of (steps$|async)" [disabled]="(tab.disabled$|async) ?? false"></mat-tab>
+
+        </mat-tab-group>
+
+        <div class="content-wrapper">
+            <div #dynamicInner></div>
+        </div>
+
+    </div>
+
+    <div class="footer">
+
+        <div class="spacer">
+
+            <div class="status-message">
+                {{statusMessage$|async}}
+            </div>
+
+        </div>
+
+        <div class="control secondary" *ngIf="(currentStep$|async)?.taskCreationStep === TaskCreationStep.ConfigureFunctionImplementation">
+            Help
+        </div>
+
+        <div class="control secondary" *ngIf="canAnalyzeCustomImplementation$|async" (click)="testImplementation()">
+            Execute
+        </div>
+
+        <div class="control primary" [ngClass]="{ 'disabled': unfinished }" (click)="finish()">
+            Finish
+        </div>
+
+    </div>
+
+</div>

@@ -33,3 +33,62 @@ $storage-manager-theme: mat-light-theme((
 // that you are using.
 @include angular-material-theme($storage-manager-theme);
 
+@import 'bebas-neue.css';
+
+html,
+body {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+}
+
+.width {
+  width: 100%;
+}
+
+.spacer {
+  flex: 1;
+  overflow: hidden;
+}
+
+.cm-editor {
+  height: 100% !important;
+}
+
+.CodeMirror-hints {
+  z-index: 1000 !important;
+}
+
+.no-padding-dialog>.mat-dialog-container {
+  padding: 0px;
+}
+
+.dialog-navbar {
+  height: 64px;
+  display: flex;
+  align-items: center;
+  padding: 0px 1rem;
+  box-sizing: border-box;
+  background-color: #fafafa;
+}
+
+.dialog-navbar>.icon {
+  margin-right: 0.5rem;
+  font-size: 1.5rem;
+  color: rgb(65, 65, 65);
+  height: auto;
+  width: auto;
+}
+
+.dialog-navbar .text {
+  font-size: 1.4rem;
+  flex: 1;
+}
+
+.dialog-body {
+  flex: 1;
+  overflow-y: auto;
+}

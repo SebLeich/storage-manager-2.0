@@ -12,6 +12,10 @@ import { MatTableModule } from '@angular/material/table';
 import { MatDialogModule } from '@angular/material/dialog';
 import { HttpClientModule } from '@angular/common/http';
 
+import PROCESS_BUILDER_CONFIG from 'src/config/process-builder-config';
+import PARAMS_CONFIG from 'src/config/params-config';
+import FUNCTIONS_CONFIG from 'src/config/function-config';
+
 import { VisualizerComponent } from './components/main/visualizer/visualizer.component';
 import { GoodPreviewComponent } from './components/good-preview/good-preview.component';
 import { MatButtonModule } from '@angular/material/button';
@@ -45,6 +49,11 @@ import { SolutionAnimationComponent } from './components/solution-animation/solu
 import { NoSolutionDialogComponent } from './components/dialog/no-solution-dialog/no-solution-dialog.component';
 import { SolutionValidationComponent } from './components/solution-validation/solution-validation.component';
 import { SolutionValidationErrorPipe } from './pipes/solution-validation-error.pipe';
+import { StoreModule } from '@ngrx/store';
+import { EffectsModule } from '@ngrx/effects';
+import { PROCESS_BUILDER_CONFIG_TOKEN } from 'src/lib/process-builder/globals/i-process-builder-config';
+import { PARAMS_CONFIG_TOKEN } from 'src/lib/process-builder/globals/i-param';
+import { FUNCTIONS_CONFIG_TOKEN } from 'src/lib/process-builder/globals/i-function';
 
 @NgModule({
   declarations: [
@@ -93,9 +102,15 @@ import { SolutionValidationErrorPipe } from './pipes/solution-validation-error.p
     MatCheckboxModule,
     MatSelectModule,
     ChartsModule,
-    AutomationModule
+    AutomationModule,
+    StoreModule.forRoot({}, {}),
+    EffectsModule.forRoot([])
   ],
-  providers: [],
+  providers: [
+    { provide: PROCESS_BUILDER_CONFIG_TOKEN, useValue: PROCESS_BUILDER_CONFIG },
+    { provide: PARAMS_CONFIG_TOKEN, useValue: PARAMS_CONFIG },
+    { provide: FUNCTIONS_CONFIG_TOKEN, useValue: FUNCTIONS_CONFIG },
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

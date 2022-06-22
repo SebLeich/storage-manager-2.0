@@ -1,6 +1,5 @@
 .body {
-    width: 700px;
-    max-width: 80vw;
+    width: min(90vw, 800px);
     overflow: hidden;
     display: flex;
     flex-direction: column;
@@ -28,11 +27,14 @@
     display: inline-flex;
     flex-direction: column;
     vertical-align: top;
-    width: 200px;
+    width: 180px;
     height: 160px;
     border-radius: 3px;
     cursor: pointer;
     transition: .5s background-color ease-out;
+    border-radius: 3px;
+    padding: 0.5rem;
+    border: 3px solid #f1f1f1;
 }
 
 .suggestion:hover {
@@ -40,12 +42,13 @@
 }
 
 .suggestion:not(:last-child) {
-    margin-right: 1rem;
+    margin-right: .2rem;
 }
 
 .suggestion .headline {
     padding: 0.5rem;
     font-weight: 700;
+    text-align: center;
 }
 
 .suggestion .sub-title {
@@ -53,6 +56,11 @@
     padding: 0.5rem;
     color: #3f3f3f;
     flex: 1;
+    font-size: .7rem;
+    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .suggestion .footer {
@@ -64,5 +72,5 @@
     width: auto;
     font-size: 2rem;
     line-height: 2rem;
-    color: #7c7c7c;
+    color: #6b6b6b;
 }

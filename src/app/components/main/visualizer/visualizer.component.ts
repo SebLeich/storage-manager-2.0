@@ -1,4 +1,4 @@
-import { Component, ElementRef, HostListener, OnDestroy, OnInit, ViewChild, ViewContainerRef } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, HostListener, OnDestroy, OnInit, ViewChild, ViewContainerRef } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { BehaviorSubject, Subscription } from 'rxjs';
 import { filter, switchMap, take } from 'rxjs/operators';
@@ -18,7 +18,7 @@ import { VisualizerComponentService } from './visualizer-component-service';
   ],
   animations: [showAnimation]
 })
-export class VisualizerComponent implements OnDestroy, OnInit {
+export class VisualizerComponent implements AfterViewInit, OnDestroy, OnInit {
 
   private _menuVisible = new BehaviorSubject<boolean>(true);
   menuVisible$ = this._menuVisible.asObservable();
@@ -38,6 +38,10 @@ export class VisualizerComponent implements OnDestroy, OnInit {
     private _dialog: MatDialog,
     private _viewContainerRef: ViewContainerRef
   ) { }
+
+  ngAfterViewInit(): void {
+    this.validateClient();
+  }
 
   ngOnDestroy(): void {
     for (let sub of this._subscriptions) sub.unsubscribe();

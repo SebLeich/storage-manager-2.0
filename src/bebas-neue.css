@@ -1,0 +1,8 @@
+@font-face {
+  font-family: 'Bebas Neue';
+  font-style: normal;
+  font-weight: 400;
+  src: url(assets/BebasNeue/Bebas-Neue-normal-400.eot);
+  src: local('Bebas Neue'), url(assets/BebasNeue/Bebas-Neue-normal-400.ttf) format('truetype'), url(assets/BebasNeue/Bebas-Neue-normal-400.eot?#iefix) format('embedded-opentype'), url(assets/BebasNeue/Bebas-Neue-normal-400.woff) format('woff'), url(assets/BebasNeue/Bebas-Neue-normal-400.svg#BebasNeue) format('svg'), url(assets/BebasNeue/Bebas-Neue-normal-400.woff2) format('woff2');
+}
+

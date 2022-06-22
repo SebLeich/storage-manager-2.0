@@ -1,0 +1,21 @@
+.function-wrapper
+    padding: 1rem 2rem
+    cursor: pointer
+    height: 8rem
+    opacity: .9
+    border: 2px solid transparent
+    user-select: none
+
+.function-wrapper:not(:last-child)
+    border-bottom: 2px solid #e2f1ff
+
+.function-wrapper:nth-child(even)
+    background-color: #f5faff
+
+.function-wrapper:hover
+    background-color: #feffe3
+    opacity: 1
+
+.function-wrapper.active
+    background-color: #fdffc4
+    border: 2px solid gold

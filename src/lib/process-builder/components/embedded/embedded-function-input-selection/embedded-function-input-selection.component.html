@@ -1,0 +1,10 @@
+<div class="body">
+
+    <div class="param-wrapper" *ngFor="let param of (availableInputParams$|async)">
+
+        <mat-slide-toggle></mat-slide-toggle>
+        <app-param-preview [param]="param"></app-param-preview>
+
+    </div>
+
+</div>

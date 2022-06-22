@@ -1,14 +1,14 @@
 .body {
     overflow-y: auto;
-    height: 100%;
+    height: -webkit-fill-available;
 }
 
 .content {
     margin: 1rem;
     display: grid;
     grid-template-columns: 1fr;
-    grid-column-gap: 1rem;
-    grid-row-gap: 1rem;
+    grid-column-gap: .5rem;
+    grid-row-gap: .5rem;
 }
 
 .algorithm-overview {

@@ -1,0 +1,30 @@
+<div class="body" [formGroup]="formGroup">
+
+    <div class="method-name-wrapper">
+
+        <mat-form-field class="width">
+            <mat-label>method name</mat-label>
+            <input matInput type="text" formControlName="name" />
+        </mat-form-field>
+
+        <mat-form-field class="width">
+            <mat-label>{{(returnValueStatus$|async) === MethodEvaluationStatus.ReturnValueFound? 'output param name': 'no output param'}}</mat-label>
+            <input matInput type="text" formControlName="outputParamName" />
+        </mat-form-field>
+
+        <mat-slide-toggle formControlName="canFail">{{canFailControl.value? 'can fail': 'can not fail'}}</mat-slide-toggle>
+
+        <div class="spacer"></div>
+
+        <div class="loading-wrapper">
+            <mat-spinner *ngIf="(returnValueStatus$|async) === MethodEvaluationStatus.Calculating" diameter="20"></mat-spinner>
+        </div>
+        
+    </div>
+
+    <div #codeBody class="code-body" 
+        (keypress)="blockTabPressEvent($event)" 
+        (keydown)="blockTabPressEvent($event)" 
+        (keyup)="blockTabPressEvent($event)"></div>
+
+</div>

@@ -1,0 +1,30 @@
+@mixin button()
+    padding: 0.3rem 0.5rem
+    cursor: pointer
+    color: white
+    border-radius: 2px
+    transition: all .3s
+    animation: leaves .15s ease-out
+    width: 5rem
+    text-align: center
+    font-weight: 200 !important
+
+    &:hover
+        opacity: .8
+
+@mixin default-button()
+    @include button
+    background-color: #404db9
+
+@mixin secondary-button()
+    @include button
+    background-color: #47968a
+
+@keyframes leaves
+    0%
+        transform: scale(.8)
+        -webkit-transform: scale(.8)
+
+    100%
+        transform: scale(1)
+        -webkit-transform: scale(1)
