@@ -93,8 +93,8 @@ export class ParamEditorComponent implements AfterViewInit, OnDestroy, OnInit {
     let inputParams = BPMNJsRepository.getAvailableInputParams(this.data.element);
     this._paramStore.select(selectIParams(inputParams)).pipe(take(1)).subscribe((params: IParam[]) => {
       for (let param of params) {
-        (this._injector as any)[param!.normalizedName] = ProcessBuilderRepository.convertIParamKeyValuesToPseudoObject(param!.value);
-        (this._injectorInterface.injector as any)[param!.normalizedName] = ProcessBuilderRepository.convertIParamKeyValuesToPseudoObject(param!.value);
+        (this._injector as any)[param!.normalizedName] = ProcessBuilderRepository.createPseudoObjectFromIParamDefinition(param!.defaultValue);
+        (this._injectorInterface.injector as any)[param!.normalizedName] = ProcessBuilderRepository.createPseudoObjectFromIParamDefinition(param!.defaultValue);
       }
     });
   }
@@ -135,7 +135,7 @@ export class ParamEditorComponent implements AfterViewInit, OnDestroy, OnInit {
     this._subscriptions.push(...[
       combineLatest([this.editor$.pipe(take(1)), this.paramObject$])
         .subscribe(([editor, param]: [JSONEditor, IParam | null | undefined]) => {
-          let converted = param ? ProcessBuilderRepository.convertIParamKeyValuesToPseudoObject(param.value) : {};
+          let converted = param ? ProcessBuilderRepository.createPseudoObjectFromIParamDefinition(param?.defaultValue) : {};
           editor.set(converted);
           editor.expandAll();
         })

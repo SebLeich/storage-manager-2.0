@@ -16,6 +16,7 @@ export interface IFunction {
     customImplementation?: string[];
     requireCustomImplementation?: boolean;
     requireDynamicInput?: boolean;
+    requireDataMapping?: boolean;
 }
 
 export const FUNCTIONS_CONFIG_TOKEN: InjectionToken<IFunction[]> = new InjectionToken<IFunction[]>("FUNCTION_CONFIG");

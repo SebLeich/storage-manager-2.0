@@ -15,6 +15,7 @@ import { HttpClientModule } from '@angular/common/http';
 import PROCESS_BUILDER_CONFIG from 'src/config/process-builder-config';
 import PARAMS_CONFIG from 'src/config/params-config';
 import FUNCTIONS_CONFIG from 'src/config/function-config';
+import INTERFACES_CONFIG from 'src/config/interfaces-config';
 
 import { VisualizerComponent } from './components/main/visualizer/visualizer.component';
 import { GoodPreviewComponent } from './components/good-preview/good-preview.component';
@@ -53,6 +54,8 @@ import { EffectsModule } from '@ngrx/effects';
 import { PROCESS_BUILDER_CONFIG_TOKEN } from 'src/lib/process-builder/globals/i-process-builder-config';
 import { PARAMS_CONFIG_TOKEN } from 'src/lib/process-builder/globals/i-param';
 import { FUNCTIONS_CONFIG_TOKEN } from 'src/lib/process-builder/globals/i-function';
+import { INTERFACES_CONFIG_TOKEN } from 'src/lib/process-builder/globals/i-interface';
+
 import { SharedModule } from 'src/lib/shared/shared.module';
 
 @NgModule({
@@ -111,6 +114,7 @@ import { SharedModule } from 'src/lib/shared/shared.module';
     { provide: PROCESS_BUILDER_CONFIG_TOKEN, useValue: PROCESS_BUILDER_CONFIG },
     { provide: PARAMS_CONFIG_TOKEN, useValue: PARAMS_CONFIG },
     { provide: FUNCTIONS_CONFIG_TOKEN, useValue: FUNCTIONS_CONFIG },
+    { provide: INTERFACES_CONFIG_TOKEN, useValue: INTERFACES_CONFIG },
   ],
   bootstrap: [AppComponent]
 })

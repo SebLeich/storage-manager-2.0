@@ -1,0 +1,19 @@
+<ng-template #rowTemplate>
+
+    <tr>
+        <td>-</td>
+        <td>{{def.defaultValue}}</td>
+        <td [ngStyle]="{ 'padding-left': 'calc(.5rem + (1rem * ' + level + '))' }">
+            {{def.name}} (type: {{def.type}})
+        </td>
+    </tr>
+
+    <ng-container *ngFor="let child of def.typeDef">
+
+        <app-embedded-input-output-mapping-table-row #wrapper [def]="child" [level]="level+1">
+        </app-embedded-input-output-mapping-table-row>
+        <ng-content *ngTemplateOutlet="wrapper.rowTemplate"></ng-content>
+
+    </ng-container>
+
+</ng-template>

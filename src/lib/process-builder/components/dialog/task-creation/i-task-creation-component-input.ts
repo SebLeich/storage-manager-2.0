@@ -1,6 +1,6 @@
 import { IConnector } from "src/lib/bpmn-io/i-connector";
 import { IElement } from "src/lib/bpmn-io/i-element";
-import { IParamKeyValue } from "src/lib/process-builder/globals/i-param-key-value";
+import { IParamDefinition } from "src/lib/process-builder/globals/i-param-definition";
 
 export interface ITaskCreationComponentInput {
     data: ITaskCreationDataWrapper;
@@ -20,7 +20,7 @@ export interface ITaskCreationData {
     normalizedName: string | null;
     outputParamName: string | null;
     normalizedOutputParamName: string | null;
-    outputParamValue: IParamKeyValue[] | null;
+    outputParamValue: IParamDefinition[] | null;
     entranceGatewayType: number | null;
     inputParam: number | null;
 }

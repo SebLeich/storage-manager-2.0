@@ -1,5 +1,4 @@
 import { createFeatureSelector, createSelector } from '@ngrx/store';
-import { ParamCodes } from 'src/config/param-codes';
 import { IParam } from '../../globals/i-param';
 import * as fromIParam from '../reducers/i-param.reducer';
 
@@ -12,12 +11,12 @@ export const selectIParam = (arg: number | 'dynamic' | undefined | null | (() =>
     (state: fromIParam.State) => {
         if (!state || !state.entities || !arg || arg === 'dynamic') return null;
         let code = typeof arg === 'function' ? arg() : arg;
-        if (!code || code === 'dynamic') return null;
+        if (typeof code !== 'number') return null;
         return Object.values(state.entities).find(x => x?.identifier === code);
     }
 );
 
-export const selectIParams = (codes?: ParamCodes[]) => createSelector(
+export const selectIParams = (codes?: number[]) => createSelector(
     selectIParamState,
     (state: fromIParam.State) => {
         if (!state || !state.entities) return [];

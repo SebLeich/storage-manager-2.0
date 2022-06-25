@@ -29,7 +29,7 @@ export class ProcessBuilderComponent implements AfterContentInit, OnDestroy, OnI
   }
 
   ngOnInit(): void {
-    
+
   }
 
 }

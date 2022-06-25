@@ -162,7 +162,7 @@ export const validateBPMNConfig = (bpmnJS: any, injector: Injector) => {
             )
             .subscribe(([func, paramId, funcId, usedInputParams, outputParam]: [(IFunction | undefined | null), number, number, IParam[], IParam | 'dynamic' | undefined | null]) => {
 
-                if (!func || (func.useDynamicInputParams && typeof taskCreationComponentOutput.functionIdentifier !== 'number')) {
+                if (!func) {
 
                     if (payload.configureActivity && typeof BPMNJsRepository.getSLPBExtension(payload.configureActivity.businessObject, 'ActivityExtension', (ext) => ext.activityFunctionId) !== 'number') {
                         getModelingModule(bpmnJS).removeElements([payload.configureActivity]);
@@ -173,16 +173,17 @@ export const validateBPMNConfig = (bpmnJS: any, injector: Injector) => {
 
                 let type = typeof func.output?.param;
                 let f: IFunction = func!, outputParamId: number = type === 'number' ? func.output?.param as number : paramId;
-                if (func.requireCustomImplementation || func.customImplementation || func.useDynamicInputParams) {
+                if (func.requireCustomImplementation || func.customImplementation || func.useDynamicInputParams || func.output.param === 'dynamic') {
 
                     let methodEvaluation = CodemirrorRepository.evaluateCustomMethod(undefined, taskCreationComponentOutput.implementation ?? defaultImplementation);
-                    if (methodEvaluation === MethodEvaluationStatus.ReturnValueFound) {
+                    if (methodEvaluation === MethodEvaluationStatus.ReturnValueFound || func.output?.param === 'dynamic') {
 
                         outputParam = {
-                            'identifier': outputParamId,
-                            'name': taskCreationComponentOutput.outputParamName ?? config.dynamicParamDefaultNaming,
-                            'normalizedName': taskCreationComponentOutput.normalizedOutputParamName ?? ProcessBuilderRepository.normalizeName(taskCreationComponentOutput.outputParamName ?? config.dynamicParamDefaultNaming),
-                            'value': taskCreationComponentOutput.outputParamValue ?? []
+                            identifier: outputParamId,
+                            name: taskCreationComponentOutput.outputParamName ?? config.dynamicParamDefaultNaming,
+                            normalizedName: taskCreationComponentOutput.normalizedOutputParamName ?? ProcessBuilderRepository.normalizeName(taskCreationComponentOutput.outputParamName ?? config.dynamicParamDefaultNaming),
+                            defaultValue: taskCreationComponentOutput.outputParamValue ?? [],
+                            type: 'object'
                         };
                         paramStore.dispatch(upsertIParam(outputParam));
 
@@ -207,7 +208,7 @@ export const validateBPMNConfig = (bpmnJS: any, injector: Injector) => {
                         'name': taskCreationComponentOutput.name ?? config.defaultFunctionName,
                         'identifier': func.requireCustomImplementation ? funcId : func.identifier,
                         'normalizedName': taskCreationComponentOutput.normalizedName ?? ProcessBuilderRepository.normalizeName(taskCreationComponentOutput.name ?? undefined),
-                        'output': methodEvaluation === MethodEvaluationStatus.ReturnValueFound ? { param: outputParamId } : null,
+                        'output': methodEvaluation === MethodEvaluationStatus.ReturnValueFound || func.output?.param === 'dynamic' ? { param: outputParamId } : null,
                         'pseudoImplementation': func.pseudoImplementation,
                         'inputParams': inputParams,
                         'requireCustomImplementation': false,
@@ -215,7 +216,7 @@ export const validateBPMNConfig = (bpmnJS: any, injector: Injector) => {
                         'useDynamicInputParams': func.useDynamicInputParams
                     };
 
-                    func.requireCustomImplementation || func.requireDynamicInput ? funcStore.dispatch(addIFunction(f)) : funcStore.dispatch(updateIFunction(f));
+                    func.requireCustomImplementation || func.requireDynamicInput || func.output?.param === 'dynamic' ? funcStore.dispatch(addIFunction(f)) : funcStore.dispatch(updateIFunction(f));
 
                 }
 

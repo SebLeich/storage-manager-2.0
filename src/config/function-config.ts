@@ -86,5 +86,19 @@ export default [
         },
         'canFail': false,
         'requireCustomImplementation': false
+    } as IFunction,
+    {
+        'identifier': 4,
+        'inputParams': null,
+        'name': 'Map to solution',
+        'normalizedName': 'mapToSolution',
+        'description': 'method converts a given input to a reusable solution',
+        'output': {
+            'param': 'dynamic',
+            'interface': 4
+        },
+        'canFail': false,
+        'requireCustomImplementation': false,
+        'requireDataMapping': true
     } as IFunction
 ];

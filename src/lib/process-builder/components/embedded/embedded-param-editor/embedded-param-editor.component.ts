@@ -1,5 +1,5 @@
 import { AfterViewInit, Component, ElementRef, Inject, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { FormGroup } from '@angular/forms';
+import { FormControl, FormGroup } from '@angular/forms';
 import JSONEditor from 'jsoneditor';
 import { combineLatest, ReplaySubject, Subject, Subscription } from 'rxjs';
 import { debounceTime, startWith } from 'rxjs/operators';
@@ -36,9 +36,10 @@ export class EmbeddedParamEditorComponent implements IEmbeddedView, AfterViewIni
 
   ngAfterViewInit(): void {
     this._subscriptions.push(...[
-      combineLatest([this.editor$, this.formGroup.controls['outputParamValue'].valueChanges.pipe(startWith(this.formGroup.controls['outputParamValue'].value))])
+      
+      combineLatest([this.editor$, this.outputParamValueControl.valueChanges.pipe(startWith(this.outputParamValueControl.value))])
         .subscribe(([editor, param]: [JSONEditor, any]) => {
-          editor.set(ProcessBuilderRepository.convertIParamKeyValuesToPseudoObject(param));
+          editor.set(ProcessBuilderRepository.createPseudoObjectFromIParamDefinition(param));
           editor.expandAll();
         })
     ]);
@@ -56,7 +57,11 @@ export class EmbeddedParamEditorComponent implements IEmbeddedView, AfterViewIni
   }
 
   ngOnInit(): void {
+    console.log(this.formGroup.value);
+  }
 
+  get outputParamValueControl(): FormControl {
+    return this.formGroup.controls['outputParamValue'] as FormControl;
   }
 
 }

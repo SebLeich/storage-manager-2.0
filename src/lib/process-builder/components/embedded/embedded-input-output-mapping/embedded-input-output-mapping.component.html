@@ -1,0 +1,30 @@
+<div class="body">
+    
+    <table>
+
+        <thead>
+
+            <tr>
+
+                <th>input param</th>
+                <th>constant value</th>
+                <th>map to output</th>
+
+            </tr>
+
+        </thead>
+
+        <tbody>
+
+            <ng-container  *ngFor="let value of outputParamValueControl.value">
+
+                <app-embedded-input-output-mapping-table-row #wrapper [def]="value"></app-embedded-input-output-mapping-table-row>
+                <ng-content *ngTemplateOutlet="wrapper.rowTemplate"></ng-content>
+
+            </ng-container>
+
+        </tbody>
+
+    </table>
+
+</div>

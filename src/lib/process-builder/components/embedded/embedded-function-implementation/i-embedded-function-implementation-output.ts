@@ -1,4 +1,4 @@
-import { IParamKeyValue } from "src/lib/process-builder/globals/i-param-key-value";
+import { IParamDefinition } from "src/lib/process-builder/globals/i-param-definition";
 
 export interface IEmbeddedFunctionImplementationData {
     implementation: string[];
@@ -7,6 +7,6 @@ export interface IEmbeddedFunctionImplementationData {
     normalizedName: string;
     outputParamName: string;
     normalizedOutputParamName: string;
-    outputParamValue: IParamKeyValue[];
+    outputParamValue: IParamDefinition[];
     inputParam: number | null;
 }

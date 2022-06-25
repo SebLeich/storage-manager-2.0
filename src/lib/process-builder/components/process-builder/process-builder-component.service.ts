@@ -54,22 +54,16 @@ import { ValidationWarningPipe } from '../../pipes/validation-warning.pipe';
 @Injectable()
 export class ProcessBuilderComponentService {
 
-  private _init: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
   private _currentIBpmnJSModelGuid = new BehaviorSubject<string | null>(null);
   private _modelChanged = new Subject<void>();
   private _pendingChanges = new BehaviorSubject<boolean>(false);
 
   // instantiate BpmnJS with component
   public bpmnJS!: IBpmnJS;
-  public elementFactory: any;
-  public elementRegistry: any;
-  public modeling: any;
-  public eventBus: any;
 
   public params$ = this._paramStore.select(selectIParams());
   public funcs$ = this._funcStore.select(selectIFunctions());
   public models$ = this._bpmnJSModelStore.select(selectIBpmnJSModels());
-  public init$ = this._init.pipe(delay(1));
   public pendingChanges$ = this._pendingChanges.asObservable();
   public noPendingChanges$ = this.pendingChanges$.pipe(map(x => !x));
   public currentIBpmnJSModelGuid$ = this._currentIBpmnJSModelGuid.pipe(distinctUntilChanged());
@@ -129,18 +123,10 @@ export class ProcessBuilderComponentService {
   hideAllHints = () => ProcessBuilderRepository.clearAllTooltips(this.bpmnJS);
 
   init(parent: HTMLDivElement) {
+    debugger;
     // attach BpmnJS instance to DOM element
     this.bpmnJS.attachTo(parent);
-    this.setDefaultModel().pipe(delay(1))
-      .subscribe({
-        complete: () => {
-          this.elementFactory = this.bpmnJS.get(BPMNJSModules.ElementFactory);
-          this.elementRegistry = this.bpmnJS.get(BPMNJSModules.ElementRegistry);
-          this.modeling = this.bpmnJS.get(BPMNJSModules.Modeling);
-          this.eventBus = this.bpmnJS.get(BPMNJSModules.EventBus);
-          this._init.next(true);
-        }
-      });
+    this.setDefaultModel().subscribe();
   }
 
   removeModel(bpmnJsModel?: IBpmnJSModel) {
@@ -208,6 +194,9 @@ export class ProcessBuilderComponentService {
       )
       .subscribe({
         next: (model: IBpmnJSModel | string) => {
+
+          debugger;
+
           if (typeof model === 'string') {
             model = {
               'guid': Guid.generateGuid(),

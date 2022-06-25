@@ -14,6 +14,7 @@ export class TaskCreationStepPipe implements PipeTransform {
     this.config[TaskCreationStep.ConfigureFunctionImplementation] = 'implementation';
     this.config[TaskCreationStep.ConfigureFunctionOutput] = 'output structure';
     this.config[TaskCreationStep.ConfigureFunctionInput] = 'select input';
+    this.config[TaskCreationStep.ConfigureInputOutputMapping] = 'data mapping';
   }
 
   transform(value: TaskCreationStep): string {

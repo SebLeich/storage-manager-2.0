@@ -1,0 +1,5 @@
+th, td {
+    border: 1px solid lightgray;
+    padding: .25rem .5rem;
+    border-radius: 2px;
+}

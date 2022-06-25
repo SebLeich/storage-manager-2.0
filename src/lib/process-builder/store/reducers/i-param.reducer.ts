@@ -32,11 +32,16 @@ export const reducer = createReducer(
   on(addIParam, (state: State, { param }) => {
     return adapter.addOne({
       identifier: typeof param.identifier === 'number'? param.identifier: nextId(state),
-      value: param.value,
+      defaultValue: param.defaultValue,
       name: param.name,
       normalizedName: param.normalizedName,
-      constant: param.constant
-    }, state);
+      constant: param.constant,
+      interface: param.interface,
+      nullable: param.nullable,
+      optional: param.optional,
+      type: param.type,
+      typeDef: param.typeDef
+    } as IParam, state);
   }),
 
   on(addIParams, (state: State, { params }) => {
@@ -44,10 +49,15 @@ export const reducer = createReducer(
     for (let param of params) {
       output.push({
         identifier: typeof param.identifier === 'number'? param.identifier: nextId(state),
-        value: param.value,
+        defaultValue: param.defaultValue,
         name: param.name,
         normalizedName: param.normalizedName,
-        constant: param.constant
+        constant: param.constant,
+        interface: param.interface,
+        nullable: param.nullable,
+        optional: param.optional,
+        type: param.type,
+        typeDef: param.typeDef
       });
     }
     return adapter.addMany(output, state);
@@ -57,9 +67,15 @@ export const reducer = createReducer(
     let update: Update<IParam> = {
       'id': param.identifier,
       'changes': {
-        'name': param.name,
-        'normalizedName': param.normalizedName,
-        'value': param.value
+        defaultValue: param.defaultValue,
+        name: param.name,
+        normalizedName: param.normalizedName,
+        constant: param.constant,
+        interface: param.interface,
+        nullable: param.nullable,
+        optional: param.optional,
+        type: param.type,
+        typeDef: param.typeDef
       }
     }
     return adapter.updateOne(update, state);
