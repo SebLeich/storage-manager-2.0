@@ -184,7 +184,7 @@ export const validateBPMNConfig = (bpmnJS: any, injector: Injector) => {
                             normalizedName: taskCreationComponentOutput.normalizedOutputParamName ?? ProcessBuilderRepository.normalizeName(taskCreationComponentOutput.outputParamName ?? config.dynamicParamDefaultNaming),
                             defaultValue: taskCreationComponentOutput.outputParamValue ?? [],
                             type: 'object'
-                        };
+                        } as IParam;
                         paramStore.dispatch(upsertIParam(outputParam));
 
                     } else if (outputParam && outputParam !== 'dynamic') {

@@ -31,7 +31,7 @@ export const reducer = createReducer(
 
   on(addIParam, (state: State, { param }) => {
     return adapter.addOne({
-      identifier: typeof param.identifier === 'number'? param.identifier: nextId(state),
+      identifier: typeof param.identifier === 'number' ? param.identifier : nextId(state),
       defaultValue: param.defaultValue,
       name: param.name,
       normalizedName: param.normalizedName,
@@ -40,15 +40,16 @@ export const reducer = createReducer(
       nullable: param.nullable,
       optional: param.optional,
       type: param.type,
-      typeDef: param.typeDef
-    } as IParam, state);
+      typeDef: param.typeDef,
+      _isIParam: true
+    }, state);
   }),
 
   on(addIParams, (state: State, { params }) => {
     let output: IParam[] = [];
     for (let param of params) {
       output.push({
-        identifier: typeof param.identifier === 'number'? param.identifier: nextId(state),
+        identifier: typeof param.identifier === 'number' ? param.identifier : nextId(state),
         defaultValue: param.defaultValue,
         name: param.name,
         normalizedName: param.normalizedName,
@@ -57,7 +58,8 @@ export const reducer = createReducer(
         nullable: param.nullable,
         optional: param.optional,
         type: param.type,
-        typeDef: param.typeDef
+        typeDef: param.typeDef,
+        _isIParam: true
       });
     }
     return adapter.addMany(output, state);
@@ -82,15 +84,41 @@ export const reducer = createReducer(
   }),
 
   on(upsertIParam, (state: State, { param }) => {
-    return adapter.upsertOne(param, state);
+    return adapter.upsertOne({
+      _isIParam: true,
+      constant: param.constant,
+      defaultValue: param.defaultValue,
+      identifier: param.identifier,
+      interface: param.interface,
+      name: param.name,
+      normalizedName: param.normalizedName,
+      nullable: param.nullable,
+      optional: param.optional,
+      type: param.type,
+      typeDef: param.typeDef
+    }, state);
   }),
 
   on(upsertIParams, (state: State, { params }) => {
-    return adapter.upsertMany(params, state);
+    return adapter.upsertMany(params.map(param => {
+      return {
+        _isIParam: true,
+        constant: param.constant,
+        defaultValue: param.defaultValue,
+        identifier: param.identifier,
+        interface: param.interface,
+        name: param.name,
+        normalizedName: param.normalizedName,
+        nullable: param.nullable,
+        optional: param.optional,
+        type: param.type,
+        typeDef: param.typeDef
+      }
+    }), state);
   }),
 
   on(removeIParam, (state: State, { param }) => {
-    let key = typeof param === 'number'? param: param.identifier;
+    let key = typeof param === 'number' ? param : param.identifier;
     return adapter.removeOne(key, state);
   }),
 

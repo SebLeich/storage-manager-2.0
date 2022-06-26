@@ -39,7 +39,6 @@ export const reducer = createReducer(
   }),
 
   on(addIInterfaces, (state: State, { ifaces }) => {
-    debugger;
     let output: IInterface[] = [];
     for (let iface of ifaces) {
       output.push({

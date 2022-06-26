@@ -12,6 +12,7 @@ export interface IFunction {
     useDynamicInputParams?: undefined | boolean | IDynamicInputParamsConfig;
     output: IOutputParam | null;
     pseudoImplementation?: (args?: any) => Promise<any>;
+    pseudoImplementationComputationName?: string;
     canFail: boolean;
     customImplementation?: string[];
     requireCustomImplementation?: boolean;

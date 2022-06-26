@@ -123,7 +123,6 @@ export class ProcessBuilderComponentService {
   hideAllHints = () => ProcessBuilderRepository.clearAllTooltips(this.bpmnJS);
 
   init(parent: HTMLDivElement) {
-    debugger;
     // attach BpmnJS instance to DOM element
     this.bpmnJS.attachTo(parent);
     this.setDefaultModel().subscribe();
@@ -194,9 +193,7 @@ export class ProcessBuilderComponentService {
       )
       .subscribe({
         next: (model: IBpmnJSModel | string) => {
-
-          debugger;
-
+          
           if (typeof model === 'string') {
             model = {
               'guid': Guid.generateGuid(),

@@ -84,6 +84,7 @@ export default [
             });
             return promise;
         },
+        'pseudoImplementationComputationName': 'Import',
         'canFail': false,
         'requireCustomImplementation': false
     } as IFunction,

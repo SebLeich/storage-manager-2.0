@@ -36,10 +36,12 @@ export class EmbeddedParamEditorComponent implements IEmbeddedView, AfterViewIni
 
   ngAfterViewInit(): void {
     this._subscriptions.push(...[
-      
+
       combineLatest([this.editor$, this.outputParamValueControl.valueChanges.pipe(startWith(this.outputParamValueControl.value))])
+        .pipe(debounceTime(100))
         .subscribe(([editor, param]: [JSONEditor, any]) => {
-          editor.set(ProcessBuilderRepository.createPseudoObjectFromIParamDefinition(param));
+          let obj = ProcessBuilderRepository.createPseudoObjectFromIParamDefinition(param);
+          editor.set(obj ?? {});
           editor.expandAll();
         })
     ]);
