@@ -51,6 +51,7 @@ import { ValidationWarningPipe } from './pipes/validation-warning.pipe';
 import { EmbeddedInputOutputMappingComponent } from './components/embedded/embedded-input-output-mapping/embedded-input-output-mapping.component';
 import { EmbeddedInputOutputMappingTableRowComponent } from './components/helpers/embedded-input-output-mapping-table-row/embedded-input-output-mapping-table-row.component';
 import { loadIInterfaces } from './store/actions/i-interface.actions';
+import { InterfacePipe } from './pipes/interface.pipe';
 
 
 @NgModule({
@@ -72,7 +73,8 @@ import { loadIInterfaces } from './store/actions/i-interface.actions';
     ParamPreviewComponent,
     ValidationWarningPipe,
     EmbeddedInputOutputMappingComponent,
-    EmbeddedInputOutputMappingTableRowComponent
+    EmbeddedInputOutputMappingTableRowComponent,
+    InterfacePipe
   ],
   imports: [
     CodemirrorModule,

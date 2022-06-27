@@ -41,7 +41,7 @@
         </div>
 
         <div class="control secondary" *ngIf="canAnalyzeCustomImplementation$|async" (click)="testImplementation()">
-            Execute
+            {{(func$|async)?.pseudoImplementationComputationName ?? 'Execute'}}
         </div>
 
         <div class="control primary" [ngClass]="{ 'disabled': unfinished }" (click)="finish()">

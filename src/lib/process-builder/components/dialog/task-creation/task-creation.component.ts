@@ -32,6 +32,8 @@ import { IConnector } from 'src/lib/bpmn-io/i-connector';
 import { EmbeddedFunctionInputSelectionComponent } from '../../embedded/embedded-function-input-selection/embedded-function-input-selection.component';
 import { debounceTime, filter, map, shareReplay, switchMap, take } from 'rxjs/operators';
 import { EmbeddedInputOutputMappingComponent } from '../../embedded/embedded-input-output-mapping/embedded-input-output-mapping.component';
+import { selectIInterface } from 'src/lib/process-builder/store/selectors/i-interface.selectors';
+import { IInterface } from 'src/lib/process-builder/globals/i-interface';
 
 @Component({
   selector: 'app-task-creation',
@@ -133,6 +135,8 @@ export class TaskCreationComponent implements OnDestroy, OnInit {
     map(x => x.taskCreationStep === TaskCreationStep.ConfigureFunctionImplementation || x.taskCreationStep === TaskCreationStep.ConfigureFunctionOutput)
   );
 
+  func$: Observable<IFunction> = this._funcStore.select(selectIFunction(() => this.functionIdentifierControl.value));
+
   private _statusMessage: Subject<string> = new Subject<string>();
   statusMessage$ = combineLatest([this._statusMessage.asObservable(), this._statusMessage.pipe(switchMap(() => interval(1000)))])
     .pipe(map(([val, time]: [string, number]) => {
@@ -163,7 +167,7 @@ export class TaskCreationComponent implements OnDestroy, OnInit {
       'normalizedName': ProcessBuilderRepository.normalizeName(config.defaultFunctionName),
       'outputParamName': config.dynamicParamDefaultNaming,
       'normalizedOutputParamName': ProcessBuilderRepository.normalizeName(config.dynamicParamDefaultNaming),
-      'outputParamValue': this._formBuilder.control(null),
+      'outputParamValue': null,
       'entranceGatewayType': null,
       'inputParam': null
     });
@@ -293,10 +297,10 @@ export class TaskCreationComponent implements OnDestroy, OnInit {
     this._funcStore.select(selectIFunction(this.functionIdentifierControl.value)).pipe(
       take(1),
       filter(x => x ? true : false),
-      switchMap((fun: IFunction | null | undefined) => combineLatest([of(fun), this._paramStore.select(selectIParam(fun?.output?.param)), this._paramStore.select(selectIParam(fun?.output?.interface))]))
-    ).subscribe(([fun, outputParam, outputParamInterface]: [IFunction | null | undefined, IParam | null | undefined, IParam | null | undefined]) => {
+      switchMap((fun: IFunction | null | undefined) => combineLatest([of(fun), this._paramStore.select(selectIParam(fun?.output?.param)), this._interfaceStore.select(selectIInterface(fun?.output?.interface))]))
+    ).subscribe(([fun, outputParam, outputParamInterface]: [IFunction | null | undefined, IParam | null | undefined, IInterface | null | undefined]) => {
       let inputParams = fun.useDynamicInputParams && fun.inputParams ? Array.isArray(fun.inputParams) ? [...fun.inputParams] : [fun.inputParams] : [];
-      let outputParamValue = ((fun.output?.param === 'dynamic' && outputParamInterface) ?? false) ? outputParamInterface.defaultValue : outputParam?.defaultValue;
+      let outputParamValue = ((fun.output?.param === 'dynamic' && outputParamInterface) ?? false) ? outputParamInterface.typeDef : outputParam?.typeDef;
       this.formGroup.patchValue({
         'canFail': fun?.canFail,
         'implementation': fun?.customImplementation,

@@ -1,5 +1,47 @@
 th, td {
-    border: 1px solid lightgray;
-    padding: .25rem .5rem;
+    padding: 0.4rem 0.5rem;
     border-radius: 2px;
+    font-size: .7rem;
+}
+
+.input-value {
+    cursor: pointer;
+    width: 100%;
+}
+
+.input-value:hover {
+    opacity: .7;
+}
+
+.output-value {
+    min-width: min(14rem, 40vw);
+}
+
+.exemplary-value {
+    max-width: 10rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    text-align: center;
+    opacity: .6;
+}
+
+tr:nth-child(4n+2) {
+    background-color: rgb(247, 247, 247);
+}
+
+.entry-row.object {
+    background-color: #e6f0ff;
+}
+
+.entry-row.array {
+    background-color: rgb(255, 236, 224);
+}
+
+.entry-row:nth-child(2n+2) .input-value {
+    background-color: #d8ffd970;
+}
+
+.entry-row:nth-child(4n+2) .input-value {
+    background-color: #e6ffe79d;
 }

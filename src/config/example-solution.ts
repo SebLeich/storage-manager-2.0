@@ -1,6 +1,6 @@
 export default {
-    "_Id": "ab34762f-ccd1-4258-b3e1-69558728e6b4",
-    "_Container": {
+    "id": "ab34762f-ccd1-4258-b3e1-69558728e6b4",
+    "container": {
         "_Height": 1700,
         "_Width": 2100,
         "_Length": 3000,
@@ -327,20 +327,20 @@ export default {
             }
         ]
     },
-    "_Algorithm": "Super-Flo",
-    "_Groups": [
+    "algorithm": "Super-Flo",
+    "groups": [
         {
-            "_Id": 1,
-            "_Color": "#b71a1a",
-            "_Desc": "Test AG"
+            "id": 1,
+            "color": "#b71a1a",
+            "desc": "Test AG"
         },
         {
-            "_Id": 2,
-            "_Color": "#6094e6",
-            "_Desc": "Beispiel SE"
+            "id": 2,
+            "color": "#6094e6",
+            "desc": "Beispiel SE"
         }
     ],
-    "_Steps": [
+    "steps": [
         {
             "sequenceNumber": 0,
             "messages": [
@@ -5300,6 +5300,6 @@ export default {
             "usedDimension": null
         }
     ],
-    "_Calculated": "2022-01-20T18:14:58",
-    "_Description": null
+    "calculated": "2022-01-20T18:14:58",
+    "description": null
 }

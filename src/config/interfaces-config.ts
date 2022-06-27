@@ -12,6 +12,30 @@ export default [
                 'interface': InterfaceCodes.Container
             },
             { 'name': 'alogorithm', 'type': 'string', 'defaultValue': 'all in one row' },
+            {
+                'name': 'groups',
+                'type': 'array',
+                'defaultValue': null,
+                'typeDef': [
+                    {
+                        'interface': InterfaceCodes.Group,
+                        'type': 'object'
+                    }
+                ]
+            },
+            { 'name': 'description', 'type': 'string', 'defaultValue': 'exemplary algorithm' },
+            { 'name': 'calculated', 'type': 'string', 'defaultValue': '2020-01-01T12:00:00' },
+            {
+                'name': 'steps',
+                'type': 'array',
+                'defaultValue': null,
+                'typeDef': [
+                    {
+                        'interface': InterfaceCodes.Step,
+                        'type': 'object'
+                    }
+                ]
+            },
         ],
         name: 'solution template',
         normalizedName: 'solution'
@@ -44,6 +68,24 @@ export default [
             { 'name': 'desc', 'type': 'string', 'defaultValue': 'pallet' },
             { 'name': 'height', 'type': 'number', 'defaultValue': 10 },
             { 'name': 'group', 'type': 'number', 'defaultValue': 1 },
+        ]
+    } as IInterface,
+    {
+        identifier: InterfaceCodes.Group,
+        name: 'group template',
+        normalizedName: 'group',
+        typeDef: [
+            { 'name': 'id', 'type': 'number', 'defaultValue': 1 },
+            { 'name': 'color', 'type': 'string', 'defaultValue': '#b71a1a' },
+            { 'name': 'desc', 'type': 'string', 'defaultValue': 'Test AG' },
+        ]
+    } as IInterface,
+    {
+        identifier: InterfaceCodes.Step,
+        name: 'step template',
+        normalizedName: 'step',
+        typeDef: [
+            { 'name': 'sequenceNumber', 'type': 'number', 'defaultValue': 0 },
         ]
     } as IInterface
 ];

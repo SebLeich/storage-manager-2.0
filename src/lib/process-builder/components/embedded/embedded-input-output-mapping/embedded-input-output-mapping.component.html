@@ -6,9 +6,9 @@
 
             <tr>
 
-                <th>input param</th>
-                <th>constant value</th>
-                <th>map to output</th>
+                <th class="input-column">input param</th>
+                <th>map to output ({{outputParamName$|async}})</th>
+                <th>exemplary value</th>
 
             </tr>
 
@@ -16,7 +16,7 @@
 
         <tbody>
 
-            <ng-container  *ngFor="let value of outputParamValueControl.value">
+            <ng-container  *ngFor="let value of (params$|async)">
 
                 <app-embedded-input-output-mapping-table-row #wrapper [def]="value"></app-embedded-input-output-mapping-table-row>
                 <ng-content *ngTemplateOutlet="wrapper.rowTemplate"></ng-content>

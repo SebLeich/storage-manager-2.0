@@ -24,6 +24,8 @@ export class FunctionPreviewComponent implements OnInit {
     private _paramStore: Store<fromIFunction.State>
   ) { }
 
+  isNumber = (arg: any) => typeof arg === 'number';
+
   ngOnInit(): void {
     this.inputParams = Array.isArray(this.func.inputParams) ? this.func.inputParams : typeof this.func.inputParams === 'number' ? [this.func.inputParams] : [];
   }

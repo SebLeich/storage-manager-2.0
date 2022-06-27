@@ -1,6 +1,7 @@
 import { IFunction } from "src/lib/process-builder/globals/i-function";
 import { PredefinedFunctions } from "src/lib/process-builder/globals/pre-defined-functions";
 import exampleSolution from "./example-solution";
+import { InterfaceCodes } from "./interface-codes";
 import { ParamCodes } from "./param-codes";
 
 export default [
@@ -96,7 +97,7 @@ export default [
         'description': 'method converts a given input to a reusable solution',
         'output': {
             'param': 'dynamic',
-            'interface': 4
+            'interface': InterfaceCodes.Solution
         },
         'canFail': false,
         'requireCustomImplementation': false,

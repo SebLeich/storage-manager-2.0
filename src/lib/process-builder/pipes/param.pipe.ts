@@ -17,7 +17,7 @@ export class ParamPipe implements PipeTransform {
 
   }
 
-  transform(value: ParamCodes | null | undefined | 'dynamic'): Observable<string> {
+  transform(value: number | null | undefined | 'dynamic'): Observable<string> {
     if(typeof value !== 'number'){
       return of(value === 'dynamic'? 'dynamic': this.notFoundResult);
     }

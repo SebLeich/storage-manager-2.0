@@ -1,5 +1,7 @@
 export enum InterfaceCodes {
     Solution,
     Good,
-    Container
+    Container,
+    Group,
+    Step
 }

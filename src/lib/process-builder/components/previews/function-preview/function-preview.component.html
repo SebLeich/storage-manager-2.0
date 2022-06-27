@@ -87,7 +87,7 @@
 <ng-template #outputParamPreview>
 
     <div>
-        {{func.output?.param|param|async}}
+        {{func.output?.param === 'dynamic' && isNumber(func.output?.interface)? (func.output?.interface|interface|async): (func.output?.param|param|async)}}
     </div>
 
 </ng-template>

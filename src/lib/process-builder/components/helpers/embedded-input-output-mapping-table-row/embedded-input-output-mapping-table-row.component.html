@@ -1,18 +1,24 @@
 <ng-template #rowTemplate>
 
-    <tr>
-        <td>-</td>
-        <td>{{def.defaultValue}}</td>
-        <td [ngStyle]="{ 'padding-left': 'calc(.5rem + (1rem * ' + level + '))' }">
-            {{def.name}} (type: {{def.type}})
+    <tr class="entry-row" [ngClass]="{ 'object': def.type === 'object', 'array': def.type === 'array' }">
+        <td class="input-value">
+            click to select
         </td>
+        <td class="output-value" [ngStyle]="{ 'padding-left': 'calc(.5rem + (.5rem * ' + level + '))' }">
+            {{def?.name}} (type: {{isNumber(def?.interface)? (def?.interface|interface|async): def?.type}})
+        </td>
+        <td class="exemplary-value">{{def?.defaultValue}}</td>
     </tr>
 
-    <ng-container *ngFor="let child of def.typeDef">
+    <ng-container *ngIf="def.type === 'object' || def.type === 'array'">
 
-        <app-embedded-input-output-mapping-table-row #wrapper [def]="child" [level]="level+1">
-        </app-embedded-input-output-mapping-table-row>
-        <ng-content *ngTemplateOutlet="wrapper.rowTemplate"></ng-content>
+        <ng-container *ngFor="let child of (typeDef$|async)">
+
+            <app-embedded-input-output-mapping-table-row #wrapper [def]="child" [level]="level+1">
+            </app-embedded-input-output-mapping-table-row>
+            <ng-content *ngTemplateOutlet="wrapper.rowTemplate"></ng-content>
+    
+        </ng-container>
 
     </ng-container>
 
