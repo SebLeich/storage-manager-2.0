@@ -8,6 +8,7 @@ export default [
         'name': 'exemplary solution',
         'normalizedName': 'exemplarySolution',
         'constant': true,
-        'interface': InterfaceCodes.Solution
+        'interface': InterfaceCodes.Solution,
+        'type': 'object'
     } as IParam,
 ];

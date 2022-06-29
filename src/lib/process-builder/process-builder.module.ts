@@ -25,6 +25,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { MatTabsModule } from '@angular/material/tabs';
+import { MatMenuModule } from '@angular/material/menu';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 import { FunctionPreviewComponent } from './components/previews/function-preview/function-preview.component';
@@ -52,6 +53,8 @@ import { EmbeddedInputOutputMappingComponent } from './components/embedded/embed
 import { EmbeddedInputOutputMappingTableRowComponent } from './components/helpers/embedded-input-output-mapping-table-row/embedded-input-output-mapping-table-row.component';
 import { loadIInterfaces } from './store/actions/i-interface.actions';
 import { InterfacePipe } from './pipes/interface.pipe';
+import { ParamMemberPreviewComponent } from './components/helpers/param-member-preview/param-member-preview.component';
+import { ParamMemberPathPreviewComponent } from './components/helpers/param-member-path-preview/param-member-path-preview.component';
 
 
 @NgModule({
@@ -74,17 +77,22 @@ import { InterfacePipe } from './pipes/interface.pipe';
     ValidationWarningPipe,
     EmbeddedInputOutputMappingComponent,
     EmbeddedInputOutputMappingTableRowComponent,
-    InterfacePipe
+    InterfacePipe,
+    ParamMemberPreviewComponent,
+    ParamMemberPathPreviewComponent
   ],
   imports: [
+    
     CodemirrorModule,
     CommonModule,
     FormsModule,
     HttpClientModule,
+
     MatButtonModule,
     MatDialogModule,
     MatIconModule,
     MatInputModule,
+    MatMenuModule,
     MatProgressSpinnerModule,
     MatSnackBarModule,
     MatSlideToggleModule,

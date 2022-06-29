@@ -1,14 +1,22 @@
 <div class="body">
-    
+
     <table>
 
         <thead>
 
             <tr>
 
-                <th class="input-column">input param</th>
-                <th>map to output ({{outputParamName$|async}})</th>
-                <th>exemplary value</th>
+                <th class="input-column">input value</th>
+                <th rowspan="2">map to output ({{outputParamName$|async}})</th>
+                <th rowspan="2">exemplary value</th>
+
+            </tr>
+
+            <tr>
+
+                <td class="input-value" [matMenuTriggerFor]="menu" (menuOpened)="menuOpened()">
+                    click to select
+                </td>
 
             </tr>
 
@@ -16,9 +24,9 @@
 
         <tbody>
 
-            <ng-container  *ngFor="let value of (params$|async)">
+            <ng-container *ngFor="let value of (params$|async)">
 
-                <app-embedded-input-output-mapping-table-row #wrapper [def]="value"></app-embedded-input-output-mapping-table-row>
+                <app-embedded-input-output-mapping-table-row #wrapper [def]="value" [inputParams]="inputParams"></app-embedded-input-output-mapping-table-row>
                 <ng-content *ngTemplateOutlet="wrapper.rowTemplate"></ng-content>
 
             </ng-container>
@@ -28,3 +36,13 @@
     </table>
 
 </div>
+
+<mat-menu #menu="matMenu">
+
+    <div *ngFor="let paramMember of (availableTypes$|async)">
+
+        <app-param-member-preview [paramMember]="paramMember"></app-param-member-preview>
+
+    </div>
+
+</mat-menu>

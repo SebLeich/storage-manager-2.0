@@ -34,6 +34,7 @@ import { debounceTime, filter, map, shareReplay, switchMap, take } from 'rxjs/op
 import { EmbeddedInputOutputMappingComponent } from '../../embedded/embedded-input-output-mapping/embedded-input-output-mapping.component';
 import { selectIInterface } from 'src/lib/process-builder/store/selectors/i-interface.selectors';
 import { IInterface } from 'src/lib/process-builder/globals/i-interface';
+import { mapIParamsInterfaces } from 'src/lib/process-builder/globals/rxjs-extensions';
 
 @Component({
   selector: 'app-task-creation',
@@ -200,7 +201,11 @@ export class TaskCreationComponent implements OnDestroy, OnInit {
       type: EmbeddedParamEditorComponent
     };
     this.stepRegistry[TaskCreationStep.ConfigureInputOutputMapping] = {
-      type: EmbeddedInputOutputMappingComponent
+      type: EmbeddedInputOutputMappingComponent,
+      provideInputParams: (arg: IEmbeddedView, element: IElement) => {
+        let component = arg as EmbeddedInputOutputMappingComponent;
+        component.inputParams = BPMNJsRepository.getAvailableInputParams(element);
+      }
     };
     this.stepRegistry[TaskCreationStep.ConfigureFunctionInput] = {
       type: EmbeddedFunctionInputSelectionComponent,
@@ -233,12 +238,13 @@ export class TaskCreationComponent implements OnDestroy, OnInit {
             return this._paramStore.select(selectIParams(inputParams));
           }),
           take(1),
-          filter(x => x ? true : false)
+          filter(x => x ? true : false),
+          mapIParamsInterfaces(this._interfaceStore)
         )
-        .subscribe(allParams => {
+        .subscribe((allParams: IParam[]) => {
           for (let param of allParams) {
-            (this._injector as any)[param!.normalizedName] = ProcessBuilderRepository.createPseudoObjectFromIParamDefinition(param!.defaultValue);
-            (this._injectorInterface.injector as any)[param!.normalizedName] = ProcessBuilderRepository.createPseudoObjectFromIParamDefinition(param!.defaultValue);
+            (this._injector as any)[param!.normalizedName] = ProcessBuilderRepository.createPseudoObjectFromIParamDefinition(param);
+            (this._injectorInterface.injector as any)[param!.normalizedName] = ProcessBuilderRepository.createPseudoObjectFromIParamDefinition(param);
           }
         }),
       this.functionIdentifierControl.valueChanges.subscribe((functionIdentifier: number | null) => {

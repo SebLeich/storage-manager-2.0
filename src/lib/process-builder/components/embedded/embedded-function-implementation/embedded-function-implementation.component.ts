@@ -27,7 +27,7 @@ import { FormControl, FormGroup } from '@angular/forms';
 })
 export class EmbeddedFunctionImplementationComponent implements IEmbeddedView, AfterViewInit, OnDestroy {
 
-  @Input() inputParams!: ParamCodes | ParamCodes[] | null;
+  @Input() inputParams!: number | number[] | null;
 
   @ViewChild('codeBody', { static: true, read: ElementRef }) codeBody!: ElementRef<HTMLDivElement>;
   codeMirror!: EditorView;
@@ -58,8 +58,7 @@ export class EmbeddedFunctionImplementationComponent implements IEmbeddedView, A
 
   constructor(
     @Inject(PROCESS_BUILDER_CONFIG_TOKEN) public config: IProcessBuilderConfig,
-    @Inject(INJECTOR_INTERFACE_TOKEN) private _injector: object,
-    private _paramStore: Store<fromIParam.State>,
+    @Inject(INJECTOR_INTERFACE_TOKEN) private _injector: object
   ) { }
 
   blockTabPressEvent(event: KeyboardEvent) {
@@ -160,6 +159,7 @@ const dontCompleteIn = [
 function completeProperties(from: number, object: { type: string, apply?: string }) {
   let options = [];
   for (let name in object) {
+    if(!object[name]) continue;
     let option = {
       label: name,
       type: (object as any)[name].type,

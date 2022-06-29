@@ -16,8 +16,8 @@ export class ParameterRepository {
         if (a.type !== b.type) return false;
         if (a.type !== 'object' && a.type !== 'array') return a.type === b.type;
         else if (a.type === 'object') {
-            for (let entry of a.typeDef) {
-                let counterpart = b.typeDef.find(x => x.name === entry.name && x.type === entry.type);
+            for (let entry of (a.typeDef as IParamDefinition[])) {
+                let counterpart = (b.typeDef as IParamDefinition[]).find(x => x.name === entry.name && x.type === entry.type);
                 if (!counterpart || !this.objectsMatch(entry, counterpart)) return false;
             }
             return true;

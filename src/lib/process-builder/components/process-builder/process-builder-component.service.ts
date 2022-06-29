@@ -244,6 +244,7 @@ export class ProcessBuilderComponentService {
   }
 
   showWarning(warning: { element: IElement, warning: ValidationWarning }) {
+    console.log(warning);
     this.hideAllHints();
     var tooltipModule = getTooltipModule(this.bpmnJS);
     tooltipModule.add({

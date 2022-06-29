@@ -24,6 +24,7 @@ th, td {
     text-overflow: ellipsis;
     text-align: center;
     opacity: .6;
+    font-weight: 500;
 }
 
 tr:nth-child(4n+2) {
@@ -38,10 +39,19 @@ tr:nth-child(4n+2) {
     background-color: rgb(255, 236, 224);
 }
 
+.input-value {
+    cursor: pointer;
+    width: 100%;
+}
+
 .entry-row:nth-child(2n+2) .input-value {
     background-color: #d8ffd970;
 }
 
 .entry-row:nth-child(4n+2) .input-value {
     background-color: #e6ffe79d;
+}
+
+.param-member-wrapper:nth-child(even) {
+    
 }

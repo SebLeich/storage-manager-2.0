@@ -1,0 +1,7 @@
+<div class="body">
+
+    <span *ngFor="let segment of (pathSegments$|async); let i = index" class="segment {{(i + 1) < (segmentCount$|async)? 'pre': 'main'}}">
+        {{segment}}
+    </span>
+
+</div>

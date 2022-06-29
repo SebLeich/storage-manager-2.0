@@ -1,0 +1,14 @@
+.body {
+    padding: .5rem;
+}
+
+.navigation-path-wrapper {
+    margin-bottom: .1rem;
+}
+
+.type {
+    font-size: .8rem;
+    color: #5c5c5c;
+    font-weight: 100;
+    margin: 0rem 0.25rem;
+}

@@ -57,6 +57,7 @@ import { FUNCTIONS_CONFIG_TOKEN } from 'src/lib/process-builder/globals/i-functi
 import { INTERFACES_CONFIG_TOKEN } from 'src/lib/process-builder/globals/i-interface';
 
 import { SharedModule } from 'src/lib/shared/shared.module';
+import { MatMenuModule } from '@angular/material/menu';
 
 @NgModule({
   declarations: [
@@ -93,6 +94,7 @@ import { SharedModule } from 'src/lib/shared/shared.module';
     MatTableModule,
     MatButtonModule,
     MatDialogModule,
+    MatMenuModule,
     MatTooltipModule,
     MatToolbarModule,
     MatSnackBarModule,

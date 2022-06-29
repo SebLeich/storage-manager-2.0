@@ -1,7 +1,9 @@
-import { Component, Input, OnChanges, OnDestroy, OnInit, SimpleChanges, TemplateRef, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, Input, OnChanges, OnDestroy, SimpleChanges, TemplateRef, ViewChild } from '@angular/core';
+import { MatMenuTrigger } from '@angular/material/menu';
 import { Store } from '@ngrx/store';
-import { BehaviorSubject, Observable, ReplaySubject, Subscription } from 'rxjs';
+import { BehaviorSubject, Subscription } from 'rxjs';
 import { IParamDefinition } from 'src/lib/process-builder/globals/i-param-definition';
+import { IParamMember } from 'src/lib/process-builder/globals/i-param-member';
 import { State } from 'src/lib/process-builder/store/reducers/i-interface.reducer';
 import { selectIInterface } from 'src/lib/process-builder/store/selectors/i-interface.selectors';
 
@@ -10,17 +12,22 @@ import { selectIInterface } from 'src/lib/process-builder/store/selectors/i-inte
   templateUrl: './embedded-input-output-mapping-table-row.component.html',
   styleUrls: ['./embedded-input-output-mapping-table-row.component.css']
 })
-export class EmbeddedInputOutputMappingTableRowComponent implements OnChanges, OnDestroy, OnInit {
+export class EmbeddedInputOutputMappingTableRowComponent implements OnChanges, OnDestroy, AfterViewInit {
 
   @ViewChild('rowTemplate') rowTemplate: TemplateRef<any>;
 
   @Input() level: number = 0;
   @Input() def!: IParamDefinition;
+  @Input() inputParams!: number | number[] | null;
 
   private _typeDef = new BehaviorSubject<IParamDefinition[]>([]);
   typeDef$ = this._typeDef.asObservable();
 
+  private _availableTypes = new BehaviorSubject<IParamMember[]>([]);
+  availableTypes$ = this._availableTypes.asObservable();
+
   private _sub: Subscription | null = null;
+  private _subscriptions: Subscription[] = [];
 
   constructor(
     private _store: Store<State>
@@ -28,8 +35,12 @@ export class EmbeddedInputOutputMappingTableRowComponent implements OnChanges, O
 
   isNumber = (arg: any) => typeof arg === 'number';
 
+  menuOpened(){
+    this._setAvailableTypes();
+  }
+
   ngOnChanges(simpleChanges: SimpleChanges): void {
-    if (simpleChanges['def']) this._setTypeDef();
+    if (simpleChanges['def'] || simpleChanges['inputParams']) this._setTypeDef();
   }
 
   ngOnDestroy(): void {
@@ -37,10 +48,21 @@ export class EmbeddedInputOutputMappingTableRowComponent implements OnChanges, O
       this._sub.unsubscribe();
       this._sub = null;
     }
+    for (let sub of this._subscriptions) {
+      sub.unsubscribe();
+      this._subscriptions = [];
+    }
   }
 
-  ngOnInit(): void {
+  ngAfterViewInit(): void {
     this._setTypeDef();
+  }
+
+  private _setAvailableTypes(){
+    this._availableTypes.next([
+      { 'navigationPath': 'exemplarySolution', 'type': 'Solution template' },
+      { 'navigationPath': 'exemplarySolution.container', 'type': 'Container template' }
+    ])
   }
 
   private _setTypeDef() {
@@ -55,7 +77,9 @@ export class EmbeddedInputOutputMappingTableRowComponent implements OnChanges, O
         this._typeDef.next(iface.typeDef);
       });
     }
-    else this._typeDef.next(Array.isArray(this.def.typeDef) ? this.def.typeDef : [this.def.typeDef]);
+    else {
+      this._typeDef.next(Array.isArray(this.def.typeDef) ? this.def.typeDef : [this.def.typeDef]);
+    }
   }
 
 }

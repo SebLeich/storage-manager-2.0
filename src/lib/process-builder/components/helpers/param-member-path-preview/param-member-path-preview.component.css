@@ -1,0 +1,21 @@
+.segment {
+    overflow: hidden;
+    display: inline-block;
+    vertical-align: bottom;
+    font-size: .8rem;
+    text-overflow: ellipsis;
+    padding: 0.25rem 0.5rem;
+    background-color: rgb(241, 241, 241);
+    border-radius: 2px;
+    margin-right: 0.25rem;
+    line-height: .8rem;
+}
+
+.segment.pre {
+    max-width: 40px;
+}
+
+.segment.main {
+    background-color: rgb(70, 70, 165);
+    color: white;
+}
