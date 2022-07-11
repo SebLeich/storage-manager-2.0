@@ -1,14 +1,15 @@
 .body {
-    width: min(90vw, 800px);
     overflow: hidden;
     display: flex;
     flex-direction: column;
+    max-width: 466px;
 }
 
 .content {
     flex: 1;
     display: flex;
     flex-direction: column;
+    background-color: #f7f7f7;
 }
 
 .user-hint {
@@ -19,8 +20,8 @@
 .suggeston-wrapper {
     flex: 1;
     overflow-x: auto;
-    white-space: nowrap;
     padding-bottom: 1rem;
+    text-align: center;
 }
 
 .suggestion {
@@ -31,30 +32,30 @@
     height: 160px;
     border-radius: 3px;
     cursor: pointer;
-    transition: .5s background-color ease-out;
+    transition: .5s all ease-out;
     border-radius: 3px;
-    padding: 0.5rem;
-    border: 3px solid #f1f1f1;
+    padding: .5rem;
+    margin-bottom: .3rem;
+    margin-right: .3rem;
+    background: linear-gradient(135deg, #0078d4, #0078d4bd, #0078d4);
+    box-shadow: 0px 3px 1px -2px rgb(0 0 0 / 20%), 0px 2px 2px 0px rgb(0 0 0 / 14%), 0px 1px 5px 0px rgb(0 0 0 / 12%);
 }
 
 .suggestion:hover {
-    background-color: #f2f2f2;
-}
-
-.suggestion:not(:last-child) {
-    margin-right: .2rem;
+    opacity: .8;
 }
 
 .suggestion .headline {
     padding: 0.5rem;
-    font-weight: 700;
+    font-weight: 500;
     text-align: center;
+    color: white;
 }
 
 .suggestion .sub-title {
     white-space: break-spaces;
     padding: 0.5rem;
-    color: #3f3f3f;
+    color: #e3e3e3;
     flex: 1;
     font-size: .7rem;
     text-align: center;
@@ -70,7 +71,7 @@
 .suggestion .footer mat-icon {
     height: auto;
     width: auto;
-    font-size: 2rem;
-    line-height: 2rem;
-    color: #6b6b6b;
+    font-size: 3rem;
+    line-height: 3rem;
+    color: #ffffff;
 }
