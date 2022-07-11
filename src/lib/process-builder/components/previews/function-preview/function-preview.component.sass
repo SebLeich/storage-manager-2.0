@@ -14,29 +14,32 @@
 .scheme-wrapper
     display: flex
     flex: 1
-    margin-top: 1rem
+    margin-top: .1rem
 
 .section
     flex: 1
     display: flex
     flex-direction: column
 
-.section:not(:last-child)
-    border-right: 1px solid lightgrey
+.section:nth-child(1)
+    max-width: 8rem !important
+    display: block
 
-.section-title
-    text-align: center
+.section:nth-child(1) .section-content
+    font-size: .7rem
+    line-height: .8rem
+
+.section:not(:last-child)
+    margin-right: 1rem
 
 .section-content
     flex: 1
-    margin: 0.5rem
+    margin: 0.5rem 0px
     font-weight: 100
     display: flex
     align-items: center
-    justify-content: center
 
 .function-description
-    margin-left: 0.5rem
     font-size: .8rem
     display: -webkit-box
     -webkit-line-clamp: 3
@@ -52,5 +55,4 @@
     line-height: .7rem
     background-color: transparent
     outline: none
-    text-align: center
     width: calc(100% - .5rem)

@@ -52,12 +52,6 @@
     vertical-align: top;
 }
 
-.footer-button {
-    margin-top: .5rem;
-    margin-right: .5rem;
-    display: inline-block;
-}
-
 .progress-status {
     flex: 1;
     padding: 1rem;

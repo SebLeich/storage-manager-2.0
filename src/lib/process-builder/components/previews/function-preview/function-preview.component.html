@@ -37,7 +37,6 @@
 
             <div class="section-content">
 
-                <mat-icon>settings</mat-icon>
                 <div class="function-description">
                     
                     <textarea matInput rows="3" [ngModel]="func.description" (ngModelChange)="updateFunctionDescription(func, $event)" [ngModelOptions]="{ updateOn: 'blur' }" placeholder="no procedure definition provided" (click)="$event.preventDefault()"></textarea>

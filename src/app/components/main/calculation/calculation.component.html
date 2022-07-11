@@ -5,116 +5,118 @@
         <div class="algorithm-overview" (click)="configureAPICall()">
 
             <div class="headline">
-                Eigene API verwenden
+                connect own service
             </div>
-    
+
             <div class="description">
-                Konfigurieren Sie einen eigenen API-Call. Die Engine kann RESTful Web-Interfaces ansprechen und unterstützt Authorization (Basic, JWT Bearer Token, OAuth2), Model-Crawling, Model-Mapping und Requests gegen localhost.
+                Configure a custom data flow and import data using interfaces such as data uploads or API calls.
             </div>
-    
+
             <div class="algorithm-content">
-    
+
                 <app-api-configuration-preview></app-api-configuration-preview>
-    
+
                 <div class="footer-button-wrapper">
-    
-                    <button class="footer-button" mat-raised-button color="primary" [disabled]="(configureApiCallService.configurationValid$|async)?.invalid ?? true">
-                        Daten senden
-                    </button>
-        
-                    <button class="footer-button" mat-raised-button color="accent">
-                        Visualisieren
-                    </button>
-    
+
+                    <div class="control primary"
+                        [ngClass]="{ 'disabled': (configureApiCallService.configurationValid$|async)?.invalid ?? true }">
+                        send data
+                    </div>
+
                 </div>
-                
+
             </div>
-    
+
         </div>
-    
-        <div class="algorithm-overview" *ngFor="let wrapper of calculationComponentService.algorithms" [class.unavailable]="!wrapper.available">
-    
+
+        <div class="algorithm-overview" *ngFor="let wrapper of calculationComponentService.algorithms"
+            [class.unavailable]="!wrapper.available">
+
             <div class="headline">
                 {{wrapper.algorithm.title}}
             </div>
-    
+
             <div class="description">
                 {{wrapper.algorithm.description}}
             </div>
-    
+
             <div class="algorithm-content">
-    
+
                 <mat-form-field class="width">
-    
+
                     <mat-label>Bezeichnung Lösung</mat-label>
-                    <input type="text" #input [value]="wrapper.solutionDescription" (keyup)="wrapper.solutionDescription = input.value" matInput />
-    
+                    <input type="text" #input [value]="wrapper.solutionDescription"
+                        (keyup)="wrapper.solutionDescription = input.value" matInput />
+
                 </mat-form-field>
-    
+
                 <div class="progress-status">
-    
+
                     <div class="progress-status-label">
-    
+
                         <span class="status">Status: </span>
-    
+
                         <ng-container [ngSwitch]="wrapper.status">
-    
+
                             <span *ngSwitchCase="ALGORITHM_CALCULATION_STATUS.PENDING">
                                 Nicht berechnet
                             </span>
-        
+
                             <span *ngSwitchCase="ALGORITHM_CALCULATION_STATUS.PREPARE_CALCULATION">
                                 Bereite vor ...
                             </span>
-        
+
                             <span *ngSwitchCase="ALGORITHM_CALCULATION_STATUS.CALCULATING">
                                 Berechnet ...
                             </span>
-        
+
                             <span *ngSwitchCase="ALGORITHM_CALCULATION_STATUS.CALCULATED">
                                 Berechnet {{wrapper.solution._Calculated|date:'dd.MM.yyyy HH:mm'}} Uhr
                             </span>
-        
+
                             <span *ngSwitchCase="ALGORITHM_CALCULATION_STATUS.ERROR">
                                 Fehler
                             </span>
-        
+
                             <span *ngSwitchDefault>
                                 Nicht berechnet
                             </span>
-        
+
                         </ng-container>
-    
+
                     </div>
 
                     <div *ngIf="wrapper.status === ALGORITHM_CALCULATION_STATUS.CALCULATED">
                         Länge: {{wrapper.solution._Container._Length|prettyLength}}
                     </div>
-    
+
                     <ng-container *ngIf="wrapper.status === ALGORITHM_CALCULATION_STATUS.ERROR">
-    
+
                         <div class="calculation-error" *ngFor="let error of wrapper.errors">
                             {{error|calculationError}}
                         </div>
-    
+
                     </ng-container>
-    
+
                 </div>
-    
+
                 <div class="footer-button-wrapper">
-    
-                    <button class="footer-button" mat-raised-button color="primary" (click)="calculationComponentService.calculateAlgorithm(wrapper)">
+
+                    <button class="footer-button" mat-raised-button color="primary"
+                        (click)="calculationComponentService.calculateAlgorithm(wrapper)">
                         Berechnen
                     </button>
-        
-                    <button class="footer-button" mat-raised-button color="accent" (click)="calculationComponentService.visualizeSolution(wrapper.solution)" [disabled]="wrapper.status !== ALGORITHM_CALCULATION_STATUS.CALCULATED">
+
+                    <button class="footer-button" mat-raised-button color="accent"
+                        (click)="calculationComponentService.visualizeSolution(wrapper.solution)"
+                        [disabled]="wrapper.status !== ALGORITHM_CALCULATION_STATUS.CALCULATED">
                         Visualisieren
                     </button>
-    
+
                 </div>
-                
+
             </div>
-    
+
         </div>
 
     </div>

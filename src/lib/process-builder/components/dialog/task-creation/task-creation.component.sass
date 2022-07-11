@@ -1,7 +1,7 @@
 @import 'src/lib/sass/button'
 
 .body
-    width: 80vw
+    width: min(80vw, 800px)
     max-width: 1200px
     height: 80vh
     overflow: hidden
@@ -34,7 +34,7 @@
     @include default-button
 
 .footer .control.secondary
-    @include secondary-button
+    @include secondary-button-2
 
 .footer .control.disabled
     pointer-events: none

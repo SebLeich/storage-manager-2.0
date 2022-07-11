@@ -5,153 +5,156 @@
         <div class="general-wrapper">
 
             <mat-expansion-panel expanded="true">
-    
+
                 <mat-expansion-panel-header>
                     <mat-panel-title class="expansion-panel-headline">
-    
+
                         {{headline? headline: 'Lösung'}}
-    
+
                     </mat-panel-title>
-    
+
                     <mat-panel-description>
                         Übersicht
                     </mat-panel-description>
-    
+
                 </mat-expansion-panel-header>
-    
+
                 <div class="general-inner">
-    
+
                     <div class="metadata-wrapper">
 
                         <div class="metadata">
                             <div class="calculated" *ngIf="calculated">
                                 {{'Berechnet: ' + (calculated|date:'dd.MM.yyyy HH:mm') + ' Uhr'}}
                             </div>
-            
+
                             <div class="algorithm" *ngIf="algorithm">
                                 {{'Algorithmus: ' + algorithm}}
                             </div>
                         </div>
 
                         <div class="next-solution-wrapper">
-                            <button mat-icon-button [disabled]="(dataService.solutions$|async).length < 2" (click)="solutionPreviewComponentService.nextSolution()" matTooltip="Nächste Lösung anzeigen">
+                            <button mat-icon-button [disabled]="(dataService.solutions$|async).length < 2"
+                                (click)="solutionPreviewComponentService.nextSolution()"
+                                matTooltip="Nächste Lösung anzeigen">
                                 <mat-icon>chevron_right</mat-icon>
                             </button>
                         </div>
 
                     </div>
-    
+
                     <div class="container-wrapper">
-    
+
                         <app-container-preview [container]="container"></app-container-preview>
-    
+
                     </div>
-    
+
                 </div>
-    
+
             </mat-expansion-panel>
-    
+
         </div>
-    
+
         <div class="goods-wrapper">
-    
+
             <mat-expansion-panel>
-    
+
                 <mat-expansion-panel-header>
                     <mat-panel-title class="expansion-panel-headline">
-    
+
                         Güter
-    
+
                     </mat-panel-title>
-    
+
                     <mat-panel-description>
                         Eingeräumte Güter
                     </mat-panel-description>
-    
+
                 </mat-expansion-panel-header>
-    
+
                 <app-goods-panel></app-goods-panel>
-    
+
             </mat-expansion-panel>
-    
+
         </div>
-    
+
         <div class="groups-wrapper">
-    
+
             <mat-expansion-panel>
-    
+
                 <mat-expansion-panel-header>
                     <mat-panel-title class="expansion-panel-headline">
-    
+
                         Gruppen
-    
+
                     </mat-panel-title>
-    
+
                     <mat-panel-description>
                         Vorgesehene Gruppen
                     </mat-panel-description>
-    
+
                 </mat-expansion-panel-header>
-    
+
                 <app-groups-panel></app-groups-panel>
-    
+
             </mat-expansion-panel>
-    
+
         </div>
-    
+
         <div class="animation-wrapper">
-    
+
             <mat-expansion-panel>
-    
+
                 <mat-expansion-panel-header>
                     <mat-panel-title class="expansion-panel-headline">
-    
+
                         Animation
-    
+
                     </mat-panel-title>
-    
+
                     <mat-panel-description>
                         Vorgehen animieren
                     </mat-panel-description>
-    
+
                 </mat-expansion-panel-header>
 
                 <app-solution-animation></app-solution-animation>
-    
+
             </mat-expansion-panel>
-    
+
         </div>
-    
+
         <div class="validator-wrapper">
-    
+
             <mat-expansion-panel>
-    
+
                 <mat-expansion-panel-header>
-                    <mat-panel-title class="expansion-panel-headline" [class.error]="(dataService.currentSolutionValidation$|async)?.length > 0">
-    
+                    <mat-panel-title class="expansion-panel-headline"
+                        [class.error]="(dataService.currentSolutionValidation$|async)?.length > 0">
+
                         Validator
-    
+
                     </mat-panel-title>
-    
+
                     <mat-panel-description>
                         Lösungsvalidierung
                     </mat-panel-description>
-    
+
                 </mat-expansion-panel-header>
 
                 <app-solution-validation></app-solution-validation>
-    
+
             </mat-expansion-panel>
-    
+
         </div>
 
     </div>
 
     <div class="footer">
 
-        <button mat-raised-button color="primary" (click)="downloadSolution()">
-            Lösung herunterladen
-        </button>
+        <div class="control accent-2" (click)="downloadSolution()">
+            download
+        </div>
 
     </div>
 
