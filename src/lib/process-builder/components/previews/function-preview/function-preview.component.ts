@@ -30,15 +30,6 @@ export class FunctionPreviewComponent implements OnInit {
     this.inputParams = Array.isArray(this.func.inputParams) ? this.func.inputParams : typeof this.func.inputParams === 'number' ? [this.func.inputParams] : [];
   }
 
-  removeFunction() {
-    if (typeof this.func.output?.param === 'number') {
-      this._funcStore.select(selectIFunctionsByOutputParam(this.func.output.param)).pipe(take(1)).subscribe(arg => {
-        if (arg.length === 1 && arg[0].identifier === this.func.identifier) this._paramStore.dispatch(removeIParam(this.func.output!.param as number));
-        this._funcStore.dispatch(removeIFunction(this.func));
-      });
-    } else this._funcStore.dispatch(removeIFunction(this.func));
-  }
-
   updateFunctionDescription(func: IFunction, description: string) {
     let updatedFun = Object.assign({}, func);
     updatedFun.description = description;

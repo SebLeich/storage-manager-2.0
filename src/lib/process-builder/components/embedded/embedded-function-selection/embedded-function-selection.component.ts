@@ -11,6 +11,8 @@ import { FunctionPreviewComponent } from '../../previews/function-preview/functi
 import { FormControl, FormGroup } from '@angular/forms';
 import { IInputParam } from 'src/lib/process-builder/globals/i-input-param';
 import { delay, map } from 'rxjs/operators';
+import { ProcessBuilderComponentService } from '../../process-builder/process-builder-component.service';
+import { ProcessBuilderService } from 'src/lib/process-builder/services/process-builder.service';
 
 @Component({
   selector: 'app-embedded-function-selection',
@@ -32,6 +34,7 @@ export class EmbeddedFunctionSelectionComponent implements IEmbeddedView, OnDest
   private _subscriptions: Subscription[] = [];
 
   constructor(
+    private _service: ProcessBuilderService,
     private _store: Store<fromIFunctionState.State>
   ) { }
 
@@ -56,13 +59,21 @@ export class EmbeddedFunctionSelectionComponent implements IEmbeddedView, OnDest
       }),
       this.availableFunctions$.pipe(delay(800)).subscribe(() => {
         let ref = this.activeFunctionWrappers.find(x => (x.element.nativeElement as HTMLDivElement).hasAttribute('active'));
-        if(ref) ref.element.nativeElement.scrollIntoView({ behavior: 'smooth' });
+        if (ref) ref.element.nativeElement.scrollIntoView({ behavior: 'smooth' });
       })
     ])
   }
 
+  removeFunction(func: IFunction, evt?: Event) {
+    if (evt) {
+      evt.stopPropagation();
+      evt.preventDefault();
+    }
+    this._service.removeFunction(func);
+  }
+
   selectFunction(func: IFunction) {
-    this.functionIdentifierControl.setValue(this.functionIdentifierControl.value === func.identifier? null: func.identifier);
+    this.functionIdentifierControl.setValue(this.functionIdentifierControl.value === func.identifier ? null : func.identifier);
   }
 
   get functionIdentifierControl(): FormControl {

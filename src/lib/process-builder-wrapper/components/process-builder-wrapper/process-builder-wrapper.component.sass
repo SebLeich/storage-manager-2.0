@@ -1,3 +1,5 @@
+@import 'src/lib/sass/gradients'
+
 .body
     display: flex
     flex-direction: column
@@ -5,8 +7,7 @@
     width: 100%
 
 .control-footer
-    background-color: #ffffff7d
-    box-shadow: 0 0 4px #848484
+    background-color: #ffffff45
     display: flex
     align-items: center
     padding: 0.5rem 1rem
@@ -83,8 +84,63 @@
     display: flex
     align-items: center
     justify-content: center
-    background-color: #5e5e5e
     color: white
     border-radius: 2px
     box-shadow: 0 0 4px #848484
     cursor: pointer
+    margin-left: .2rem
+
+.control-footer-item.primary
+    @include gradient-darkblue
+    &:hover
+        opacity: .8
+
+.control-footer-item.accent
+    @include gradient-darkgrey
+    &:hover
+        opacity: .8
+
+.hint
+    max-width: 100px
+    border-radius: 3px
+
+.hint .counter
+    font-size: 1.5rem
+    font-weight: 700
+
+.hint .text
+    font-size: .6rem
+    line-height: .6rem
+    font-weight: 100
+
+.hint
+    color: white
+    display: flex
+    flex-direction: column
+    justify-content: center
+    align-items: center
+    height: 48px
+    width: 48px
+    padding: 2px 4px
+    box-sizing: border-box
+    box-shadow: 0 0 4px #848484
+    cursor: pointer
+    margin-left: 4px
+
+.hint.success
+    @include gradient-yellowgreen
+
+.hint.error
+    @include gradient-red
+
+.hint.warning
+    background: linear-gradient(135deg, #e28b00, #e28b00d7, #e28b00)
+
+.hint .inner
+    box-sizing: border-box
+    display: -webkit-box
+    -webkit-line-clamp: 2
+    -webkit-box-orient: vertical
+    overflow: hidden
+    font-size: 10px
+    line-height: 12px

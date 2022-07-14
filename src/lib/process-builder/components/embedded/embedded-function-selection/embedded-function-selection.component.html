@@ -9,9 +9,15 @@
             [attr.active]="func.identifier === functionIdentifierControl.value? true: undefined"></app-function-preview>
 
         <div class="control-wrapper">
+
             <div class="control accent-2">
                 {{ func.identifier === functionIdentifierControl.value? 'unselect': 'select' }}
             </div>
+
+            <div *ngIf="func.customImplementation" class="control danger" (click)="removeFunction(func, $event)">
+                remove
+            </div>
+
         </div>
 
     </div>

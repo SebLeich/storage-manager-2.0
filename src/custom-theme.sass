@@ -1,4 +1,5 @@
 @import 'src/lib/sass/button'
+@import 'src/lib/sass/gradients'
 
 .control.primary
     @include default-button
@@ -8,6 +9,10 @@
 
 .control.accent-2
     @include secondary-button-2
+
+.control.danger
+    @include button
+    @include gradient-red
 
 .control.disabled
     pointer-events: none

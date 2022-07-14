@@ -8,11 +8,14 @@
             <mat-label>current draft (total: {{(service.models$|async)?.length ?? 0}})</mat-label>
             <mat-select [value]="service.currentIBpmnJSModelGuid$|async">
                 <mat-select-trigger>
-                    <div #element class="editable-select-trigger" contenteditable (click)="$event.stopPropagation()" (keydown.enter)="blurElement(element, $event)" (focusout)="service.renameCurrentModel(element.innerText)">
+                    <div #element class="editable-select-trigger" contenteditable (click)="$event.stopPropagation()"
+                        (keydown.enter)="blurElement(element, $event)"
+                        (focusout)="service.renameCurrentModel(element.innerText)">
                         {{(service.currentIBpmnJSModel$|async)?.name ?? 'no name'}}
                     </div>
                 </mat-select-trigger>
-                <mat-option class="dropdown-option" *ngFor="let model of ((service.models$|async) ?? [])" [value]="model.guid" (click)="service.setModel(model)">
+                <mat-option class="dropdown-option" *ngFor="let model of ((service.models$|async) ?? [])"
+                    [value]="model.guid" (click)="service.setModel(model)">
                     <span class="text">
                         {{model.name ?? 'no name'}}
                     </span>
@@ -27,8 +30,26 @@
 
         <div class="spacer"></div>
 
-        <div class="control-footer-item" (click)="service.saveModel()">
+        <div class="hint" [ngClass]="((service.validation$|async)?.errors?.length ?? 0) > 0? 'error': 'success'" (mouseleave)="service.hideAllHints()">
+
+            <span class="counter">{{(service.validation$|async)?.errors?.length ?? 0}}</span>
+            <span class="text">errors</span>
+
+        </div>
+
+        <div class="hint" [ngClass]="((service.validation$|async)?.warnings?.length ?? 0) > 0? 'warning': 'success'"  (mouseleave)="service.hideAllHints()">
+
+            <span class="counter">{{(service.validation$|async)?.warnings?.length ?? 0}}</span>
+            <span class="text">warn's</span>
+
+        </div>
+
+        <div class="control-footer-item accent" (click)="service.saveModel()">
             <mat-icon>save</mat-icon>
+        </div>
+
+        <div class="control-footer-item primary">
+            <mat-icon>play_arrow</mat-icon>
         </div>
 
     </div>
@@ -49,7 +70,7 @@
                 <div class="quick-interaction-wrapper">
 
                     <app-method-quick-interaction></app-method-quick-interaction>
-                    
+
                 </div>
 
             </div>
@@ -70,7 +91,8 @@
                 <div class="option" *ngFor="let func of (service.funcs$|async)">
 
                     <div class="text">{{func.name ?? 'unnamed function'}}</div>
-                    <mat-icon *ngIf="func.customImplementation" (click)="service.removeFunction(func)" class="control" color="warn">delete_forever</mat-icon>
+                    <mat-icon *ngIf="func.customImplementation" (click)="service.removeFunction(func)" class="control"
+                        color="warn">delete_forever</mat-icon>
 
                 </div>
 

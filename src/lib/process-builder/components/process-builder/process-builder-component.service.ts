@@ -20,7 +20,7 @@ import * as fromIBpmnJSModelState from '../../store/reducers/i-bpmn-js-model.red
 
 import { selectIParams } from '../../store/selectors/i-param.selectors';
 import { validateBPMNConfig } from 'src/lib/core/config-validator';
-import { selectIFunctions } from '../../store/selectors/i-function.selector';
+import { selectIFunctions, selectIFunctionsByOutputParam } from '../../store/selectors/i-function.selector';
 import { IBpmnJS } from '../../globals/i-bpmn-js';
 import { addIBpmnJSModel, removeIBpmnJSModel, updateIBpmnJSModel, upsertIBpmnJSModel } from '../../store/actions/i-bpmn-js-model.actions';
 import * as moment from 'moment';
@@ -149,6 +149,13 @@ export class ProcessBuilderComponentService {
 
   removeFunction(func: IFunction) {
     this._funcStore.dispatch(removeIFunction(func));
+    if (typeof func.output?.param !== 'number') return;
+
+    this._funcStore.select(selectIFunctionsByOutputParam(func.output.param))
+      .pipe(take(1))
+      .subscribe(arg => {
+        if (arg.length === 1 && arg[0].identifier === func.identifier) this._paramStore.dispatch(removeIParam(func.output!.param as number));
+      });
   }
 
   removeParameter(param: IParam) {

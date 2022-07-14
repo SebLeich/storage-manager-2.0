@@ -1,12 +1,11 @@
 <div class="body">
 
     <div class="function-name-wrapper">
+
         <div class="function-name">
-            {{func.name}}
+            <div class="inner">{{func.name}}</div>
         </div>
-        <button *ngIf="func.customImplementation" mat-icon-button color="warn" (click)="removeFunction()">
-            <mat-icon>delete_forever</mat-icon>
-        </button>
+
     </div>
 
     <div class="scheme-wrapper">
