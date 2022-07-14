@@ -63,7 +63,7 @@ export class ProcessBuilderComponentService {
 
   public params$ = this._paramStore.select(selectIParams());
   public funcs$ = this._funcStore.select(selectIFunctions());
-  public models$ = this._bpmnJSModelStore.select(selectIBpmnJSModels());
+  public models$: Observable<IBpmnJSModel[]> = this._bpmnJSModelStore.select(selectIBpmnJSModels());
   public pendingChanges$ = this._pendingChanges.asObservable();
   public noPendingChanges$ = this.pendingChanges$.pipe(map(x => !x));
   public currentIBpmnJSModelGuid$ = this._currentIBpmnJSModelGuid.pipe(distinctUntilChanged());
@@ -109,6 +109,7 @@ export class ProcessBuilderComponentService {
             'xml': xml,
             'lastModified': moment().format('yyyy-MM-ddTHH:mm:ss')
           };
+          console.log(defaultBpmnModel);
           this._bpmnJSModelStore.dispatch(addIBpmnJSModel(defaultBpmnModel));
           this._currentIBpmnJSModelGuid.next(defaultBpmnModel.guid);
         }
@@ -128,7 +129,11 @@ export class ProcessBuilderComponentService {
     this.setDefaultModel().subscribe();
   }
 
-  removeModel(bpmnJsModel?: IBpmnJSModel) {
+  removeModel(bpmnJsModel?: IBpmnJSModel, event?: Event) {
+    if (event) {
+      event.preventDefault();
+      event.stopPropagation();
+    }
     let callback = (model: IBpmnJSModel | string) => {
       this._bpmnJSModelStore.dispatch(removeIBpmnJSModel(model));
       this.setDefaultModel();
@@ -148,6 +153,16 @@ export class ProcessBuilderComponentService {
 
   removeParameter(param: IParam) {
     this._funcStore.dispatch(removeIParam(param));
+  }
+
+  renameCurrentModel(name: string) {
+    this.currentIBpmnJSModel$.pipe(take(1))
+      .subscribe(model => {
+        if (!model) return;
+        let copy = { ...model };
+        copy.name = name;
+        this._bpmnJSModelStore.dispatch(updateIBpmnJSModel(copy));
+      });
   }
 
   resetAll() {
@@ -193,7 +208,7 @@ export class ProcessBuilderComponentService {
       )
       .subscribe({
         next: (model: IBpmnJSModel | string) => {
-          
+
           if (typeof model === 'string') {
             model = {
               'guid': Guid.generateGuid(),
@@ -267,11 +282,11 @@ export class ProcessBuilderComponentService {
 
   }
 
-  updateIBpmnJSModel(model: IBpmnJSModel){
+  updateIBpmnJSModel(model: IBpmnJSModel) {
     this._bpmnJSModelStore.dispatch(updateIBpmnJSModel(model));
   }
 
-  updateIFunction(func: IFunction){
+  updateIFunction(func: IFunction) {
     this._bpmnJSModelStore.dispatch(updateIFunction(func));
   }
 

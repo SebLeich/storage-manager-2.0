@@ -8,7 +8,7 @@ import { showListAnimation } from 'src/lib/shared/animations/show-list';
 @Component({
   selector: 'app-process-builder-wrapper',
   templateUrl: './process-builder-wrapper.component.html',
-  styleUrls: ['./process-builder-wrapper.component.css'],
+  styleUrls: ['./process-builder-wrapper.component.sass'],
   animations: [
     showListAnimation
   ]
@@ -29,18 +29,26 @@ export class ProcessBuilderWrapperComponent implements OnInit {
     public service: ProcessBuilderComponentService
   ) { }
 
+  blurElement(element: HTMLElement, event?: Event) {
+    if (event) {
+      event.stopPropagation();
+      event.preventDefault();
+    }
+    element.blur();
+  }
+
   ngOnInit(): void {
   }
 
-  toggleModules(){
+  toggleModules() {
     this._modelsVisible.pipe(take(1)).subscribe((val: boolean) => this._modelsVisible.next(!val));
   }
 
-  toggleMethods(){
+  toggleMethods() {
     this._methodsVisible.pipe(take(1)).subscribe((val: boolean) => this._methodsVisible.next(!val));
   }
 
-  toggleParams(){
+  toggleParams() {
     this._paramsVisible.pipe(take(1)).subscribe((val: boolean) => this._paramsVisible.next(!val));
   }
 

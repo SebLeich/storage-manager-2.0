@@ -4,11 +4,36 @@
 
     <div class="control-footer">
 
+        <mat-form-field class="mat-form-field-outline-white-bg mat-form-field-no-padding" appearance="outline">
+            <mat-label>current draft (total: {{(service.models$|async)?.length ?? 0}})</mat-label>
+            <mat-select [value]="service.currentIBpmnJSModelGuid$|async">
+                <mat-select-trigger>
+                    <div #element class="editable-select-trigger" contenteditable (click)="$event.stopPropagation()" (keydown.enter)="blurElement(element, $event)" (focusout)="service.renameCurrentModel(element.innerText)">
+                        {{(service.currentIBpmnJSModel$|async)?.name ?? 'no name'}}
+                    </div>
+                </mat-select-trigger>
+                <mat-option class="dropdown-option" *ngFor="let model of ((service.models$|async) ?? [])" [value]="model.guid" (click)="service.setModel(model)">
+                    <span class="text">
+                        {{model.name ?? 'no name'}}
+                    </span>
+                    <mat-icon class="icon">edit</mat-icon>
+                    <mat-icon class="icon danger" (click)="service.removeModel(model)">delete_forever</mat-icon>
+                </mat-option>
+                <mat-option class="dropdown-interaction-control" (click)="service.createModel()">
+                    Add new draft
+                </mat-option>
+            </mat-select>
+        </mat-form-field>
 
+        <div class="spacer"></div>
+
+        <div class="control-footer-item" (click)="service.saveModel()">
+            <mat-icon>save</mat-icon>
+        </div>
 
     </div>
 
-    <div class="control-wrapper">
+    <div class="control-wrapper" style="display: none;">
 
         <div class="option-wrapper">
 
@@ -20,13 +45,6 @@
             </div>
 
             <div [@showList]="(service.models$|async).length" *ngIf="modelsVisible$|async">
-
-                <div class="option" [class.active]="model.guid === (service.currentIBpmnJSModelGuid$|async)" *ngFor="let model of (service.models$|async)">
-
-                    <div class="text" (click)="service.setModel(model)">{{model.name ?? 'unnamed draft'}}</div>
-                    <mat-icon class="control" color="warn" (click)="service.removeModel(model)">delete_forever</mat-icon>
-    
-                </div>
 
                 <div class="quick-interaction-wrapper">
 

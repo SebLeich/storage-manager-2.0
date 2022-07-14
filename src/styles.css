@@ -1,13 +1,13 @@
 /* You can add global styles to this file, and also import other style files */
 
-body {
-}
+body {}
 
 html,
 body {
     height: -webkit-fill-available;
     width: -webkit-fill-available;
 }
+
 body {
     margin: 0;
     font-family: Roboto, "Helvetica Neue", sans-serif;
@@ -90,7 +90,7 @@ body {
     outline: none;
 }
 
-.no-padding-dialog > .mat-dialog-container {
+.no-padding-dialog>.mat-dialog-container {
     padding: 0px;
 }
 
@@ -149,4 +149,48 @@ body {
     color: grey;
     font-weight: 100;
     font-size: .8rem;
+}
+
+.mat-form-field-outline-white-bg .mat-form-field-outline {
+    background-color: white;
+    border-radius: 5px;
+}
+
+.mat-form-field-no-padding .mat-form-field-wrapper {
+    padding: 0px;
+}
+
+.dropdown-option .mat-option-text {
+    display: flex;
+    align-items: center;
+}
+
+.dropdown-option .mat-option-text .text {
+    flex: 1;
+}
+
+.dropdown-option .mat-option-text .icon {
+    margin: 0px;
+    width: auto;
+    height: auto;
+    cursor: pointer;
+}
+
+.icon.danger {
+    color: rgb(182, 0, 0);
+}
+
+.dropdown-interaction-control {
+    border-top: 1px solid rgb(224, 224, 224);
+    margin: 0px 0.5rem;
+    text-align: center !important;
+    margin-top: 0.5rem;
+}
+
+.editable-select-trigger {
+    padding: 0.5rem;
+    outline: none;
+    border-right: 1px solid lightgray;
+    margin-right: 0.5rem;
+    margin-bottom: 0.5rem;
 }
