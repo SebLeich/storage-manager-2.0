@@ -15,8 +15,8 @@
     <div class="content dialog-content">
 
         <div class="user-hint">
-            
-            No data to display. 
+
+            No data to display.
             Decide for one option to proceed.
 
         </div>
@@ -87,8 +87,27 @@
 
             </div>
 
+            <div class="suggestion upload-own-solution" (click)="uploadSolution.click()">
+
+                <div class="headline">
+                    upload solution
+                </div>
+
+                <div class="sub-title">
+                    upload an own solution
+                </div>
+
+                <div class="footer">
+                    <mat-icon>grid_on</mat-icon>
+                </div>
+
+            </div>
+
         </div>
 
     </div>
 
 </div>
+
+<input #uploadSolution type="file" class="file-upload" (input)="uploadOwnSolution($event)"
+    style="display: none;" accept="application/json" />

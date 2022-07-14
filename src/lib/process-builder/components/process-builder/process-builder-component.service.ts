@@ -249,8 +249,8 @@ export class ProcessBuilderComponentService {
     var tooltipModule = getTooltipModule(this.bpmnJS);
     tooltipModule.add({
       position: {
-        x: warning.element.x,
-        y: warning.element.y + warning.element.height + 3
+        x: warning.element?.x,
+        y: warning.element?.y + warning.element?.height + 3
       },
       html:
         `<div style="width: 120px; background: #ffb200; color: white; font-size: .7rem; padding: .2rem .3rem; border-radius: 2px; line-height: .8rem;">${new ValidationWarningPipe().transform(warning.warning)}</div>`
