@@ -23,7 +23,7 @@ export class CsvService {
     'TurningAllowed': nameOf<Order>('turningAllowed'),
     'StackingAllowed': nameOf<Order>('stackingAllowed'),
     'Group': nameOf<Order>('group'),
-    'GroupName': (order: Order) => this._dataService.groups.find(x => x._Id === order.group)?._Desc
+    'GroupName': (order: Order) => this._dataService.groups.find(x => x.id === order.group)?.desc
   };
 
   constructor(
@@ -115,12 +115,12 @@ export class CsvService {
           if ([nameOf<Order>('height'), nameOf<Order>('width'), nameOf<Order>('length'), nameOf<Order>('orderId'), nameOf<Order>('quantity')].indexOf(property) > -1) converted = parseFloat(converted);
           else if (nameOf<Order>('group') === property) {
             converted = parseInt(converted);
-            if (groups.findIndex(x => x._Id === converted) === -1) {
+            if (groups.findIndex(x => x.id === converted) === -1) {
 
               groups.push({
-                '_Id': converted,
-                '_Color': null,
-                '_Desc': row.split(',')[rows[2].split(',').indexOf('GroupName')]
+                id: converted,
+                color: null,
+                desc: row.split(',')[rows[2].split(',').indexOf('GroupName')]
               });
             }
           }

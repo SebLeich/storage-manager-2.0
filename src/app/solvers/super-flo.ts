@@ -28,8 +28,8 @@ export class SuperFloSolver extends Solver implements ISolver {
                     .pipe(take(1))
                     .subscribe(([orders, height, width, groups]) => {
                         let solution = new Solution(generateGuid(), this._description);
-                        solution._Container = new Container(height, width, 0);
-                        this._unusedDimensions.push(solution._Container.getUnusedDimension());
+                        solution.container = new Container(height, width, 0);
+                        this._unusedDimensions.push(solution.container.getUnusedDimension());
                         let sequenceNumber = 0;
                         for (let order of orders) {
                             for (let i = 0; i < order.quantity; i++) {
@@ -39,21 +39,21 @@ export class SuperFloSolver extends Solver implements ISolver {
                                 this._unusedDimensions.splice(this._unusedDimensions.findIndex(x => x === space), 1);
                                 let good = new Good(sequenceNumber + 1, space.x, space.y, space.z, sequenceNumber, order.description);
                                 good.setOrderDimensions(order);
-                                solution._Steps.push({
+                                solution.steps.push({
                                     sequenceNumber: sequenceNumber,
                                     messages: [`put good ${good.id} into space (${space.x}/${space.y}/${space.z}) (order ${order.orderId} element ${i + 1})`],
                                     unusedDimensions: unusedDimensions,
                                     dimension: DataService.getGoodDimension(good),
                                     usedDimension: space
                                 } as Step);
-                                solution._Container._Goods.push(good);
+                                solution.container.goods.push(good);
                                 sequenceNumber++;
                                 let combinable = this.getCombinableSpacePairs(this._unusedDimensions, true);
                                 while (combinable.length > 0) {
                                     let combined = this.combineSpaces(combinable[0]);
                                     let spaces = [...this._unusedDimensions.filter(x => combinable[0].indexOf(x) === -1), combined];
                                     this._unusedDimensions = spaces;
-                                    solution._Steps.push({
+                                    solution.steps.push({
                                         sequenceNumber: sequenceNumber,
                                         messages: [`combined unused spaces: ${combinable[0].map(x => x.guid).join(', ')}`],
                                         unusedDimensions: [combined],
@@ -65,8 +65,8 @@ export class SuperFloSolver extends Solver implements ISolver {
                                 }
                             }
                         }
-                        solution._Container._Length = Math.max(...solution._Container._Goods.map(x => x.z + x.length), 0);
-                        solution._Groups = groups;
+                        solution.container.length = Math.max(...solution.container.goods.map(x => x.z + x.length), 0);
+                        solution.groups = groups;
                         this._dataService.setCurrentSolution(solution);
                         subject.next(solution);
                         subject.complete();

@@ -2,17 +2,17 @@ import * as moment from "moment";
 import { generateGuid } from "./globals";
 
 export class Container {
-    _Height: number = null;
-    _Width: number = null;
-    _Length: number = null;
-    _Goods: Good[] = [];
+    height: number = null;
+    width: number = null;
+    length: number = null;
+    goods: Good[] = [];
     constructor(height: number = null, width: number = null, length: number = null) {
-        this._Height = height;
-        this._Width = width;
-        this._Length = length;
+        this.height = height;
+        this.width = width;
+        this.length = length;
     }
     getUnusedDimension(): UnusedDimension {
-        let unusedDimension = new UnusedDimension(this._Width, this._Height, Infinity, null);
+        let unusedDimension = new UnusedDimension(this.width, this.height, Infinity, null);
         unusedDimension.setPosition(0, 0, 0);
         return unusedDimension;
     }
@@ -52,9 +52,9 @@ export class Good {
 }
 
 export class Group {
-    _Color: string;
-    _Id: number;
-    _Desc: string;
+    color: string;
+    id: number;
+    desc: string;
 }
 
 export class Order {
@@ -141,17 +141,17 @@ export class UnusedDimension extends Dimension {
 }
 
 export class Solution {
-    _Id: string = null;
-    _Container: Container = null;
-    _Algorithm: string = null;
-    _Groups: Group[] = [];
-    _Steps: Step[] = [];
-    _Calculated: string = null;
-    _Description: string = null;
+    id: string = null;
+    container: Container = null;
+    algorithm: string = null;
+    groups: Group[] = [];
+    steps: Step[] = [];
+    calculated: string = null;
+    description: string = null;
     constructor(id: string = generateGuid(), algorithm: string = null, calculated: string = moment().format('YYYY-MM-DDTHH:mm:ss')) {
-        this._Id = id;
-        this._Algorithm = algorithm;
-        this._Calculated = calculated;
+        this.id = id;
+        this.algorithm = algorithm;
+        this.calculated = calculated;
     }
 }
 

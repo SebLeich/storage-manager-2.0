@@ -14,15 +14,15 @@ export class DataService {
   private _currentSolution: BehaviorSubject<Solution> = new BehaviorSubject<Solution>(null);
   currentSolution$ = this._currentSolution.pipe(distinctUntilChanged());
   currentSolutionValidation$ = this.currentSolution$.pipe(distinctUntilChanged(), map(solution => this._solutionValidationService.validateSolution(solution)));
-  currentContainer$ = this.currentSolution$.pipe(map(x => x._Container));
-  currentGroups$ = this._currentSolution.pipe(map(x => x._Groups));
+  currentContainer$ = this.currentSolution$.pipe(map(x => x.container));
+  currentGroups$ = this._currentSolution.pipe(map(x => x.groups));
   currentSolutionAvailable$ = this._currentSolution.pipe(map(x => x ? true : false));
-  currentSteps$ = this.currentSolution$.pipe(filter(x => x ? true : false), map((solution: Solution) => solution._Steps));
+  currentSteps$ = this.currentSolution$.pipe(filter(x => x ? true : false), map((solution: Solution) => solution.steps));
 
   private _groups = new BehaviorSubject<Group[]>([]);
   groups$ = this._groups.asObservable();
-  ascSortedGroups$ = this.groups$.pipe(map((groups: Group[]) => groups.sort((a, b) => compare(a._Id, b._Id, true))));
-  descSortedGroups$ = this.groups$.pipe(map((groups: Group[]) => groups.sort((a, b) => compare(a._Id, b._Id, false))));
+  ascSortedGroups$ = this.groups$.pipe(map((groups: Group[]) => groups.sort((a, b) => compare(a.id, b.id, true))));
+  descSortedGroups$ = this.groups$.pipe(map((groups: Group[]) => groups.sort((a, b) => compare(a.id, b.id, false))));
   get groups() {
     return this._groups.value;
   }
@@ -58,16 +58,16 @@ export class DataService {
 
   addGroup(group: Group) {
     let existing = this._groups.value;
-    if (existing.findIndex(x => x._Desc === group._Desc) > -1) return;
-    if (typeof group._Id !== 'number' || existing.findIndex(x => x._Id === group._Id) > -1) group._Id = Math.max(...existing.map(x => x._Id), 0) + 1;
+    if (existing.findIndex(x => x.desc === group.desc) > -1) return;
+    if (typeof group.id !== 'number' || existing.findIndex(x => x.id === group.id) > -1) group.id = Math.max(...existing.map(x => x.id), 0) + 1;
     this._groups.next([...existing, group]);
   }
 
   addGroups(groups: Group[]) {
     let existing = this._groups.value;
-    groups = groups.filter(x => existing.findIndex(y => y._Desc === x._Desc) === -1);
+    groups = groups.filter(x => existing.findIndex(y => y.desc === x.desc) === -1);
     for (let group of groups) {
-      if (typeof group._Id !== 'number' || existing.findIndex(x => x._Id === group._Id) > -1) group._Id = Math.max(...existing.map(x => x._Id), 0) + 1;
+      if (typeof group.id !== 'number' || existing.findIndex(x => x.id === group.id) > -1) group.id = Math.max(...existing.map(x => x.id), 0) + 1;
     }
     this._groups.next([...existing, ...groups]);
   }
@@ -80,7 +80,7 @@ export class DataService {
       var sJson = JSON.stringify(solution);
       var element = document.createElement('a');
       element.setAttribute('href', `data:text/json;charset=UTF-8,${encodeURIComponent(sJson)}`);
-      element.setAttribute('download', `${solution._Description}.json`);
+      element.setAttribute('download', `${solution.description}.json`);
       element.style.display = 'none';
       document.body.appendChild(element);
       element.click();
@@ -89,7 +89,7 @@ export class DataService {
   }
 
   getSolutionByAlgorithm(algorithm: string): Observable<Solution> {
-    return this._solutions.pipe(map(x => x.find(y => y._Algorithm === algorithm)));
+    return this._solutions.pipe(map(x => x.find(y => y.algorithm === algorithm)));
   }
 
   loadDefaultSolution(): Observable<Solution> {
@@ -111,9 +111,9 @@ export class DataService {
   setUnit = (unit: 'mm' | 'cm' | 'dm' | 'm') => this._unit.next(unit);
 
   setCurrentSolution(solution: Solution) {
-    if (this._solutions.value.findIndex(x => x._Id === solution._Id) === -1) this._solutions.next([...this._solutions.value, solution]);
+    if (this._solutions.value.findIndex(x => x.id === solution.id) === -1) this._solutions.next([...this._solutions.value, solution]);
     this._currentSolution.next(solution);
-    this.addGroups(solution._Groups);
+    this.addGroups(solution.groups);
   }
 
   setOrders(orders: Order[]) {
@@ -121,7 +121,7 @@ export class DataService {
   }
 
   static getContainerDimension(container: Container): Dimension {
-    let dimension = new Dimension(container._Width, container._Height, container._Length);
+    let dimension = new Dimension(container.width, container.height, container.length);
     dimension.x = 0;
     dimension.y = 0;
     dimension.z = 0;

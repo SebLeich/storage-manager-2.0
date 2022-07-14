@@ -16,7 +16,7 @@ export enum SOLUTION_ERROR {
 export const algorithms = [
     {
         title: 'All In One Row',
-        description: 'Dieser Algorithmus sortiert alle Güter an der linken Seite des Containers direkt voreinander.',
+        description: 'That algorithm takes all orders and puts each good in front of the previous one.',
         code: ALGORITHMS.ALL_IN_ONE_ROW
     },
     {

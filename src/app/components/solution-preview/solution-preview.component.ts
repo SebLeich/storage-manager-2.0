@@ -1,5 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { combineLatest, Subscription } from 'rxjs';
+import { Subscription } from 'rxjs';
 import { filter } from 'rxjs/operators';
 import { showAnimation } from 'src/app/animations';
 import { Container, Solution } from 'src/app/classes';
@@ -37,10 +37,10 @@ export class SolutionPreviewComponent implements OnDestroy, OnInit {
   ngOnInit(): void {
     this._subscriptions.push(...[
       this.dataService.currentSolution$.pipe(filter(x => x ? true : false)).subscribe((solution: Solution) => {
-        this.headline = solution._Description;
-        this.calculated = solution._Calculated;
-        this.algorithm = solution._Algorithm;
-        this.container = solution._Container;
+        this.headline = solution.description;
+        this.calculated = solution.calculated;
+        this.algorithm = solution.algorithm;
+        this.container = solution.container;
       })
     ]);
   }

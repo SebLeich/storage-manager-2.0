@@ -12,8 +12,8 @@ export class SolutionPreviewComponentService implements IGroupsProvider, IGoodsP
         public dataService: DataService
     ){ }
 
-    groups$: Observable<Group[]> = this.dataService.currentSolution$.pipe(filter(x => x? true: false), map(x => x._Groups));
-    goods$: Observable<Good[]> = this.dataService.currentSolution$.pipe(filter(x => x? true: false), map(x => x._Container._Goods));
+    groups$: Observable<Group[]> = this.dataService.currentSolution$.pipe(filter(x => x? true: false), map(x => x.groups));
+    goods$: Observable<Good[]> = this.dataService.currentSolution$.pipe(filter(x => x? true: false), map(x => x.container.goods));
 
     nextSolution(){
         combineLatest([this.dataService.solutions$, this.dataService.currentSolution$]).pipe(take(1)).subscribe({

@@ -25,22 +25,22 @@ export class AllInOneRowSolver extends Solver implements ISolver {
                     .pipe(take(1))
                     .subscribe(([orders, height, width, groups]) => {
                         let solution = new Solution(generateGuid(), this._description);
-                        solution._Container = new Container(height, width, 0);
+                        solution.container = new Container(height, width, 0);
                         let currentPosition = { x: 0, y: 0, z: 0 };
                         let sequenceNumber = 0;
                         for (let group of groups) {
-                            for (let order of orders.filter(x => x.group === group._Id)) {
+                            for (let order of orders.filter(x => x.group === group.id)) {
                                 for (let i = 0; i < order.quantity; i++) {
                                     let good = new Good(sequenceNumber + 1, currentPosition.x, currentPosition.y, currentPosition.z, sequenceNumber, order.description);
                                     good.setOrderDimensions(order);
-                                    solution._Container._Goods.push(good);
+                                    solution.container.goods.push(good);
                                     sequenceNumber++;
                                     currentPosition.z += order.length;
-                                    solution._Container._Length += order.length;
+                                    solution.container.length += order.length;
                                 }
                             }
                         }
-                        solution._Groups = groups;
+                        solution.groups = groups;
                         this._dataService.setCurrentSolution(solution);
                         subject.next(solution);
                         subject.complete();

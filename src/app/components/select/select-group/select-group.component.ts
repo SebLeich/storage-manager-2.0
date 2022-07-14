@@ -28,7 +28,7 @@ export class SelectGroupComponent implements ControlValueAccessor, OnDestroy, On
 
   addGroup(event: KeyboardEvent) {
     event.stopPropagation();
-    this.dataService.addGroup({ '_Desc': (event.target as HTMLInputElement).value } as Group);
+    this.dataService.addGroup({ desc: (event.target as HTMLInputElement).value } as Group);
     (event.target as HTMLInputElement).value = null;
   }
 

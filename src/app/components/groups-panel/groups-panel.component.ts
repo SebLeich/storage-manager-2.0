@@ -30,7 +30,7 @@ export class GroupsPanelComponent implements OnDestroy, OnInit {
   }
 
   setGroupColor(event: InputEvent, group: Group){
-    group._Color = (event.target as HTMLInputElement).value;
+    group.color = (event.target as HTMLInputElement).value;
     this._visualizerComponentService.updateGroupColors();
   }
 

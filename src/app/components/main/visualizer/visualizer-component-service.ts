@@ -28,11 +28,11 @@ export class VisualizerComponentService {
     hoverIntersections$ = this._hoverIntersections.pipe(debounceTime(5));
     hoveredElement$ = this._hoveredElement.asObservable();
     hoveredGood$ = combineLatest([this.container$, this.hoveredElement$]).pipe(map(([container, element]) => {
-        return element ? container._Goods.find(x => x.id === element.goodId) : null;
+        return element ? container.goods.find(x => x.id === element.goodId) : null;
     }));
     selectedElement$ = this._selectedElement.asObservable();
     selectedGood$ = combineLatest([this.container$, this.selectedElement$]).pipe(map(([container, element]) => {
-        return element ? container._Goods.find(x => x.id === element.goodId) : null;
+        return element ? container.goods.find(x => x.id === element.goodId) : null;
     }));
 
     private _sceneBodyId: string = generateGuid();
@@ -51,13 +51,13 @@ export class VisualizerComponentService {
 
     addContainerToScene(container: Container, groups: Group[]) {
         this.clearScene();
-        this._addUnloadingArrowToScene(container._Height, container._Length);
-        this._addBaseGridToScene(container._Height, container._Length);
+        this._addUnloadingArrowToScene(container.height, container.length);
+        this._addBaseGridToScene(container.height, container.length);
         this._addContainerToScene(DataService.getContainerDimension(container));
         this._container.next(container);
         this._addElementToScene(DataService.getContainerDimension(container), 'Container', 'bordered', null, null, null, null);
-        for (var good of container._Goods) {
-            let group = groups.find(x => x._Id === good.group);
+        for (var good of container.goods) {
+            let group = groups.find(x => x.id === good.group);
             this._addElementToScene(DataService.getGoodDimension(good), `${good.desc}`, 'good', good.sequenceNr, good.id, group, DataService.getContainerDimension(container));
         }
     }
@@ -65,8 +65,8 @@ export class VisualizerComponentService {
     animateStep(step: Step, keepPreviousGoods: boolean = false, keepPreviousUnusedSpaces: boolean = false) {
         this._dataService.currentContainer$.pipe(take(1)).subscribe((container: Container) => {
             this.clearScene(keepPreviousGoods, keepPreviousUnusedSpaces, [step.usedDimension?.guid ?? null].filter(x=> x != null));
-            this._addUnloadingArrowToScene(container._Height, container._Length);
-            this._addBaseGridToScene(container._Height, container._Length);
+            this._addUnloadingArrowToScene(container.height, container.length);
+            this._addBaseGridToScene(container.height, container.length);
             this._addContainerToScene(DataService.getContainerDimension(container));
             if(step.dimension) this._addElementToScene(step.dimension, null, 'good', step.sequenceNumber, null, null, DataService.getContainerDimension(container));
             for (let unusedDimension of step.unusedDimensions) {
@@ -199,8 +199,8 @@ export class VisualizerComponentService {
     updateGroupColors() {
         this._dataService.currentGroups$.pipe(take(1)).subscribe((groups: Group[]) => {
             this._meshes.forEach(x => {
-                let group = groups.find(y => y._Id === x.groupId);
-                x.groupColor = group?._Color ?? null;
+                let group = groups.find(y => y.id === x.groupId);
+                x.groupColor = group?.color ?? null;
                 ((x.mesh as ThreeJS.Mesh).material as ThreeJS.MeshBasicMaterial).color.set(x.groupColor);
             })
         });
@@ -227,8 +227,8 @@ export class VisualizerComponentService {
         switch (type) {
 
             case "good":
-                var color = group && group._Color ? group._Color : "rgb(200, 200, 200)";
-                var groupId = group && group._Id ? group._Id : null;
+                var color = group && group.color ? group.color : "rgb(200, 200, 200)";
+                var groupId = group && group.id ? group.id : null;
 
                 var geometry = new ThreeJS.BoxGeometry(dimension.width, dimension.height, length, 4, 4, 4);  // rotation
                 var material = new ThreeJS.MeshBasicMaterial({ color: color });
@@ -337,7 +337,7 @@ export class VisualizerComponentService {
                 }
             }),
             this._dataService.currentSolution$.pipe(filter(x => x ? true : false)).subscribe((solution: Solution) => {
-                this.addContainerToScene(solution._Container, solution._Groups);
+                this.addContainerToScene(solution.container, solution.groups);
             })
         ]);
     }

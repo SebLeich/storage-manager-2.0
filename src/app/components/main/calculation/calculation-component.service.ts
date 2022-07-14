@@ -102,7 +102,7 @@ export class CalculationComponentService {
                     algorithm.status = ALGORITHM_CALCULATION_STATUS.UNCHECKED;
                 }
                 for (let solution of solutions) {
-                    let wrapper = this.algorithms.find(x => x.algorithm.title === solution._Algorithm);
+                    let wrapper = this.algorithms.find(x => x.algorithm.title === solution.algorithm);
                     if (wrapper) {
                         wrapper.status = ALGORITHM_CALCULATION_STATUS.CALCULATED;
                         wrapper.solution = solution;

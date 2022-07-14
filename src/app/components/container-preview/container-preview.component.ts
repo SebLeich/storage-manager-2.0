@@ -40,9 +40,9 @@ export class ContainerPreviewComponent implements OnChanges, OnInit {
   }
 
   private _calculateUsedSpace() {
-    if (!this.container || !Array.isArray(this.container._Goods)) return;
-    let used = this.container._Goods.reduce((x, curr) => x += (curr.length * curr.width * curr.height), 0);
-    let total = this.container._Height * this.container._Length * this.container._Width;
+    if (!this.container || !Array.isArray(this.container.goods)) return;
+    let used = this.container.goods.reduce((x, curr) => x += (curr.length * curr.width * curr.height), 0);
+    let total = this.container.height * this.container.length * this.container.width;
     this.datasets[0].data = [used, total - used];
     this.percentage = ((used / total) * 100).toFixed(0);
   }

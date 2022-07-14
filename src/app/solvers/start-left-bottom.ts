@@ -25,24 +25,24 @@ export class StartLeftBottomSolver extends Solver implements ISolver {
                     .pipe(take(1))
                     .subscribe(([orders, height, width, groups]) => {
                         let solution = new Solution(generateGuid(), this._description);
-                        solution._Container = new Container(height, width, 0);
+                        solution.container = new Container(height, width, 0);
                         let sequenceNumber = 0, lastGood: Good = null;
                         for (let group of groups) {
-                            let currentOrders = orders.filter(x => x.group === group._Id).sort((a, b) => compare(a.length, b.length, false));
+                            let currentOrders = orders.filter(x => x.group === group.id).sort((a, b) => compare(a.length, b.length, false));
                             for (let order of currentOrders) {
                                 for (let index = 0; index < order.quantity; index++) {
-                                    let position = lastGood === null ? { x: 0, y: 0, z: 0, stackedOn: null } : this._getNextPosition(solution._Container, order, lastGood);
+                                    let position = lastGood === null ? { x: 0, y: 0, z: 0, stackedOn: null } : this._getNextPosition(solution.container, order, lastGood);
                                     lastGood = new Good(sequenceNumber+1, position.x, position.y, position.z, sequenceNumber, order.description);
                                     lastGood.setOrderDimensions(order);
                                     lastGood.stackedOnGood = position.stackedOn;
                                     lastGood.turned = false;
-                                    solution._Container._Goods.push(lastGood);
+                                    solution.container.goods.push(lastGood);
                                     sequenceNumber++;
                                 }
                             }
                         }
-                        solution._Container._Length = Math.max(...solution._Container._Goods.map(x => x.z + x.length), 0);
-                        solution._Groups = groups;
+                        solution.container.length = Math.max(...solution.container.goods.map(x => x.z + x.length), 0);
+                        solution.groups = groups;
                         this._dataService.setCurrentSolution(solution);
                         subject.next(solution);
                         subject.complete();
@@ -53,12 +53,12 @@ export class StartLeftBottomSolver extends Solver implements ISolver {
     }
 
     private _getNextPosition(container: Container, order: Order, lastGood: Good): { x: number, y: number, z: number, stackedOn: number } {
-        if (lastGood.stackingAllowed && lastGood.length >= order.length && lastGood.width >= order.width && container._Height >= lastGood.y + order.height + lastGood.height) return { x: lastGood.x, y: lastGood.y + lastGood.height, z: lastGood.z, stackedOn: lastGood.id };
+        if (lastGood.stackingAllowed && lastGood.length >= order.length && lastGood.width >= order.width && container.height >= lastGood.y + order.height + lastGood.height) return { x: lastGood.x, y: lastGood.y + lastGood.height, z: lastGood.z, stackedOn: lastGood.id };
         else {
             if (lastGood.stackedOnGood === null) {
                 let space = {
-                    width: container._Width - lastGood.x - lastGood.width,
-                    height: container._Height,
+                    width: container.width - lastGood.x - lastGood.width,
+                    height: container.height,
                     length: lastGood.length
                 };
                 if (super.canPlaceOrderIntoSpace(order, space).notTurned) {
@@ -66,23 +66,23 @@ export class StartLeftBottomSolver extends Solver implements ISolver {
                 }
             }
             else {
-                let underneath = container._Goods.find(x => x.id === lastGood.stackedOnGood);
+                let underneath = container.goods.find(x => x.id === lastGood.stackedOnGood);
                 while(underneath){
                     let space = {
                         width: underneath.width - lastGood.x - lastGood.width,
-                        height: container._Height - underneath.y - underneath.height,
+                        height: container.height - underneath.y - underneath.height,
                         length: underneath.length - lastGood.z - lastGood.length
                     };
                     if (super.canPlaceOrderIntoSpace(order, space).notTurned) {
                         return { x: lastGood.x + lastGood.width, y: lastGood.y, z: lastGood.z, stackedOn: underneath.id };
                     }
                     if(typeof underneath.stackedOnGood !== 'number') break;
-                    underneath = container._Goods.find(x => x.id === underneath.stackedOnGood);
+                    underneath = container.goods.find(x => x.id === underneath.stackedOnGood);
                 }
                 if (underneath) {
                     let space = {
-                        width: container._Width - underneath.x - underneath.width,
-                        height: container._Height,
+                        width: container.width - underneath.x - underneath.width,
+                        height: container.height,
                         length: underneath.length
                     };
                     if (super.canPlaceOrderIntoSpace(order, space).notTurned) {

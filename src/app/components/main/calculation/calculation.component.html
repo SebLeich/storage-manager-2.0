@@ -44,7 +44,7 @@
 
                 <mat-form-field class="width">
 
-                    <mat-label>Bezeichnung Lösung</mat-label>
+                    <mat-label>solution description</mat-label>
                     <input type="text" #input [value]="wrapper.solutionDescription"
                         (keyup)="wrapper.solutionDescription = input.value" matInput />
 
@@ -54,32 +54,28 @@
 
                     <div class="progress-status-label">
 
-                        <span class="status">Status: </span>
+                        <span class="status">state: </span>
 
                         <ng-container [ngSwitch]="wrapper.status">
 
-                            <span *ngSwitchCase="ALGORITHM_CALCULATION_STATUS.PENDING">
-                                Nicht berechnet
-                            </span>
-
                             <span *ngSwitchCase="ALGORITHM_CALCULATION_STATUS.PREPARE_CALCULATION">
-                                Bereite vor ...
+                                preparing ...
                             </span>
 
                             <span *ngSwitchCase="ALGORITHM_CALCULATION_STATUS.CALCULATING">
-                                Berechnet ...
+                                calculating ...
                             </span>
 
                             <span *ngSwitchCase="ALGORITHM_CALCULATION_STATUS.CALCULATED">
-                                Berechnet {{wrapper.solution._Calculated|date:'dd.MM.yyyy HH:mm'}} Uhr
+                                calculated {{wrapper.solution.calculated|date:'dd.MM.yyyy HH:mm'}}
                             </span>
 
                             <span *ngSwitchCase="ALGORITHM_CALCULATION_STATUS.ERROR">
-                                Fehler
+                                error
                             </span>
 
                             <span *ngSwitchDefault>
-                                Nicht berechnet
+                                not calculated yet
                             </span>
 
                         </ng-container>
@@ -87,7 +83,7 @@
                     </div>
 
                     <div *ngIf="wrapper.status === ALGORITHM_CALCULATION_STATUS.CALCULATED">
-                        Länge: {{wrapper.solution._Container._Length|prettyLength}}
+                        length: {{wrapper.solution.container.length|prettyLength}}
                     </div>
 
                     <ng-container *ngIf="wrapper.status === ALGORITHM_CALCULATION_STATUS.ERROR">
@@ -102,16 +98,13 @@
 
                 <div class="footer-button-wrapper">
 
-                    <button class="footer-button" mat-raised-button color="primary"
-                        (click)="calculationComponentService.calculateAlgorithm(wrapper)">
-                        Berechnen
-                    </button>
+                    <div class="control primary" (click)="calculationComponentService.calculateAlgorithm(wrapper)">
+                        calculate
+                    </div>
 
-                    <button class="footer-button" mat-raised-button color="accent"
-                        (click)="calculationComponentService.visualizeSolution(wrapper.solution)"
-                        [disabled]="wrapper.status !== ALGORITHM_CALCULATION_STATUS.CALCULATED">
-                        Visualisieren
-                    </button>
+                    <div class="control accent-2" (click)="calculationComponentService.visualizeSolution(wrapper.solution)" [ngClass]="{ 'disabled': wrapper.status !== ALGORITHM_CALCULATION_STATUS.CALCULATED }">
+                        visualize
+                    </div>
 
                 </div>
 

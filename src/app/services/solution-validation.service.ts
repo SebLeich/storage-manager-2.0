@@ -12,21 +12,21 @@ export class SolutionValidationService {
 
   validateSolution(solution: Solution): { error: SOLUTION_ERROR, effectedGoods: Good[] }[] {
     if (solution === null) return [{ error: SOLUTION_ERROR.NO_SOLUTION, effectedGoods: [] }];
-    if (solution._Container === null) return [{ error: SOLUTION_ERROR.NO_CONTAINER, effectedGoods: [] }];
+    if (solution.container === null) return [{ error: SOLUTION_ERROR.NO_CONTAINER, effectedGoods: [] }];
     let output = [];
-    let goodsXError1 = solution._Container._Goods.filter(x => x.x < 0);
+    let goodsXError1 = solution.container.goods.filter(x => x.x < 0);
     if (goodsXError1.length > 0) output.push({ error: SOLUTION_ERROR.GOOD_BEFORE_CONTAINER_X, effectedGoods: goodsXError1 });
-    let goodsXError2 = solution._Container._Goods.filter(x => (x.x + x.width) > solution._Container._Width);
+    let goodsXError2 = solution.container.goods.filter(x => (x.x + x.width) > solution.container.width);
     if (goodsXError2.length > 0) output.push({ error: SOLUTION_ERROR.GOOD_OUT_OF_CONTAINER_X, effectedGoods: goodsXError2 });
-    let goodsYError1 = solution._Container._Goods.filter(x => x.y < 0);
+    let goodsYError1 = solution.container.goods.filter(x => x.y < 0);
     if (goodsYError1.length > 0) output.push({ error: SOLUTION_ERROR.GOOD_BEFORE_CONTAINER_Y, effectedGoods: goodsYError1 });
-    let goodsYError2 = solution._Container._Goods.filter(x => (x.y + x.height) > solution._Container._Height);
+    let goodsYError2 = solution.container.goods.filter(x => (x.y + x.height) > solution.container.height);
     if (goodsYError2.length > 0) output.push({ error: SOLUTION_ERROR.GOOD_OUT_OF_CONTAINER_Y, effectedGoods: goodsYError2 });
-    let goodsZError1 = solution._Container._Goods.filter(x => x.z < 0);
+    let goodsZError1 = solution.container.goods.filter(x => x.z < 0);
     if (goodsZError1.length > 0) output.push({ error: SOLUTION_ERROR.GOOD_BEFORE_CONTAINER_Z, effectedGoods: goodsZError1 });
-    let goodsZError2 = solution._Container._Goods.filter(x => (x.z + x.length) > solution._Container._Length);
+    let goodsZError2 = solution.container.goods.filter(x => (x.z + x.length) > solution.container.length);
     if (goodsZError2.length > 0) output.push({ error: SOLUTION_ERROR.GOOD_OUT_OF_CONTAINER_Z, effectedGoods: goodsZError2 });
-    let dimensions = solution._Container._Goods.map(x => {
+    let dimensions = solution.container.goods.map(x => {
       return { good: x, dimension: DataService.getGoodDimension(x) };
     });
     for (let wrapper of dimensions) {
