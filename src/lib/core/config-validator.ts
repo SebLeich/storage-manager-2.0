@@ -1,6 +1,6 @@
 import { Injector } from "@angular/core";
 import { combineLatest, of, ReplaySubject, Subject, timer } from "rxjs";
-import { buffer, debounceTime, filter, switchMap, take } from "rxjs/operators";
+import { buffer, debounceTime, filter, map, switchMap, take } from "rxjs/operators";
 import bpmnJsEventTypes from "../bpmn-io/bpmn-js-event-types";
 import bpmnJsModules from "../bpmn-io/bpmn-js-modules";
 import { getElementRegistryModule, getModelingModule } from "../bpmn-io/bpmn-modules";
@@ -58,7 +58,7 @@ export const validateBPMNConfig = (bpmnJS: any, injector: Injector) => {
     let _connectionCreatePostExecutedActions: { [key: string]: (evt: IConnectionCreatePostExecutedEvent) => void } = {};
     let _directEditingActivateActions: { [key: string]: (evt: IDirectEditingEvent) => void } = {};
     let _shapeAddedActions: { [key: string]: (evt: IEvent) => void } = {};
-    let _shapeDeleteExecutedActions: { [key: string]: (evt: IShapeDeleteExecutedEvent) => void } = {};
+    let _shapeDeletePreExecuteActions: { [key: string]: (evt: IShapeDeleteExecutedEvent) => void } = {};
 
     _connectionCreatePostExecutedActions[shapeTypes.SequenceFlow] = (evt: IConnectionCreatePostExecutedEvent) => {
         if (evt.context.source.type !== shapeTypes.ExclusiveGateway || !BPMNJsRepository.sLPBExtensionSetted(evt.context.source.businessObject, 'GatewayExtension', (ext) => ext.gatewayType === 'error_gateway')) return;
@@ -105,11 +105,25 @@ export const validateBPMNConfig = (bpmnJS: any, injector: Injector) => {
         validationFinishedSubject.next();
     }
 
-    _shapeDeleteExecutedActions[shapeTypes.Task] = (evt: IShapeDeleteExecutedEvent) => {
+    _shapeDeletePreExecuteActions[shapeTypes.Task] = (evt: IShapeDeleteExecutedEvent) => {
         let removeElements = evt.context.shape.outgoing.filter(x => x.type === shapeTypes.DataOutputAssociation || (x.type === shapeTypes.SequenceFlow && BPMNJsRepository.sLPBExtensionSetted(x.target.businessObject, 'GatewayExtension', (ext) => ext.gatewayType === 'error_gateway')));
         getModelingModule(bpmnJS).removeElements(removeElements.map(x => x.target));
     }
 
+    _shapeDeletePreExecuteActions[shapeTypes.EndEvent] = (evt: IShapeDeleteExecutedEvent) => {
+        let incomingFunctionMap = evt.context.shape.incoming.map(x => {
+            return {
+                element: x.source,
+                activityFunctionId: BPMNJsRepository.getSLPBExtension(x.source.businessObject, 'ActivityExtension', (ext) => ext.activityFunctionId)
+            }
+        }).filter(x => typeof x.activityFunctionId === 'number');
+
+        let funcStore = injector.get(FUNCTION_STORE_TOKEN), modelingModule = getModelingModule(bpmnJS);
+        funcStore.select(fromIFunctionSelector.selectIFunctions(incomingFunctionMap.map(x => x.activityFunctionId))).pipe(take(1), map(funcs => funcs.filter(func => func.finalizesFlow))).subscribe(finalizingFuncs => {
+            let elements = incomingFunctionMap.filter(entry => finalizingFuncs.findIndex(x => x.identifier === entry.activityFunctionId) > -1).map(entry => entry.element);
+            modelingModule.removeElements(elements);
+        });
+    }
 
     bpmnJS.get(bpmnJsModules.EventBus).on(bpmnJsEventTypes.ShapeAdded, (evt: IEvent) => {
         if (typeof _shapeAddedActions[evt.element.type] === 'undefined') return;
@@ -122,8 +136,8 @@ export const validateBPMNConfig = (bpmnJS: any, injector: Injector) => {
     });
 
     bpmnJS.get(bpmnJsModules.EventBus).on(bpmnJsEventTypes.CommandStackShapeDeletePreExecute, (evt: IShapeDeleteExecutedEvent) => {
-        if (typeof _shapeDeleteExecutedActions[evt.context.shape.type] === 'undefined') return;
-        _shapeDeleteExecutedActions[evt.context.shape.type](evt);
+        if (typeof _shapeDeletePreExecuteActions[evt.context.shape.type] === 'undefined') return;
+        _shapeDeletePreExecuteActions[evt.context.shape.type](evt);
     });
 
     bpmnJS.get(bpmnJsModules.EventBus).on(bpmnJsEventTypes.CommandStackConnectionCreatePostExecuted, (evt: IConnectionCreatePostExecutedEvent) => {
@@ -220,6 +234,15 @@ export const validateBPMNConfig = (bpmnJS: any, injector: Injector) => {
 
                 }
 
+                if (func.finalizesFlow) {
+
+                    modelingModule.appendShape(payload.configureActivity, { type: shapeTypes.EndEvent }, {
+                        x: payload.configureActivity.x + 200,
+                        y: payload.configureActivity.y + 40
+                    });
+
+                }
+
                 if (payload.configureActivity) {
 
                     BPMNJsRepository.updateBpmnElementSLPBExtension(bpmnJS, payload.configureActivity.businessObject, 'ActivityExtension', (e: any) => e.activityFunctionId = f.identifier);
@@ -237,10 +260,7 @@ export const validateBPMNConfig = (bpmnJS: any, injector: Injector) => {
                         modelingModule.removeElements(outgoingSequenceFlows);
 
                         gatewayShape = modelingModule.appendShape(payload.configureActivity, {
-                            type: shapeTypes.ExclusiveGateway,
-                            data: {
-                                'gatewayType': 'error_gateway'
-                            }
+                            type: shapeTypes.ExclusiveGateway
                         }, { x: payload.configureActivity.x + 200, y: payload.configureActivity.y + 40 });
 
                         BPMNJsRepository.updateBpmnElementSLPBExtension(bpmnJS, gatewayShape.businessObject, 'GatewayExtension', (e: any) => e.gatewayType = 'error_gateway');

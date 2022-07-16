@@ -9,6 +9,8 @@ import { MatInputModule } from '@angular/material/input';
 import { ReactiveFormsModule } from '@angular/forms';
 import { MatSelectModule } from '@angular/material/select';
 import { MatButtonModule } from '@angular/material/button';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatMenuModule } from '@angular/material/menu';
 
 
 
@@ -23,7 +25,9 @@ import { MatButtonModule } from '@angular/material/button';
     MatButtonModule,
     MatIconModule,
     MatInputModule,
+    MatMenuModule,
     MatSelectModule,
+    MatTooltipModule,
 
     ReactiveFormsModule,
 

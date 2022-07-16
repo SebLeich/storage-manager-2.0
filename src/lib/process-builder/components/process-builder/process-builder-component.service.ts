@@ -327,7 +327,6 @@ export class ProcessBuilderComponentService {
         this._setBpmnModel(model.xml, model.viewbox);
       }),
       validateBPMNConfig(this.bpmnJS, this._injector).subscribe(() => {
-        console.log('YET');
         this._modelChanged.next();
         this._pendingChanges.next(true);
       })

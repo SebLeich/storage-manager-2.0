@@ -1,21 +1,32 @@
+@import 'src/lib/sass/gradients'
+    
 .body
     display: flex
     flex-direction: column
     height: 100%
 
 .function-name-wrapper
-    display: flex
 
 .function-name
-    font-size: 1.4rem
-    line-height: 1.5rem
-    font-weight: 500
-    flex: 1
+    display: flex
+    align-items: center
 
 .function-name .inner
     padding: 0px 1rem
     //background: linear-gradient(0deg, #ffe000 0%, #ffe000 60%, transparent 60%, transparent 100%)
     display: inline-block
+    font-size: 1.4rem
+    line-height: 1.5rem
+    font-weight: 500
+
+.function-name .tag
+    margin-left: 0.2rem
+    font-size: .8rem
+    line-height: .8rem
+    padding: 0.2rem 0.4rem
+    @include gradient-lightblue
+    border-radius: 3px
+    color: white
 
 .scheme-wrapper
     display: flex

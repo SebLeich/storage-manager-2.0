@@ -1,4 +1,5 @@
-th, td {
+th,
+td {
     padding: 0.4rem 0.5rem;
     border-radius: 2px;
     font-size: .7rem;
@@ -14,7 +15,7 @@ th, td {
 }
 
 .output-value {
-    min-width: min(14rem, 40vw);
+    min-width: min(10rem, 40vw);
 }
 
 .exemplary-value {
@@ -52,6 +53,16 @@ tr:nth-child(4n+2) {
     background-color: #e6ffe79d;
 }
 
-.param-member-wrapper:nth-child(even) {
-    
+.param-member-wrapper {
+    cursor: pointer;
+}
+
+.param-member-wrapper:hover {
+    opacity: .8;
+}
+
+.param-member-wrapper:nth-child(even) {}
+
+.param-member-wrapper:not(:last-child) {
+    border-bottom: 1px solid rgb(235, 235, 235);
 }

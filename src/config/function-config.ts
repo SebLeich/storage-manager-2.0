@@ -90,17 +90,18 @@ export default [
         'requireCustomImplementation': false
     } as IFunction,
     {
-        'identifier': 4,
-        'inputParams': null,
-        'name': 'Map to solution',
-        'normalizedName': 'mapToSolution',
-        'description': 'method converts a given input to a reusable solution',
-        'output': {
-            'param': 'dynamic',
-            'interface': InterfaceCodes.Solution
+        identifier: 4,
+        inputParams: null,
+        name: 'Map to solution',
+        normalizedName: 'mapToSolution',
+        description: 'method converts a given input to a reusable solution',
+        output: {
+            param: 'dynamic',
+            interface: InterfaceCodes.Solution
         },
-        'canFail': false,
-        'requireCustomImplementation': false,
-        'requireDataMapping': true
+        canFail: false,
+        requireCustomImplementation: false,
+        requireDataMapping: true,
+        finalizesFlow: true
     } as IFunction
 ];

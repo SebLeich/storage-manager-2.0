@@ -194,3 +194,29 @@ body {
     margin-right: 0.5rem;
     margin-bottom: 0.5rem;
 }
+
+.mat-menu-item {
+    height: unset !important;
+    line-height: 2rem !important;
+    font-size: .8rem;
+    vertical-align: middle;
+    margin: 0px .5rem;
+    display: flex;
+    align-items: center;
+}
+
+.mat-menu-item .text {
+    flex: 1;
+}
+
+.mat-menu-item .icon {
+    margin: 0px 0px 0px .5rem !important;
+    width: auto;
+    height: auto;
+    font-size: 1.2rem;
+    line-height: 1.2rem;
+}
+
+.mat-menu-item:not(:last-child){
+    border-bottom: 1px solid lightgray;
+}

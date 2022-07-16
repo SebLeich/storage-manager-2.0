@@ -3,10 +3,7 @@ import { Store } from '@ngrx/store';
 import { IFunction } from '../../../globals/i-function';
 import { IInputParam } from '../../../globals/i-input-param';
 import * as fromIFunction from 'src/lib/process-builder/store/reducers/i-function.reducer';
-import { removeIFunction, updateIFunction } from '../../../store/actions/i-function.actions';
-import { selectIFunctionsByOutputParam } from '../../../store/selectors/i-function.selector';
-import { removeIParam } from '../../../store/actions/i-param.actions';
-import { take } from 'rxjs/operators';
+import { updateIFunction } from '../../../store/actions/i-function.actions';
 
 @Component({
   selector: 'app-function-preview',

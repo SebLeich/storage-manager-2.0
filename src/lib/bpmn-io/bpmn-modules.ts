@@ -28,7 +28,7 @@ export interface IEventBus {
 }
 
 export interface IModelingModule {
-    appendShape: (origin: IElement, type: { type: string, data?: any }, position: null | { x: number, y: number }) => IElement;
+    appendShape: (origin: IElement, type: { type: string }, position: null | { x: number, y: number }) => IElement;
     connect: (origin: IElement, target: IElement) => IConnector;
     removeElements: (elements: IElement[] | IConnector[]) => void;
     updateLabel: (element: IElement | IConnector, text: string) => void;
