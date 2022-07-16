@@ -11,6 +11,7 @@ import { selectIFunctionsByOutputParam } from '../store/selectors/i-function.sel
 import * as fromIFunction from 'src/lib/process-builder/store/reducers/i-function.reducer';
 import * as fromIParam from 'src/lib/process-builder/store/reducers/i-param.reducer';
 import { removeIParam } from '../store/actions/i-param.actions';
+import { selectCurrentParamOutput } from '../store/selectors/i-param.selectors';
 
 @Injectable({
   providedIn: 'root'
@@ -23,6 +24,7 @@ export class ProcessBuilderService {
   }).pipe(
     shareReplay(1)
   );
+  currentProcessOutput$ = this._paramStore.select(selectCurrentParamOutput);
 
   private _config = new ReplaySubject<IProcessBuilderConfig>(1);
 
@@ -31,7 +33,7 @@ export class ProcessBuilderService {
     private _httpClient: HttpClient,
     private _funcStore: Store<fromIFunction.State>,
     private _paramStore: Store<fromIParam.State>,
-  ) {
+  ) {    
     if (!config) config = this.defaultConfig;
     this._config.next(config);
   }

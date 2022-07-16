@@ -1,4 +1,6 @@
 import { IProcessBuilderConfig } from "src/lib/process-builder/globals/i-process-builder-config";
+import { InterfaceCodes } from "./interface-codes";
+import interfacesConfig from "./interfaces-config";
 
 export default {
     editable: true,
@@ -21,5 +23,5 @@ export default {
     },
     dynamicParamDefaultNaming: 'unnamed param',
     defaultFunctionName: 'unnamed function',
-    expectInterface: 1
+    expectInterface: InterfaceCodes.Solution
 } as IProcessBuilderConfig;

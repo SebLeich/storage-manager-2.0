@@ -8,7 +8,7 @@ export default {
     "types": [
         {
             "name": "ActivityExtension",
-            "superClass": [ "Element" ],
+            "superClass": ["Element"],
             "properties": [
                 {
                     "name": "activityFunctionId",
@@ -18,7 +18,7 @@ export default {
             ]
         }, {
             "name": "GatewayExtension",
-            "superClass": [ "Element" ],
+            "superClass": ["Element"],
             "properties": [
                 {
                     "name": "gatewayType",
@@ -28,12 +28,20 @@ export default {
             ]
         }, {
             "name": "DataObjectExtension",
-            "superClass": [ "Element" ],
+            "superClass": ["Element"],
             "properties": [
                 {
                     "name": "outputParam",
                     "isAttr": true,
                     "type": "Integer"
+                }, {
+                    "name": "matchesProcessOutputInterface",
+                    "isAttr": true,
+                    "type": "Boolean"
+                }, {
+                    "name": "isProcessOutput",
+                    "isAttr": true,
+                    "type": "Boolean"
                 }
             ]
         }

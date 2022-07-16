@@ -39,6 +39,7 @@
     "bpmn-js-cli": "^2.2.0",
     "chart.js": "^2.9.4",
     "codemirror": "^5.65.6",
+    "diagram-js": "^8.7.1",
     "eslint4b-prebuilt": "^6.7.2",
     "jsoneditor": "^9.9.0",
     "ng2-charts": "^2.4.3",

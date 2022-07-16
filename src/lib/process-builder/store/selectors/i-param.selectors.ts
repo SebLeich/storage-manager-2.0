@@ -38,3 +38,8 @@ export const selectNextId = () => createSelector(
     selectIParamState,
     (state: fromIParam.State) => (state && state.entities ? Math.max(...Object.values(state.entities).filter(x => x ? true : false).map(x => (x as IParam).identifier), -1) : -1) + 1
 );
+
+export const selectCurrentParamOutput = createSelector(
+    selectIParamState,
+    (state: fromIParam.State) => Object.values(state?.entities).find(x => x.isProcessOutput) ?? null
+)

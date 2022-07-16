@@ -77,7 +77,8 @@ export const reducer = createReducer(
         nullable: param.nullable,
         optional: param.optional,
         type: param.type,
-        typeDef: param.typeDef
+        typeDef: param.typeDef,
+        isProcessOutput: param.isProcessOutput
       }
     }
     return adapter.updateOne(update, state);

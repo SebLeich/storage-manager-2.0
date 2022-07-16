@@ -11,7 +11,6 @@ import { FunctionPreviewComponent } from '../../previews/function-preview/functi
 import { FormControl, FormGroup } from '@angular/forms';
 import { IInputParam } from 'src/lib/process-builder/globals/i-input-param';
 import { delay, map } from 'rxjs/operators';
-import { ProcessBuilderComponentService } from '../../process-builder/process-builder-component.service';
 import { ProcessBuilderService } from 'src/lib/process-builder/services/process-builder.service';
 
 @Component({

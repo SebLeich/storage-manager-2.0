@@ -146,7 +146,7 @@ export const validateBPMNConfig = (bpmnJS: any, injector: Injector) => {
     });
 
     const handleTaskCreationComponentOutput = (taskCreationComponentOutput: ITaskCreationData, payload: ITaskCreationPayload): void => {
-
+        
         if (!taskCreationComponentOutput) {
             if (!payload.configureActivity || typeof BPMNJsRepository.getSLPBExtension(payload.configureActivity.businessObject, 'ActivityExtension', (ext) => ext.activityFunctionId) !== 'number') getModelingModule(bpmnJS).removeElements([payload.configureActivity!]);
             return;
@@ -248,7 +248,7 @@ export const validateBPMNConfig = (bpmnJS: any, injector: Injector) => {
                     BPMNJsRepository.updateBpmnElementSLPBExtension(bpmnJS, payload.configureActivity.businessObject, 'ActivityExtension', (e: any) => e.activityFunctionId = f.identifier);
                     getModelingModule(bpmnJS).updateLabel(payload.configureActivity, f.name);
 
-                    if (outputParam && outputParam !== 'dynamic') BPMNJsRepository.appendOutputParam(bpmnJS, payload.configureActivity!, outputParam);
+                    if (outputParam && outputParam !== 'dynamic') BPMNJsRepository.appendOutputParam(bpmnJS, payload.configureActivity!, outputParam, true, config.expectInterface);
                     else modelingModule.removeElements(payload.configureActivity.outgoing.filter(x => x.type === shapeTypes.DataOutputAssociation).map(x => x.target));
 
                     var gatewayShape = payload.configureActivity.outgoing.find(x => x.type === shapeTypes.SequenceFlow && BPMNJsRepository.sLPBExtensionSetted(x.target?.businessObject, 'GatewayExtension', (ext) => ext.gatewayType === 'error_gateway'))?.target;

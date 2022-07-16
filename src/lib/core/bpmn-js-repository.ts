@@ -20,7 +20,7 @@ export class BPMNJsRepository {
 
     }
 
-    static appendOutputParam(bpmnJS: any, element: IElement, param: IParam | null | undefined, preventDublet: boolean = true): null | IElement {
+    static appendOutputParam(bpmnJS: any, element: IElement, param: IParam | null | undefined, preventDublet: boolean = true, expectedInterface?: number): null | IElement {
         if (!param) return null;
         let e = element.outgoing.find(x => x.type === shapeTypes.DataOutputAssociation)?.target;
         if (!preventDublet || !e) {
@@ -30,9 +30,21 @@ export class BPMNJsRepository {
             BPMNJsRepository.updateBpmnElementSLPBExtension(bpmnJS, e.businessObject, 'DataObjectExtension', (ext) => {
                 ext.outputParam = param.identifier;
             });
+            BPMNJsRepository.updateBpmnElementSLPBExtension(bpmnJS, e.businessObject, 'DataObjectExtension', (ext) => {
+                ext.matchesProcessOutputInterface = param.interface === expectedInterface;
+            });
+            BPMNJsRepository.updateBpmnElementSLPBExtension(bpmnJS, e.businessObject, 'DataObjectExtension', (ext) => {
+                ext.isProcessOutput = param.isProcessOutput;
+            });
         } else if (e) {
             BPMNJsRepository.updateBpmnElementSLPBExtension(bpmnJS, e.businessObject, 'DataObjectExtension', (ext) => {
                 ext.outputParam = param.identifier;
+            });
+            BPMNJsRepository.updateBpmnElementSLPBExtension(bpmnJS, e.businessObject, 'DataObjectExtension', (ext) => {
+                ext.matchesProcessOutputInterface = param.interface === expectedInterface;
+            });
+            BPMNJsRepository.updateBpmnElementSLPBExtension(bpmnJS, e.businessObject, 'DataObjectExtension', (ext) => {
+                ext.isProcessOutput = param.isProcessOutput;
             });
         };
         getModelingModule(bpmnJS).updateLabel(e, param.name);

@@ -4,7 +4,7 @@ import { Observable } from 'rxjs';
 import { ParamCodes } from 'src/config/param-codes';
 import { IElement } from 'src/lib/bpmn-io/i-element';
 import { ParamEditorComponent } from '../components/dialog/param-editor/param-editor.component';
-import { ITaskCreationComponentInput, ITaskCreationData, ITaskCreationDataWrapper, ITaskCreationPayload } from '../components/dialog/task-creation/i-task-creation-component-input';
+import { ITaskCreationComponentInput, ITaskCreationData, ITaskCreationDataWrapper } from '../components/dialog/task-creation/i-task-creation-component-input';
 import { TaskCreationComponent } from '../components/dialog/task-creation/task-creation.component';
 import { FUNCTIONS_CONFIG_TOKEN, IFunction } from '../globals/i-function';
 

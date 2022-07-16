@@ -170,7 +170,8 @@ export class TaskCreationComponent implements OnDestroy, OnInit {
       'normalizedOutputParamName': ProcessBuilderRepository.normalizeName(config.dynamicParamDefaultNaming),
       'outputParamValue': null,
       'entranceGatewayType': null,
-      'inputParam': null
+      'inputParam': null,
+      'isProcessOutput': null
     });
     this.formGroup.patchValue(this.data.data.data);
   }

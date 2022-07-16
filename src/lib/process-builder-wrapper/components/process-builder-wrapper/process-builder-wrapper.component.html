@@ -128,7 +128,12 @@
 </div>
 
 <mat-menu #menu="matMenu">
-    <div mat-menu-item>
+    <div mat-menu-item class="inactive" (click)="$event.stopPropagation()">
+        <span class="text">zoom</span>
+        <mat-icon class="interactable-icon" (click)="service.zoomIn()">add_circle_outline</mat-icon>
+        <mat-icon class="interactable-icon" (click)="service.zoomOut()">remove_circle_outline</mat-icon>
+    </div>
+    <div mat-menu-item class="bordered">
         <span class="text">run pipeline</span>
     </div>
     <div mat-menu-item (click)="service.resetAll()">

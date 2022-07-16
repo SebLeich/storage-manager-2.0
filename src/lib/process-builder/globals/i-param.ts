@@ -3,6 +3,7 @@ import { IParamDefinition } from "./i-param-definition";
 
 export interface IParam extends IParamDefinition {
     identifier: number;
+    isProcessOutput?: boolean;
     _isIParam: boolean;
 }
 

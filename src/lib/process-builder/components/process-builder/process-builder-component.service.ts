@@ -51,6 +51,8 @@ import { ValidationError } from '../../globals/validation-error';
 import { ValidationWarning } from '../../globals/validation-warning';
 import { ValidationWarningPipe } from '../../pipes/validation-warning.pipe';
 
+import customRendererModule from '../../extensions/custom-renderer';
+
 @Injectable()
 export class ProcessBuilderComponentService {
 
@@ -299,6 +301,8 @@ export class ProcessBuilderComponentService {
 
   undo = () => (window as any).cli.undo();
   redo = () => (window as any).cli.redo();
+  zoomIn = () => this.bpmnJS.get('zoomScroll').stepZoom(1);
+  zoomOut = () => this.bpmnJS.get('zoomScroll').stepZoom(-1);
 
 
   private _setBpmnModel(xml: string, viewbox: IViewbox | null = null) {
@@ -312,7 +316,7 @@ export class ProcessBuilderComponentService {
   private _setUp() {
 
     this.bpmnJS = new BpmnJS({
-      additionalModules: [gridModule, CliModule, tooltips],
+      additionalModules: [customRendererModule, gridModule, CliModule, tooltips],
       cli: {
         bindTo: 'cli'
       },
