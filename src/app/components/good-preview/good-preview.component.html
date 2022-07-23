@@ -1,83 +1,55 @@
 <div class="body">
+  <ng-container *ngIf="good; else noGood">
+    <div class="description">
+      <div class="text">{{ good.description }}</div>
+      <button mat-icon-button>
+        <mat-icon>search</mat-icon>
+      </button>
+    </div>
 
-    <ng-container *ngIf="good; else noGood">
+    <div class="property-row">
+      <div class="property">
+        <div class="attribute">width</div>
+        <div class="value">{{ good.width | prettyLength }}</div>
+      </div>
 
-        <div class="description">
+      <div class="property">
+        <div class="attribute">height</div>
+        <div class="value">{{ good.height | prettyLength }}</div>
+      </div>
 
-            <div class="text">{{good.description}}</div>
-            <button mat-icon-button>
-                <mat-icon>search</mat-icon>
-            </button>
-    
+      <div class="property">
+        <div class="attribute">length</div>
+        <div class="value">{{ good.length | prettyLength }}</div>
+      </div>
+
+      <div class="property">
+        <div class="attribute">volume</div>
+        <div class="value">
+          {{ good.length * good.height * good.width | prettyVolume: true }}
         </div>
+      </div>
+    </div>
 
-        <div class="property-row">
+    <div class="property-row">
+      <div class="property">
+        <div class="attribute">x-coordinate</div>
+        <div class="value">{{ good.x }}</div>
+      </div>
 
-            <div class="property">
+      <div class="property">
+        <div class="attribute">y-coordinate</div>
+        <div class="value">{{ good.y }}</div>
+      </div>
 
-                <div class="attribute">Breite</div>
-                <div class="value">{{good.width|prettyLength}}</div>
-    
-            </div>
-    
-            <div class="property">
-    
-                <div class="attribute">Höhe</div>
-                <div class="value">{{good.height|prettyLength}}</div>
-    
-            </div>
-    
-            <div class="property">
-    
-                <div class="attribute">Länge</div>
-                <div class="value">{{good.length|prettyLength}}</div>
-    
-            </div>
-
-            <div class="property">
-    
-                <div class="attribute">Volumen</div>
-                <div class="value">{{(good.length * good.height * good.width)|prettyVolume:true}}</div>
-    
-            </div>
-
-        </div>
-
-        <div class="property-row">
-
-            <div class="property">
-
-                <div class="attribute">x-Koordinate</div>
-                <div class="value">{{good.x}}</div>
-    
-            </div>
-    
-            <div class="property">
-    
-                <div class="attribute">y-Koordinate</div>
-                <div class="value">{{good.y}}</div>
-    
-            </div>
-    
-            <div class="property">
-    
-                <div class="attribute">z-Koordinate</div>
-                <div class="value">{{good.z}}</div>
-    
-            </div>
-
-        </div>
-
-    </ng-container>
-
+      <div class="property">
+        <div class="attribute">z-coordinate</div>
+        <div class="value">{{ good.z }}</div>
+      </div>
+    </div>
+  </ng-container>
 </div>
 
 <ng-template #noGood>
-
-    <div class="no-good-hint">
-
-        Kein Element
-
-    </div>
-
+  <div class="no-good-hint">no element</div>
 </ng-template>

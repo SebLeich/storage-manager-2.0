@@ -1,72 +1,55 @@
 <div class="body">
+  <ng-container *ngIf="container; else noContainerAvailable">
+    <div class="description">
+      <div class="text">Container</div>
+    </div>
 
-    <ng-container *ngIf="container; else noContainerAvailable">
+    <div class="property-row">
+      <div class="property">
+        <div class="attribute">width</div>
+        <div class="value">{{ container.width | prettyLength }}</div>
+      </div>
 
-        <div class="description">
+      <div class="property">
+        <div class="attribute">height</div>
+        <div class="value">{{ container.height | prettyLength }}</div>
+      </div>
 
-            <div class="text">Container</div>
+      <div class="property">
+        <div class="attribute">length</div>
+        <div class="value">{{ container.length | prettyLength }}</div>
+      </div>
 
+      <div class="property">
+        <div class="attribute">volume</div>
+        <div class="value">
+          {{
+            container.length * container.height * container.width
+              | prettyVolume: true
+          }}
         </div>
+      </div>
+    </div>
 
-        <div class="property-row">
+    <div class="chart-wrapper">
+      <div class="chart-inner">
+        <canvas
+          baseChart
+          [datasets]="datasets"
+          [labels]="labels"
+          chartType="doughnut"
+          [options]="options"
+        ></canvas>
+      </div>
 
-            <div class="property">
-
-                <div class="attribute">Breite</div>
-                <div class="value">{{container.width|prettyLength}}</div>
-
-            </div>
-
-            <div class="property">
-
-                <div class="attribute">Höhe</div>
-                <div class="value">{{container.height|prettyLength}}</div>
-
-            </div>
-
-            <div class="property">
-
-                <div class="attribute">Länge</div>
-                <div class="value">{{container.length|prettyLength}}</div>
-
-            </div>
-
-            <div class="property">
-
-                <div class="attribute">Volumen</div>
-                <div class="value">{{(container.length * container.height * container.width)|prettyVolume:true}}
-                </div>
-
-            </div>
-
-        </div>
-
-        <div class="chart-wrapper">
-
-            <div class="chart-inner">
-                <canvas baseChart [datasets]="datasets" [labels]="labels" chartType="doughnut"
-                    [options]="options"></canvas>
-            </div>
-
-            <div class="percentage-wrapper">
-
-                <div class="percentage">{{percentage}} %</div>
-                <div class="text">Auslastung</div>
-
-            </div>
-
-        </div>
-
-    </ng-container>
-
+      <div class="percentage-wrapper">
+        <div class="percentage">{{ percentage }} %</div>
+        <div class="text">packaging load</div>
+      </div>
+    </div>
+  </ng-container>
 </div>
 
 <ng-template #noContainerAvailable>
-
-    <div class="no-content-available">
-
-        Kein Container verfügbar
-
-    </div>
-
+  <div class="no-content-available">no container available</div>
 </ng-template>
