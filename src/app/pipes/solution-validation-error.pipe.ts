@@ -8,24 +8,34 @@ export class SolutionValidationErrorPipe implements PipeTransform {
 
   transform(errorCode: SOLUTION_ERROR): string {
     switch (errorCode) {
+
       case SOLUTION_ERROR.NO_SOLUTION:
-        return 'Keine Lösung';
+        return 'no solution';
+
       case SOLUTION_ERROR.NO_CONTAINER:
-        return 'Lösung ohne Container';
+        return 'solution without container';
+
       case SOLUTION_ERROR.GOOD_BEFORE_CONTAINER_X:
-        return 'Lösung enthält Güter, welche neben dem Container beginnen';
+        return 'solution contains goods, positioned next to the container';
+
       case SOLUTION_ERROR.GOOD_OUT_OF_CONTAINER_X:
-        return 'Lösung enthält Güter, welche über die Breite des Containers hinausragen';
+        return 'solution contains goods, jutting over the x edge of the container';
+
       case SOLUTION_ERROR.GOOD_BEFORE_CONTAINER_Y:
-        return 'Lösung enthält Güter, welche unter dem Container beginnen';
+        return 'solution contains goods, positioned beneath the container';
+
       case SOLUTION_ERROR.GOOD_OUT_OF_CONTAINER_Y:
-        return 'Lösung enthält Güter, welche über die Höhe des Containers hinausragen';
+        return 'solution contains goods, jutting over the y edge of the container';
+
       case SOLUTION_ERROR.GOOD_BEFORE_CONTAINER_Z:
-        return 'Lösung enthält Güter, welche hinter dem Container beginnen';
+        return 'solution contains goods, positioned behind the container';
+
       case SOLUTION_ERROR.GOOD_OUT_OF_CONTAINER_Z:
-        return 'Lösung enthält Güter, welche über die Länge des Containers hinausragen';
+        return 'solution contains goods, jutting over the z edge of the container';
+
       case SOLUTION_ERROR.GOOD_OVERLAP:
-        return 'Gut überlappt sich mit einem anderen Gut';
+        return 'solution\' goods overlapping'
+
     }
   }
 

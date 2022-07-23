@@ -128,10 +128,19 @@
 </div>
 
 <mat-menu #menu="matMenu">
+    <div mat-menu-item>
+        <span class="text">functions ({{(service.funcs$|async)?.length ?? 0}}) ...</span>
+    </div>
+    <div mat-menu-item class="bordered">
+        <span class="text">params ({{(service.params$|async)?.length ?? 0}}) ...</span>
+    </div>
     <div mat-menu-item class="inactive" (click)="$event.stopPropagation()">
         <span class="text">zoom</span>
         <mat-icon class="interactable-icon" (click)="service.zoomIn()">add_circle_outline</mat-icon>
         <mat-icon class="interactable-icon" (click)="service.zoomOut()">remove_circle_outline</mat-icon>
+    </div>
+    <div mat-menu-item (click)="service.saveModel()">
+        <span class="text">save model</span>
     </div>
     <div mat-menu-item class="bordered">
         <span class="text">run pipeline</span>

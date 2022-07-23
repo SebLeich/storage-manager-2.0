@@ -3,7 +3,7 @@
     <ng-container *ngIf="(dataService.currentSteps$|async)?.length > 0; else noCalculationStepsAvailable">
 
         <div class="headline">
-            Lösung in {{(dataService.currentSteps$|async)?.length ?? 0}} Schritten berechnet
+            solution, calculated using {{(dataService.currentSteps$|async)?.length ?? 0}} steps
         </div>
     
         <div class="control-wrapper">
@@ -56,7 +56,7 @@
 
     <div class="no-content-available">
 
-        Keine Berechnungsschritte verfügbar
+        no calculation steps available
 
     </div>
 
