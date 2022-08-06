@@ -1,4 +1,4 @@
-<div class="body main-component-body">
+<div class="body main-component-body" (contextmenu)="load()">
 
     <div class="solution-wrapper" *ngIf="(menuVisible$|async)">
         <app-solution-preview></app-solution-preview>

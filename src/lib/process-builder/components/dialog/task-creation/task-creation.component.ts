@@ -167,11 +167,12 @@ export class TaskCreationComponent implements OnDestroy, OnInit {
       'name': config.defaultFunctionName,
       'normalizedName': ProcessBuilderRepository.normalizeName(config.defaultFunctionName),
       'outputParamName': config.dynamicParamDefaultNaming,
+      'outputParamInterface': null,
       'normalizedOutputParamName': ProcessBuilderRepository.normalizeName(config.dynamicParamDefaultNaming),
       'outputParamValue': null,
       'entranceGatewayType': null,
       'inputParam': null,
-      'isProcessOutput': null
+      'isProcessOutput': null,
     });
     this.formGroup.patchValue(this.data.data.data);
   }
@@ -307,7 +308,7 @@ export class TaskCreationComponent implements OnDestroy, OnInit {
       switchMap((fun: IFunction | null | undefined) => combineLatest([of(fun), this._paramStore.select(selectIParam(fun?.output?.param)), this._interfaceStore.select(selectIInterface(fun?.output?.interface))]))
     ).subscribe(([fun, outputParam, outputParamInterface]: [IFunction | null | undefined, IParam | null | undefined, IInterface | null | undefined]) => {
       let inputParams = fun.useDynamicInputParams && fun.inputParams ? Array.isArray(fun.inputParams) ? [...fun.inputParams] : [fun.inputParams] : [];
-      let outputParamValue = ((fun.output?.param === 'dynamic' && outputParamInterface) ?? false) ? outputParamInterface.typeDef : outputParam?.typeDef;
+      let outputParamValue = ((fun.output?.param === 'dynamic' && outputParamInterface) ?? false) ? outputParamInterface.typeDef : outputParam?.typeDef, outputParamName = ((fun.output?.param === 'dynamic' && outputParamInterface) ?? false) ? outputParamInterface.name : outputParam?.name;;
       this.formGroup.patchValue({
         'canFail': fun?.canFail,
         'implementation': fun?.customImplementation,
@@ -315,10 +316,12 @@ export class TaskCreationComponent implements OnDestroy, OnInit {
         'name': fun?.name,
         'normalizedName': fun?.normalizedName,
         'normalizedOutputParamName': outputParam?.normalizedName,
-        'outputParamName': outputParam?.name,
+        'outputParamName': outputParamName,
         'outputParamValue': outputParamValue,
+        'outputParamInterface': outputParamInterface?.identifier,
         'entranceGatewayType': null,
-        'inputParam': inputParams.length === 1 ? inputParams[0].param : null
+        'inputParam': inputParams.length === 1 ? inputParams[0].param : null,
+        'isProcessOutput': outputParam?.isProcessOutput,
       } as IEmbeddedFunctionImplementationData);
       let hasCustomImplementation = (this.requireCustomImplementationControl.value || this.implementationControl.value) && this.data.data.payload.configureActivity ? true : false;
       this._customImplementation.next(hasCustomImplementation ? this.data.data.payload.configureActivity ?? null : null);

@@ -13,6 +13,7 @@ export class ParamMemberPreviewComponent implements OnInit {
   constructor() { }
 
   ngOnInit(): void {
+    debugger;
   }
 
 }

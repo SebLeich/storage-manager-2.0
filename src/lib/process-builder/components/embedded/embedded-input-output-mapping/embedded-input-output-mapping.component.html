@@ -1,48 +1,40 @@
 <div class="body">
+  <table>
+    <thead>
+      <tr>
+        <th class="input-column">input value</th>
+        <th rowspan="2">map to output ({{ outputParamName$ | async }})</th>
+        <th rowspan="2">exemplary value</th>
+      </tr>
 
-    <table>
+      <tr>
+        <td
+          class="input-value"
+          [matMenuTriggerFor]="menu"
+          (menuOpened)="updateAvailableParams('string')"
+        >
+          click to select
+        </td>
+      </tr>
+    </thead>
 
-        <thead>
-
-            <tr>
-
-                <th class="input-column">input value</th>
-                <th rowspan="2">map to output ({{outputParamName$|async}})</th>
-                <th rowspan="2">exemplary value</th>
-
-            </tr>
-
-            <tr>
-
-                <td class="input-value" [matMenuTriggerFor]="menu" (menuOpened)="menuOpened()">
-                    click to select
-                </td>
-
-            </tr>
-
-        </thead>
-
-        <tbody>
-
-            <ng-container *ngFor="let value of (params$|async)">
-
-                <app-embedded-input-output-mapping-table-row #wrapper [def]="value" [inputParams]="inputParams"></app-embedded-input-output-mapping-table-row>
-                <ng-content *ngTemplateOutlet="wrapper.rowTemplate"></ng-content>
-
-            </ng-container>
-
-        </tbody>
-
-    </table>
-
+    <tbody>
+      <ng-container *ngFor="let value of params$ | async">
+        <app-embedded-input-output-mapping-table-row
+          #wrapper
+          [def]="value"
+          [inputParams]="inputParams"
+        ></app-embedded-input-output-mapping-table-row>
+        <ng-content *ngTemplateOutlet="wrapper.rowTemplate"></ng-content>
+      </ng-container>
+    </tbody>
+  </table>
 </div>
 
 <mat-menu #menu="matMenu">
-
-    <div *ngFor="let paramMember of (availableTypes$|async)">
-
-        <app-param-member-preview [paramMember]="paramMember"></app-param-member-preview>
-
-    </div>
-
+  <div *ngFor="let paramMember of availableTypes$ | async">
+    <app-param-member-preview
+      [paramMember]="paramMember"
+    ></app-param-member-preview>
+  </div>
 </mat-menu>

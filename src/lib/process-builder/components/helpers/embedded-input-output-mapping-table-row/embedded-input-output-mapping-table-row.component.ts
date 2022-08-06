@@ -1,19 +1,31 @@
-import { AfterViewInit, Component, Input, OnChanges, OnDestroy, SimpleChanges, TemplateRef, ViewChild } from '@angular/core';
-import { MatMenuTrigger } from '@angular/material/menu';
+import {
+  Component,
+  Input,
+  OnChanges,
+  OnDestroy,
+  SimpleChanges,
+  TemplateRef,
+  ViewChild,
+} from '@angular/core';
 import { Store } from '@ngrx/store';
-import { BehaviorSubject, Subscription } from 'rxjs';
+import { BehaviorSubject, ReplaySubject, Subscription } from 'rxjs';
+import { switchMap } from 'rxjs/operators';
+import { IInterface } from 'src/lib/process-builder/globals/i-interface';
 import { IParamDefinition } from 'src/lib/process-builder/globals/i-param-definition';
-import { IParamMember } from 'src/lib/process-builder/globals/i-param-member';
-import { State } from 'src/lib/process-builder/store/reducers/i-interface.reducer';
+import * as fromIParam from 'src/lib/process-builder/store/reducers/i-param.reducer';
+import * as fromIFunction from 'src/lib/process-builder/store/reducers/i-function.reducer';
+import * as fromIInterface from 'src/lib/process-builder/store/reducers/i-interface.reducer';
 import { selectIInterface } from 'src/lib/process-builder/store/selectors/i-interface.selectors';
+import { selectIParamsByType } from 'src/lib/process-builder/store/selectors/i-param.selectors';
 
 @Component({
   selector: 'app-embedded-input-output-mapping-table-row',
   templateUrl: './embedded-input-output-mapping-table-row.component.html',
-  styleUrls: ['./embedded-input-output-mapping-table-row.component.css']
+  styleUrls: ['./embedded-input-output-mapping-table-row.component.css'],
 })
-export class EmbeddedInputOutputMappingTableRowComponent implements OnChanges, OnDestroy, AfterViewInit {
-
+export class EmbeddedInputOutputMappingTableRowComponent
+  implements OnChanges, OnDestroy
+{
   @ViewChild('rowTemplate') rowTemplate: TemplateRef<any>;
 
   @Input() level: number = 0;
@@ -23,24 +35,30 @@ export class EmbeddedInputOutputMappingTableRowComponent implements OnChanges, O
   private _typeDef = new BehaviorSubject<IParamDefinition[]>([]);
   typeDef$ = this._typeDef.asObservable();
 
-  private _availableTypes = new BehaviorSubject<IParamMember[]>([]);
-  availableTypes$ = this._availableTypes.asObservable();
+  private _currentDefinition = new ReplaySubject<{
+    type: 'object' | 'number' | 'string' | 'boolean' | 'array';
+    interface?: IInterface;
+  }>(1);
+  availableTypes$ = this._currentDefinition.pipe(
+    switchMap((def) => {
+      return this._paramStore.select(selectIParamsByType(def));
+    })
+  );
 
   private _sub: Subscription | null = null;
   private _subscriptions: Subscription[] = [];
 
   constructor(
-    private _store: Store<State>
-  ) { }
+    private _paramStore: Store<fromIParam.State>,
+    private _funcStore: Store<fromIFunction.State>,
+    private _interfaceStore: Store<fromIInterface.State>
+  ) {}
 
   isNumber = (arg: any) => typeof arg === 'number';
 
-  menuOpened(){
-    this._setAvailableTypes();
-  }
-
   ngOnChanges(simpleChanges: SimpleChanges): void {
-    if (simpleChanges['def'] || simpleChanges['inputParams']) this._setTypeDef();
+    if (simpleChanges['def'] || simpleChanges['inputParams'])
+      this._setTypeDef();
   }
 
   ngOnDestroy(): void {
@@ -54,15 +72,8 @@ export class EmbeddedInputOutputMappingTableRowComponent implements OnChanges, O
     }
   }
 
-  ngAfterViewInit(): void {
-    this._setTypeDef();
-  }
-
-  private _setAvailableTypes(){
-    this._availableTypes.next([
-      { 'navigationPath': 'exemplarySolution', 'type': 'Solution template' },
-      { 'navigationPath': 'exemplarySolution.container', 'type': 'Container template' }
-    ])
+  updateAvailableParams(type, iface?) {
+    this._currentDefinition.next({ type: type, interface: iface });
   }
 
   private _setTypeDef() {
@@ -72,14 +83,16 @@ export class EmbeddedInputOutputMappingTableRowComponent implements OnChanges, O
         this._sub.unsubscribe();
         this._sub = null;
       }
-      this._sub = this._store.select(selectIInterface(this.def.interface)).subscribe(iface => {
-        if (!iface || !Array.isArray(iface.typeDef)) return;
-        this._typeDef.next(iface.typeDef);
-      });
-    }
-    else {
-      this._typeDef.next(Array.isArray(this.def.typeDef) ? this.def.typeDef : [this.def.typeDef]);
+      this._sub = this._interfaceStore
+        .select(selectIInterface(this.def.interface))
+        .subscribe((iface) => {
+          if (!iface || !Array.isArray(iface.typeDef)) return;
+          this._typeDef.next(iface.typeDef);
+        });
+    } else {
+      this._typeDef.next(
+        Array.isArray(this.def.typeDef) ? this.def.typeDef : [this.def.typeDef]
+      );
     }
   }
-
 }

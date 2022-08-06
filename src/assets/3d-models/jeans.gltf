@@ -1,0 +1,256 @@
+{
+  "asset": {
+    "generator": "Khronos glTF Blender I/O v3.2.43",
+    "version": "2.0"
+  },
+  "extensionsUsed": [
+    "KHR_texture_transform"
+  ],
+  "extensionsRequired": [
+    "KHR_texture_transform"
+  ],
+  "scene": 0,
+  "scenes": [
+    {
+      "name": "Scene",
+      "nodes": [
+        0,
+        1
+      ]
+    }
+  ],
+  "nodes": [
+    {
+      "mesh": 0,
+      "name": "Cylinder",
+      "scale": [
+        0.009999999776482582,
+        0.0024999999441206455,
+        0.009999999776482582
+      ],
+      "translation": [
+        -0.05000000074505806,
+        0.014999999664723873,
+        -0.4050000011920929
+      ]
+    },
+    {
+      "mesh": 1,
+      "name": "Cube.003",
+      "scale": [
+        0.004667710512876511,
+        0.004285714123398066,
+        0.013369269669055939
+      ],
+      "translation": [
+        0.11999999731779099,
+        0.014999999664723873,
+        -0.4050000011920929
+      ]
+    }
+  ],
+  "materials": [
+    {
+      "doubleSided": true,
+      "name": "Material.001",
+      "pbrMetallicRoughness": {
+        "baseColorFactor": [
+          0.3913629949092865,
+          0.21629145741462708,
+          0.10702266544103622,
+          1
+        ],
+        "metallicFactor": 0,
+        "roughnessFactor": 0.5
+      }
+    },
+    {
+      "doubleSided": true,
+      "name": "Material",
+      "pbrMetallicRoughness": {
+        "baseColorTexture": {
+          "extensions": {
+            "KHR_texture_transform": {
+              "offset": [
+                0,
+                -3
+              ],
+              "scale": [
+                4,
+                4
+              ]
+            }
+          },
+          "index": 0
+        },
+        "metallicFactor": 0
+      }
+    }
+  ],
+  "meshes": [
+    {
+      "name": "Cylinder",
+      "primitives": [
+        {
+          "attributes": {
+            "POSITION": 0,
+            "NORMAL": 1,
+            "TEXCOORD_0": 2
+          },
+          "indices": 3,
+          "material": 0
+        }
+      ]
+    },
+    {
+      "name": "Cube.003",
+      "primitives": [
+        {
+          "attributes": {
+            "POSITION": 4,
+            "NORMAL": 5,
+            "TEXCOORD_0": 6
+          },
+          "indices": 7,
+          "material": 1
+        }
+      ]
+    }
+  ],
+  "textures": [
+    {
+      "sampler": 0,
+      "source": 0
+    }
+  ],
+  "images": [
+    {
+      "name": "jeans",
+      "uri": "jeans_img0.jpg"
+    }
+  ],
+  "accessors": [
+    {
+      "bufferView": 0,
+      "componentType": 5126,
+      "count": 192,
+      "max": [
+        1,
+        1,
+        1
+      ],
+      "min": [
+        -1,
+        -1,
+        -1
+      ],
+      "type": "VEC3"
+    },
+    {
+      "bufferView": 1,
+      "componentType": 5126,
+      "count": 192,
+      "type": "VEC3"
+    },
+    {
+      "bufferView": 2,
+      "componentType": 5126,
+      "count": 192,
+      "type": "VEC2"
+    },
+    {
+      "bufferView": 3,
+      "componentType": 5123,
+      "count": 372,
+      "type": "SCALAR"
+    },
+    {
+      "bufferView": 4,
+      "componentType": 5126,
+      "count": 9280,
+      "max": [
+        10.679407119750977,
+        1,
+        32.2330322265625
+      ],
+      "min": [
+        -42.880043029785156,
+        -6,
+        -1.4262475967407227
+      ],
+      "type": "VEC3"
+    },
+    {
+      "bufferView": 5,
+      "componentType": 5126,
+      "count": 9280,
+      "type": "VEC3"
+    },
+    {
+      "bufferView": 6,
+      "componentType": 5126,
+      "count": 9280,
+      "type": "VEC2"
+    },
+    {
+      "bufferView": 7,
+      "componentType": 5123,
+      "count": 15228,
+      "type": "SCALAR"
+    }
+  ],
+  "bufferViews": [
+    {
+      "buffer": 0,
+      "byteLength": 2304,
+      "byteOffset": 0
+    },
+    {
+      "buffer": 0,
+      "byteLength": 2304,
+      "byteOffset": 2304
+    },
+    {
+      "buffer": 0,
+      "byteLength": 1536,
+      "byteOffset": 4608
+    },
+    {
+      "buffer": 0,
+      "byteLength": 744,
+      "byteOffset": 6144
+    },
+    {
+      "buffer": 0,
+      "byteLength": 111360,
+      "byteOffset": 6888
+    },
+    {
+      "buffer": 0,
+      "byteLength": 111360,
+      "byteOffset": 118248
+    },
+    {
+      "buffer": 0,
+      "byteLength": 74240,
+      "byteOffset": 229608
+    },
+    {
+      "buffer": 0,
+      "byteLength": 30456,
+      "byteOffset": 303848
+    }
+  ],
+  "samplers": [
+    {
+      "magFilter": 9729,
+      "minFilter": 9987
+    }
+  ],
+  "buffers": [
+    {
+      "uri": "jeans_data.bin",
+      "byteLength": 334304
+    }
+  ]
+}

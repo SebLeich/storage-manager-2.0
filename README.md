@@ -35,4 +35,11 @@ Next, the custom API feature for connecting self created solvers via a RESTful i
 
 Additionally, an english version is coming soon.
 
+### How to build and publish version to github pages?
+
+Use the following commands:
+ng build --configuration=production --base-href "https://sebleich.github.io/storage-manager-2.0/"
+npx angular-cli-ghpages --dir=dist/storage-manager
+
+
 
