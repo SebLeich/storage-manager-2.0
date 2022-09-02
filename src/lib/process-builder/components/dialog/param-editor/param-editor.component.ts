@@ -1,5 +1,5 @@
 import { AfterViewInit, Component, ElementRef, Inject, OnDestroy, OnInit, ViewChild, ViewContainerRef } from '@angular/core';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { Store } from '@ngrx/store';
 import JSONEditor from 'jsoneditor';
@@ -53,7 +53,7 @@ export class ParamEditorComponent implements AfterViewInit, OnDestroy, OnInit {
 
   @ViewChild('parameterBody', { static: true, read: ElementRef }) parameterBody!: ElementRef<HTMLDivElement>;
 
-  formGroup!: FormGroup;
+  formGroup!: UntypedFormGroup;
 
   private _editor = new ReplaySubject<JSONEditor>(1);
   editor$ = this._editor.asObservable();
@@ -82,7 +82,7 @@ export class ParamEditorComponent implements AfterViewInit, OnDestroy, OnInit {
     @Inject(MAT_DIALOG_DATA) public data: { paramCode: ParamCodes | 'dynamic', element: IElement },
     @Inject(PROCESS_BUILDER_CONFIG_TOKEN) public config: IProcessBuilderConfig,
     private _snackBar: MatSnackBar,
-    private _formBuilder: FormBuilder
+    private _formBuilder: UntypedFormBuilder
   ) {
     this.formGroup = this._formBuilder.group({
       'name': null,

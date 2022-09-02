@@ -1,5 +1,5 @@
 import { Component, forwardRef, OnDestroy, OnInit } from '@angular/core';
-import { ControlValueAccessor, FormControl, NG_VALUE_ACCESSOR } from '@angular/forms';
+import { ControlValueAccessor, UntypedFormControl, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { Subscription } from 'rxjs';
 import { nextUnitSize } from 'src/app/globals';
 import { DataService } from 'src/app/services/data.service';
@@ -18,7 +18,7 @@ import { DataService } from 'src/app/services/data.service';
 })
 export class SelectUnitComponent implements ControlValueAccessor, OnDestroy, OnInit {
 
-  valueControl: FormControl = new FormControl();
+  valueControl: UntypedFormControl = new UntypedFormControl();
 
   units = nextUnitSize.map(x => x.unit);
 

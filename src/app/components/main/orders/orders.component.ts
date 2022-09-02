@@ -1,5 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { FormArray, FormControl, FormGroup } from '@angular/forms';
+import { UntypedFormArray, FormControl, UntypedFormGroup } from '@angular/forms';
 import { SortDirection } from '@angular/material/sort';
 import { interval, Subscription } from 'rxjs';
 import { filter, map } from 'rxjs/operators';
@@ -48,7 +48,7 @@ export class OrdersComponent implements OnDestroy, OnInit {
     this.csvService.downloadOrderCollectionToCSV();
   }
 
-  setOrderProduct(product: string, formGroup: FormGroup) {
+  setOrderProduct(product: string, formGroup: UntypedFormGroup) {
     if (typeof product !== 'string') return;
     this.dataService.products$
       .pipe(map((products: Product[]) => products.find(x => x.description === product)), filter(x => x? true: false))
@@ -65,14 +65,14 @@ export class OrdersComponent implements OnDestroy, OnInit {
     this.dataService.products$.pipe(map(x => x.find(y => y.description === product)))
       .subscribe((product: Product) => {
         product[dimension] = value;
-        this.ordersControl.controls.filter(x => (x.value as Order).description === product.description).forEach((x: FormGroup) => {
+        this.ordersControl.controls.filter(x => (x.value as Order).description === product.description).forEach((x: UntypedFormGroup) => {
           x.controls[dimension].setValue(value);
         });
       });
   }
 
-  get ordersControl(): FormArray {
-    return this.ordersComponentService.formGroup.controls['orders'] as FormArray;
+  get ordersControl(): UntypedFormArray {
+    return this.ordersComponentService.formGroup.controls['orders'] as UntypedFormArray;
   }
 
 }

@@ -1,5 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { FormControl, FormGroup } from '@angular/forms';
+import { UntypedFormControl, UntypedFormGroup } from '@angular/forms';
 import { Store } from '@ngrx/store';
 import { combineLatest, ReplaySubject } from 'rxjs';
 import { map } from 'rxjs/operators';
@@ -24,7 +24,7 @@ export class EmbeddedFunctionInputSelectionComponent implements IEmbeddedView, O
     })
   );
 
-  formGroup!: FormGroup;
+  formGroup!: UntypedFormGroup;
 
   constructor(
     private _paramStore: Store<fromIParam.State>
@@ -44,8 +44,8 @@ export class EmbeddedFunctionInputSelectionComponent implements IEmbeddedView, O
 
   setInputParams = (inputParams: ParamCodes[]) => this._inputParams.next(inputParams);
 
-  get inputParamControl(): FormControl {
-    return this.formGroup.controls['inputParam'] as FormControl;
+  get inputParamControl(): UntypedFormControl {
+    return this.formGroup.controls['inputParam'] as UntypedFormControl;
   }
 
 }

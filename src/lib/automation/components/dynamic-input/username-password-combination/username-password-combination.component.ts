@@ -1,5 +1,5 @@
 import { Component, Inject, OnInit } from '@angular/core';
-import { FormGroup } from '@angular/forms';
+import { UntypedFormGroup } from '@angular/forms';
 import { FORM_GROUP } from 'src/lib/automation/interfaces';
 
 @Component({
@@ -11,7 +11,7 @@ export class UsernamePasswordCombinationComponent implements OnInit {
 
   showPassword: boolean = false;
 
-  constructor(@Inject(FORM_GROUP) public formGroup: FormGroup) { }
+  constructor(@Inject(FORM_GROUP) public formGroup: UntypedFormGroup) { }
 
   ngOnInit(): void {
   }

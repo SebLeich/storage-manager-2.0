@@ -1,5 +1,5 @@
 import { Component, ComponentFactoryResolver, Inject, Injector, OnDestroy, OnInit, ViewChild, ViewContainerRef } from '@angular/core';
-import { FormBuilder } from '@angular/forms';
+import { UntypedFormBuilder } from '@angular/forms';
 import { combineLatest, ReplaySubject, Subscription } from 'rxjs';
 import { distinctUntilChanged } from 'rxjs/operators';
 import { BasicAuthConfiguration, Configuration, JWTTokenLoginConfiguration, OAuth2Configuration, StolenJWTTokenConfiguration } from 'src/lib/automation/classes/api-call-configuration';
@@ -29,7 +29,7 @@ export class ApiCallConfiguratorComponent implements OnDestroy, OnInit {
     @Inject(FORM_GROUP_PROVIDER) public formGroupProvider: IFormGroupProvider,
     @Inject(CONFIGURATION_FORM_GROUP_PROVIDER) private _configurationFormGroupProvider: IConfigurationFormGroupProvider,
     @Inject(SUBMIT_CONFIGURATION_PROVIDER) private _submitConfigurationProvider: ISubmitConfigurationProvider,
-    private _formBuilder: FormBuilder,
+    private _formBuilder: UntypedFormBuilder,
     private _componentFactoryResolver: ComponentFactoryResolver,
     private _configureApiCallService: ConfigureApiCallService
   ) {

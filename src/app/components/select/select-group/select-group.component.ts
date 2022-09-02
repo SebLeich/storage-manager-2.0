@@ -1,5 +1,5 @@
 import { Component, forwardRef, OnDestroy, OnInit } from '@angular/core';
-import { ControlValueAccessor, FormControl, NG_VALUE_ACCESSOR } from '@angular/forms';
+import { ControlValueAccessor, UntypedFormControl, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { Subscription } from 'rxjs';
 import { Group } from 'src/app/classes';
 import { DataService } from 'src/app/services/data.service';
@@ -18,7 +18,7 @@ import { DataService } from 'src/app/services/data.service';
 })
 export class SelectGroupComponent implements ControlValueAccessor, OnDestroy, OnInit {
 
-  valueControl: FormControl = new FormControl();
+  valueControl: UntypedFormControl = new UntypedFormControl();
 
   private _subscriptions: Subscription[] = [];
 

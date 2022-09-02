@@ -1,5 +1,5 @@
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
-import { FormControl, FormGroup } from '@angular/forms';
+import { UntypedFormControl, UntypedFormGroup } from '@angular/forms';
 import { Store } from '@ngrx/store';
 import { BehaviorSubject, of, ReplaySubject, Subscription } from 'rxjs';
 import { IEmbeddedView } from 'src/lib/process-builder/globals/i-embedded-view';
@@ -21,7 +21,7 @@ export class EmbeddedInputOutputMappingComponent implements IEmbeddedView, OnDes
 
   @Input() inputParams!: number | number[] | null;
 
-  formGroup!: FormGroup;
+  formGroup!: UntypedFormGroup;
 
   outputParamName$ = this._funcStore
     .select(selectIFunction(() => this.formGroup.controls['functionIdentifier'].value))
@@ -76,8 +76,8 @@ export class EmbeddedInputOutputMappingComponent implements IEmbeddedView, OnDes
     ])
   }
 
-  get outputParamValueControl(): FormControl {
-    return this.formGroup.controls['outputParamValue'] as FormControl;
+  get outputParamValueControl(): UntypedFormControl {
+    return this.formGroup.controls['outputParamValue'] as UntypedFormControl;
   }
 
 }

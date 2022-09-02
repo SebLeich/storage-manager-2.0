@@ -1,5 +1,5 @@
 import { Component, forwardRef, Input, OnDestroy, OnInit } from '@angular/core';
-import { ControlValueAccessor, FormControl, NG_VALUE_ACCESSOR } from '@angular/forms';
+import { ControlValueAccessor, UntypedFormControl, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { Subscription } from 'rxjs';
 import { DataService } from 'src/app/services/data.service';
 import { apiCallAuthorizationTypeToString, API_CALL_AUTHORIZATION } from '../../globals';
@@ -20,7 +20,7 @@ export class SelectApiAuthorizationComponent implements ControlValueAccessor, On
 
   @Input() appearance: null | 'fill' | 'outline' | 'standard' = null;
 
-  valueControl: FormControl = new FormControl(API_CALL_AUTHORIZATION.NO_AUTH);
+  valueControl: UntypedFormControl = new UntypedFormControl(API_CALL_AUTHORIZATION.NO_AUTH);
 
   authorizationTypes = Object.values(API_CALL_AUTHORIZATION).filter(x => typeof x === 'number').map((x: API_CALL_AUTHORIZATION) => {
     return { display: apiCallAuthorizationTypeToString(x), type: x.valueOf() };

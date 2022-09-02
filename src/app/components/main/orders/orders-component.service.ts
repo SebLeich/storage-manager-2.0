@@ -1,5 +1,5 @@
 import { Injectable } from "@angular/core";
-import { AbstractControl, FormArray, FormBuilder, FormGroup, Validators } from "@angular/forms";
+import { AbstractControl, UntypedFormArray, UntypedFormBuilder, UntypedFormGroup, Validators } from "@angular/forms";
 import { MatSnackBar } from "@angular/material/snack-bar";
 import { Subscription } from "rxjs";
 import { distinctUntilChanged, take } from "rxjs/operators";
@@ -10,12 +10,12 @@ import { DataService } from "src/app/services/data.service";
 @Injectable()
 export class OrdersComponentService {
 
-    public formGroup: FormGroup;
+    public formGroup: UntypedFormGroup;
 
     private _subscriptions: Subscription[] = [];
 
     constructor(
-        private _formBuilder: FormBuilder,
+        private _formBuilder: UntypedFormBuilder,
         private _dataService: DataService,
         private _snackBar: MatSnackBar
     ) {
@@ -39,7 +39,7 @@ export class OrdersComponentService {
         let index = 1;
         let controls = this.ordersControl.controls;
         controls.sort((a, b) => compare((a.value as Order).orderId, (b.value as Order).orderId, true)).forEach(control => {
-            (control as FormGroup).controls[nameOf<Order>('orderId')].setValue(index);
+            (control as UntypedFormGroup).controls[nameOf<Order>('orderId')].setValue(index);
             index++;
         });
     }
@@ -85,8 +85,8 @@ export class OrdersComponentService {
         ]);
     }
 
-    get ordersControl(): FormArray {
-        return this.formGroup.controls['orders'] as FormArray;
+    get ordersControl(): UntypedFormArray {
+        return this.formGroup.controls['orders'] as UntypedFormArray;
     }
 
 }

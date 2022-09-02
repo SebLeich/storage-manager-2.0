@@ -1,5 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormControl, UntypedFormGroup } from '@angular/forms';
 import { Subscription } from 'rxjs';
 import { debounceTime } from 'rxjs/operators';
 import { ProcessBuilderComponentService } from 'src/lib/process-builder/components/process-builder/process-builder-component.service';
@@ -12,13 +12,13 @@ import { IBpmnJSModel } from 'src/lib/process-builder/globals/i-bpmn-js-model';
 })
 export class MethodQuickInteractionComponent implements OnDestroy, OnInit {
 
-  formGroup: FormGroup;
+  formGroup: UntypedFormGroup;
 
   private _subscriptions: Subscription[] = [];
 
   constructor(
     public service: ProcessBuilderComponentService,
-    private _formBuilder: FormBuilder
+    private _formBuilder: UntypedFormBuilder
   ) {
     this.formGroup = this._formBuilder.group({
       name: null,
@@ -48,8 +48,8 @@ export class MethodQuickInteractionComponent implements OnDestroy, OnInit {
     ]);
   }
 
-  get nameControl(): FormControl {
-    return this.formGroup.controls['name'] as FormControl;
+  get nameControl(): UntypedFormControl {
+    return this.formGroup.controls['name'] as UntypedFormControl;
   }
 
 }

@@ -18,7 +18,7 @@ import Linter from "eslint4b-prebuilt";
 import { INJECTOR_INTERFACE_TOKEN } from 'src/lib/process-builder/globals/injector';
 import defaultImplementation from 'src/lib/process-builder/globals/default-implementation';
 import { debounceTime, tap } from 'rxjs/operators';
-import { FormControl, FormGroup } from '@angular/forms';
+import { UntypedFormControl, UntypedFormGroup } from '@angular/forms';
 
 @Component({
   selector: 'app-embedded-function-implementation',
@@ -46,7 +46,7 @@ export class EmbeddedFunctionImplementationComponent implements IEmbeddedView, A
     'var2': { type: 'variable' }
   };
 
-  formGroup!: FormGroup;
+  formGroup!: UntypedFormGroup;
 
   private _implementationChanged = new ReplaySubject<Text>(1);
   implementationChanged$ = this._implementationChanged.asObservable();
@@ -132,8 +132,8 @@ export class EmbeddedFunctionImplementationComponent implements IEmbeddedView, A
 
   MethodEvaluationStatus = MethodEvaluationStatus;
 
-  get canFailControl(): FormControl {
-    return this.formGroup.controls['canFail'] as FormControl;
+  get canFailControl(): UntypedFormControl {
+    return this.formGroup.controls['canFail'] as UntypedFormControl;
   }
 
 }

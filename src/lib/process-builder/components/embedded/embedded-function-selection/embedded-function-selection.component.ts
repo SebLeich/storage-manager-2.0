@@ -8,7 +8,7 @@ import * as fromIFunctionState from 'src/lib/process-builder/store/reducers/i-fu
 import { Store } from '@ngrx/store';
 import { selectIFunctions } from 'src/lib/process-builder/store/selectors/i-function.selector';
 import { FunctionPreviewComponent } from '../../previews/function-preview/function-preview.component';
-import { FormControl, FormGroup } from '@angular/forms';
+import { UntypedFormControl, UntypedFormGroup } from '@angular/forms';
 import { IInputParam } from 'src/lib/process-builder/globals/i-input-param';
 import { delay, map } from 'rxjs/operators';
 import { ProcessBuilderService } from 'src/lib/process-builder/services/process-builder.service';
@@ -25,7 +25,7 @@ export class EmbeddedFunctionSelectionComponent implements IEmbeddedView, OnDest
 
   @ViewChildren(FunctionPreviewComponent, { read: ViewContainerRef }) private activeFunctionWrappers!: QueryList<ViewContainerRef>;
 
-  formGroup!: FormGroup;
+  formGroup!: UntypedFormGroup;
 
   private _availableFunctions = new ReplaySubject<IFunction[]>(1);
   availableFunctions$ = this._availableFunctions.asObservable();
@@ -75,8 +75,8 @@ export class EmbeddedFunctionSelectionComponent implements IEmbeddedView, OnDest
     this.functionIdentifierControl.setValue(this.functionIdentifierControl.value === func.identifier ? null : func.identifier);
   }
 
-  get functionIdentifierControl(): FormControl {
-    return this.formGroup.controls['functionIdentifier'] as FormControl;
+  get functionIdentifierControl(): UntypedFormControl {
+    return this.formGroup.controls['functionIdentifier'] as UntypedFormControl;
   }
 
 }

@@ -24,7 +24,7 @@ import { HttpClient } from '@angular/common/http';
 import { EmbeddedParamEditorComponent } from '../../embedded/embedded-param-editor/embedded-param-editor.component';
 import { CodemirrorRepository } from 'src/lib/core/codemirror-repository';
 import { MethodEvaluationStatus } from 'src/lib/process-builder/globals/method-evaluation-status';
-import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormControl, UntypedFormGroup } from '@angular/forms';
 import { IProcessBuilderConfig, PROCESS_BUILDER_CONFIG_TOKEN } from 'src/lib/process-builder/globals/i-process-builder-config';
 import { INJECTOR_INTERFACE_TOKEN, INJECTOR_TOKEN } from 'src/lib/process-builder/globals/injector';
 import { InjectorInterfacesProvider, InjectorProvider } from 'src/lib/process-builder/globals/injector-interfaces-provider';
@@ -144,7 +144,7 @@ export class TaskCreationComponent implements OnDestroy, OnInit {
       return time < 5 ? val : null;
     }));
 
-  formGroup!: FormGroup;
+  formGroup!: UntypedFormGroup;
 
   private _subscriptions: Subscription[] = [];
 
@@ -157,7 +157,7 @@ export class TaskCreationComponent implements OnDestroy, OnInit {
     private _funcStore: Store<fromIFunction.State>,
     private _paramStore: Store<fromIParam.State>,
     private _interfaceStore: Store<fromIInterface.State>,
-    private _formBuilder: FormBuilder
+    private _formBuilder: UntypedFormBuilder
   ) {
     this.formGroup = this._formBuilder.group({
       'functionIdentifier': null,
@@ -330,14 +330,14 @@ export class TaskCreationComponent implements OnDestroy, OnInit {
 
   TaskCreationStep = TaskCreationStep;
 
-  get functionIdentifierControl(): FormControl {
-    return this.formGroup.controls['functionIdentifier'] as FormControl;
+  get functionIdentifierControl(): UntypedFormControl {
+    return this.formGroup.controls['functionIdentifier'] as UntypedFormControl;
   }
-  get implementationControl(): FormControl {
-    return this.formGroup.controls['implementation'] as FormControl;
+  get implementationControl(): UntypedFormControl {
+    return this.formGroup.controls['implementation'] as UntypedFormControl;
   }
-  get requireCustomImplementationControl(): FormControl {
-    return this.formGroup.controls['requireCustomImplementation'] as FormControl;
+  get requireCustomImplementationControl(): UntypedFormControl {
+    return this.formGroup.controls['requireCustomImplementation'] as UntypedFormControl;
   }
 
   get finished() {

@@ -1,5 +1,5 @@
 import { Injectable } from "@angular/core";
-import { FormGroup } from "@angular/forms";
+import { UntypedFormGroup } from "@angular/forms";
 import { ReplaySubject } from "rxjs";
 import { Configuration } from "src/lib/automation/classes/api-call-configuration";
 import { IConfigurationFormGroupProvider, IFormGroupProvider, ISubmitConfigurationProvider } from "src/lib/automation/interfaces";
@@ -8,8 +8,8 @@ import { ConfigureApiCallService } from "src/lib/automation/services/configure-a
 @Injectable()
 export class ApiCallConfiguratorComponentService implements ISubmitConfigurationProvider, IFormGroupProvider, IConfigurationFormGroupProvider {
 
-    public formGroup: FormGroup;
-    public configurationFormGroup: FormGroup;
+    public formGroup: UntypedFormGroup;
+    public configurationFormGroup: UntypedFormGroup;
 
     constructor(
         private _configureApiCallService: ConfigureApiCallService

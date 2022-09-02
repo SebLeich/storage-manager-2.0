@@ -1,5 +1,5 @@
 import { Component, Inject, OnInit } from '@angular/core';
-import { FormGroup } from '@angular/forms';
+import { UntypedFormGroup } from '@angular/forms';
 import { FORM_GROUP } from 'src/lib/automation/interfaces';
 
 @Component({
@@ -9,7 +9,7 @@ import { FORM_GROUP } from 'src/lib/automation/interfaces';
 })
 export class AccessTokenInputComponent implements OnInit {
 
-  constructor(@Inject(FORM_GROUP) public formGroup: FormGroup) { }
+  constructor(@Inject(FORM_GROUP) public formGroup: UntypedFormGroup) { }
 
   ngOnInit(): void {
   }

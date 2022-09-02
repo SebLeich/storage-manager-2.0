@@ -1,5 +1,5 @@
 import { Component, Inject, OnDestroy } from '@angular/core';
-import { FormControl, FormGroup } from '@angular/forms';
+import { UntypedFormControl, UntypedFormGroup } from '@angular/forms';
 import { ErrorGatewayEvent } from 'src/lib/process-builder/globals/error-gateway-event';
 import { IEmbeddedView } from 'src/lib/process-builder/globals/i-embedded-view';
 import { IProcessBuilderConfig, PROCESS_BUILDER_CONFIG_TOKEN } from 'src/lib/process-builder/globals/i-process-builder-config';
@@ -11,7 +11,7 @@ import { IProcessBuilderConfig, PROCESS_BUILDER_CONFIG_TOKEN } from 'src/lib/pro
 })
 export class EmbeddedConfigureErrorGatewayEntranceConnectionComponent implements IEmbeddedView, OnDestroy {
 
-  formGroup!: FormGroup;
+  formGroup!: UntypedFormGroup;
 
   constructor(
     @Inject(PROCESS_BUILDER_CONFIG_TOKEN) public config: IProcessBuilderConfig
@@ -27,8 +27,8 @@ export class EmbeddedConfigureErrorGatewayEntranceConnectionComponent implements
 
   ErrorGatewayEvent = ErrorGatewayEvent;
 
-  get entranceGatewayTypeControl(): FormControl {
-    return this.formGroup.controls['entranceGatewayType'] as FormControl;
+  get entranceGatewayTypeControl(): UntypedFormControl {
+    return this.formGroup.controls['entranceGatewayType'] as UntypedFormControl;
   }
 
 }

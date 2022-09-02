@@ -144,7 +144,6 @@
       }
     }
   },
-  "defaultProject": "storage-manager",
   "cli": {
     "analytics": false
   }

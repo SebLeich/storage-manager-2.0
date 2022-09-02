@@ -1,5 +1,5 @@
 import { AfterViewInit, Component, ElementRef, Inject, OnDestroy, ViewChild } from '@angular/core';
-import { FormControl, FormGroup } from '@angular/forms';
+import { UntypedFormControl, UntypedFormGroup } from '@angular/forms';
 import JSONEditor from 'jsoneditor';
 import { combineLatest, ReplaySubject, Subject, Subscription } from 'rxjs';
 import { debounceTime, startWith } from 'rxjs/operators';
@@ -16,7 +16,7 @@ export class EmbeddedParamEditorComponent implements IEmbeddedView, AfterViewIni
 
   @ViewChild('parameterBody', { static: true, read: ElementRef }) parameterBody!: ElementRef<HTMLDivElement>;
 
-  formGroup!: FormGroup;
+  formGroup!: UntypedFormGroup;
 
   private _instance: JSONEditor | undefined;
   private _editor = new ReplaySubject<JSONEditor>(1);
@@ -58,8 +58,8 @@ export class EmbeddedParamEditorComponent implements IEmbeddedView, AfterViewIni
     this._subscriptions = [];
   }
 
-  get outputParamValueControl(): FormControl {
-    return this.formGroup.controls['outputParamValue'] as FormControl;
+  get outputParamValueControl(): UntypedFormControl {
+    return this.formGroup.controls['outputParamValue'] as UntypedFormControl;
   }
 
 }
