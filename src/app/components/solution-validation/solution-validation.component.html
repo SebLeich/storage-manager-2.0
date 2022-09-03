@@ -1,6 +1,6 @@
 <div class="body">
 
-    <ng-container *ngIf="(dataService.currentSolutionValidation$|async).length > 0; else noValidationErrors">
+    <ng-container *ngIf="(dataService.currentSolutionValidation$|async)?.length > 0; else noValidationErrors">
 
         <div class="error-wrapper" *ngFor="let error of ((dataService.currentSolutionValidation$|async) ?? [])">
 

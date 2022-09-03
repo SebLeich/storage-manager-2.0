@@ -9,7 +9,7 @@
 
         <mat-option class="smgr-manual-select-add-input-option">
             
-            <input class="smgr-manual-select-add-input" type="text" (click)="$event.stopPropagation()" (keydown)="$event.stopPropagation()" (keydown.enter)="addProduct($event)" placeholder="Weiteres Produkt angeben" />
+            <input class="smgr-manual-select-add-input" type="text" (click)="$event.stopPropagation()" (keydown)="$event.stopPropagation()" (keydown.enter)="addProduct($any($event))" placeholder="Weiteres Produkt angeben" />
 
         </mat-option>
 

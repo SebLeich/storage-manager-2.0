@@ -36,7 +36,7 @@ export class EmbeddedParamEditorComponent implements IEmbeddedView, AfterViewIni
 
   ngAfterViewInit(): void {
     this._subscriptions.push(...[
-      this.jsonChanged$.pipe(debounceTime(500)).subscribe(json => this.outputParamValueControl.setValue(ProcessBuilderRepository.extractObjectIParams(json))),
+      this.jsonChanged$.pipe(debounceTime(500)).subscribe(json => this.outputParamValueControl.setValue(ProcessBuilderRepository.extractObjectTypeDefinition(json))),
       combineLatest([this.editor$, this.outputParamValueControl.valueChanges.pipe(startWith(this.outputParamValueControl.value))])
         .pipe(debounceTime(100))
         .subscribe(([editor, param]: [JSONEditor, any]) => {
@@ -53,7 +53,7 @@ export class EmbeddedParamEditorComponent implements IEmbeddedView, AfterViewIni
 
   ngOnDestroy() {
     let obj = this._instance?.get();
-    this.formGroup.controls['outputParamValue'].setValue(ProcessBuilderRepository.extractObjectIParams(obj));
+    this.formGroup.controls['outputParamValue'].setValue(ProcessBuilderRepository.extractObjectTypeDefinition(obj));
     for (let sub of this._subscriptions) sub.unsubscribe();
     this._subscriptions = [];
   }

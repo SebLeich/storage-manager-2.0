@@ -12,7 +12,7 @@
 
     </div>
 
-    <div class="dialog-body form-body" [formGroup]="formGroup">
+    <div class="dialog-body form-body" [formGroup]="paramEditorComponentService.formGroup$|async">
 
         <div class="param-naming-wrapper">
 
@@ -31,12 +31,12 @@
 
             </mat-tab>
 
-            <mat-tab label="import from flow" *ngIf="computable$|async">
+            <mat-tab label="import from flow" *ngIf="paramEditorComponentService.computable$|async">
 
                 <div class="hint">
                     Dynamically calculate the parameter's data structure as a result of your modeled flow.
-                    The parameter <b>{{(paramObject$|async)?.name ?? 'unknown'}}</b> is produced by
-                    <b>{{(producingFunctions$|async)?.length ?? 0}}</b> function(s).
+                    The parameter <b>{{(paramEditorComponentService.paramObject$|async)?.name ?? 'unknown'}}</b> is produced by
+                    <b>{{(paramEditorComponentService.producingFunctions$|async)?.length ?? 0}}</b> function(s).
                 </div>
 
                 <div class="function-wrapper" *ngFor="let func of producingFunctions$|async">

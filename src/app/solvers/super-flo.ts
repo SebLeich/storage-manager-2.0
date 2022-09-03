@@ -1,9 +1,10 @@
 import { combineLatest, Observable, ReplaySubject, throwError } from "rxjs";
 import { switchMap, take } from "rxjs/operators";
-import { Container, Good, Solution, Step, UnusedDimension } from "../classes";
+import { Container, Good, Solution, UnusedDimension } from "../classes";
 import { CALCULATION_ERROR } from "../components/main/calculation/calculation-component.classes";
 import { generateGuid, MinimizationFunction } from "../globals";
 import { ISolver } from "../interfaces";
+import { IStep } from "../interfaces/i-step";
 import { DataService } from "../services/data.service";
 import { Solver } from "./solver";
 
@@ -58,8 +59,8 @@ export class SuperFloSolver extends Solver implements ISolver {
                                         messages: [`combined unused spaces: ${combinable[0].map(x => x.guid).join(', ')}`],
                                         unusedDimensions: [combined],
                                         dimension: null,
-                                        usedDimension: null
-                                    } as Step);
+                                        usedDimension: []
+                                    } as IStep);
                                     sequenceNumber++;
                                     combinable = this.getCombinableSpacePairs(this._unusedDimensions, true);
                                 }

@@ -6,10 +6,10 @@ export const selectIInterfaceState = createFeatureSelector<fromIInterface.State>
     fromIInterface.featureKey,
 );
 
-export const selectIInterface = (arg: number | (() => number)) => createSelector(
+export const selectIInterface = (arg: undefined | null | number | (() => number)) => createSelector(
     selectIInterfaceState,
     (state: fromIInterface.State) => {
-        if (!state || !state.entities) return null;
+        if (arg == null || !state || !state.entities) return null;
         let code = typeof arg === 'function' ? arg() : arg;
         if (typeof code !== 'number') return null;
         return Object.values(state.entities).find(x => x?.identifier === code);

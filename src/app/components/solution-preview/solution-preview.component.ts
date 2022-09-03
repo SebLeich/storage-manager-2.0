@@ -1,8 +1,6 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
-import { Subscription } from 'rxjs';
-import { filter } from 'rxjs/operators';
+import { Component } from '@angular/core';
+import { map } from 'rxjs/operators';
 import { showAnimation } from 'src/app/animations';
-import { Container, Solution } from 'src/app/classes';
 import { GOODS_PROVIDER, GROUPS_PROVIDER } from 'src/app/interfaces';
 import { DataService } from 'src/app/services/data.service';
 import { SolutionPreviewComponentService } from './solution-preview-component.service';
@@ -18,14 +16,12 @@ import { SolutionPreviewComponentService } from './solution-preview-component.se
   ],
   animations: [showAnimation]
 })
-export class SolutionPreviewComponent implements OnDestroy, OnInit {
+export class SolutionPreviewComponent {
 
-  headline: string = null;
-  calculated: string = null;
-  algorithm: string = null;
-  container: Container = null;
-
-  private _subscriptions: Subscription[] = [];
+  public headline$ = this.dataService.currentSolution$.pipe(map(solution => solution.description));
+  public algorithm$ = this.dataService.currentSolution$.pipe(map(solution => solution.algorithm));
+  public calculated$ = this.dataService.currentSolution$.pipe(map(solution => solution.calculated));
+  public container$ = this.dataService.currentSolution$.pipe(map(solution => solution.container));
 
   constructor(
     public solutionPreviewComponentService: SolutionPreviewComponentService,
@@ -33,21 +29,5 @@ export class SolutionPreviewComponent implements OnDestroy, OnInit {
   ) { }
 
   downloadSolution = () => this.dataService.downloadCurrentSolution();
-
-  ngOnInit(): void {
-    this._subscriptions.push(...[
-      this.dataService.currentSolution$.pipe(filter(x => x ? true : false)).subscribe((solution: Solution) => {
-        this.headline = solution.description;
-        this.calculated = solution.calculated;
-        this.algorithm = solution.algorithm;
-        this.container = solution.container;
-      })
-    ]);
-  }
-
-  ngOnDestroy(): void {
-    for (let sub of this._subscriptions) sub.unsubscribe();
-    this._subscriptions = [];
-  }
 
 }

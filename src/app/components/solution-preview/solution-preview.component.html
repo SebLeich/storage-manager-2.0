@@ -4,7 +4,7 @@
       <mat-expansion-panel expanded="true">
         <mat-expansion-panel-header>
           <mat-panel-title class="expansion-panel-headline">
-            {{ headline ? headline : "solution" }}
+            {{ headline$|async ?? 'unknown' }}
           </mat-panel-title>
 
           <mat-panel-description>general</mat-panel-description>
@@ -14,30 +14,24 @@
           <div class="metadata-wrapper">
             <div class="metadata">
               <div class="calculated" *ngIf="calculated">
-                calculated {{ calculated | date: "dd.MM.yyyy HH:mm" }}
+                calculated {{ (calculated$|async | date: "dd.MM.yyyy HH:mm") ?? 'unknown' }}
               </div>
 
               <div class="algorithm" *ngIf="algorithm">
-                {{ "algorithm: " + algorithm }}
+                algorithm {{ (algorithm$|async) ?? 'unknown' }}
               </div>
             </div>
 
             <div class="next-solution-wrapper">
-              <button
-                mat-icon-button
-                [disabled]="(dataService.solutions$ | async).length < 2"
-                (click)="solutionPreviewComponentService.nextSolution()"
-                matTooltip="next solution"
-              >
+              <button mat-icon-button [disabled]="(dataService.solutions$ | async)?.length < 2"
+                (click)="solutionPreviewComponentService.nextSolution()" matTooltip="next solution">
                 <mat-icon>chevron_right</mat-icon>
               </button>
             </div>
           </div>
 
           <div class="container-wrapper">
-            <app-container-preview
-              [container]="container"
-            ></app-container-preview>
+            <app-container-preview [container]="container$|async"></app-container-preview>
           </div>
         </div>
       </mat-expansion-panel>
@@ -88,12 +82,9 @@
     <div class="validator-wrapper">
       <mat-expansion-panel>
         <mat-expansion-panel-header>
-          <mat-panel-title
-            class="expansion-panel-headline"
-            [class.error]="
+          <mat-panel-title class="expansion-panel-headline" [class.error]="
               (dataService.currentSolutionValidation$ | async)?.length > 0
-            "
-          >
+            ">
             validator
           </mat-panel-title>
 

@@ -123,7 +123,7 @@ export class ProcessBuilderComponentService {
     this._subscriptions = [];
   }
 
-  hideAllHints = () => ProcessBuilderRepository.clearAllTooltips(this.bpmnJS);
+  hideAllHints = () => BPMNJsRepository.clearAllTooltips(this.bpmnJS);
 
   init(parent: HTMLDivElement) {
     // attach BpmnJS instance to DOM element
@@ -341,7 +341,7 @@ export class ProcessBuilderComponentService {
     let prevSub: Subscription | undefined;
     getEventBusModule(this.bpmnJS).on(bpmnJsEventTypes.ElementHover, (evt) => {
 
-      ProcessBuilderRepository.clearAllTooltips(this.bpmnJS);
+      BPMNJsRepository.clearAllTooltips(this.bpmnJS);
 
       var tooltipModule = getTooltipModule(this.bpmnJS);
 

@@ -1,6 +1,6 @@
 import { Inject, Injectable } from "@angular/core";
 import { ParamCodes } from "src/config/param-codes";
-import { getElementRegistryModule, getModelingModule } from "../bpmn-io/bpmn-modules";
+import { getElementRegistryModule, getModelingModule, getTooltipModule } from "../bpmn-io/bpmn-modules";
 import { IBusinessObject } from "../bpmn-io/i-business-object";
 import { IElement } from "../bpmn-io/i-element";
 import shapeTypes from "../bpmn-io/shape-types";
@@ -49,6 +49,11 @@ export class BPMNJsRepository {
         };
         getModelingModule(bpmnJS).updateLabel(e, param.name);
         return e;
+    }
+
+    static clearAllTooltips(bpmnJS: IBpmnJS) {
+        var tooltipModule = getTooltipModule(bpmnJS);
+        Object.values(tooltipModule._tooltips).forEach(x => tooltipModule.remove(x));
     }
 
     static fillAnchestors(element: IElement, anchestors: IElement[] = []) {

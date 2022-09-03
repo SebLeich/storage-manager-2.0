@@ -79,15 +79,15 @@ export class TaskCreationComponent implements OnDestroy, OnInit {
   private _configureGateway = new BehaviorSubject<IConnector | null>(null);
   private _customImplementation = new BehaviorSubject<IElement | null>(null);
   private _hasOutputParam = new BehaviorSubject<boolean>(false);
-  private _hasDynamicInputParam = new BehaviorSubject<IElement | null>(null);
-  private _hasDynamicOutputParam = new BehaviorSubject<IElement | null>(null);
-  private _hasDataMapping = new BehaviorSubject<IElement | null>(null);
+  private _hasDynamicInputParam = new BehaviorSubject<IElement | null | undefined>(null);
+  private _hasDynamicOutputParam = new BehaviorSubject<IElement | null | undefined>(null);
+  private _hasDataMapping = new BehaviorSubject<IElement | null | undefined>(null);
 
   hasOutputParam$ = this._hasOutputParam.asObservable();
   steps$ = combineLatest([this._configureGateway.asObservable(), this._customImplementation.asObservable(), this._hasDynamicInputParam.asObservable(), this._hasDynamicOutputParam.asObservable(), this._hasDataMapping.asObservable()])
     .pipe(
       debounceTime(10),
-      map(([gatewayConfig, customImplementation, hasDynamicInputParam, dynamicOutputParam, dataMapping]: [IConnector | null, IElement | null, IElement | null, IElement | null, IElement | null]) => {
+      map(([gatewayConfig, customImplementation, hasDynamicInputParam, dynamicOutputParam, dataMapping]) => {
         let availableSteps: ITaskCreationConfig[] = [];
         if (gatewayConfig) {
           availableSteps.push({
@@ -136,7 +136,7 @@ export class TaskCreationComponent implements OnDestroy, OnInit {
     map(x => x.taskCreationStep === TaskCreationStep.ConfigureFunctionImplementation || x.taskCreationStep === TaskCreationStep.ConfigureFunctionOutput)
   );
 
-  func$: Observable<IFunction> = this._funcStore.select(selectIFunction(() => this.functionIdentifierControl.value));
+  func$: Observable<IFunction | null | undefined> = this._funcStore.select(selectIFunction(() => this.functionIdentifierControl.value));
 
   private _statusMessage: Subject<string> = new Subject<string>();
   statusMessage$ = combineLatest([this._statusMessage.asObservable(), this._statusMessage.pipe(switchMap(() => interval(1000)))])
@@ -281,18 +281,18 @@ export class TaskCreationComponent implements OnDestroy, OnInit {
         'next': (result: any) => {
           let parsed: string = typeof result === 'object' ? JSON.stringify(result) : typeof result === 'number' ? result.toString() : result;
           this._statusMessage.next(`succeeded! received: ${parsed}`);
-          this.formGroup.controls['outputParamValue'].setValue(ProcessBuilderRepository.extractObjectIParams(result));
+          this.formGroup.controls['outputParamValue'].setValue(ProcessBuilderRepository.extractObjectTypeDefinition(result));
         }
       });
       return;
     } else if (typeof this.functionIdentifierControl.value === 'number') {
       this._funcStore.select(selectIFunction(this.functionIdentifierControl.value))
         .pipe(take(1))
-        .subscribe((func: IFunction) => {
-          if (typeof func.pseudoImplementation === 'function') {
+        .subscribe((func: IFunction | null | undefined) => {
+          if (func && typeof func.pseudoImplementation === 'function') {
             func.pseudoImplementation()
               .then((result: object) => {
-                this.formGroup.controls['outputParamValue'].setValue(ProcessBuilderRepository.extractObjectIParams(result));
+                this.formGroup.controls['outputParamValue'].setValue(ProcessBuilderRepository.extractObjectTypeDefinition(result));
               })
               .catch((reason: string) => alert(reason));
           }
@@ -306,8 +306,11 @@ export class TaskCreationComponent implements OnDestroy, OnInit {
       filter(x => x ? true : false),
       switchMap((fun: IFunction | null | undefined) => combineLatest([of(fun), this._paramStore.select(selectIParam(fun?.output?.param)), this._interfaceStore.select(selectIInterface(fun?.output?.interface))]))
     ).subscribe(([fun, outputParam, outputParamInterface]: [IFunction | null | undefined, IParam | null | undefined, IInterface | null | undefined]) => {
-      let inputParams = fun.useDynamicInputParams && fun.inputParams ? Array.isArray(fun.inputParams) ? [...fun.inputParams] : [fun.inputParams] : [];
-      let outputParamValue = ((fun.output?.param === 'dynamic' && outputParamInterface) ?? false) ? outputParamInterface.typeDef : outputParam?.typeDef;
+      if (!fun) {
+        return;
+      }
+      const inputParams = fun.useDynamicInputParams && fun.inputParams ? Array.isArray(fun.inputParams) ? [...fun.inputParams] : [fun.inputParams] : [];
+      let outputParamValue = fun.output?.param === 'dynamic' && outputParamInterface ? outputParamInterface.typeDef : outputParam?.typeDef;
       this.formGroup.patchValue({
         'canFail': fun?.canFail,
         'implementation': fun?.customImplementation,

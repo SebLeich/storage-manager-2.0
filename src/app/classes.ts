@@ -1,5 +1,6 @@
 import * as moment from "moment";
 import { generateGuid } from "./globals";
+import { IStep } from "./interfaces/i-step";
 
 export class Container {
     height: number = null;
@@ -19,8 +20,8 @@ export class Container {
 }
 
 export class Good {
-    id: number = null;
-    desc: string = null;
+    id!: number;
+    desc: string | null = null;
     height: number = null;
     group: number = null;
     width: number = null;
@@ -33,7 +34,7 @@ export class Good {
     y: number = null;
     z: number = null;
     sequenceNr: number = null;
-    constructor(id: number, x: number = null, y: number = null, z: number = null, sequenceNumber: number = null, description: string = null){
+    constructor(id: number, x: number = null, y: number = null, z: number = null, sequenceNumber: number = null, description: string = null) {
         this.id = id;
         this.x = x;
         this.y = y;
@@ -41,7 +42,7 @@ export class Good {
         this.sequenceNr = sequenceNumber;
         this.desc = description;
     }
-    setOrderDimensions(order: Order){
+    setOrderDimensions(order: Order) {
         this.height = order.height;
         this.width = order.width;
         this.length = order.length;
@@ -49,12 +50,6 @@ export class Good {
         this.stackingAllowed = order.stackingAllowed;
         this.group = order.group;
     }
-}
-
-export class Group {
-    color: string;
-    id: number;
-    desc: string;
 }
 
 export class Order {
@@ -73,7 +68,7 @@ export class Point {
     x: number = null;
     y: number = null;
     z: number = null;
-    constructor(x: number = null, y: number = null, z: number = null){
+    constructor(x: number = null, y: number = null, z: number = null) {
         this.x = x;
         this.y = y;
         this.z = z;
@@ -91,7 +86,7 @@ export class Space {
     width: number = null;
     height: number = null;
     length: number = null;
-    constructor(width: number = null, height: number = null, length: number = null){
+    constructor(width: number = null, height: number = null, length: number = null) {
         this.width = width;
         this.height = height;
         this.length = length;
@@ -107,10 +102,10 @@ export class Dimension extends Space {
     t: number = null;
     f: number = null;
     points: Point[] = [];
-    constructor(width: number = null, height: number = null, length: number = null){
+    constructor(width: number = null, height: number = null, length: number = null) {
         super(width, height, length);
     }
-    setPosition(x: number, y: number, z: number){
+    setPosition(x: number, y: number, z: number) {
         this.x = x;
         this.y = y;
         this.z = z;
@@ -131,9 +126,9 @@ export class Dimension extends Space {
 }
 
 export class UnusedDimension extends Dimension {
-    stackedOn: number = null;
-    groupRestrictedBy: number = null;
-    constructor(width: number = null, height: number = null, length: number = null, stackedOn: number = null, groupRestrictedBy: number = null){
+    stackedOn: number = 0;
+    groupRestrictedBy?: number;
+    constructor(width: number = 0, height: number = 0, length: number = 0, stackedOn: number = 0, groupRestrictedBy: number | undefined = undefined) {
         super(width, height, length);
         this.stackedOn = stackedOn;
         this.groupRestrictedBy = groupRestrictedBy;
@@ -141,24 +136,16 @@ export class UnusedDimension extends Dimension {
 }
 
 export class Solution {
-    id: string = null;
-    container: Container = null;
-    algorithm: string = null;
+    id: string = '';
+    container?: Container;
+    algorithm: string = '';
     groups: Group[] = [];
-    steps: Step[] = [];
-    calculated: string = null;
-    description: string = null;
-    constructor(id: string = generateGuid(), algorithm: string = null, calculated: string = moment().format('YYYY-MM-DDTHH:mm:ss')) {
+    steps: IStep[] = [];
+    calculated: string = '';
+    description: string = '';
+    constructor(id: string = generateGuid(), algorithm: string = '', calculated: string = moment().format('YYYY-MM-DDTHH:mm:ss')) {
         this.id = id;
         this.algorithm = algorithm;
         this.calculated = calculated;
     }
-}
-
-export class Step {
-    sequenceNumber: number;
-    messages: string[];
-    unusedDimensions: UnusedDimension[];
-    dimension: Dimension;
-    usedDimension: UnusedDimension;
 }

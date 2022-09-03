@@ -16,11 +16,11 @@ import { DataService } from 'src/app/services/data.service';
     }
   ]
 })
-export class SelectProductComponent implements ControlValueAccessor, OnDestroy, OnInit {
+export class SelectProductComponent implements ControlValueAccessor, OnDestroy {
 
   valueControl: UntypedFormControl = new UntypedFormControl();
 
-  private _subscriptions: Subscription[] = [];
+  private _subscriptions: Subscription = new Subscription();
 
   constructor(
     public dataService: DataService
@@ -34,22 +34,16 @@ export class SelectProductComponent implements ControlValueAccessor, OnDestroy, 
       'length': 0,
       'width': 0
     } as Product);
-    (event.target as HTMLInputElement).value = null;
+    (event.target as HTMLInputElement).value = '';
   }
 
-  ngOnDestroy(): void {
-    for (let sub of this._subscriptions) sub.unsubscribe();
-    this._subscriptions = [];
-  }
-
-  ngOnInit(): void {
-  }
+  ngOnDestroy = () => this._subscriptions.unsubscribe();
 
   public onTouched: () => void = () => { };
   registerOnTouched = (fn: any) => this.onTouched = fn;
 
   registerOnChange(fn: any): void {
-    this._subscriptions.push(this.valueControl.valueChanges.subscribe(fn));
+    this._subscriptions.add(this.valueControl.valueChanges.subscribe(fn));
   }
 
   setDisabledState?(isDisabled: boolean): void {

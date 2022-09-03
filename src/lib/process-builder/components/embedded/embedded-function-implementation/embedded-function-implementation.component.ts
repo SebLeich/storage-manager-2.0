@@ -1,10 +1,7 @@
 import { AfterViewInit, Component, ElementRef, Inject, Input, OnDestroy, ViewChild } from '@angular/core';
-import { Store } from '@ngrx/store';
 import { BehaviorSubject, ReplaySubject, Subscription } from 'rxjs';
-import { ParamCodes } from 'src/config/param-codes';
 import { ProcessBuilderRepository } from 'src/lib/core/process-builder-repository';
 import { IEmbeddedView } from 'src/lib/process-builder/globals/i-embedded-view';
-import * as fromIParam from 'src/lib/process-builder/store/reducers/i-param.reducer';
 import { syntaxTree } from "@codemirror/language";
 import { autocompletion, CompletionContext } from "@codemirror/autocomplete";
 import { EditorState, Text } from '@codemirror/state';
@@ -14,6 +11,7 @@ import { CodemirrorRepository } from 'src/lib/core/codemirror-repository';
 import { MethodEvaluationStatus } from 'src/lib/process-builder/globals/method-evaluation-status';
 import { IProcessBuilderConfig, PROCESS_BUILDER_CONFIG_TOKEN } from 'src/lib/process-builder/globals/i-process-builder-config';
 import { linter, lintGutter } from '@codemirror/lint';
+// @ts-ignore
 import Linter from "eslint4b-prebuilt";
 import { INJECTOR_INTERFACE_TOKEN } from 'src/lib/process-builder/globals/injector';
 import defaultImplementation from 'src/lib/process-builder/globals/default-implementation';
@@ -159,7 +157,7 @@ const dontCompleteIn = [
 function completeProperties(from: number, object: { type: string, apply?: string }) {
   let options = [];
   for (let name in object) {
-    if(!object[name]) continue;
+    if(!(object as any)[name]) continue;
     let option = {
       label: name,
       type: (object as any)[name].type,

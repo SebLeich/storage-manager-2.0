@@ -1,12 +1,12 @@
 import { Observable, ReplaySubject } from "rxjs";
-import { getTooltipModule } from "../bpmn-io/bpmn-modules";
-import { IBpmnJS } from "../process-builder/globals/i-bpmn-js";
+import { IInterface } from "../process-builder/globals/i-interface";
 import { IParam } from "../process-builder/globals/i-param";
 import { IParamDefinition } from "../process-builder/globals/i-param-definition";
 
 export class ProcessBuilderRepository {
 
-    static createPseudoObjectFromIParamDefinition(arg: IParam | IParamDefinition | null | undefined, parent: any = null, config: {
+
+    static createPseudoObjectFromIParam(arg: IParam | null | undefined, parent: any = null, config: {
         string: () => string | undefined,
         boolean: () => boolean | undefined,
         number: () => number | undefined,
@@ -28,7 +28,7 @@ export class ProcessBuilderRepository {
             undefined: () => undefined
         }): object {
 
-        if (!arg) return arg;
+        if (!arg) return {};
 
         let index = 0;
 
@@ -57,16 +57,125 @@ export class ProcessBuilderRepository {
 
         } catch (e) {
             debugger;
+        } finally {
+            return {};
         }
 
     }
 
-    static clearAllTooltips(bpmnJS: IBpmnJS) {
-        var tooltipModule = getTooltipModule(bpmnJS);
-        Object.values(tooltipModule._tooltips).forEach(x => tooltipModule.remove(x));
+    static createPseudoObjectFromIParamDefinition(arg: IParam | IParamDefinition | null | undefined, parent: any = null, config: {
+        string: () => string | undefined,
+        boolean: () => boolean | undefined,
+        number: () => number | undefined,
+        object: () => object,
+        array: () => any[],
+        bigint: () => bigint | undefined,
+        function: () => Function | undefined,
+        symbol: () => symbol | undefined,
+        undefined: () => undefined
+    } = {
+            string: () => undefined,
+            boolean: () => undefined,
+            number: () => undefined,
+            object: () => { return {} },
+            array: () => [],
+            function: () => undefined,
+            symbol: () => undefined,
+            bigint: () => undefined,
+            undefined: () => undefined
+        }): object {
+
+        if (!arg) return {};
+
+        let index = 0;
+
+        try {
+
+            let defaultValue = arg.type === 'array' ? [] : arg.type === 'object' ? {} : arg.defaultValue;
+            if (!defaultValue) defaultValue = config[arg.type]();
+            if (!defaultValue) defaultValue = this._randomValueGenerator[arg.type]();
+
+            if (Array.isArray(parent)) parent.push(defaultValue);
+            else if (parent && typeof parent === 'object') parent[arg.name] = defaultValue;
+
+            if (arg.typeDef) {
+                let typeDefArray = Array.isArray(arg.typeDef) ? arg.typeDef : [arg.typeDef];
+
+                for (let def of typeDefArray) {
+
+                    this.createPseudoObjectFromIParamDefinition(def, defaultValue);
+
+                }
+            }
+
+            index++;
+
+            return parent ?? defaultValue;
+
+        } catch (e) {
+            debugger;
+        } finally {
+            return {};
+        }
+
     }
 
-    static extractObjectIParams(arg: object | string | number | null | undefined, isRoot: boolean = true, defaultParamName: string = 'unnamed param', isNullable: boolean = false, isOptional: boolean = false, isConstant: boolean = false): IParamDefinition | IParamDefinition[] {
+    static createPseudoObjectFromIInterface(arg: IInterface | undefined, parent: any = null, config: {
+        string: () => string | undefined,
+        boolean: () => boolean | undefined,
+        number: () => number | undefined,
+        object: () => object,
+        array: () => any[],
+        bigint: () => bigint | undefined,
+        function: () => Function | undefined,
+        symbol: () => symbol | undefined,
+        undefined: () => undefined
+    } = {
+            string: () => undefined,
+            boolean: () => undefined,
+            number: () => undefined,
+            object: () => { return {} },
+            array: () => [],
+            function: () => undefined,
+            symbol: () => undefined,
+            bigint: () => undefined,
+            undefined: () => undefined
+        }): object {
+
+        if (!arg) return {};
+
+        let index = 0;
+
+        try {
+
+            let defaultValue = {};
+
+            if (Array.isArray(parent)) parent.push(defaultValue);
+            else if (parent && typeof parent === 'object') parent[arg.name] = defaultValue;
+
+            if (arg.typeDef) {
+                let typeDefArray = Array.isArray(arg.typeDef) ? arg.typeDef : [arg.typeDef];
+
+                for (let def of typeDefArray) {
+
+                    this.createPseudoObjectFromIParamDefinition(def, defaultValue);
+
+                }
+            }
+
+            index++;
+
+            return parent ?? defaultValue;
+
+        } catch (e) {
+            debugger;
+        } finally {
+            return {};
+        }
+
+    }
+
+    static extractObjectTypeDefinition(arg: object | string | number | null | undefined, isRoot: boolean = true, defaultParamName: string = 'unnamed param', isNullable: boolean = false, isOptional: boolean = false, isConstant: boolean = false): IParamDefinition | IParamDefinition[] {
 
         let rootDef: IParamDefinition = {
             'name': defaultParamName,
@@ -87,11 +196,13 @@ export class ProcessBuilderRepository {
 
             try {
 
-                for (let entry of Object.entries(arg)) {
+                for (let entry of Object.entries(arg as object)) {
 
                     let def = this._getDefinitionForMember(entry);
                     if (def.type === 'object') {
-                        if (entry[1]) def.typeDef = this.extractObjectIParams(entry[1], false);
+                        if (entry[1]) {
+                            def.typeDef = this.extractObjectTypeDefinition(entry[1], false);
+                        }
                     } else if (def.type === 'array') {
                         let pseudoObject: any = {};
                         def.defaultValue = def.defaultValue.slice(0, 10);
@@ -104,10 +215,7 @@ export class ProcessBuilderRepository {
                             }
 
                         });
-                        def.typeDef = this.extractObjectIParams(pseudoObject);
-
-                        typeDef.push(def);
-                        break;
+                        def.typeDef = this.extractObjectTypeDefinition(pseudoObject);
                     }
 
                     typeDef.push(def);
@@ -130,7 +238,8 @@ export class ProcessBuilderRepository {
 
     }
 
-    static normalizeName(text: string = 'unnamedFunction'): string {
+    static normalizeName(text?: string | null): string {
+        if (typeof text !== 'string') return '';
         text = text.toLowerCase().replace(/[\(\)-_?:*%!;¿\s.]+(.)?/g, (_, c) => c ? c.toUpperCase() : '');
         return text.substr(0, 1).toLowerCase() + text.substr(1);
     }
@@ -158,14 +267,33 @@ export class ProcessBuilderRepository {
         return subject.asObservable();
     }
 
+    static async calculateCustomImplementationOutput(arg: string[] | string | null | undefined | (() => string[] | string | null | undefined), injector: object) {
+        let customImplementation = typeof arg === 'function' ? arg() : arg;
+        if (Array.isArray(customImplementation)) {
+            customImplementation = customImplementation.join('\n');
+        }
+        if (!customImplementation) {
+            return;
+        }
+
+        return eval.call(
+            window,
+            `(${customImplementation})`
+        )(injector);
+    }
+
     private static _getDefinitionForMember(entry: [key: string, value: any]): IParamDefinition {
         let type = typeof entry[1];
         return {
-            'defaultValue': entry[1],
-            'name': entry[0],
-            'type': type === 'object' && Array.isArray(entry[1]) ? 'array' : type,
-            'typeDef': undefined,
-            'normalizedName': ProcessBuilderRepository.normalizeName(entry[0])
+            defaultValue: entry[1],
+            name: entry[0],
+            interface: null,
+            constant: null,
+            nullable: null,
+            optional: null,
+            type: type === 'object' && Array.isArray(entry[1]) ? 'array' : type,
+            typeDef: undefined,
+            normalizedName: ProcessBuilderRepository.normalizeName(entry[0])!
         };
     }
 
