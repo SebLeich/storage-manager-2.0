@@ -34,6 +34,18 @@ export const selectSolutionById = (solutionGuid: string | null) => createSelecto
   }
 );
 
+export const selectSolutionByAlgorithm = (arg: string | null | (() => string | null)) => createSelector(
+  solutionsState,
+  (state: State) => {
+    const algorithm = typeof arg === 'function'? arg(): arg;
+    if(!algorithm){
+      return null;
+    }
+    const solution = Object.values(state.entities ?? {}).find(solution => solution?.algorithm === algorithm);
+    return solution ?? null;
+  }
+);
+
 export const selectSolutions = createSelector(
   solutionsState,
   (state: State) => Object.values(state.entities ?? {}) as ISolution[]

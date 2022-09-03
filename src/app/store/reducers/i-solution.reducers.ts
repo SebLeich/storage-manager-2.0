@@ -45,7 +45,7 @@ export const solutionReducer = createReducer(
     return adapter.addOne(
       {
         ...solution,
-        addedToState: moment().format(),
+        id: solution.id ?? generateGuid()
       },
       state
     );

@@ -2,7 +2,7 @@ import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { MatDialogRef } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
-import { Solution } from 'src/app/classes';
+import { SolutionEntity } from 'src/app/classes';
 import { CsvService } from 'src/app/services/csv.service';
 import { DataService } from 'src/app/services/data.service';
 
@@ -51,7 +51,7 @@ export class NoSolutionDialogComponent implements OnInit {
     reader.onloadend = () => {
       try {
 
-        let result: Solution = JSON.parse(reader.result as string);
+        let result: SolutionEntity = JSON.parse(reader.result as string);
         this._dataService.setCurrentSolution(result);
         this._router.navigate(['/visualizer']);
         this._ref.close();

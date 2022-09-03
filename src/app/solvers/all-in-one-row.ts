@@ -1,11 +1,12 @@
 import { combineLatest, Observable, ReplaySubject, throwError } from "rxjs";
 import { switchMap, take } from "rxjs/operators";
-import { Container, Good, Solution } from "../classes";
-import { CALCULATION_ERROR } from "../components/main/calculation/calculation-component.classes";
-import { generateGuid } from "../globals";
+import { Good } from "../classes";
+import { v4 as generateGuid } from 'uuid';
 import { ISolver } from "../interfaces";
 import { DataService } from "../services/data.service";
 import { Solver } from "./solver";
+import { SolutionEntity } from "../classes/solution.class";
+import { CalculationError } from "../components/main/calculation/enumerations/calculation-error";
 
 export class AllInOneRowSolver extends Solver implements ISolver {
 
@@ -16,15 +17,15 @@ export class AllInOneRowSolver extends Solver implements ISolver {
         super();
     }
 
-    solve(): Observable<Solution> {
+    solve(): Observable<SolutionEntity> {
         return this._dataService.containerValid$.pipe(
             switchMap((valid: boolean) => {
-                if (!valid) return throwError(CALCULATION_ERROR.CONTAINER_NOT_READY);
-                let subject = new ReplaySubject<Solution>(1);
+                if (!valid) return throwError(CalculationError.ContainerNotReady);
+                let subject = new ReplaySubject<SolutionEntity>(1);
                 combineLatest([this._dataService.orders$, this._dataService.containerHeight$, this._dataService.containerWidth$, this._dataService.descSortedGroups$])
                     .pipe(take(1))
                     .subscribe(([orders, height, width, groups]) => {
-                        let solution = new Solution(generateGuid(), this._description);
+                        let solution = new SolutionEntity(generateGuid(), this._description);
                         solution.container = new Container(height, width, 0);
                         let currentPosition = { x: 0, y: 0, z: 0 };
                         let sequenceNumber = 0;
@@ -47,7 +48,7 @@ export class AllInOneRowSolver extends Solver implements ISolver {
                     });
                 return subject.asObservable();
             })
-        ) as Observable<Solution>;
+        ) as Observable<SolutionEntity>;
     }
 
 }

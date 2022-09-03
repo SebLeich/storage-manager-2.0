@@ -1,3 +1,3 @@
 export interface IEntity {
-    addedToState: string;
+    id: string;
 }

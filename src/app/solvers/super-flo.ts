@@ -1,16 +1,17 @@
 import { combineLatest, Observable, ReplaySubject, throwError } from "rxjs";
 import { switchMap, take } from "rxjs/operators";
-import { Container, Good, Solution, UnusedDimension } from "../classes";
+import { SolutionEntity } from "../classes/solution.class";
 import { CalculationError } from "../components/main/calculation/enumerations/calculation-error";
-import { generateGuid, MinimizationFunction } from "../globals";
+import { MinimizationFunction } from "../globals";
 import { ISolver } from "../interfaces";
-import { IStep } from "../interfaces/i-step";
+import { IStep } from "../interfaces/i-step.interface";
+import { IVirtualDimension } from "../interfaces/i-virtual-dimension.interface";
 import { DataService } from "../services/data.service";
 import { Solver } from "./solver";
 
 export class SuperFloSolver extends Solver implements ISolver {
 
-    private _unusedDimensions: UnusedDimension[] = [];
+    private _unusedDimensions: IVirtualDimension[] = [];
 
     constructor(
         private _dataService: DataService,
@@ -20,15 +21,15 @@ export class SuperFloSolver extends Solver implements ISolver {
         super();
     }
 
-    solve(): Observable<Solution> {
+    solve(): Observable<SolutionEntity> {
         return this._dataService.containerValid$.pipe(
             switchMap((valid: boolean) => {
                 if (!valid) return throwError(CalculationError.ContainerNotReady);
-                let subject = new ReplaySubject<Solution>(1);
+                let subject = new ReplaySubject<SolutionEntity>(1);
                 combineLatest([this._dataService.orders$, this._dataService.containerHeight$, this._dataService.containerWidth$, this._dataService.groups$])
                     .pipe(take(1))
                     .subscribe(([orders, height, width, groups]) => {
-                        let solution = new Solution(generateGuid(), this._description);
+                        let solution = new SolutionEntity(generateGuid(), this._description);
                         solution.container = new Container(height, width, 0);
                         this._unusedDimensions.push(solution.container.getUnusedDimension());
                         let sequenceNumber = 0;
@@ -41,11 +42,11 @@ export class SuperFloSolver extends Solver implements ISolver {
                                 let unusedDimensions = this.putOrderAndCreateUnusedDimensions(order, space);
                                 this._unusedDimensions.push(...unusedDimensions);
                                 this._unusedDimensions.splice(this._unusedDimensions.findIndex(x => x === space), 1);
-                                let good = new Good(sequenceNumber + 1, space?.x, space?.y, space?.z, sequenceNumber, order.description);
+                                let good = new Good(sequenceNumber + 1, space?.xCoord, space?.yCoord, space?.zCoord, sequenceNumber, order.description);
                                 good.setOrderDimensions(order);
                                 solution.steps.push({
                                     sequenceNumber: sequenceNumber,
-                                    messages: [`put good ${good.id} into space (${space.x}/${space.y}/${space.z}) (order ${order.orderId} element ${i + 1})`],
+                                    messages: [`put good ${good.id} into space (${space.xCoord}/${space.yCoord}/${space.zCoord}) (order ${order.orderId} element ${i + 1})`],
                                     unusedDimensions: unusedDimensions,
                                     dimension: DataService.getGoodDimension(good),
                                     usedDimension: space
@@ -77,7 +78,7 @@ export class SuperFloSolver extends Solver implements ISolver {
                     });
                 return subject.asObservable();
             })
-        ) as Observable<Solution>;
+        ) as Observable<SolutionEntity>;
     }
 
 }

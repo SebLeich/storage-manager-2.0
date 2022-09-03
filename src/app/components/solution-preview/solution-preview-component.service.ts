@@ -1,28 +1,24 @@
 import { Injectable } from "@angular/core";
-import { combineLatest, Observable } from "rxjs";
-import { filter, map, take } from "rxjs/operators";
-import { Good, Group } from "src/app/classes";
+import { Store } from "@ngrx/store";
+import { map } from "rxjs/operators";
 import { IGoodsProvider, IGroupsProvider } from "src/app/interfaces";
-import { DataService } from "src/app/services/data.service";
+import { setNextSolution } from "src/app/store/actions/i-solution.actions";
+import { selectCurrentSolution } from "src/app/store/selectors/i-solution.selectors";
+
+import * as fromISolutionState from 'src/app/store/reducers/i-solution.reducers';
 
 @Injectable()
 export class SolutionPreviewComponentService implements IGroupsProvider, IGoodsProvider {
 
+    groups$ = this._solutionStore.select(selectCurrentSolution).pipe(map(solution => solution?.groups ?? []));
+    goods$ = this._solutionStore.select(selectCurrentSolution).pipe(map(solution => solution?.container?.goods ?? []));
+
     constructor(
-        public dataService: DataService
-    ){ }
+        private _solutionStore: Store<fromISolutionState.State>,
+    ) { }
 
-    groups$: Observable<Group[]> = this.dataService.currentSolution$.pipe(filter(x => x? true: false), map(x => x.groups));
-    goods$: Observable<Good[]> = this.dataService.currentSolution$.pipe(filter(x => x? true: false), map(x => x.container.goods));
-
-    nextSolution(){
-        combineLatest([this.dataService.solutions$, this.dataService.currentSolution$]).pipe(take(1)).subscribe({
-            next: ([solutions, currentSolution]) => {
-                let index = solutions.indexOf(currentSolution);
-                index = index === solutions.length - 1? 0: index + 1;
-                this.dataService.setCurrentSolution(solutions[index]);
-            }
-        })
+    nextSolution() {
+        this._solutionStore.dispatch(setNextSolution());
     }
 
 }

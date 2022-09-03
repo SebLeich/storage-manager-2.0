@@ -3,7 +3,8 @@ import { ISolution } from 'src/app/interfaces/i-solution.interface';
 
 export const solutionActions = {
   AddSolution: '[Solution] Add Solution',
-  AddSolutions: '[Solutions] Add Solutions',
+  AddSolutions: '[Solution] Add Solutions',
+  DownloadCurrentSolution: '[Solution] Download Current Solution',
   RouteToSolution: '[Solution] Route To Solution',
   SetCurrentSolution: '[Solution] Set Current Solution',
   SetNextSolution: '[Solution] Set Next Solution'
@@ -11,12 +12,16 @@ export const solutionActions = {
 
 export const addSolution = createAction(
   solutionActions.AddSolution,
-  props<{ solution: ISolution }>()
+  props<{ solution: Partial<ISolution> }>()
 );
 
 export const addSolutions = createAction(
   solutionActions.AddSolutions,
   props<{ solutions: ISolution[] }>()
+);
+
+export const downloadCurrentSolution = createAction(
+  solutionActions.DownloadCurrentSolution
 );
 
 export const duplicateSolution = createAction(

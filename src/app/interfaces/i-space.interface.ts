@@ -1,6 +1,6 @@
 
 export interface ISpace {
-    width: number | null;
-    height: number | null;
-    length: number | null;
+    width: number;
+    height: number;
+    length: number;
 }

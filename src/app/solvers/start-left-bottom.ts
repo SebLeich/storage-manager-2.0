@@ -1,6 +1,6 @@
 import { combineLatest, Observable, ReplaySubject, throwError } from "rxjs";
 import { switchMap, take } from "rxjs/operators";
-import { Container, Good, Order, Solution, Space } from "../classes";
+import { Container, Good, Order, SolutionEntity, Space } from "../classes";
 import { CALCULATION_ERROR } from "../components/main/calculation/calculation-component.classes";
 import { compare, generateGuid } from "../globals";
 import { ISolver } from "../interfaces";
@@ -16,15 +16,15 @@ export class StartLeftBottomSolver extends Solver implements ISolver {
         super();
     }
 
-    solve(): Observable<Solution> {
+    solve(): Observable<SolutionEntity> {
         return this._dataService.containerValid$.pipe(
             switchMap((valid: boolean) => {
                 if (!valid) return throwError(CALCULATION_ERROR.CONTAINER_NOT_READY);
-                let subject = new ReplaySubject<Solution>(1);
+                let subject = new ReplaySubject<SolutionEntity>(1);
                 combineLatest([this._dataService.orders$, this._dataService.containerHeight$, this._dataService.containerWidth$, this._dataService.descSortedGroups$])
                     .pipe(take(1))
                     .subscribe(([orders, height, width, groups]) => {
-                        let solution = new Solution(generateGuid(), this._description);
+                        let solution = new SolutionEntity(generateGuid(), this._description);
                         solution.container = new Container(height, width, 0);
                         let sequenceNumber = 0, lastGood: Good = null;
                         for (let group of groups) {

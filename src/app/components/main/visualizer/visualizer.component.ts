@@ -2,7 +2,7 @@ import { AfterViewInit, Component, ElementRef, HostListener, OnDestroy, OnInit, 
 import { MatDialog } from '@angular/material/dialog';
 import { BehaviorSubject, Subscription } from 'rxjs';
 import { filter, switchMap, take } from 'rxjs/operators';
-import { Solution } from 'src/app/classes';
+import { SolutionEntity } from 'src/app/classes';
 import { selectedGoodEdgeColor } from 'src/app/globals';
 import { DataService } from 'src/app/services/data.service';
 import { showAnimation } from 'src/lib/shared/animations/show';
@@ -55,7 +55,7 @@ export class VisualizerComponent implements AfterViewInit, OnDestroy, OnInit {
         this.visualizerComponentService.setSceneDimensions(ref.nativeElement.clientWidth, ref.nativeElement.clientHeight, true);
       }),
       this._dataService.currentSolution$
-        .pipe(filter((solution: Solution) => solution === null ? true : false))
+        .pipe(filter((solution: SolutionEntity) => solution === null ? true : false))
         .subscribe(() => this.showNoSolutionDialog()),
       this.menuVisible$.subscribe(() => this.visualizerComponentService.triggerResizeEvent())
     ]);

@@ -2,7 +2,7 @@ import { Injectable } from "@angular/core";
 import { Router } from "@angular/router";
 import { combineLatest, of, throwError, timer } from "rxjs";
 import { catchError, switchMap, take } from "rxjs/operators";
-import { Solution } from "src/app/classes";
+import { SolutionEntity } from "src/app/classes";
 import { ALGORITHMS, algorithms } from "src/app/globals";
 import { DataService } from "src/app/services/data.service";
 import { AllInOneRowSolver } from "src/app/solvers/all-in-one-row";
@@ -64,13 +64,13 @@ export class CalculationComponentService {
         })).subscribe(this._calculationCallback);
     }
 
-    visualizeSolution(solution: Solution) {
+    visualizeSolution(solution: SolutionEntity) {
         this._dataService.setCurrentSolution(solution);
         this._router.navigate(['/visualizer']);
     }
 
     private _calculationCallback = {
-        next: ([wrapper, solution]: [AlgorihmStatusWrapper, Solution]) => {
+        next: ([wrapper, solution]: [AlgorihmStatusWrapper, SolutionEntity]) => {
             wrapper.solution = solution;
             wrapper.status = ALGORITHM_CALCULATION_STATUS.CALCULATED;
         },
@@ -96,7 +96,7 @@ export class CalculationComponentService {
         }
         this._dataService
             .solutions$
-            .subscribe((solutions: Solution[]) => {
+            .subscribe((solutions: SolutionEntity[]) => {
                 for(let algorithm of this.algorithms) {
                     algorithm.solution = null;
                     algorithm.status = ALGORITHM_CALCULATION_STATUS.UNCHECKED;

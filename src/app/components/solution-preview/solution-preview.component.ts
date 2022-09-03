@@ -1,9 +1,13 @@
 import { Component } from '@angular/core';
-import { map } from 'rxjs/operators';
-import { showAnimation } from 'src/app/animations';
+import { filter, map, shareReplay } from 'rxjs/operators';
 import { GOODS_PROVIDER, GROUPS_PROVIDER } from 'src/app/interfaces';
-import { DataService } from 'src/app/services/data.service';
+import { showAnimation } from 'src/lib/shared/animations/show';
+import * as fromISolutionState from 'src/app/store/reducers/i-solution.reducers';
 import { SolutionPreviewComponentService } from './solution-preview-component.service';
+import { Store } from '@ngrx/store';
+import { selectCurrentSolution, selectSolutions } from 'src/app/store/selectors/i-solution.selectors';
+import { downloadCurrentSolution } from 'src/app/store/actions/i-solution.actions';
+import { SolutionValidationService } from 'src/app/services/solution-validation.service';
 
 @Component({
   selector: 'app-solution-preview',
@@ -18,16 +22,19 @@ import { SolutionPreviewComponentService } from './solution-preview-component.se
 })
 export class SolutionPreviewComponent {
 
-  public headline$ = this.dataService.currentSolution$.pipe(map(solution => solution.description));
-  public algorithm$ = this.dataService.currentSolution$.pipe(map(solution => solution.algorithm));
-  public calculated$ = this.dataService.currentSolution$.pipe(map(solution => solution.calculated));
-  public container$ = this.dataService.currentSolution$.pipe(map(solution => solution.container));
+  public solutions$ = this._solutionStore.select(selectSolutions);
+  public currentSolution$ = this._solutionStore.select(selectCurrentSolution).pipe(filter(solution => !!solution), shareReplay());
+  public currentSolutionValidation$ = this.currentSolution$.pipe(map(solution => SolutionValidationService.validateSolution(solution!)));
+  public headline$ = this.currentSolution$.pipe(map(solution => solution?.description));
+  public algorithm$ = this.currentSolution$.pipe(map(solution => solution?.algorithm));
+  public calculated$ = this.currentSolution$.pipe(map(solution => solution?.calculated));
+  public container$ = this.currentSolution$.pipe(map(solution => solution?.container));
 
   constructor(
     public solutionPreviewComponentService: SolutionPreviewComponentService,
-    public dataService: DataService
+    private _solutionStore: Store<fromISolutionState.State>
   ) { }
 
-  downloadSolution = () => this.dataService.downloadCurrentSolution();
+  downloadSolution = () => this._solutionStore.dispatch(downloadCurrentSolution());
 
 }

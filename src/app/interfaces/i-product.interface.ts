@@ -1,4 +1,4 @@
-import { IEntity } from "./i-entity";
+import { IEntity } from "./i-entity.interface";
 
 export interface IProduct extends IEntity {
     id: string;

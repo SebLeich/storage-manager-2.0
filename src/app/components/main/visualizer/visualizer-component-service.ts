@@ -1,11 +1,11 @@
 import { ElementRef, Injectable } from "@angular/core";
 import { BehaviorSubject, combineLatest, ReplaySubject, Subject, Subscription } from "rxjs";
 import { debounceTime, filter, map, take } from "rxjs/operators";
-import { Good, Solution } from "src/app/classes";
+import { Good } from "src/app/classes";
 import { Container } from "src/app/classes/container.class";
 import { defaultGoodEdgeColor, infinityReplacement, keyboardControlMoveStep, selectedGoodEdgeColor } from "src/app/globals";
 import { IGroup } from "src/app/interfaces/i-group.interface";
-import { IStep } from "src/app/interfaces/i-step";
+import { IStep } from "src/app/interfaces/i-step.interface";
 import { DataService } from "src/app/services/data.service";
 import { selectSnapshot } from "src/lib/process-builder/globals/select-snapshot";
 import * as ThreeJS from 'three';
@@ -224,7 +224,7 @@ export class VisualizerComponentService {
     private _addElementToScene(dimension: Dimension, preview: string, type: null | 'bordered' | 'good' | 'infiniteSpace' | 'unusedSpace', sequenceNumber: number | null = null, goodId: number | null = null, group: IGroup | null = null, parentDimension: Dimension | null = null, dimensionGuid: string | null = null) {
 
         var length = dimension.length;
-        if (!length) length = (parentDimension!.length! - dimension.z!); // rotation
+        if (!length) length = (parentDimension!.length! - dimension.zCoord!); // rotation
 
         var mesh!: ThreeJS.Mesh;
         var edges!: ThreeJS.LineSegments;
@@ -265,9 +265,9 @@ export class VisualizerComponentService {
                 break;
         }
 
-        const x = parentDimension ? dimension.x! - (parentDimension.width! / 2) + (dimension.width! / 2) : dimension.x;
-        const y = parentDimension ? dimension.y! - (parentDimension.height! / 2) + (dimension.height! / 2) : dimension.y;
-        const z = parentDimension ? dimension.z! - (parentDimension.length! / 2) + ((dimension.length === Infinity ? infinityReplacement : dimension.length!) / 2) : dimension.z;
+        const x = parentDimension ? dimension.xCoord! - (parentDimension.width! / 2) + (dimension.width! / 2) : dimension.xCoord;
+        const y = parentDimension ? dimension.yCoord! - (parentDimension.height! / 2) + (dimension.height! / 2) : dimension.yCoord;
+        const z = parentDimension ? dimension.zCoord! - (parentDimension.length! / 2) + ((dimension.length === Infinity ? infinityReplacement : dimension.length!) / 2) : dimension.zCoord;
 
         if (mesh) {
             mesh.position.x = x!;

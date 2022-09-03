@@ -1,25 +1,26 @@
-import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, combineLatest, Observable, Subject } from 'rxjs';
-import { distinctUntilChanged, filter, map } from 'rxjs/operators';
+import { BehaviorSubject, combineLatest } from 'rxjs';
+import { map } from 'rxjs/operators';
 import { selectSnapshot } from 'src/lib/process-builder/globals/select-snapshot';
-import { Good, Solution } from '../classes';
+import { Dimension } from '../classes/dimension.class';
 import { compare } from '../globals';
 import { IGroup } from '../interfaces/i-group.interface';
-import { SolutionValidationService } from './solution-validation.service';
+import defaultSolution from 'src/assets/exampleSolution.json';
+import { Store } from '@ngrx/store';
+
+import * as fromISolutionState from 'src/app/store/reducers/i-solution.reducers';
+
+import { addSolution } from '../store/actions/i-solution.actions';
+import { ISolution } from '../interfaces/i-solution.interface';
+import { IContainer } from '../interfaces/i-container.interface';
+import { selectCurrentSolution } from '../store/selectors/i-solution.selectors';
+import { IGood } from '../interfaces/i-good.interface';
+import { IDimension } from '../interfaces/i-dimension.interface';
 
 @Injectable({
   providedIn: 'root'
 })
 export class DataService {
-
-  private _currentSolution = new BehaviorSubject<Solution | null>(null);
-  currentSolution$ = this._currentSolution.pipe(distinctUntilChanged());
-  currentSolutionValidation$ = this.currentSolution$.pipe(distinctUntilChanged(), map(solution => this._solutionValidationService.validateSolution(solution!)));
-  currentContainer$ = this.currentSolution$.pipe(filter(solution => !!solution), map((solution) => solution!.container));
-  currentGroups$ = this.currentSolution$.pipe(filter(solution => !!solution), map((solution) => solution!.groups));
-  currentSolutionAvailable$ = this._currentSolution.pipe(map(x => x ? true : false));
-  currentSteps$ = this.currentSolution$.pipe(filter(solution => !!solution), map((solution) => solution!.steps));
 
   private _groups = new BehaviorSubject<IGroup[]>([]);
   groups$ = this._groups.asObservable();
@@ -43,9 +44,7 @@ export class DataService {
   }
 
   constructor(
-    private _solutionValidationService: SolutionValidationService,
-    private _httpClient: HttpClient,
-
+    private _solutionStore: Store<fromISolutionState.State>,
   ) { }
 
   addGroup(group: IGroup) {
@@ -65,7 +64,7 @@ export class DataService {
   }
 
   async downloadCurrentSolution() {
-    const solution = await selectSnapshot(this.currentSolution$);
+    const solution = await selectSnapshot(this._solutionStore.select(selectCurrentSolution));
     if (!solution) {
       return;
     }
@@ -80,42 +79,28 @@ export class DataService {
     document.body.removeChild(element);
   }
 
-  getSolutionByAlgorithm(algorithm: string): Observable<Solution | null | undefined> {
-    return this._solutions.pipe(map(solutions => solutions.find(solution => solution.algorithm === algorithm)));
-  }
-
-  async loadDefaultSolution(): Observable<Solution> {
-
-    let subject = new Subject<Solution>();
-    this._httpClient.get('./assets/exampleSolution.json')
-      .subscribe(
-        (solution: Solution) => {
-          this.setCurrentSolution(solution);
-          subject.next(solution);
-          subject.complete();
-        },
-        (error) => subject.error(error)
-      );
-    return subject.asObservable();
+  loadDefaultSolution(): ISolution {
+    this._solutionStore.dispatch(addSolution({ solution: defaultSolution }));
+    return { ...defaultSolution };
   }
 
   setContainerHeight = (height: number) => this._containerHeight.next(height);
   setContainerWidth = (width: number) => this._containerWidth.next(width);
   setUnit = (unit: 'mm' | 'cm' | 'dm' | 'm') => this._unit.next(unit);
 
-  static getContainerDimension(container: Container): Dimension {
+  static getContainerDimension(container: IContainer): Dimension {
     let dimension = new Dimension(container.width, container.height, container.length);
-    dimension.x = 0;
-    dimension.y = 0;
-    dimension.z = 0;
+    dimension.xCoord = 0;
+    dimension.yCoord = 0;
+    dimension.zCoord = 0;
     return dimension;
   }
 
-  static getGoodDimension(good: Good): Dimension {
+  static getGoodDimension(good: IGood): IDimension {
     let dimension = new Dimension(good.width, good.height, good.length);
-    dimension.x = good.x;
-    dimension.y = good.y;
-    dimension.z = good.z;
+    dimension.xCoord = good.xCoord;
+    dimension.yCoord = good.yCoord;
+    dimension.zCoord = good.zCoord;
     return dimension;
   }
 }

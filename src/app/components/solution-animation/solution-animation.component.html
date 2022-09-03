@@ -1,9 +1,9 @@
 <div class="body">
 
-    <ng-container *ngIf="(dataService.currentSteps$|async)?.length > 0; else noCalculationStepsAvailable">
+    <ng-container *ngIf="(currentSteps$|async)?.length > 0; else noCalculationStepsAvailable">
 
         <div class="headline">
-            solution, calculated using {{(dataService.currentSteps$|async)?.length ?? 0}} steps
+            solution, calculated using {{(currentSteps$|async)?.length ?? 0}} steps
         </div>
     
         <div class="control-wrapper">
@@ -30,7 +30,7 @@
     
         <div class="step-overview" (mouseleave)="mouseleave()">
     
-            <div class="step-wrapper" *ngFor="let step of (dataService.currentSteps$|async)" (mouseenter)="visualizerComponentService.animateStep(step)">
+            <div class="step-wrapper" *ngFor="let step of (currentSteps$|async)" (mouseenter)="visualizerComponentService.animateStep(step)">
     
                 <div class="sequence-number">
                     {{step.sequenceNumber+1}}

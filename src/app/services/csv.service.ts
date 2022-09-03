@@ -3,9 +3,19 @@ import { Injectable } from '@angular/core';
 import * as moment from 'moment';
 import { combineLatest, Observable, Subject } from 'rxjs';
 import { filter, switchMap, take } from 'rxjs/operators';
-import { Group, Order } from '../classes';
 import { nameOf } from '../globals';
 import { DataService } from './data.service';
+
+import * as fromIOrderState from 'src/app/store/reducers/i-order.reducers';
+import * as fromIProductState from 'src/app/store/reducers/i-product.reducers';
+import * as fromISolutionState from 'src/app/store/reducers/i-solution.reducers';
+
+import { IOrder } from '../interfaces/i-order.interface';
+import { Store } from '@ngrx/store';
+import { selectOrders } from '../store/selectors/i-order.selectors';
+import { IGroup } from '../interfaces/i-group.interface';
+import { addProducts } from '../store/actions/i-product.actions';
+import { addOrders } from '../store/actions/i-order.actions';
 
 @Injectable({
   providedIn: 'root'
@@ -14,21 +24,24 @@ export class CsvService {
 
   headers = ['Order', 'Description', 'Quantity', 'Length', 'Width', 'Height', 'TurningAllowed', 'StackingAllowed', 'Group', 'GroupName'];
   headerOrderMap = {
-    'Order': nameOf<Order>('orderId'),
-    'Description': nameOf<Order>('description'),
-    'Quantity': nameOf<Order>('quantity'),
-    'Length': nameOf<Order>('length'),
-    'Width': nameOf<Order>('width'),
-    'Height': nameOf<Order>('height'),
-    'TurningAllowed': nameOf<Order>('turningAllowed'),
-    'StackingAllowed': nameOf<Order>('stackingAllowed'),
-    'Group': nameOf<Order>('group'),
-    'GroupName': (order: Order) => this._dataService.groups.find(x => x.id === order.group)?.desc
+    'Order': nameOf<IOrder>('id'),
+    'Description': nameOf<IOrder>('description'),
+    'Quantity': nameOf<IOrder>('quantity'),
+    'Length': nameOf<IOrder>('length'),
+    'Width': nameOf<IOrder>('width'),
+    'Height': nameOf<IOrder>('height'),
+    'TurningAllowed': nameOf<IOrder>('turningAllowed'),
+    'StackingAllowed': nameOf<IOrder>('stackingAllowed'),
+    'Group': nameOf<IOrder>('group'),
+    'GroupName': (order: IOrder) => this._dataService.groups.find(x => x.id === order.group)?.desc
   };
 
   constructor(
     private _dataService: DataService,
-    private _httpClient: HttpClient
+    private _httpClient: HttpClient,
+    private _orderStore: Store<fromIOrderState.State>,
+    private _productStore: Store<fromIProductState.State>,
+    private _solutionStore: Store<fromISolutionState.State>,
   ) { }
 
   downloadOrderCollectionToCSV() {
@@ -36,7 +49,7 @@ export class CsvService {
       .pipe(
         take(1),
         filter(x => x ? true : false),
-        switchMap(() => combineLatest([this._dataService.containerHeight$, this._dataService.containerWidth$, this._dataService.unit$, this._dataService.orders$]).pipe(take(1)))
+        switchMap(() => combineLatest([this._dataService.containerHeight$, this._dataService.containerWidth$, this._dataService.unit$, this._orderStore.select(selectOrders)]).pipe(take(1)))
       )
       .subscribe(([height, width, unit, orders]) => {
         let colCount = this.headers.length;
@@ -49,9 +62,9 @@ export class CsvService {
             csv[1] += ',';
           }
         }
-        for (let order of orders) csv.push(this.headers.map(x => {
-          if (typeof this.headerOrderMap[x] === 'string') return order[this.headerOrderMap[x]];
-          else if (typeof this.headerOrderMap[x] === 'function') return this.headerOrderMap[x](order);
+        for (let order of (orders as any)) csv.push(this.headers.map(x => {
+          if (typeof (this.headerOrderMap as any)[x] === 'string') return order[(this.headerOrderMap as any)[x]];
+          else if (typeof (this.headerOrderMap as any)[x] === 'function') return (this.headerOrderMap as any)[x](order);
           return '';
         }).join(','));
         let final = csv.join('\n');
@@ -66,7 +79,7 @@ export class CsvService {
   }
 
   uploadCSVToOrderCollection(event: Event) {
-    let files = (event.target as HTMLInputElement).files;
+    let files: FileList = (event.target as HTMLInputElement).files!;
     if (files.length === 0) return;
     this._fileToString(files[0]).subscribe((result: string) => this._importCSVToOrderCollection(result));
   }
@@ -105,40 +118,45 @@ export class CsvService {
       this._dataService.setContainerHeight(parseFloat(containerRow[1]));
       this._dataService.setUnit(containerRow[2] as any ?? 'mm');
       let properties = [];
-      for (let column of rows[2].split(',')) properties.push(this.headerOrderMap[column]);
-      let orders: Order[] = [];
-      let groups: Group[] = [];
+      for (let column of rows[2].split(',')) properties.push((this.headerOrderMap as any)[column]);
+      let orders: IOrder[] = [];
+      let groups: IGroup[] = [];
       for (let row of rows.splice(3)) {
-        let order: Order = new Order();
+        let order: IOrder = {} as IOrder;
         properties.filter(x => typeof x === 'string').forEach((property: string, index: number) => {
           let converted: any = row.split(',')[index];
-          if ([nameOf<Order>('height'), nameOf<Order>('width'), nameOf<Order>('length'), nameOf<Order>('orderId'), nameOf<Order>('quantity')].indexOf(property) > -1) converted = parseFloat(converted);
-          else if (nameOf<Order>('group') === property) {
+          if ([nameOf<IOrder>('height'), nameOf<IOrder>('width'), nameOf<IOrder>('length'), nameOf<IOrder>('id'), nameOf<IOrder>('quantity')].indexOf(property) > -1) converted = parseFloat(converted);
+          else if (nameOf<IOrder>('group') === property) {
             converted = parseInt(converted);
             if (groups.findIndex(x => x.id === converted) === -1) {
 
               groups.push({
                 id: converted,
-                color: null,
+                color: '#ffffff',
                 desc: row.split(',')[rows[2].split(',').indexOf('GroupName')]
               });
             }
           }
-          else if ([nameOf<Order>('stackingAllowed'), nameOf<Order>('turningAllowed')].indexOf(property) > -1) converted = converted === 'true';
-          order[property] = converted;
+          else if ([nameOf<IOrder>('stackingAllowed'), nameOf<IOrder>('turningAllowed')].indexOf(property) > -1) converted = converted === 'true';
+          (order as any)[property] = converted;
         });
         orders.push(order);
       }
+
       this._dataService.addGroups(groups);
-      this._dataService.addProducts(orders.filter((x, index: number) => orders.findIndex(y => y.description === x.description) === index).map(x => {
-        return {
-          description: x.description,
-          height: x.height,
-          length: x.length,
-          width: x.width
-        };
+      this._productStore.dispatch(addProducts({
+        products: (orders.filter((x, index: number) => orders.findIndex(y => y.description === x.description) === index).map(order => {
+          return {
+            id: order.id,
+            description: order.description,
+            height: order.height,
+            length: order.length,
+            width: order.width
+          };
+        }))
       }));
-      this._dataService.setOrders(orders);
+
+      this._orderStore.dispatch(addOrders({ orders }));
     } catch (e) {
       console.error(e);
     }

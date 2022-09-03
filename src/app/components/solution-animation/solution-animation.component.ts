@@ -1,10 +1,11 @@
-import { OnDestroy } from '@angular/core';
-import { Component, OnInit } from '@angular/core';
-import { combineLatest, Subscription } from 'rxjs';
+import { Component } from '@angular/core';
+import { Store } from '@ngrx/store';
+import * as fromISolutionState from 'src/app/store/reducers/i-solution.reducers';
 import { take } from 'rxjs/operators';
-import { DataService } from 'src/app/services/data.service';
 import { VisualizerComponentService } from '../main/visualizer/visualizer-component-service';
 import { SolutionAnimationComponentService } from './solution-animation-component.service';
+import { selectCurrentSolution } from 'src/app/store/selectors/i-solution.selectors';
+import { map } from 'rxjs/operators';
 
 @Component({
   selector: 'app-solution-animation',
@@ -14,28 +15,20 @@ import { SolutionAnimationComponentService } from './solution-animation-componen
     SolutionAnimationComponentService
   ]
 })
-export class SolutionAnimationComponent implements OnDestroy, OnInit {
+export class SolutionAnimationComponent {
 
-  private _subscriptions: Subscription[] = [];
+  public currentSteps$ = this._solutionStore.select(selectCurrentSolution).pipe(map(solution => solution?.steps ?? []));
 
   constructor(
-    public dataService: DataService,
+    private _solutionStore: Store<fromISolutionState.State>,
     public visualizerComponentService: VisualizerComponentService,
     public solutionAnimationComponentService: SolutionAnimationComponentService
   ) { }
 
-  mouseleave(){
+  mouseleave() {
     this.solutionAnimationComponentService.animationRunning$.pipe(take(1)).subscribe((animationRunning: boolean) => {
-      if(!animationRunning) this.visualizerComponentService.reRenderCurrentContainer();
+      if (!animationRunning) this.visualizerComponentService.reRenderCurrentContainer();
     });
-  }
-
-  ngOnDestroy(): void {
-    for (let sub of this._subscriptions) sub.unsubscribe();
-    this._subscriptions = [];
-  }
-
-  ngOnInit(): void {
   }
 
 }

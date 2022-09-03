@@ -7,8 +7,7 @@ import { IParamDefinition } from 'src/lib/process-builder/globals/i-param-defini
 import * as fromIParam from 'src/lib/process-builder/store/reducers/i-param.reducer';
 import * as fromIFunction from 'src/lib/process-builder/store/reducers/i-function.reducer';
 import { selectIFunction } from 'src/lib/process-builder/store/selectors/i-function.selector';
-import { map, switchMap } from 'rxjs/operators';
-import { IFunction } from 'src/lib/process-builder/globals/i-function';
+import { filter, map, switchMap } from 'rxjs/operators';
 import { selectIInterface } from 'src/lib/process-builder/store/selectors/i-interface.selectors';
 import { IParamMember } from 'src/lib/process-builder/globals/i-param-member';
 
@@ -26,13 +25,14 @@ export class EmbeddedInputOutputMappingComponent implements IEmbeddedView, OnDes
   outputParamName$ = this._funcStore
     .select(selectIFunction(() => this.formGroup.controls['functionIdentifier'].value))
     .pipe(
-      switchMap((func: IFunction) => {
-        if (typeof func.output?.interface === 'number') {
+      filter(func => !!func),
+      switchMap((func) => {
+        if (typeof func!.output?.interface === 'number') {
           return this._interfaceStore
-            .select(selectIInterface(func.output!.interface))
-            .pipe(map(x => x.name));
+            .select(selectIInterface(func!.output!.interface))
+            .pipe(map(iface => iface?.name));
         }
-        return of(`param ${func.output.param}`);
+        return of(`param ${func!.output!.param}`);
       })
     );
 
