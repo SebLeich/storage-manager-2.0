@@ -58,19 +58,19 @@
 
                         <ng-container [ngSwitch]="wrapper.status">
 
-                            <span *ngSwitchCase="ALGORITHM_CALCULATION_STATUS.PREPARE_CALCULATION">
+                            <span *ngSwitchCase="AlgorithmCalculationStatus.Preparecalculation">
                                 preparing ...
                             </span>
 
-                            <span *ngSwitchCase="ALGORITHM_CALCULATION_STATUS.CALCULATING">
+                            <span *ngSwitchCase="AlgorithmCalculationStatus.Calculating">
                                 calculating ...
                             </span>
 
-                            <span *ngSwitchCase="ALGORITHM_CALCULATION_STATUS.CALCULATED">
+                            <span *ngSwitchCase="AlgorithmCalculationStatus.Calculated">
                                 calculated {{wrapper.solution.calculated|date:'dd.MM.yyyy HH:mm'}}
                             </span>
 
-                            <span *ngSwitchCase="ALGORITHM_CALCULATION_STATUS.ERROR">
+                            <span *ngSwitchCase="AlgorithmCalculationStatus.Error">
                                 error
                             </span>
 
@@ -82,11 +82,11 @@
 
                     </div>
 
-                    <div *ngIf="wrapper.status === ALGORITHM_CALCULATION_STATUS.CALCULATED">
-                        length: {{wrapper.solution.container.length|prettyLength}}
+                    <div *ngIf="wrapper.status === AlgorithmCalculationStatus.Calculated">
+                        length: {{wrapper.solution.container?.length|prettyLength}}
                     </div>
 
-                    <ng-container *ngIf="wrapper.status === ALGORITHM_CALCULATION_STATUS.ERROR">
+                    <ng-container *ngIf="wrapper.status === AlgorithmCalculationStatus.Error">
 
                         <div class="calculation-error" *ngFor="let error of wrapper.errors">
                             {{error|calculationError}}
@@ -102,7 +102,7 @@
                         calculate
                     </div>
 
-                    <div class="control accent-2" (click)="calculationComponentService.visualizeSolution(wrapper.solution)" [ngClass]="{ 'disabled': wrapper.status !== ALGORITHM_CALCULATION_STATUS.CALCULATED }">
+                    <div class="control accent-2" (click)="calculationComponentService.visualizeSolution(wrapper.solution)" [ngClass]="{ 'disabled': wrapper.status !== AlgorithmCalculationStatus.Calculated }">
                         visualize
                     </div>
 

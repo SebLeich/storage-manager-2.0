@@ -4,6 +4,6 @@ export interface IStep {
     sequenceNumber: number;
     messages: string[];
     unusedDimensions: UnusedDimension[];
-    dimension: Dimension;
-    usedDimension: UnusedDimension;
+    dimension: Dimension | null;
+    usedDimension: UnusedDimension | null;
 }

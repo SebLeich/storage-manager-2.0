@@ -26,7 +26,7 @@ export class Solver {
         let r = Math.max(...unusedDimensions.map(x => x.r));
         let t = Math.max(...unusedDimensions.map(x => x.t));
         let f = Math.max(...unusedDimensions.map(x => x.f));
-        let dimension = new UnusedDimension(r-x, t-y, f-z, null, null); // TODO
+        let dimension = new UnusedDimension(r-x, t-y, f-z); // TODO
         dimension.setPosition(x, y, z);
         return dimension;
     }

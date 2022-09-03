@@ -10,7 +10,7 @@ import { DataService } from "src/app/services/data.service";
 @Injectable()
 export class OrdersComponentService {
 
-    public formGroup: UntypedFormGroup;
+    public formGroup!: UntypedFormGroup;
 
     private _subscriptions: Subscription[] = [];
 

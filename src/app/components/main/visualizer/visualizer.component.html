@@ -19,7 +19,7 @@
                 <mat-panel-title>
 
                     <span *ngIf="(visualizerComponentService.hoveredElement$|async); else noElement">
-                        {{(visualizerComponentService.hoveredElement$|async).preview}}
+                        {{(visualizerComponentService.hoveredElement$|async)?.preview}}
                     </span>
 
                 </mat-panel-title>
@@ -30,7 +30,7 @@
 
             </mat-expansion-panel-header>
 
-            <app-good-preview [good]="(visualizerComponentService.hoveredGood$|async)"></app-good-preview>
+            <app-good-preview *ngIf="(visualizerComponentService.selectedGood$|async)" [good]="(visualizerComponentService.selectedGood$|async)!"></app-good-preview>
 
         </mat-expansion-panel>
 
@@ -41,7 +41,7 @@
 
                     <span [style.color]="selectedGoodEdgeColor"
                         *ngIf="(visualizerComponentService.selectedElement$|async); else noElement">
-                        {{(visualizerComponentService.selectedElement$|async).preview}}
+                        {{(visualizerComponentService.selectedElement$|async)?.preview}}
                     </span>
 
                 </mat-panel-title>
@@ -52,7 +52,7 @@
 
             </mat-expansion-panel-header>
 
-            <app-good-preview [good]="(visualizerComponentService.selectedGood$|async)"></app-good-preview>
+            <app-good-preview *ngIf="(visualizerComponentService.selectedGood$|async)" [good]="(visualizerComponentService.selectedGood$|async)!"></app-good-preview>
 
         </mat-expansion-panel>
 

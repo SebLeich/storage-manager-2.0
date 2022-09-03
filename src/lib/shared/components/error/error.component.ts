@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { showAnimation } from 'src/app/animations';
+import { showAnimation } from '../../animations/show';
 
 @Component({
   selector: 'app-error',

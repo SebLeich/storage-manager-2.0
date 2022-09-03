@@ -7,17 +7,17 @@ import { DataService } from '../services/data.service';
 })
 export class PrettyVolumePipe implements PipeTransform {
 
-  constructor(private _dataService: DataService){
+  constructor(private _dataService: DataService) {
 
   }
 
   transform(value: number, prettify: boolean = true): string {
     let unit = this._dataService.unit;
-    if(!prettify) return `${value} ${unit}³`;
+    if (!prettify) return `${value} ${unit}³`;
     let converted = value;
     let index = nextUnitSize.findIndex(x => x.unit === unit);
-    while(converted > nextUnitSize[index].threshold){
-      converted = converted/(Math.pow(nextUnitSize[index].next, 3));
+    while (converted > (nextUnitSize[index!].threshold ?? Infinity)) {
+      converted = converted / (Math.pow((nextUnitSize[index!].next ?? 1), 3));
       index++;
       unit = nextUnitSize[index].unit as any;
     }

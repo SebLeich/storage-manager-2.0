@@ -16,6 +16,7 @@ export const mapIParamInterfaces = (interfaceStore: Store<fromIInterfaceState.St
                     flatMap((param: IParam) =>
                         forkJoin([
                             of(param),
+                            //ts-ignore
                             of(param.typeDef).pipe(mapIParamsInterfaces(interfaceStore))
                         ])
                     ),
@@ -72,9 +73,9 @@ export const mapIParamsInterfaces: ((interfaceStore: Store<fromIInterfaceState.S
                             interfaceStore.select(selectIInterface(param.interface))
                         ]).pipe(
                             take(1),
-                            map(([param, iFace]: [IParam, IInterface]) => {
+                            map(([param, iFace]: [IParam, IInterface | null | undefined]) => {
                                 let result = { ...param };
-                                result.typeDef = iFace.typeDef;
+                                result.typeDef = iFace?.typeDef;
                                 return result as IParam;
                             }),
                             flatMap((param: IParam) =>

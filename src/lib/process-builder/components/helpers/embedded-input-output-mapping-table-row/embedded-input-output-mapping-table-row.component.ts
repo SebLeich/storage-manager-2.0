@@ -14,13 +14,13 @@ import { selectIInterface } from 'src/lib/process-builder/store/selectors/i-inte
 })
 export class EmbeddedInputOutputMappingTableRowComponent implements OnChanges, OnDestroy, AfterViewInit {
 
-  @ViewChild('rowTemplate') rowTemplate: TemplateRef<any>;
+  @ViewChild('rowTemplate') public rowTemplate!: TemplateRef<any>;
 
   @Input() level: number = 0;
   @Input() def!: IParamDefinition;
   @Input() inputParams!: number | number[] | null;
 
-  private _typeDef = new BehaviorSubject<IParamDefinition[]>([]);
+  private _typeDef = new BehaviorSubject<(IParamDefinition | null | undefined)[]>([]);
   typeDef$ = this._typeDef.asObservable();
 
   private _availableTypes = new BehaviorSubject<IParamMember[]>([]);

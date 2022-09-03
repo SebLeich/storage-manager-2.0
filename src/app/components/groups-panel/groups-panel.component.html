@@ -2,7 +2,7 @@
 
     <ng-container *ngIf="(groupsProvider.groups$|async)?.length > 0; else noGroupsAvailable">
 
-        <table mat-table class="smgr-table small striped" [dataSource]="groupsProvider.groups$|async">
+        <table mat-table class="smgr-table small striped" [dataSource]="$any(groupsProvider.groups$|async)">
 
             <ng-container matColumnDef="desc">
                 <th mat-header-cell *matHeaderCellDef>Beschreibung</th>

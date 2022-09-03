@@ -1,6 +1,10 @@
 <div class="body">
 
-    <span *ngFor="let segment of (pathSegments$|async); let i = index" class="segment {{(i + 1) < (segmentCount$|async)? 'pre': 'main'}}">
+    <span *ngFor="let segment of (pathSegments$|async); let i = index"
+        class="segment {{(i + 1) < (segmentCount$|async)? 'pre': 'main'}}" [ngClass]="{
+        'pre': ((segmentCount$|async)? > (i + 1)) ?? false,
+        'main': ((segmentCount$|async)? < (i + 1)) ?? false,
+    }">
         {{segment}}
     </span>
 

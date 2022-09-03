@@ -1,7 +1,7 @@
 import { combineLatest, Observable, ReplaySubject, throwError } from "rxjs";
 import { switchMap, take } from "rxjs/operators";
 import { Container, Good, Solution, UnusedDimension } from "../classes";
-import { CALCULATION_ERROR } from "../components/main/calculation/calculation-component.classes";
+import { CalculationError } from "../components/main/calculation/enumerations/calculation-error";
 import { generateGuid, MinimizationFunction } from "../globals";
 import { ISolver } from "../interfaces";
 import { IStep } from "../interfaces/i-step";
@@ -23,7 +23,7 @@ export class SuperFloSolver extends Solver implements ISolver {
     solve(): Observable<Solution> {
         return this._dataService.containerValid$.pipe(
             switchMap((valid: boolean) => {
-                if (!valid) return throwError(CALCULATION_ERROR.CONTAINER_NOT_READY);
+                if (!valid) return throwError(CalculationError.ContainerNotReady);
                 let subject = new ReplaySubject<Solution>(1);
                 combineLatest([this._dataService.orders$, this._dataService.containerHeight$, this._dataService.containerWidth$, this._dataService.groups$])
                     .pipe(take(1))
@@ -35,10 +35,13 @@ export class SuperFloSolver extends Solver implements ISolver {
                         for (let order of orders) {
                             for (let i = 0; i < order.quantity; i++) {
                                 let space = this.getBestUnusedDimensionsForMinimizationFunction(this._unusedDimensions.filter(x => this.canPlaceOrderIntoSpace(order, x).notTurned), this._minimizationFunction);
+                                if (!space) {
+                                    continue;
+                                }
                                 let unusedDimensions = this.putOrderAndCreateUnusedDimensions(order, space);
                                 this._unusedDimensions.push(...unusedDimensions);
                                 this._unusedDimensions.splice(this._unusedDimensions.findIndex(x => x === space), 1);
-                                let good = new Good(sequenceNumber + 1, space.x, space.y, space.z, sequenceNumber, order.description);
+                                let good = new Good(sequenceNumber + 1, space?.x, space?.y, space?.z, sequenceNumber, order.description);
                                 good.setOrderDimensions(order);
                                 solution.steps.push({
                                     sequenceNumber: sequenceNumber,
@@ -46,7 +49,7 @@ export class SuperFloSolver extends Solver implements ISolver {
                                     unusedDimensions: unusedDimensions,
                                     dimension: DataService.getGoodDimension(good),
                                     usedDimension: space
-                                } as Step);
+                                } as IStep);
                                 solution.container.goods.push(good);
                                 sequenceNumber++;
                                 let combinable = this.getCombinableSpacePairs(this._unusedDimensions, true);
@@ -59,7 +62,7 @@ export class SuperFloSolver extends Solver implements ISolver {
                                         messages: [`combined unused spaces: ${combinable[0].map(x => x.guid).join(', ')}`],
                                         unusedDimensions: [combined],
                                         dimension: null,
-                                        usedDimension: []
+                                        usedDimension: null
                                     } as IStep);
                                     sequenceNumber++;
                                     combinable = this.getCombinableSpacePairs(this._unusedDimensions, true);

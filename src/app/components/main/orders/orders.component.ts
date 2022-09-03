@@ -1,12 +1,12 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { UntypedFormArray, FormControl, UntypedFormGroup } from '@angular/forms';
+import { UntypedFormArray, UntypedFormGroup } from '@angular/forms';
 import { SortDirection } from '@angular/material/sort';
-import { interval, Subscription } from 'rxjs';
+import { Subscription } from 'rxjs';
 import { filter, map } from 'rxjs/operators';
-import { showAnimation } from 'src/app/animations';
 import { Order, Product } from 'src/app/classes';
 import { CsvService } from 'src/app/services/csv.service';
 import { DataService } from 'src/app/services/data.service';
+import { showAnimation } from 'src/lib/shared/animations/show';
 import { OrdersComponentService } from './orders-component.service';
 
 @Component({
@@ -62,6 +62,7 @@ export class OrdersComponent implements OnDestroy, OnInit {
 
   updateProductDimension(value: number, product: string, dimension: 'length' | 'width' | 'height') {
     if (typeof product !== 'string' || typeof value !== 'number') return;
+
     this.dataService.products$.pipe(map(x => x.find(y => y.description === product)))
       .subscribe((product: Product) => {
         product[dimension] = value;

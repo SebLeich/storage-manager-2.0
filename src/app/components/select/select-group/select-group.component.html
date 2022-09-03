@@ -8,8 +8,10 @@
         </mat-option>
 
         <mat-option class="smgr-manual-select-add-input-option">
-            
-            <input class="smgr-manual-select-add-input" type="text" (click)="$event.stopPropagation()" (keydown)="$event.stopPropagation()" (keydown.enter)="addGroup($event)" placeholder="Weiteres Ziel angeben" />
+
+            <input class="smgr-manual-select-add-input" type="text" (click)="$event.stopPropagation()"
+                (keydown)="$event.stopPropagation()" (keydown.enter)="addGroup($any($event))"
+                placeholder="Weiteres Ziel angeben" />
 
         </mat-option>
 

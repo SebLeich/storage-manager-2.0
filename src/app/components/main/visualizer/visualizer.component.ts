@@ -2,10 +2,10 @@ import { AfterViewInit, Component, ElementRef, HostListener, OnDestroy, OnInit, 
 import { MatDialog } from '@angular/material/dialog';
 import { BehaviorSubject, Subscription } from 'rxjs';
 import { filter, switchMap, take } from 'rxjs/operators';
-import { showAnimation } from 'src/app/animations';
 import { Solution } from 'src/app/classes';
 import { selectedGoodEdgeColor } from 'src/app/globals';
 import { DataService } from 'src/app/services/data.service';
+import { showAnimation } from 'src/lib/shared/animations/show';
 import { NoSolutionDialogComponent } from '../../dialog/no-solution-dialog/no-solution-dialog.component';
 import { VisualizerComponentService } from './visualizer-component-service';
 
@@ -78,7 +78,7 @@ export class VisualizerComponent implements AfterViewInit, OnDestroy, OnInit {
   }
 
   @HostListener('document:keypress', ['$event'])
-  onKeydown = (event) => this.visualizerComponentService.keydown(event);
+  onKeydown = (event: KeyboardEvent) => this.visualizerComponentService.keydown(event);
 
   selectedGoodEdgeColor = selectedGoodEdgeColor;
   

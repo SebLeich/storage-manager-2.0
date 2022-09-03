@@ -159,8 +159,7 @@ export const validateBPMNConfig = (bpmnJS: any, injector: Injector) => {
             if (connector) modelingModule.updateLabel(connector, taskCreationComponentOutput.entranceGatewayType === ErrorGatewayEvent.Success ? config.errorGatewayConfig.successConnectionName : config.errorGatewayConfig.errorConnectionName);
         }
 
-        let inputParams: { varName: string, propertyName: string }[] = taskCreationComponentOutput.implementation ? CodemirrorRepository.getUsedInputParams(undefined, taskCreationComponentOutput.implementation) : [];
-
+        const inputParams: { varName: string, propertyName: string | null }[] = taskCreationComponentOutput.implementation ? CodemirrorRepository.getUsedInputParams(undefined, taskCreationComponentOutput.implementation) : [];
         combineLatest([
             funcStore.select(fromIFunctionSelector.selectIFunction(taskCreationComponentOutput.functionIdentifier)),
             paramStore.select(fromIParmSelector.selectNextId()),
@@ -187,7 +186,7 @@ export const validateBPMNConfig = (bpmnJS: any, injector: Injector) => {
 
                 let type = typeof func.output?.param;
                 let f: IFunction = func!, outputParamId: number = type === 'number' ? func.output?.param as number : paramId;
-                if (func.requireCustomImplementation || func.customImplementation || func.useDynamicInputParams || func.output.param === 'dynamic') {
+                if (func.requireCustomImplementation || func.customImplementation || func.useDynamicInputParams || func.output!.param === 'dynamic') {
 
                     let methodEvaluation = CodemirrorRepository.evaluateCustomMethod(undefined, taskCreationComponentOutput.implementation ?? defaultImplementation);
                     if (methodEvaluation === MethodEvaluationStatus.ReturnValueFound || func.output?.param === 'dynamic') {
@@ -217,7 +216,7 @@ export const validateBPMNConfig = (bpmnJS: any, injector: Injector) => {
                     }
 
                     f = {
-                        'customImplementation': taskCreationComponentOutput.implementation ?? null,
+                        'customImplementation': taskCreationComponentOutput.implementation ?? undefined,
                         'canFail': taskCreationComponentOutput.canFail ?? false,
                         'name': taskCreationComponentOutput.name ?? config.defaultFunctionName,
                         'identifier': func.requireCustomImplementation ? funcId : func.identifier,
@@ -236,9 +235,9 @@ export const validateBPMNConfig = (bpmnJS: any, injector: Injector) => {
 
                 if (func.finalizesFlow) {
 
-                    modelingModule.appendShape(payload.configureActivity, { type: shapeTypes.EndEvent }, {
-                        x: payload.configureActivity.x + 200,
-                        y: payload.configureActivity.y + 40
+                    modelingModule.appendShape(payload.configureActivity!, { type: shapeTypes.EndEvent }, {
+                        x: payload.configureActivity!.x + 200,
+                        y: payload.configureActivity!.y + 40
                     });
 
                 }

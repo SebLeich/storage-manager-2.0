@@ -1,23 +1,11 @@
 import * as moment from "moment";
-import { generateGuid } from "./globals";
+import { v4 as generateGuid } from 'uuid';
+import { Container } from "./classes/container.class";
+import { Dimension } from "./classes/dimension.class";
+import { IGroup } from "./interfaces/i-group.interface";
+import { IOrder } from "./interfaces/i-order.interface";
+import { ISolution } from "./interfaces/i-solution.interface";
 import { IStep } from "./interfaces/i-step";
-
-export class Container {
-    height: number = null;
-    width: number = null;
-    length: number = null;
-    goods: Good[] = [];
-    constructor(height: number = null, width: number = null, length: number = null) {
-        this.height = height;
-        this.width = width;
-        this.length = length;
-    }
-    getUnusedDimension(): UnusedDimension {
-        let unusedDimension = new UnusedDimension(this.width, this.height, Infinity, null);
-        unusedDimension.setPosition(0, 0, 0);
-        return unusedDimension;
-    }
-}
 
 export class Good {
     id!: number;
@@ -42,86 +30,13 @@ export class Good {
         this.sequenceNr = sequenceNumber;
         this.desc = description;
     }
-    setOrderDimensions(order: Order) {
+    setOrderDimensions(order: IOrder) {
         this.height = order.height;
         this.width = order.width;
         this.length = order.length;
         this.turningAllowed = order.turningAllowed;
         this.stackingAllowed = order.stackingAllowed;
         this.group = order.group;
-    }
-}
-
-export class Order {
-    orderId: number = null;
-    description: string = null;
-    quantity: number = null;
-    length: number = null;
-    width: number = null;
-    height: number = null;
-    turningAllowed: boolean = true;
-    stackingAllowed: boolean = false;
-    group: number = null;
-}
-
-export class Point {
-    x: number = null;
-    y: number = null;
-    z: number = null;
-    constructor(x: number = null, y: number = null, z: number = null) {
-        this.x = x;
-        this.y = y;
-        this.z = z;
-    }
-}
-
-export class Product {
-    description: string;
-    height: number;
-    length: number;
-    width: number;
-}
-
-export class Space {
-    width: number = null;
-    height: number = null;
-    length: number = null;
-    constructor(width: number = null, height: number = null, length: number = null) {
-        this.width = width;
-        this.height = height;
-        this.length = length;
-    }
-}
-
-export class Dimension extends Space {
-    guid: string = generateGuid();
-    x: number = null;
-    y: number = null;
-    z: number = null;
-    r: number = null;
-    t: number = null;
-    f: number = null;
-    points: Point[] = [];
-    constructor(width: number = null, height: number = null, length: number = null) {
-        super(width, height, length);
-    }
-    setPosition(x: number, y: number, z: number) {
-        this.x = x;
-        this.y = y;
-        this.z = z;
-        this.r = x + this.width;
-        this.t = y + this.height;
-        this.f = z + this.length;
-        this.points = [
-            new Point(this.x, this.y, this.z),
-            new Point(this.r, this.y, this.z),
-            new Point(this.x, this.y, this.f),
-            new Point(this.r, this.y, this.f),
-            new Point(this.x, this.t, this.z),
-            new Point(this.r, this.t, this.z),
-            new Point(this.x, this.t, this.f),
-            new Point(this.r, this.t, this.f),
-        ];
     }
 }
 
@@ -135,11 +50,11 @@ export class UnusedDimension extends Dimension {
     }
 }
 
-export class Solution {
+export class Solution implements ISolution {
     id: string = '';
     container?: Container;
     algorithm: string = '';
-    groups: Group[] = [];
+    groups: IGroup[] = [];
     steps: IStep[] = [];
     calculated: string = '';
     description: string = '';

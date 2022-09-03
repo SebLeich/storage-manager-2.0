@@ -8,8 +8,8 @@ import { ConfigureApiCallService } from "src/lib/automation/services/configure-a
 @Injectable()
 export class ApiCallConfiguratorComponentService implements ISubmitConfigurationProvider, IFormGroupProvider, IConfigurationFormGroupProvider {
 
-    public formGroup: UntypedFormGroup;
-    public configurationFormGroup: UntypedFormGroup;
+    public formGroup!: UntypedFormGroup;
+    public configurationFormGroup!: UntypedFormGroup;
 
     constructor(
         private _configureApiCallService: ConfigureApiCallService

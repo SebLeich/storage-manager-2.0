@@ -4,7 +4,7 @@
       <mat-expansion-panel expanded="true">
         <mat-expansion-panel-header>
           <mat-panel-title class="expansion-panel-headline">
-            {{ headline$|async ?? 'unknown' }}
+            {{ (headline$|async) ?? 'unknown' }}
           </mat-panel-title>
 
           <mat-panel-description>general</mat-panel-description>
