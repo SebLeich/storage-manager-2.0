@@ -58,7 +58,6 @@ export class VisualizerComponentService {
     private _subscriptions: Subscription[] = [];
 
     constructor(
-        private _dataService: DataService,
         private _solutionStore: Store<fromISolutionState.State>,
         private _groupStore: Store<fromIGroupState.State>,
     ) {

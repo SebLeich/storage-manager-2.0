@@ -1,8 +1,7 @@
-import { Component, forwardRef, OnDestroy, OnInit } from '@angular/core';
+import { Component, forwardRef, OnDestroy } from '@angular/core';
 import { ControlValueAccessor, UntypedFormControl, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { Subscription } from 'rxjs';
 import { nextUnitSize } from 'src/app/globals';
-import { DataService } from 'src/app/services/data.service';
 
 @Component({
   selector: 'app-select-unit',
@@ -16,31 +15,21 @@ import { DataService } from 'src/app/services/data.service';
     }
   ]
 })
-export class SelectUnitComponent implements ControlValueAccessor, OnDestroy, OnInit {
+export class SelectUnitComponent implements ControlValueAccessor, OnDestroy {
 
   valueControl: UntypedFormControl = new UntypedFormControl();
 
   units = nextUnitSize.map(x => x.unit);
 
-  private _subscriptions: Subscription[] = [];
+  private _subscriptions = new Subscription();
 
-  constructor(
-    public dataService: DataService
-  ) { }
-
-  ngOnDestroy(): void {
-    for (let sub of this._subscriptions) sub.unsubscribe();
-    this._subscriptions = [];
-  }
-
-  ngOnInit(): void {
-  }
+  ngOnDestroy = () => this._subscriptions.unsubscribe();
 
   public onTouched: () => void = () => { };
   registerOnTouched = (fn: any) => this.onTouched = fn;
 
   registerOnChange(fn: any): void {
-    this._subscriptions.push(this.valueControl.valueChanges.subscribe(fn));
+    this._subscriptions.add(this.valueControl.valueChanges.subscribe(fn));
   }
 
   setDisabledState?(isDisabled: boolean): void {

@@ -4,7 +4,6 @@ import { SortDirection } from '@angular/material/sort';
 import { Store } from '@ngrx/store';
 import { Subscription } from 'rxjs';
 import { CsvService } from 'src/app/services/csv.service';
-import { DataService } from 'src/app/services/data.service';
 import { showAnimation } from 'src/lib/shared/animations/show';
 import { OrdersComponentService } from './orders-component.service';
 
@@ -28,10 +27,9 @@ export class OrdersComponent implements OnDestroy, OnInit {
   active: string = 'order';
   direction: SortDirection = 'asc';
 
-  private _subscriptions: Subscription[] = [];
+  private _subscriptions = new Subscription();
 
   constructor(
-    public dataService: DataService,
     public csvService: CsvService,
     public ordersComponentService: OrdersComponentService,
     private _productStore: Store<fromIProductState.State>
@@ -41,8 +39,7 @@ export class OrdersComponent implements OnDestroy, OnInit {
 
   ngOnDestroy(): void {
     if (this.ordersComponentService.formGroup.dirty) this.ordersComponentService.takeOrders();
-    for (let sub of this._subscriptions) sub.unsubscribe();
-    this._subscriptions = [];
+    this._subscriptions.unsubscribe();
     this.ordersComponentService.dispose();
   }
 
