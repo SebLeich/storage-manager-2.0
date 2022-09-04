@@ -1,5 +1,5 @@
-export enum ALGORITHMS {
-    ALL_IN_ONE_ROW, START_LEFT_BOTTOM, SUPER_FLO, AI_SUPPORTED_SOLVER
+export enum Algorithm {
+    AllInOneRow, StartLeftBottom, SuperFlo, AISupportedSolver
 }
 
 export enum SOLUTION_ERROR {
@@ -10,22 +10,22 @@ export const algorithms = [
     {
         title: 'All In One Row',
         description: 'That algorithm takes all orders and puts each good in front of the previous one.',
-        code: ALGORITHMS.ALL_IN_ONE_ROW
+        code: Algorithm.AllInOneRow
     },
     {
         title: 'Start Left Bottom',
         description: 'Dieser Algorithmus sortiert alle Güter entsprechend der vorgegebenen Sortierung, schiebt die Güter möglichst weit hinter und ermöglicht das Stapeln',
-        code: ALGORITHMS.START_LEFT_BOTTOM
+        code: Algorithm.StartLeftBottom
     },
     {
         title: 'Super-Flo',
         description: 'Dieser Algorithmus berechnet Lösungen mit Hilfe von zwischengespeicherten Räumen. Diese werden entsprechend definierter Minimierungsfunktionen für das Einräumen ausgewählt und anschließend in Teilfreiräume zerlegt.',
-        code: ALGORITHMS.SUPER_FLO
+        code: Algorithm.SuperFlo
     },
     {
         title: 'AI Supported Solver',
         description: 'Dieser Algorithmus berechnet Lösungen mit Hilfe von heuristischen und AI-basierten Ansätzen.',
-        code: ALGORITHMS.AI_SUPPORTED_SOLVER
+        code: Algorithm.AISupportedSolver
     }
 ]
 

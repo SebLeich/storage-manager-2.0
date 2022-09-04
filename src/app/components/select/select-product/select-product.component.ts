@@ -6,6 +6,7 @@ import { IProduct } from 'src/app/interfaces/i-product.interface';
 import { addProduct } from 'src/app/store/actions/i-product.actions';
 
 import * as fromIProductState from 'src/app/store/reducers/i-product.reducers';
+import { selectProducts } from 'src/app/store/selectors/i-product.selectors';
 
 @Component({
   selector: 'app-select-product',
@@ -20,6 +21,8 @@ import * as fromIProductState from 'src/app/store/reducers/i-product.reducers';
   ]
 })
 export class SelectProductComponent implements ControlValueAccessor, OnDestroy {
+
+  products$ = this._productStore.select(selectProducts);
 
   valueControl: UntypedFormControl = new UntypedFormControl();
 

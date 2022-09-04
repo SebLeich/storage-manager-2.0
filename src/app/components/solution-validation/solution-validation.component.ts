@@ -1,8 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { SOLUTION_ERROR } from 'src/app/globals';
 import { IGood } from 'src/app/interfaces/i-good.interface';
-import { DataService } from 'src/app/services/data.service';
 import { VisualizerComponentService } from '../main/visualizer/visualizer-component-service';
+
+import * as fromISolutionState from 'src/app/store/reducers/i-solution.reducers';
+import { Store } from '@ngrx/store';
+import { selectCurrentSolution, selectCurrentSolutionValidation } from 'src/app/store/selectors/i-solution.selectors';
 
 @Component({
   selector: 'app-solution-validation',
@@ -11,8 +14,10 @@ import { VisualizerComponentService } from '../main/visualizer/visualizer-compon
 })
 export class SolutionValidationComponent implements OnInit {
 
+  public currentSolutionValidation$ = this._solutionStore.select(selectCurrentSolutionValidation);
+
   constructor(
-    public dataService: DataService,
+    private _solutionStore: Store<fromISolutionState.State>,
     private _visualizerComponentService: VisualizerComponentService
   ) { }
 

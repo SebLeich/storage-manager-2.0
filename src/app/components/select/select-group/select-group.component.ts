@@ -1,8 +1,13 @@
+import { v4 as generateGuid } from 'uuid';
 import { Component, forwardRef, OnDestroy, OnInit } from '@angular/core';
 import { ControlValueAccessor, UntypedFormControl, NG_VALUE_ACCESSOR } from '@angular/forms';
+import { Store } from '@ngrx/store';
 import { Subscription } from 'rxjs';
-import { Group } from 'src/app/classes';
 import { DataService } from 'src/app/services/data.service';
+import { addGroup } from 'src/app/store/actions/i-group.actions';
+
+import * as fromIGroupState from 'src/app/store/reducers/i-group.reducers';
+import { selectGroups } from 'src/app/store/selectors/i-group.selectors';
 
 @Component({
   selector: 'app-select-group',
@@ -18,18 +23,26 @@ import { DataService } from 'src/app/services/data.service';
 })
 export class SelectGroupComponent implements ControlValueAccessor, OnDestroy, OnInit {
 
+  groups$ = this._groupStore.select(selectGroups);
+
   valueControl: UntypedFormControl = new UntypedFormControl();
 
   private _subscriptions: Subscription[] = [];
 
   constructor(
-    public dataService: DataService
+    public dataService: DataService,
+    private _groupStore: Store<fromIGroupState.State>
   ) { }
 
   addGroup(event: KeyboardEvent) {
     event.stopPropagation();
-    this.dataService.addGroup({ desc: (event.target as HTMLInputElement).value } as Group);
-    (event.target as HTMLInputElement).value = null;
+    this._groupStore.dispatch(addGroup({
+      group: {
+        id: generateGuid(),
+        desc: (event.target as HTMLInputElement).value
+      }
+    }));
+    (event.target as HTMLInputElement).value = '';
   }
 
   ngOnDestroy(): void {

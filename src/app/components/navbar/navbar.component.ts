@@ -1,7 +1,10 @@
 import { Component, HostListener, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { Store } from '@ngrx/store';
 import { BehaviorSubject } from 'rxjs';
-import { DataService } from 'src/app/services/data.service';
+
+import * as fromISolutionState from 'src/app/store/reducers/i-solution.reducers';
+import { selectCurrentSolution } from 'src/app/store/selectors/i-solution.selectors';
 
 @Component({
   selector: 'app-navbar',
@@ -10,12 +13,14 @@ import { DataService } from 'src/app/services/data.service';
 })
 export class NavbarComponent implements OnInit {
 
+  currentSolutionAvailable$ = this._solutionStore.select(selectCurrentSolution);
+
   private _limitedHeight = new BehaviorSubject<boolean>(false);
   limitedHeight$ = this._limitedHeight.asObservable();
 
   constructor(
     public router: Router,
-    public dataService: DataService
+    private _solutionStore: Store<fromISolutionState.State>,
   ) { }
 
   ngOnInit(): void {

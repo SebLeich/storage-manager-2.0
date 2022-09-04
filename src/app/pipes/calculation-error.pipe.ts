@@ -1,18 +1,18 @@
 import { Pipe, PipeTransform } from '@angular/core';
-import { CALCULATION_ERROR } from '../components/main/calculation/calculation-component.classes';
+import { CalculationError } from '../components/main/calculation/enumerations/calculation-error';
 
 @Pipe({
   name: 'calculationError'
 })
 export class CalculationErrorPipe implements PipeTransform {
 
-  transform(code: CALCULATION_ERROR): string {
+  transform(code: CalculationError): string {
     switch (code) {
 
-      case CALCULATION_ERROR.CONTAINER_NOT_READY:
+      case CalculationError.ContainerNotReady:
         return 'calculation failed: height and width should be setted higher than 0.';
 
-      case CALCULATION_ERROR.ALGORITHM_NOT_IMPLEMENTED:
+      case CalculationError.AlgorithmNotImplemented:
         return 'algorithm not available yet';
 
       default:

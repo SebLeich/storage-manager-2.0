@@ -1,12 +1,16 @@
-import { Injectable } from "@angular/core";
-import { BehaviorSubject, combineLatest, interval, timer } from "rxjs";
+import { Injectable, OnDestroy, OnInit } from "@angular/core";
+import { Store } from "@ngrx/store";
+import { BehaviorSubject, combineLatest, interval, Subscription, timer } from "rxjs";
 import { filter, map, switchMap, take, takeUntil, tap } from "rxjs/operators";
-import { Step } from "src/app/classes";
-import { DataService } from "src/app/services/data.service";
 import { VisualizerComponentService } from "../main/visualizer/visualizer-component-service";
 
+import * as fromISolutionState from 'src/app/store/reducers/i-solution.reducers';
+import { selectCurrentSolution, selectCurrentSolutionSteps } from "src/app/store/selectors/i-solution.selectors";
+import { IStep } from "src/app/interfaces/i-step.interface";
+import { selectSnapshot } from "src/lib/process-builder/globals/select-snapshot";
+
 @Injectable()
-export class SolutionAnimationComponentService {
+export class SolutionAnimationComponentService implements OnDestroy, OnInit {
 
     private _animationRunning = new BehaviorSubject<boolean>(false);
     private _stepIndex = new BehaviorSubject<number>(0);
@@ -15,42 +19,63 @@ export class SolutionAnimationComponentService {
     animationRunning$ = this._animationRunning.asObservable();
     animationSpeed$ = this._animationSpeed.asObservable();
     stepIndex$ = this._stepIndex.asObservable();
-    currentStep$ = combineLatest([this._dataService.currentSteps$, this.stepIndex$]).pipe(map(([steps, index]: [Step[], number]) => steps[index]));
+
+    currentStep$ = combineLatest([this._solutionStore.select(selectCurrentSolutionSteps), this.stepIndex$]).pipe(map(([steps, index]: [IStep[] | null, number]) => {
+        if (!Array.isArray(steps)) {
+            return;
+        }
+        return steps[index];
+    }));
+
+    private _subscriptions = new Subscription();
 
     constructor(
         private _visualizerComponentService: VisualizerComponentService,
-        private _dataService: DataService
-    ) {
+        private _solutionStore: Store<fromISolutionState.State>,
+    ) { }
 
+    public ngOnDestroy(): void {
+        this._subscriptions.unsubscribe();
     }
 
-    setAnimationSpeed(value: number){
-        if(value > 0 && value < 60) this._animationSpeed.next(value);
-    }
-
-    startAnimation() {
-        this._dataService.currentSteps$.pipe(
-            take(1),
-            filter((steps: Step[]) => steps?.length > 0),
-            tap((steps: Step[]) => {
-                this._visualizerComponentService.clearScene();
-                this._animationRunning.next(true);
-            }),
-            switchMap((steps: Step[]) => timer(0, this._animationSpeed.value * 1000)
+    public ngOnInit(): void {
+        this._subscriptions.add(
+            combineLatest([this.animationRunning$, this.stepIndex$, this._solutionStore.select(selectCurrentSolutionSteps)])
                 .pipe(
-                    takeUntil(this._animationRunning.pipe(filter(x => x === false))),
-                    map((index: number) => {
-                        if (typeof steps[index] === 'undefined') {
-                            this._animationRunning.next(false);
-                            return null;
-                        }
-                        this._stepIndex.next(index);
-                        return steps[index];
-                    })
+                    filter(([animationRunning, _]) => animationRunning)
                 )
-            ),
-            filter((step: Step) => step ? true : false)
-        ).subscribe((step: Step) => this._visualizerComponentService.animateStep(step, false, true));
+                .subscribe(([_, index, steps]) => {
+                    const step = steps![index];
+                    this._visualizerComponentService.animateStep(step, false, true)
+                })
+        );
+    }
+
+    setAnimationSpeed(value: number) {
+        if (value > 0 && value < 60) this._animationSpeed.next(value);
+    }
+
+    async startAnimation() {
+        const currentSteps = await selectSnapshot(this._solutionStore.select(selectCurrentSolutionSteps));
+        if (!currentSteps || currentSteps.length === 0) {
+            return;
+        }
+
+        this._visualizerComponentService.clearScene();
+        this._animationRunning.next(true);
+
+        this._subscriptions.add(
+            timer(0, this._animationSpeed.value * 1000).pipe(
+                takeUntil(this._animationRunning.pipe(filter(x => x === false))),
+                tap((index: number) => {
+                    if (typeof currentSteps[index] === 'undefined') {
+                        this._animationRunning.next(false);
+                    }
+                })
+            ).subscribe((index) => {
+                this._stepIndex.next(index);
+            })
+        );
     }
 
     stopAnimation() {

@@ -3,8 +3,8 @@
     <mat-label class="label">Ziel wählen</mat-label>
     <mat-select [formControl]="valueControl">
 
-        <mat-option *ngFor="let group of (dataService.groups$|async)" [value]="group._Id">
-            {{group._Desc}}
+        <mat-option *ngFor="let group of (groups$|async)" [value]="group.id">
+            {{group.desc}}
         </mat-option>
 
         <mat-option class="smgr-manual-select-add-input-option">

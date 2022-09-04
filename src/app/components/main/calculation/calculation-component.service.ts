@@ -1,9 +1,7 @@
 import { Injectable } from "@angular/core";
 import { Router } from "@angular/router";
 import { Store } from "@ngrx/store";
-import { combineLatest, of, throwError, timer } from "rxjs";
-import { catchError, switchMap, take } from "rxjs/operators";
-import { ALGORITHMS, algorithms } from "src/app/globals";
+import { Algorithm, algorithms, MinimizationFunction } from "src/app/globals";
 import { ISolution } from "src/app/interfaces/i-solution.interface";
 import { AllInOneRowSolver } from "src/app/solvers/all-in-one-row";
 import { StartLeftBottomSolver } from "src/app/solvers/start-left-bottom";
@@ -16,7 +14,6 @@ import * as fromISolutionState from 'src/app/store/reducers/i-solution.reducers'
 import * as fromICalculationContextState from 'src/app/store/reducers/i-calculation-context.reducers';
 import * as fromIGroupState from 'src/app/store/reducers/i-group.reducers';
 import * as fromIOrderState from 'src/app/store/reducers/i-order.reducers';
-import * as fromIProductState from 'src/app/store/reducers/i-product.reducers';
 
 import { setCurrentSolution } from "src/app/store/actions/i-solution.actions";
 import { selectSnapshot } from "src/lib/process-builder/globals/select-snapshot";
@@ -31,7 +28,6 @@ export class CalculationComponentService {
         private _solutionStore: Store<fromISolutionState.State>,
         private _groupStore: Store<fromIGroupState.State>,
         private _orderStore: Store<fromIOrderState.State>,
-        private _productStore: Store<fromIProductState.State>,
         private _calculationContextStore: Store<fromICalculationContextState.State>,
         private _router: Router
     ) {
@@ -42,51 +38,35 @@ export class CalculationComponentService {
         wrapper.errors.splice(0, wrapper.errors.length);
         wrapper.status = AlgorithmCalculationStatus.PrepareCalculation;
 
-        let result;
+        let result: ISolution | undefined;
 
         switch (wrapper.algorithm.code) {
 
-            case ALGORITHMS.ALL_IN_ONE_ROW:
+            case Algorithm.AllInOneRow:
                 wrapper.status = AlgorithmCalculationStatus.Calculating;
                 result = await new AllInOneRowSolver(wrapper.solutionDescription, this._solutionStore, this._groupStore, this._orderStore, this._calculationContextStore).solve();
+                break;
+
+            case Algorithm.StartLeftBottom:
+                wrapper.status = AlgorithmCalculationStatus.Calculating;
+                result = await new StartLeftBottomSolver(wrapper.solutionDescription, this._solutionStore, this._groupStore, this._orderStore, this._calculationContextStore).solve();
+                break;
+
+            case Algorithm.SuperFlo:
+                wrapper.status = AlgorithmCalculationStatus.Calculating;
+                result = await new SuperFloSolver(wrapper.solutionDescription, MinimizationFunction.MIN_X, this._solutionStore, this._groupStore, this._orderStore, this._calculationContextStore).solve();
                 break;
 
         }
 
         if (!result) {
-            return;
+            this._calculationCallback.error({
+                wrapper: wrapper,
+                errorCode: CalculationError.AlgorithmNotImplemented
+            });
         }
 
-
-
-        timer(1000).pipe(switchMap(_ => {
-            switch (wrapper.algorithm.code) {
-
-                case ALGORITHMS.START_LEFT_BOTTOM:
-                    wrapper.status = AlgorithmCalculationStatus.Calculating;
-                    return combineLatest([of(wrapper), new StartLeftBottomSolver(wrapper.solutionDescription).solve().pipe(catchError((errorCode) => {
-                        return throwError({
-                            wrapper: wrapper,
-                            errorCode: errorCode
-                        });
-                    }))]);
-
-                case ALGORITHMS.SUPER_FLO:
-                    wrapper.status = AlgorithmCalculationStatus.Calculating;
-                    return combineLatest([of(wrapper), new SuperFloSolver(wrapper.solutionDescription).solve().pipe(catchError((errorCode) => {
-                        return throwError({
-                            wrapper: wrapper,
-                            errorCode: errorCode
-                        });
-                    }))]);
-
-                default:
-                    return throwError({
-                        wrapper: wrapper,
-                        errorCode: CalculationError.AlgorithmNotImplemented
-                    });
-            }
-        })).subscribe(this._calculationCallback);
+        this._calculationCallback.next([wrapper, result!]);
     }
 
     visualizeSolution(solution: ISolution) {
@@ -116,7 +96,7 @@ export class CalculationComponentService {
                 'status': AlgorithmCalculationStatus.Unchecked,
                 'solutionDescription': algorithm.title,
                 'solution': undefined,
-                'available': algorithm.code === ALGORITHMS.AI_SUPPORTED_SOLVER ? false : true
+                'available': algorithm.code === Algorithm.AISupportedSolver ? false : true
             });
         }
         const solutions = await selectSnapshot(this._solutionStore.select(selectSolutions));

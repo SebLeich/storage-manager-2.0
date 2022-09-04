@@ -1,7 +1,7 @@
 import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
 import { Subscription } from 'rxjs';
-import { Good } from 'src/app/classes';
 import { GOODS_PROVIDER, IGoodsProvider } from 'src/app/interfaces';
+import { IGood } from 'src/app/interfaces/i-good.interface';
 import { VisualizerComponentService } from '../main/visualizer/visualizer-component-service';
 
 @Component({
@@ -20,7 +20,7 @@ export class GoodsPanelComponent implements OnDestroy, OnInit {
     private _visualizerComponentService: VisualizerComponentService
   ) { }
 
-  hoverGood = (good: Good) => this._visualizerComponentService.highlightGood(good);
+  hoverGood = (good: IGood) => this._visualizerComponentService.highlightGood(good);
 
   ngOnDestroy(): void {
       for(let sub of this._subscriptions) sub.unsubscribe();
@@ -31,6 +31,6 @@ export class GoodsPanelComponent implements OnDestroy, OnInit {
 
   }
 
-  selectGood = (good: Good) => this._visualizerComponentService.selectGood(good);
+  selectGood = (good: IGood) => this._visualizerComponentService.selectGood(good);
 
 }

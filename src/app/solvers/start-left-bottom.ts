@@ -9,7 +9,6 @@ import * as fromIGroupState from 'src/app/store/reducers/i-group.reducers';
 import * as fromIOrderState from 'src/app/store/reducers/i-order.reducers';
 import * as fromISolutionState from 'src/app/store/reducers/i-solution.reducers';
 
-import { DataService } from "../services/data.service";
 import { Solver } from "./solver";
 import { Store } from "@ngrx/store";
 import { selectCalculationContextValid, selectContainerHeight, selectContainerWidth } from "../store/selectors/i-calculation-context.selectors";
@@ -23,7 +22,6 @@ import { setCurrentSolution } from '../store/actions/i-solution.actions';
 export class StartLeftBottomSolver extends Solver implements ISolver {
 
     constructor(
-        private _dataService: DataService,
         private _description: string = 'All In One Row',
         private _solutionStore: Store<fromISolutionState.State>,
         private _groupStore: Store<fromIGroupState.State>,

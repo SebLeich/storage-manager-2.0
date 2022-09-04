@@ -102,7 +102,7 @@
                         calculate
                     </div>
 
-                    <div class="control accent-2" (click)="calculationComponentService.visualizeSolution(wrapper.solution)" [ngClass]="{ 'disabled': wrapper.status !== AlgorithmCalculationStatus.Calculated }">
+                    <div class="control accent-2" (click)="calculationComponentService.visualizeSolution(wrapper.solution!)" [ngClass]="{ 'disabled': wrapper.status !== AlgorithmCalculationStatus.Calculated }">
                         visualize
                     </div>
 

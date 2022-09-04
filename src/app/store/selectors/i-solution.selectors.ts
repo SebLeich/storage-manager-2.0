@@ -1,6 +1,7 @@
 import { ISolution } from 'src/app/interfaces/i-solution.interface';
 import { createSelector } from '@ngrx/store';
 import { solutionFeatureKey, State } from '../reducers/i-solution.reducers';
+import { SolutionValidationService } from 'src/app/services/solution-validation.service';
 
 export const solutionsState = (state: any) => state[solutionFeatureKey] as State;
 
@@ -37,8 +38,8 @@ export const selectSolutionById = (solutionGuid: string | null) => createSelecto
 export const selectSolutionByAlgorithm = (arg: string | null | (() => string | null)) => createSelector(
   solutionsState,
   (state: State) => {
-    const algorithm = typeof arg === 'function'? arg(): arg;
-    if(!algorithm){
+    const algorithm = typeof arg === 'function' ? arg() : arg;
+    if (!algorithm) {
       return null;
     }
     const solution = Object.values(state.entities ?? {}).find(solution => solution?.algorithm === algorithm);
@@ -49,4 +50,26 @@ export const selectSolutionByAlgorithm = (arg: string | null | (() => string | n
 export const selectSolutions = createSelector(
   solutionsState,
   (state: State) => Object.values(state.entities ?? {}) as ISolution[]
+);
+
+export const selectCurrentSolutionValidation = createSelector(
+  solutionsState,
+  (state: State) => {
+    const currentSolution = state.entities[state.selectedSolutionId as any] ?? null;
+    if (!currentSolution) {
+      return null;
+    }
+    return SolutionValidationService.validateSolution(currentSolution);
+  }
+);
+
+export const selectCurrentSolutionSteps = createSelector(
+  solutionsState,
+  (state: State) => {
+    const currentSolution = state.entities[state.selectedSolutionId as any] ?? null;
+    if (!currentSolution) {
+      return null;
+    }
+    return currentSolution.steps ?? [];
+  }
 );

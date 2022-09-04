@@ -1,53 +1,57 @@
 <div class="body">
 
-    <ng-container *ngIf="(currentSteps$|async)?.length > 0; else noCalculationStepsAvailable">
+    <ng-container *ngIf="((currentSteps$|async)?.length ?? 0) > 0; else noCalculationStepsAvailable">
 
         <div class="headline">
             solution, calculated using {{(currentSteps$|async)?.length ?? 0}} steps
         </div>
-    
+
         <div class="control-wrapper">
-    
+
             <button mat-icon-button>
                 <mat-icon>fast_rewind</mat-icon>
             </button>
-    
-            <button [disabled]="solutionAnimationComponentService.animationRunning$|async" mat-icon-button (click)="solutionAnimationComponentService.startAnimation()">
+
+            <button [disabled]="solutionAnimationComponentService.animationRunning$|async" mat-icon-button
+                (click)="solutionAnimationComponentService.startAnimation()">
                 <mat-icon>play_arrow</mat-icon>
             </button>
-    
-            <button [disabled]="!(solutionAnimationComponentService.animationRunning$|async)" mat-icon-button (click)="solutionAnimationComponentService.stopAnimation()">
+
+            <button [disabled]="!(solutionAnimationComponentService.animationRunning$|async)" mat-icon-button
+                (click)="solutionAnimationComponentService.stopAnimation()">
                 <mat-icon>pause</mat-icon>
             </button>
-    
-            <input type="number" matInput [value]="solutionAnimationComponentService.animationSpeed$|async" (input)="solutionAnimationComponentService.setAnimationSpeed($event.value)" min="1" max="60" />
-    
+
+            <input type="number" matInput [value]="solutionAnimationComponentService.animationSpeed$|async"
+                (input)="solutionAnimationComponentService.setAnimationSpeed($any($event).value)" min="1" max="60" />
+
             <button mat-icon-button>
                 <mat-icon>fast_forward</mat-icon>
             </button>
-    
+
         </div>
-    
+
         <div class="step-overview" (mouseleave)="mouseleave()">
-    
-            <div class="step-wrapper" *ngFor="let step of (currentSteps$|async)" (mouseenter)="visualizerComponentService.animateStep(step)">
-    
+
+            <div class="step-wrapper" *ngFor="let step of (currentSteps$|async)"
+                (mouseenter)="visualizerComponentService.animateStep(step)">
+
                 <div class="sequence-number">
-                    {{step.sequenceNumber+1}}
+                    {{(step.sequenceNumber ?? 0) + 1}}
                 </div>
-    
+
                 <div class="message-wrapper">
-    
+
                     <div class="message" *ngFor="let message of step.messages">
                         {{message}}
                     </div>
-    
+
                 </div>
-    
+
             </div>
-    
+
         </div>
-        
+
     </ng-container>
 
 </div>

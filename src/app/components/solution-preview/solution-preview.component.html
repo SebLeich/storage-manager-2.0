@@ -23,7 +23,7 @@
             </div>
 
             <div class="next-solution-wrapper">
-              <button mat-icon-button [disabled]="(solutions$ | async)?.length < 2"
+              <button mat-icon-button [disabled]="((solutions$ | async)?.length ?? 0) < 2"
                 (click)="solutionPreviewComponentService.nextSolution()" matTooltip="next solution">
                 <mat-icon>chevron_right</mat-icon>
               </button>
@@ -31,7 +31,7 @@
           </div>
 
           <div class="container-wrapper">
-            <app-container-preview [container]="container$|async"></app-container-preview>
+            <app-container-preview [container]="(container$|async)!"></app-container-preview>
           </div>
         </div>
       </mat-expansion-panel>
@@ -83,7 +83,7 @@
       <mat-expansion-panel>
         <mat-expansion-panel-header>
           <mat-panel-title class="expansion-panel-headline" [class.error]="
-              (currentSolutionValidation$ | async)?.length > 0
+              ((currentSolutionValidation$ | async)?.length ?? 0) > 0
             ">
             validator
           </mat-panel-title>
