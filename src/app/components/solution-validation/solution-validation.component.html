@@ -5,7 +5,7 @@
         <div class="error-wrapper" *ngFor="let error of ((dataService.currentSolutionValidation$|async) ?? [])">
 
             <div class="error-title">
-                {{error.error|solutionValidationError}}
+                {{$any(error).error|solutionValidationError}}
             </div>
 
             <div class="control">

@@ -2,7 +2,7 @@
 
     <ng-container *ngIf="(goodsProvider.goods$|async)?.length > 0; else noGoodsAvailable">
 
-        <table mat-table class="smgr-table small striped" [dataSource]="goodsProvider.goods$|async">
+        <table mat-table class="smgr-table small striped" [dataSource]="$any(goodsProvider.goods$|async)">
 
             <ng-container matColumnDef="desc">
                 <th mat-header-cell *matHeaderCellDef>Beschreibung</th>

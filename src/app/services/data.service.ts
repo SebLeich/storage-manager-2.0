@@ -1,10 +1,6 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, combineLatest } from 'rxjs';
-import { map } from 'rxjs/operators';
 import { selectSnapshot } from 'src/lib/process-builder/globals/select-snapshot';
 import { Dimension } from '../classes/dimension.class';
-import { compare } from '../globals';
-import { IGroup } from '../interfaces/i-group.interface';
 import defaultSolution from 'src/assets/exampleSolution.json';
 import { Store } from '@ngrx/store';
 
@@ -22,46 +18,9 @@ import { IDimension } from '../interfaces/i-dimension.interface';
 })
 export class DataService {
 
-  private _groups = new BehaviorSubject<IGroup[]>([]);
-  groups$ = this._groups.asObservable();
-  ascSortedGroups$ = this.groups$.pipe(map((groups: IGroup[]) => groups.sort((a, b) => compare(a.id, b.id, true))));
-  descSortedGroups$ = this.groups$.pipe(map((groups: IGroup[]) => groups.sort((a, b) => compare(a.id, b.id, false))));
-  get groups() {
-    return this._groups.value;
-  }
-
-  private _containerWidth = new BehaviorSubject<number | null>(null);
-  private _containerHeight = new BehaviorSubject<number | null>(null);
-  containerWidth$ = this._containerWidth.asObservable();
-  containerHeight$ = this._containerHeight.asObservable();
-  containerValid$ = combineLatest([this.containerHeight$, this.containerWidth$]).pipe(map(([height, width]) => typeof height === 'number' && typeof width === 'number' && height > 0 && width > 0));
-
-  private _unit = new BehaviorSubject<'mm' | 'cm' | 'dm' | 'm'>('mm');
-  unit$ = this._unit.asObservable();
-
-  get unit() {
-    return this._unit.value;
-  }
-
   constructor(
     private _solutionStore: Store<fromISolutionState.State>,
   ) { }
-
-  addGroup(group: IGroup) {
-    let existing = this._groups.value;
-    if (existing.findIndex(x => x.desc === group.desc) > -1) return;
-    if (typeof group.id !== 'number' || existing.findIndex(x => x.id === group.id) > -1) group.id = Math.max(...existing.map(x => x.id), 0) + 1;
-    this._groups.next([...existing, group]);
-  }
-
-  addGroups(groups: IGroup[]) {
-    let existing = this._groups.value;
-    groups = groups.filter(x => existing.findIndex(y => y.desc === x.desc) === -1);
-    for (let group of groups) {
-      if (typeof group.id !== 'number' || existing.findIndex(x => x.id === group.id) > -1) group.id = Math.max(...existing.map(x => x.id), 0) + 1;
-    }
-    this._groups.next([...existing, ...groups]);
-  }
 
   async downloadCurrentSolution() {
     const solution = await selectSnapshot(this._solutionStore.select(selectCurrentSolution));
@@ -83,11 +42,7 @@ export class DataService {
     this._solutionStore.dispatch(addSolution({ solution: defaultSolution }));
     return { ...defaultSolution };
   }
-
-  setContainerHeight = (height: number) => this._containerHeight.next(height);
-  setContainerWidth = (width: number) => this._containerWidth.next(width);
-  setUnit = (unit: 'mm' | 'cm' | 'dm' | 'm') => this._unit.next(unit);
-
+  
   static getContainerDimension(container: IContainer): Dimension {
     let dimension = new Dimension(container.width, container.height, container.length);
     dimension.xCoord = 0;

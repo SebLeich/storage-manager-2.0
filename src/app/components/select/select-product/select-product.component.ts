@@ -1,8 +1,11 @@
-import { Component, forwardRef, OnDestroy, OnInit } from '@angular/core';
+import { Component, forwardRef, OnDestroy } from '@angular/core';
 import { ControlValueAccessor, UntypedFormControl, NG_VALUE_ACCESSOR } from '@angular/forms';
+import { Store } from '@ngrx/store';
 import { Subscription } from 'rxjs';
-import { Product } from 'src/app/classes';
-import { DataService } from 'src/app/services/data.service';
+import { IProduct } from 'src/app/interfaces/i-product.interface';
+import { addProduct } from 'src/app/store/actions/i-product.actions';
+
+import * as fromIProductState from 'src/app/store/reducers/i-product.reducers';
 
 @Component({
   selector: 'app-select-product',
@@ -23,17 +26,19 @@ export class SelectProductComponent implements ControlValueAccessor, OnDestroy {
   private _subscriptions: Subscription = new Subscription();
 
   constructor(
-    public dataService: DataService
+    private _productStore: Store<fromIProductState.State>
   ) { }
 
   addProduct(event: KeyboardEvent) {
     event.stopPropagation();
-    this.dataService.addProduct({
-      'description': (event.target as HTMLInputElement).value,
-      'height': 0,
-      'length': 0,
-      'width': 0
-    } as Product);
+    this._productStore.dispatch(addProduct({
+      product: {
+        'description': (event.target as HTMLInputElement).value,
+        'height': 0,
+        'length': 0,
+        'width': 0
+      } as IProduct
+    }));
     (event.target as HTMLInputElement).value = '';
   }
 

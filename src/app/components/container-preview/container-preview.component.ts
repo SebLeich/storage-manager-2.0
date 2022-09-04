@@ -1,6 +1,6 @@
 import { Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
 import { ChartOptions } from 'chart.js';
-import { Container } from 'src/app/classes';
+import { IContainer } from 'src/app/interfaces/i-container.interface';
 
 @Component({
   selector: 'app-container-preview',
@@ -9,7 +9,7 @@ import { Container } from 'src/app/classes';
 })
 export class ContainerPreviewComponent implements OnChanges, OnInit {
 
-  @Input() public container: Container;
+  @Input() public container!: IContainer;
 
   public datasets = [
     {

@@ -16,5 +16,5 @@ export interface IConfigurationFormGroupProvider {
 
 export const SUBMIT_CONFIGURATION_PROVIDER = new InjectionToken("SUBMIT_CONFIGURATION_PROVIDER");
 export interface ISubmitConfigurationProvider {
-    takeConfiguration();
+    takeConfiguration(): void;
 }

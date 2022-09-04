@@ -1,13 +1,18 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { UntypedFormArray, UntypedFormGroup } from '@angular/forms';
 import { SortDirection } from '@angular/material/sort';
+import { Store } from '@ngrx/store';
 import { Subscription } from 'rxjs';
-import { filter, map } from 'rxjs/operators';
-import { Order, Product } from 'src/app/classes';
 import { CsvService } from 'src/app/services/csv.service';
 import { DataService } from 'src/app/services/data.service';
 import { showAnimation } from 'src/lib/shared/animations/show';
 import { OrdersComponentService } from './orders-component.service';
+
+import * as fromIProductState from 'src/app/store/reducers/i-product.reducers';
+
+import { selectSnapshot } from 'src/lib/process-builder/globals/select-snapshot';
+import { selectProductByDescription } from 'src/app/store/selectors/i-product.selectors';
+import { IOrder } from 'src/app/interfaces/i-order.interface';
 
 @Component({
   selector: 'app-orders',
@@ -28,7 +33,8 @@ export class OrdersComponent implements OnDestroy, OnInit {
   constructor(
     public dataService: DataService,
     public csvService: CsvService,
-    public ordersComponentService: OrdersComponentService
+    public ordersComponentService: OrdersComponentService,
+    private _productStore: Store<fromIProductState.State>
   ) {
 
   }
@@ -43,32 +49,36 @@ export class OrdersComponent implements OnDestroy, OnInit {
   ngOnInit(): void {
   }
 
-  orderCollectionToCSV(){
+  orderCollectionToCSV() {
     this.ordersComponentService.takeOrders();
     this.csvService.downloadOrderCollectionToCSV();
   }
 
-  setOrderProduct(product: string, formGroup: UntypedFormGroup) {
-    if (typeof product !== 'string') return;
-    this.dataService.products$
-      .pipe(map((products: Product[]) => products.find(x => x.description === product)), filter(x => x? true: false))
-      .subscribe((product: Product) => {
-        formGroup.controls['description'].setValue(product.description);
-        formGroup.controls['height'].setValue(product.height);
-        formGroup.controls['width'].setValue(product.width);
-        formGroup.controls['length'].setValue(product.length);
-      });
+  async setOrderProduct(productDescription: string, formGroup: UntypedFormGroup) {
+    const product = await selectSnapshot(this._productStore.select(selectProductByDescription(productDescription)));
+    if (!product) {
+      return;
+    }
+
+    formGroup.controls['description'].setValue(product.description);
+    formGroup.controls['height'].setValue(product.height);
+    formGroup.controls['width'].setValue(product.width);
+    formGroup.controls['length'].setValue(product.length);
   }
 
-  updateProductDimension(value: number, product: string, dimension: 'length' | 'width' | 'height') {
-    if (typeof product !== 'string' || typeof value !== 'number') return;
+  async updateProductDimension(value: number, productDescription: string, dimension: 'length' | 'width' | 'height') {
+    if (productDescription == null || typeof value !== 'number') return;
 
-    this.dataService.products$.pipe(map(x => x.find(y => y.description === product)))
-      .subscribe((product: Product) => {
-        product[dimension] = value;
-        this.ordersControl.controls.filter(x => (x.value as Order).description === product.description).forEach((x: UntypedFormGroup) => {
-          x.controls[dimension].setValue(value);
-        });
+    const product = await selectSnapshot(this._productStore.select(selectProductByDescription(productDescription)));
+    if (!product) {
+      return;
+    }
+
+    product[dimension] = value;
+    this.ordersControl.controls
+      .filter(x => (x.value as IOrder).description === product.description)
+      .forEach((x) => {
+        (x as UntypedFormGroup).controls[dimension].setValue(value);
       });
   }
 

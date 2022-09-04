@@ -2,9 +2,14 @@ import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { MatDialogRef } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
-import { SolutionEntity } from 'src/app/classes';
+import { Store } from '@ngrx/store';
+import { ISolution } from 'src/app/interfaces/i-solution.interface';
 import { CsvService } from 'src/app/services/csv.service';
-import { DataService } from 'src/app/services/data.service';
+import { setCurrentSolution } from 'src/app/store/actions/i-solution.actions';
+
+import defaultSolution from 'src/assets/exampleSolution.json';
+
+import * as fromISolutionState from 'src/app/store/reducers/i-solution.reducers';
 
 @Component({
   selector: 'app-no-solution-dialog',
@@ -13,14 +18,14 @@ import { DataService } from 'src/app/services/data.service';
 })
 export class NoSolutionDialogComponent implements OnInit {
 
-  @ViewChild('uploadSolution', { read: ElementRef }) uploadSolutionInput: ElementRef<HTMLInputElement>;
+  @ViewChild('uploadSolution', { read: ElementRef }) uploadSolutionInput!: ElementRef<HTMLInputElement>;
 
   constructor(
     private _ref: MatDialogRef<NoSolutionDialogComponent>,
     private _router: Router,
-    private _dataService: DataService,
     private _csvService: CsvService,
-    private _snackBar: MatSnackBar
+    private _snackBar: MatSnackBar,
+    private _solutionStore: Store<fromISolutionState.State>,
   ) { }
 
   close = () => this._ref.close();
@@ -44,15 +49,15 @@ export class NoSolutionDialogComponent implements OnInit {
   }
 
   uploadOwnSolution(evt: InputEvent) {
-    let file: File = (evt.target as HTMLInputElement).files[0];
+    let file: File = (evt.target as HTMLInputElement).files![0];
     (this.uploadSolutionInput.nativeElement).value = '';
     if (!file) return;
     let reader = new FileReader();
     reader.onloadend = () => {
       try {
 
-        let result: SolutionEntity = JSON.parse(reader.result as string);
-        this._dataService.setCurrentSolution(result);
+        let solution: ISolution = JSON.parse(reader.result as string);
+        this._solutionStore.dispatch(setCurrentSolution({ solution }));
         this._router.navigate(['/visualizer']);
         this._ref.close();
 
@@ -67,7 +72,8 @@ export class NoSolutionDialogComponent implements OnInit {
 
   useExampleSolution() {
     this.close();
-    this._dataService.loadDefaultSolution().subscribe(() => this._router.navigate(['/visualizer']));
+    this._solutionStore.dispatch(setCurrentSolution({ solution: defaultSolution }));
+    this._router.navigate(['/visualizer']);
   }
 
 }

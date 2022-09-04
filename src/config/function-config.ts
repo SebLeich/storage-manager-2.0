@@ -56,7 +56,7 @@ export default [
                 input.setAttribute('accept', 'application/json');
                 input.style.display = 'none';
                 input.onchange = (evt) => {
-                    let file: File = (evt.target as HTMLInputElement).files[0];
+                    let file: File = (evt.target as HTMLInputElement).files![0];
                     if (file) {
                         let fileReader = new FileReader();
                         fileReader.onload = () => {

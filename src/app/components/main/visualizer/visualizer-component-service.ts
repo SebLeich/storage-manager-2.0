@@ -1,8 +1,6 @@
 import { ElementRef, Injectable } from "@angular/core";
 import { BehaviorSubject, combineLatest, ReplaySubject, Subject, Subscription } from "rxjs";
 import { debounceTime, filter, map, take } from "rxjs/operators";
-import { Good } from "src/app/classes";
-import { Container } from "src/app/classes/container.class";
 import { defaultGoodEdgeColor, infinityReplacement, keyboardControlMoveStep, selectedGoodEdgeColor } from "src/app/globals";
 import { IGroup } from "src/app/interfaces/i-group.interface";
 import { IStep } from "src/app/interfaces/i-step.interface";
@@ -12,6 +10,16 @@ import * as ThreeJS from 'three';
 import { v4 as generateGuid } from 'uuid';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 import { Dimension } from "src/app/classes/dimension.class";
+import { IGood } from "src/app/interfaces/i-good.interface";
+
+import * as fromISolutionState from 'src/app/store/reducers/i-solution.reducers';
+import * as fromIGroupState from 'src/app/store/reducers/i-group.reducers';
+
+import { Store } from "@ngrx/store";
+import { selectCurrentSolution } from "src/app/store/selectors/i-solution.selectors";
+import { IContainer } from "src/app/interfaces/i-container.interface";
+import { selectGroups } from "src/app/store/selectors/i-group.selectors";
+import { IDimension } from "src/app/interfaces/i-dimension.interface";
 
 @Injectable()
 export class VisualizerComponentService {
@@ -23,11 +31,11 @@ export class VisualizerComponentService {
     gridHelper!: ThreeJS.GridHelper;
     ray: ThreeJS.Raycaster = new ThreeJS.Raycaster();
 
-    private _container: ReplaySubject<Container> = new ReplaySubject<Container>(1);
+    private _container = new ReplaySubject<IContainer>(1);
     private _visualizerWrapper: ReplaySubject<ElementRef<HTMLDivElement>> = new ReplaySubject<ElementRef<HTMLDivElement>>(1);
     private _hoverIntersections: ReplaySubject<MouseEvent> = new ReplaySubject<MouseEvent>(1);
-    private _hoveredElement: BehaviorSubject<{ preview: string, groupColor: string | null, groupId: number | null, seqNr: number | null, goodId: number | null, mesh: ThreeJS.Mesh, edges: ThreeJS.LineSegments } | null | undefined> = new BehaviorSubject<{ preview: string, groupColor: string | null, groupId: number | null, seqNr: number | null, goodId: number | null, mesh: ThreeJS.Mesh, edges: ThreeJS.LineSegments } | null | undefined>(null);
-    private _selectedElement: BehaviorSubject<{ preview: string, groupColor: string | null, groupId: number | null, seqNr: number | null, goodId: number | null, mesh: ThreeJS.Mesh, edges: ThreeJS.LineSegments } | null | undefined> = new BehaviorSubject<{ preview: string, groupColor: string | null, groupId: number | null, seqNr: number | null, goodId: number | null, mesh: ThreeJS.Mesh, edges: ThreeJS.LineSegments } | null | undefined>(null);
+    private _hoveredElement = new BehaviorSubject<{ preview: string, groupColor: string | null, groupId: string | null, seqNr: number | null, goodId: string | null, mesh: ThreeJS.Mesh, edges: ThreeJS.LineSegments } | null | undefined>(null);
+    private _selectedElement = new BehaviorSubject<{ preview: string, groupColor: string | null, groupId: string | null, seqNr: number | null, goodId: string | null, mesh: ThreeJS.Mesh, edges: ThreeJS.LineSegments } | null | undefined>(null);
 
     visualizerWrapper$ = this._visualizerWrapper.asObservable();
     container$ = this._container.asObservable();
@@ -46,16 +54,18 @@ export class VisualizerComponentService {
     private _resized = new Subject<void>();
     resized$ = this._resized.pipe(debounceTime(100));
 
-    private _meshes: { preview: string, groupColor: string | null, groupId: number | null, seqNr: number | null, goodId: number | null, mesh: ThreeJS.Mesh, edges: ThreeJS.LineSegments }[] = [];
+    private _meshes: { preview: string, groupColor: string | null, groupId: string | null, seqNr: number | null, goodId: string | null, mesh: ThreeJS.Mesh, edges: ThreeJS.LineSegments }[] = [];
     private _subscriptions: Subscription[] = [];
 
     constructor(
-        private _dataService: DataService
+        private _dataService: DataService,
+        private _solutionStore: Store<fromISolutionState.State>,
+        private _groupStore: Store<fromIGroupState.State>,
     ) {
         this._setUp();
     }
 
-    addContainerToScene(container: Container, groups: IGroup[]) {
+    addContainerToScene(container: IContainer, groups: IGroup[]) {
         this.clearScene();
         this._addUnloadingArrowToScene(container.height!, container.length!);
         this._addBaseGridToScene(container.height!, container.length!);
@@ -69,17 +79,17 @@ export class VisualizerComponentService {
     }
 
     async animateStep(step: IStep, keepPreviousGoods: boolean = false, keepPreviousUnusedSpaces: boolean = false) {
-        const container = await selectSnapshot(this._dataService.currentContainer$);
+        const container = await selectSnapshot(this._solutionStore.select(selectCurrentSolution).pipe(map(solution => solution?.container!)));
         if (!container) {
             return;
         }
-        this.clearScene(keepPreviousGoods, keepPreviousUnusedSpaces, [step.usedDimension?.guid ?? null].filter(guid => !!guid) as string[]);
+        this.clearScene(keepPreviousGoods, keepPreviousUnusedSpaces, [step.usedDimension?.id ?? null].filter(guid => !!guid) as string[]);
         this._addUnloadingArrowToScene(container.height, container.length);
         this._addBaseGridToScene(container.height, container.length);
         this._addContainerToScene(DataService.getContainerDimension(container));
         if (step.dimension) this._addElementToScene(step.dimension, '', 'good', step.sequenceNumber, null, null, DataService.getContainerDimension(container));
-        for (let unusedDimension of step.unusedDimensions) {
-            this._addElementToScene(unusedDimension, '', unusedDimension.length === Infinity ? 'infiniteSpace' : 'unusedSpace', step.sequenceNumber, null, null, DataService.getContainerDimension(container), unusedDimension.guid);
+        for (let unusedDimension of step.unusedDimensions ?? []) {
+            this._addElementToScene(unusedDimension, '', unusedDimension.length === Infinity ? 'infiniteSpace' : 'unusedSpace', step.sequenceNumber, null, null, DataService.getContainerDimension(container), unusedDimension.id);
         }
     }
 
@@ -96,7 +106,7 @@ export class VisualizerComponentService {
         this._subscriptions = [];
     }
 
-    highlightGood(good: Good) {
+    highlightGood(good: IGood) {
         const meshes = this.scene.children.filter(x => x instanceof ThreeJS.Mesh) as ThreeJS.Mesh[];
         meshes.map(mesh => this._meshes.find(meshWrapper => meshWrapper.mesh === mesh))
             .filter(meshWrapper => !!meshWrapper)
@@ -105,7 +115,7 @@ export class VisualizerComponentService {
             });
     }
 
-    highlightGoods = (goods: Good[]) => goods.forEach(good => this.highlightGood(good));
+    highlightGoods = (goods: IGood[]) => goods.forEach(good => this.highlightGood(good));
 
     keydown(event: KeyboardEvent) {
         let updateProjection = false;
@@ -162,15 +172,15 @@ export class VisualizerComponentService {
     }
 
     async reRenderCurrentContainer() {
-        const container = await selectSnapshot(this._dataService.currentContainer$);
-        const groups = await selectSnapshot(this._dataService.currentGroups$);
+        const container = await selectSnapshot(this._solutionStore.select(selectCurrentSolution).pipe(map(solution => solution?.container!)));
+        const groups = await selectSnapshot(this._groupStore.select(selectGroups));
         if (!container) {
             return;
         }
         this.addContainerToScene(container, groups);
     }
 
-    selectGood(good: Good) {
+    selectGood(good: IGood) {
         let wrapper = this._meshes.find(x => x.goodId === good.id);
         if (wrapper) this._selectedElement.next(wrapper);
     }
@@ -203,7 +213,7 @@ export class VisualizerComponentService {
     triggerResizeEvent = () => this._resized.next();
 
     async updateGroupColors() {
-        const groups: IGroup[] = await selectSnapshot(this._dataService.currentGroups$);
+        const groups: IGroup[] = await selectSnapshot(this._groupStore.select(selectGroups));
         this._meshes.forEach(meshWrapper => {
             const group = groups.find(group => group.id === meshWrapper.goodId);
             meshWrapper.groupColor = group?.color ?? '';
@@ -217,11 +227,11 @@ export class VisualizerComponentService {
         this.scene.add(gridHelper);
     }
 
-    private _addContainerToScene(dimension: Dimension) {
+    private _addContainerToScene(dimension: IDimension) {
         this._addElementToScene(dimension, 'Container', 'bordered');
     }
 
-    private _addElementToScene(dimension: Dimension, preview: string, type: null | 'bordered' | 'good' | 'infiniteSpace' | 'unusedSpace', sequenceNumber: number | null = null, goodId: number | null = null, group: IGroup | null = null, parentDimension: Dimension | null = null, dimensionGuid: string | null = null) {
+    private _addElementToScene(dimension: IDimension, preview: string, type: null | 'bordered' | 'good' | 'infiniteSpace' | 'unusedSpace', sequenceNumber: number | null = null, goodId: string | null = null, group: IGroup | null = null, parentDimension: Dimension | null = null, dimensionGuid: string | null = null) {
 
         var length = dimension.length;
         if (!length) length = (parentDimension!.length! - dimension.zCoord!); // rotation
@@ -242,7 +252,7 @@ export class VisualizerComponentService {
                 edges = new ThreeJS.LineSegments(new ThreeJS.EdgesGeometry(mesh.geometry), new ThreeJS.LineBasicMaterial({ color: defaultGoodEdgeColor, linewidth: 1 }));
                 edges.userData = { type: type, dimensionGuid: dimensionGuid };
 
-                var meshWrapper = {
+                const meshWrapper = {
                     preview: preview,
                     groupColor: color,
                     groupId: groupId,
@@ -346,12 +356,12 @@ export class VisualizerComponentService {
                     }
                 }
             }),
-            this._dataService.currentSolution$
+            this._solutionStore.select(selectCurrentSolution)
                 .pipe(
                     filter(solution => !!solution && !!solution.container)
                 )
                 .subscribe((solution) => {
-                    this.addContainerToScene(solution!.container!, solution!.groups);
+                    this.addContainerToScene(solution!.container!, solution!.groups!);
                 })
         ]);
     }

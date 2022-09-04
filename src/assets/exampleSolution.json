@@ -10,279 +10,279 @@
                 "id": "ab34762f-ccd1-4258-b3e1-69558728e6z0",
                 "desc": "Palette 1",
                 "height": 1000,
-                "group": 1,
+                "group": "ab34762f-ccd1-4258-b3e1-69558728d6b0",
                 "width": 1050,
                 "length": 1000,
                 "turningAllowed": true,
                 "turned": false,
                 "stackingAllowed": false,
-                
                 "xCoord": 0,
                 "yCoord": 0,
                 "zCoord": 0,
-                "sequenceNr": 0
+                "sequenceNr": 0,
+                "stackedOnGood": null
             },
             {
                 "id": "ab34762f-ccd1-4258-b3e1-69558728e6z1",
                 "desc": "Palette 1",
                 "height": 1000,
-                "group": 1,
+                "group": "ab34762f-ccd1-4258-b3e1-69558728d6b0",
                 "width": 1050,
                 "length": 1000,
                 "turningAllowed": true,
                 "turned": false,
                 "stackingAllowed": false,
-                
                 "xCoord": 1050,
                 "yCoord": 0,
                 "zCoord": 0,
-                "sequenceNr": 1
+                "sequenceNr": 1,
+                "stackedOnGood": null
             },
             {
                 "id": "ab34762f-ccd1-4258-b3e1-69558728e6z2",
                 "desc": "Palette 1",
                 "height": 1000,
-                "group": 1,
+                "group": "ab34762f-ccd1-4258-b3e1-69558728d6b0",
                 "width": 1050,
                 "length": 1000,
                 "turningAllowed": true,
                 "turned": false,
                 "stackingAllowed": false,
-                
                 "xCoord": 0,
                 "yCoord": 0,
                 "zCoord": 1000,
-                "sequenceNr": 3
+                "sequenceNr": 3,
+                "stackedOnGood": null
             },
             {
                 "id": "ab34762f-ccd1-4258-b3e1-69558728e6z3",
                 "desc": "Palette 1",
                 "height": 1000,
-                "group": 1,
+                "group": "ab34762f-ccd1-4258-b3e1-69558728d6b0",
                 "width": 1050,
                 "length": 1000,
                 "turningAllowed": true,
                 "turned": false,
                 "stackingAllowed": false,
-                
                 "xCoord": 1050,
                 "yCoord": 0,
                 "zCoord": 1000,
-                "sequenceNr": 4
+                "sequenceNr": 4,
+                "stackedOnGood": null
             },
             {
                 "id": "ab34762f-ccd1-4258-b3e1-69558728e6z4",
                 "desc": "Palette 1",
                 "height": 1000,
-                "group": 1,
+                "group": "ab34762f-ccd1-4258-b3e1-69558728d6b0",
                 "width": 1050,
                 "length": 1000,
                 "turningAllowed": true,
                 "turned": false,
                 "stackingAllowed": false,
-                
                 "xCoord": 0,
                 "yCoord": 0,
                 "zCoord": 2000,
-                "sequenceNr": 7
+                "sequenceNr": 7,
+                "stackedOnGood": null
             },
             {
                 "id": "ab34762f-ccd1-4258-b3e1-69558728e6z5",
                 "desc": "Palette 1",
                 "height": 1000,
-                "group": 1,
+                "group": "ab34762f-ccd1-4258-b3e1-69558728d6b0",
                 "width": 1050,
                 "length": 1000,
                 "turningAllowed": true,
                 "turned": false,
                 "stackingAllowed": false,
-                
                 "xCoord": 1050,
                 "yCoord": 0,
                 "zCoord": 2000,
-                "sequenceNr": 8
+                "sequenceNr": 8,
+                "stackedOnGood": null
             },
             {
                 "id": "ab34762f-ccd1-4258-b3e1-69558728e6z6",
                 "desc": "Palette 2",
                 "height": 400,
-                "group": 1,
+                "group": "ab34762f-ccd1-4258-b3e1-69558728d6b0",
                 "width": 700,
                 "length": 500,
                 "turningAllowed": true,
                 "turned": false,
                 "stackingAllowed": false,
-                
                 "xCoord": 0,
                 "yCoord": 1000,
                 "zCoord": 0,
-                "sequenceNr": 11
+                "sequenceNr": 11,
+                "stackedOnGood": null
             },
             {
                 "id": "ab34762f-ccd1-4258-b3e1-69558728e6z7",
                 "desc": "Palette 2",
                 "height": 400,
-                "group": 1,
+                "group": "ab34762f-ccd1-4258-b3e1-69558728d6b0",
                 "width": 700,
                 "length": 500,
                 "turningAllowed": true,
                 "turned": false,
                 "stackingAllowed": false,
-                
                 "xCoord": 700,
                 "yCoord": 1000,
                 "zCoord": 0,
-                "sequenceNr": 12
+                "sequenceNr": 12,
+                "stackedOnGood": null
             },
             {
                 "id": "ab34762f-ccd1-4258-b3e1-69558728e6z8",
                 "desc": "Palette 2",
                 "height": 400,
-                "group": 1,
+                "group": "ab34762f-ccd1-4258-b3e1-69558728d6b0",
                 "width": 700,
                 "length": 500,
                 "turningAllowed": true,
                 "turned": false,
                 "stackingAllowed": false,
-                
                 "xCoord": 1400,
                 "yCoord": 1000,
                 "zCoord": 0,
-                "sequenceNr": 14
+                "sequenceNr": 14,
+                "stackedOnGood": null
             },
             {
                 "id": "ab34762f-ccd1-4258-b3e1-69558728e6z9",
                 "desc": "Palette 2",
                 "height": 400,
-                "group": 1,
+                "group": "ab34762f-ccd1-4258-b3e1-69558728d6b0",
                 "width": 700,
                 "length": 500,
                 "turningAllowed": true,
                 "turned": false,
                 "stackingAllowed": false,
-                
                 "xCoord": 0,
                 "yCoord": 1000,
                 "zCoord": 500,
-                "sequenceNr": 16
+                "sequenceNr": 16,
+                "stackedOnGood": null
             },
             {
                 "id": "ab34762f-ccd1-4258-b3e1-69558728e6y0",
                 "desc": "Palette 2",
                 "height": 400,
-                "group": 2,
+                "group": "ab34762f-ccd1-4258-b3e1-69558728d6b1",
                 "width": 700,
                 "length": 500,
                 "turningAllowed": true,
                 "turned": false,
                 "stackingAllowed": false,
-                
                 "xCoord": 700,
                 "yCoord": 1000,
                 "zCoord": 500,
-                "sequenceNr": 17
+                "sequenceNr": 17,
+                "stackedOnGood": null
             },
             {
                 "id": "ab34762f-ccd1-4258-b3e1-69558728e6y1",
                 "desc": "Palette 2",
                 "height": 400,
-                "group": 2,
+                "group": "ab34762f-ccd1-4258-b3e1-69558728d6b1",
                 "width": 700,
                 "length": 500,
                 "turningAllowed": true,
                 "turned": false,
                 "stackingAllowed": false,
-                
                 "xCoord": 1400,
                 "yCoord": 1000,
                 "zCoord": 500,
-                "sequenceNr": 19
+                "sequenceNr": 19,
+                "stackedOnGood": null
             },
             {
                 "id": "ab34762f-ccd1-4258-b3e1-69558728e6y2",
                 "desc": "Palette 2",
                 "height": 400,
-                "group": 2,
+                "group": "ab34762f-ccd1-4258-b3e1-69558728d6b1",
                 "width": 700,
                 "length": 500,
                 "turningAllowed": true,
                 "turned": false,
                 "stackingAllowed": false,
-                
                 "xCoord": 0,
                 "yCoord": 1000,
                 "zCoord": 1000,
-                "sequenceNr": 22
+                "sequenceNr": 22,
+                "stackedOnGood": null
             },
             {
                 "id": "ab34762f-ccd1-4258-b3e1-69558728e6y3",
                 "desc": "Palette 2",
                 "height": 400,
-                "group": 2,
+                "group": "ab34762f-ccd1-4258-b3e1-69558728d6b1",
                 "width": 700,
                 "length": 500,
                 "turningAllowed": true,
                 "turned": false,
                 "stackingAllowed": false,
-                
                 "xCoord": 700,
                 "yCoord": 1000,
                 "zCoord": 1000,
-                "sequenceNr": 23
+                "sequenceNr": 23,
+                "stackedOnGood": null
             },
             {
                 "id": "ab34762f-ccd1-4258-b3e1-69558728e6y4",
                 "desc": "Palette 2",
                 "height": 400,
-                "group": 2,
+                "group": "ab34762f-ccd1-4258-b3e1-69558728d6b1",
                 "width": 700,
                 "length": 500,
                 "turningAllowed": true,
                 "turned": false,
                 "stackingAllowed": false,
-                
                 "xCoord": 1400,
                 "yCoord": 1000,
                 "zCoord": 1000,
-                "sequenceNr": 25
+                "sequenceNr": 25,
+                "stackedOnGood": null
             },
             {
                 "id": "ab34762f-ccd1-4258-b3e1-69558728e6y5",
                 "desc": "Palette 2",
                 "height": 400,
-                "group": 2,
+                "group": "ab34762f-ccd1-4258-b3e1-69558728d6b1",
                 "width": 700,
                 "length": 500,
                 "turningAllowed": true,
                 "turned": false,
                 "stackingAllowed": false,
-                
                 "xCoord": 0,
                 "yCoord": 1000,
                 "zCoord": 1500,
-                "sequenceNr": 28
+                "sequenceNr": 28,
+                "stackedOnGood": null
             },
             {
                 "id": "ab34762f-ccd1-4258-b3e1-69558728e6y6",
                 "desc": "Palette 2",
                 "height": 400,
-                "group": 2,
+                "group": "ab34762f-ccd1-4258-b3e1-69558728d6b1",
                 "width": 700,
                 "length": 500,
                 "turningAllowed": true,
                 "turned": false,
                 "stackingAllowed": false,
-                
                 "xCoord": 700,
                 "yCoord": 1000,
                 "zCoord": 1500,
-                "sequenceNr": 29
+                "sequenceNr": 29,
+                "stackedOnGood": null
             },
             {
                 "id": "ab34762f-ccd1-4258-b3e1-69558728e6y7",
                 "desc": "Palette 2",
                 "height": 400,
-                "group": 2,
+                "group": "ab34762f-ccd1-4258-b3e1-69558728d6b1",
                 "width": 700,
                 "length": 500,
                 "turningAllowed": true,
@@ -291,13 +291,14 @@
                 "xCoord": 1400,
                 "yCoord": 1000,
                 "zCoord": 1500,
-                "sequenceNr": 31
+                "sequenceNr": 31,
+                "stackedOnGood": null
             },
             {
                 "id": "ab34762f-ccd1-4258-b3e1-69558728e6y8",
                 "desc": "Palette 2",
                 "height": 400,
-                "group": 2,
+                "group": "ab34762f-ccd1-4258-b3e1-69558728d6b1",
                 "width": 700,
                 "length": 500,
                 "turningAllowed": true,
@@ -306,13 +307,14 @@
                 "xCoord": 0,
                 "yCoord": 1000,
                 "zCoord": 2000,
-                "sequenceNr": 34
+                "sequenceNr": 34,
+                "stackedOnGood": null
             },
             {
                 "id": "ab34762f-ccd1-4258-b3e1-69558728e6y9",
                 "desc": "Palette 2",
                 "height": 400,
-                "group": 2,
+                "group": "ab34762f-ccd1-4258-b3e1-69558728d6b1",
                 "width": 700,
                 "length": 500,
                 "turningAllowed": true,
@@ -321,19 +323,23 @@
                 "xCoord": 700,
                 "yCoord": 1000,
                 "zCoord": 2000,
-                "sequenceNr": 35
+                "sequenceNr": 35,
+                "stackedOnGood": null
             }
-        ]
+        ],
+        "xCoord": 0,
+        "yCoord": 0,
+        "zCoord": 0
     },
     "algorithm": "Super-Flo",
     "groups": [
         {
-            "id": 1,
+            "id": "ab34762f-ccd1-4258-b3e1-69558728d6b0",
             "color": "#b71a1a",
             "desc": "Test AG"
         },
         {
-            "id": 2,
+            "id": "ab34762f-ccd1-4258-b3e1-69558728d6b1",
             "color": "#6094e6",
             "desc": "Beispiel SE"
         }

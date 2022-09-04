@@ -1,8 +1,8 @@
 import { Component, OnDestroy, OnInit, ViewContainerRef } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
+import { Store } from '@ngrx/store';
 import { Subscription } from 'rxjs';
 import { filter } from 'rxjs/operators';
-import { Order } from 'src/app/classes';
 import { DataService } from 'src/app/services/data.service';
 import { ConfigureApiCallService } from 'src/lib/automation/services/configure-api-call.service';
 import { showAnimation } from 'src/lib/shared/animations/show';
@@ -10,6 +10,10 @@ import { ApiCallConfiguratorDialogComponent } from '../../dialog/api-call-config
 import { NoSolutionDialogComponent } from '../../dialog/no-solution-dialog/no-solution-dialog.component';
 import { CalculationComponentService } from './calculation-component.service';
 import { AlgorithmCalculationStatus } from './enumerations/algorithm-calculation-status.enum';
+
+import * as fromIOrderState from 'src/app/store/reducers/i-order.reducers';
+import { selectOrders } from 'src/app/store/selectors/i-order.selectors';
+import { IOrder } from 'src/app/interfaces/i-order.interface';
 
 @Component({
   selector: 'app-calculation',
@@ -24,7 +28,7 @@ export class CalculationComponent implements OnDestroy, OnInit {
 
   AlgorithmCalculationStatus = AlgorithmCalculationStatus;
 
-  private _subscriptions: Subscription[] = [];
+  private _subscriptions: Subscription = new Subscription();
 
   constructor(
     public calculationComponentService: CalculationComponentService,
@@ -32,7 +36,8 @@ export class CalculationComponent implements OnDestroy, OnInit {
     public configureApiCallService: ConfigureApiCallService,
     private _dataService: DataService,
     private _dialog: MatDialog,
-    private _viewContainerRef: ViewContainerRef
+    private _viewContainerRef: ViewContainerRef,
+    private _orderStore: Store<fromIOrderState.State>,
   ) { }
 
   configureAPICall() {
@@ -41,20 +46,18 @@ export class CalculationComponent implements OnDestroy, OnInit {
     });
   }
 
-  ngOnDestroy(): void {
-    for (let sub of this._subscriptions) sub.unsubscribe();
-    this._subscriptions = [];
-  }
+  ngOnDestroy = () => this._subscriptions.unsubscribe();
 
   ngOnInit(): void {
-    this._subscriptions.push(...[
-      this._dataService.orders$
-        .pipe(filter((orders: Order[]) => orders.length === 0 ? true : false))
-        .subscribe(() => this.showNoSolutionDialog())
+
+    this._subscriptions.add(...[
+      this._orderStore.select(selectOrders)
+        .pipe(filter((orders: IOrder[]) => orders.length === 0 ? true : false))
+        .subscribe(() => this._showNoSolutionDialog())
     ])
   }
 
-  showNoSolutionDialog() {
+  private _showNoSolutionDialog() {
     this._dialog.open(NoSolutionDialogComponent, {
       panelClass: 'no-padding-dialog',
       disableClose: true,

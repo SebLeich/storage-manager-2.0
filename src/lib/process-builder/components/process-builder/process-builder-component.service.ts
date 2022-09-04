@@ -255,8 +255,12 @@ export class ProcessBuilderComponentService {
     });
   }
 
-  showError(error: { element: IElement, error: ValidationError }) {
+  showError(error: { element?: IElement, error: ValidationError }) {
     this.hideAllHints();
+    if(!error.element){
+      return;
+    }
+
     var tooltipModule = getTooltipModule(this.bpmnJS);
     tooltipModule.add({
       position: {
@@ -268,9 +272,12 @@ export class ProcessBuilderComponentService {
     });
   }
 
-  showWarning(warning: { element: IElement, warning: ValidationWarning }) {
-    console.log(warning);
+  showWarning(warning: { element?: IElement, warning: ValidationWarning }) {
     this.hideAllHints();
+    if(!warning.element){
+      return;
+    }
+
     var tooltipModule = getTooltipModule(this.bpmnJS);
     tooltipModule.add({
       position: {

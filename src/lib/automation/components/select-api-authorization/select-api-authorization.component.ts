@@ -22,8 +22,8 @@ export class SelectApiAuthorizationComponent implements ControlValueAccessor, On
 
   valueControl: UntypedFormControl = new UntypedFormControl(API_CALL_AUTHORIZATION.NO_AUTH);
 
-  authorizationTypes = Object.values(API_CALL_AUTHORIZATION).filter(x => typeof x === 'number').map((x: API_CALL_AUTHORIZATION) => {
-    return { display: apiCallAuthorizationTypeToString(x), type: x.valueOf() };
+  authorizationTypes = Object.values(API_CALL_AUTHORIZATION).filter(x => typeof x === 'number').map((x) => {
+    return { display: apiCallAuthorizationTypeToString(x as any), type: x.valueOf() };
   });
 
   private _subscriptions: Subscription[] = [];

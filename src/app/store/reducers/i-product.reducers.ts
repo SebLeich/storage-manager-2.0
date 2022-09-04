@@ -44,8 +44,7 @@ export const productReducer = createReducer(
   on(addProduct, (state, { product }) => {
     return adapter.addOne(
       {
-        ...product,
-        addedToState: moment().format(),
+        ...product
       },
       state
     );

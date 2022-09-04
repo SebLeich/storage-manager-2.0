@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { Good } from 'src/app/classes';
 import { SOLUTION_ERROR } from 'src/app/globals';
+import { IGood } from 'src/app/interfaces/i-good.interface';
 import { DataService } from 'src/app/services/data.service';
 import { VisualizerComponentService } from '../main/visualizer/visualizer-component-service';
 
@@ -16,7 +16,7 @@ export class SolutionValidationComponent implements OnInit {
     private _visualizerComponentService: VisualizerComponentService
   ) { }
 
-  hoverError(error: { error: SOLUTION_ERROR, effectedGoods: Good[] }){
+  hoverError(error: { error: SOLUTION_ERROR, effectedGoods: IGood[] }){
     if(Array.isArray(error.effectedGoods)) this._visualizerComponentService.highlightGoods(error.effectedGoods);
   }
 

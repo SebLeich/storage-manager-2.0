@@ -1,5 +1,7 @@
 import { createReducer, MetaReducer, on, Store } from '@ngrx/store';
 
+import defaultSolution from 'src/assets/exampleSolution.json';
+
 import { environment } from 'src/environments/environment';
 import { EntityState, EntityAdapter, createEntityAdapter } from '@ngrx/entity';
 import { InjectionToken } from '@angular/core';
@@ -33,11 +35,14 @@ export const adapter: EntityAdapter<ISolution> = createEntityAdapter<ISolution>(
   }
 );
 
+let entities = {};
+(entities as any)[defaultSolution.id] = defaultSolution;
 export const initialState: State = adapter.getInitialState({
-  selectedSolutionId: null,
-  entities: {},
-  ids: [],
+  selectedSolutionId: defaultSolution.id,
+  entities: entities,
+  ids: [defaultSolution.id],
 });
+
 
 export const solutionReducer = createReducer(
   initialState,

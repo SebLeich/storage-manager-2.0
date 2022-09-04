@@ -44,8 +44,7 @@ export const orderReducer = createReducer(
   on(addOrder, (state, { order }) => {
     return adapter.addOne(
       {
-        ...order,
-        addedToState: moment().format(),
+        ...order
       },
       state
     );

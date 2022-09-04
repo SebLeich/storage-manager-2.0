@@ -1,5 +1,5 @@
 import { Component, Input } from '@angular/core';
-import { Good } from 'src/app/classes';
+import { IGood } from 'src/app/interfaces/i-good.interface';
 
 @Component({
   selector: 'app-good-preview',
@@ -8,7 +8,7 @@ import { Good } from 'src/app/classes';
 })
 export class GoodPreviewComponent {
 
-  @Input() good: Good;
+  @Input() good!: IGood;
 
   columns: string[] = [];
 

@@ -33,3 +33,8 @@ export const selectProducts = createSelector(
   productsState,
   (state: State) => Object.values(state.entities ?? {}) as IProduct[]
 );
+
+export const selectProductByDescription = (productDescription: string) => createSelector(
+  productsState,
+  (state: State) => (Object.values(state.entities ?? {}) as IProduct[]).find(product => product.description === productDescription)
+);

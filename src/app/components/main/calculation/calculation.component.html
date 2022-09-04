@@ -58,7 +58,7 @@
 
                         <ng-container [ngSwitch]="wrapper.status">
 
-                            <span *ngSwitchCase="AlgorithmCalculationStatus.Preparecalculation">
+                            <span *ngSwitchCase="AlgorithmCalculationStatus.PrepareCalculation">
                                 preparing ...
                             </span>
 
@@ -67,7 +67,7 @@
                             </span>
 
                             <span *ngSwitchCase="AlgorithmCalculationStatus.Calculated">
-                                calculated {{wrapper.solution.calculated|date:'dd.MM.yyyy HH:mm'}}
+                                calculated {{wrapper.solution?.calculated|date:'dd.MM.yyyy HH:mm'}}
                             </span>
 
                             <span *ngSwitchCase="AlgorithmCalculationStatus.Error">
@@ -83,7 +83,7 @@
                     </div>
 
                     <div *ngIf="wrapper.status === AlgorithmCalculationStatus.Calculated">
-                        length: {{wrapper.solution.container?.length|prettyLength}}
+                        length: {{wrapper.solution?.container?.length|prettyLength}}
                     </div>
 
                     <ng-container *ngIf="wrapper.status === AlgorithmCalculationStatus.Error">

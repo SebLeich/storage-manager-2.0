@@ -1,13 +1,16 @@
 import { AfterViewInit, Component, ElementRef, HostListener, OnDestroy, OnInit, ViewChild, ViewContainerRef } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
+import { Store } from '@ngrx/store';
 import { BehaviorSubject, Subscription } from 'rxjs';
 import { filter, switchMap, take } from 'rxjs/operators';
-import { SolutionEntity } from 'src/app/classes';
 import { selectedGoodEdgeColor } from 'src/app/globals';
 import { DataService } from 'src/app/services/data.service';
 import { showAnimation } from 'src/lib/shared/animations/show';
 import { NoSolutionDialogComponent } from '../../dialog/no-solution-dialog/no-solution-dialog.component';
 import { VisualizerComponentService } from './visualizer-component-service';
+
+import * as fromISolutionState from 'src/app/store/reducers/i-solution.reducers';
+import { selectCurrentSolution } from 'src/app/store/selectors/i-solution.selectors';
 
 @Component({
   selector: 'app-visualizer',
@@ -30,13 +33,14 @@ export class VisualizerComponent implements AfterViewInit, OnDestroy, OnInit {
     this.visualizerComponentService.setVisualizerWrapper(ref);
   }
 
-  private _subscriptions: Subscription[] = [];
+  private _subscriptions = new Subscription();
 
   constructor(
     public visualizerComponentService: VisualizerComponentService,
     private _dataService: DataService,
     private _dialog: MatDialog,
-    private _viewContainerRef: ViewContainerRef
+    private _viewContainerRef: ViewContainerRef,
+    private _solutionStore: Store<fromISolutionState.State>,
   ) { }
 
   ngAfterViewInit(): void {
@@ -44,18 +48,17 @@ export class VisualizerComponent implements AfterViewInit, OnDestroy, OnInit {
   }
 
   ngOnDestroy(): void {
-    for (let sub of this._subscriptions) sub.unsubscribe();
-    this._subscriptions = [];
+    this._subscriptions.unsubscribe();
     this.visualizerComponentService.dispose();
   }
 
   ngOnInit(): void {
-    this._subscriptions.push(...[
+    this._subscriptions.add(...[
       this.visualizerComponentService.resized$.pipe(switchMap(() => this.visualizerComponentService.visualizerWrapper$.pipe(take(1)))).subscribe((ref: ElementRef<HTMLDivElement>) => {
         this.visualizerComponentService.setSceneDimensions(ref.nativeElement.clientWidth, ref.nativeElement.clientHeight, true);
       }),
-      this._dataService.currentSolution$
-        .pipe(filter((solution: SolutionEntity) => solution === null ? true : false))
+      this._solutionStore.select(selectCurrentSolution)
+        .pipe(filter((solution) => !!solution))
         .subscribe(() => this.showNoSolutionDialog()),
       this.menuVisible$.subscribe(() => this.visualizerComponentService.triggerResizeEvent())
     ]);
@@ -81,8 +84,8 @@ export class VisualizerComponent implements AfterViewInit, OnDestroy, OnInit {
   onKeydown = (event: KeyboardEvent) => this.visualizerComponentService.keydown(event);
 
   selectedGoodEdgeColor = selectedGoodEdgeColor;
-  
-  validateClient(){
+
+  validateClient() {
     this._displayDetails.next(window.innerWidth >= 1000);
     this._menuVisible.next(window.innerWidth >= 1000);
   }

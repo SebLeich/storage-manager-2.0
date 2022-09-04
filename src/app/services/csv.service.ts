@@ -1,14 +1,13 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import * as moment from 'moment';
-import { combineLatest, Observable, Subject } from 'rxjs';
-import { filter, switchMap, take } from 'rxjs/operators';
+import { Observable, Subject } from 'rxjs';
 import { nameOf } from '../globals';
-import { DataService } from './data.service';
 
+import * as fromICalculationContextState from 'src/app/store/reducers/i-calculation-context.reducers';
+import * as fromIGroupState from 'src/app/store/reducers/i-group.reducers';
 import * as fromIOrderState from 'src/app/store/reducers/i-order.reducers';
 import * as fromIProductState from 'src/app/store/reducers/i-product.reducers';
-import * as fromISolutionState from 'src/app/store/reducers/i-solution.reducers';
 
 import { IOrder } from '../interfaces/i-order.interface';
 import { Store } from '@ngrx/store';
@@ -16,6 +15,11 @@ import { selectOrders } from '../store/selectors/i-order.selectors';
 import { IGroup } from '../interfaces/i-group.interface';
 import { addProducts } from '../store/actions/i-product.actions';
 import { addOrders } from '../store/actions/i-order.actions';
+import { addGroups } from '../store/actions/i-group.actions';
+import { selectCalculationContextValid, selectContainerHeight, selectContainerWidth, selectUnit } from '../store/selectors/i-calculation-context.selectors';
+import { setContainerHeight, setContainerWidth, setUnit } from '../store/actions/i-calculation-context.actions';
+import { selectGroups } from '../store/selectors/i-group.selectors';
+import { IProduct } from '../interfaces/i-product.interface';
 
 @Injectable({
   providedIn: 'root'
@@ -33,49 +37,55 @@ export class CsvService {
     'TurningAllowed': nameOf<IOrder>('turningAllowed'),
     'StackingAllowed': nameOf<IOrder>('stackingAllowed'),
     'Group': nameOf<IOrder>('group'),
-    'GroupName': (order: IOrder) => this._dataService.groups.find(x => x.id === order.group)?.desc
+    'GroupName': (order: IOrder, groups: IGroup[]) => groups.find(group => group.id === order.group)?.desc
   };
 
   constructor(
-    private _dataService: DataService,
     private _httpClient: HttpClient,
+    private _calculationContextStore: Store<fromICalculationContextState.State>,
+    private _groupStore: Store<fromIGroupState.State>,
     private _orderStore: Store<fromIOrderState.State>,
-    private _productStore: Store<fromIProductState.State>,
-    private _solutionStore: Store<fromISolutionState.State>,
+    private _productStore: Store<fromIProductState.State>
   ) { }
 
-  downloadOrderCollectionToCSV() {
-    this._dataService.containerValid$
-      .pipe(
-        take(1),
-        filter(x => x ? true : false),
-        switchMap(() => combineLatest([this._dataService.containerHeight$, this._dataService.containerWidth$, this._dataService.unit$, this._orderStore.select(selectOrders)]).pipe(take(1)))
-      )
-      .subscribe(([height, width, unit, orders]) => {
-        let colCount = this.headers.length;
-        let csv: string[] = ['', '', this.headers.join(',')];
-        for (let i = 0; i < colCount; i++) {
-          csv[0] += i === 0 ? 'ContainerWidth' : i === 1 ? 'ContainerHeight' : i === 2 ? 'Unit' : '';
-          csv[1] += i === 0 ? width : i === 1 ? height : i === 2 ? unit : '';
-          if (i < (colCount - 1)) {
-            csv[0] += ',';
-            csv[1] += ',';
-          }
-        }
-        for (let order of (orders as any)) csv.push(this.headers.map(x => {
-          if (typeof (this.headerOrderMap as any)[x] === 'string') return order[(this.headerOrderMap as any)[x]];
-          else if (typeof (this.headerOrderMap as any)[x] === 'function') return (this.headerOrderMap as any)[x](order);
-          return '';
-        }).join(','));
-        let final = csv.join('\n');
-        var element = document.createElement('a');
-        element.setAttribute('href', `data:text/csv;charset=UTF-8,${encodeURIComponent(final)}`);
-        element.setAttribute('download', `orders_${moment().format('YYYY_MM_DD_HH_mm')}.csv`);
-        element.style.display = 'none';
-        document.body.appendChild(element);
-        element.click();
-        document.body.removeChild(element);
-      });
+  async downloadOrderCollectionToCSV() {
+
+    const calculationContextValid = await this._calculationContextStore.select(selectCalculationContextValid);
+    if (!calculationContextValid) {
+      return;
+    }
+
+    const containerHeight = await this._calculationContextStore.select(selectContainerHeight);
+    const containerWidth = await this._calculationContextStore.select(selectContainerWidth);
+    const unit = await this._calculationContextStore.select(selectUnit);
+    const orders = await this._orderStore.select(selectOrders);
+    const groups = await this._groupStore.select(selectGroups);
+
+    const colCount = this.headers.length;
+    const csv: string[] = ['', '', this.headers.join(',')];
+    for (let i = 0; i < colCount; i++) {
+      csv[0] += i === 0 ? 'ContainerWidth' : i === 1 ? 'ContainerHeight' : i === 2 ? 'Unit' : '';
+      csv[1] += i === 0 ? containerWidth : i === 1 ? containerHeight : i === 2 ? unit : '';
+      if (i < (colCount - 1)) {
+        csv[0] += ',';
+        csv[1] += ',';
+      }
+    }
+    for (let order of (orders as any)) csv.push(this.headers.map(x => {
+      if (typeof (this.headerOrderMap as any)[x] === 'string') return order[(this.headerOrderMap as any)[x]];
+      else if (typeof (this.headerOrderMap as any)[x] === 'function') return (this.headerOrderMap as any)[x](order, groups);
+      return '';
+    }).join(','));
+
+    let final = csv.join('\n');
+    var element = document.createElement('a');
+    element.setAttribute('href', `data:text/csv;charset=UTF-8,${encodeURIComponent(final)}`);
+    element.setAttribute('download', `orders_${moment().format('YYYY_MM_DD_HH_mm')}.csv`);
+    element.style.display = 'none';
+    document.body.appendChild(element);
+    element.click();
+    document.body.removeChild(element);
+
   }
 
   uploadCSVToOrderCollection(event: Event) {
@@ -114,9 +124,11 @@ export class CsvService {
     try {
       let rows = csvString.split('\n');
       let containerRow = rows[1].split(',');
-      this._dataService.setContainerWidth(parseFloat(containerRow[0]));
-      this._dataService.setContainerHeight(parseFloat(containerRow[1]));
-      this._dataService.setUnit(containerRow[2] as any ?? 'mm');
+
+      this._calculationContextStore.dispatch(setContainerWidth({ width: parseFloat(containerRow[0]) }));
+      this._calculationContextStore.dispatch(setContainerHeight({ height: parseFloat(containerRow[1]) }));
+      this._calculationContextStore.dispatch(setUnit({ unit: containerRow[2] as any ?? 'mm' }));
+
       let properties = [];
       for (let column of rows[2].split(',')) properties.push((this.headerOrderMap as any)[column]);
       let orders: IOrder[] = [];
@@ -143,16 +155,16 @@ export class CsvService {
         orders.push(order);
       }
 
-      this._dataService.addGroups(groups);
+      this._groupStore.dispatch(addGroups({ groups }));
       this._productStore.dispatch(addProducts({
         products: (orders.filter((x, index: number) => orders.findIndex(y => y.description === x.description) === index).map(order => {
           return {
             id: order.id,
-            description: order.description,
+            description: order.description ?? null,
             height: order.height,
             length: order.length,
             width: order.width
-          };
+          } as IProduct;
         }))
       }));
 

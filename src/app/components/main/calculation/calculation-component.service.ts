@@ -13,6 +13,11 @@ import { CalculationError } from "./enumerations/calculation-error";
 import { IAlgorithmStatusWrapper } from "./interfaces/i-algorithm-calculation-status-wrapper.interface";
 
 import * as fromISolutionState from 'src/app/store/reducers/i-solution.reducers';
+import * as fromICalculationContextState from 'src/app/store/reducers/i-calculation-context.reducers';
+import * as fromIGroupState from 'src/app/store/reducers/i-group.reducers';
+import * as fromIOrderState from 'src/app/store/reducers/i-order.reducers';
+import * as fromIProductState from 'src/app/store/reducers/i-product.reducers';
+
 import { setCurrentSolution } from "src/app/store/actions/i-solution.actions";
 import { selectSnapshot } from "src/lib/process-builder/globals/select-snapshot";
 import { selectSolutions } from "src/app/store/selectors/i-solution.selectors";
@@ -24,25 +29,38 @@ export class CalculationComponentService {
 
     constructor(
         private _solutionStore: Store<fromISolutionState.State>,
+        private _groupStore: Store<fromIGroupState.State>,
+        private _orderStore: Store<fromIOrderState.State>,
+        private _productStore: Store<fromIProductState.State>,
+        private _calculationContextStore: Store<fromICalculationContextState.State>,
         private _router: Router
     ) {
         this._setUp();
     }
 
-    calculateAlgorithm(wrapper: IAlgorithmStatusWrapper) {
+    async calculateAlgorithm(wrapper: IAlgorithmStatusWrapper) {
         wrapper.errors.splice(0, wrapper.errors.length);
         wrapper.status = AlgorithmCalculationStatus.PrepareCalculation;
+
+        let result;
+
+        switch (wrapper.algorithm.code) {
+
+            case ALGORITHMS.ALL_IN_ONE_ROW:
+                wrapper.status = AlgorithmCalculationStatus.Calculating;
+                result = await new AllInOneRowSolver(wrapper.solutionDescription, this._solutionStore, this._groupStore, this._orderStore, this._calculationContextStore).solve();
+                break;
+
+        }
+
+        if (!result) {
+            return;
+        }
+
+
+
         timer(1000).pipe(switchMap(_ => {
             switch (wrapper.algorithm.code) {
-
-                case ALGORITHMS.ALL_IN_ONE_ROW:
-                    wrapper.status = AlgorithmCalculationStatus.Calculating;
-                    return combineLatest([of(wrapper), new AllInOneRowSolver(wrapper.solutionDescription).solve().pipe(catchError((errorCode) => {
-                        return throwError({
-                            wrapper: wrapper,
-                            errorCode: errorCode
-                        });
-                    }))]);
 
                 case ALGORITHMS.START_LEFT_BOTTOM:
                     wrapper.status = AlgorithmCalculationStatus.Calculating;
@@ -102,21 +120,17 @@ export class CalculationComponentService {
             });
         }
         const solutions = await selectSnapshot(this._solutionStore.select(selectSolutions));
-        this._dataService
-            .solutions$
-            .subscribe((solutions: ISolution[]) => {
-                for (let algorithm of this.algorithms) {
-                    algorithm.solution = undefined;
-                    algorithm.status = AlgorithmCalculationStatus.Unchecked;
-                }
-                for (let solution of solutions) {
-                    let wrapper = this.algorithms.find(x => x.algorithm.title === solution.algorithm);
-                    if (wrapper) {
-                        wrapper.status = AlgorithmCalculationStatus.Calculated;
-                        wrapper.solution = solution;
-                    }
-                }
-            });
+        for (let algorithm of this.algorithms) {
+            algorithm.solution = undefined;
+            algorithm.status = AlgorithmCalculationStatus.Unchecked;
+        }
+        for (let solution of solutions) {
+            let wrapper = this.algorithms.find(x => x.algorithm.title === solution.algorithm);
+            if (wrapper) {
+                wrapper.status = AlgorithmCalculationStatus.Calculated;
+                wrapper.solution = solution;
+            }
+        }
     }
 
 }

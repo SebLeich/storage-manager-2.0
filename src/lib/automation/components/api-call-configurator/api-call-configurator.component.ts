@@ -2,10 +2,14 @@ import { Component, ComponentFactoryResolver, Inject, Injector, OnDestroy, OnIni
 import { UntypedFormBuilder } from '@angular/forms';
 import { combineLatest, ReplaySubject, Subscription } from 'rxjs';
 import { distinctUntilChanged } from 'rxjs/operators';
-import { BasicAuthConfiguration, Configuration, JWTTokenLoginConfiguration, OAuth2Configuration, StolenJWTTokenConfiguration } from 'src/lib/automation/classes/api-call-configuration';
 import { API_CALL_AUTHORIZATION } from 'src/lib/automation/globals';
 import { ConfigureApiCallService } from 'src/lib/automation/services/configure-api-call.service';
 import { CONFIGURATION_FORM_GROUP_PROVIDER, FORM_GROUP, FORM_GROUP_PROVIDER, IConfigurationFormGroupProvider, IFormGroupProvider, ISubmitConfigurationProvider, SUBMIT_CONFIGURATION_PROVIDER } from '../../interfaces';
+import { IBasicAuthConfiguration } from '../../interfaces/i-basic-auth-configuration.interface';
+import { IConfiguration } from '../../interfaces/i-configuration.interface';
+import { IJwtByLoginConfiguration } from '../../interfaces/i-jwt-by-login-configuration.interface';
+import { IOAuth2Configuration } from '../../interfaces/i-oauth2-configuration.interface';
+import { IInjectedJwtTokenConfiguration } from '../../interfaces/î-injected-jwt-token-configuration.interface';
 import { AccessTokenInputComponent } from '../dynamic-input/access-token-input/access-token-input.component';
 import { ApiLoginTestComponent } from '../dynamic-input/api-login-test/api-login-test.component';
 import { EndpointInputComponent } from '../dynamic-input/endpoint-input/endpoint-input.component';
@@ -18,7 +22,7 @@ import { UsernamePasswordCombinationComponent } from '../dynamic-input/username-
 })
 export class ApiCallConfiguratorComponent implements OnDestroy, OnInit {
 
-  @ViewChild('dynamicContent', { read: ViewContainerRef }) public set ref(ref: ViewContainerRef){
+  @ViewChild('dynamicContent', { read: ViewContainerRef }) public set ref(ref: ViewContainerRef) {
     this._ref.next(ref);
   }
   private _ref = new ReplaySubject<ViewContainerRef>(1);
@@ -52,14 +56,14 @@ export class ApiCallConfiguratorComponent implements OnDestroy, OnInit {
           this.setDynamicInner(ref, type);
         }),
       combineLatest([this._ref, this._configureApiCallService.authType$, this._configureApiCallService.configuration$]).subscribe({
-        next: ([ref, authType, configuration]: [ViewContainerRef, API_CALL_AUTHORIZATION, Configuration]) => {
+        next: ([ref, authType, configuration]: [ViewContainerRef, API_CALL_AUTHORIZATION, IConfiguration]) => {
           this.formGroupProvider.formGroup.patchValue({
             endpoint: configuration?.calculationEndpoint,
             authorization: authType
           });
           this.setConfigurationForm(authType);
           this.setDynamicInner(ref, authType);
-          if(this._configurationFormGroupProvider.configurationFormGroup) this._configurationFormGroupProvider.configurationFormGroup.patchValue(configuration);
+          if (this._configurationFormGroupProvider.configurationFormGroup) this._configurationFormGroupProvider.configurationFormGroup.patchValue(configuration);
         }
       })
     ]);
@@ -68,22 +72,35 @@ export class ApiCallConfiguratorComponent implements OnDestroy, OnInit {
   setConfigurationForm(type: API_CALL_AUTHORIZATION) {
     switch (type) {
       case API_CALL_AUTHORIZATION.BASIC:
-        this._configurationFormGroupProvider.configurationFormGroup = this._formBuilder.group(new BasicAuthConfiguration());
+        this._configurationFormGroupProvider.configurationFormGroup = this._formBuilder.group({
+          userName: '',
+          password: ''
+        } as IBasicAuthConfiguration);
         break;
       case API_CALL_AUTHORIZATION.JWT_BEARER_LOGIN:
-        this._configurationFormGroupProvider.configurationFormGroup = this._formBuilder.group(new JWTTokenLoginConfiguration());
+        this._configurationFormGroupProvider.configurationFormGroup = this._formBuilder.group({
+          calculationEndpoint: '',
+          loginEndpoint: '',
+          password: '',
+          userName: ''
+        } as IJwtByLoginConfiguration);
         break;
       case API_CALL_AUTHORIZATION.OAUTH2:
-        this._configurationFormGroupProvider.configurationFormGroup = this._formBuilder.group(new OAuth2Configuration());
+        this._configurationFormGroupProvider.configurationFormGroup = this._formBuilder.group({
+          calculationEndpoint: ''
+        } as IOAuth2Configuration);
         break;
       case API_CALL_AUTHORIZATION.STOLEN_JWT_BEARER:
-        this._configurationFormGroupProvider.configurationFormGroup = this._formBuilder.group(new StolenJWTTokenConfiguration());
+        this._configurationFormGroupProvider.configurationFormGroup = this._formBuilder.group({
+          calculationEndpoint: '',
+          jwtToken: ''
+        } as IInjectedJwtTokenConfiguration);
         break;
     }
   }
 
   setDynamicInner(ref: ViewContainerRef, type: API_CALL_AUTHORIZATION) {
-    if(!ref) return;
+    if (!ref) return;
     ref.clear();
     if (typeof type !== 'number') return;
     let injector = Injector.create({

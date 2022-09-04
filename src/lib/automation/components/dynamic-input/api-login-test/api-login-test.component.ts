@@ -18,21 +18,18 @@ export class ApiLoginTestComponent implements OnInit {
   ngOnInit(): void {
   }
 
-  testLogin() {
+  async testLogin() {
     this.configureApiCallService.setAccessGrantedStatus(ACCESS_GRANTED_STATUS.NOT_TESTED);
     this.submitConfigurationProvider.takeConfiguration();
-    this.configureApiCallService
-      .loginBearerToken()
-      .subscribe(
-        (result) => {
-          this.configureApiCallService.setLoginResponse(result);
-          this.configureApiCallService.setAccessGrantedStatus(ACCESS_GRANTED_STATUS.SUCCEEDED);
-        },
-        (result) => {
-          this.configureApiCallService.setLoginResponse(result);
-          this.configureApiCallService.setAccessGrantedStatus(ACCESS_GRANTED_STATUS.FAILED);
-        }
-      );
+
+    try {
+      const result = await this.configureApiCallService.loginBearerToken({} as any);
+      this.configureApiCallService.setLoginResponse(result);
+      this.configureApiCallService.setAccessGrantedStatus(ACCESS_GRANTED_STATUS.SUCCEEDED);
+    } catch (error) {
+      this.configureApiCallService.setLoginResponse(error as Error);
+      this.configureApiCallService.setAccessGrantedStatus(ACCESS_GRANTED_STATUS.FAILED);
+    }
   }
 
   ACCESS_GRANTED_STATUS = ACCESS_GRANTED_STATUS;

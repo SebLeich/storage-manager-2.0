@@ -17,5 +17,5 @@ export interface IGroupsProvider {
 }
 
 export interface ISolver {
-    solve(): Observable<ISolution>;
+    solve(): Promise<ISolution | undefined>;
 }

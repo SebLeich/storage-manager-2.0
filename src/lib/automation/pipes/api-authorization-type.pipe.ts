@@ -6,7 +6,10 @@ import { apiCallAuthorizationTypeToString, API_CALL_AUTHORIZATION } from '../glo
 })
 export class ApiAuthorizationTypePipe implements PipeTransform {
 
-  transform(value: API_CALL_AUTHORIZATION): string {
+  transform(value: API_CALL_AUTHORIZATION | null): string {
+    if (!value) {
+      return '';
+    }
     return apiCallAuthorizationTypeToString(value);
   }
 

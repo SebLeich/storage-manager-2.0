@@ -12,3 +12,13 @@ export const selectContainerWidth = createSelector(
   solutionsState,
   (state: State) => state.containerWidth
 );
+
+export const selectUnit = createSelector(
+  solutionsState,
+  (state: State) => state.unit
+);
+
+export const selectCalculationContextValid = createSelector(
+  solutionsState,
+  (state: State) => !!state.containerWidth && !!state.containerHeight
+);

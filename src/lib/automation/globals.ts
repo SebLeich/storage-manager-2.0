@@ -11,7 +11,7 @@ export enum ACCESS_GRANTED_STATUS {
 }
 
 export function apiCallAuthorizationTypeToString(type: API_CALL_AUTHORIZATION) {
-    if (typeof type !== 'number') return null;
+    if (typeof type !== 'number') return '';
     switch (type.valueOf()) {
         case API_CALL_AUTHORIZATION.NO_AUTH:
             return 'Ohne Autorisierung';
@@ -29,4 +29,5 @@ export function apiCallAuthorizationTypeToString(type: API_CALL_AUTHORIZATION) {
             return 'JWT Bearer (nur Token)';
 
     }
+    return '';
 }
