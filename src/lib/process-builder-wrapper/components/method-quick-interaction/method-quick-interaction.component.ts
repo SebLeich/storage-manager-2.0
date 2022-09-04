@@ -1,9 +1,8 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { UntypedFormBuilder, UntypedFormControl, UntypedFormGroup } from '@angular/forms';
+import { FormControl, UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
 import { Subscription } from 'rxjs';
 import { debounceTime } from 'rxjs/operators';
 import { ProcessBuilderComponentService } from 'src/lib/process-builder/components/process-builder/process-builder-component.service';
-import { IBpmnJSModel } from 'src/lib/process-builder/globals/i-bpmn-js-model';
 
 @Component({
   selector: 'app-method-quick-interaction',
@@ -14,33 +13,30 @@ export class MethodQuickInteractionComponent implements OnDestroy, OnInit {
 
   formGroup: UntypedFormGroup;
 
-  private _subscriptions: Subscription[] = [];
+  private _subscriptions: Subscription = new Subscription();
 
   constructor(
     public service: ProcessBuilderComponentService,
     private _formBuilder: UntypedFormBuilder
   ) {
     this.formGroup = this._formBuilder.group({
-      name: null,
+      name: '',
       guid: null,
       created: null,
       description: null,
       lastModified: null,
       viewbox: null,
       xml: null
-    } as IBpmnJSModel);
+    });
   }
 
-  ngOnDestroy(): void {
-    for (let sub of this._subscriptions) sub.unsubscribe();
-    this._subscriptions = [];
-  }
+  ngOnDestroy = () => this._subscriptions.unsubscribe();
 
   ngOnInit(): void {
-    this._subscriptions.push(...[
+    this._subscriptions.add(...[
       this.service.currentIBpmnJSModel$.subscribe((model) => {
         this.formGroup.reset();
-        this.formGroup.patchValue(model, { emitEvent: false });
+        this.formGroup.patchValue(model as object, { emitEvent: false });
       }),
       this.formGroup.valueChanges.pipe(debounceTime(1000)).subscribe((value) => {
         this.service.updateIBpmnJSModel(value);
@@ -48,8 +44,8 @@ export class MethodQuickInteractionComponent implements OnDestroy, OnInit {
     ]);
   }
 
-  get nameControl(): UntypedFormControl {
-    return this.formGroup.controls['name'] as UntypedFormControl;
+  get nameControl(): FormControl<string> {
+    return this.formGroup.controls['name'] as FormControl<string>;
   }
 
 }

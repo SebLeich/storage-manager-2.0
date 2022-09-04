@@ -1,36 +1,43 @@
 import { Injectable } from "@angular/core";
 import { Router } from "@angular/router";
+import { Store } from "@ngrx/store";
 import { combineLatest, of, throwError, timer } from "rxjs";
 import { catchError, switchMap, take } from "rxjs/operators";
-import { SolutionEntity } from "src/app/classes";
 import { ALGORITHMS, algorithms } from "src/app/globals";
-import { DataService } from "src/app/services/data.service";
+import { ISolution } from "src/app/interfaces/i-solution.interface";
 import { AllInOneRowSolver } from "src/app/solvers/all-in-one-row";
 import { StartLeftBottomSolver } from "src/app/solvers/start-left-bottom";
 import { SuperFloSolver } from "src/app/solvers/super-flo";
-import { AlgorihmStatusWrapper, ALGORITHM_CALCULATION_STATUS, CALCULATION_ERROR } from "./calculation-component.classes";
+import { AlgorithmCalculationStatus } from "./enumerations/algorithm-calculation-status.enum";
+import { CalculationError } from "./enumerations/calculation-error";
+import { IAlgorithmStatusWrapper } from "./interfaces/i-algorithm-calculation-status-wrapper.interface";
+
+import * as fromISolutionState from 'src/app/store/reducers/i-solution.reducers';
+import { setCurrentSolution } from "src/app/store/actions/i-solution.actions";
+import { selectSnapshot } from "src/lib/process-builder/globals/select-snapshot";
+import { selectSolutions } from "src/app/store/selectors/i-solution.selectors";
 
 @Injectable()
 export class CalculationComponentService {
 
-    algorithms: AlgorihmStatusWrapper[] = [];
+    algorithms: IAlgorithmStatusWrapper[] = [];
 
     constructor(
-        private _dataService: DataService,
+        private _solutionStore: Store<fromISolutionState.State>,
         private _router: Router
     ) {
         this._setUp();
     }
 
-    calculateAlgorithm(wrapper: AlgorihmStatusWrapper) {
+    calculateAlgorithm(wrapper: IAlgorithmStatusWrapper) {
         wrapper.errors.splice(0, wrapper.errors.length);
-        wrapper.status = ALGORITHM_CALCULATION_STATUS.PREPARE_CALCULATION;
+        wrapper.status = AlgorithmCalculationStatus.PrepareCalculation;
         timer(1000).pipe(switchMap(_ => {
             switch (wrapper.algorithm.code) {
 
                 case ALGORITHMS.ALL_IN_ONE_ROW:
-                    wrapper.status = ALGORITHM_CALCULATION_STATUS.CALCULATING;
-                    return combineLatest([of(wrapper), new AllInOneRowSolver(this._dataService, wrapper.solutionDescription).solve().pipe(catchError((errorCode) => {
+                    wrapper.status = AlgorithmCalculationStatus.Calculating;
+                    return combineLatest([of(wrapper), new AllInOneRowSolver(wrapper.solutionDescription).solve().pipe(catchError((errorCode) => {
                         return throwError({
                             wrapper: wrapper,
                             errorCode: errorCode
@@ -38,8 +45,8 @@ export class CalculationComponentService {
                     }))]);
 
                 case ALGORITHMS.START_LEFT_BOTTOM:
-                    wrapper.status = ALGORITHM_CALCULATION_STATUS.CALCULATING;
-                    return combineLatest([of(wrapper), new StartLeftBottomSolver(this._dataService, wrapper.solutionDescription).solve().pipe(catchError((errorCode) => {
+                    wrapper.status = AlgorithmCalculationStatus.Calculating;
+                    return combineLatest([of(wrapper), new StartLeftBottomSolver(wrapper.solutionDescription).solve().pipe(catchError((errorCode) => {
                         return throwError({
                             wrapper: wrapper,
                             errorCode: errorCode
@@ -47,8 +54,8 @@ export class CalculationComponentService {
                     }))]);
 
                 case ALGORITHMS.SUPER_FLO:
-                    wrapper.status = ALGORITHM_CALCULATION_STATUS.CALCULATING;
-                    return combineLatest([of(wrapper), new SuperFloSolver(this._dataService, wrapper.solutionDescription).solve().pipe(catchError((errorCode) => {
+                    wrapper.status = AlgorithmCalculationStatus.Calculating;
+                    return combineLatest([of(wrapper), new SuperFloSolver(wrapper.solutionDescription).solve().pipe(catchError((errorCode) => {
                         return throwError({
                             wrapper: wrapper,
                             errorCode: errorCode
@@ -58,24 +65,24 @@ export class CalculationComponentService {
                 default:
                     return throwError({
                         wrapper: wrapper,
-                        errorCode: CALCULATION_ERROR.ALGORITHM_NOT_IMPLEMENTED
+                        errorCode: CalculationError.AlgorithmNotImplemented
                     });
             }
         })).subscribe(this._calculationCallback);
     }
 
-    visualizeSolution(solution: SolutionEntity) {
-        this._dataService.setCurrentSolution(solution);
+    visualizeSolution(solution: ISolution) {
+        this._solutionStore.dispatch(setCurrentSolution({ solution }));
         this._router.navigate(['/visualizer']);
     }
 
     private _calculationCallback = {
-        next: ([wrapper, solution]: [AlgorihmStatusWrapper, SolutionEntity]) => {
+        next: ([wrapper, solution]: [IAlgorithmStatusWrapper, ISolution]) => {
             wrapper.solution = solution;
-            wrapper.status = ALGORITHM_CALCULATION_STATUS.CALCULATED;
+            wrapper.status = AlgorithmCalculationStatus.Calculated;
         },
-        error: (error: { wrapper: AlgorihmStatusWrapper, errorCode: CALCULATION_ERROR }) => {
-            error.wrapper.status = ALGORITHM_CALCULATION_STATUS.ERROR;
+        error: (error: { wrapper: IAlgorithmStatusWrapper, errorCode: CalculationError }) => {
+            error.wrapper.status = AlgorithmCalculationStatus.Error;
             error.wrapper.errors.push(error.errorCode);
         },
         complete: () => {
@@ -83,28 +90,29 @@ export class CalculationComponentService {
         }
     };
 
-    private _setUp() {
+    private async _setUp() {
         for (let algorithm of algorithms) {
             this.algorithms.push({
                 'algorithm': algorithm,
                 'errors': [],
-                'status': ALGORITHM_CALCULATION_STATUS.UNCHECKED,
+                'status': AlgorithmCalculationStatus.Unchecked,
                 'solutionDescription': algorithm.title,
-                'solution': null,
+                'solution': undefined,
                 'available': algorithm.code === ALGORITHMS.AI_SUPPORTED_SOLVER ? false : true
-            } as AlgorihmStatusWrapper);
+            });
         }
+        const solutions = await selectSnapshot(this._solutionStore.select(selectSolutions));
         this._dataService
             .solutions$
-            .subscribe((solutions: SolutionEntity[]) => {
-                for(let algorithm of this.algorithms) {
-                    algorithm.solution = null;
-                    algorithm.status = ALGORITHM_CALCULATION_STATUS.UNCHECKED;
+            .subscribe((solutions: ISolution[]) => {
+                for (let algorithm of this.algorithms) {
+                    algorithm.solution = undefined;
+                    algorithm.status = AlgorithmCalculationStatus.Unchecked;
                 }
                 for (let solution of solutions) {
                     let wrapper = this.algorithms.find(x => x.algorithm.title === solution.algorithm);
                     if (wrapper) {
-                        wrapper.status = ALGORITHM_CALCULATION_STATUS.CALCULATED;
+                        wrapper.status = AlgorithmCalculationStatus.Calculated;
                         wrapper.solution = solution;
                     }
                 }

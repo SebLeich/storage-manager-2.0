@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { IParamMember } from 'src/lib/process-builder/globals/i-param-member';
 
 @Component({
@@ -6,13 +6,10 @@ import { IParamMember } from 'src/lib/process-builder/globals/i-param-member';
   templateUrl: './param-member-preview.component.html',
   styleUrls: ['./param-member-preview.component.css']
 })
-export class ParamMemberPreviewComponent implements OnInit {
+export class ParamMemberPreviewComponent {
 
   @Input() paramMember!: IParamMember;
 
   constructor() { }
-
-  ngOnInit(): void {
-  }
 
 }

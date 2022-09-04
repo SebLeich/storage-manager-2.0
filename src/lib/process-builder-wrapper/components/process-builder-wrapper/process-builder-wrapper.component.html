@@ -63,11 +63,11 @@
             <div class="headline" (click)="toggleModules()">
                 <span class="text">Models</span>
                 <span class="counter">
-                    {{(service.models$|async).length}}
+                    {{(service.models$|async)?.length}}
                 </span>
             </div>
 
-            <div [@showList]="(service.models$|async).length" *ngIf="modelsVisible$|async">
+            <div [@showList]="(service.models$|async)?.length" *ngIf="modelsVisible$|async">
 
                 <div class="quick-interaction-wrapper">
 
@@ -84,11 +84,11 @@
             <div class="headline" (click)="toggleMethods()">
                 <span class="text">Functions</span>
                 <span class="counter">
-                    {{(service.funcs$|async).length}}
+                    {{(service.funcs$|async)?.length}}
                 </span>
             </div>
 
-            <div [@showList]="(service.funcs$|async).length" *ngIf="methodsVisible$|async">
+            <div [@showList]="(service.funcs$|async)?.length" *ngIf="methodsVisible$|async">
 
                 <div class="option" *ngFor="let func of (service.funcs$|async)">
 
@@ -107,11 +107,11 @@
             <div class="headline" (click)="toggleParams()">
                 <span class="text">Params</span>
                 <span class="counter">
-                    {{(service.params$|async).length}}
+                    {{(service.params$|async)?.length}}
                 </span>
             </div>
 
-            <div [@showList]="(service.params$|async).length" *ngIf="paramsVisible$|async">
+            <div [@showList]="(service.params$|async)?.length" *ngIf="paramsVisible$|async">
 
                 <div class="option" *ngFor="let param of (service.params$|async)">
 

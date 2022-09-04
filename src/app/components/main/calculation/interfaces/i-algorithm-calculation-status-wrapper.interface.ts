@@ -1,12 +1,12 @@
-import { SolutionEntity } from "src/app/classes";
 import { ALGORITHMS } from "src/app/globals";
+import { ISolution } from "src/app/interfaces/i-solution.interface";
 import { CalculationError } from "../enumerations/calculation-error";
 
-export interface IAlgorihmStatusWrapper {
+export interface IAlgorithmStatusWrapper {
     status: number;
     errors: CalculationError[];
     algorithm: { title: string, description: string, code: ALGORITHMS };
-    solution: SolutionEntity;
+    solution?: ISolution;
     solutionDescription: string;
     available: boolean;
 }

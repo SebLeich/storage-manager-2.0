@@ -14,7 +14,7 @@
 
         <ng-container *ngFor="let child of (typeDef$|async)">
 
-            <app-embedded-input-output-mapping-table-row #wrapper [def]="child" [level]="level+1">
+            <app-embedded-input-output-mapping-table-row #wrapper [def]="child!" [level]="level+1">
             </app-embedded-input-output-mapping-table-row>
             <ng-content *ngTemplateOutlet="wrapper.rowTemplate"></ng-content>
     

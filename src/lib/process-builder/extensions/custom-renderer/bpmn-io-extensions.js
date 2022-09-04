@@ -1,7 +1,5 @@
 import BaseRenderer from 'diagram-js/lib/draw/BaseRenderer';
 
-import { map, shareReplay, take } from 'rxjs/operators';
-
 import {
     append as svgAppend,
     attr as svgAttr,
@@ -9,11 +7,7 @@ import {
     remove as svgRemove
 } from 'tiny-svg';
 
-import { getRoundRectPath } from 'bpmn-js/lib/draw/BpmnRenderUtil';
 import { BPMNJsRepository } from 'src/lib/core/bpmn-js-repository';
-import { ProcessBuilderService } from 'src/lib/process-builder/services/process-builder.service';
-
-import { is } from 'bpmn-js/lib/util/ModelUtil';
 import { isAny } from 'bpmn-js/lib/features/modeling/util/ModelingUtil';
 import shapeTypes from 'src/lib/bpmn-io/shape-types';
 

@@ -5,28 +5,29 @@ import { v4 as generateGuid } from 'uuid';
 import { ISolver } from "../interfaces";
 import { DataService } from "../services/data.service";
 import { Solver } from "./solver";
-import { SolutionEntity } from "../classes/solution.class";
 import { CalculationError } from "../components/main/calculation/enumerations/calculation-error";
+import { ISolution } from "../interfaces/i-solution.interface";
+import { inject } from "@angular/core";
 
 export class AllInOneRowSolver extends Solver implements ISolver {
 
     constructor(
-        private _dataService: DataService,
         private _description: string = 'All In One Row'
     ) {
         super();
     }
 
-    solve(): Observable<SolutionEntity> {
-        return this._dataService.containerValid$.pipe(
+    async solve(): Observable<ISolution> {
+        const dataService = inject(DataService);
+        return dataService.containerValid$.pipe(
             switchMap((valid: boolean) => {
                 if (!valid) return throwError(CalculationError.ContainerNotReady);
-                let subject = new ReplaySubject<SolutionEntity>(1);
+                let subject = new ReplaySubject<ISolution>(1);
                 combineLatest([this._dataService.orders$, this._dataService.containerHeight$, this._dataService.containerWidth$, this._dataService.descSortedGroups$])
                     .pipe(take(1))
                     .subscribe(([orders, height, width, groups]) => {
-                        let solution = new SolutionEntity(generateGuid(), this._description);
-                        solution.container = new Container(height, width, 0);
+                        let solution = { id: generateGuid(), description: this._description } as ISolution;
+                        solution.container = { height: height, width: width, length: 0 };
                         let currentPosition = { x: 0, y: 0, z: 0 };
                         let sequenceNumber = 0;
                         for (let group of groups) {
@@ -48,7 +49,7 @@ export class AllInOneRowSolver extends Solver implements ISolver {
                     });
                 return subject.asObservable();
             })
-        ) as Observable<SolutionEntity>;
+        ) as Observable<ISolution>;
     }
 
 }

@@ -12,7 +12,7 @@
 
     </div>
 
-    <div class="dialog-body form-body" [formGroup]="paramEditorComponentService.formGroup$|async">
+    <div class="dialog-body form-body" [formGroup]="(paramEditorComponentService.formGroup$|async)!">
 
         <div class="param-naming-wrapper">
 
@@ -36,10 +36,10 @@
                 <div class="hint">
                     Dynamically calculate the parameter's data structure as a result of your modeled flow.
                     The parameter <b>{{(paramEditorComponentService.paramObject$|async)?.name ?? 'unknown'}}</b> is produced by
-                    <b>{{(paramEditorComponentService.producingFunctions$|async)?.length ?? 0}}</b> function(s).
+                    <b>{{(paramEditorComponentService.paramIsProducedByFunctions$|async)?.length ?? 0}}</b> function(s).
                 </div>
 
-                <div class="function-wrapper" *ngFor="let func of producingFunctions$|async">
+                <div class="function-wrapper" *ngFor="let func of paramEditorComponentService.paramIsProducedByFunctions$|async">
 
                     <app-function-preview [func]="func"></app-function-preview>
                     <div class="calculate-control" (click)="calculateFunctionOutput(func)">

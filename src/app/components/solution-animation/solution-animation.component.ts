@@ -1,11 +1,12 @@
 import { Component } from '@angular/core';
 import { Store } from '@ngrx/store';
-import * as fromISolutionState from 'src/app/store/reducers/i-solution.reducers';
 import { take } from 'rxjs/operators';
 import { VisualizerComponentService } from '../main/visualizer/visualizer-component-service';
 import { SolutionAnimationComponentService } from './solution-animation-component.service';
 import { selectCurrentSolution } from 'src/app/store/selectors/i-solution.selectors';
 import { map } from 'rxjs/operators';
+
+import * as fromISolutionState from 'src/app/store/reducers/i-solution.reducers';
 
 @Component({
   selector: 'app-solution-animation',

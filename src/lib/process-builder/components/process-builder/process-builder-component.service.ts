@@ -51,6 +51,7 @@ import { ValidationError } from '../../globals/validation-error';
 import { ValidationWarning } from '../../globals/validation-warning';
 import { ValidationWarningPipe } from '../../pipes/validation-warning.pipe';
 
+// @ts-ignore
 import customRendererModule from '../../extensions/custom-renderer';
 
 @Injectable()

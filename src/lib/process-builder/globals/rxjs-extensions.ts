@@ -10,14 +10,13 @@ import { IParamDefinition } from "./i-param-definition";
 export const mapIParamInterfaces = (interfaceStore: Store<fromIInterfaceState.State>) => {
     return (obs: Observable<IParam | null | undefined>) => obs.pipe(
         switchMap((param: IParam | null | undefined) => {
-            
+
             if (param?.type === 'array') {
                 return of({ ...param }).pipe(
                     flatMap((param: IParam) =>
                         forkJoin([
                             of(param),
-                            //ts-ignore
-                            of(param.typeDef).pipe(mapIParamsInterfaces(interfaceStore))
+                            of(param.typeDef as IParam[]).pipe(mapIParamsInterfaces(interfaceStore))
                         ])
                     ),
                     tap(([param, typeDef]: [IParam, IParamDefinition[]]) => param.typeDef = typeDef),
@@ -30,15 +29,15 @@ export const mapIParamInterfaces = (interfaceStore: Store<fromIInterfaceState.St
                     interfaceStore.select(selectIInterface(param.interface))
                 ]).pipe(
                     take(1),
-                    map(([param, iFace]: [IParam, IInterface]) => {
+                    map(([param, iFace]) => {
                         let result = { ...param };
-                        result.typeDef = iFace.typeDef;
+                        result.typeDef = iFace!.typeDef;
                         return result as IParam;
                     }),
                     flatMap((param: IParam) =>
                         forkJoin([
                             of(param),
-                            of(param.typeDef).pipe(mapIParamsInterfaces(interfaceStore))
+                            of(param.typeDef as IParam[]).pipe(mapIParamsInterfaces(interfaceStore))
                         ])
                     ),
                     tap(([param, typeDef]: [IParam, IParamDefinition[]]) => param.typeDef = typeDef),
@@ -60,7 +59,7 @@ export const mapIParamsInterfaces: ((interfaceStore: Store<fromIInterfaceState.S
                             flatMap((param: IParam) =>
                                 forkJoin([
                                     of(param),
-                                    of(param.typeDef).pipe(mapIParamsInterfaces(interfaceStore))
+                                    of(param.typeDef as IParam[]).pipe(mapIParamsInterfaces(interfaceStore))
                                 ])
                             ),
                             tap(([param, typeDef]: [IParam, IParamDefinition[]]) => param.typeDef = typeDef),
@@ -81,7 +80,7 @@ export const mapIParamsInterfaces: ((interfaceStore: Store<fromIInterfaceState.S
                             flatMap((param: IParam) =>
                                 forkJoin([
                                     of(param),
-                                    of(param.typeDef).pipe(mapIParamsInterfaces(interfaceStore))
+                                    of(param.typeDef as IParam[]).pipe(mapIParamsInterfaces(interfaceStore))
                                 ])
                             ),
                             tap(([param, typeDef]: [IParam, IParamDefinition[]]) => param.typeDef = typeDef),

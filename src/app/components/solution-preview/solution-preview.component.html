@@ -13,11 +13,11 @@
         <div class="general-inner">
           <div class="metadata-wrapper">
             <div class="metadata">
-              <div class="calculated" *ngIf="calculated">
+              <div class="calculated" *ngIf="calculated$|async">
                 calculated {{ (calculated$|async | date: "dd.MM.yyyy HH:mm") ?? 'unknown' }}
               </div>
 
-              <div class="algorithm" *ngIf="algorithm">
+              <div class="algorithm" *ngIf="algorithm$|async">
                 algorithm {{ (algorithm$|async) ?? 'unknown' }}
               </div>
             </div>

@@ -19,7 +19,6 @@ import {
 import { ProcessBuilderRepository } from 'src/lib/core/process-builder-repository';
 import { selectIInterface } from 'src/lib/process-builder/store/selectors/i-interface.selectors';
 import { mapIParamInterfaces, mapIParamsInterfaces } from 'src/lib/process-builder/globals/rxjs-extensions';
-import { IParamDefinition } from 'src/lib/process-builder/globals/i-param-definition';
 
 @Injectable({
   providedIn: 'root',

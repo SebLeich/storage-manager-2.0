@@ -113,7 +113,7 @@ export class ParamEditorComponent implements OnInit, OnDestroy {
         duration: 2000,
       });
       this.selectedIndex = 0;
-    } else if(typeof func.pseudoImplementation === 'function'){
+    } else if (typeof func.pseudoImplementation === 'function') {
       let result = func.pseudoImplementation();
       console.log(result);
     }
@@ -138,7 +138,9 @@ export class ParamEditorComponent implements OnInit, OnDestroy {
     this._ref.close();
   }
 
-  ngOnDestroy = () => this._subscriptions.unsubscribe();
+  ngOnDestroy() {
+    this._subscriptions.unsubscribe();
+  }
 
   ngOnInit(): void {
     this._subscriptions.add(

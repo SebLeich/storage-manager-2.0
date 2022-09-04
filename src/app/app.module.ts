@@ -68,7 +68,11 @@ import { IProductEffects } from './store/effects/i-product.effects';
 import * as fromISolutionState from './store/reducers/i-solution.reducers';
 import { ISolutionEffects } from './store/effects/i-solution.effects';
 
+import * as fromICalculationContextState from './store/reducers/i-calculation-context.reducers';
+import { ICalculationContextEffects } from './store/effects/i-calculation-context.effects';
+
 let rootStoreFeatures: any = {};
+rootStoreFeatures[fromICalculationContextState.calculationContextFeatureKey] = fromICalculationContextState.calculationContextReducer;
 rootStoreFeatures[fromIOrderState.orderFeatureKey] = fromIOrderState.orderReducer;
 rootStoreFeatures[fromIProductState.productFeatureKey] = fromIProductState.productReducer;
 rootStoreFeatures[fromISolutionState.solutionFeatureKey] = fromISolutionState.solutionReducer;
@@ -124,9 +128,9 @@ rootStoreFeatures[fromISolutionState.solutionFeatureKey] = fromISolutionState.so
     SharedModule,
 
     StoreModule.forRoot(rootStoreFeatures, {
-      
+
     }),
-    EffectsModule.forRoot([IOrderEffects, IProductEffects, ISolutionEffects]),
+    EffectsModule.forRoot([ICalculationContextEffects, IOrderEffects, IProductEffects, ISolutionEffects]),
   ],
   providers: [
     { provide: PROCESS_BUILDER_CONFIG_TOKEN, useValue: PROCESS_BUILDER_CONFIG },
