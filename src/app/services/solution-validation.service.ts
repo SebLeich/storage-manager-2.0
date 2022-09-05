@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { SOLUTION_ERROR } from '../globals';
+import { SolutionError } from '../globals';
 import { IDimension } from '../interfaces/i-dimension.interface';
 import { IGood } from '../interfaces/i-good.interface';
 import { ISolution } from '../interfaces/i-solution.interface';
@@ -10,22 +10,22 @@ export class SolutionValidationService {
 
   constructor() { }
 
-  static validateSolution(solution: ISolution): { error: SOLUTION_ERROR, effectedGoods: IGood[] }[] {
-    if (solution === null) return [{ error: SOLUTION_ERROR.NO_SOLUTION, effectedGoods: [] }];
-    if (!solution.container) return [{ error: SOLUTION_ERROR.NO_CONTAINER, effectedGoods: [] }];
+  static validateSolution(solution: ISolution): { error: SolutionError, effectedGoods: IGood[] }[] {
+    if (solution === null) return [{ error: SolutionError.NoSolution, effectedGoods: [] }];
+    if (!solution.container) return [{ error: SolutionError.NoContainer, effectedGoods: [] }];
     let output = [];
     let goodsXError1 = solution.container.goods.filter(x => x.xCoord < 0);
-    if (goodsXError1.length > 0) output.push({ error: SOLUTION_ERROR.GOOD_BEFORE_CONTAINER_X, effectedGoods: goodsXError1 });
+    if (goodsXError1.length > 0) output.push({ error: SolutionError.GoodBeforeContainerXCoord, effectedGoods: goodsXError1 });
     let goodsXError2 = solution.container.goods.filter(x => (x.xCoord + x.width) > solution.container!.width);
-    if (goodsXError2.length > 0) output.push({ error: SOLUTION_ERROR.GOOD_OUT_OF_CONTAINER_X, effectedGoods: goodsXError2 });
+    if (goodsXError2.length > 0) output.push({ error: SolutionError.GoodOutOfContainerXCoord, effectedGoods: goodsXError2 });
     let goodsYError1 = solution.container.goods.filter(x => x.yCoord < 0);
-    if (goodsYError1.length > 0) output.push({ error: SOLUTION_ERROR.GOOD_BEFORE_CONTAINER_Y, effectedGoods: goodsYError1 });
+    if (goodsYError1.length > 0) output.push({ error: SolutionError.GoodBeforeContainerYCoord, effectedGoods: goodsYError1 });
     let goodsYError2 = solution.container.goods.filter(x => (x.yCoord + x.height) > solution.container!.height);
-    if (goodsYError2.length > 0) output.push({ error: SOLUTION_ERROR.GOOD_OUT_OF_CONTAINER_Y, effectedGoods: goodsYError2 });
+    if (goodsYError2.length > 0) output.push({ error: SolutionError.GoodOutOfContainerYCoord, effectedGoods: goodsYError2 });
     let goodsZError1 = solution.container.goods.filter(x => x.zCoord < 0);
-    if (goodsZError1.length > 0) output.push({ error: SOLUTION_ERROR.GOOD_BEFORE_CONTAINER_Z, effectedGoods: goodsZError1 });
+    if (goodsZError1.length > 0) output.push({ error: SolutionError.GoodBeforeContainerZCoord, effectedGoods: goodsZError1 });
     let goodsZError2 = solution.container.goods.filter(x => (x.zCoord + x.length) > solution.container!.length);
-    if (goodsZError2.length > 0) output.push({ error: SOLUTION_ERROR.GOOD_OUT_OF_CONTAINER_Z, effectedGoods: goodsZError2 });
+    if (goodsZError2.length > 0) output.push({ error: SolutionError.GoodOutOfContainerZCoord, effectedGoods: goodsZError2 });
     let dimensions = solution.container.goods.map(good => {
       return { good: good, dimension: DataService.getGoodDimension(good) };
     });
@@ -33,7 +33,7 @@ export class SolutionValidationService {
       let overlappingSet = this._cubeIsInAnotherCube(wrapper.dimension, Object.values(dimensions).map(x => x.dimension).filter(x => wrapper.dimension !== x));
       if (overlappingSet.length > 0) {
         output.push({
-          error: SOLUTION_ERROR.GOOD_OVERLAP,
+          error: SolutionError.GoodOverlap,
           effectedGoods: [wrapper.good, ...(overlappingSet.map(x => (dimensions.find(y => y.dimension === x))?.good))].filter(good => !!good) as IGood[]
         });
       }

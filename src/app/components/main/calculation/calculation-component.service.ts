@@ -82,9 +82,6 @@ export class CalculationComponentService {
         error: (error: { wrapper: IAlgorithmStatusWrapper, errorCode: CalculationError }) => {
             error.wrapper.status = AlgorithmCalculationStatus.Error;
             error.wrapper.errors.push(error.errorCode);
-        },
-        complete: () => {
-
         }
     };
 

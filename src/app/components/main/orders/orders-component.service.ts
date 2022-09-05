@@ -12,7 +12,7 @@ import * as fromICalculationContextState from 'src/app/store/reducers/i-calculat
 import * as fromIOrderState from 'src/app/store/reducers/i-order.reducers';
 
 import { selectContainerHeight, selectContainerWidth, selectUnit } from "src/app/store/selectors/i-calculation-context.selectors";
-import { setContainerHeight, setUnit } from "src/app/store/actions/i-calculation-context.actions";
+import { setContainerHeight, setContainerWidth, setUnit } from "src/app/store/actions/i-calculation-context.actions";
 import { addOrders } from "src/app/store/actions/i-order.actions";
 import { selectOrders } from "src/app/store/selectors/i-order.selectors";
 
@@ -76,7 +76,7 @@ export class OrdersComponentService {
             this._calculationContextStore.select(selectContainerWidth).pipe(distinctUntilChanged()).subscribe((width: number) => this.formGroup.controls['containerWidth'].setValue(width, { emitEvent: false })),
             this._calculationContextStore.select(selectUnit).pipe(distinctUntilChanged()).subscribe((unit: string) => this.formGroup.controls['unit'].setValue(unit, { emitEvent: false })),
             this.formGroup.controls['containerHeight'].valueChanges.pipe(distinctUntilChanged()).subscribe((height) => this._calculationContextStore.dispatch(setContainerHeight(height))),
-            this.formGroup.controls['containerWidth'].valueChanges.pipe(distinctUntilChanged()).subscribe((width) => this._calculationContextStore.dispatch(setContainerHeight(width))),
+            this.formGroup.controls['containerWidth'].valueChanges.pipe(distinctUntilChanged()).subscribe((width) => this._calculationContextStore.dispatch(setContainerWidth(width))),
             this.formGroup.controls['unit'].valueChanges.pipe(distinctUntilChanged()).subscribe((unit) => this._calculationContextStore.dispatch(setUnit(unit))),
             this._orderStore.select(selectOrders).subscribe((orders: IOrder[]) => {
                 this.ordersControl.clear();

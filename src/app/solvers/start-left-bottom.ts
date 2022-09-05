@@ -57,7 +57,6 @@ export class StartLeftBottomSolver extends Solver implements ISolver {
                 goods: []
             },
         } as ISolution;
-        let currentPosition = { x: 0, y: 0, z: 0 };
         let sequenceNumber = 0, lastGood: IGood | null = null;
 
         for (let group of groups) {
@@ -84,7 +83,8 @@ export class StartLeftBottomSolver extends Solver implements ISolver {
         }
         solution.container!.length = Math.max(...solution.container!.goods.map(x => x.zCoord + x.length), 0);
         solution.groups = groups;
-        this._solutionStore.dispatch(setCurrentSolution({ solution }));
+        
+        return solution;
     }
 
     private _getNextPosition(container: IContainer, order: IOrder, lastGood: IGood): { xCoord: number, yCoord: number, zCoord: number, stackedOn: null | string } {

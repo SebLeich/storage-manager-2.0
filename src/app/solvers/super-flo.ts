@@ -5,7 +5,6 @@ import { MinimizationFunction } from "../globals";
 import { ISolver } from "../interfaces";
 import { ISolution } from "../interfaces/i-solution.interface";
 import { IStep } from "../interfaces/i-step.interface";
-import { IVirtualDimension } from "../interfaces/i-virtual-dimension.interface";
 import { DataService } from "../services/data.service";
 import { Solver } from "./solver";
 
@@ -17,11 +16,9 @@ import { selectCalculationContextValid, selectContainerHeight, selectContainerWi
 import { selectOrders } from "../store/selectors/i-order.selectors";
 import { selectGroups } from "../store/selectors/i-group.selectors";
 import { IGood } from '../interfaces/i-good.interface';
-import { setCurrentSolution } from '../store/actions/i-solution.actions';
+import getContainerVirtualSpace from '../methods/get-container-virtual-space.shared-methods';
 
 export class SuperFloSolver extends Solver implements ISolver {
-
-    private _unusedDimensions: IVirtualDimension[] = [];
 
     constructor(
         private _description: string = 'SuperFlo',
@@ -59,18 +56,20 @@ export class SuperFloSolver extends Solver implements ISolver {
                 length: 0,
                 goods: []
             },
+            steps: []
         } as ISolution;
         let sequenceNumber = 0;
+        
+        let virtualDimensions = [getContainerVirtualSpace(solution.container!)];
 
         for (let order of orders) {
             for (let i = 0; i < (order.quantity ?? 0); i++) {
-                let space = this.getBestIVirtualDimensionsForMinimizationFunction(this._unusedDimensions.filter(x => this.canPlaceOrderIntoSpace(order, x).notTurned), this._minimizationFunction);
+                let space = this.getBestIVirtualDimensionsForMinimizationFunction(virtualDimensions.filter(x => this.canPlaceOrderIntoSpace(order, x).notTurned), this._minimizationFunction);
                 if (!space) {
                     continue;
                 }
-                let unusedDimensions = this.putOrderAndCreateIVirtualDimensions(order, space);
-                this._unusedDimensions.push(...unusedDimensions);
-                this._unusedDimensions.splice(this._unusedDimensions.findIndex(x => x === space), 1);
+                virtualDimensions = [...virtualDimensions, ...this.putOrderAndCreateIVirtualDimensions(order, space)];
+                virtualDimensions.splice(virtualDimensions.findIndex(dimension => dimension === space), 1);
                 const good: IGood = {
                     id: generateGuid(),
                     xCoord: space.xCoord,
@@ -86,30 +85,29 @@ export class SuperFloSolver extends Solver implements ISolver {
                 solution.steps!.push({
                     sequenceNumber: sequenceNumber,
                     messages: [`put good ${good.id} into space (${space.xCoord}/${space.yCoord}/${space.zCoord}) (order ${order.id} element ${i + 1})`],
-                    unusedDimensions: unusedDimensions,
+                    unusedDimensions: virtualDimensions,
                     dimension: DataService.getGoodDimension(good),
                     usedDimension: space
                 } as IStep);
                 solution.container!.goods.push(good);
                 sequenceNumber++;
-                let combinable = this.getCombinableSpacePairs(this._unusedDimensions, true);
+                let combinable = this.getCombinableSpacePairs(virtualDimensions, true);
                 while (combinable.length > 0) {
                     let combined = this.combineSpaces(combinable[0]);
-                    let spaces = [...this._unusedDimensions.filter(x => combinable[0].indexOf(x) === -1), combined];
-                    this._unusedDimensions = spaces;
+                    virtualDimensions = [...virtualDimensions.filter(x => combinable[0].indexOf(x) === -1), combined];
                     solution.steps!.push({
                         sequenceNumber: sequenceNumber,
                         messages: [`combined unused spaces: ${combinable[0].map(x => x.id).join(', ')}`],
                         unusedDimensions: [combined]
                     } as IStep);
                     sequenceNumber++;
-                    combinable = this.getCombinableSpacePairs(this._unusedDimensions, true);
+                    combinable = this.getCombinableSpacePairs(virtualDimensions, true);
                 }
             }
         }
         solution.container!.length = Math.max(...solution.container!.goods.map(good => good.zCoord + good.length), 0);
         solution.groups = groups;
-        this._solutionStore.dispatch(setCurrentSolution({ solution }));
+        return solution;
     }
 
 }

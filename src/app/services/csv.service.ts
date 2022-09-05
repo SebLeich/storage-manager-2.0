@@ -125,9 +125,10 @@ export class CsvService {
       let rows = csvString.split('\n');
       let containerRow = rows[1].split(',');
 
-      this._calculationContextStore.dispatch(setContainerWidth({ width: parseFloat(containerRow[0]) }));
-      this._calculationContextStore.dispatch(setContainerHeight({ height: parseFloat(containerRow[1]) }));
-      this._calculationContextStore.dispatch(setUnit({ unit: containerRow[2] as any ?? 'mm' }));
+      const containerWidth = parseFloat(containerRow[0]), containerHeight = parseFloat(containerRow[1]), unit = containerRow[2] as any ?? 'mm';
+      this._calculationContextStore.dispatch(setContainerWidth({ width: containerWidth }));
+      this._calculationContextStore.dispatch(setContainerHeight({ height: containerHeight }));
+      this._calculationContextStore.dispatch(setUnit({ unit: unit }));
 
       let properties = [];
       for (let column of rows[2].split(',')) properties.push((this.headerOrderMap as any)[column]);

@@ -83,7 +83,7 @@
                     </div>
 
                     <div *ngIf="wrapper.status === AlgorithmCalculationStatus.Calculated">
-                        length: {{wrapper.solution?.container?.length|prettyLength}}
+                        length: {{wrapper.solution?.container?.length|prettyLength|async}}
                     </div>
 
                     <ng-container *ngIf="wrapper.status === AlgorithmCalculationStatus.Error">
@@ -102,7 +102,9 @@
                         calculate
                     </div>
 
-                    <div class="control accent-2" (click)="calculationComponentService.visualizeSolution(wrapper.solution!)" [ngClass]="{ 'disabled': wrapper.status !== AlgorithmCalculationStatus.Calculated }">
+                    <div class="control accent-2"
+                        (click)="calculationComponentService.visualizeSolution(wrapper.solution!)"
+                        [ngClass]="{ 'disabled': wrapper.status !== AlgorithmCalculationStatus.Calculated }">
                         visualize
                     </div>
 

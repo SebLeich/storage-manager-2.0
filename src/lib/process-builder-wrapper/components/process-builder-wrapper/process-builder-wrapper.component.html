@@ -92,7 +92,7 @@
 
                 <div class="option" *ngFor="let func of (service.funcs$|async)">
 
-                    <div class="text">{{func.name ?? 'unnamed function'}}</div>
+                    <div class="text">{{func.name}}</div>
                     <mat-icon *ngIf="func.customImplementation" (click)="service.removeFunction(func)" class="control"
                         color="warn">delete_forever</mat-icon>
 
@@ -115,7 +115,7 @@
 
                 <div class="option" *ngFor="let param of (service.params$|async)">
 
-                    <div class="text">{{param.name ?? 'unnamed param'}}</div>
+                    <div class="text">{{param.name}}</div>
 
                 </div>
 

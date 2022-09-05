@@ -5,9 +5,9 @@
             click to select
         </td>
         <td class="output-value" [ngStyle]="{ 'padding-left': 'calc(.5rem + (.5rem * ' + level + '))' }">
-            {{def?.name}} (type: {{isNumber(def?.interface)? (def?.interface|interface|async): def?.type}})
+            {{def.name}} (type: {{isNumber(def.interface)? (def.interface|interface|async): def.type}})
         </td>
-        <td class="exemplary-value">{{def.type === 'object' || def.type === 'array' ? '-': def?.defaultValue}}</td>
+        <td class="exemplary-value">{{def.type === 'object' || def.type === 'array' ? '-': def.defaultValue}}</td>
     </tr>
 
     <ng-container *ngIf="def.type === 'object' || def.type === 'array'">

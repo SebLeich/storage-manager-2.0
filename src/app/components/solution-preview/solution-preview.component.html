@@ -18,12 +18,12 @@
               </div>
 
               <div class="algorithm" *ngIf="algorithm$|async">
-                algorithm {{ (algorithm$|async) ?? 'unknown' }}
+                calculated using {{ (algorithm$|async) ?? 'unknown' }} algorithm
               </div>
             </div>
 
             <div class="next-solution-wrapper">
-              <button mat-icon-button [disabled]="((solutions$ | async)?.length ?? 0) < 2"
+              <button mat-icon-button [disabled]="!(hasMultipleSolutions$|async)"
                 (click)="solutionPreviewComponentService.nextSolution()" matTooltip="next solution">
                 <mat-icon>chevron_right</mat-icon>
               </button>
@@ -61,7 +61,7 @@
           <mat-panel-description>used groups</mat-panel-description>
         </mat-expansion-panel-header>
 
-        <app-groups-panel></app-groups-panel>
+        <app-groups-panel (groupColorChanged)="groupColorChanged($event)"></app-groups-panel>
       </mat-expansion-panel>
     </div>
 

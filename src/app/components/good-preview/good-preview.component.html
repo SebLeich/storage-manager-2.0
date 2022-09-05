@@ -10,23 +10,23 @@
     <div class="property-row">
       <div class="property">
         <div class="attribute">width</div>
-        <div class="value">{{ good?.width | prettyLength }}</div>
+        <div class="value">{{ good.width | prettyLength | async }}</div>
       </div>
 
       <div class="property">
         <div class="attribute">height</div>
-        <div class="value">{{ good?.height | prettyLength }}</div>
+        <div class="value">{{ good.height | prettyLength | async }}</div>
       </div>
 
       <div class="property">
         <div class="attribute">length</div>
-        <div class="value">{{ good?.length | prettyLength }}</div>
+        <div class="value">{{ good.length | prettyLength | async }}</div>
       </div>
 
       <div class="property">
         <div class="attribute">volume</div>
         <div class="value">
-          {{ good!.length * good!.height * good!.width | prettyVolume: true }}
+          {{ good.length * good.height * good.width | prettyVolume: true | async }}
         </div>
       </div>
     </div>
@@ -34,17 +34,17 @@
     <div class="property-row">
       <div class="property">
         <div class="attribute">x-coordinate</div>
-        <div class="value">{{ good?.xCoord }}</div>
+        <div class="value">{{ good.xCoord }}</div>
       </div>
 
       <div class="property">
         <div class="attribute">y-coordinate</div>
-        <div class="value">{{ good?.yCoord }}</div>
+        <div class="value">{{ good.yCoord }}</div>
       </div>
 
       <div class="property">
         <div class="attribute">z-coordinate</div>
-        <div class="value">{{ good?.zCoord }}</div>
+        <div class="value">{{ good.zCoord }}</div>
       </div>
     </div>
   </ng-container>

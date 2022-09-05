@@ -1,4 +1,5 @@
 import { createAction, props } from '@ngrx/store';
+import { IGroup } from 'src/app/interfaces/i-group.interface';
 import { ISolution } from 'src/app/interfaces/i-solution.interface';
 
 export const solutionActions = {
@@ -7,7 +8,8 @@ export const solutionActions = {
   DownloadCurrentSolution: '[Solution] Download Current Solution',
   RouteToSolution: '[Solution] Route To Solution',
   SetCurrentSolution: '[Solution] Set Current Solution',
-  SetNextSolution: '[Solution] Set Next Solution'
+  SetNextSolution: '[Solution] Set Next Solution',
+  UpdateCurrentSolutionGroupColor: '[Solution] Update Current Solution Group Color'
 }
 
 export const addSolution = createAction(
@@ -42,3 +44,8 @@ export const setCurrentSolution = createAction(
 export const setNextSolution = createAction(
   solutionActions.SetNextSolution
 );
+
+export const updateCurrentSolutionGroupColor = createAction(
+  solutionActions.UpdateCurrentSolutionGroupColor,
+  props<{ group: IGroup; color: string }>()
+)

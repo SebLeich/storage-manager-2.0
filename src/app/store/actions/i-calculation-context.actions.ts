@@ -17,6 +17,6 @@ export const setContainerWidth = createAction(
 );
 
 export const setUnit = createAction(
-  solutionActions.SetContainerWidth,
+  solutionActions.SetUnit,
   props<{ unit: 'mm' | 'cm' | 'dm' | 'm' }>()
 );

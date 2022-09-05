@@ -25,12 +25,12 @@
                 </mat-panel-title>
 
                 <mat-panel-description>
-                    Hervorgehobenes Element
+                    hovered element
                 </mat-panel-description>
 
             </mat-expansion-panel-header>
 
-            <app-good-preview *ngIf="(visualizerComponentService.selectedGood$|async)" [good]="(visualizerComponentService.selectedGood$|async)!"></app-good-preview>
+            <app-good-preview *ngIf="(visualizerComponentService.hoveredElement$|async)" [good]="(visualizerComponentService.hoveredGood$|async)!"></app-good-preview>
 
         </mat-expansion-panel>
 
@@ -47,7 +47,7 @@
                 </mat-panel-title>
 
                 <mat-panel-description>
-                    Gewähltes Element
+                    selected element
                 </mat-panel-description>
 
             </mat-expansion-panel-header>
@@ -62,6 +62,6 @@
 
 <ng-template #noElement>
 
-    <span class="no-element-hint">Kein Element</span>
+    <span class="no-element-hint">no element</span>
 
 </ng-template>

@@ -18,7 +18,7 @@ export class ContainerPreviewComponent implements OnChanges, OnInit {
       data: [0, 0]
     }
   ];
-  public labels = ['Belegt', 'Frei'];
+  public labels = ['used', 'unused'];
   public type = 'doughnut';
   public options: ChartOptions = {
     maintainAspectRatio: false,

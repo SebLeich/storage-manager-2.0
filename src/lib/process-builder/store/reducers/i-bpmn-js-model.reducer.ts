@@ -57,7 +57,7 @@ export const reducer = createReducer(
   }),
 
   on(updateIBpmnJSModel, (state: State, { model }) => {
-    let update: Update<IBpmnJSModel> = {
+    const update: Update<IBpmnJSModel> = {
       'id': model.guid,
       'changes': {
         'description': model.description,

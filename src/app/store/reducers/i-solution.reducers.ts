@@ -3,7 +3,7 @@ import { createReducer, MetaReducer, on, Store } from '@ngrx/store';
 import defaultSolution from 'src/assets/exampleSolution.json';
 
 import { environment } from 'src/environments/environment';
-import { EntityState, EntityAdapter, createEntityAdapter } from '@ngrx/entity';
+import { EntityState, EntityAdapter, createEntityAdapter, Update } from '@ngrx/entity';
 import { InjectionToken } from '@angular/core';
 import {
   addSolution,
@@ -11,6 +11,7 @@ import {
   duplicateSolution,
   removeSolution,
   setCurrentSolution,
+  updateCurrentSolutionGroupColor,
 } from '../actions/i-solution.actions';
 import { v4 as generateGuid } from 'uuid';
 import * as moment from 'moment';
@@ -46,6 +47,7 @@ export const initialState: State = adapter.getInitialState({
 
 export const solutionReducer = createReducer(
   initialState,
+  
   on(addSolution, (state, { solution }) => {
     return adapter.addOne(
       {
@@ -55,6 +57,7 @@ export const solutionReducer = createReducer(
       state
     );
   }),
+
   on(addSolutions, (state, { solutions }) => {
     return adapter.addMany(
       solutions.map((solution, index) => {
@@ -67,26 +70,49 @@ export const solutionReducer = createReducer(
       state
     );
   }),
+
   on(duplicateSolution, (state, { duplicateSolution }) => {
     if (!duplicateSolution) {
       return state;
     }
     return adapter.addOne({ ...duplicateSolution, id: generateGuid() }, state);
   }),
+
   on(removeSolution, (state, { removeSolution }) => {
     if (!removeSolution) {
       return state;
     }
     return adapter.removeOne(removeSolution.id, state);
   }),
+
   on(setCurrentSolution, (currentState, { solution }) => {
-    const state = {
-      ...currentState,
-      selectedSolutionId: solution?.id ?? null,
-      selectedSolutionIndex: solution
-        ? currentState.ids.findIndex((id) => id === solution.id)
-        : null,
-    };
+    let state: State = currentState;
+    if(solution){
+      let solutionIndex = Object.values(currentState.entities).findIndex((currentSolution) => currentSolution?.id === solution.id);
+      if(solutionIndex === -1){
+        state = adapter.addOne(solution, currentState);
+        solutionIndex = Object.values(currentState.entities).findIndex((currentSolution) => currentSolution?.id === solution.id);
+      }
+      return { ...state, selectedSolutionId: solution.id, selectedSolutionIndex: solutionIndex };
+    } else {
+      return { ...state, selectedSolutionId: null, selectedSolutionIndex: null };
+    }
+  }),
+
+  on(updateCurrentSolutionGroupColor, (currentState, { group, color }) => {
+    let state: State = { ...currentState };
+    if (typeof currentState.selectedSolutionId === 'string') {
+      const updatedGroups = currentState.entities[currentState.selectedSolutionId]!.groups?.map(currentGroup => {
+        return currentGroup === group? { ...group, color: color }: currentGroup;
+      }) ?? [];
+      const updateCommand: Update<ISolution> = {
+        'id': currentState.selectedSolutionId,
+        'changes': {
+          'groups': updatedGroups
+        }
+      }
+      return adapter.updateOne(updateCommand, currentState);
+    }
     return state;
   })
 );

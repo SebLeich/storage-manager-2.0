@@ -15,17 +15,18 @@ export class PrettyVolumePipe implements PipeTransform {
 
   }
 
-  async transform(value: number, prettify: boolean = true): Promise<string> {
+  async transform(value: number, prettify: boolean = true, decimalDigits: number = 2, hideDecimalDigitsWhenZero: boolean = false): Promise<string> {
     let unit = await selectSnapshot(this._calculationContextStore.select(selectUnit));
     if (!prettify) return `${value} ${unit}³`;
     let converted = value;
     let index = nextUnitSize.findIndex(x => x.unit === unit);
-    while (converted > (nextUnitSize[index!].threshold ?? Infinity)) {
+    while (converted >= (nextUnitSize[index!].threshold ?? Infinity)) {
       converted = converted / (Math.pow((nextUnitSize[index!].next ?? 1), 3));
       index++;
-      unit = nextUnitSize[index].unit as any;
+      unit = nextUnitSize[index!].unit as any;
     }
-    return `${converted.toFixed(2)} ${unit}³`;
+    const stringified = hideDecimalDigitsWhenZero ? `${parseFloat(converted.toFixed(decimalDigits))} ${unit}³` : `${converted.toFixed(decimalDigits)} ${unit}³`;
+    return stringified.replace('.', ',');
   }
 
 }

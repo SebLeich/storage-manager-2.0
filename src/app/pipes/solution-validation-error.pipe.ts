@@ -1,39 +1,39 @@
 import { Pipe, PipeTransform } from '@angular/core';
-import { SOLUTION_ERROR } from '../globals';
+import { SolutionError } from '../globals';
 
 @Pipe({
   name: 'solutionValidationError'
 })
 export class SolutionValidationErrorPipe implements PipeTransform {
 
-  transform(errorCode: SOLUTION_ERROR): string {
+  transform(errorCode: SolutionError): string {
     switch (errorCode) {
 
-      case SOLUTION_ERROR.NO_SOLUTION:
+      case SolutionError.NoSolution:
         return 'no solution';
 
-      case SOLUTION_ERROR.NO_CONTAINER:
+      case SolutionError.NoContainer:
         return 'solution without container';
 
-      case SOLUTION_ERROR.GOOD_BEFORE_CONTAINER_X:
+      case SolutionError.GoodBeforeContainerXCoord:
         return 'solution contains goods, positioned next to the container';
 
-      case SOLUTION_ERROR.GOOD_OUT_OF_CONTAINER_X:
+      case SolutionError.GoodOutOfContainerXCoord:
         return 'solution contains goods, jutting over the x edge of the container';
 
-      case SOLUTION_ERROR.GOOD_BEFORE_CONTAINER_Y:
+      case SolutionError.GoodBeforeContainerYCoord:
         return 'solution contains goods, positioned beneath the container';
 
-      case SOLUTION_ERROR.GOOD_OUT_OF_CONTAINER_Y:
+      case SolutionError.GoodOutOfContainerYCoord:
         return 'solution contains goods, jutting over the y edge of the container';
 
-      case SOLUTION_ERROR.GOOD_BEFORE_CONTAINER_Z:
+      case SolutionError.GoodBeforeContainerZCoord:
         return 'solution contains goods, positioned behind the container';
 
-      case SOLUTION_ERROR.GOOD_OUT_OF_CONTAINER_Z:
+      case SolutionError.GoodOutOfContainerZCoord:
         return 'solution contains goods, jutting over the z edge of the container';
 
-      case SOLUTION_ERROR.GOOD_OVERLAP:
+      case SolutionError.GoodOverlap:
         return 'solution\' goods overlapping'
 
     }

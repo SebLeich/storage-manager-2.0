@@ -75,6 +75,10 @@ body {
     width: 4rem;
 }
 
+.smgr-table tfoot td {
+    border-bottom: none;
+}
+
 .smgr-manual-select-add-input-option {
     padding: 0px !important;
     height: auto;

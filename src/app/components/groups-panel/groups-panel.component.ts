@@ -1,7 +1,6 @@
-import { Component, Inject } from '@angular/core';
+import { Component, Inject, Output, EventEmitter } from '@angular/core';
 import { GROUPS_PROVIDER, IGroupsProvider } from 'src/app/interfaces';
 import { IGroup } from 'src/app/interfaces/i-group.interface';
-import { VisualizerComponentService } from '../main/visualizer/visualizer-component-service';
 
 @Component({
   selector: 'app-groups-panel',
@@ -10,16 +9,15 @@ import { VisualizerComponentService } from '../main/visualizer/visualizer-compon
 })
 export class GroupsPanelComponent {
 
-  columns: string[] = [ 'desc', 'color' ];
+  @Output() groupColorChanged = new EventEmitter<{ group: IGroup, color: string }>();
+  columns: string[] = ['desc', 'color'];
 
   constructor(
-    @Inject(GROUPS_PROVIDER) public groupsProvider: IGroupsProvider,
-    private _visualizerComponentService: VisualizerComponentService
+    @Inject(GROUPS_PROVIDER) public groupsProvider: IGroupsProvider
   ) { }
 
-  setGroupColor(event: InputEvent, group: IGroup){
-    group.color = (event.target as HTMLInputElement).value;
-    this._visualizerComponentService.updateGroupColors();
+  setGroupColor(event: InputEvent, group: IGroup) {
+    this.groupColorChanged.emit({ group: group, color: (event.target as HTMLInputElement).value });
   }
 
 }

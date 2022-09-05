@@ -8,7 +8,7 @@
         "goods": [
             {
                 "id": "ab34762f-ccd1-4258-b3e1-69558728e6z0",
-                "desc": "Palette 1",
+                "desc": "pallet type1",
                 "height": 1000,
                 "group": "ab34762f-ccd1-4258-b3e1-69558728d6b0",
                 "width": 1050,
@@ -24,7 +24,7 @@
             },
             {
                 "id": "ab34762f-ccd1-4258-b3e1-69558728e6z1",
-                "desc": "Palette 1",
+                "desc": "pallet type1",
                 "height": 1000,
                 "group": "ab34762f-ccd1-4258-b3e1-69558728d6b0",
                 "width": 1050,
@@ -40,7 +40,7 @@
             },
             {
                 "id": "ab34762f-ccd1-4258-b3e1-69558728e6z2",
-                "desc": "Palette 1",
+                "desc": "pallet type1",
                 "height": 1000,
                 "group": "ab34762f-ccd1-4258-b3e1-69558728d6b0",
                 "width": 1050,
@@ -56,7 +56,7 @@
             },
             {
                 "id": "ab34762f-ccd1-4258-b3e1-69558728e6z3",
-                "desc": "Palette 1",
+                "desc": "pallet type1",
                 "height": 1000,
                 "group": "ab34762f-ccd1-4258-b3e1-69558728d6b0",
                 "width": 1050,
@@ -72,7 +72,7 @@
             },
             {
                 "id": "ab34762f-ccd1-4258-b3e1-69558728e6z4",
-                "desc": "Palette 1",
+                "desc": "pallet type1",
                 "height": 1000,
                 "group": "ab34762f-ccd1-4258-b3e1-69558728d6b0",
                 "width": 1050,
@@ -88,7 +88,7 @@
             },
             {
                 "id": "ab34762f-ccd1-4258-b3e1-69558728e6z5",
-                "desc": "Palette 1",
+                "desc": "pallet type1",
                 "height": 1000,
                 "group": "ab34762f-ccd1-4258-b3e1-69558728d6b0",
                 "width": 1050,
@@ -104,7 +104,7 @@
             },
             {
                 "id": "ab34762f-ccd1-4258-b3e1-69558728e6z6",
-                "desc": "Palette 2",
+                "desc": "pallet type2",
                 "height": 400,
                 "group": "ab34762f-ccd1-4258-b3e1-69558728d6b0",
                 "width": 700,
@@ -120,7 +120,7 @@
             },
             {
                 "id": "ab34762f-ccd1-4258-b3e1-69558728e6z7",
-                "desc": "Palette 2",
+                "desc": "pallet type2",
                 "height": 400,
                 "group": "ab34762f-ccd1-4258-b3e1-69558728d6b0",
                 "width": 700,
@@ -136,7 +136,7 @@
             },
             {
                 "id": "ab34762f-ccd1-4258-b3e1-69558728e6z8",
-                "desc": "Palette 2",
+                "desc": "pallet type2",
                 "height": 400,
                 "group": "ab34762f-ccd1-4258-b3e1-69558728d6b0",
                 "width": 700,
@@ -152,7 +152,7 @@
             },
             {
                 "id": "ab34762f-ccd1-4258-b3e1-69558728e6z9",
-                "desc": "Palette 2",
+                "desc": "pallet type2",
                 "height": 400,
                 "group": "ab34762f-ccd1-4258-b3e1-69558728d6b0",
                 "width": 700,
@@ -168,7 +168,7 @@
             },
             {
                 "id": "ab34762f-ccd1-4258-b3e1-69558728e6y0",
-                "desc": "Palette 2",
+                "desc": "pallet type2",
                 "height": 400,
                 "group": "ab34762f-ccd1-4258-b3e1-69558728d6b1",
                 "width": 700,
@@ -184,7 +184,7 @@
             },
             {
                 "id": "ab34762f-ccd1-4258-b3e1-69558728e6y1",
-                "desc": "Palette 2",
+                "desc": "pallet type2",
                 "height": 400,
                 "group": "ab34762f-ccd1-4258-b3e1-69558728d6b1",
                 "width": 700,
@@ -200,7 +200,7 @@
             },
             {
                 "id": "ab34762f-ccd1-4258-b3e1-69558728e6y2",
-                "desc": "Palette 2",
+                "desc": "pallet type2",
                 "height": 400,
                 "group": "ab34762f-ccd1-4258-b3e1-69558728d6b1",
                 "width": 700,
@@ -216,7 +216,7 @@
             },
             {
                 "id": "ab34762f-ccd1-4258-b3e1-69558728e6y3",
-                "desc": "Palette 2",
+                "desc": "pallet type2",
                 "height": 400,
                 "group": "ab34762f-ccd1-4258-b3e1-69558728d6b1",
                 "width": 700,
@@ -232,7 +232,7 @@
             },
             {
                 "id": "ab34762f-ccd1-4258-b3e1-69558728e6y4",
-                "desc": "Palette 2",
+                "desc": "pallet type2",
                 "height": 400,
                 "group": "ab34762f-ccd1-4258-b3e1-69558728d6b1",
                 "width": 700,
@@ -248,7 +248,7 @@
             },
             {
                 "id": "ab34762f-ccd1-4258-b3e1-69558728e6y5",
-                "desc": "Palette 2",
+                "desc": "pallet type2",
                 "height": 400,
                 "group": "ab34762f-ccd1-4258-b3e1-69558728d6b1",
                 "width": 700,
@@ -264,7 +264,7 @@
             },
             {
                 "id": "ab34762f-ccd1-4258-b3e1-69558728e6y6",
-                "desc": "Palette 2",
+                "desc": "pallet type2",
                 "height": 400,
                 "group": "ab34762f-ccd1-4258-b3e1-69558728d6b1",
                 "width": 700,
@@ -280,7 +280,7 @@
             },
             {
                 "id": "ab34762f-ccd1-4258-b3e1-69558728e6y7",
-                "desc": "Palette 2",
+                "desc": "pallet type2",
                 "height": 400,
                 "group": "ab34762f-ccd1-4258-b3e1-69558728d6b1",
                 "width": 700,
@@ -296,7 +296,7 @@
             },
             {
                 "id": "ab34762f-ccd1-4258-b3e1-69558728e6y8",
-                "desc": "Palette 2",
+                "desc": "pallet type2",
                 "height": 400,
                 "group": "ab34762f-ccd1-4258-b3e1-69558728d6b1",
                 "width": 700,
@@ -312,7 +312,7 @@
             },
             {
                 "id": "ab34762f-ccd1-4258-b3e1-69558728e6y9",
-                "desc": "Palette 2",
+                "desc": "pallet type2",
                 "height": 400,
                 "group": "ab34762f-ccd1-4258-b3e1-69558728d6b1",
                 "width": 700,
@@ -336,15 +336,15 @@
         {
             "id": "ab34762f-ccd1-4258-b3e1-69558728d6b0",
             "color": "#b71a1a",
-            "desc": "Test AG"
+            "desc": "Test Ltd."
         },
         {
             "id": "ab34762f-ccd1-4258-b3e1-69558728d6b1",
             "color": "#6094e6",
-            "desc": "Beispiel SE"
+            "desc": "Exemplary SE"
         }
     ],
     "steps": [],
     "calculated": "2022-01-20T18:14:58",
-    "description": null
+    "description": "exemplary solution"
 }

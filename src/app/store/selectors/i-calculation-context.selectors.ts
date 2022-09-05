@@ -20,5 +20,7 @@ export const selectUnit = createSelector(
 
 export const selectCalculationContextValid = createSelector(
   solutionsState,
-  (state: State) => !!state.containerWidth && !!state.containerHeight
+  (state: State) => {
+    return !!state.containerWidth && !!state.containerHeight;
+  }
 );

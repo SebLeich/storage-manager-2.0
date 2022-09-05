@@ -22,21 +22,18 @@ export interface State {
 export const initialState: State = {
   containerHeight: 1000,
   containerWidth: 1000,
-  unit: 'cm'
+  unit: 'mm'
 }
 
 export const calculationContextReducer = createReducer(
   initialState,
   on(setContainerHeight, (state, { height }) => {
-    state.containerHeight = height;
-    return state;
+    return { ...state, containerHeight: height };
   }),
   on(setContainerWidth, (state, { width }) => {
-    state.containerWidth = width;
-    return state;
+    return { ...state, containerWidth: width };
   }),
   on(setUnit, (state, { unit }) => {
-    state.unit = unit;
-    return state;
+    return { ...state, unit: unit };
   }),
 );

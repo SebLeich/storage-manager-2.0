@@ -5301,5 +5301,5 @@ export default {
         }
     ],
     "calculated": "2022-01-20T18:14:58",
-    "description": null
+    "description": "exemplary solution"
 }

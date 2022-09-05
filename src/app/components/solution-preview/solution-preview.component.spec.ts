@@ -1,4 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import defaultImports from 'src/app/default-imports.constant';
 
 import { SolutionPreviewComponent } from './solution-preview.component';
 
@@ -8,7 +9,10 @@ describe('SolutionPreviewComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ SolutionPreviewComponent ]
+      declarations: [ SolutionPreviewComponent ],
+      imports: [
+        ...defaultImports
+      ]
     })
     .compileComponents();
   });

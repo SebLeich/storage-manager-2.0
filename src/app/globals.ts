@@ -2,8 +2,8 @@ export enum Algorithm {
     AllInOneRow, StartLeftBottom, SuperFlo, AISupportedSolver
 }
 
-export enum SOLUTION_ERROR {
-    NO_SOLUTION, NO_CONTAINER, GOOD_BEFORE_CONTAINER_X, GOOD_OUT_OF_CONTAINER_X, GOOD_BEFORE_CONTAINER_Y, GOOD_OUT_OF_CONTAINER_Y, GOOD_BEFORE_CONTAINER_Z, GOOD_OUT_OF_CONTAINER_Z, GOOD_OVERLAP
+export enum SolutionError {
+    NoSolution, NoContainer, GoodBeforeContainerXCoord, GoodOutOfContainerXCoord, GoodBeforeContainerYCoord, GoodOutOfContainerYCoord, GoodBeforeContainerZCoord, GoodOutOfContainerZCoord, GoodOverlap
 }
 
 export const algorithms = [
@@ -41,9 +41,8 @@ export function compare(a: number | string, b: number | string, isAsc: boolean =
 export const nameOf = <T>(name: Extract<keyof T, string>): string => name;
 
 export const nextUnitSize = [
-    { unit: 'mm', next: 10, threshold: 1000 },
-    { unit: 'cm', next: 10, threshold: 1000 },
-    { unit: 'dm', next: 10, threshold: 1000 },
+    { unit: 'mm', next: 10, threshold: 100 },
+    { unit: 'cm', next: 100, threshold: 100 },
     { unit: 'm', next: 1000, threshold: 1000 },
     { unit: 'km', next: null, threshold: null },
 ];

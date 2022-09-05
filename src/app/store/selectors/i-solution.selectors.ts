@@ -2,6 +2,7 @@ import { ISolution } from 'src/app/interfaces/i-solution.interface';
 import { createSelector } from '@ngrx/store';
 import { solutionFeatureKey, State } from '../reducers/i-solution.reducers';
 import { SolutionValidationService } from 'src/app/services/solution-validation.service';
+import { IGroup } from 'src/app/interfaces/i-group.interface';
 
 export const solutionsState = (state: any) => state[solutionFeatureKey] as State;
 
@@ -52,6 +53,11 @@ export const selectSolutions = createSelector(
   (state: State) => Object.values(state.entities ?? {}) as ISolution[]
 );
 
+export const selectHasMultipleSolutions = createSelector(
+  solutionsState,
+  (state: State) => Object.values(state.entities).length > 1
+);
+
 export const selectCurrentSolutionValidation = createSelector(
   solutionsState,
   (state: State) => {
@@ -71,5 +77,16 @@ export const selectCurrentSolutionSteps = createSelector(
       return null;
     }
     return currentSolution.steps ?? [];
+  }
+);
+
+export const selectCurrentSolutionGroups = createSelector(
+  solutionsState,
+  (state: State) => {
+    if (typeof state.selectedSolutionId !== 'string') {
+      return [];
+    }
+    const currentSolution = state.entities[state.selectedSolutionId];
+    return (currentSolution!.groups ?? []) as IGroup[];
   }
 );

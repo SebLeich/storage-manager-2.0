@@ -4,7 +4,6 @@ import { Store } from '@ngrx/store';
 import { BehaviorSubject, Subscription } from 'rxjs';
 import { filter, switchMap, take } from 'rxjs/operators';
 import { selectedGoodEdgeColor } from 'src/app/globals';
-import { DataService } from 'src/app/services/data.service';
 import { showAnimation } from 'src/lib/shared/animations/show';
 import { NoSolutionDialogComponent } from '../../dialog/no-solution-dialog/no-solution-dialog.component';
 import { VisualizerComponentService } from './visualizer-component-service';
@@ -37,7 +36,6 @@ export class VisualizerComponent implements AfterViewInit, OnDestroy, OnInit {
 
   constructor(
     public visualizerComponentService: VisualizerComponentService,
-    private _dataService: DataService,
     private _dialog: MatDialog,
     private _viewContainerRef: ViewContainerRef,
     private _solutionStore: Store<fromISolutionState.State>,
@@ -58,7 +56,7 @@ export class VisualizerComponent implements AfterViewInit, OnDestroy, OnInit {
         this.visualizerComponentService.setSceneDimensions(ref.nativeElement.clientWidth, ref.nativeElement.clientHeight, true);
       }),
       this._solutionStore.select(selectCurrentSolution)
-        .pipe(filter((solution) => !!solution))
+        .pipe(filter((solution) => !solution))
         .subscribe(() => this.showNoSolutionDialog()),
       this.menuVisible$.subscribe(() => this.visualizerComponentService.triggerResizeEvent())
     ]);

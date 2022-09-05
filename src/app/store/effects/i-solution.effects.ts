@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { Store } from '@ngrx/store';
-import { switchMap, mergeMap, tap } from 'rxjs/operators';
+import { switchMap, tap } from 'rxjs/operators';
 import { downloadCurrentSolution } from '../actions/i-solution.actions';
 import * as fromISolutionState from 'src/app/store/reducers/i-solution.reducers';
 import { selectCurrentSolution } from '../selectors/i-solution.selectors';

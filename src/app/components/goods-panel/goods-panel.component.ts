@@ -1,5 +1,4 @@
-import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
-import { Subscription } from 'rxjs';
+import { Component, Inject } from '@angular/core';
 import { GOODS_PROVIDER, IGoodsProvider } from 'src/app/interfaces';
 import { IGood } from 'src/app/interfaces/i-good.interface';
 import { VisualizerComponentService } from '../main/visualizer/visualizer-component-service';
@@ -9,11 +8,9 @@ import { VisualizerComponentService } from '../main/visualizer/visualizer-compon
   templateUrl: './goods-panel.component.html',
   styleUrls: ['./goods-panel.component.css']
 })
-export class GoodsPanelComponent implements OnDestroy, OnInit {
+export class GoodsPanelComponent {
 
-  columns: string[] = [ 'desc', 'height', 'width', 'length' ];
-
-  private _subscriptions: Subscription[] = [];
+  columns: string[] = ['desc', 'height', 'width', 'length'];
 
   constructor(
     @Inject(GOODS_PROVIDER) public goodsProvider: IGoodsProvider,
@@ -21,16 +18,6 @@ export class GoodsPanelComponent implements OnDestroy, OnInit {
   ) { }
 
   hoverGood = (good: IGood) => this._visualizerComponentService.highlightGood(good);
-
-  ngOnDestroy(): void {
-      for(let sub of this._subscriptions) sub.unsubscribe();
-      this._subscriptions = [];
-  }
-
-  ngOnInit(): void {
-
-  }
-
   selectGood = (good: IGood) => this._visualizerComponentService.selectGood(good);
 
 }
