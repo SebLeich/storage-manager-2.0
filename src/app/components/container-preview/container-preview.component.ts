@@ -1,5 +1,5 @@
 import { Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
-import { ChartOptions } from 'chart.js';
+import { ChartConfiguration } from 'chart.js';
 import { IContainer } from 'src/app/interfaces/i-container.interface';
 
 @Component({
@@ -20,12 +20,17 @@ export class ContainerPreviewComponent implements OnChanges, OnInit {
   ];
   public labels = ['used', 'unused'];
   public type = 'doughnut';
-  public options: ChartOptions = {
+  public options: ChartConfiguration['options'] = {
     maintainAspectRatio: false,
     responsive: true,
-    legend: {
-      position: 'bottom'
-    }
+    plugins: {
+      legend: {
+        position: 'bottom'
+      },
+      tooltip: {
+        enabled: false
+      }
+    },
   }
   public percentage: string = '0';
 

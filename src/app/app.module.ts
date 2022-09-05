@@ -27,7 +27,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { SolutionPreviewComponent } from './components/solution-preview/solution-preview.component';
 import { ContainerPreviewComponent } from './components/container-preview/container-preview.component';
-import { ChartsModule } from 'ng2-charts';
+import { NgChartsModule } from 'ng2-charts';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { GoodsPanelComponent } from './components/goods-panel/goods-panel.component';
 import { GroupsPanelComponent } from './components/groups-panel/groups-panel.component';
@@ -127,7 +127,7 @@ rootStoreFeatures[fromISolutionState.solutionFeatureKey] = fromISolutionState.so
     MatInputModule,
     MatCheckboxModule,
     MatSelectModule,
-    ChartsModule,
+    NgChartsModule,
     AutomationModule,
     SharedModule,
 

@@ -266,7 +266,7 @@ export class VisualizerComponentService {
 
             default:
                 let edgeColor = type === 'infiniteSpace' ? 'orange' : type === 'unusedSpace' ? 'red' : 'black';
-                var geometry = new ThreeJS.BoxBufferGeometry(dimension.width!, dimension.height!, dimension.length === Infinity ? infinityReplacement : dimension.length!);
+                var geometry = new ThreeJS.BoxGeometry(dimension.width!, dimension.height!, dimension.length === Infinity ? infinityReplacement : dimension.length!);
                 edges = new ThreeJS.LineSegments(new ThreeJS.EdgesGeometry(geometry), new ThreeJS.LineBasicMaterial({ color: edgeColor, linewidth: 1 }));
                 edges.userData = { type: type, dimensionGuid: dimensionGuid };
                 if (type === 'infiniteSpace') console.log(edges);

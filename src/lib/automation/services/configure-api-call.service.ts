@@ -2,6 +2,7 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, combineLatest, ReplaySubject } from 'rxjs';
 import { map } from 'rxjs/operators';
+import { selectSnapshot } from 'src/lib/process-builder/globals/select-snapshot';
 import { IApiAuthorizationResponse } from '../classes/api-response';
 import { ACCESS_GRANTED_STATUS, API_CALL_AUTHORIZATION, CONFIGURATION_ERROR } from '../globals';
 import { IBasicAuthConfiguration } from '../interfaces/i-basic-auth-configuration.interface';
@@ -64,18 +65,19 @@ export class ConfigureApiCallService {
   ) { }
 
   async loginBearerToken(configuration: IJwtByLoginConfiguration): Promise<IApiAuthorizationResponse> {
-    return this._httpClient
-      .post(
-        configuration.loginEndpoint,
-        new HttpParams()
-          .set('userName', configuration.userName)
-          .set('password', configuration.password)
-          .set('grant_type', 'password')
-      )
-      .pipe(
-        map(response => response as IApiAuthorizationResponse)
-      )
-      .toPromise();
+    return selectSnapshot(
+      this._httpClient
+        .post(
+          configuration.loginEndpoint,
+          new HttpParams()
+            .set('userName', configuration.userName)
+            .set('password', configuration.password)
+            .set('grant_type', 'password')
+        )
+        .pipe(
+          map(response => response as IApiAuthorizationResponse)
+        )
+    );
   }
 
   setAccessGrantedStatus = (status: ACCESS_GRANTED_STATUS) => this._accessGrantedStatus.next(status);

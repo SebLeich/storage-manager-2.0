@@ -11,6 +11,7 @@ import {
   duplicateSolution,
   removeSolution,
   setCurrentSolution,
+  setNextSolution,
   updateCurrentSolutionGroupColor,
 } from '../actions/i-solution.actions';
 import { v4 as generateGuid } from 'uuid';
@@ -47,7 +48,7 @@ export const initialState: State = adapter.getInitialState({
 
 export const solutionReducer = createReducer(
   initialState,
-  
+
   on(addSolution, (state, { solution }) => {
     return adapter.addOne(
       {
@@ -87,9 +88,9 @@ export const solutionReducer = createReducer(
 
   on(setCurrentSolution, (currentState, { solution }) => {
     let state: State = currentState;
-    if(solution){
+    if (solution) {
       let solutionIndex = Object.values(currentState.entities).findIndex((currentSolution) => currentSolution?.id === solution.id);
-      if(solutionIndex === -1){
+      if (solutionIndex === -1) {
         state = adapter.addOne(solution, currentState);
         solutionIndex = Object.values(currentState.entities).findIndex((currentSolution) => currentSolution?.id === solution.id);
       }
@@ -99,11 +100,23 @@ export const solutionReducer = createReducer(
     }
   }),
 
+  on(setNextSolution, (currentState) => {
+    if (Object.values(currentState.entities).length === 0) {
+      return currentState;
+    }
+    let nextSolutionIndex = typeof currentState.selectedSolutionId === 'string' ? Object.values(currentState.entities).findIndex((currentSolution) => currentSolution?.id === currentState.selectedSolutionId) + 1 : 0;
+    if (nextSolutionIndex === Object.values(currentState.entities).length) {
+      nextSolutionIndex = 0;
+    }
+    const nextSolution = Object.values(currentState.entities)[nextSolutionIndex];
+    return { ...currentState, selectedSolutionId: nextSolution!.id };
+  }),
+
   on(updateCurrentSolutionGroupColor, (currentState, { group, color }) => {
     let state: State = { ...currentState };
     if (typeof currentState.selectedSolutionId === 'string') {
       const updatedGroups = currentState.entities[currentState.selectedSolutionId]!.groups?.map(currentGroup => {
-        return currentGroup === group? { ...group, color: color }: currentGroup;
+        return currentGroup === group ? { ...group, color: color } : currentGroup;
       }) ?? [];
       const updateCommand: Update<ISolution> = {
         'id': currentState.selectedSolutionId,

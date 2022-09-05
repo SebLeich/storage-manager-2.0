@@ -39,7 +39,7 @@ export class CalculationComponent implements OnDestroy, OnInit {
   ) { }
 
   configureAPICall() {
-    this._matDialog.open(ApiCallConfiguratorDialogComponent, {
+    this._dialog.open(ApiCallConfiguratorDialogComponent, {
       panelClass: 'no-padding-dialog'
     });
   }

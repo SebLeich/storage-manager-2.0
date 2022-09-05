@@ -11,8 +11,8 @@ import {
 import { MatDialogRef } from '@angular/material/dialog';
 import { Store } from '@ngrx/store';
 import JSONEditor from 'jsoneditor';
-import { combineLatest, ReplaySubject, Subject, Subscription } from 'rxjs';
-import { take } from 'rxjs/operators';
+import { combineLatest, firstValueFrom, ReplaySubject, Subject, Subscription } from 'rxjs';
+import { take, withLatestFrom } from 'rxjs/operators';
 import { ProcessBuilderRepository } from 'src/lib/core/process-builder-repository';
 import { IParam } from 'src/lib/process-builder/globals/i-param';
 import {
@@ -99,7 +99,7 @@ export class ParamEditorComponent implements OnInit, OnDestroy {
   ) { }
 
   async calculateFunctionOutput(func: IFunction) {
-    const formGroup = await this.paramEditorComponentService.formGroup$.toPromise();
+    const formGroup = await selectSnapshot(this.paramEditorComponentService.formGroup$);
     if (func.customImplementation) {
       const output = await ProcessBuilderRepository.calculateCustomImplementationOutput(func.customImplementation, this._injector);
       const outputIParamDefinitions = ProcessBuilderRepository.extractObjectTypeDefinition(output);
