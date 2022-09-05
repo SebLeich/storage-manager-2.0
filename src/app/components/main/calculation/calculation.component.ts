@@ -1,5 +1,4 @@
 import { Component, OnDestroy, OnInit, ViewContainerRef } from '@angular/core';
-import { MatDialog } from '@angular/material/dialog';
 import { Store } from '@ngrx/store';
 import { Subscription } from 'rxjs';
 import { filter } from 'rxjs/operators';
@@ -9,6 +8,8 @@ import { ApiCallConfiguratorDialogComponent } from '../../dialog/api-call-config
 import { NoSolutionDialogComponent } from '../../dialog/no-solution-dialog/no-solution-dialog.component';
 import { CalculationComponentService } from './calculation-component.service';
 import { AlgorithmCalculationStatus } from './enumerations/algorithm-calculation-status.enum';
+
+import { MatDialog } from '@angular/material/dialog';
 
 import * as fromIOrderState from 'src/app/store/reducers/i-order.reducers';
 import { selectOrders } from 'src/app/store/selectors/i-order.selectors';
@@ -31,7 +32,6 @@ export class CalculationComponent implements OnDestroy, OnInit {
 
   constructor(
     public calculationComponentService: CalculationComponentService,
-    private _matDialog: MatDialog,
     public configureApiCallService: ConfigureApiCallService,
     private _dialog: MatDialog,
     private _viewContainerRef: ViewContainerRef,
@@ -47,12 +47,11 @@ export class CalculationComponent implements OnDestroy, OnInit {
   ngOnDestroy = () => this._subscriptions.unsubscribe();
 
   ngOnInit(): void {
-
     this._subscriptions.add(...[
       this._orderStore.select(selectOrders)
         .pipe(filter((orders: IOrder[]) => orders.length === 0 ? true : false))
-        .subscribe(() => this._showNoSolutionDialog())
-    ])
+        .subscribe(() => this._showNoSolutionDialog()),
+    ]);
   }
 
   private _showNoSolutionDialog() {

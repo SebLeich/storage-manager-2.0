@@ -16,9 +16,8 @@ import * as fromISolutionState from 'src/app/store/reducers/i-solution.reducers'
 import * as fromIGroupState from 'src/app/store/reducers/i-group.reducers';
 
 import { Store } from "@ngrx/store";
-import { selectCurrentSolution } from "src/app/store/selectors/i-solution.selectors";
+import { selectCurrentSolution, selectCurrentSolutionGroups } from "src/app/store/selectors/i-solution.selectors";
 import { IContainer } from "src/app/interfaces/i-container.interface";
-import { selectGroups } from "src/app/store/selectors/i-group.selectors";
 import { IDimension } from "src/app/interfaces/i-dimension.interface";
 
 @Injectable()
@@ -172,7 +171,7 @@ export class VisualizerComponentService {
 
     async reRenderCurrentContainer() {
         const container = await selectSnapshot(this._solutionStore.select(selectCurrentSolution).pipe(map(solution => solution?.container!)));
-        const groups = await selectSnapshot(this._groupStore.select(selectGroups));
+        const groups = await selectSnapshot(this._solutionStore.select(selectCurrentSolutionGroups));
         if (!container) {
             return;
         }
@@ -212,7 +211,7 @@ export class VisualizerComponentService {
     triggerResizeEvent = () => this._resized.next();
 
     async updateGroupColors() {
-        const groups: IGroup[] = await selectSnapshot(this._groupStore.select(selectGroups));
+        const groups: IGroup[] = await selectSnapshot(this._groupStore.select(selectCurrentSolutionGroups));
         this._meshes.forEach(meshWrapper => {
             const group = groups.find(group => group.id === meshWrapper.goodId);
             meshWrapper.groupColor = group?.color ?? '';
@@ -340,6 +339,7 @@ export class VisualizerComponentService {
     }
 
     private _setUp() {
+
         this.scene.background = new ThreeJS.Color('rgb(238,238,238)');
         this.renderer.domElement.id = this._sceneBodyId;
 

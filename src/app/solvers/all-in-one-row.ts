@@ -2,6 +2,7 @@ import { v4 as generateGuid } from 'uuid';
 import { ISolver } from "../interfaces";
 import { Solver } from "./solver";
 import { ISolution } from "../interfaces/i-solution.interface";
+import * as moment from 'moment';
 
 import * as fromICalculationContextState from 'src/app/store/reducers/i-calculation-context.reducers';
 import * as fromIGroupState from 'src/app/store/reducers/i-group.reducers';
@@ -52,6 +53,10 @@ export class AllInOneRowSolver extends Solver implements ISolver {
                 length: 0,
                 goods: []
             },
+            groups: groups,
+            algorithm: this._description,
+            calculated: moment().format(),
+            steps: []
         } as ISolution;
         let currentPosition = { x: 0, y: 0, z: 0 };
         let sequenceNumber = 0;
