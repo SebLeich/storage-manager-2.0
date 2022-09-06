@@ -85,7 +85,7 @@ export class VisualizerComponentService {
         this._addUnloadingArrowToScene(container.height, container.length);
         this._addBaseGridToScene(container.height, container.length);
         this._addContainerToScene(DataService.getContainerDimension(container));
-        if (step.dimension) this._addElementToScene(step.dimension, '', 'good', step.sequenceNumber, null, null, DataService.getContainerDimension(container));
+        if (step.position) this._addElementToScene(step.position, '', 'good', step.sequenceNumber, null, null, DataService.getContainerDimension(container));
         for (let unusedDimension of step.unusedDimensions ?? []) {
             this._addElementToScene(unusedDimension, '', unusedDimension.length === Infinity ? 'infiniteSpace' : 'unusedSpace', step.sequenceNumber, null, null, DataService.getContainerDimension(container), unusedDimension.id);
         }
