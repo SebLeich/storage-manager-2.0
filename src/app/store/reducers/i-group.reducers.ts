@@ -13,6 +13,7 @@ import {
 import { v4 as generateGuid } from 'uuid';
 import * as moment from 'moment';
 import { IGroup } from 'src/app/interfaces/i-group.interface';
+import { updateCalculationAttributes } from '../actions/i-calculation-attribute.actions';
 
 export const groupFeatureKey = 'group';
 
@@ -83,6 +84,17 @@ export const groupReducer = createReducer(
         : null,
     };
     return state;
+  }),
+  on(updateCalculationAttributes, (_, { groups }) => {
+    const entities: { [key: string]: IGroup } = {};
+    groups.forEach(group => {
+      entities[group.id] = group;
+    });
+    return {
+      entities: entities,
+      ids: groups.map(group => group.id),
+      selectedGroupId: null
+    };
   })
 );
 

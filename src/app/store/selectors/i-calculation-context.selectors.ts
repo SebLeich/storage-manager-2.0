@@ -1,26 +1,21 @@
 import { createSelector } from '@ngrx/store';
-import { calculationContextFeatureKey, State } from '../reducers/i-calculation-context.reducers';
 
-export const solutionsState = (state: any) => state[calculationContextFeatureKey] as State;
+import * as fromICalculationAttributes from '../reducers/i-calculation-attribute.reducers';
+import * as fromIGroups from '../reducers/i-group.reducers';
+import * as fromIOrders from '../reducers/i-order.reducers';
+import * as fromIProducts from '../reducers/i-product.reducers';
 
-export const selectContainerHeight = createSelector(
-  solutionsState,
-  (state: State) => state.containerHeight
-);
-
-export const selectContainerWidth = createSelector(
-  solutionsState,
-  (state: State) => state.containerWidth
-);
-
-export const selectUnit = createSelector(
-  solutionsState,
-  (state: State) => state.unit
-);
+export const calculationAttributesState = (state: any) => state[fromICalculationAttributes.calculationAttributesFeatureKey] as fromICalculationAttributes.State;
+export const groupsState = (state: any) => state[fromIGroups.groupFeatureKey] as fromIGroups.State;
+export const ordersState = (state: any) => state[fromIOrders.orderFeatureKey] as fromIOrders.State;
+export const productsState = (state: any) => state[fromIProducts.productFeatureKey] as fromIProducts.State;
 
 export const selectCalculationContextValid = createSelector(
-  solutionsState,
-  (state: State) => {
-    return !!state.containerWidth && !!state.containerHeight;
-  }
+    calculationAttributesState,
+    groupsState,
+    ordersState,
+    productsState,
+    (calculationAttributesState, groupsState, ordersState, productsState) => {
+        return calculationAttributesState.containerHeight > 0 && calculationAttributesState.containerWidth > 0 && calculationAttributesState.unit && groupsState.ids.length > 0 && ordersState.ids.length > 0 && productsState.ids.length > 0
+    }
 );

@@ -1,66 +1,80 @@
 <div class="body main-component-body">
 
-    <div class="solution-wrapper" *ngIf="(menuVisible$|async)">
-        <app-solution-preview></app-solution-preview>
-    </div>
+    <ng-container *ngIf="hasCurrentSolution$|async; else noSolutionSetted">
 
-    <div @show class="visualizer-wrapper" #visualizerWrapper (mousemove)="visualizerComponentService.mousemove($event)"
-        (click)="visualizerComponentService.mouseclick($event)">
-        <button mat-icon-button class="menu-toggler" (click)="toggleMenu()">
-            <mat-icon>{{(menuVisible$|async)? 'chevron_left': 'chevron_right'}}</mat-icon>
-        </button>
-    </div>
+        <div class="solution-wrapper" *ngIf="(menuVisible$|async)">
+            <app-solution-preview></app-solution-preview>
+        </div>
+    
+        <div @show class="visualizer-wrapper" #visualizerWrapper (mousemove)="visualizerComponentService.mousemove($event)"
+            (click)="visualizerComponentService.mouseclick($event)">
+            <button mat-icon-button class="menu-toggler" (click)="toggleMenu()">
+                <mat-icon>{{(menuVisible$|async)? 'chevron_left': 'chevron_right'}}</mat-icon>
+            </button>
+        </div>
+    
+        <div class="information-wrapper" *ngIf="(displayDetails$|async)">
+    
+            <mat-expansion-panel>
+    
+                <mat-expansion-panel-header>
+                    <mat-panel-title>
+    
+                        <span *ngIf="(visualizerComponentService.hoveredElement$|async); else noElement">
+                            {{(visualizerComponentService.hoveredElement$|async)?.preview}}
+                        </span>
+    
+                    </mat-panel-title>
+    
+                    <mat-panel-description>
+                        hovered element
+                    </mat-panel-description>
+    
+                </mat-expansion-panel-header>
+    
+                <app-good-preview *ngIf="(visualizerComponentService.hoveredElement$|async)"
+                    [good]="(visualizerComponentService.hoveredGood$|async)!"></app-good-preview>
+    
+            </mat-expansion-panel>
+    
+            <mat-expansion-panel expanded="true">
+    
+                <mat-expansion-panel-header>
+                    <mat-panel-title>
+    
+                        <span [style.color]="selectedGoodEdgeColor"
+                            *ngIf="(visualizerComponentService.selectedElement$|async); else noElement">
+                            {{(visualizerComponentService.selectedElement$|async)?.preview}}
+                        </span>
+    
+                    </mat-panel-title>
+    
+                    <mat-panel-description>
+                        selected element
+                    </mat-panel-description>
+    
+                </mat-expansion-panel-header>
+    
+                <app-good-preview *ngIf="(visualizerComponentService.selectedGood$|async)"
+                    [good]="(visualizerComponentService.selectedGood$|async)!"></app-good-preview>
+    
+            </mat-expansion-panel>
+    
+        </div>
 
-    <div class="information-wrapper" *ngIf="(displayDetails$|async)">
-
-        <mat-expansion-panel>
-
-            <mat-expansion-panel-header>
-                <mat-panel-title>
-
-                    <span *ngIf="(visualizerComponentService.hoveredElement$|async); else noElement">
-                        {{(visualizerComponentService.hoveredElement$|async)?.preview}}
-                    </span>
-
-                </mat-panel-title>
-
-                <mat-panel-description>
-                    hovered element
-                </mat-panel-description>
-
-            </mat-expansion-panel-header>
-
-            <app-good-preview *ngIf="(visualizerComponentService.hoveredElement$|async)"
-                [good]="(visualizerComponentService.hoveredGood$|async)!"></app-good-preview>
-
-        </mat-expansion-panel>
-
-        <mat-expansion-panel expanded="true">
-
-            <mat-expansion-panel-header>
-                <mat-panel-title>
-
-                    <span [style.color]="selectedGoodEdgeColor"
-                        *ngIf="(visualizerComponentService.selectedElement$|async); else noElement">
-                        {{(visualizerComponentService.selectedElement$|async)?.preview}}
-                    </span>
-
-                </mat-panel-title>
-
-                <mat-panel-description>
-                    selected element
-                </mat-panel-description>
-
-            </mat-expansion-panel-header>
-
-            <app-good-preview *ngIf="(visualizerComponentService.selectedGood$|async)"
-                [good]="(visualizerComponentService.selectedGood$|async)!"></app-good-preview>
-
-        </mat-expansion-panel>
-
-    </div>
+    </ng-container>
 
 </div>
+
+<ng-template #noSolutionSetted>
+
+    <div class="no-solution-selected-hint">
+
+        no solution selected
+
+    </div>
+
+</ng-template>
 
 <ng-template #noElement>
 

@@ -13,6 +13,7 @@ import {
 import { v4 as generateGuid } from 'uuid';
 import * as moment from 'moment';
 import { IOrder } from 'src/app/interfaces/i-order.interface';
+import { updateCalculationAttributes } from '../actions/i-calculation-attribute.actions';
 
 export const orderFeatureKey = 'order';
 
@@ -82,6 +83,15 @@ export const orderReducer = createReducer(
         : null,
     };
     return state;
+  }),
+  on(updateCalculationAttributes, (_, { orders }) => {
+    const entities: { [key: string]: IOrder } = {};
+    orders.forEach(order => entities[order.id] = order);
+    return {
+      entities: entities,
+      ids: orders.map(order => order.id),
+      selectedOrderId: null
+    };
   })
 );
 

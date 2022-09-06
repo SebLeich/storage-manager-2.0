@@ -4,37 +4,37 @@ import { compare } from "../globals";
 import { ISolver } from "../interfaces";
 import { ISolution } from "../interfaces/i-solution.interface";
 
-import * as fromICalculationContextState from 'src/app/store/reducers/i-calculation-context.reducers';
+import * as fromICalculationAttributesState from 'src/app/store/reducers/i-calculation-attribute.reducers';
 import * as fromIGroupState from 'src/app/store/reducers/i-group.reducers';
 import * as fromIOrderState from 'src/app/store/reducers/i-order.reducers';
 import * as fromISolutionState from 'src/app/store/reducers/i-solution.reducers';
 
 import { Solver } from "./solver";
 import { Store } from "@ngrx/store";
-import { selectCalculationContextValid, selectContainerHeight, selectContainerWidth } from "../store/selectors/i-calculation-context.selectors";
+import { selectCalculationAttributesValid, selectContainerHeight, selectContainerWidth } from "../store/selectors/i-calculation-attribute.selectors";
 import { selectGroups } from "../store/selectors/i-group.selectors";
 import { selectOrders } from "../store/selectors/i-order.selectors";
 import { IGood } from '../interfaces/i-good.interface';
 import { IContainer } from '../interfaces/i-container.interface';
 import { IOrder } from '../interfaces/i-order.interface';
-import { setCurrentSolution } from '../store/actions/i-solution.actions';
+import moment from 'moment';
 
 export class StartLeftBottomSolver extends Solver implements ISolver {
 
     constructor(
-        private _description: string = 'All In One Row',
+        private _description: string = 'Start Left Bottom',
         private _solutionStore: Store<fromISolutionState.State>,
         private _groupStore: Store<fromIGroupState.State>,
         private _orderStore: Store<fromIOrderState.State>,
-        private _calculationContextStore: Store<fromICalculationContextState.State>,
+        private _calculationAttributesStore: Store<fromICalculationAttributesState.State>,
     ) {
         super();
     }
 
     async solve(): Promise<ISolution | undefined> {
 
-        const calculationContextValid = await selectSnapshot(this._calculationContextStore.select(selectCalculationContextValid));
-        if (!calculationContextValid) {
+        const calculationAttributesValid = await selectSnapshot(this._calculationAttributesStore.select(selectCalculationAttributesValid));
+        if (!calculationAttributesValid) {
             return;
         }
 
@@ -56,6 +56,8 @@ export class StartLeftBottomSolver extends Solver implements ISolver {
                 length: 0,
                 goods: []
             },
+            algorithm: this._description,
+            calculated: moment().format()
         } as ISolution;
         let sequenceNumber = 0, lastGood: IGood | null = null;
 
@@ -74,7 +76,8 @@ export class StartLeftBottomSolver extends Solver implements ISolver {
                         yCoord: position.yCoord,
                         zCoord: position.zCoord,
                         stackedOnGood: position.stackedOn,
-                        turned: false
+                        turned: false,
+                        group: group.id
                     };
                     solution.container!.goods.push(lastGood);
                     sequenceNumber++;

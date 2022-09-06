@@ -14,8 +14,10 @@ export class ContainerPreviewComponent implements OnChanges, OnInit {
   public datasets = [
     {
       backgroundColor: ['rgba(101, 166, 90,  0.4)', 'rgba(214, 55, 55,  0.4)'],
-      borderColor: ['rgba(101, 166, 90, 1.0)', 'rgba(214, 55, 55, 1.0)'],
-      data: [0, 0]
+      borderColor: ['rgba(101, 166, 90, 1)', 'rgba(214, 55, 55, 1)'],
+      data: [0, 0],
+      hoverBackgroundColor: ['rgba(101, 166, 90,  0.2)', 'rgba(214, 55, 55,  0.2)'],
+      hoverBorderColor: ['rgba(101, 166, 90, .7)', 'rgba(214, 55, 55, .7)'],
     }
   ];
   public labels = ['used', 'unused'];
@@ -28,7 +30,18 @@ export class ContainerPreviewComponent implements OnChanges, OnInit {
         position: 'bottom'
       },
       tooltip: {
-        enabled: false
+        callbacks: {
+          // @ts-ignore
+          label: (tooltipItem) => {
+            const dataSets = tooltipItem.dataset.data;
+            const index = tooltipItem.dataIndex;
+            const data = dataSets[index];
+            const total: number = tooltipItem.dataset.data.reduce((previousValue, currentValue) => {
+              return (previousValue as number) + (currentValue as number);
+            }, 0) as number;
+            return `${Math.floor((((data as number) / total) * 100) + 0.5)} %`;
+          }
+        }
       }
     },
   }
@@ -48,7 +61,10 @@ export class ContainerPreviewComponent implements OnChanges, OnInit {
     if (!this.container || !Array.isArray(this.container.goods)) return;
     let used = this.container.goods.reduce((x, curr) => x += (curr.length * curr.width * curr.height), 0);
     let total = this.container.height * this.container.length * this.container.width;
-    this.datasets[0].data = [used, total - used];
+    this.datasets = [...this.datasets.map(dataset => {
+      dataset.data = [used, total - used];
+      return dataset;
+    })];
     this.percentage = ((used / total) * 100).toFixed(0);
   }
 

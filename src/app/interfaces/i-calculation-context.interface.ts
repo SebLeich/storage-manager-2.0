@@ -1,3 +1,3 @@
-export interface ICalculationContext {
+export interface ICalculationAttributes {
     
 }

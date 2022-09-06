@@ -6,7 +6,7 @@
         <span class="text">
             no data found
         </span>
-        <button mat-icon-button color="warn" [disabled]="true" (click)="close()">
+        <button mat-icon-button color="warn" [disabled]="!canClose" (click)="close()">
             <mat-icon>clear</mat-icon>
         </button>
 

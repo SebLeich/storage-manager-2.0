@@ -5,9 +5,10 @@ import {
   setContainerHeight,
   setContainerWidth,
   setUnit,
-} from '../actions/i-calculation-context.actions';
+  updateCalculationAttributes,
+} from '../actions/i-calculation-attribute.actions';
 
-export const calculationContextFeatureKey = 'calculationContext';
+export const calculationAttributesFeatureKey = 'calculationAttributes';
 
 export const CALCULATION_CONTEXT_REDUCER_TOKEN = new InjectionToken<Store<State>>(
   'Calculation Context Reducers'
@@ -25,7 +26,7 @@ export const initialState: State = {
   unit: 'mm'
 }
 
-export const calculationContextReducer = createReducer(
+export const calculationAttributesReducer = createReducer(
   initialState,
   on(setContainerHeight, (state, { height }) => {
     return { ...state, containerHeight: height };
@@ -36,4 +37,11 @@ export const calculationContextReducer = createReducer(
   on(setUnit, (state, { unit }) => {
     return { ...state, unit: unit };
   }),
+  on(updateCalculationAttributes, (_, variables) => {
+    return {
+      containerHeight: variables.containerHeight,
+      containerWidth: variables.containerWidth,
+      unit: variables.unit
+    };
+  })
 );

@@ -2,7 +2,7 @@ import { AfterViewInit, Component, ElementRef, HostListener, OnDestroy, OnInit, 
 import { MatDialog } from '@angular/material/dialog';
 import { Store } from '@ngrx/store';
 import { BehaviorSubject, Subscription } from 'rxjs';
-import { filter, switchMap, take } from 'rxjs/operators';
+import { filter, map, switchMap, take } from 'rxjs/operators';
 import { selectedGoodEdgeColor } from 'src/app/globals';
 import { showAnimation } from 'src/lib/shared/animations/show';
 import { NoSolutionDialogComponent } from '../../dialog/no-solution-dialog/no-solution-dialog.component';
@@ -22,6 +22,9 @@ import { selectCurrentSolution } from 'src/app/store/selectors/i-solution.select
 })
 export class VisualizerComponent implements AfterViewInit, OnDestroy, OnInit {
 
+  public currentSolution$ = this._store.select(selectCurrentSolution);
+  public hasCurrentSolution$ = this.currentSolution$.pipe(map(solution => !!solution));
+
   private _menuVisible = new BehaviorSubject<boolean>(true);
   menuVisible$ = this._menuVisible.asObservable();
 
@@ -29,6 +32,9 @@ export class VisualizerComponent implements AfterViewInit, OnDestroy, OnInit {
   displayDetails$ = this._displayDetails.asObservable();
 
   @ViewChild('visualizerWrapper', { static: false }) set visualizerWrapperRef(ref: ElementRef<HTMLDivElement>) {
+    if (!ref) {
+      return;
+    }
     this.visualizerComponentService.setVisualizerWrapper(ref);
   }
 
@@ -38,7 +44,7 @@ export class VisualizerComponent implements AfterViewInit, OnDestroy, OnInit {
     public visualizerComponentService: VisualizerComponentService,
     private _dialog: MatDialog,
     private _viewContainerRef: ViewContainerRef,
-    private _solutionStore: Store<fromISolutionState.State>,
+    private _store: Store,
   ) { }
 
   ngAfterViewInit(): void {
@@ -55,11 +61,14 @@ export class VisualizerComponent implements AfterViewInit, OnDestroy, OnInit {
       this.visualizerComponentService.resized$.pipe(switchMap(() => this.visualizerComponentService.visualizerWrapper$.pipe(take(1)))).subscribe((ref: ElementRef<HTMLDivElement>) => {
         this.visualizerComponentService.setSceneDimensions(ref.nativeElement.clientWidth, ref.nativeElement.clientHeight, true);
       }),
-      this._solutionStore.select(selectCurrentSolution)
-        .pipe(filter((solution) => !solution))
-        .subscribe(() => this.showNoSolutionDialog()),
+
       this.menuVisible$.subscribe(() => this.visualizerComponentService.triggerResizeEvent())
     ]);
+
+    this._subscriptions.add(
+      this.hasCurrentSolution$.pipe(filter(hasCurrentSolution => !hasCurrentSolution))
+        .subscribe(() => this.showNoSolutionDialog())
+    );
   }
 
   showNoSolutionDialog() {

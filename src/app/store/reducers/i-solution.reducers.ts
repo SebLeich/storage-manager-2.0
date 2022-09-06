@@ -9,10 +9,13 @@ import {
   addSolution,
   addSolutions,
   duplicateSolution,
+  setDefaultSolution,
   removeSolution,
   setCurrentSolution,
   setNextSolution,
   updateCurrentSolutionGroupColor,
+  clearSolutions,
+  updateAlgorithmSolution,
 } from '../actions/i-solution.actions';
 import { v4 as generateGuid } from 'uuid';
 import * as moment from 'moment';
@@ -37,12 +40,10 @@ export const adapter: EntityAdapter<ISolution> = createEntityAdapter<ISolution>(
   }
 );
 
-let entities = {};
-(entities as any)[defaultSolution.id] = defaultSolution;
 export const initialState: State = adapter.getInitialState({
-  selectedSolutionId: defaultSolution.id,
-  entities: entities,
-  ids: [defaultSolution.id],
+  selectedSolutionId: null,
+  entities: {},
+  ids: [],
 });
 
 
@@ -70,6 +71,10 @@ export const solutionReducer = createReducer(
       }),
       state
     );
+  }),
+
+  on(clearSolutions, () => {
+    return initialState;
   }),
 
   on(duplicateSolution, (state, { duplicateSolution }) => {
@@ -100,6 +105,16 @@ export const solutionReducer = createReducer(
     }
   }),
 
+  on(setDefaultSolution, () => {
+    let entities: { [key: string]: ISolution } = {};
+    entities[defaultSolution.id] = defaultSolution;
+    return {
+      entities: entities,
+      ids: [defaultSolution.id],
+      selectedSolutionId: defaultSolution.id
+    }
+  }),
+
   on(setNextSolution, (currentState) => {
     if (Object.values(currentState.entities).length === 0) {
       return currentState;
@@ -110,6 +125,27 @@ export const solutionReducer = createReducer(
     }
     const nextSolution = Object.values(currentState.entities)[nextSolutionIndex];
     return { ...currentState, selectedSolutionId: nextSolution!.id };
+  }),
+
+  on(updateAlgorithmSolution, (currentState, { solution }) => {
+    const existingSolutionIndex: number = Object.values(currentState.entities).findIndex(currentSolution => solutionCalculationSourcesMatch(currentSolution, solution));
+    const existingSolution: null | ISolution | undefined = existingSolutionIndex > -1 ? Object.values(currentState.entities)[existingSolutionIndex] : null;
+    const entities: { [key: string]: ISolution } = {};
+    for (let currentSolution of Object.values(currentState.entities)) {
+      if (currentSolution === existingSolution) {
+        entities[solution.id] = solution;
+      } else {
+        entities[currentSolution!.id] = currentSolution!;
+      }
+    }
+    if (!existingSolution) {
+      entities[solution.id] = solution;
+    }
+    return {
+      selectedSolutionId: existingSolution && currentState.selectedSolutionId === existingSolution!.id ? solution.id : currentState.selectedSolutionId,
+      entities: entities,
+      ids: Object.keys(entities)
+    };
   }),
 
   on(updateCurrentSolutionGroupColor, (currentState, { group, color }) => {
@@ -127,9 +163,16 @@ export const solutionReducer = createReducer(
       return adapter.updateOne(updateCommand, currentState);
     }
     return state;
-  })
+  }),
 );
 
 export const metaReducers: MetaReducer<State>[] = !environment.production
   ? []
   : [];
+
+function solutionCalculationSourcesMatch(solution1: ISolution | null | undefined, solution2: ISolution | null | undefined) {
+  if (!!solution1?.calculationSource?.staticAlgorithm || !!solution2?.calculationSource?.staticAlgorithm) {
+    return false;
+  }
+  return solution1!.calculationSource!.staticAlgorithm === solution2!.calculationSource!.staticAlgorithm;
+}

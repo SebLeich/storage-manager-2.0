@@ -13,6 +13,7 @@ import {
 import { v4 as generateGuid } from 'uuid';
 import * as moment from 'moment';
 import { IProduct } from 'src/app/interfaces/i-product.interface';
+import { updateCalculationAttributes } from '../actions/i-calculation-attribute.actions';
 
 export const productFeatureKey = 'product';
 
@@ -82,6 +83,15 @@ export const productReducer = createReducer(
         : null,
     };
     return state;
+  }),
+  on(updateCalculationAttributes, (_, { products }) => {
+    const entities: { [key: string]: IProduct } = {};
+    products.forEach(product => entities[product.id] = product);
+    return {
+      entities: entities,
+      ids: products.map(product => product.id),
+      selectedProductId: null
+    };
   })
 );
 

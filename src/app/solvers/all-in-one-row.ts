@@ -4,14 +4,14 @@ import { Solver } from "./solver";
 import { ISolution } from "../interfaces/i-solution.interface";
 import * as moment from 'moment';
 
-import * as fromICalculationContextState from 'src/app/store/reducers/i-calculation-context.reducers';
+import * as fromICalculationAttributesState from 'src/app/store/reducers/i-calculation-attribute.reducers';
 import * as fromIGroupState from 'src/app/store/reducers/i-group.reducers';
 import * as fromIOrderState from 'src/app/store/reducers/i-order.reducers';
 import * as fromISolutionState from 'src/app/store/reducers/i-solution.reducers';
 
 import { Store } from "@ngrx/store";
 import { selectSnapshot } from "src/lib/process-builder/globals/select-snapshot";
-import { selectContainerHeight, selectCalculationContextValid, selectContainerWidth } from "../store/selectors/i-calculation-context.selectors";
+import { selectContainerHeight, selectCalculationAttributesValid, selectContainerWidth } from "../store/selectors/i-calculation-attribute.selectors";
 import { selectGroups } from "../store/selectors/i-group.selectors";
 import { selectOrders } from "../store/selectors/i-order.selectors";
 import { IGood } from "../interfaces/i-good.interface";
@@ -23,15 +23,15 @@ export class AllInOneRowSolver extends Solver implements ISolver {
         private _solutionStore: Store<fromISolutionState.State>,
         private _groupStore: Store<fromIGroupState.State>,
         private _orderStore: Store<fromIOrderState.State>,
-        private _calculationContextStore: Store<fromICalculationContextState.State>,
+        private _calculationAttributesStore: Store<fromICalculationAttributesState.State>,
     ) {
         super();
     }
 
     async solve(): Promise<ISolution | undefined> {
 
-        const calculationContextValid = await selectSnapshot(this._calculationContextStore.select(selectCalculationContextValid));
-        if (!calculationContextValid) {
+        const calculationAttributesValid = await selectSnapshot(this._calculationAttributesStore.select(selectCalculationAttributesValid));
+        if (!calculationAttributesValid) {
             return;
         }
 
@@ -76,7 +76,8 @@ export class AllInOneRowSolver extends Solver implements ISolver {
                         height: order.height,
                         width: order.width,
                         length: order.length,
-                        stackedOnGood: null
+                        stackedOnGood: null,
+                        group: group.id
                     };
                     solution.container!.goods.push(good);
                     sequenceNumber++;

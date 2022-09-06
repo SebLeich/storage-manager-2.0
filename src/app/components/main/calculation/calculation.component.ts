@@ -1,7 +1,7 @@
 import { Component, OnDestroy, OnInit, ViewContainerRef } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { Subscription } from 'rxjs';
-import { filter } from 'rxjs/operators';
+import { filter, debounceTime } from 'rxjs/operators';
 import { ConfigureApiCallService } from 'src/lib/automation/services/configure-api-call.service';
 import { showAnimation } from 'src/lib/shared/animations/show';
 import { ApiCallConfiguratorDialogComponent } from '../../dialog/api-call-configurator-dialog/api-call-configurator-dialog.component';
@@ -12,8 +12,13 @@ import { AlgorithmCalculationStatus } from './enumerations/algorithm-calculation
 import { MatDialog } from '@angular/material/dialog';
 
 import * as fromIOrderState from 'src/app/store/reducers/i-order.reducers';
+import * as fromICalculationAttributesState from 'src/app/store/reducers/i-calculation-attribute.reducers';
+
 import { selectOrders } from 'src/app/store/selectors/i-order.selectors';
 import { IOrder } from 'src/app/interfaces/i-order.interface';
+import { selectCalculationAttributesValid } from 'src/app/store/selectors/i-calculation-attribute.selectors';
+import { selectSnapshot } from 'src/lib/process-builder/globals/select-snapshot';
+import { selectCalculationContextValid } from 'src/app/store/selectors/i-calculation-context.selectors';
 
 @Component({
   selector: 'app-calculation',
@@ -26,6 +31,7 @@ import { IOrder } from 'src/app/interfaces/i-order.interface';
 })
 export class CalculationComponent implements OnDestroy, OnInit {
 
+  private calculationContextInvalid$ = this._store.select(selectCalculationContextValid);
   AlgorithmCalculationStatus = AlgorithmCalculationStatus;
 
   private _subscriptions: Subscription = new Subscription();
@@ -35,7 +41,7 @@ export class CalculationComponent implements OnDestroy, OnInit {
     public configureApiCallService: ConfigureApiCallService,
     private _dialog: MatDialog,
     private _viewContainerRef: ViewContainerRef,
-    private _orderStore: Store<fromIOrderState.State>,
+    private _store: Store
   ) { }
 
   configureAPICall() {
@@ -44,21 +50,26 @@ export class CalculationComponent implements OnDestroy, OnInit {
     });
   }
 
-  ngOnDestroy = () => this._subscriptions.unsubscribe();
+  public ngOnDestroy = () => this._subscriptions.unsubscribe();
 
-  ngOnInit(): void {
-    this._subscriptions.add(...[
-      this._orderStore.select(selectOrders)
-        .pipe(filter((orders: IOrder[]) => orders.length === 0 ? true : false))
-        .subscribe(() => this._showNoSolutionDialog()),
-    ]);
+  public ngOnInit(): void {
+    this._subscriptions.add(
+      this.calculationContextInvalid$
+        .pipe(filter(calculationContextValid => !calculationContextValid))
+        .subscribe(() => {
+          this._showNoSolutionDialog();
+        })
+    )
   }
 
-  private _showNoSolutionDialog() {
+  private _showNoSolutionDialog(closeDialogEnabled: boolean = false) {
     this._dialog.open(NoSolutionDialogComponent, {
       panelClass: 'no-padding-dialog',
       disableClose: true,
-      viewContainerRef: this._viewContainerRef
+      viewContainerRef: this._viewContainerRef,
+      data: {
+        closeControlEnabled: closeDialogEnabled
+      }
     });
   }
 

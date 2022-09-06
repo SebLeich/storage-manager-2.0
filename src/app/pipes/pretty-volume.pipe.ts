@@ -3,20 +3,20 @@ import { Store } from '@ngrx/store';
 import { selectSnapshot } from 'src/lib/process-builder/globals/select-snapshot';
 import { nextUnitSize } from '../globals';
 
-import * as fromICalculationContextState from 'src/app/store/reducers/i-calculation-context.reducers';
-import { selectUnit } from '../store/selectors/i-calculation-context.selectors';
+import * as fromICalculationAttributesState from 'src/app/store/reducers/i-calculation-attribute.reducers';
+import { selectUnit } from '../store/selectors/i-calculation-attribute.selectors';
 
 @Pipe({
   name: 'prettyVolume'
 })
 export class PrettyVolumePipe implements PipeTransform {
 
-  constructor(private _calculationContextStore: Store<fromICalculationContextState.State>,) {
+  constructor(private _calculationAttributesStore: Store<fromICalculationAttributesState.State>,) {
 
   }
 
   async transform(value: number, prettify: boolean = true, decimalDigits: number = 2, hideDecimalDigitsWhenZero: boolean = false): Promise<string> {
-    let unit = await selectSnapshot(this._calculationContextStore.select(selectUnit));
+    let unit = await selectSnapshot(this._calculationAttributesStore.select(selectUnit));
     if (!prettify) return `${value} ${unit}³`;
     let converted = value;
     let index = nextUnitSize.findIndex(x => x.unit === unit);

@@ -5,10 +5,13 @@ import { ISolution } from 'src/app/interfaces/i-solution.interface';
 export const solutionActions = {
   AddSolution: '[Solution] Add Solution',
   AddSolutions: '[Solution] Add Solutions',
+  ClearSolutions: '[Solution] Clear Solution',
   DownloadCurrentSolution: '[Solution] Download Current Solution',
+  SetDefaultSolution: '[Solution] Set Default Solution',
   RouteToSolution: '[Solution] Route To Solution',
   SetCurrentSolution: '[Solution] Set Current Solution',
   SetNextSolution: '[Solution] Set Next Solution',
+  UpdateAlgorithmSolution: '[Solution] Update Algorithm Solution',
   UpdateCurrentSolutionGroupColor: '[Solution] Update Current Solution Group Color'
 }
 
@@ -22,6 +25,10 @@ export const addSolutions = createAction(
   props<{ solutions: ISolution[] }>()
 );
 
+export const clearSolutions = createAction(
+  solutionActions.ClearSolutions
+);
+
 export const downloadCurrentSolution = createAction(
   solutionActions.DownloadCurrentSolution
 );
@@ -29,6 +36,10 @@ export const downloadCurrentSolution = createAction(
 export const duplicateSolution = createAction(
   solutionActions.SetCurrentSolution,
   props<{ duplicateSolution: ISolution }>()
+);
+
+export const setDefaultSolution = createAction(
+  solutionActions.SetDefaultSolution
 );
 
 export const removeSolution = createAction(
@@ -44,6 +55,11 @@ export const setCurrentSolution = createAction(
 export const setNextSolution = createAction(
   solutionActions.SetNextSolution
 );
+
+export const updateAlgorithmSolution = createAction(
+  solutionActions.UpdateAlgorithmSolution,
+  props<{ solution: ISolution }>()
+)
 
 export const updateCurrentSolutionGroupColor = createAction(
   solutionActions.UpdateCurrentSolutionGroupColor,

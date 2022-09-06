@@ -11,11 +11,11 @@ import { CalculationError } from "./enumerations/calculation-error";
 import { IAlgorithmStatusWrapper } from "./interfaces/i-algorithm-calculation-status-wrapper.interface";
 
 import * as fromISolutionState from 'src/app/store/reducers/i-solution.reducers';
-import * as fromICalculationContextState from 'src/app/store/reducers/i-calculation-context.reducers';
+import * as fromICalculationAttributesState from 'src/app/store/reducers/i-calculation-attribute.reducers';
 import * as fromIGroupState from 'src/app/store/reducers/i-group.reducers';
 import * as fromIOrderState from 'src/app/store/reducers/i-order.reducers';
 
-import { setCurrentSolution } from "src/app/store/actions/i-solution.actions";
+import { setCurrentSolution, updateAlgorithmSolution } from "src/app/store/actions/i-solution.actions";
 import { selectSnapshot } from "src/lib/process-builder/globals/select-snapshot";
 import { selectSolutions } from "src/app/store/selectors/i-solution.selectors";
 
@@ -28,7 +28,7 @@ export class CalculationComponentService {
         private _solutionStore: Store<fromISolutionState.State>,
         private _groupStore: Store<fromIGroupState.State>,
         private _orderStore: Store<fromIOrderState.State>,
-        private _calculationContextStore: Store<fromICalculationContextState.State>,
+        private _calculationAttributesStore: Store<fromICalculationAttributesState.State>,
         private _router: Router
     ) {
         this._setUp();
@@ -44,17 +44,17 @@ export class CalculationComponentService {
 
             case Algorithm.AllInOneRow:
                 wrapper.status = AlgorithmCalculationStatus.Calculating;
-                result = await new AllInOneRowSolver(wrapper.solutionDescription, this._solutionStore, this._groupStore, this._orderStore, this._calculationContextStore).solve();
+                result = await new AllInOneRowSolver(wrapper.solutionDescription, this._solutionStore, this._groupStore, this._orderStore, this._calculationAttributesStore).solve();
                 break;
 
             case Algorithm.StartLeftBottom:
                 wrapper.status = AlgorithmCalculationStatus.Calculating;
-                result = await new StartLeftBottomSolver(wrapper.solutionDescription, this._solutionStore, this._groupStore, this._orderStore, this._calculationContextStore).solve();
+                result = await new StartLeftBottomSolver(wrapper.solutionDescription, this._solutionStore, this._groupStore, this._orderStore, this._calculationAttributesStore).solve();
                 break;
 
             case Algorithm.SuperFlo:
                 wrapper.status = AlgorithmCalculationStatus.Calculating;
-                result = await new SuperFloSolver(wrapper.solutionDescription, MinimizationFunction.MIN_X, this._solutionStore, this._groupStore, this._orderStore, this._calculationContextStore).solve();
+                result = await new SuperFloSolver(wrapper.solutionDescription, MinimizationFunction.MIN_X, this._solutionStore, this._groupStore, this._orderStore, this._calculationAttributesStore).solve();
                 break;
 
         }
@@ -76,8 +76,10 @@ export class CalculationComponentService {
 
     private _calculationCallback = {
         next: ([wrapper, solution]: [IAlgorithmStatusWrapper, ISolution]) => {
+            solution.calculationSource = { staticAlgorithm: wrapper.algorithm.code };
             wrapper.solution = solution;
             wrapper.status = AlgorithmCalculationStatus.Calculated;
+            this._solutionStore.dispatch(updateAlgorithmSolution({ solution }))
         },
         error: (error: { wrapper: IAlgorithmStatusWrapper, errorCode: CalculationError }) => {
             error.wrapper.status = AlgorithmCalculationStatus.Error;

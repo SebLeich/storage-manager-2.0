@@ -1,14 +1,13 @@
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
-import { MatDialogRef } from '@angular/material/dialog';
+import { Component, ElementRef, Inject, OnInit, ViewChild } from '@angular/core';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { ISolution } from 'src/app/interfaces/i-solution.interface';
-import { CsvService } from 'src/app/services/csv.service';
-import { setCurrentSolution } from 'src/app/store/actions/i-solution.actions';
+import { setExemplaryInputData } from 'src/app/store/actions/i-calculation-attribute.actions';
+import { setCurrentSolution, setDefaultSolution } from 'src/app/store/actions/i-solution.actions';
 
-import defaultSolution from 'src/assets/exampleSolution.json';
-
+import * as fromICalculationAttributesState from 'src/app/store/reducers/i-calculation-attribute.reducers';
 import * as fromISolutionState from 'src/app/store/reducers/i-solution.reducers';
 
 @Component({
@@ -20,11 +19,14 @@ export class NoSolutionDialogComponent implements OnInit {
 
   @ViewChild('uploadSolution', { read: ElementRef }) uploadSolutionInput!: ElementRef<HTMLInputElement>;
 
+  public canClose: boolean = false;
+
   constructor(
+    @Inject(MAT_DIALOG_DATA) public data: { closeControlEnabled?: boolean },
     private _ref: MatDialogRef<NoSolutionDialogComponent>,
     private _router: Router,
-    private _csvService: CsvService,
     private _snackBar: MatSnackBar,
+    private _calculationAttributesStore: Store<fromICalculationAttributesState.State>,
     private _solutionStore: Store<fromISolutionState.State>,
   ) { }
 
@@ -41,11 +43,13 @@ export class NoSolutionDialogComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.canClose = this.data?.closeControlEnabled ?? false;
   }
 
   useExampleData() {
+    this._calculationAttributesStore.dispatch(setExemplaryInputData());
+    this._router.navigate(['/calculation']);
     this.close();
-    this._csvService.uploadDefaultOrders().subscribe(() => this._router.navigate(['/calculation']));
   }
 
   uploadOwnSolution(evt: InputEvent) {
@@ -72,7 +76,7 @@ export class NoSolutionDialogComponent implements OnInit {
 
   useExampleSolution() {
     this.close();
-    this._solutionStore.dispatch(setCurrentSolution({ solution: defaultSolution }));
+    this._solutionStore.dispatch(setDefaultSolution());
     this._router.navigate(['/visualizer']);
   }
 

@@ -1,6 +1,6 @@
 import { Inject, Injectable, Injector } from '@angular/core';
 
-import BPMNJSModules from 'src/lib/bpmn-io/bpmn-js-modules';
+import { v4 as generateGuid } from 'uuid';
 
 // @ts-ignore
 import * as BpmnJS from 'bpmn-js/dist/bpmn-modeler.production.min.js';
@@ -25,7 +25,6 @@ import { IBpmnJS } from '../../globals/i-bpmn-js';
 import { addIBpmnJSModel, removeIBpmnJSModel, updateIBpmnJSModel, upsertIBpmnJSModel } from '../../store/actions/i-bpmn-js-model.actions';
 import * as moment from 'moment';
 import { IProcessBuilderConfig, PROCESS_BUILDER_CONFIG_TOKEN } from '../../globals/i-process-builder-config';
-import { Guid } from '../../globals/guid';
 import { selectIBpmnJSModels, selectRecentlyUsedIBpmnJSModel } from '../../store/selectors/i-bpmn-js-model.selectors';
 import { IBpmnJSModel } from '../../globals/i-bpmn-js-model';
 import sebleichProcessBuilderExtension from '../../globals/sebleich-process-builder-extension';
@@ -105,7 +104,7 @@ export class ProcessBuilderComponentService {
       .subscribe({
         next: (xml: string) => {
           let defaultBpmnModel = {
-            'guid': Guid.generateGuid(),
+            'guid': generateGuid(),
             'created': moment().format('yyyy-MM-ddTHH:mm:ss'),
             'description': null,
             'name': this._config.defaultBpmnModelName,
@@ -221,7 +220,7 @@ export class ProcessBuilderComponentService {
 
           if (typeof model === 'string') {
             model = {
-              'guid': Guid.generateGuid(),
+              'guid': generateGuid(),
               'created': moment().format('yyyy-MM-ddTHH:mm:ss'),
               'description': null,
               'name': this._config.defaultBpmnModelName,

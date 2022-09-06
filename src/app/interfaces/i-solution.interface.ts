@@ -1,3 +1,4 @@
+import { Algorithm } from "../globals";
 import { IContainer } from "./i-container.interface";
 import { IEntity } from "./i-entity.interface";
 import { IGroup } from "./i-group.interface";
@@ -11,4 +12,5 @@ export interface ISolution extends IEntity {
     steps?: IStep[];
     calculated?: string;
     description?: string | null;
+    calculationSource?: { staticAlgorithm?: Algorithm };
 }

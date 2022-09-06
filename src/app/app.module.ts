@@ -59,8 +59,8 @@ import { INTERFACES_CONFIG_TOKEN } from 'src/lib/process-builder/globals/i-inter
 import { SharedModule } from 'src/lib/shared/shared.module';
 import { MatMenuModule } from '@angular/material/menu';
 
-import * as fromICalculationContextState from './store/reducers/i-calculation-context.reducers';
-import { ICalculationContextEffects } from './store/effects/i-calculation-context.effects';
+import * as fromICalculationAttributesState from './store/reducers/i-calculation-attribute.reducers';
+import { ICalculationAttributesEffects } from './store/effects/i-calculation-attribute.effects';
 
 import * as fromIGroupState from './store/reducers/i-group.reducers';
 import { IGroupEffects } from './store/effects/i-group.effects';
@@ -75,7 +75,7 @@ import * as fromISolutionState from './store/reducers/i-solution.reducers';
 import { ISolutionEffects } from './store/effects/i-solution.effects';
 
 let rootStoreFeatures: any = {};
-rootStoreFeatures[fromICalculationContextState.calculationContextFeatureKey] = fromICalculationContextState.calculationContextReducer;
+rootStoreFeatures[fromICalculationAttributesState.calculationAttributesFeatureKey] = fromICalculationAttributesState.calculationAttributesReducer;
 rootStoreFeatures[fromIGroupState.groupFeatureKey] = fromIGroupState.groupReducer;
 rootStoreFeatures[fromIOrderState.orderFeatureKey] = fromIOrderState.orderReducer;
 rootStoreFeatures[fromIProductState.productFeatureKey] = fromIProductState.productReducer;
@@ -134,7 +134,7 @@ rootStoreFeatures[fromISolutionState.solutionFeatureKey] = fromISolutionState.so
     StoreModule.forRoot(rootStoreFeatures, {
 
     }),
-    EffectsModule.forRoot([ICalculationContextEffects, IGroupEffects, IOrderEffects, IProductEffects, ISolutionEffects]),
+    EffectsModule.forRoot([ICalculationAttributesEffects, IGroupEffects, IOrderEffects, IProductEffects, ISolutionEffects]),
   ],
   providers: [
     { provide: PROCESS_BUILDER_CONFIG_TOKEN, useValue: PROCESS_BUILDER_CONFIG },

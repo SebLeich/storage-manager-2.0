@@ -4,7 +4,7 @@ import { Actions } from '@ngrx/effects';
 
 
 @Injectable()
-export class ICalculationContextEffects {
+export class ICalculationAttributesEffects {
 
   constructor(
     private actions$: Actions
