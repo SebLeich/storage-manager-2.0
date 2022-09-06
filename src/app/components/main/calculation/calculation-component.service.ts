@@ -1,7 +1,7 @@
 import { Injectable } from "@angular/core";
 import { Router } from "@angular/router";
 import { Store } from "@ngrx/store";
-import { Algorithm, algorithms, MinimizationFunction } from "src/app/globals";
+import { Algorithm, algorithms } from "src/app/globals";
 import { ISolution } from "src/app/interfaces/i-solution.interface";
 import { AllInOneRowSolver } from "src/app/solvers/all-in-one-row";
 import { StartLeftBottomSolver } from "src/app/solvers/start-left-bottom";
@@ -9,11 +9,6 @@ import { SuperFloSolver } from "src/app/solvers/super-flo";
 import { AlgorithmCalculationStatus } from "./enumerations/algorithm-calculation-status.enum";
 import { CalculationError } from "./enumerations/calculation-error";
 import { IAlgorithmStatusWrapper } from "./interfaces/i-algorithm-calculation-status-wrapper.interface";
-
-import * as fromISolutionState from 'src/app/store/reducers/i-solution.reducers';
-import * as fromICalculationAttributesState from 'src/app/store/reducers/i-calculation-attribute.reducers';
-import * as fromIGroupState from 'src/app/store/reducers/i-group.reducers';
-import * as fromIOrderState from 'src/app/store/reducers/i-order.reducers';
 
 import { setCurrentSolution, updateAlgorithmSolution } from "src/app/store/actions/i-solution.actions";
 import { selectSnapshot } from "src/lib/process-builder/globals/select-snapshot";
@@ -25,10 +20,7 @@ export class CalculationComponentService {
     algorithms: IAlgorithmStatusWrapper[] = [];
 
     constructor(
-        private _solutionStore: Store<fromISolutionState.State>,
-        private _groupStore: Store<fromIGroupState.State>,
-        private _orderStore: Store<fromIOrderState.State>,
-        private _calculationAttributesStore: Store<fromICalculationAttributesState.State>,
+        private _store: Store,
         private _router: Router
     ) {
         this._setUp();
@@ -44,17 +36,17 @@ export class CalculationComponentService {
 
             case Algorithm.AllInOneRow:
                 wrapper.status = AlgorithmCalculationStatus.Calculating;
-                result = await new AllInOneRowSolver(wrapper.solutionDescription, this._solutionStore, this._groupStore, this._orderStore, this._calculationAttributesStore).solve();
+                result = await new AllInOneRowSolver(wrapper.solutionDescription, this._store).solve();
                 break;
 
             case Algorithm.StartLeftBottom:
                 wrapper.status = AlgorithmCalculationStatus.Calculating;
-                result = await new StartLeftBottomSolver(wrapper.solutionDescription, this._solutionStore, this._groupStore, this._orderStore, this._calculationAttributesStore).solve();
+                result = await new StartLeftBottomSolver(wrapper.solutionDescription, this._store).solve();
                 break;
 
             case Algorithm.SuperFlo:
                 wrapper.status = AlgorithmCalculationStatus.Calculating;
-                result = await new SuperFloSolver(wrapper.solutionDescription, MinimizationFunction.MIN_X, this._solutionStore, this._groupStore, this._orderStore, this._calculationAttributesStore).solve();
+                result = await new SuperFloSolver(wrapper.solutionDescription, this._store).solve();
                 break;
 
         }
@@ -70,7 +62,7 @@ export class CalculationComponentService {
     }
 
     visualizeSolution(solution: ISolution) {
-        this._solutionStore.dispatch(setCurrentSolution({ solution }));
+        this._store.dispatch(setCurrentSolution({ solution }));
         this._router.navigate(['/visualizer']);
     }
 
@@ -79,7 +71,7 @@ export class CalculationComponentService {
             solution.calculationSource = { staticAlgorithm: wrapper.algorithm.code };
             wrapper.solution = solution;
             wrapper.status = AlgorithmCalculationStatus.Calculated;
-            this._solutionStore.dispatch(updateAlgorithmSolution({ solution }))
+            this._store.dispatch(updateAlgorithmSolution({ solution }))
         },
         error: (error: { wrapper: IAlgorithmStatusWrapper, errorCode: CalculationError }) => {
             error.wrapper.status = AlgorithmCalculationStatus.Error;
@@ -98,7 +90,7 @@ export class CalculationComponentService {
                 'available': algorithm.code === Algorithm.AISupportedSolver ? false : true
             });
         }
-        const solutions = await selectSnapshot(this._solutionStore.select(selectSolutions));
+        const solutions = await selectSnapshot(this._store.select(selectSolutions));
         for (let algorithm of this.algorithms) {
             algorithm.solution = undefined;
             algorithm.status = AlgorithmCalculationStatus.Unchecked;

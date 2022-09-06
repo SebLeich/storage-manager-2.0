@@ -1,4 +1,3 @@
-import { MinimizationFunction } from "../globals";
 import { IOrder } from "../interfaces/i-order.interface";
 import { ISpace } from "../interfaces/i-space.interface";
 import { IVirtualDimension } from "../interfaces/i-virtual-dimension.interface";
@@ -6,15 +5,6 @@ import calculateDimensionSharedMethod from "../methods/calculate-dimension.share
 import { v4 as generateGuid } from 'uuid';
 
 export class Solver {
-
-    private _minimizationFunctions: { [key: number]: (space: IVirtualDimension) => number } = {};
-
-    constructor() {
-        this._minimizationFunctions[MinimizationFunction.MIN_VOLUME] = (space: IVirtualDimension) => space.height * space.length * space.width;
-        this._minimizationFunctions[MinimizationFunction.MIN_X] = (space: IVirtualDimension) => space.xCoord;
-        this._minimizationFunctions[MinimizationFunction.MIN_Y] = (space: IVirtualDimension) => space.yCoord;
-        this._minimizationFunctions[MinimizationFunction.MIN_Z] = (space: IVirtualDimension) => space.zCoord;
-    }
 
     protected canPlaceOrderIntoSpace(order: IOrder, space: ISpace): { notTurned: boolean, turned: boolean } {
         return {
@@ -34,21 +24,13 @@ export class Solver {
         return { ...dimension, id: generateGuid() } as IVirtualDimension;
     }
 
-    protected getBestIVirtualDimensionsForMinimizationFunction(unusedDimensions: IVirtualDimension[], minimizationFunction: MinimizationFunction) {
-        if (unusedDimensions.length === 0) return null;
-        if (unusedDimensions.length === 1) return unusedDimensions[0];
-        return unusedDimensions.reduce((prev: IVirtualDimension, curr: IVirtualDimension) => {
-            return this._minimizationFunctions[minimizationFunction](prev) < this._minimizationFunctions[minimizationFunction](curr) ? prev : curr;
-        });
-    }
-
     protected getCombinableSpacePairs(unusedDimensions: IVirtualDimension[], returnFirstOnly: boolean = false): IVirtualDimension[][] {
         let output = [];
         for (let unusedDimension of unusedDimensions) {
             let result = [unusedDimension, ...unusedDimensions.filter((x: IVirtualDimension) => x === unusedDimension ? false : this._unusedDimensionsShare4Points(unusedDimension, x))];
             if (result.length > 1) {
                 output.push(result);
-                if(returnFirstOnly) break;
+                if (returnFirstOnly) break;
             }
         }
         return output;
@@ -57,7 +39,7 @@ export class Solver {
     protected putOrderAndCreateIVirtualDimensions(order: IOrder, virtualDimension: IVirtualDimension): IVirtualDimension[] {
         let virtualDimensions: IVirtualDimension[] = [];
         if (order.height < virtualDimension.height) {
-            const above = calculateDimensionSharedMethod(virtualDimension.xCoord, virtualDimension.yCoord, virtualDimension.zCoord, order.width, virtualDimension.height - order.height,order.length);
+            const above = calculateDimensionSharedMethod(virtualDimension.xCoord, virtualDimension.yCoord, virtualDimension.zCoord, order.width, virtualDimension.height - order.height, order.length);
             virtualDimensions.push(above as IVirtualDimension);
         }
         if (order.width < virtualDimension.width) {

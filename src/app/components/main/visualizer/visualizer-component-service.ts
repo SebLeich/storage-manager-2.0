@@ -19,6 +19,7 @@ import { Store } from "@ngrx/store";
 import { selectCurrentSolution, selectCurrentSolutionGroups } from "src/app/store/selectors/i-solution.selectors";
 import { IContainer } from "src/app/interfaces/i-container.interface";
 import { IDimension } from "src/app/interfaces/i-dimension.interface";
+import { IPosition } from "src/app/interfaces/i-position";
 
 @Injectable()
 export class VisualizerComponentService {
@@ -81,12 +82,12 @@ export class VisualizerComponentService {
         if (!container) {
             return;
         }
-        this.clearScene(keepPreviousGoods, keepPreviousUnusedSpaces, [step.usedDimension?.id ?? null].filter(guid => !!guid) as string[]);
+        this.clearScene(keepPreviousGoods, keepPreviousUnusedSpaces, [step.usedPosition?.id ?? null].filter(guid => !!guid) as string[]);
         this._addUnloadingArrowToScene(container.height, container.length);
         this._addBaseGridToScene(container.height, container.length);
         this._addContainerToScene(DataService.getContainerDimension(container));
-        if (step.position) this._addElementToScene(step.position, '', 'good', step.sequenceNumber, null, null, DataService.getContainerDimension(container));
-        for (let unusedDimension of step.unusedDimensions ?? []) {
+        if (step.placedAtPosition) this._addElementToScene(step.placedAtPosition, '', 'good', step.sequenceNumber, null, null, DataService.getContainerDimension(container));
+        for (let unusedDimension of step.createdPositions ?? []) {
             this._addElementToScene(unusedDimension, '', unusedDimension.length === Infinity ? 'infiniteSpace' : 'unusedSpace', step.sequenceNumber, null, null, DataService.getContainerDimension(container), unusedDimension.id);
         }
     }
@@ -225,11 +226,11 @@ export class VisualizerComponentService {
         this.scene.add(gridHelper);
     }
 
-    private _addContainerToScene(dimension: IDimension) {
+    private _addContainerToScene(dimension: IPosition) {
         this._addElementToScene(dimension, 'Container', 'bordered');
     }
 
-    private _addElementToScene(dimension: IDimension, preview: string, type: null | 'bordered' | 'good' | 'infiniteSpace' | 'unusedSpace', sequenceNumber: number | null = null, goodId: string | null = null, group: IGroup | null = null, parentDimension: Dimension | null = null, dimensionGuid: string | null = null) {
+    private _addElementToScene(dimension: IPosition, preview: string, type: null | 'bordered' | 'good' | 'infiniteSpace' | 'unusedSpace', sequenceNumber: number | null = null, goodId: string | null = null, group: IGroup | null = null, parentDimension: IPosition | null = null, dimensionGuid: string | null = null) {
 
         var length = dimension.length;
         if (!length) length = (parentDimension!.length! - dimension.zCoord!); // rotation

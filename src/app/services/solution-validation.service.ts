@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { SolutionError } from '../globals';
-import { IDimension } from '../interfaces/i-dimension.interface';
 import { IGood } from '../interfaces/i-good.interface';
+import { IPosition } from '../interfaces/i-position';
 import { ISolution } from '../interfaces/i-solution.interface';
 import { DataService } from './data.service';
 
@@ -41,11 +41,11 @@ export class SolutionValidationService {
     return output;
   }
 
-  private static _cubeIsInAnotherCube(cube: IDimension, cubeSet: IDimension[]): IDimension[] {
+  private static _cubeIsInAnotherCube(cube: IPosition, cubeSet: IPosition[]): IPosition[] {
     return cubeSet.filter(x => this._cubeIsInCube(cube, x));
   }
 
-  private static _cubeIsInCube(cube1: IDimension, cube2: IDimension) {
+  private static _cubeIsInCube(cube1: IPosition, cube2: IPosition) {
     let c1 = (cube1.xCoord + cube1.width) <= cube2.xCoord;
     let c2 = (cube2.xCoord + cube2.width) <= cube1.xCoord;
     let c3 = (cube1.yCoord + cube1.height) <= cube2.yCoord;

@@ -4,11 +4,6 @@ import { Solver } from "./solver";
 import { ISolution } from "../interfaces/i-solution.interface";
 import * as moment from 'moment';
 
-import * as fromICalculationAttributesState from 'src/app/store/reducers/i-calculation-attribute.reducers';
-import * as fromIGroupState from 'src/app/store/reducers/i-group.reducers';
-import * as fromIOrderState from 'src/app/store/reducers/i-order.reducers';
-import * as fromISolutionState from 'src/app/store/reducers/i-solution.reducers';
-
 import { Store } from "@ngrx/store";
 import { selectSnapshot } from "src/lib/process-builder/globals/select-snapshot";
 import { selectContainerHeight, selectCalculationAttributesValid, selectContainerWidth } from "../store/selectors/i-calculation-attribute.selectors";
@@ -20,25 +15,22 @@ export class AllInOneRowSolver extends Solver implements ISolver {
 
     constructor(
         private _description: string = 'All In One Row',
-        private _solutionStore: Store<fromISolutionState.State>,
-        private _groupStore: Store<fromIGroupState.State>,
-        private _orderStore: Store<fromIOrderState.State>,
-        private _calculationAttributesStore: Store<fromICalculationAttributesState.State>,
+        private _store: Store
     ) {
         super();
     }
 
     async solve(): Promise<ISolution | undefined> {
 
-        const calculationAttributesValid = await selectSnapshot(this._calculationAttributesStore.select(selectCalculationAttributesValid));
+        const calculationAttributesValid = await selectSnapshot(this._store.select(selectCalculationAttributesValid));
         if (!calculationAttributesValid) {
             return;
         }
 
-        const containerHeight = await selectSnapshot(this._solutionStore.select(selectContainerHeight));
-        const containerWidth = await selectSnapshot(this._solutionStore.select(selectContainerWidth));
-        const groups = await selectSnapshot(this._groupStore.select(selectGroups));
-        const orders = await selectSnapshot(this._orderStore.select(selectOrders));
+        const containerHeight = await selectSnapshot(this._store.select(selectContainerHeight));
+        const containerWidth = await selectSnapshot(this._store.select(selectContainerWidth));
+        const groups = await selectSnapshot(this._store.select(selectGroups));
+        const orders = await selectSnapshot(this._store.select(selectOrders));
 
         const solution = {
             id: generateGuid(),
