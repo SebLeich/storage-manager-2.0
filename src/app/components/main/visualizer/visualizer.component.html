@@ -6,7 +6,7 @@
             <app-solution-preview></app-solution-preview>
         </div>
     
-        <div @show class="visualizer-wrapper" #visualizerWrapper (mousemove)="visualizerComponentService.mousemove($event)"
+        <div *ngIf="displaySolution$|async" @fadeIn class="visualizer-wrapper" #visualizerWrapper (mousemove)="visualizerComponentService.mousemove($event)"
             (click)="visualizerComponentService.mouseclick($event)">
             <button mat-icon-button class="menu-toggler" (click)="toggleMenu()">
                 <mat-icon>{{(menuVisible$|async)? 'chevron_left': 'chevron_right'}}</mat-icon>
