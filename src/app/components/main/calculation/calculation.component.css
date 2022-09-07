@@ -28,10 +28,25 @@
 }
 
 .algorithm-overview .headline {
-    font-size: 1.5rem;
+    display: flex;
+    align-items: baseline;
     padding: 2rem 2rem 0.5rem 2rem;
+}
+
+.algorithm-overview .headline .text {
+    font-size: 1.3rem;
     background-color: #ffffff;
     color: #363636;
+}
+
+.algorithm-overview .headline .badge {
+    padding: 4px 6px;
+    font-size: .7rem;
+    color: black;
+    border-radius: 3px;
+    margin-left: 0.5rem;
+    line-height: .7rem;
+    font-weight: 500;
 }
 
 .algorithm-overview .description {
@@ -54,7 +69,7 @@
     flex-wrap: wrap;
 }
 
-.footer-button-wrapper > * {
+.footer-button-wrapper>* {
     margin-right: .2rem;
 }
 

@@ -31,14 +31,14 @@
     overflow: hidden;
     -webkit-user-select: none;
     user-select: none;
-    border-left: 5px solid transparent;
+    border-left: 3px solid transparent;
     box-sizing: border-box;
     padding-right: 5px;
 }
 
 .option.active {
     background: linear-gradient(135deg, #0078d4, #0078d4bd, #0078d4);
-    border-left-color: #ffffff29;
+    border-left-color: #ffffff75;
 }
 
 .option:hover {

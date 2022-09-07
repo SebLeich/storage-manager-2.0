@@ -37,7 +37,7 @@
       </div>
    </div>
 
-   <div class="option-wrapper" [class.disabled]="!(currentSolutionAvailable$|async)">
+   <div class="option-wrapper" [class.disabled]="(solutionCount$|async) === 0">
       <div class="option" routerLink="visualizer" [class.active]="router.url === '/visualizer'">
 
          <mat-icon class="icon">view_in_ar</mat-icon>

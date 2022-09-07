@@ -1,7 +1,7 @@
 import { Component, OnDestroy, OnInit, ViewContainerRef } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { Subscription } from 'rxjs';
-import { filter, debounceTime } from 'rxjs/operators';
+import { filter, debounceTime, map } from 'rxjs/operators';
 import { ConfigureApiCallService } from 'src/lib/automation/services/configure-api-call.service';
 import { showAnimation } from 'src/lib/shared/animations/show';
 import { ApiCallConfiguratorDialogComponent } from '../../dialog/api-call-configurator-dialog/api-call-configurator-dialog.component';
@@ -31,7 +31,7 @@ import { selectCalculationContextValid } from 'src/app/store/selectors/i-calcula
 })
 export class CalculationComponent implements OnDestroy, OnInit {
 
-  private calculationContextInvalid$ = this._store.select(selectCalculationContextValid);
+  private calculationContextInvalid$ = this._store.select(selectCalculationContextValid).pipe(debounceTime(10), map(valid => !valid));
   AlgorithmCalculationStatus = AlgorithmCalculationStatus;
 
   private _subscriptions: Subscription = new Subscription();
@@ -55,7 +55,7 @@ export class CalculationComponent implements OnDestroy, OnInit {
   public ngOnInit(): void {
     this._subscriptions.add(
       this.calculationContextInvalid$
-        .pipe(filter(calculationContextValid => !calculationContextValid))
+        .pipe(filter(calculationContextInvalid => !!calculationContextInvalid))
         .subscribe(() => {
           this._showNoSolutionDialog();
         })

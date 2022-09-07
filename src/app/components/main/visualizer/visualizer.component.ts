@@ -15,9 +15,10 @@ import { filter, map, startWith, switchMap, take } from 'rxjs/operators';
 import { selectedGoodEdgeColor } from 'src/app/globals';
 import { NoSolutionDialogComponent } from '../../dialog/no-solution-dialog/no-solution-dialog.component';
 import { VisualizerComponentService } from './visualizer-component-service';
-import { selectCurrentSolution } from 'src/app/store/selectors/i-solution.selectors';
+import { selectCurrentSolution, selectSolutions } from 'src/app/store/selectors/i-solution.selectors';
 import { fadeInAnimation } from 'src/lib/shared/animations/fade-in';
 import { selectSnapshot } from 'src/lib/process-builder/globals/select-snapshot';
+import { setCurrentSolution } from 'src/app/store/actions/i-solution.actions';
 
 @Component({
   selector: 'app-visualizer',
@@ -57,7 +58,7 @@ export class VisualizerComponent implements AfterViewInit, OnDestroy, OnInit {
     private _dialog: MatDialog,
     private _viewContainerRef: ViewContainerRef,
     private _store: Store
-  ) {}
+  ) { }
 
   public ngAfterViewInit(): void {
     this.validateClient();
@@ -68,7 +69,7 @@ export class VisualizerComponent implements AfterViewInit, OnDestroy, OnInit {
     this.visualizerComponentService.dispose();
   }
 
-  ngOnInit(): void {
+  public ngOnInit(): void {
     this._subscriptions.add(
       ...[
         this.visualizerComponentService.resized$
@@ -93,8 +94,17 @@ export class VisualizerComponent implements AfterViewInit, OnDestroy, OnInit {
 
     this._subscriptions.add(
       this.hasCurrentSolution$
-        .pipe(filter((hasCurrentSolution) => !hasCurrentSolution))
-        .subscribe(() => this.showNoSolutionDialog())
+        .pipe(
+          filter((hasCurrentSolution) => !hasCurrentSolution),
+          switchMap(() => this._store.select(selectSolutions)),
+          take(1)
+        )
+        .subscribe((solutions) => {
+          if (solutions.length > 0) {
+            this._store.dispatch(setCurrentSolution({ solution: solutions[0] }));
+          }
+          this.showNoSolutionDialog();
+        })
     );
   }
 
@@ -106,10 +116,10 @@ export class VisualizerComponent implements AfterViewInit, OnDestroy, OnInit {
     });
   }
 
-  async toggleMenu(){
+  async toggleMenu() {
     const menuVisible = await selectSnapshot(this._menuVisible);
     const userToggledMenu = await selectSnapshot(this._userToggledMenu);
-    
+
     this._menuVisible.next(!menuVisible);
     this._userToggledMenu.next(!userToggledMenu);
   }

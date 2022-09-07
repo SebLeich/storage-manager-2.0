@@ -49,7 +49,7 @@ export class SuperFloSolver extends Solver implements ISolver {
                 zCoord: 0,
                 height: containerHeight,
                 width: containerWidth,
-                length: 0,
+                length: Infinity,
                 goods: []
             },
             steps: [],
@@ -59,6 +59,7 @@ export class SuperFloSolver extends Solver implements ISolver {
 
         const containerPosition = getContainerPosition(solution.container!);
         let positions: IPosition[] = [containerPosition];
+        let positionBacklog: IPosition[] = [containerPosition];
         let sequenceNumber = 1;
 
         for (let group of groups) {
@@ -68,7 +69,7 @@ export class SuperFloSolver extends Solver implements ISolver {
                 .sort((order1, order2) => {
                     const a1 = order1.length * order1.width;
                     const a2 = order2.length * order2.width;
-                    return a1 > a2 ? 1 : -1;
+                    return a1 < a2 ? 1 : -1;
                 });
 
             for (let order of groupOrders) {
@@ -76,12 +77,13 @@ export class SuperFloSolver extends Solver implements ISolver {
                 for (let i = 0; i < (order.quantity ?? 0); i++) {
 
                     const index = Math.max(...positions.map(virtualDimension => virtualDimension.index ?? 0));
-                    const addOrderResult = this.addOrder(order, group, positions, index);
+                    const addOrderResult = this.addOrder(order, group, positions, index, positionBacklog);
                     if (addOrderResult === false) {
                         continue;
                     }
 
                     positions = [...positions.filter(position => position.id !== addOrderResult.usedPosition!.id), ...addOrderResult.createdPositions!];
+                    positionBacklog = [...positionBacklog, ...addOrderResult.createdPositions];
                     solution.container!.goods.push({
                         ...addOrderResult.placedAtPosition,
                         desc: order.description,
@@ -95,6 +97,11 @@ export class SuperFloSolver extends Solver implements ISolver {
                     } as IGood);
                     solution.steps!.push({ ...addOrderResult, sequenceNumber: sequenceNumber });
                     sequenceNumber++;
+
+                    const mergingResult = this.mergePositions(positions, sequenceNumber);
+                    positions = mergingResult.positions;
+                    sequenceNumber = mergingResult.sequenceNumber;
+                    solution.steps! = [...solution.steps!, ...mergingResult.steps];
                 }
             }
         }
@@ -104,13 +111,13 @@ export class SuperFloSolver extends Solver implements ISolver {
         return solution;
     }
 
-    private addOrder(order: IOrder, orderGroup: IGroup, availablePositions: IPosition[], index: number): false | IStep {
+    private addOrder(order: IOrder, orderGroup: IGroup, availablePositions: IPosition[], index: number, positionBacklog: IPosition[]): false | IStep {
         let possibilities: IPossibilities = {
             notRotated: availablePositions
                 .filter(availablePosition => {
-                    availablePosition.height > order.height
-                        && availablePosition.width > order.width
-                        && availablePosition.length > order.length
+                    return availablePosition.height >= order.height
+                        && availablePosition.width >= order.width
+                        && availablePosition.length >= order.length
                         && (order.stackingAllowed || availablePosition.yCoord === 0)
                         && (availablePosition.groupRestrictedBy == null || orderGroup.sequenceNumber == null || availablePosition.groupRestrictedBy <= orderGroup.sequenceNumber)
                 }),
@@ -120,7 +127,7 @@ export class SuperFloSolver extends Solver implements ISolver {
         if (order.turningAllowed) {
             possibilities.rotated = availablePositions
                 .filter(availablePosition => {
-                    availablePosition.height > order.height
+                    return availablePosition.height > order.height
                         && availablePosition.width > order.length
                         && availablePosition.length > order.width
                         && (order.stackingAllowed || availablePosition.yCoord === 0)
@@ -139,7 +146,7 @@ export class SuperFloSolver extends Solver implements ISolver {
         }
 
         const bestPosition = this.getOptimalPosition(possibilities);
-        const putted = this.putOrderIntoPosition(order, orderGroup.sequenceNumber!, bestPosition, index);
+        const putted = this.putOrderIntoPosition(order, orderGroup.sequenceNumber!, bestPosition, index, positionBacklog);
 
         const recursiveGroupRestricted: IPosition[] = [];
         for (let position of availablePositions.filter(availablePosition => availablePosition.zCoord < bestPosition.zCoord && (availablePosition.groupRestrictedBy == null || availablePosition.groupRestrictedBy < orderGroup.sequenceNumber!))) {
@@ -166,11 +173,55 @@ export class SuperFloSolver extends Solver implements ISolver {
         return minResult1;
     }
 
+    private mergePositions(availablePositions: IPosition[], startingSequenceNumber: number) {
+        var positions = [...availablePositions];
+        var steps: IStep[] = [];
+        var found = true;
+        var sequenceNumber = startingSequenceNumber;
+
+        while (found) {
+
+            found = false;
+            let mergedPosition: IPosition | false = false;
+
+            for (let position of positions) {
+
+                if (mergedPosition) {
+                    break;
+                }
+                for (let candidate of positions) {
+
+                    if (candidate === position) continue;
+
+                    mergedPosition = this.mergeIfPossible(position, candidate);
+                    if (mergedPosition) {
+                        steps.push({
+                            createdPositions: [mergedPosition],
+                            messages: [`merged positions to new position`],
+                            sequenceNumber: sequenceNumber
+                        });
+                        sequenceNumber++;
+
+                        const filteredPositions = positions.filter(currentPosition => currentPosition !== position && currentPosition !== candidate);
+                        positions = [...filteredPositions, mergedPosition];
+                        break;
+                    }
+                }
+            }
+
+            if (mergedPosition) {
+                found = true;
+            }
+        }
+
+        return { positions, steps, sequenceNumber };
+    }
+
     private minimizationFunction1(position1: IPosition, position2: IPosition) {
-        if (position1.fCoord === position2.fCoord) {
+        if (position1.zCoord === position2.zCoord) {
             return position1.xCoord > position2.xCoord ? 1 : -1;
         }
-        return position1.fCoord > position2.fCoord ? 1 : -1;
+        return position1.zCoord > position2.zCoord ? 1 : -1;
     }
 
     private minimizationFunction2(position1: IPosition, position2: IPosition, orderWidth: number, orderLength: number) {
@@ -182,7 +233,7 @@ export class SuperFloSolver extends Solver implements ISolver {
         return position1Rest > position2Rest ? 1 : -1;
     }
 
-    private putOrderIntoPosition(order: IOrder, orderGroup: number, position: IPosition, start: number) {
+    private putOrderIntoPosition(order: IOrder, orderGroup: number, position: IPosition, start: number, positionBacklog: IPosition[]) {
         let index = start;
         let groupRestrictedBy = orderGroup;
         if (position.groupRestrictedBy && position.groupRestrictedBy < groupRestrictedBy) {
@@ -203,10 +254,16 @@ export class SuperFloSolver extends Solver implements ISolver {
             index++;
             const addPosition = {
                 ...position,
+                fCoord: position.zCoord + order.length,
                 yCoord: position.yCoord + order.height,
+                height: diff.y,
+                length: order.length,
                 index: index,
-                groupRestrictedBy: orderGroup
-            };
+                groupRestrictedBy: orderGroup,
+                stackedOnPosition: position.id,
+                width: order.width,
+                rCoord: position.xCoord + order.width
+            } as IPosition;
             createdPositions.push(addPosition);
             messages.push(`added space at (${addPosition.xCoord}, ${addPosition.yCoord}, ${addPosition.zCoord}) | w: ${addPosition.width}, h: ${addPosition.height}, l: ${addPosition.length}`);
         }
@@ -214,9 +271,13 @@ export class SuperFloSolver extends Solver implements ISolver {
             index++;
             const addPosition = {
                 ...position,
+                id: generateGuid(),
+                width: diff.x,
+                length: order.length,
                 xCoord: position.xCoord + order.width,
+                fCoord: order.length + position.zCoord,
                 index: index,
-                groupRestrictedBy: groupRestrictedBy
+                groupRestrictedBy: groupRestrictedBy,
             };
             createdPositions.push(addPosition);
             messages.push(`added space at (${addPosition.xCoord}, ${addPosition.yCoord}, ${addPosition.zCoord}) | w: ${addPosition.width}, h: ${addPosition.height}, l: ${addPosition.length}`);
@@ -225,9 +286,11 @@ export class SuperFloSolver extends Solver implements ISolver {
             index++;
             const addPosition = {
                 ...position,
+                id: generateGuid(),
                 zCoord: position.zCoord + order.length,
                 index: index,
-                groupRestrictedBy: groupRestrictedBy
+                groupRestrictedBy: groupRestrictedBy,
+                length: diff.z
             };
             createdPositions.push(addPosition);
             messages.push(`added space at (${addPosition.xCoord}, ${addPosition.yCoord}, ${addPosition.zCoord}) | w: ${addPosition.width}, h: ${addPosition.height}, l: ${addPosition.length}`);
@@ -250,6 +313,107 @@ export class SuperFloSolver extends Solver implements ISolver {
         if ((firstPosition.tCoord <= position.yCoord) || (firstPosition.yCoord >= position.tCoord)) return false;
         if ((firstPosition.rCoord <= position.xCoord) || (firstPosition.xCoord >= position.rCoord)) return false;
         return true;
+    }
+
+    private mergeIfPossible(source: IPosition, candidate: IPosition): false | IPosition {
+        if (
+            source.yCoord === candidate.yCoord &&
+            source.xCoord === candidate.xCoord &&
+            source.rCoord === candidate.rCoord &&
+            source.tCoord === candidate.tCoord
+        ) {
+            // positions in line
+            if (source.zCoord === candidate.fCoord) {
+
+                // candidate right behind position
+                return {
+                    ...source,
+                    id: generateGuid(),
+                    groupRestrictedBy: source.groupRestrictedBy,
+                    length: source.length + candidate.length,
+                    rotated: false,
+                    zCoord: candidate.zCoord
+                };
+            }
+            if (source.fCoord === candidate.zCoord) {
+
+                // candidate right infornt position
+                return {
+                    ...source,
+                    id: generateGuid(),
+                    groupRestrictedBy: candidate.groupRestrictedBy,
+                    length: source.length + candidate.length,
+                    rotated: false,
+                    fCoord: candidate.fCoord
+                }
+            }
+        }
+
+        if (
+            source.yCoord === candidate.yCoord &&
+            source.zCoord === candidate.zCoord &&
+            source.fCoord === candidate.fCoord &&
+            source.tCoord === candidate.tCoord
+        ) {
+            // positions in row
+            // more restricter group restriction
+            if (source.rCoord === candidate.xCoord) {
+
+                // candidate right to position
+                return {
+                    ...source,
+                    id: generateGuid(),
+                    width: source.width + candidate.width,
+                    rotated: false,
+                    rCoord: candidate.rCoord
+                };
+            }
+            if (source.xCoord === candidate.rCoord) {
+
+                // candidate left to position
+                return {
+                    ...source,
+                    id: generateGuid(),
+                    width: source.width + candidate.width,
+                    rotated: false,
+                    xCoord: candidate.xCoord
+                }
+            }
+        }
+
+        if (
+            source.xCoord === candidate.xCoord &&
+            source.zCoord === candidate.zCoord &&
+            source.fCoord === candidate.fCoord &&
+            source.rCoord === candidate.rCoord
+        ) {
+            // positions stacked
+            if (source.tCoord === candidate.yCoord) {
+
+                // candidate right above position
+                // more restricter group restriction
+                return {
+                    ...source,
+                    id: generateGuid(),
+                    height: source.height + candidate.height,
+                    rotated: false,
+                    tCoord: candidate.tCoord
+                };
+            }
+            if (source.yCoord === candidate.tCoord) {
+
+                // candidate right below position
+                return {
+                    ...source,
+                    id: generateGuid(),
+                    height: source.height + candidate.height,
+                    rotated: false,
+                    yCoord: candidate.yCoord
+                }
+            }
+        }
+
+        return false;
     }
 
 }

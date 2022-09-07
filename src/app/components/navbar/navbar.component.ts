@@ -1,10 +1,10 @@
 import { Component, HostListener, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { Store } from '@ngrx/store';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, map } from 'rxjs';
 
 import * as fromISolutionState from 'src/app/store/reducers/i-solution.reducers';
-import { selectCurrentSolution } from 'src/app/store/selectors/i-solution.selectors';
+import { selectSolutions } from 'src/app/store/selectors/i-solution.selectors';
 
 @Component({
   selector: 'app-navbar',
@@ -13,7 +13,7 @@ import { selectCurrentSolution } from 'src/app/store/selectors/i-solution.select
 })
 export class NavbarComponent implements OnInit {
 
-  currentSolutionAvailable$ = this._solutionStore.select(selectCurrentSolution);
+  solutionCount$ = this._solutionStore.select(selectSolutions).pipe(map(solutions => solutions?.length ?? 0));
 
   private _limitedHeight = new BehaviorSubject<boolean>(false);
   limitedHeight$ = this._limitedHeight.asObservable();
@@ -31,7 +31,7 @@ export class NavbarComponent implements OnInit {
     this.validateClient();
   }
 
-  validateClient(){
+  validateClient() {
     this._limitedHeight.next(window.innerHeight <= 500);
   }
 

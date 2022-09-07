@@ -5,7 +5,12 @@
         <div class="algorithm-overview" (click)="configureAPICall()">
 
             <div class="headline">
-                connect own service
+                <div class="text">
+                    connect own service
+                </div>
+                <span class="badge">
+                    using data pipeline
+                </span>
             </div>
 
             <div class="description">
@@ -20,7 +25,7 @@
 
                     <div class="control primary"
                         [ngClass]="{ 'disabled': (configureApiCallService.configurationValid$|async)?.invalid ?? true }">
-                        send data
+                        start app
                     </div>
 
                 </div>
@@ -29,11 +34,15 @@
 
         </div>
 
-        <div class="algorithm-overview" *ngFor="let wrapper of calculationComponentService.algorithms"
-            [class.unavailable]="!wrapper.available">
+        <div class="algorithm-overview" *ngFor="let wrapper of calculationComponentService.algorithms" [class.unavailable]="!wrapper.available">
 
             <div class="headline">
-                {{wrapper.algorithm.title}}
+                <div class="text">
+                    {{wrapper.algorithm.title}}
+                </div>
+                <span class="badge">
+                    calulated in browser
+                </span>
             </div>
 
             <div class="description">
