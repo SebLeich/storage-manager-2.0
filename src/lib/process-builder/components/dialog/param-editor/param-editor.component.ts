@@ -8,20 +8,13 @@ import { IParam } from 'src/lib/process-builder/globals/i-param';
 import { IProcessBuilderConfig, PROCESS_BUILDER_CONFIG_TOKEN, } from 'src/lib/process-builder/globals/i-process-builder-config';
 import { updateIParam } from 'src/lib/process-builder/store/actions/i-param.actions';
 import { IFunction } from 'src/lib/process-builder/globals/i-function';
-import {
-  INJECTOR_INTERFACE_TOKEN,
-  INJECTOR_TOKEN,
-} from 'src/lib/process-builder/globals/injector';
-import {
-  InjectorInterfacesProvider,
-  InjectorProvider,
-} from 'src/lib/process-builder/globals/injector-interfaces-provider';
+import { INJECTOR_INTERFACE_TOKEN, INJECTOR_TOKEN, } from 'src/lib/process-builder/globals/injector';
+import { InjectorInterfacesProvider, InjectorProvider, } from 'src/lib/process-builder/globals/injector-interfaces-provider';
 import { HttpClient } from '@angular/common/http';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { debounceTime } from 'rxjs/operators';
 import { ParamEditorComponentService } from './service/param-editor-component.service';
 import { selectSnapshot } from 'src/lib/process-builder/globals/select-snapshot';
-import { selectIParams } from 'src/lib/process-builder/store/selectors/i-param.selectors';
 
 @Component({
   selector: 'app-param-editor',

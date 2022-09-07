@@ -4,7 +4,6 @@ import { FormBuilder } from '@angular/forms';
 import { of, Observable } from 'rxjs';
 import * as fromIParam from 'src/lib/process-builder/store/reducers/i-param.reducer';
 import * as fromIFunction from 'src/lib/process-builder/store/reducers/i-function.reducer';
-import * as fromIInterface from 'src/lib/process-builder/store/reducers/i-interface.reducer';
 import { Store } from '@ngrx/store';
 import { selectIParam, selectIParams } from 'src/lib/process-builder/store/selectors/i-param.selectors';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';

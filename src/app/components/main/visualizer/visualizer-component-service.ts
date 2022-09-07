@@ -9,7 +9,6 @@ import { selectSnapshot } from "src/lib/process-builder/globals/select-snapshot"
 import * as ThreeJS from 'three';
 import { v4 as generateGuid } from 'uuid';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
-import { Dimension } from "src/app/classes/dimension.class";
 import { IGood } from "src/app/interfaces/i-good.interface";
 
 import * as fromISolutionState from 'src/app/store/reducers/i-solution.reducers';
@@ -18,7 +17,6 @@ import * as fromIGroupState from 'src/app/store/reducers/i-group.reducers';
 import { Store } from "@ngrx/store";
 import { selectCurrentSolution, selectCurrentSolutionGroups } from "src/app/store/selectors/i-solution.selectors";
 import { IContainer } from "src/app/interfaces/i-container.interface";
-import { IDimension } from "src/app/interfaces/i-dimension.interface";
 import { IPosition } from "src/app/interfaces/i-position";
 
 @Injectable()
