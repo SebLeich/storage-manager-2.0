@@ -1,6 +1,0 @@
-ContainerWidth,ContainerHeight,Unit,,,,,,,
-2100,1700,mm,,,,,,,
-Order,Description,Quantity,Length,Width,Height,TurningAllowed,StackingAllowed,Group,GroupName
-1,Palette 1,6,1000,1050,1000,true,false,1,Test AG
-2,Palette 2,4,500,700,400,true,false,1,Test AG
-3,Palette 2,10,500,700,400,true,false,2,Beispiel SE
