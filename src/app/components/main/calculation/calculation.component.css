@@ -76,10 +76,16 @@
 .progress-status {
     flex: 1;
     padding: 1rem;
-    align-items: center;
+    border-radius: 3px;
     justify-content: center;
     display: flex;
     flex-direction: column;
+    background-color: #e4eeff;
+    color: #343434;
+    margin-bottom: 0.5rem;
+    font-size: .8rem;
+    line-height: 1rem;
+    border: 2px solid #dae8ff;
 }
 
 .calculation-error {

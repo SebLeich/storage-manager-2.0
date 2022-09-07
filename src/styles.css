@@ -253,7 +253,3 @@ body {
 .mat-menu-item .interactable-icon:hover {
     opacity: .8;
 }
-
-div.jsoneditor-tree {
-    overflow: hidden !important;
-}

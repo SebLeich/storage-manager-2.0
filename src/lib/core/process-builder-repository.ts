@@ -53,11 +53,10 @@ export class ProcessBuilderRepository {
 
             index++;
 
-            return parent ?? defaultValue;
+            return defaultValue;
 
         } catch (e) {
             debugger;
-        } finally {
             return {};
         }
 

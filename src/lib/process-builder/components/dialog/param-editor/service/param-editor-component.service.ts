@@ -17,8 +17,7 @@ import {
   INJECTOR_TOKEN,
 } from 'src/lib/process-builder/globals/injector';
 import { ProcessBuilderRepository } from 'src/lib/core/process-builder-repository';
-import { selectIInterface } from 'src/lib/process-builder/store/selectors/i-interface.selectors';
-import { mapIParamInterfaces, mapIParamsInterfaces } from 'src/lib/process-builder/globals/rxjs-extensions';
+import { mapIParamInterfaces } from 'src/lib/process-builder/globals/rxjs-extensions';
 
 @Injectable({
   providedIn: 'root',
@@ -28,7 +27,7 @@ export class ParamEditorComponentService {
     selectIParam(() => this.data.paramCode)
   );
   public paramObjectPseudoObject$: Observable<object> = this.paramObject$.pipe(
-    mapIParamInterfaces(this._interfaceStore),
+    mapIParamInterfaces(this._store),
     switchMap((paramObject: IParam | null | undefined) => {
       if (paramObject) {
         return of(ProcessBuilderRepository.createPseudoObjectFromIParam(paramObject));
@@ -39,7 +38,7 @@ export class ParamEditorComponentService {
   public formGroup$ = this.paramObject$.pipe(
     scan(
       (formGroup, iParam) => {
-        if(iParam){
+        if (iParam) {
           formGroup.patchValue(iParam, { emitEvent: false });
         }
         return formGroup;
@@ -96,7 +95,7 @@ export class ParamEditorComponentService {
     @Inject(MAT_DIALOG_DATA) public data: IParamEditorComponentInputData,
     @Inject(INJECTOR_TOKEN) private _injector: { injector: object },
     @Inject(INJECTOR_INTERFACE_TOKEN) private _injectorInterface: { injector: object },
-    private _interfaceStore: Store<fromIInterface.State>,
+    private _store: Store,
   ) { }
 
   public updateInjector(iParams: IParam[]) {

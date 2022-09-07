@@ -3,10 +3,11 @@ import { IOrder } from 'src/app/interfaces/i-order.interface';
 
 export const orderActions = {
   AddOrder: '[Order] Add Order',
-  AddOrders: '[Orders] Add Orders',
+  AddOrders: '[Order] Add Orders',
   RouteToOrder: '[Order] Route To Order',
   SetCurrentOrder: '[Order] Set Current Order',
-  SetNextOrder: '[Order] Set Next Order'
+  SetNextOrder: '[Order] Set Next Order',
+  SetOrders: '[Order] Set Orders',
 }
 
 export const addOrder = createAction(
@@ -36,4 +37,9 @@ export const setCurrentOrder = createAction(
 
 export const setNextOrder = createAction(
   orderActions.SetNextOrder
+);
+
+export const setOrders = createAction(
+  orderActions.SetOrders,
+  props<{ orders: IOrder[] }>()
 );

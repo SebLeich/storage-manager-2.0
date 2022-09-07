@@ -1,4 +1,5 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { BehaviorSubject } from 'rxjs';
 import { take } from 'rxjs/operators';
 import { ProcessBuilderComponentService } from 'src/lib/process-builder/components/process-builder/process-builder-component.service';
@@ -26,7 +27,8 @@ export class ProcessBuilderWrapperComponent implements OnInit {
   paramsVisible$ = this._paramsVisible.asObservable();
 
   constructor(
-    public service: ProcessBuilderComponentService
+    public service: ProcessBuilderComponentService,
+    private _snackBar: MatSnackBar
   ) { }
 
   blurElement(element: HTMLElement, event?: Event) {
@@ -38,6 +40,9 @@ export class ProcessBuilderWrapperComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this._snackBar.open('The process builder is currently under construction and may not work properly.', 'ok', {
+      duration: 5000
+    });
   }
 
   toggleModules() {

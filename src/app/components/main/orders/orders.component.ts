@@ -20,7 +20,7 @@ import { IOrder } from 'src/app/interfaces/i-order.interface';
   providers: [OrdersComponentService],
   animations: [showAnimation]
 })
-export class OrdersComponent implements OnDestroy, OnInit {
+export class OrdersComponent implements OnDestroy {
 
   columns: string[] = ['order', 'quantity', 'group', 'description', 'length', 'width', 'height', 'turningAllowed', 'stackingAllowed', 'controls'];
 
@@ -33,17 +33,12 @@ export class OrdersComponent implements OnDestroy, OnInit {
     public csvService: CsvService,
     public ordersComponentService: OrdersComponentService,
     private _productStore: Store<fromIProductState.State>
-  ) {
+  ) { }
 
-  }
-
-  ngOnDestroy(): void {
+  public ngOnDestroy(): void {
     if (this.ordersComponentService.formGroup.dirty) this.ordersComponentService.takeOrders();
     this._subscriptions.unsubscribe();
     this.ordersComponentService.dispose();
-  }
-
-  ngOnInit(): void {
   }
 
   orderCollectionToCSV() {

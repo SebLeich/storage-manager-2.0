@@ -1,26 +1,12 @@
-import {
-  AfterViewInit,
-  Component,
-  ElementRef,
-  inject,
-  Inject,
-  OnDestroy,
-  OnInit,
-  ViewChild,
-} from '@angular/core';
+import { Component, ElementRef, Inject, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { MatDialogRef } from '@angular/material/dialog';
 import { Store } from '@ngrx/store';
 import JSONEditor from 'jsoneditor';
-import { combineLatest, firstValueFrom, ReplaySubject, Subject, Subscription } from 'rxjs';
-import { take, withLatestFrom } from 'rxjs/operators';
+import { combineLatest, ReplaySubject, Subject, Subscription } from 'rxjs';
 import { ProcessBuilderRepository } from 'src/lib/core/process-builder-repository';
 import { IParam } from 'src/lib/process-builder/globals/i-param';
-import {
-  IProcessBuilderConfig,
-  PROCESS_BUILDER_CONFIG_TOKEN,
-} from 'src/lib/process-builder/globals/i-process-builder-config';
+import { IProcessBuilderConfig, PROCESS_BUILDER_CONFIG_TOKEN, } from 'src/lib/process-builder/globals/i-process-builder-config';
 import { updateIParam } from 'src/lib/process-builder/store/actions/i-param.actions';
-import * as fromIParam from 'src/lib/process-builder/store/reducers/i-param.reducer';
 import { IFunction } from 'src/lib/process-builder/globals/i-function';
 import {
   INJECTOR_INTERFACE_TOKEN,
@@ -35,6 +21,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { debounceTime } from 'rxjs/operators';
 import { ParamEditorComponentService } from './service/param-editor-component.service';
 import { selectSnapshot } from 'src/lib/process-builder/globals/select-snapshot';
+import { selectIParams } from 'src/lib/process-builder/store/selectors/i-param.selectors';
 
 @Component({
   selector: 'app-param-editor',
@@ -92,7 +79,7 @@ export class ParamEditorComponent implements OnInit, OnDestroy {
   constructor(
     @Inject(PROCESS_BUILDER_CONFIG_TOKEN) public config: IProcessBuilderConfig,
     @Inject(INJECTOR_TOKEN) private _injector: { injector: object },
-    private _paramStore: Store<fromIParam.State>,
+    private _store: Store,
     public paramEditorComponentService: ParamEditorComponentService,
     private _snackBar: MatSnackBar,
     private _ref: MatDialogRef<ParamEditorComponent>
@@ -107,7 +94,7 @@ export class ParamEditorComponent implements OnInit, OnDestroy {
       formGroup.controls['typeDef']?.setValue(outputIParamDefinitions);
       formGroup.controls['typeDef']?.markAsDirty();
 
-      this._paramStore.dispatch(updateIParam(formGroup.value as IParam));
+      this._store.dispatch(updateIParam(formGroup.value as IParam));
 
       this._snackBar.open(`param recalculated successfully`, 'Ok', {
         duration: 2000,
@@ -131,7 +118,7 @@ export class ParamEditorComponent implements OnInit, OnDestroy {
         ProcessBuilderRepository.normalizeName(formGroup.controls['name']?.value)
       );
 
-      this._paramStore.dispatch(updateIParam(formGroup.value as IParam));
+      this._store.dispatch(updateIParam(formGroup.value as IParam));
       this._snackBar.open(`param saved`, 'Ok', { duration: 2000 });
     }
 

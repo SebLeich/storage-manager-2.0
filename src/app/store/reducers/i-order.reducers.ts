@@ -9,6 +9,7 @@ import {
   duplicateOrder,
   removeOrder,
   setCurrentOrder,
+  setOrders,
 } from '../actions/i-order.actions';
 import { v4 as generateGuid } from 'uuid';
 import * as moment from 'moment';
@@ -43,24 +44,10 @@ export const initialState: State = adapter.getInitialState({
 export const orderReducer = createReducer(
   initialState,
   on(addOrder, (state, { order }) => {
-    return adapter.addOne(
-      {
-        ...order
-      },
-      state
-    );
+    return adapter.addOne(order, state);
   }),
   on(addOrders, (state, { orders }) => {
-    return adapter.addMany(
-      orders.map((order, index) => {
-        return {
-          ...order,
-          addedToState: moment().format(),
-          index: index,
-        };
-      }),
-      state
-    );
+    return adapter.addMany(orders, state);
   }),
   on(duplicateOrder, (state, { duplicateOrder }) => {
     if (!duplicateOrder) {
@@ -81,6 +68,19 @@ export const orderReducer = createReducer(
       selectedOrderIndex: order
         ? currentState.ids.findIndex((id) => id === order.id)
         : null,
+    };
+    return state;
+  }),
+  on(setOrders, (_, { orders }) => {
+    const entities: { [key: string]: IOrder } = {};
+    for (let order of orders) {
+      entities[order.id] = order;
+    }
+    const state = {
+      entities: entities,
+      ids: Object.keys(entities),
+      selectedOrderId: null,
+      selectedOrderIndex: null,
     };
     return state;
   }),
