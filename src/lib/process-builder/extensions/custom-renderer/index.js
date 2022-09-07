@@ -1,7 +1,6 @@
-
-import CustomRenderer from './bpmn-io-extensions';
+import CustomRenderer from './CustomRenderer';
 
 export default {
-  __init__: [ 'customRenderer' ],
-  customRenderer: [ 'type', CustomRenderer ]
+  __init__: ['customRenderer'],
+  customRenderer: ['type', CustomRenderer]
 };

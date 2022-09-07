@@ -15,6 +15,8 @@ const HIGH_PRIORITY = 1500;
 
 export default class CustomRenderer extends BaseRenderer {
 
+    static $inject = ['eventBus', 'bpmnRenderer'];
+
     constructor(eventBus, bpmnRenderer) {
         super(eventBus, HIGH_PRIORITY);
 
@@ -44,11 +46,11 @@ export default class CustomRenderer extends BaseRenderer {
 
         let matchesProcessOutputInterface = BPMNJsRepository.getSLPBExtension(element.businessObject, 'DataObjectExtension', (ext) => ext.matchesProcessOutputInterface), isProcessOutput = BPMNJsRepository.getSLPBExtension(element.businessObject, 'DataObjectExtension', (ext) => ext.isProcessOutput);
 
-        if(matchesProcessOutputInterface){
+        if (matchesProcessOutputInterface) {
             let transform = 'translate(-10, 0)';
             const rect = CustomRenderer.drawRect(parentNode, 20, 20, CustomRenderer.TASK_BORDER_RADIUS, '#e8e8e8');
             svgAttr(rect, { transform: transform });
-            if(isProcessOutput){
+            if (isProcessOutput) {
                 const checkmark = CustomRenderer.drawCheckmark(parentNode, '#4d7a25');
                 svgAttr(checkmark, { transform: transform });
             }
@@ -78,7 +80,7 @@ export default class CustomRenderer extends BaseRenderer {
         return rect;
     }
     static drawCheckmark(parentNode, strokeColor) {
-        
+
         const checkmark = svgCreate('path');
 
         svgAttr(checkmark, {

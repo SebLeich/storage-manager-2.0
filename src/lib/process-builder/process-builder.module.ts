@@ -14,7 +14,6 @@ import { IFunctionEffects } from './store/effects/i-function.effects';
 import * as fromIBpmnJSModelState from './store/reducers/i-bpmn-js-model.reducer';
 import { IBpmnJSModelEffects } from './store/effects/i-bpmn-js-model.effects';
 
-
 import * as fromIInterfaceState from './store/reducers/i-interface.reducer';
 import { IInterfaceEffects } from './store/effects/i-interface.effects';
 
@@ -55,6 +54,7 @@ import { loadIInterfaces } from './store/actions/i-interface.actions';
 import { InterfacePipe } from './pipes/interface.pipe';
 import { ParamMemberPreviewComponent } from './components/helpers/param-member-preview/param-member-preview.component';
 import { ParamMemberPathPreviewComponent } from './components/helpers/param-member-path-preview/param-member-path-preview.component';
+import { BpmnjsService } from './services/bpmnjs.service';
 
 
 @NgModule({
@@ -82,7 +82,7 @@ import { ParamMemberPathPreviewComponent } from './components/helpers/param-memb
     ParamMemberPathPreviewComponent
   ],
   imports: [
-    
+
     CodemirrorModule,
     CommonModule,
     FormsModule,
@@ -119,6 +119,7 @@ import { ParamMemberPathPreviewComponent } from './components/helpers/param-memb
     ValidationWarningPipe
   ],
   providers: [
+    BpmnjsService,
     ParamPipe,
     ProcessBuilderComponentService,
     { provide: fromIParamState.PARAM_STORE_TOKEN, useExisting: Store },
@@ -131,16 +132,17 @@ export class ProcessBuilderModule {
 
   constructor(
     injector: Injector,
-    private _iFunctionStore: Store<fromIFunctionState.State>,
-    private _iParamStore: Store<fromIParamState.State>,
-    private _iBpmnJSModelStore: Store<fromIBpmnJSModelState.State>,
-    private _iInterfaceStore: Store<fromIInterfaceState.State>
+    private _store: Store,
   ) {
-    this._iFunctionStore.dispatch(loadIFunctions());
-    this._iParamStore.dispatch(loadIParams());
-    this._iInterfaceStore.dispatch(loadIInterfaces());
+
+    this._store.dispatch(loadIFunctions());
+    this._store.dispatch(loadIParams());
+    this._store.dispatch(loadIInterfaces());
+
     provideLocalStorageSettings(injector);
     localStorageAdapter(injector);
+
+
   }
 
 }
