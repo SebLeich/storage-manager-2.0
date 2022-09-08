@@ -1,10 +1,13 @@
 {
   "name": "storage-manager",
-  "version": "0.0.0",
+  "version": "0.2.67",
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
+    "prebuild": "npm --no-git-tag-version version patch",
     "build": "ng build",
+    "prepublish-ghp": "npm --no-git-tag-version version patch",
+    "publish-ghp": "ng build --configuration=production --base-href='https://sebleich.github.io/storage-manager-2.0/' && npx angular-cli-ghpages --dir=dist/storage-manager",
     "watch": "ng build --watch --configuration development",
     "test": "ng test"
   },

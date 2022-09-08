@@ -73,6 +73,10 @@ import { IProductEffects } from './store/effects/i-product.effects';
 
 import * as fromISolutionState from './store/reducers/i-solution.reducers';
 import { ISolutionEffects } from './store/effects/i-solution.effects';
+import { LocalDataComponent } from './components/main/local-data/local-data.component';
+import { WidgetComponent } from './components/widget/widget.component';
+import { OrdersFormComponent } from './components/forms/orders-form/orders-form.component';
+import { GroupsFormComponent } from './components/forms/groups-form/groups-form.component';
 
 let rootStoreFeatures: any = {};
 rootStoreFeatures[fromICalculationAttributesState.calculationAttributesFeatureKey] = fromICalculationAttributesState.calculationAttributesReducer;
@@ -105,7 +109,11 @@ rootStoreFeatures[fromISolutionState.solutionFeatureKey] = fromISolutionState.so
     SolutionAnimationComponent,
     NoSolutionDialogComponent,
     SolutionValidationComponent,
-    SolutionValidationErrorPipe
+    SolutionValidationErrorPipe,
+    LocalDataComponent,
+    WidgetComponent,
+    OrdersFormComponent,
+    GroupsFormComponent
   ],
   imports: [
     BrowserModule,

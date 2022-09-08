@@ -1,0 +1,53 @@
+<div class="body main-component-body">
+
+    <div @show class="content" [formGroup]="formGroup">
+
+        <app-widget class="widget orders-widget" headline="orders">
+            <div class="headline-controls-wrapper">
+                <mat-icon class="primary" [matMenuTriggerFor]="selectOrderProductMenu" matTooltip="add order">add
+                </mat-icon>
+                <mat-icon class="danger" matTooltip="clear orders" (click)="clearOrders()">delete_outline</mat-icon>
+            </div>
+            <app-orders-form class="widget-content" formArrayName="orders"></app-orders-form>
+        </app-widget>
+
+        <app-widget class="widget groups-widget" headline="groups">
+            <div class="headline-controls-wrapper">
+                <mat-icon class="primary" (click)="addGroup()" matTooltip="add group">add
+                </mat-icon>
+                <mat-icon class="danger" matTooltip="clear groups" (click)="clearGroups()">delete_outline</mat-icon>
+            </div>
+            <app-groups-form class="widget-content" formArrayName="groups"></app-groups-form>
+        </app-widget>
+
+        <app-widget class="widget products-widget" headline="products">
+            <ng-container headlineControls>
+                <mat-icon class="icon">add</mat-icon>
+            </ng-container>
+        </app-widget>
+
+        <app-widget class="widget solutions-widget" headline="solutions">
+            <ng-container headlineControls>
+                <mat-icon class="icon">add</mat-icon>
+            </ng-container>
+        </app-widget>
+
+    </div>
+
+    <div class="footer">
+
+    </div>
+
+</div>
+
+<mat-menu #selectOrderProductMenu="matMenu">
+    <button mat-menu-item *ngFor="let product of (products$|async)" [matMenuTriggerFor]="selectOrderGroupMenu"
+        [matMenuTriggerData]="{ product: product }">{{product.description}}</button>
+</mat-menu>
+
+<mat-menu #selectOrderGroupMenu="matMenu">
+    <ng-template matMenuContent let-product="product">
+        <button mat-menu-item *ngFor="let group of (groups$|async)"
+            (click)="addOrder(product, group)">{{group.desc}}</button>
+    </ng-template>
+</mat-menu>

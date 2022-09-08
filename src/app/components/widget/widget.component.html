@@ -1,0 +1,14 @@
+<div class="body">
+
+    <div class="headline">
+        <div class="text">{{headline}}</div>
+        <div class="control-wrapper">
+            <ng-content select=".headline-controls-wrapper"></ng-content>
+        </div>
+    </div>
+
+    <div class="content">
+        <ng-content select=".widget-content" class="test-class"></ng-content>
+    </div>
+
+</div>

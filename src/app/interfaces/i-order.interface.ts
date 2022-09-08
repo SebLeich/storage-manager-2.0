@@ -3,12 +3,13 @@ import { ISpace } from "./i-space.interface";
 
 export interface IOrder extends ISpace, IEntity {
     id: string;
+    index: number;
     description: string | null;
-    quantity?: number;
+    quantity: number;
     length: number;
     width: number;
     height: number;
     turningAllowed: boolean;
     stackingAllowed: boolean;
-    group?: string;
+    group: string;
 }

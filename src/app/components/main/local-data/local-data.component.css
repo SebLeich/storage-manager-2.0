@@ -1,0 +1,49 @@
+.body {
+    display: flex;
+    flex-direction: column;
+}
+
+.content {
+    flex: 1;
+    margin: 1rem;
+    overflow-y: auto;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-column-gap: 0.5rem;
+    grid-row-gap: 0.5rem;
+}
+
+.footer {
+    min-height: 40px;
+    background-color: rgb(201 201 201);
+    display: flex;
+}
+
+.widget {
+    background-color: white;
+    height: 100%;
+    border-radius: 4px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    min-height: 300px;
+    box-shadow: 0px 3px 1px -2px rgb(0 0 0 / 20%), 0px 2px 2px 0px rgb(0 0 0 / 14%), 0px 1px 5px 0px rgb(0 0 0 / 12%);
+}
+
+.orders-widget {
+    grid-column: 1 / span 2;
+    min-height: 460px;
+}
+
+.solutions-widget {
+    grid-column: 2 / span 2;
+    min-height: 400px;
+}
+
+@media screen and (min-width: 900px) {
+
+    .content {
+        grid-template-columns: 1fr 1fr 1fr;
+    }
+
+}

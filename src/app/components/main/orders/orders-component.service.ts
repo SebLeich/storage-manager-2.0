@@ -10,7 +10,7 @@ import { v4 as generateGuid } from 'uuid';
 
 import { selectContainerHeight, selectContainerWidth, selectUnit } from "src/app/store/selectors/i-calculation-attribute.selectors";
 import { setContainerHeight, setContainerWidth, setUnit } from "src/app/store/actions/i-calculation-attribute.actions";
-import { addOrders, setOrders } from "src/app/store/actions/i-order.actions";
+import { setOrders } from "src/app/store/actions/i-order.actions";
 import { selectOrders } from "src/app/store/selectors/i-order.selectors";
 
 @Injectable()
@@ -28,8 +28,11 @@ export class OrdersComponentService {
         this._setUp();
     }
 
+    /**
+     * @deprecated
+     */
     addOrder() {
-        const order: IOrder = {
+        const order = {
             id: generateGuid(),
             description: null,
             quantity: 1,
@@ -38,7 +41,7 @@ export class OrdersComponentService {
             height: 0,
             stackingAllowed: false,
             turningAllowed: false
-        }
+        };
         this.ordersControl.push(this._formBuilder.group(order));
         this.ordersControl.markAsDirty();
     }

@@ -2,6 +2,7 @@
     display: flex;
     flex-direction: column;
     background-color: white;
+    transition: width 1s ease-in-out;
 }
 
 .headline {
@@ -11,13 +12,13 @@
 }
 
 .control-row {
-    display: flex;
+    display: none;
     padding: 0px 2rem;
     background-color: white;
     align-items: flex-start;
 }
 
-.control-row > .option {
+.control-row>.option {
     width: 60px;
     height: 60px;
     display: flex;
@@ -30,26 +31,26 @@
     margin-bottom: .3rem;
 }
 
-.control-row > .option.disabled {
+.control-row>.option.disabled {
     opacity: .5;
     cursor: not-allowed;
 }
 
-.control-row > .option.enabled {
+.control-row>.option.enabled {
     background-color: #dcffdd;
     color: white !important;
     box-shadow: 0 0 4px #848484;
 }
 
-.control-row > .option:hover {
+.control-row>.option:hover {
     background-color: #f1f1f1;
 }
 
-.control-row > .option > .icon {
+.control-row>.option>.icon {
     color: #3a3a3a;
 }
 
-.control-row > .option > .text {
+.control-row>.option>.text {
     font-size: .6rem;
     color: #464646;
     font-weight: 500;

@@ -1,17 +1,13 @@
 import { Injectable } from '@angular/core';
 import { selectSnapshot } from 'src/lib/process-builder/globals/select-snapshot';
 import { Dimension } from '../classes/dimension.class';
-import defaultSolution from 'src/assets/exampleSolution.json';
 import { Store } from '@ngrx/store';
 
 import * as fromISolutionState from 'src/app/store/reducers/i-solution.reducers';
 
-import { addSolution } from '../store/actions/i-solution.actions';
-import { ISolution } from '../interfaces/i-solution.interface';
 import { IContainer } from '../interfaces/i-container.interface';
 import { selectCurrentSolution } from '../store/selectors/i-solution.selectors';
 import { IGood } from '../interfaces/i-good.interface';
-import { IDimension } from '../interfaces/i-dimension.interface';
 import { IPosition } from '../interfaces/i-position';
 
 @Injectable({
@@ -37,11 +33,6 @@ export class DataService {
     document.body.appendChild(element);
     element.click();
     document.body.removeChild(element);
-  }
-
-  loadDefaultSolution(): ISolution {
-    this._solutionStore.dispatch(addSolution({ solution: defaultSolution }));
-    return { ...defaultSolution };
   }
 
   static getContainerDimension(container: IContainer): IPosition {

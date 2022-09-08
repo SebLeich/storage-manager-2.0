@@ -1,13 +1,10 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy } from '@angular/core';
 import { UntypedFormArray, UntypedFormGroup } from '@angular/forms';
 import { SortDirection } from '@angular/material/sort';
 import { Store } from '@ngrx/store';
 import { Subscription } from 'rxjs';
 import { CsvService } from 'src/app/services/csv.service';
-import { showAnimation } from 'src/lib/shared/animations/show';
 import { OrdersComponentService } from './orders-component.service';
-
-import * as fromIProductState from 'src/app/store/reducers/i-product.reducers';
 
 import { selectSnapshot } from 'src/lib/process-builder/globals/select-snapshot';
 import { selectProductByDescription } from 'src/app/store/selectors/i-product.selectors';
@@ -17,8 +14,7 @@ import { IOrder } from 'src/app/interfaces/i-order.interface';
   selector: 'app-orders',
   templateUrl: './orders.component.html',
   styleUrls: ['./orders.component.css'],
-  providers: [OrdersComponentService],
-  animations: [showAnimation]
+  providers: [OrdersComponentService]
 })
 export class OrdersComponent implements OnDestroy {
 
@@ -32,7 +28,7 @@ export class OrdersComponent implements OnDestroy {
   constructor(
     public csvService: CsvService,
     public ordersComponentService: OrdersComponentService,
-    private _productStore: Store<fromIProductState.State>
+    private _store: Store
   ) { }
 
   public ngOnDestroy(): void {
@@ -47,7 +43,7 @@ export class OrdersComponent implements OnDestroy {
   }
 
   async setOrderProduct(productDescription: string, formGroup: UntypedFormGroup) {
-    const product = await selectSnapshot(this._productStore.select(selectProductByDescription(productDescription)));
+    const product = await selectSnapshot(this._store.select(selectProductByDescription(productDescription)));
     if (!product) {
       return;
     }
@@ -61,7 +57,7 @@ export class OrdersComponent implements OnDestroy {
   async updateProductDimension(value: number, productDescription: string, dimension: 'length' | 'width' | 'height') {
     if (productDescription == null || typeof value !== 'number') return;
 
-    const product = await selectSnapshot(this._productStore.select(selectProductByDescription(productDescription)));
+    const product = await selectSnapshot(this._store.select(selectProductByDescription(productDescription)));
     if (!product) {
       return;
     }

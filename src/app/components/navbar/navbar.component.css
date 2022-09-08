@@ -62,6 +62,14 @@
     font-weight: 100;
 }
 
+.version {
+    font-size: .6rem;
+    line-height: .6rem;
+    margin-bottom: 0.5rem;
+    color: #c6c6c6;
+    text-align: center;
+}
+
 @media screen and (max-height: 500px) {
 
     .option {
@@ -69,6 +77,9 @@
         height: 40px;
     }
 
+    .version {
+        width: 40px;
+    }
 
     .option .icon {
         font-size: 1rem;

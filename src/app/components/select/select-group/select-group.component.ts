@@ -8,6 +8,7 @@ import { addGroup } from 'src/app/store/actions/i-group.actions';
 
 import * as fromIGroupState from 'src/app/store/reducers/i-group.reducers';
 import { selectGroups } from 'src/app/store/selectors/i-group.selectors';
+import calculateRandomColorSharedMethod from 'src/app/methods/calculate-random-color.shared-method';
 
 @Component({
   selector: 'app-select-group',
@@ -40,7 +41,7 @@ export class SelectGroupComponent implements ControlValueAccessor, OnDestroy, On
       group: {
         id: generateGuid(),
         desc: (event.target as HTMLInputElement).value
-      }
+      } as any
     }));
     (event.target as HTMLInputElement).value = '';
   }

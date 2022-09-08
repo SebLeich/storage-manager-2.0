@@ -107,7 +107,7 @@ export const solutionReducer = createReducer(
 
   on(setDefaultSolution, () => {
     let entities: { [key: string]: ISolution } = {};
-    entities[defaultSolution.id] = defaultSolution;
+    entities[defaultSolution.id] = defaultSolution as any;
     return {
       entities: entities,
       ids: [defaultSolution.id],

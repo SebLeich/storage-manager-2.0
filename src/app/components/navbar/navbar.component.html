@@ -20,10 +20,10 @@
    </div>
    
    <div class="option-wrapper">
-      <div class="option" routerLink="orders" [class.active]="router.url === '/orders'">
+      <div class="option" routerLink="local-data" [class.active]="router.url === '/local-data'">
 
          <mat-icon class="icon">web_stories</mat-icon>
-         <div class="text">orders</div>
+         <div class="text">local data</div>
    
       </div>
    </div>
@@ -55,6 +55,10 @@
          <div class="text">about</div>
    
       </div>
+   </div>
+
+   <div class="version">
+      version {{currentApplicationVersion}}
    </div>
 
 </div>

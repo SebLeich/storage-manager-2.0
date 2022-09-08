@@ -1,0 +1,107 @@
+<ng-container *ngIf="ordersControl.value.length > 0; else noOrders">
+
+    <table mat-table class="smgr-table unsparing striped"
+        [dataSource]="ordersControl.controls | sortedFormArray: active:direction:ordersControl.value.length">
+
+        <ng-container matColumnDef="order">
+            <th mat-header-cell *matHeaderCellDef>Ord.-No.</th>
+            <td mat-cell *matCellDef="let element" [formGroup]="element.value">
+                <input autocomplete="off" formControlName="id" matInput #ref type="number" />
+            </td>
+            <td mat-footer-cell *matFooterCellDef class="footer-cell">
+                {{ ordersControl.value.length }} orders
+            </td>
+        </ng-container>
+
+        <ng-container matColumnDef="group">
+            <th mat-header-cell *matHeaderCellDef>group / target</th>
+            <td mat-cell *matCellDef="let element" [formGroup]="element.value">
+                <app-select-group formControlName="group"></app-select-group>
+            </td>
+            <td mat-footer-cell *matFooterCellDef class="footer-cell"></td>
+        </ng-container>
+
+        <ng-container matColumnDef="description">
+            <th mat-header-cell *matHeaderCellDef>name</th>
+            <td mat-cell *matCellDef="let element">
+                <app-select-product [ngModel]="element.value.controls['description'].value"
+                    (ngModelChange)="setOrderProduct($event, element.value)"></app-select-product>
+            </td>
+            <td mat-footer-cell *matFooterCellDef class="footer-cell"></td>
+        </ng-container>
+
+        <ng-container matColumnDef="quantity">
+            <th mat-header-cell *matHeaderCellDef>count</th>
+            <td mat-cell *matCellDef="let element" [formGroup]="element.value">
+                <input autocomplete="off" formControlName="quantity" matInput #ref type="number" />
+            </td>
+            <td mat-footer-cell *matFooterCellDef class="footer-cell"></td>
+        </ng-container>
+
+        <ng-container matColumnDef="length">
+            <th mat-header-cell *matHeaderCellDef>length</th>
+            <td mat-cell *matCellDef="let element" [formGroup]="element.value">
+                <input autocomplete="off" formControlName="length" matInput #ref type="number" />
+            </td>
+            <td mat-footer-cell *matFooterCellDef class="footer-cell"></td>
+        </ng-container>
+
+        <ng-container matColumnDef="width">
+            <th mat-header-cell *matHeaderCellDef>width</th>
+            <td mat-cell *matCellDef="let element" [formGroup]="element.value">
+                <input autocomplete="off" formControlName="width" matInput #ref type="number" />
+            </td>
+            <td mat-footer-cell *matFooterCellDef class="footer-cell"></td>
+        </ng-container>
+
+        <ng-container matColumnDef="height">
+            <th mat-header-cell *matHeaderCellDef>height</th>
+            <td mat-cell *matCellDef="let element" [formGroup]="element.value">
+                <input autocomplete="off" formControlName="height" matInput #ref type="number" />
+            </td>
+            <td mat-footer-cell *matFooterCellDef class="footer-cell"></td>
+        </ng-container>
+
+        <ng-container matColumnDef="turningAllowed">
+            <th mat-header-cell *matHeaderCellDef>turnable</th>
+            <td mat-cell *matCellDef="let element" [formGroup]="element.value">
+                <mat-checkbox formControlName="turningAllowed"></mat-checkbox>
+            </td>
+            <td mat-footer-cell *matFooterCellDef class="footer-cell"></td>
+        </ng-container>
+
+        <ng-container matColumnDef="stackingAllowed">
+            <th mat-header-cell *matHeaderCellDef>stackable</th>
+            <td mat-cell *matCellDef="let element" [formGroup]="element.value">
+                <mat-checkbox formControlName="stackingAllowed"></mat-checkbox>
+            </td>
+            <td mat-footer-cell *matFooterCellDef class="footer-cell"></td>
+        </ng-container>
+
+        <ng-container matColumnDef="controls">
+            <th mat-header-cell *matHeaderCellDef></th>
+            <td mat-cell *matCellDef="let element">
+                <button color="warn" mat-icon-button (click)="removeOrder(element.key)">
+                    <mat-icon>delete_forever</mat-icon>
+                </button>
+            </td>
+            <td mat-footer-cell *matFooterCellDef class="footer-cell"></td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="columns; sticky: true"></tr>
+        <tr mat-row *matRowDef="let row; let i = index; columns: columns" class="smgr-table-body-row"></tr>
+        <tr mat-footer-row *matFooterRowDef="columns; sticky: true"></tr>
+
+    </table>
+
+</ng-container>
+
+<ng-template #noOrders>
+
+    <div class="no-orders-wrapper">
+
+        no orders to display
+
+    </div>
+
+</ng-template>

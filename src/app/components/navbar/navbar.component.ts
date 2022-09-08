@@ -5,6 +5,7 @@ import { BehaviorSubject, map } from 'rxjs';
 
 import * as fromISolutionState from 'src/app/store/reducers/i-solution.reducers';
 import { selectSolutions } from 'src/app/store/selectors/i-solution.selectors';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-navbar',
@@ -12,6 +13,8 @@ import { selectSolutions } from 'src/app/store/selectors/i-solution.selectors';
   styleUrls: ['./navbar.component.css']
 })
 export class NavbarComponent implements OnInit {
+
+  currentApplicationVersion = environment.appVersion;
 
   solutionCount$ = this._solutionStore.select(selectSolutions).pipe(map(solutions => solutions?.length ?? 0));
 

@@ -1,7 +1,7 @@
 
 export interface IGroup {
-    color?: string;
+    color: string | null;
     id: string;
-    desc?: string;
-    sequenceNumber?: number;
+    desc: string | null;
+    sequenceNumber: number;
 }

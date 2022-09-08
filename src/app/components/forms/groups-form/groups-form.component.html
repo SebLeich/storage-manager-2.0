@@ -1,0 +1,58 @@
+<ng-container *ngIf="groupsControl.value.length > 0; else noGroups">
+
+    <table mat-table class="smgr-table unsparing striped"
+        [dataSource]="groupsControl.controls | sortedFormArray: active:direction:groupsControl.value.length">
+
+        <ng-container matColumnDef="sequenceNumber">
+            <th mat-header-cell *matHeaderCellDef>seq.-nr.</th>
+            <td mat-cell *matCellDef="let element" [formGroup]="element.value">
+                <input autocomplete="off" formControlName="sequenceNumber" matInput #ref type="number" />
+            </td>
+            <td mat-footer-cell *matFooterCellDef class="footer-cell">
+                {{ groupsControl.value.length }} orders
+            </td>
+        </ng-container>
+
+        <ng-container matColumnDef="desc">
+            <th mat-header-cell *matHeaderCellDef>name</th>
+            <td mat-cell *matCellDef="let element" [formGroup]="element.value">
+                <input autocomplete="off" formControlName="desc" matInput #ref type="text" placeholder="group name" />
+            </td>
+            <td mat-footer-cell *matFooterCellDef class="footer-cell"></td>
+        </ng-container>
+
+        <ng-container matColumnDef="color">
+            <th mat-header-cell *matHeaderCellDef>color</th>
+            <td mat-cell *matCellDef="let element" [formGroup]="element.value">
+                <input autocomplete="off" formControlName="color" matInput #ref type="color" />
+            </td>
+            <td mat-footer-cell *matFooterCellDef class="footer-cell"></td>
+        </ng-container>
+
+        <ng-container matColumnDef="controls">
+            <th mat-header-cell *matHeaderCellDef></th>
+            <td mat-cell *matCellDef="let element">
+                <button color="warn" mat-icon-button (click)="removeGroup(element.key)">
+                    <mat-icon>delete_forever</mat-icon>
+                </button>
+            </td>
+            <td mat-footer-cell *matFooterCellDef class="footer-cell"></td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="columns; sticky: true"></tr>
+        <tr mat-row *matRowDef="let row; let i = index; columns: columns" class="smgr-table-body-row"></tr>
+        <tr mat-footer-row *matFooterRowDef="columns; sticky: true"></tr>
+
+    </table>
+
+</ng-container>
+
+<ng-template #noGroups>
+
+    <div class="no-groups-wrapper">
+
+        no groups to display
+
+    </div>
+
+</ng-template>

@@ -34,7 +34,7 @@ export class NoSolutionDialogComponent implements OnInit {
 
   gotoOrders() {
     this._ref.close();
-    this._router.navigate(['/orders']);
+    this._router.navigate(['/local-data']);
   }
 
   gotoPipelineDesigner() {

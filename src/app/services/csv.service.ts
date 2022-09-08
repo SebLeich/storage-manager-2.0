@@ -4,6 +4,8 @@ import * as moment from 'moment';
 import { Observable, Subject } from 'rxjs';
 import { nameOf } from '../globals';
 
+import { v4 as generateGuid } from 'uuid';
+
 import * as fromICalculationAttributesState from 'src/app/store/reducers/i-calculation-attribute.reducers';
 import * as fromIGroupState from 'src/app/store/reducers/i-group.reducers';
 import * as fromIOrderState from 'src/app/store/reducers/i-order.reducers';
@@ -124,7 +126,8 @@ export class CsvService {
           if (groups.findIndex(x => x.id === converted) === -1) {
 
             groups.push({
-              id: converted,
+              id: generateGuid(),
+              sequenceNumber: converted,
               color: calculateRandomColorSharedMethod(),
               desc: row.split(',')[rows[2].split(',').indexOf('GroupName')] ?? 'unnamed group'
             });
@@ -219,9 +222,10 @@ export class CsvService {
             if (groups.findIndex(x => x.id === converted) === -1) {
 
               groups.push({
-                id: converted,
+                id: generateGuid(),
                 color: '#ffffff',
-                desc: row.split(',')[rows[2].split(',').indexOf('GroupName')]
+                desc: row.split(',')[rows[2].split(',').indexOf('GroupName')],
+                sequenceNumber: converted
               });
             }
           }
