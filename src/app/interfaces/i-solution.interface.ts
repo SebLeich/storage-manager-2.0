@@ -10,7 +10,7 @@ export interface ISolution extends IEntity {
     algorithm?: string;
     groups?: IGroup[];
     steps?: IStep[];
-    calculated?: string;
+    calculated: string;
     description?: string | null;
     calculationSource?: { staticAlgorithm?: Algorithm };
 }

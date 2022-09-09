@@ -16,6 +16,7 @@ import {
   updateCurrentSolutionGroupColor,
   clearSolutions,
   updateAlgorithmSolution,
+  updateSolution,
 } from '../actions/i-solution.actions';
 import { v4 as generateGuid } from 'uuid';
 import * as moment from 'moment';
@@ -54,7 +55,8 @@ export const solutionReducer = createReducer(
     return adapter.addOne(
       {
         ...solution,
-        id: solution.id ?? generateGuid()
+        id: solution.id ?? generateGuid(),
+        calculated: solution.calculated ?? moment().format()
       },
       state
     );
@@ -164,6 +166,17 @@ export const solutionReducer = createReducer(
     }
     return state;
   }),
+
+  on(updateSolution, (currentState, { solution }) => {
+    const update = {
+      id: solution.id,
+      changes: {
+        description: solution.description,
+        calculationSource: solution.calculationSource
+      }
+    } as Update<ISolution>;
+    return adapter.updateOne(update, currentState);
+  })
 );
 
 export const metaReducers: MetaReducer<State>[] = !environment.production

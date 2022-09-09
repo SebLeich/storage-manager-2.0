@@ -31,7 +31,6 @@ import { NgChartsModule } from 'ng2-charts';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { GoodsPanelComponent } from './components/goods-panel/goods-panel.component';
 import { GroupsPanelComponent } from './components/groups-panel/groups-panel.component';
-import { OrdersComponent } from './components/main/orders/orders.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { SortedFormArrayPipe } from './pipes/sorted-form-array.pipe';
 import { MatSortModule } from '@angular/material/sort';
@@ -78,6 +77,8 @@ import { WidgetComponent } from './components/widget/widget.component';
 import { OrdersFormComponent } from './components/forms/orders-form/orders-form.component';
 import { GroupsFormComponent } from './components/forms/groups-form/groups-form.component';
 import { ProductFormComponent } from './components/forms/products-form/products-form.component';
+import { CalculationContextOverviewComponent } from './components/calculation-context-overview/calculation-context-overview.component';
+import { MatFormFieldModule } from '@angular/material/form-field';
 
 let rootStoreFeatures: any = {};
 rootStoreFeatures[fromICalculationAttributesState.calculationAttributesFeatureKey] = fromICalculationAttributesState.calculationAttributesReducer;
@@ -99,7 +100,6 @@ rootStoreFeatures[fromISolutionState.solutionFeatureKey] = fromISolutionState.so
     ContainerPreviewComponent,
     GoodsPanelComponent,
     GroupsPanelComponent,
-    OrdersComponent,
     SortedFormArrayPipe,
     SelectGroupComponent,
     SelectProductComponent,
@@ -115,7 +115,8 @@ rootStoreFeatures[fromISolutionState.solutionFeatureKey] = fromISolutionState.so
     WidgetComponent,
     OrdersFormComponent,
     GroupsFormComponent,
-    ProductFormComponent
+    ProductFormComponent,
+    CalculationContextOverviewComponent
   ],
   imports: [
     BrowserModule,
@@ -126,6 +127,7 @@ rootStoreFeatures[fromISolutionState.solutionFeatureKey] = fromISolutionState.so
     MatTableModule,
     MatButtonModule,
     MatDialogModule,
+    MatInputModule,
     MatMenuModule,
     MatTooltipModule,
     MatToolbarModule,
@@ -134,6 +136,7 @@ rootStoreFeatures[fromISolutionState.solutionFeatureKey] = fromISolutionState.so
     FormsModule,
     ReactiveFormsModule,
     MatSortModule,
+    MatFormFieldModule,
     MatInputModule,
     MatCheckboxModule,
     MatSelectModule,

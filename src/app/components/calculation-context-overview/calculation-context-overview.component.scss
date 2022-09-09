@@ -1,0 +1,126 @@
+@import 'src/lib/sass/gradients';
+
+.body {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    width: 100%;
+}
+
+.general-data-row {
+    display: flex;
+    align-items: flex-start;
+    padding: .5rem 0px 0px .5rem;
+}
+
+.general-data-row > * {
+    margin-right: 1rem;
+}
+
+.general-data-row > mat-form-field {
+    max-width: 120px;
+}
+
+.content {
+    flex: 1;
+    overflow-y: auto;
+}
+
+.no-solutions-hint {
+    height: 100%;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: gray;
+    font-weight: 100;
+}
+
+.solution-preview {
+    padding: 0.75rem 1rem;
+}
+
+.solution-preview:not(:last-child) {
+    border-bottom: 2px solid #d7d7d7;
+}
+
+.solution-preview:nth-child(even) {
+    background-color: rgb(248, 248, 248);
+}
+
+.solution-preview .headline {
+    font-size: 1.2rem;
+    line-height: 1.5rem;
+    display: flex;
+}
+
+.solution-preview .button {
+    cursor: pointer;
+    font-size: 1.2rem;
+    line-height: 1.2rem;
+    height: 2rem;
+    width: 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 35%;
+    margin-right: 0.3rem;
+    box-shadow: 0 0 4px #9d9d9d;
+    opacity: 0.8;
+}
+
+.solution-preview .button.danger {
+    @include gradient-red;
+    color: white;
+}
+
+.solution-preview .button.primary {
+    @include gradient-darkblue;
+    color: white;
+}
+
+.solution-preview .remover:hover {
+    opacity: 1;
+    animation: opacity .2s ease-in-out;
+}
+
+.solution-preview .headline .text {
+    flex: 1;
+}
+
+.solution-preview .headline input {
+    font-size: 1.2rem;
+    line-height: 1.5rem;
+    border: none;
+    outline: none;
+    padding: 0px;
+    background-color: transparent;
+}
+
+.solution-preview .sub-title {
+    font-weight: 100;
+    font-size: .8rem;
+    line-height: .8rem;
+    color: #363636;
+}
+
+.solution-data {
+    display: flex;
+}
+
+.solution-data .data {
+    width: 100px;
+    margin-right: 0.2rem;
+    background-color: #eaeaea;
+    border-radius: 3px;
+    color: #303030;
+    padding: 0.25rem 0.3rem;
+    font-size: 0.7rem;
+    text-align: center;
+    margin-top: 0.4rem;
+    line-height: .8rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+

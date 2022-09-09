@@ -12,7 +12,8 @@ export const solutionActions = {
   SetCurrentSolution: '[Solution] Set Current Solution',
   SetNextSolution: '[Solution] Set Next Solution',
   UpdateAlgorithmSolution: '[Solution] Update Algorithm Solution',
-  UpdateCurrentSolutionGroupColor: '[Solution] Update Current Solution Group Color'
+  UpdateCurrentSolutionGroupColor: '[Solution] Update Current Solution Group Color',
+  UpdateSolution: '[Solution] Update Solution'
 }
 
 export const addSolution = createAction(
@@ -64,4 +65,9 @@ export const updateAlgorithmSolution = createAction(
 export const updateCurrentSolutionGroupColor = createAction(
   solutionActions.UpdateCurrentSolutionGroupColor,
   props<{ group: IGroup; color: string }>()
+)
+
+export const updateSolution = createAction(
+  solutionActions.UpdateSolution,
+  props<{ solution: ISolution }>()
 )

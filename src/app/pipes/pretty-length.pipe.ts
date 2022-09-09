@@ -13,12 +13,14 @@ export class PrettyLengthPipe implements PipeTransform {
 
   constructor(private _calculationAttributesStore: Store<fromICalculationAttributesState.State>) { }
 
-  async transform(value: number | null | undefined, decimalDigits: number = 2, hideDecimalDigitsWhenZero: boolean = false): Promise<string> {
+  async transform(value: number | null | undefined, decimalDigits: number = 2, hideDecimalDigitsWhenZero: boolean = false, unit?: string): Promise<string> {
     if (!value) {
       return 'no entries';
     }
     let converted = value;
-    let unit = await selectSnapshot(this._calculationAttributesStore.select(selectUnit));
+    if(!unit){
+      unit = await selectSnapshot(this._calculationAttributesStore.select(selectUnit));
+    }
     let index = nextUnitSize.findIndex(x => x.unit === unit);
     while (converted >= (nextUnitSize[index!]?.threshold ?? Infinity)) {
       converted = converted / (nextUnitSize[index!]?.next ?? 1);

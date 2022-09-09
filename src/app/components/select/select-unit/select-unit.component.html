@@ -1,12 +1,8 @@
-<div class="body">
+<mat-label class="label">unit</mat-label>
+<mat-select [formControl]="valueControl">
 
-    <mat-label class="label">unit</mat-label>
-    <mat-select [formControl]="valueControl">
+    <mat-option *ngFor="let unit of units" [value]="unit">
+        {{unit}}
+    </mat-option>
 
-        <mat-option *ngFor="let unit of units" [value]="unit">
-            {{unit}}
-        </mat-option>
-
-    </mat-select>
-
-</div>
+</mat-select>

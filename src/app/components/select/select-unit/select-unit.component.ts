@@ -17,13 +17,12 @@ import { nextUnitSize } from 'src/app/globals';
 })
 export class SelectUnitComponent implements ControlValueAccessor, OnDestroy {
 
-  valueControl: UntypedFormControl = new UntypedFormControl();
-
-  units = nextUnitSize.map(x => x.unit);
-
+  public valueControl: UntypedFormControl = new UntypedFormControl();
+  public units = nextUnitSize.map(x => x.unit);
+  
   private _subscriptions = new Subscription();
 
-  ngOnDestroy = () => this._subscriptions.unsubscribe();
+  public ngOnDestroy = () => this._subscriptions.unsubscribe();
 
   public onTouched: () => void = () => { };
   registerOnTouched = (fn: any) => this.onTouched = fn;

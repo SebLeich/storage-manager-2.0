@@ -1,0 +1,59 @@
+<div class="body">
+
+    <div class="general-data-row" [formGroup]="formGroup">
+
+        <mat-form-field>
+            <mat-label>container height</mat-label>
+            <input type="text" matInput formControlName="containerHeight" />
+            <span matSuffix>{{formGroup.controls['unit'].value}}</span>
+        </mat-form-field>
+
+        <mat-form-field>
+            <mat-label>container width</mat-label>
+            <input type="text" matInput formControlName="containerWidth" />
+            <span matSuffix>{{formGroup.controls['unit'].value}}</span>
+        </mat-form-field>
+
+        <app-select-unit formControlName="unit"></app-select-unit>
+
+    </div>
+
+    <div class="content">
+
+        <ng-container *ngIf="(solutionsAvailable$|async); else noSolutions">
+
+            <div *ngFor="let solution of solutions$|async" class="solution-preview">
+
+                <div class="headline">
+                    <div class="text">
+                        <input type="text" [value]="solution.description" (blur)="updateSolutionDescription(solution, input.value)" #input />
+                    </div>
+                    <mat-icon class="button primary" matTooltip="visualize" (click)="visualizeSolution(solution)">view_in_ar</mat-icon>
+                    <mat-icon class="button danger" matTooltip="remove" (click)="removeSolution(solution)">delete_outline</mat-icon>
+                </div>
+                <div class="sub-title">
+                    calculated using {{solution.algorithm}} algorithm
+                </div>
+
+                <div class="solution-data">
+                    <div class="data">length {{solution.container!.length | prettyLength:3:true:formGroup.controls['unit'].value | async}}</div>
+                    <div class="data">calculated {{solution.calculated|date:'dd.MM.yy HH:mm'}}</div>
+                </div>
+
+            </div>
+
+        </ng-container>
+
+    </div>
+
+</div>
+
+<ng-template #noSolutions>
+
+    <div class="no-solutions-hint">
+
+        no solutions available
+
+    </div>
+
+</ng-template>

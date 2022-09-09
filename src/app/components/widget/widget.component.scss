@@ -43,17 +43,17 @@
 
 :host ::ng-deep .headline-controls-wrapper>* {
     cursor: pointer;
-    font-size: 1.5rem;
-    line-height: 1.5rem;
+    font-size: 1.2rem;
+    line-height: 1.2rem;
     height: 2rem;
     width: 2rem;
     display: flex;
     align-items: center;
     justify-content: center;
-    border-radius: 42%;
+    border-radius: 35%;
     margin-right: 0.3rem;
     box-shadow: 0 0 4px #9d9d9d;
-    opacity: .8;
+    opacity: 0.8;
 }
 
 :host ::ng-deep .headline-controls-wrapper>*:hover {

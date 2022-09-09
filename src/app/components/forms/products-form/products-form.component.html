@@ -8,7 +8,9 @@
             <td mat-cell *matCellDef="let element" [formGroup]="element.value">
                 <input autocomplete="off" formControlName="description" matInput #ref type="text" placeholder="product name" />
             </td>
-            <td mat-footer-cell *matFooterCellDef class="footer-cell"></td>
+            <td mat-footer-cell *matFooterCellDef class="footer-cell">
+                {{productsControl.value.length}} products
+            </td>
         </ng-container>
 
         <ng-container matColumnDef="length">

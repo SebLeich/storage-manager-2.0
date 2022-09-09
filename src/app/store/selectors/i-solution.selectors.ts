@@ -50,7 +50,7 @@ export const selectSolutionByAlgorithm = (arg: string | null | (() => string | n
 
 export const selectSolutions = createSelector(
   solutionsState,
-  (state: State) => Object.values(state.entities ?? {}) as ISolution[]
+  (state: State) => (Object.values(state.entities) as ISolution[]).sort((solutionA, solutionB) => solutionA.calculated > solutionB.calculated ? 1 : -1)
 );
 
 export const selectHasMultipleSolutions = createSelector(
