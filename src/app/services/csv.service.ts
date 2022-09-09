@@ -1,25 +1,13 @@
-import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import * as moment from 'moment';
-import { Observable, Subject } from 'rxjs';
 import { nameOf } from '../globals';
 
 import { v4 as generateGuid } from 'uuid';
-
-import * as fromICalculationAttributesState from 'src/app/store/reducers/i-calculation-attribute.reducers';
-import * as fromIGroupState from 'src/app/store/reducers/i-group.reducers';
-import * as fromIOrderState from 'src/app/store/reducers/i-order.reducers';
-import * as fromIProductState from 'src/app/store/reducers/i-product.reducers';
 
 import { IOrder } from '../interfaces/i-order.interface';
 import { Store } from '@ngrx/store';
 import { selectOrders } from '../store/selectors/i-order.selectors';
 import { IGroup } from '../interfaces/i-group.interface';
-import { addProducts } from '../store/actions/i-product.actions';
-import { addOrders } from '../store/actions/i-order.actions';
-import { addGroups } from '../store/actions/i-group.actions';
 import { selectCalculationAttributesValid, selectContainerHeight, selectContainerWidth, selectUnit } from '../store/selectors/i-calculation-attribute.selectors';
-import { setContainerHeight, setContainerWidth, setUnit } from '../store/actions/i-calculation-attribute.actions';
 import { selectGroups } from '../store/selectors/i-group.selectors';
 import { IProduct } from '../interfaces/i-product.interface';
 import { selectSnapshot } from 'src/lib/process-builder/globals/select-snapshot';
@@ -32,8 +20,8 @@ import calculateRandomColorSharedMethod from '../methods/calculate-random-color.
 export class CsvService {
 
   headers = ['Order', 'Description', 'Quantity', 'Length', 'Width', 'Height', 'TurningAllowed', 'StackingAllowed', 'Group', 'GroupName'];
-  headerOrderMap = {
-    'Order': nameOf<IOrder>('id'),
+  headerOrderMap: { [key: string]: any } = {
+    'Order': nameOf<IOrder>('index'),
     'Description': nameOf<IOrder>('description'),
     'Quantity': nameOf<IOrder>('quantity'),
     'Length': nameOf<IOrder>('length'),
@@ -45,45 +33,19 @@ export class CsvService {
     'GroupName': (order: IOrder, groups: IGroup[]) => groups.find(group => group.id === order.group)?.desc
   };
 
-  constructor(
-    private _httpClient: HttpClient,
-    private _calculationAttributesStore: Store<fromICalculationAttributesState.State>,
-    private _groupStore: Store<fromIGroupState.State>,
-    private _orderStore: Store<fromIOrderState.State>,
-    private _productStore: Store<fromIProductState.State>
-  ) { }
-
-  /**
-   * @deprecated
-   */
-  async downloadOrderCollectionToCSV() {
-
-    const csv = await this.createCSVFromCurrentState();
-    if (!csv) {
-      return;
-    }
-
-    var element = document.createElement('a');
-    element.setAttribute('href', `data:text/csv;charset=UTF-8,${encodeURIComponent(csv)}`);
-    element.setAttribute('download', `orders_${moment().format('YYYY_MM_DD_HH_mm')}.csv`);
-    element.style.display = 'none';
-    document.body.appendChild(element);
-    element.click();
-    document.body.removeChild(element);
-
-  }
+  constructor(private _store: Store) { }
 
   public async createCSVFromCurrentState() {
-    const calculationAttributesValid = await selectSnapshot(this._calculationAttributesStore.select(selectCalculationAttributesValid));
+    const calculationAttributesValid = await selectSnapshot(this._store.select(selectCalculationAttributesValid));
     if (!calculationAttributesValid) {
       return;
     }
 
-    const containerHeight = await selectSnapshot(this._calculationAttributesStore.select(selectContainerHeight));
-    const containerWidth = await this._calculationAttributesStore.select(selectContainerWidth);
-    const unit = await this._calculationAttributesStore.select(selectUnit);
-    const orders = await this._orderStore.select(selectOrders);
-    const groups = await this._groupStore.select(selectGroups);
+    const containerHeight = await selectSnapshot(this._store.select(selectContainerHeight));
+    const containerWidth = await this._store.select(selectContainerWidth);
+    const unit = await this._store.select(selectUnit);
+    const orders = await this._store.select(selectOrders);
+    const groups = await this._store.select(selectGroups);
 
     const colCount = this.headers.length;
     const csv: string[] = ['', '', this.headers.join(',')];
@@ -105,7 +67,7 @@ export class CsvService {
   }
 
   public extractCSVEntities(csvString: string): ICalculationAttributesVariables {
-    let rows = csvString.split('\n');
+    let rows = csvString.split('\n').map(row => row.replace(/\r$/, ''));
     let containerRow = rows[1].split(',');
 
     const containerWidth = parseFloat(containerRow[0]),
@@ -120,22 +82,26 @@ export class CsvService {
       let order: IOrder = {} as IOrder;
       properties.filter(x => typeof x === 'string').forEach((property: string, index: number) => {
         let converted: any = row.split(',')[index];
-        if ([nameOf<IOrder>('height'), nameOf<IOrder>('width'), nameOf<IOrder>('length'), nameOf<IOrder>('id'), nameOf<IOrder>('quantity')].indexOf(property) > -1) converted = parseFloat(converted);
+        if ([nameOf<IOrder>('height'), nameOf<IOrder>('width'), nameOf<IOrder>('length'), nameOf<IOrder>('index'), nameOf<IOrder>('quantity')].indexOf(property) > -1) converted = parseFloat(converted);
         else if (nameOf<IOrder>('group') === property) {
           converted = parseInt(converted);
-          if (groups.findIndex(x => x.id === converted) === -1) {
-
+          if (groups.findIndex(group => group.sequenceNumber === converted) === -1) {
+            const tableHeaders = rows[2].split(',');
+            const indexOfGroupName = tableHeaders.indexOf('GroupName');
             groups.push({
               id: generateGuid(),
               sequenceNumber: converted,
               color: calculateRandomColorSharedMethod(),
-              desc: row.split(',')[rows[2].split(',').indexOf('GroupName')] ?? 'unnamed group'
+              desc: row.split(',')[indexOfGroupName] ?? 'unnamed group'
             });
           }
+          order.group = groups.find(group => group.sequenceNumber === converted)!.id;
+          converted = undefined;
         }
         else if ([nameOf<IOrder>('stackingAllowed'), nameOf<IOrder>('turningAllowed')].indexOf(property) > -1) converted = converted === 'true';
-        (order as any)[property] = converted;
+        if(typeof converted !== 'undefined') (order as any)[property] = converted;
       });
+      order.id = generateGuid();
       orders.push(order);
     }
 
@@ -154,103 +120,6 @@ export class CsvService {
       })),
       orders: orders,
       unit: unit
-    }
-  }
-
-  /**
-   * @deprecated
-   */
-  uploadCSVToOrderCollection(event: Event) {
-    let files: FileList = (event.target as HTMLInputElement).files!;
-    if (files.length === 0) return;
-    this._fileToString(files[0]).subscribe((result: string) => this._importCSVToOrderCollection(result));
-  }
-  /**
-   * @deprecated
-   */
-  uploadDefaultOrders(): Observable<string> {
-    let subject = new Subject<string>();
-    this._httpClient.get('./assets/exemplaryInputData.csv', {
-      responseType: 'text'
-    }).subscribe(
-      (csv: string) => {
-        this._importCSVToOrderCollection(csv);
-        subject.next(csv);
-        subject.complete();
-      },
-      (error) => subject.error(error)
-    );
-    return subject.asObservable();
-  }
-
-  private _fileToString(file: File): Observable<string> {
-    let subject = new Subject<string>();
-    var reader = new FileReader();
-    reader.onload = () => {
-      subject.next(reader.result as string);
-      subject.complete();
-    }
-    reader.readAsText(file);
-    return subject.asObservable();
-  }
-
-  /**
-   * @deprecated
-   * @param csvString 
-   */
-  private _importCSVToOrderCollection(csvString: string) {
-    try {
-      let rows = csvString.split('\n');
-      let containerRow = rows[1].split(',');
-
-      const containerWidth = parseFloat(containerRow[0]), containerHeight = parseFloat(containerRow[1]), unit = containerRow[2] as any ?? 'mm';
-      this._calculationAttributesStore.dispatch(setContainerWidth({ width: containerWidth }));
-      this._calculationAttributesStore.dispatch(setContainerHeight({ height: containerHeight }));
-      this._calculationAttributesStore.dispatch(setUnit({ unit: unit }));
-
-      let properties = [];
-      for (let column of rows[2].split(',')) properties.push((this.headerOrderMap as any)[column]);
-      let orders: IOrder[] = [];
-      let groups: IGroup[] = [];
-      for (let row of rows.splice(3)) {
-        let order: IOrder = {} as IOrder;
-        properties.filter(x => typeof x === 'string').forEach((property: string, index: number) => {
-          let converted: any = row.split(',')[index];
-          if ([nameOf<IOrder>('height'), nameOf<IOrder>('width'), nameOf<IOrder>('length'), nameOf<IOrder>('id'), nameOf<IOrder>('quantity')].indexOf(property) > -1) converted = parseFloat(converted);
-          else if (nameOf<IOrder>('group') === property) {
-            converted = parseInt(converted);
-            if (groups.findIndex(x => x.id === converted) === -1) {
-
-              groups.push({
-                id: generateGuid(),
-                color: '#ffffff',
-                desc: row.split(',')[rows[2].split(',').indexOf('GroupName')],
-                sequenceNumber: converted
-              });
-            }
-          }
-          else if ([nameOf<IOrder>('stackingAllowed'), nameOf<IOrder>('turningAllowed')].indexOf(property) > -1) converted = converted === 'true';
-          (order as any)[property] = converted;
-        });
-        orders.push(order);
-      }
-
-      this._groupStore.dispatch(addGroups({ groups }));
-      this._productStore.dispatch(addProducts({
-        products: (orders.filter((x, index: number) => orders.findIndex(y => y.description === x.description) === index).map(order => {
-          return {
-            id: order.id,
-            description: order.description ?? null,
-            height: order.height,
-            length: order.length,
-            width: order.width
-          } as IProduct;
-        }))
-      }));
-
-      this._orderStore.dispatch(addOrders({ orders }));
-    } catch (e) {
-      console.error(e);
     }
   }
 

@@ -1,14 +1,13 @@
 import { v4 as generateGuid } from 'uuid';
-import { Component, forwardRef, OnDestroy, OnInit } from '@angular/core';
+import { Component, forwardRef, OnDestroy } from '@angular/core';
 import { ControlValueAccessor, UntypedFormControl, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { Store } from '@ngrx/store';
-import { Subscription } from 'rxjs';
+import { combineLatest, map, startWith, Subscription } from 'rxjs';
 import { DataService } from 'src/app/services/data.service';
 import { addGroup } from 'src/app/store/actions/i-group.actions';
 
 import * as fromIGroupState from 'src/app/store/reducers/i-group.reducers';
 import { selectGroups } from 'src/app/store/selectors/i-group.selectors';
-import calculateRandomColorSharedMethod from 'src/app/methods/calculate-random-color.shared-method';
 
 @Component({
   selector: 'app-select-group',
@@ -22,13 +21,16 @@ import calculateRandomColorSharedMethod from 'src/app/methods/calculate-random-c
     }
   ]
 })
-export class SelectGroupComponent implements ControlValueAccessor, OnDestroy, OnInit {
+export class SelectGroupComponent implements ControlValueAccessor, OnDestroy {
 
-  groups$ = this._groupStore.select(selectGroups);
+  public groups$ = this._groupStore.select(selectGroups);
+  public valueControl: UntypedFormControl = new UntypedFormControl();
 
-  valueControl: UntypedFormControl = new UntypedFormControl();
+  public currentGroup$ = combineLatest([this.groups$, this.valueControl.valueChanges.pipe(startWith(this.valueControl.value))]).pipe(map(([groups, _]) => {
+    return groups.find(group => group.id === this.valueControl.value);
+  }));
 
-  private _subscriptions: Subscription[] = [];
+  private _subscriptions = new Subscription();
 
   constructor(
     public dataService: DataService,
@@ -46,25 +48,21 @@ export class SelectGroupComponent implements ControlValueAccessor, OnDestroy, On
     (event.target as HTMLInputElement).value = '';
   }
 
-  ngOnDestroy(): void {
-    for (let sub of this._subscriptions) sub.unsubscribe();
-    this._subscriptions = [];
-  }
-
-  ngOnInit(): void {
-  }
+  public ngOnDestroy = () => this._subscriptions.unsubscribe();
 
   public onTouched: () => void = () => { };
   registerOnTouched = (fn: any) => this.onTouched = fn;
 
   registerOnChange(fn: any): void {
-    this._subscriptions.push(this.valueControl.valueChanges.subscribe(fn));
+    this._subscriptions.add(this.valueControl.valueChanges.subscribe(fn));
   }
 
   setDisabledState?(isDisabled: boolean): void {
     isDisabled ? this.valueControl.disable() : this.valueControl.enable();
   }
 
-  writeValue = (val: any) => this.valueControl.patchValue(val);
+  writeValue(value: any) {
+    this.valueControl.setValue(value);
+  }
 
 }

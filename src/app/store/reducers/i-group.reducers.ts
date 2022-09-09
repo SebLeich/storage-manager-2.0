@@ -1,7 +1,7 @@
 import { createReducer, MetaReducer, on, Store } from '@ngrx/store';
 
 import { environment } from 'src/environments/environment';
-import { EntityState, EntityAdapter, createEntityAdapter } from '@ngrx/entity';
+import { EntityState, EntityAdapter, createEntityAdapter, Update } from '@ngrx/entity';
 import { InjectionToken } from '@angular/core';
 import {
   addGroup,
@@ -9,6 +9,8 @@ import {
   duplicateGroup,
   removeGroup,
   setCurrentGroup,
+  updateGroup,
+  updateGroups,
 } from '../actions/i-group.actions';
 import { v4 as generateGuid } from 'uuid';
 import * as moment from 'moment';
@@ -95,6 +97,19 @@ export const groupReducer = createReducer(
       ids: groups.map(group => group.id),
       selectedGroupId: null
     };
+  }),
+  on(updateGroup, (currentState, { group }) => {
+    return adapter.updateOne({
+      id: group.id,
+      changes: {
+        color: group.color,
+        desc: group.desc,
+        sequenceNumber: group.sequenceNumber
+      }
+    }, currentState);
+  }),
+  on(updateGroups, (currentState, { groups }) => {
+    return adapter.upsertMany(groups, currentState);
   })
 );
 

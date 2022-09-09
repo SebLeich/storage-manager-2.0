@@ -4,5 +4,18 @@
 
 .label {
     font-size: .8rem;
-    font-weight: 500;
+    font-weight: 100;
+    color: #8b8b8b;
+}
+
+.option-wrapper {
+    display: flex;
+    align-items: center;
+}
+
+.option-wrapper .color-indicator {
+    width: 10px;
+    height: 10px;
+    margin-right: 0.5rem;
+    border-radius: 2px;
 }

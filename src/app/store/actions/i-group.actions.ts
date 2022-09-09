@@ -6,7 +6,9 @@ export const groupActions = {
   AddGroups: '[Groups] Add Groups',
   RouteToGroup: '[Group] Route To Group',
   SetCurrentGroup: '[Group] Set Current Group',
-  SetNextGroup: '[Group] Set Next Group'
+  SetNextGroup: '[Group] Set Next Group',
+  UpdateGroup: '[Group] Update Group',
+  UpdateGroups: '[Group] Update Groups'
 }
 
 export const addGroup = createAction(
@@ -36,4 +38,14 @@ export const setCurrentGroup = createAction(
 
 export const setNextGroup = createAction(
   groupActions.SetNextGroup
+);
+
+export const updateGroup = createAction(
+  groupActions.UpdateGroup,
+  props<{ group: IGroup }>()
+);
+
+export const updateGroups = createAction(
+  groupActions.UpdateGroups,
+  props<{ groups: IGroup[] }>()
 );

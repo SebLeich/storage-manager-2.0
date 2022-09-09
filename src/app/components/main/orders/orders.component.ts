@@ -37,11 +37,6 @@ export class OrdersComponent implements OnDestroy {
     this.ordersComponentService.dispose();
   }
 
-  orderCollectionToCSV() {
-    this.ordersComponentService.takeOrders();
-    this.csvService.downloadOrderCollectionToCSV();
-  }
-
   async setOrderProduct(productDescription: string, formGroup: UntypedFormGroup) {
     const product = await selectSnapshot(this._store.select(selectProductByDescription(productDescription)));
     if (!product) {

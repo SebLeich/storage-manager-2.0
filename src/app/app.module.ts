@@ -77,6 +77,7 @@ import { LocalDataComponent } from './components/main/local-data/local-data.comp
 import { WidgetComponent } from './components/widget/widget.component';
 import { OrdersFormComponent } from './components/forms/orders-form/orders-form.component';
 import { GroupsFormComponent } from './components/forms/groups-form/groups-form.component';
+import { ProductFormComponent } from './components/forms/products-form/products-form.component';
 
 let rootStoreFeatures: any = {};
 rootStoreFeatures[fromICalculationAttributesState.calculationAttributesFeatureKey] = fromICalculationAttributesState.calculationAttributesReducer;
@@ -113,7 +114,8 @@ rootStoreFeatures[fromISolutionState.solutionFeatureKey] = fromISolutionState.so
     LocalDataComponent,
     WidgetComponent,
     OrdersFormComponent,
-    GroupsFormComponent
+    GroupsFormComponent,
+    ProductFormComponent
   ],
   imports: [
     BrowserModule,

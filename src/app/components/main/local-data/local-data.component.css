@@ -31,19 +31,29 @@
 }
 
 .orders-widget {
-    grid-column: 1 / span 2;
+    grid-column: 1 / span 4;
     min-height: 460px;
 }
 
 .solutions-widget {
-    grid-column: 2 / span 2;
+    grid-column: 4 / span 3;
+    min-height: 400px;
+}
+
+.groups-widget {
+    grid-column: 5 / span 2;
+    min-height: 400px;
+}
+
+.products-widget {
+    grid-column: 1 / span 3;
     min-height: 400px;
 }
 
 @media screen and (min-width: 900px) {
 
     .content {
-        grid-template-columns: 1fr 1fr 1fr;
+        grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr;
     }
 
 }

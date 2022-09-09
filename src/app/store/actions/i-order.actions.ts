@@ -4,6 +4,9 @@ import { IOrder } from 'src/app/interfaces/i-order.interface';
 export const orderActions = {
   AddOrder: '[Order] Add Order',
   AddOrders: '[Order] Add Orders',
+  AnnounceOrderUpdate: '[Order] Announce Order Update',
+  ClearOrders: '[Order] Clear Orders',
+  OrderChanged: '[Order] Order Changed',
   RouteToOrder: '[Order] Route To Order',
   SetCurrentOrder: '[Order] Set Current Order',
   SetNextOrder: '[Order] Set Next Order',
@@ -20,9 +23,23 @@ export const addOrders = createAction(
   props<{ orders: IOrder[] }>()
 );
 
+export const announceOrderUpdate = createAction(
+  orderActions.AnnounceOrderUpdate,
+  props<{ order: IOrder }>()
+);
+
+export const clearOrders = createAction(
+  orderActions.ClearOrders
+);
+
 export const duplicateOrder = createAction(
   orderActions.SetCurrentOrder,
   props<{ duplicateOrder: IOrder }>()
+);
+
+export const orderChanged = createAction(
+  orderActions.OrderChanged,
+  props<{ currentOrder: IOrder, previousOrder: IOrder }>()
 );
 
 export const removeOrder = createAction(

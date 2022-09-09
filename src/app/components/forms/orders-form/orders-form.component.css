@@ -8,3 +8,7 @@
     font-weight: 100;
     background-color: #fafafa;
 }
+
+.padding-cell {
+    padding-right: .5rem;
+}

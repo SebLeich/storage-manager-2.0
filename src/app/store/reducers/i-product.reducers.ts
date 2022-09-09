@@ -1,12 +1,13 @@
 import { createReducer, MetaReducer, on, Store } from '@ngrx/store';
 
 import { environment } from 'src/environments/environment';
-import { EntityState, EntityAdapter, createEntityAdapter } from '@ngrx/entity';
+import { EntityState, EntityAdapter, createEntityAdapter, Update } from '@ngrx/entity';
 import { InjectionToken } from '@angular/core';
 import {
   addProduct,
   addProducts,
   duplicateProduct,
+  productChanged,
   removeProduct,
   setCurrentProduct,
 } from '../actions/i-product.actions';
@@ -14,6 +15,7 @@ import { v4 as generateGuid } from 'uuid';
 import * as moment from 'moment';
 import { IProduct } from 'src/app/interfaces/i-product.interface';
 import { updateCalculationAttributes } from '../actions/i-calculation-attribute.actions';
+import { orderChanged } from '../actions/i-order.actions';
 
 export const productFeatureKey = 'product';
 
@@ -68,6 +70,31 @@ export const productReducer = createReducer(
     }
     return adapter.addOne({ ...duplicateProduct, id: generateGuid() }, state);
   }),
+  on(orderChanged, (state, { currentOrder, previousOrder }) => {
+    const effectedProductIds = Object.values(state.entities).filter(product => product!.description === previousOrder.description).map(product => product!.id);
+    return adapter.updateMany(effectedProductIds.map(productId => {
+      return {
+        id: productId,
+        changes: {
+          description: currentOrder.description,
+          height: currentOrder.height,
+          length: currentOrder.length,
+          width: currentOrder.width
+        }
+      } as Update<IProduct>;
+    }), state);
+  }),
+  on(productChanged, (state, { currentProduct }) => {
+    return adapter.updateOne({
+      id: currentProduct.id,
+      changes: {
+        description: currentProduct.description,
+        height: currentProduct.height,
+        length: currentProduct.length,
+        width: currentProduct.width
+      }
+    }, state);
+  }),
   on(removeProduct, (state, { removeProduct }) => {
     if (!removeProduct) {
       return state;
@@ -92,7 +119,7 @@ export const productReducer = createReducer(
       ids: products.map(product => product.id),
       selectedProductId: null
     };
-  })
+  }),
 );
 
 export const metaReducers: MetaReducer<State>[] = !environment.production

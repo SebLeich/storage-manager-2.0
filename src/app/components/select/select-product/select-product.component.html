@@ -1,6 +1,6 @@
 <div class="body">
 
-    <mat-label class="label">Produkt wählen</mat-label>
+    <mat-label class="label">select product</mat-label>
     <mat-select [formControl]="valueControl">
 
         <mat-option *ngFor="let product of (products$|async)" [value]="product.description">
@@ -9,7 +9,7 @@
 
         <mat-option class="smgr-manual-select-add-input-option">
             
-            <input class="smgr-manual-select-add-input" type="text" (click)="$event.stopPropagation()" (keydown)="$event.stopPropagation()" (keydown.enter)="addProduct($any($event))" placeholder="Weiteres Produkt angeben" />
+            <input class="smgr-manual-select-add-input" type="text" (click)="$event.stopPropagation()" (keydown)="$event.stopPropagation()" (keydown.enter)="addProduct($any($event))" placeholder="add product" />
 
         </mat-option>
 

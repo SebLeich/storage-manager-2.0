@@ -1,0 +1,64 @@
+<ng-container *ngIf="productsControl.value.length > 0; else noProducts">
+
+    <table mat-table class="smgr-table unsparing striped"
+        [dataSource]="productsControl.controls | sortedFormArray: active:direction:productsControl.value.length">
+
+        <ng-container matColumnDef="description">
+            <th mat-header-cell *matHeaderCellDef>name</th>
+            <td mat-cell *matCellDef="let element" [formGroup]="element.value">
+                <input autocomplete="off" formControlName="description" matInput #ref type="text" placeholder="product name" />
+            </td>
+            <td mat-footer-cell *matFooterCellDef class="footer-cell"></td>
+        </ng-container>
+
+        <ng-container matColumnDef="length">
+            <th mat-header-cell *matHeaderCellDef>length</th>
+            <td mat-cell *matCellDef="let element" [formGroup]="element.value">
+                <input autocomplete="off" formControlName="length" matInput #ref type="number" />
+            </td>
+            <td mat-footer-cell *matFooterCellDef class="footer-cell"></td>
+        </ng-container>
+
+        <ng-container matColumnDef="width">
+            <th mat-header-cell *matHeaderCellDef>width</th>
+            <td mat-cell *matCellDef="let element" [formGroup]="element.value">
+                <input autocomplete="off" formControlName="width" matInput #ref type="number" />
+            </td>
+            <td mat-footer-cell *matFooterCellDef class="footer-cell"></td>
+        </ng-container>
+
+        <ng-container matColumnDef="height">
+            <th mat-header-cell *matHeaderCellDef>height</th>
+            <td mat-cell *matCellDef="let element" [formGroup]="element.value">
+                <input autocomplete="off" formControlName="height" matInput #ref type="number" />
+            </td>
+            <td mat-footer-cell *matFooterCellDef class="footer-cell"></td>
+        </ng-container>
+
+        <ng-container matColumnDef="controls">
+            <th mat-header-cell *matHeaderCellDef></th>
+            <td mat-cell *matCellDef="let element">
+                <button color="warn" mat-icon-button (click)="removeProduct(element.key)">
+                    <mat-icon>delete_forever</mat-icon>
+                </button>
+            </td>
+            <td mat-footer-cell *matFooterCellDef class="footer-cell"></td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="columns; sticky: true"></tr>
+        <tr mat-row *matRowDef="let row; let i = index; columns: columns" class="smgr-table-body-row"></tr>
+        <tr mat-footer-row *matFooterRowDef="columns; sticky: true"></tr>
+
+    </table>
+
+</ng-container>
+
+<ng-template #noProducts>
+
+    <div class="no-products-wrapper">
+
+        no products to display
+
+    </div>
+
+</ng-template>
