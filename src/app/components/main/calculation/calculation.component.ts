@@ -12,6 +12,7 @@ import { AlgorithmCalculationStatus } from './enumerations/algorithm-calculation
 import { MatDialog } from '@angular/material/dialog';
 
 import { selectCalculationContextValid } from 'src/app/store/selectors/i-calculation-context.selectors';
+import { widgetFadeInAnimation } from 'src/lib/shared/animations/bottom-up-fade.animation';
 
 @Component({
   selector: 'app-calculation',
@@ -20,7 +21,7 @@ import { selectCalculationContextValid } from 'src/app/store/selectors/i-calcula
   providers: [
     CalculationComponentService
   ],
-  animations: [showAnimation]
+  animations: [showAnimation, widgetFadeInAnimation]
 })
 export class CalculationComponent implements OnDestroy, OnInit {
 

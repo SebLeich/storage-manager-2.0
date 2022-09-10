@@ -1,7 +1,7 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { AfterViewChecked, ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { AbstractControl, FormArray, FormBuilder, FormControl, FormGroup } from '@angular/forms';
 import { Store } from '@ngrx/store';
-import { combineLatest, debounceTime, map, Observable, Subscription } from 'rxjs';
+import { combineLatest, debounceTime, map, Observable, Subscription, timer } from 'rxjs';
 import { IEntity } from 'src/app/interfaces/i-entity.interface';
 import { IGroup } from 'src/app/interfaces/i-group.interface';
 import { IOrder } from 'src/app/interfaces/i-order.interface';
@@ -23,12 +23,13 @@ import { selectContainerHeight, selectContainerWidth } from 'src/app/store/selec
 import { selectCalculationContextValid } from 'src/app/store/selectors/i-calculation-context.selectors';
 import { ControlsOf } from 'src/lib/shared/globals/controls-of.type';
 import { selectSnapshot } from 'src/lib/process-builder/globals/select-snapshot';
+import { widgetFadeInAnimation } from 'src/lib/shared/animations/bottom-up-fade.animation';
 
 @Component({
   selector: 'app-local-data',
   templateUrl: './local-data.component.html',
   styleUrls: ['./local-data.component.css'],
-  animations: [showAnimation]
+  animations: [ showAnimation, widgetFadeInAnimation ]
 })
 export class LocalDataComponent implements OnDestroy, OnInit {
 
@@ -51,9 +52,11 @@ export class LocalDataComponent implements OnDestroy, OnInit {
     })
   });
 
+  public animationState: 'shown' | 'hidden' = 'hidden';
+
   private _subscription = new Subscription();
 
-  constructor(private _formBuilder: FormBuilder, private _store: Store) { }
+  constructor(private _formBuilder: FormBuilder, private _store: Store, private _changeDetectorRef: ChangeDetectorRef) { }
 
   public addGroup() {
     const sequenceNumber = Math.max(...(this.groupsControl.value as IGroup[]).map(order => order.sequenceNumber), 0) + 1;
@@ -131,6 +134,10 @@ export class LocalDataComponent implements OnDestroy, OnInit {
     this._subscription.add(this._store.select(selectGroups).subscribe(async groups => await this.patchFormArray(this.groupsControl, groups, 'group')));
     this._subscription.add(this._store.select(selectOrders).subscribe(async orders => await this.patchFormArray(this.ordersControl, orders, 'order')));
     this._subscription.add(this._store.select(selectProducts).subscribe(async products => await this.patchFormArray(this.productsControl, products, 'product')));
+    this._subscription.add(timer(100).subscribe(() => {
+      this.animationState = 'shown';
+      this._changeDetectorRef.detectChanges();
+    }));
   }
 
   private patchContainerHeight(containerHeight: number) {

@@ -1,8 +1,8 @@
-<div class="body" @show>
+<div class="body">
 
-    <div class="content">
+    <div class="content" @widgetFadeIn>
 
-        <div class="algorithm-overview" (click)="configureAPICall()">
+        <div class="widget algorithm-overview" (click)="configureAPICall()">
 
             <div class="headline">
                 <div class="text">
@@ -34,7 +34,7 @@
 
         </div>
 
-        <div class="algorithm-overview" *ngFor="let wrapper of calculationComponentService.algorithms" [class.unavailable]="!wrapper.available">
+        <div class="widget algorithm-overview" *ngFor="let wrapper of calculationComponentService.algorithms" [class.unavailable]="!wrapper.available">
 
             <div class="headline">
                 <div class="text">

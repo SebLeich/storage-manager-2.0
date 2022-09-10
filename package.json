@@ -3,11 +3,11 @@
   "version": "0.3.1",
   "scripts": {
     "ng": "ng",
-    "start": "ng serve",
+    "start": "ng test --watch=false && ng serve",
     "prebuild": "npm --no-git-tag-version version patch",
     "build": "ng build",
     "prepublish-ghp": "npm --no-git-tag-version version patch",
-    "publish-ghp": "ng build --configuration=production --base-href='https://sebleich.github.io/storage-manager-2.0/' && npx angular-cli-ghpages --dir=dist/storage-manager",
+    "publish-ghp": "ng test --watch=false && ng build --configuration=production --base-href='https://sebleich.github.io/storage-manager-2.0/' && npx angular-cli-ghpages --dir=dist/storage-manager",
     "watch": "ng build --watch --configuration development",
     "test": "ng test"
   },
