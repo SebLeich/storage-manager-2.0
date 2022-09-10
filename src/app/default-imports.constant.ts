@@ -16,6 +16,11 @@ import { ISolutionEffects } from './store/effects/i-solution.effects';
 import { StoreModule } from '@ngrx/store';
 import { EffectsModule } from '@ngrx/effects';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
+import { HttpClientModule } from '@angular/common/http';
+import { BrowserModule } from '@angular/platform-browser';
+import { MatIconModule } from '@angular/material/icon';
+import { MatButtonModule } from '@angular/material/button';
+import { ReactiveFormsModule } from '@angular/forms';
 
 let rootStoreFeatures: any = {};
 rootStoreFeatures[fromICalculationAttributesState.calculationAttributesFeatureKey] = fromICalculationAttributesState.calculationAttributesReducer;
@@ -25,7 +30,12 @@ rootStoreFeatures[fromIProductState.productFeatureKey] = fromIProductState.produ
 rootStoreFeatures[fromISolutionState.solutionFeatureKey] = fromISolutionState.solutionReducer;
 
 export default [
+    BrowserModule,
+    HttpClientModule,
+    MatButtonModule,
+    MatIconModule,
     NoopAnimationsModule,
+    ReactiveFormsModule,
     StoreModule.forRoot(rootStoreFeatures, {
 
     }),

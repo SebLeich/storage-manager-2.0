@@ -125,9 +125,9 @@ export class VisualizerComponent implements AfterViewInit, OnDestroy, OnInit {
   }
 
   @HostListener('window:resize', ['$event'])
-  async onResize(event: Event) {
+  onResize() {
     this.visualizerComponentService.triggerResizeEvent();
-    await this.validateClient();
+    this.validateClient();
   }
 
   @HostListener('document:keypress', ['$event'])
@@ -137,7 +137,6 @@ export class VisualizerComponent implements AfterViewInit, OnDestroy, OnInit {
   selectedGoodEdgeColor = selectedGoodEdgeColor;
 
   async validateClient() {
-    const menuVisible = await selectSnapshot(this._menuVisible);
     const userToggledMenu = await selectSnapshot(this._userToggledMenu);
     const wideView = window.innerWidth >= 1000;
 

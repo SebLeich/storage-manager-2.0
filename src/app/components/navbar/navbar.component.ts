@@ -14,7 +14,7 @@ import { environment } from 'src/environments/environment';
 })
 export class NavbarComponent implements OnInit {
 
-  currentApplicationVersion = environment.appVersion;
+  currentApplicationVersion = (environment as any).appVersion;
 
   solutionCount$ = this._solutionStore.select(selectSolutions).pipe(map(solutions => solutions?.length ?? 0));
 

@@ -32,12 +32,12 @@
       <div class="option" routerLink="calculation" [class.active]="router.url === '/calculation'">
 
          <mat-icon class="icon">file_upload</mat-icon>
-         <div class="text">calculate</div>
+         <div class="text">calculation</div>
    
       </div>
    </div>
 
-   <div class="option-wrapper" [class.disabled]="(solutionCount$|async) === 0">
+   <div id="visualization-option-wrapper" class="option-wrapper" [class.disabled]="(solutionCount$|async) === 0">
       <div class="option" routerLink="visualizer" [class.active]="router.url === '/visualizer'">
 
          <mat-icon class="icon">view_in_ar</mat-icon>
