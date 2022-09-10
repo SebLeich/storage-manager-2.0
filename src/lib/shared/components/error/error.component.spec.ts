@@ -1,4 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import defaultImportsConstant from 'src/app/default-imports.constant';
 
 import { ErrorComponent } from './error.component';
 
@@ -8,7 +9,10 @@ describe('ErrorComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ ErrorComponent ]
+      declarations: [ ErrorComponent ],
+      imports: [
+        ...defaultImportsConstant
+      ]
     })
     .compileComponents();
   });

@@ -5,7 +5,7 @@ import { VisualizerComponentService } from '../main/visualizer/visualizer-compon
 
 import * as fromISolutionState from 'src/app/store/reducers/i-solution.reducers';
 import { Store } from '@ngrx/store';
-import { selectCurrentSolution, selectCurrentSolutionValidation } from 'src/app/store/selectors/i-solution.selectors';
+import { selectCurrentSolutionValidation } from 'src/app/store/selectors/i-solution.selectors';
 
 @Component({
   selector: 'app-solution-validation',

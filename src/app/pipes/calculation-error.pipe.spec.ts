@@ -13,7 +13,7 @@ describe('CalculationErrorPipe', () => {
     { error: CalculationError.ContainerNotReady, text: 'calculation failed' }
   ].forEach(wrapper => {
 
-    it('should return correct error message', () => {
+    it(`should return correct error message for calculation error code: ${wrapper.error}`, () => {
 
       expect(new CalculationErrorPipe().transform(wrapper.error)).toContain(wrapper.text);
 

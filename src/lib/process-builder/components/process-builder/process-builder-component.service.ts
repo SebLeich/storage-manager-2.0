@@ -2,32 +2,18 @@ import { Inject, Injectable, Injector } from '@angular/core';
 
 import { v4 as generateGuid } from 'uuid';
 
-// @ts-ignore
-import * as BpmnJS from 'bpmn-js/dist/bpmn-modeler.production.min.js';
-
-// @ts-ignore
-import gridModule from "diagram-js/lib/features/grid-snapping/visuals";
-
-// @ts-ignore
-import CliModule from 'bpmn-js-cli';
 import { ProcessBuilderService } from '../../services/process-builder.service';
 import { BehaviorSubject, combineLatest, Observable, of, Subject, Subscription } from 'rxjs';
 import { Store } from '@ngrx/store';
 
-import * as fromIParamState from '../../store/reducers/i-param.reducer';
-import * as fromIFuncState from '../../store/reducers/i-function.reducer';
-import * as fromIBpmnJSModelState from '../../store/reducers/i-bpmn-js-model.reducer';
-
 import { selectIParams } from '../../store/selectors/i-param.selectors';
 import { validateBPMNConfig } from 'src/lib/core/config-validator';
 import { selectIFunctions, selectIFunctionsByOutputParam } from '../../store/selectors/i-function.selector';
-import { IBpmnJS } from '../../globals/i-bpmn-js';
 import { addIBpmnJSModel, removeIBpmnJSModel, updateIBpmnJSModel, upsertIBpmnJSModel } from '../../store/actions/i-bpmn-js-model.actions';
 import * as moment from 'moment';
 import { IProcessBuilderConfig, PROCESS_BUILDER_CONFIG_TOKEN } from '../../globals/i-process-builder-config';
 import { selectIBpmnJSModels, selectRecentlyUsedIBpmnJSModel } from '../../store/selectors/i-bpmn-js-model.selectors';
 import { IBpmnJSModel } from '../../globals/i-bpmn-js-model';
-import sebleichProcessBuilderExtension from '../../globals/sebleich-process-builder-extension';
 import { getCanvasModule, getEventBusModule, getTooltipModule } from 'src/lib/bpmn-io/bpmn-modules';
 import { IViewbox } from 'src/lib/bpmn-io/i-viewbox';
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -35,8 +21,6 @@ import { processPerformer } from 'src/lib/core/process-performer';
 import bpmnJsEventTypes from 'src/lib/bpmn-io/bpmn-js-event-types';
 import { BPMNJsRepository } from 'src/lib/core/bpmn-js-repository';
 
-// @ts-ignore
-import * as tooltips from "diagram-js/lib/features/tooltips";
 import { IElement } from 'src/lib/bpmn-io/i-element';
 import { ValidationErrorPipe } from '../../pipes/validation-error.pipe';
 import { IProcessValidationResult } from '../../classes/validation-result';
@@ -48,9 +32,6 @@ import { removeIParam } from '../../store/actions/i-param.actions';
 import { ValidationError } from '../../globals/validation-error';
 import { ValidationWarning } from '../../globals/validation-warning';
 import { ValidationWarningPipe } from '../../pipes/validation-warning.pipe';
-
-// @ts-ignore
-import customRendererModule from '../../extensions/custom-renderer';
 import { BpmnjsService } from '../../services/bpmnjs.service';
 
 @Injectable()
@@ -60,18 +41,15 @@ export class ProcessBuilderComponentService {
   private _modelChanged = new Subject<void>();
   private _pendingChanges = new BehaviorSubject<boolean>(false);
 
-  // instantiate BpmnJS with component
-  //public bpmnJS!: IBpmnJS;
-
-  public params$ = this._paramStore.select(selectIParams());
-  public funcs$ = this._funcStore.select(selectIFunctions());
-  public models$: Observable<IBpmnJSModel[]> = this._bpmnJSModelStore.select(selectIBpmnJSModels());
+  public params$ = this._store.select(selectIParams());
+  public funcs$ = this._store.select(selectIFunctions());
+  public models$: Observable<IBpmnJSModel[]> = this._store.select(selectIBpmnJSModels());
   public pendingChanges$ = this._pendingChanges.asObservable();
   public noPendingChanges$ = this.pendingChanges$.pipe(map(x => !x));
   public currentIBpmnJSModelGuid$ = this._currentIBpmnJSModelGuid.pipe(distinctUntilChanged());
   public currentIBpmnJSModel$ = combineLatest(
     [
-      this._bpmnJSModelStore.select(selectIBpmnJSModels()),
+      this._store.select(selectIBpmnJSModels()),
       this.currentIBpmnJSModelGuid$
     ]
   ).pipe(
@@ -91,9 +69,7 @@ export class ProcessBuilderComponentService {
     private bpmnjsService: BpmnjsService,
     private _snackBar: MatSnackBar,
     private _injector: Injector,
-    private _paramStore: Store<fromIParamState.State>,
-    private _funcStore: Store<fromIFuncState.State>,
-    private _bpmnJSModelStore: Store<fromIBpmnJSModelState.State>,
+    private _store: Store,
     private _processBuilderService: ProcessBuilderService
   ) {
     this._setUp();
@@ -113,7 +89,7 @@ export class ProcessBuilderComponentService {
             'lastModified': moment().format('yyyy-MM-ddTHH:mm:ss')
           };
           console.log(defaultBpmnModel);
-          this._bpmnJSModelStore.dispatch(addIBpmnJSModel(defaultBpmnModel));
+          this._store.dispatch(addIBpmnJSModel(defaultBpmnModel));
           this._currentIBpmnJSModelGuid.next(defaultBpmnModel.guid);
         }
       });
@@ -138,7 +114,7 @@ export class ProcessBuilderComponentService {
       event.stopPropagation();
     }
     let callback = (model: IBpmnJSModel | string) => {
-      this._bpmnJSModelStore.dispatch(removeIBpmnJSModel(model));
+      this._store.dispatch(removeIBpmnJSModel(model));
       this.setDefaultModel();
     }
     if (bpmnJsModel) callback(bpmnJsModel);
@@ -151,18 +127,18 @@ export class ProcessBuilderComponentService {
   }
 
   removeFunction(func: IFunction) {
-    this._funcStore.dispatch(removeIFunction(func));
+    this._store.dispatch(removeIFunction(func));
     if (typeof func.output?.param !== 'number') return;
 
-    this._funcStore.select(selectIFunctionsByOutputParam(func.output.param))
+    this._store.select(selectIFunctionsByOutputParam(func.output.param))
       .pipe(take(1))
       .subscribe(arg => {
-        if (arg.length === 1 && arg[0].identifier === func.identifier) this._paramStore.dispatch(removeIParam(func.output!.param as number));
+        if (arg.length === 1 && arg[0].identifier === func.identifier) this._store.dispatch(removeIParam(func.output!.param as number));
       });
   }
 
   removeParameter(param: IParam) {
-    this._funcStore.dispatch(removeIParam(param));
+    this._store.dispatch(removeIParam(param));
   }
 
   renameCurrentModel(name: string) {
@@ -171,7 +147,7 @@ export class ProcessBuilderComponentService {
         if (!model) return;
         let copy = { ...model };
         copy.name = name;
-        this._bpmnJSModelStore.dispatch(updateIBpmnJSModel(copy));
+        this._store.dispatch(updateIBpmnJSModel(copy));
       });
   }
 
@@ -188,7 +164,7 @@ export class ProcessBuilderComponentService {
 
         if (!model) return;
 
-        this._bpmnJSModelStore.dispatch(upsertIBpmnJSModel({
+        this._store.dispatch(upsertIBpmnJSModel({
           'guid': model.guid,
           'created': model.created,
           'description': model.description,
@@ -210,7 +186,7 @@ export class ProcessBuilderComponentService {
   setDefaultModel(): Observable<void> {
     let subject = new Subject<void>();
 
-    this._bpmnJSModelStore.select(selectRecentlyUsedIBpmnJSModel())
+    this._store.select(selectRecentlyUsedIBpmnJSModel())
       .pipe(
         switchMap((model: IBpmnJSModel | undefined) => model ? of(model) : this._processBuilderService.defaultBPMNModel$),
         take(1)
@@ -227,7 +203,7 @@ export class ProcessBuilderComponentService {
               'xml': model,
               'lastModified': moment().format('yyyy-MM-ddTHH:mm:ss')
             };
-            this._bpmnJSModelStore.dispatch(addIBpmnJSModel(model));
+            this._store.dispatch(addIBpmnJSModel(model));
           }
           this._currentIBpmnJSModelGuid.next(model.guid);
           subject.next();
@@ -242,7 +218,7 @@ export class ProcessBuilderComponentService {
 
   setNextModel() {
     combineLatest([
-      this._bpmnJSModelStore.select(selectIBpmnJSModels()),
+      this._store.select(selectIBpmnJSModels()),
       this._currentIBpmnJSModelGuid.asObservable()
     ]).pipe(
       take(1)
@@ -299,11 +275,11 @@ export class ProcessBuilderComponentService {
   }
 
   updateIBpmnJSModel(model: IBpmnJSModel) {
-    this._bpmnJSModelStore.dispatch(updateIBpmnJSModel(model));
+    this._store.dispatch(updateIBpmnJSModel(model));
   }
 
   updateIFunction(func: IFunction) {
-    this._bpmnJSModelStore.dispatch(updateIFunction(func));
+    this._store.dispatch(updateIFunction(func));
   }
 
   undo = () => (window as any).cli.undo();

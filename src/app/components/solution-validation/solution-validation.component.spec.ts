@@ -1,4 +1,8 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { AppRoutingModule } from 'src/app/app-routing.module';
+import { AppModule } from 'src/app/app.module';
+import defaultImportsConstant from 'src/app/default-imports.constant';
+import { VisualizerComponentService } from '../main/visualizer/visualizer-component-service';
 
 import { SolutionValidationComponent } from './solution-validation.component';
 
@@ -8,7 +12,23 @@ describe('SolutionValidationComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ SolutionValidationComponent ]
+      declarations: [ SolutionValidationComponent ],
+      imports: [
+        ...defaultImportsConstant,
+
+        AppModule,
+        AppRoutingModule
+      ],
+      providers: [
+        {
+          provide: VisualizerComponentService,
+          useValue: {
+            reRenderCurrentContainer: () => {
+
+            }
+          }
+        }
+      ]
     })
     .compileComponents();
   });

@@ -10,9 +10,7 @@ import { showListAnimation } from 'src/lib/shared/animations/show-list';
   selector: 'app-process-builder-wrapper',
   templateUrl: './process-builder-wrapper.component.html',
   styleUrls: ['./process-builder-wrapper.component.sass'],
-  animations: [
-    showListAnimation
-  ]
+  animations: [ showListAnimation ]
 })
 export class ProcessBuilderWrapperComponent implements OnInit {
 

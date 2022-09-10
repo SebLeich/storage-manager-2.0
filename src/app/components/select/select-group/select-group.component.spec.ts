@@ -1,4 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { AppRoutingModule } from 'src/app/app-routing.module';
+import { AppModule } from 'src/app/app.module';
+import defaultImportsConstant from 'src/app/default-imports.constant';
 
 import { SelectGroupComponent } from './select-group.component';
 
@@ -8,7 +11,13 @@ describe('SelectGroupComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ SelectGroupComponent ]
+      declarations: [ SelectGroupComponent ],
+      imports: [
+        ...defaultImportsConstant,
+
+        AppModule,
+        AppRoutingModule
+      ]
     })
     .compileComponents();
   });

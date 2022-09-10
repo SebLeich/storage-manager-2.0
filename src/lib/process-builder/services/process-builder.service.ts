@@ -7,9 +7,6 @@ import { IProcessBuilderConfig, PROCESS_BUILDER_CONFIG_TOKEN } from '../globals/
 import { Store } from '@ngrx/store';
 import { removeIFunction } from '../store/actions/i-function.actions';
 import { selectIFunctionsByOutputParam } from '../store/selectors/i-function.selector';
-
-import * as fromIFunction from 'src/lib/process-builder/store/reducers/i-function.reducer';
-import * as fromIParam from 'src/lib/process-builder/store/reducers/i-param.reducer';
 import { removeIParam } from '../store/actions/i-param.actions';
 import { selectCurrentParamOutput } from '../store/selectors/i-param.selectors';
 
@@ -24,28 +21,27 @@ export class ProcessBuilderService {
   }).pipe(
     shareReplay(1)
   );
-  currentProcessOutput$ = this._paramStore.select(selectCurrentParamOutput);
+  currentProcessOutput$ = this._store.select(selectCurrentParamOutput);
 
   private _config = new ReplaySubject<IProcessBuilderConfig>(1);
 
   constructor(
     @Optional() @Inject(PROCESS_BUILDER_CONFIG_TOKEN) private config: IProcessBuilderConfig,
     private _httpClient: HttpClient,
-    private _funcStore: Store<fromIFunction.State>,
-    private _paramStore: Store<fromIParam.State>,
-  ) {    
-    if (!config) config = this.defaultConfig;
+    private _store: Store
+  ) {
+    if (!this.config) config = this.defaultConfig;
     this._config.next(config);
   }
 
   removeFunction(func: IFunction) {
-    this._funcStore.dispatch(removeIFunction(func));
+    this._store.dispatch(removeIFunction(func));
     if (typeof func.output?.param !== 'number') return;
 
-    this._funcStore.select(selectIFunctionsByOutputParam(func.output.param))
+    this._store.select(selectIFunctionsByOutputParam(func.output.param))
       .pipe(take(1))
       .subscribe(arg => {
-        if (arg.length === 1 && arg[0].identifier === func.identifier) this._paramStore.dispatch(removeIParam(func.output!.param as number));
+        if (arg.length === 1 && arg[0].identifier === func.identifier) this._store.dispatch(removeIParam(func.output!.param as number));
       });
   }
 
