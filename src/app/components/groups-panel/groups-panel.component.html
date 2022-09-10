@@ -1,14 +1,14 @@
 <div class="body">
 
-    <ng-container *ngIf="((groupsProvider.groups$|async)?.length ?? 0) > 0; else noGroupsAvailable">
+    <ng-container *ngIf="groups.length> 0; else noGroupsAvailable">
 
-        <table mat-table class="smgr-table small striped" [dataSource]="$any(groupsProvider.groups$|async)">
+        <table mat-table class="smgr-table small striped" [dataSource]="groups">
 
             <ng-container matColumnDef="desc">
                 <th mat-header-cell *matHeaderCellDef>description</th>
                 <td mat-cell *matCellDef="let element">{{element.desc}}</td>
                 <td mat-footer-cell *matFooterCellDef class="footer-cell" colspan="2">
-                    {{(groupsProvider.groups$|async)?.length ?? 0}} groups
+                    {{groups.length}} groups
                 </td>
             </ng-container>
     

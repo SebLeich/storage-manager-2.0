@@ -4,16 +4,16 @@
 
         <app-widget class="widget orders-widget" headline="orders">
             <div class="headline-controls-wrapper">
-                <mat-icon class="primary" [matMenuTriggerFor]="selectOrderProductMenu" matTooltip="add order">add
+                <mat-icon id="add-order-menu-trigger" class="primary" [class.disabled]="noGroupsOrProducts$|async" [matMenuTriggerFor]="selectOrderProductMenu" matTooltip="add order">add
                 </mat-icon>
-                <mat-icon class="danger" matTooltip="clear orders" (click)="clearOrders()">delete_outline</mat-icon>
+                <mat-icon id="clear-orders" class="danger" [class.disabled]="noOrdersAvailable$|async" matTooltip="clear orders" (click)="clearOrders()">delete_outline</mat-icon>
             </div>
             <app-orders-form class="widget-content" formArrayName="orders"></app-orders-form>
         </app-widget>
 
         <app-widget class="widget groups-widget" headline="groups">
             <div class="headline-controls-wrapper">
-                <mat-icon class="primary" (click)="addGroup()" matTooltip="add group">add
+                <mat-icon  id="add-group-trigger" class="primary" (click)="addGroup()" matTooltip="add group">add
                 </mat-icon>
                 <mat-icon class="danger" matTooltip="clear groups" (click)="clearGroups()">delete_outline</mat-icon>
             </div>
@@ -22,16 +22,16 @@
 
         <app-widget class="widget products-widget" headline="products">
             <div class="headline-controls-wrapper">
-                <mat-icon class="primary" (click)="addProduct()" matTooltip="add product">add
+                <mat-icon id="add-product-trigger" class="primary" (click)="addProduct()" matTooltip="add product">add
                 </mat-icon>
             </div>
             <app-products-form class="widget-content" formArrayName="products"></app-products-form>
         </app-widget>
 
         <app-widget class="widget solutions-widget" headline="context and solutions">
-            <ng-container headlineControls>
-                <mat-icon class="icon">add</mat-icon>
-            </ng-container>
+            <div class="headline-controls-wrapper">
+                <mat-icon id="calculation-control" [class.disabled]="!(calculationContextValid$|async)" [matMenuTriggerFor]="selectCalculationSourceMenu" class="primary">play_arrow</mat-icon>
+            </div>
             <app-calculation-context-overview class="widget-content" formGroupName="calculationContext"></app-calculation-context-overview>
         </app-widget>
 
@@ -41,12 +41,16 @@
 
 <mat-menu #selectOrderProductMenu="matMenu">
     <button mat-menu-item *ngFor="let product of (products$|async)" [matMenuTriggerFor]="selectOrderGroupMenu"
-        [matMenuTriggerData]="{ product: product }">{{product.description}}</button>
+        [matMenuTriggerData]="{ product: product }" (click)="$event.stopPropagation()">{{product.description}}</button>
 </mat-menu>
 
 <mat-menu #selectOrderGroupMenu="matMenu">
     <ng-template matMenuContent let-product="product">
         <button mat-menu-item *ngFor="let group of (groups$|async)"
-            (click)="addOrder(product, group)">{{group.desc}}</button>
+            (click)="addOrder($event, product, group)">{{group.desc}}</button>
     </ng-template>
+</mat-menu>
+
+<mat-menu #selectCalculationSourceMenu="matMenu">
+    <button mat-menu-item>coming soon ;)</button>
 </mat-menu>

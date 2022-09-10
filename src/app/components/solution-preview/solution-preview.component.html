@@ -23,8 +23,8 @@
             </div>
 
             <div class="next-solution-wrapper">
-              <button mat-icon-button [disabled]="!(hasMultipleSolutions$|async)"
-                (click)="solutionPreviewComponentService.nextSolution()" matTooltip="next solution">
+              <button mat-icon-button [disabled]="!(hasMultipleSolutions$|async)" (click)="nextSolution()"
+                matTooltip="next solution">
                 <mat-icon>chevron_right</mat-icon>
               </button>
             </div>
@@ -47,7 +47,7 @@
           <mat-panel-description>positioned goods</mat-panel-description>
         </mat-expansion-panel-header>
 
-        <app-goods-panel></app-goods-panel>
+        <app-goods-panel [goods]="(goods$|async) ?? []"></app-goods-panel>
       </mat-expansion-panel>
     </div>
 
@@ -61,7 +61,8 @@
           <mat-panel-description>used groups</mat-panel-description>
         </mat-expansion-panel-header>
 
-        <app-groups-panel (groupColorChanged)="groupColorChanged($event)"></app-groups-panel>
+        <app-groups-panel [groups]="(groups$|async) ?? []" (groupColorChanged)="groupColorChanged($event)">
+        </app-groups-panel>
       </mat-expansion-panel>
     </div>
 

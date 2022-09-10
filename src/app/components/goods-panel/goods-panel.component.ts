@@ -1,5 +1,4 @@
-import { Component, Inject } from '@angular/core';
-import { GOODS_PROVIDER, IGoodsProvider } from 'src/app/interfaces';
+import { Component, Input } from '@angular/core';
 import { IGood } from 'src/app/interfaces/i-good.interface';
 import { VisualizerComponentService } from '../main/visualizer/visualizer-component-service';
 
@@ -10,14 +9,15 @@ import { VisualizerComponentService } from '../main/visualizer/visualizer-compon
 })
 export class GoodsPanelComponent {
 
-  columns: string[] = ['desc', 'height', 'width', 'length'];
+  @Input() public goods: IGood[] = [];
+
+  public columns: string[] = ['desc', 'height', 'width', 'length'];
 
   constructor(
-    @Inject(GOODS_PROVIDER) public goodsProvider: IGoodsProvider,
     private _visualizerComponentService: VisualizerComponentService
   ) { }
 
-  hoverGood = (good: IGood) => this._visualizerComponentService.highlightGood(good);
-  selectGood = (good: IGood) => this._visualizerComponentService.selectGood(good);
+  public hoverGood = (good: IGood) => this._visualizerComponentService.highlightGood(good);
+  public selectGood = (good: IGood) => this._visualizerComponentService.selectGood(good);
 
 }

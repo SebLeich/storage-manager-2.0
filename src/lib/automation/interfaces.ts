@@ -1,6 +1,5 @@
 import { InjectionToken } from "@angular/core";
 import { UntypedFormGroup } from "@angular/forms";
-import { Observable } from "rxjs";
 
 export const FORM_GROUP = new InjectionToken("FORM_GROUP");
 

@@ -4,14 +4,17 @@ import { SortDirection } from '@angular/material/sort';
 import { Store } from '@ngrx/store';
 import { Subscription } from 'rxjs';
 import { IOrder } from 'src/app/interfaces/i-order.interface';
-import { removeOrder } from 'src/app/store/actions/i-order.actions';
+import { IProduct } from 'src/app/interfaces/i-product.interface';
+import { announceOrderUpdate, removeOrder } from 'src/app/store/actions/i-order.actions';
+import { selectProductByDescription } from 'src/app/store/selectors/i-product.selectors';
+import { selectSnapshot } from 'src/lib/process-builder/globals/select-snapshot';
 import { fadeInAnimation } from 'src/lib/shared/animations/fade-in';
 
 @Component({
   selector: 'app-orders-form',
   templateUrl: './orders-form.component.html',
   styleUrls: ['./orders-form.component.css'],
-  animations: [ fadeInAnimation ]
+  animations: [fadeInAnimation]
 })
 export class OrdersFormComponent implements OnDestroy, OnInit {
 
@@ -42,8 +45,19 @@ export class OrdersFormComponent implements OnDestroy, OnInit {
     this._store.dispatch(removeOrder({ removeOrder: order }));
   }
 
-  public setOrderProduct(event: Event, productDescription: string) {
-    console.log(event, productDescription);
+  public async setOrderProduct(productId: string, order: IOrder) {
+    const product: IProduct | undefined = await selectSnapshot(this._store.select(selectProductByDescription(productId)));
+    if (!product) {
+      return;
+    }
+
+    const updatedOrder = {
+      ...order,
+      height: product.height,
+      length: product.length,
+      width: product.width
+    } as IOrder;
+    this._store.dispatch(announceOrderUpdate({ order: updatedOrder }));
   }
 
   private updateTotalItemCount() {

@@ -11,7 +11,7 @@ import {
 import { MatDialog } from '@angular/material/dialog';
 import { Store } from '@ngrx/store';
 import { BehaviorSubject, Subscription, timer } from 'rxjs';
-import { filter, map, startWith, switchMap, take } from 'rxjs/operators';
+import { debounceTime, filter, map, startWith, switchMap, take } from 'rxjs/operators';
 import { selectedGoodEdgeColor } from 'src/app/globals';
 import { NoSolutionDialogComponent } from '../../dialog/no-solution-dialog/no-solution-dialog.component';
 import { VisualizerComponentService } from './visualizer-component-service';
@@ -95,6 +95,7 @@ export class VisualizerComponent implements AfterViewInit, OnDestroy, OnInit {
     this._subscriptions.add(
       this.hasCurrentSolution$
         .pipe(
+          debounceTime(1000),
           filter((hasCurrentSolution) => !hasCurrentSolution),
           switchMap(() => this._store.select(selectSolutions)),
           take(1)

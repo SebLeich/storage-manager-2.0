@@ -3,6 +3,7 @@ import { createSelector } from '@ngrx/store';
 import { solutionFeatureKey, State } from '../reducers/i-solution.reducers';
 import { SolutionValidationService } from 'src/app/services/solution-validation.service';
 import { IGroup } from 'src/app/interfaces/i-group.interface';
+import { IGood } from 'src/app/interfaces/i-good.interface';
 
 export const solutionsState = (state: any) => state[solutionFeatureKey] as State;
 
@@ -88,5 +89,16 @@ export const selectCurrentSolutionGroups = createSelector(
     }
     const currentSolution = state.entities[state.selectedSolutionId];
     return (currentSolution!.groups ?? []) as IGroup[];
+  }
+);
+
+export const selectCurrentSolutionGoods = createSelector(
+  solutionsState,
+  (state: State) => {
+    if (typeof state.selectedSolutionId !== 'string') {
+      return [];
+    }
+    const currentSolution = state.entities[state.selectedSolutionId];
+    return (currentSolution!.container!.goods ?? []) as IGood[];
   }
 );

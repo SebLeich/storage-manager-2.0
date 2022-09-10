@@ -31,10 +31,28 @@ export const selectProductById = (productGuid: string | null) => createSelector(
 
 export const selectProducts = createSelector(
   productsState,
-  (state: State) => Object.values(state.entities ?? {}) as IProduct[]
+  (state: State) => (Object.values(state.entities ?? {}) as IProduct[]).sort((productA, productB) => (productA.description ?? '') > (productB.description ?? '') ? 1 : -1)
 );
 
 export const selectProductByDescription = (productDescription: string) => createSelector(
   productsState,
   (state: State) => (Object.values(state.entities ?? {}) as IProduct[]).find(product => product.description === productDescription)
 );
+
+export const selectNextProductDescription = (productDescription?: string) => createSelector(
+  productsState,
+  (state: State) => {
+    const validatedProductDescription = productDescription ? productDescription : 'unnamed product';
+    const regExp = new RegExp('^' + validatedProductDescription + '( \\(([0-9]*)\\))?$');
+    const regExpExecArray = Object.values(state.entities)
+      .map(product => regExp.exec(product?.description ?? ''))
+      .filter(regExpExecArray => !!regExpExecArray) as RegExpExecArray[];
+
+    if (regExpExecArray.length === 0) {
+      return validatedProductDescription;
+    }
+
+    const highestVersion = Math.max(...regExpExecArray.map((entry: any) => entry[2] === null || isNaN(entry[2] as any)? 0: parseInt(entry[2])), 0) + 1;
+    return `${validatedProductDescription} (${highestVersion})`;
+  }
+)

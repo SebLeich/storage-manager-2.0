@@ -1,7 +1,7 @@
 import { Component, OnDestroy, OnInit, ViewContainerRef } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { Subscription } from 'rxjs';
-import { filter, debounceTime, map } from 'rxjs/operators';
+import { filter, debounceTime, map, take } from 'rxjs/operators';
 import { ConfigureApiCallService } from 'src/lib/automation/services/configure-api-call.service';
 import { showAnimation } from 'src/lib/shared/animations/show';
 import { ApiCallConfiguratorDialogComponent } from '../../dialog/api-call-configurator-dialog/api-call-configurator-dialog.component';
@@ -11,13 +11,6 @@ import { AlgorithmCalculationStatus } from './enumerations/algorithm-calculation
 
 import { MatDialog } from '@angular/material/dialog';
 
-import * as fromIOrderState from 'src/app/store/reducers/i-order.reducers';
-import * as fromICalculationAttributesState from 'src/app/store/reducers/i-calculation-attribute.reducers';
-
-import { selectOrders } from 'src/app/store/selectors/i-order.selectors';
-import { IOrder } from 'src/app/interfaces/i-order.interface';
-import { selectCalculationAttributesValid } from 'src/app/store/selectors/i-calculation-attribute.selectors';
-import { selectSnapshot } from 'src/lib/process-builder/globals/select-snapshot';
 import { selectCalculationContextValid } from 'src/app/store/selectors/i-calculation-context.selectors';
 
 @Component({
@@ -55,7 +48,11 @@ export class CalculationComponent implements OnDestroy, OnInit {
   public ngOnInit(): void {
     this._subscriptions.add(
       this.calculationContextInvalid$
-        .pipe(filter(calculationContextInvalid => !!calculationContextInvalid))
+        .pipe(
+          debounceTime(500),
+          filter(calculationContextInvalid => !!calculationContextInvalid),
+          take(1)
+        )
         .subscribe(() => {
           this._showNoSolutionDialog();
         })

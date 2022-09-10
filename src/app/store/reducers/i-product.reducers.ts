@@ -71,7 +71,7 @@ export const productReducer = createReducer(
     return adapter.addOne({ ...duplicateProduct, id: generateGuid() }, state);
   }),
   on(orderChanged, (state, { currentOrder, previousOrder }) => {
-    const effectedProductIds = Object.values(state.entities).filter(product => product!.description === previousOrder.description).map(product => product!.id);
+    const effectedProductIds = Object.values(state.entities).filter(product => product && product.description === previousOrder.description).map(product => product!.id);
     return adapter.updateMany(effectedProductIds.map(productId => {
       return {
         id: productId,

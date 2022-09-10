@@ -1,24 +1,28 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { AbstractControl, FormArray, FormBuilder, FormControl, FormGroup } from '@angular/forms';
 import { Store } from '@ngrx/store';
-import { debounceTime, Subscription } from 'rxjs';
+import { combineLatest, debounceTime, map, Observable, Subscription } from 'rxjs';
 import { IEntity } from 'src/app/interfaces/i-entity.interface';
 import { IGroup } from 'src/app/interfaces/i-group.interface';
 import { IOrder } from 'src/app/interfaces/i-order.interface';
 import { IProduct } from 'src/app/interfaces/i-product.interface';
 import calculateRandomColorSharedMethod from 'src/app/methods/calculate-random-color.shared-method';
-import { setContainerHeight, setContainerWidth, setExemplaryInputData } from 'src/app/store/actions/i-calculation-attribute.actions';
+import { setContainerHeight, setContainerWidth } from 'src/app/store/actions/i-calculation-attribute.actions';
 import { addGroup, updateGroup } from 'src/app/store/actions/i-group.actions';
 import { addOrder, clearOrders, announceOrderUpdate } from 'src/app/store/actions/i-order.actions';
 import { addProduct, announceProductUpdate } from 'src/app/store/actions/i-product.actions';
 import { selectGroups } from 'src/app/store/selectors/i-group.selectors';
 import { selectOrders } from 'src/app/store/selectors/i-order.selectors';
-import { selectProducts } from 'src/app/store/selectors/i-product.selectors';
+import { selectNextProductDescription, selectProducts } from 'src/app/store/selectors/i-product.selectors';
 import { showAnimation } from 'src/lib/shared/animations/show';
 
 import { v4 as generateGuid } from 'uuid';
 import * as lodash from 'lodash';
+
 import { selectContainerHeight, selectContainerWidth } from 'src/app/store/selectors/i-calculation-attribute.selectors';
+import { selectCalculationContextValid } from 'src/app/store/selectors/i-calculation-context.selectors';
+import { ControlsOf } from 'src/lib/shared/globals/controls-of.type';
+import { selectSnapshot } from 'src/lib/process-builder/globals/select-snapshot';
 
 @Component({
   selector: 'app-local-data',
@@ -28,8 +32,13 @@ import { selectContainerHeight, selectContainerWidth } from 'src/app/store/selec
 })
 export class LocalDataComponent implements OnDestroy, OnInit {
 
-  public groups$ = this._store.select(selectGroups);
-  public products$ = this._store.select(selectProducts);
+  public groups$: Observable<IGroup[]> = this._store.select(selectGroups);
+  public orders$: Observable<IOrder[]> = this._store.select(selectOrders);
+  public products$: Observable<IProduct[]> = this._store.select(selectProducts);
+
+  public calculationContextValid$ = this._store.select(selectCalculationContextValid);
+  public noGroupsOrProducts$ = combineLatest([this.groups$, this.products$]).pipe(map(([groups, products]) => groups.length === 0 || products.length === 0));
+  public noOrdersAvailable$ = this.orders$.pipe(map(orders => orders.length === 0));
 
   public formGroup = this._formBuilder.group({
     orders: this._formBuilder.array<IOrder>([], { updateOn: 'blur' }),
@@ -52,13 +61,26 @@ export class LocalDataComponent implements OnDestroy, OnInit {
       group: {
         id: generateGuid(),
         color: calculateRandomColorSharedMethod(),
-        desc: null,
+        desc: `group ${sequenceNumber}`,
         sequenceNumber: sequenceNumber
       }
     }));
   }
 
-  public addOrder(product: IProduct, group: IGroup) {
+  public addOrder(event: MouseEvent, product: IProduct, group: IGroup) {
+    if(event){
+      event.stopPropagation();
+    }
+    const existingOrderFormGroup = this.ordersControl
+      .controls
+      .find(control => control.value.description === product.description && control.value.group === group.id);
+
+    if (existingOrderFormGroup) {
+      const quantity = existingOrderFormGroup.controls['quantity'].value;
+      existingOrderFormGroup.controls['quantity'].setValue(quantity + 1);
+      return;
+    }
+
     const index = Math.max(...(this.ordersControl.value as IOrder[]).map(order => order.index), 0) + 1;
     this._store.dispatch(addOrder({
       order: {
@@ -76,11 +98,12 @@ export class LocalDataComponent implements OnDestroy, OnInit {
     }));
   }
 
-  public addProduct() {
+  public async addProduct() {
+    const productDescription = await selectSnapshot(this._store.select(selectNextProductDescription()));
     this._store.dispatch(addProduct({
       product: {
         id: generateGuid(),
-        description: null,
+        description: productDescription,
         height: 1000,
         length: 1000,
         width: 1000,
@@ -122,12 +145,12 @@ export class LocalDataComponent implements OnDestroy, OnInit {
     }
   }
 
-  private async patchFormArray(formArray: FormArray<FormControl<IEntity>>, values: IEntity[], type: 'group' | 'order' | 'product') {
+  private async patchFormArray(formArray: FormArray<FormGroup>, values: IEntity[], type: 'group' | 'order' | 'product') {
 
     const actionMap = {
-      'group': (value: IGroup) => this._store.dispatch(updateGroup({ group: value })),
-      'order': (value: IOrder) => this._store.dispatch(announceOrderUpdate({ order: value })),
-      'product': (value: IProduct) => this._store.dispatch(announceProductUpdate({ product: value })),
+      group: (value: IGroup) => this._store.dispatch(updateGroup({ group: value })),
+      order: (value: IOrder) => this._store.dispatch(announceOrderUpdate({ order: value })),
+      product: (value: IProduct) => this._store.dispatch(announceProductUpdate({ product: value })),
     }
 
     for (let value of values) {
@@ -169,11 +192,11 @@ export class LocalDataComponent implements OnDestroy, OnInit {
     return this.formGroup.controls['groups'] as FormArray;
   }
 
-  private get ordersControl(): FormArray {
+  private get ordersControl(): FormArray<FormGroup<ControlsOf<IOrder>>> {
     return this.formGroup.controls['orders'] as FormArray;
   }
 
-  private get productsControl(): FormArray {
+  private get productsControl(): FormArray<FormGroup<ControlsOf<IProduct>>> {
     return this.formGroup.controls['products'] as FormArray;
   }
 

@@ -70,3 +70,9 @@
     @include gradient-red;
     color: #ffffff;
 }
+
+:host ::ng-deep .headline-controls-wrapper>*.disabled {
+    pointer-events: none;
+    opacity: .5;
+    cursor: default;
+}

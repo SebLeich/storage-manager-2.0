@@ -1,4 +1,4 @@
-import { Component, forwardRef, OnDestroy } from '@angular/core';
+import { Component, EventEmitter, forwardRef, OnDestroy, OnInit, Output } from '@angular/core';
 import { ControlValueAccessor, UntypedFormControl, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { Store } from '@ngrx/store';
 import { Subscription } from 'rxjs';
@@ -6,6 +6,7 @@ import { IProduct } from 'src/app/interfaces/i-product.interface';
 import { addProduct } from 'src/app/store/actions/i-product.actions';
 
 import * as fromIProductState from 'src/app/store/reducers/i-product.reducers';
+
 import { selectProducts } from 'src/app/store/selectors/i-product.selectors';
 
 @Component({
@@ -20,11 +21,12 @@ import { selectProducts } from 'src/app/store/selectors/i-product.selectors';
     }
   ]
 })
-export class SelectProductComponent implements ControlValueAccessor, OnDestroy {
+export class SelectProductComponent implements ControlValueAccessor, OnDestroy, OnInit {
 
-  products$ = this._productStore.select(selectProducts);
+  @Output() public productChanged = new EventEmitter<string>();
 
-  valueControl: UntypedFormControl = new UntypedFormControl();
+  public products$ = this._productStore.select(selectProducts);
+  public valueControl: UntypedFormControl = new UntypedFormControl();
 
   private _subscriptions: Subscription = new Subscription();
 
@@ -45,14 +47,19 @@ export class SelectProductComponent implements ControlValueAccessor, OnDestroy {
     (event.target as HTMLInputElement).value = '';
   }
 
-  ngOnDestroy = () => this._subscriptions.unsubscribe();
+  public ngOnInit() {
+    this._subscriptions.add(
+      this.valueControl.valueChanges.subscribe((productDescription: string) => {
+        this.productChanged.next(productDescription);
+      })
+    );
+  }
+  public ngOnDestroy = () => this._subscriptions.unsubscribe();
 
+  public onChange: (arg: any) => void = () => { };
   public onTouched: () => void = () => { };
   registerOnTouched = (fn: any) => this.onTouched = fn;
-
-  registerOnChange(fn: any): void {
-    this._subscriptions.add(this.valueControl.valueChanges.subscribe(fn));
-  }
+  registerOnChange = (fn: any) => this.onChange = fn;
 
   setDisabledState?(isDisabled: boolean): void {
     isDisabled ? this.valueControl.disable() : this.valueControl.enable();

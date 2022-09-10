@@ -17,7 +17,7 @@ import { v4 as generateGuid } from 'uuid';
 import { IOrder } from 'src/app/interfaces/i-order.interface';
 import { updateCalculationAttributes } from '../actions/i-calculation-attribute.actions';
 import { removeGroup } from '../actions/i-group.actions';
-import { productChanged } from '../actions/i-product.actions';
+import { productChanged, removeProduct } from '../actions/i-product.actions';
 
 export const orderFeatureKey = 'order';
 
@@ -105,6 +105,10 @@ export const orderReducer = createReducer(
       return state;
     }
     return adapter.removeOne(removeOrder.id, state);
+  }),
+  on(removeProduct, (state, { removeProduct }) => {
+    const productOrders = Object.values(state.entities).filter(order => order && order.description === removeProduct.description).map(order => order!.id);
+    return adapter.removeMany(productOrders, state);
   }),
   on(setCurrentOrder, (currentState, { order }) => {
     const state: State = {
