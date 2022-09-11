@@ -1,4 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import defaultImportsConstant from 'src/app/default-imports.constant';
 
 import { EditDataDialogComponent } from './edit-data-dialog.component';
 
@@ -8,7 +9,10 @@ describe('EditDataDialogComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ EditDataDialogComponent ]
+      declarations: [ EditDataDialogComponent ],
+      imports: [
+        ...defaultImportsConstant
+      ]
     })
     .compileComponents();
   });

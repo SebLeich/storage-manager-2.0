@@ -1,0 +1,44 @@
+.function-wrapper {
+  padding: 1rem 2rem .5rem 2rem;
+  cursor: pointer;
+  opacity: 0.9;
+  border-top: 3px solid #00000000;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+   -ms-user-select: none;
+       user-select: none;
+}
+
+.function-wrapper:not(:last-child) {
+  border-bottom: 3px solid #e2f1ff;
+}
+
+.function-wrapper:nth-child(even) {
+  background-color: #f5faff;
+}
+
+.function-wrapper:hover {
+  background-color: #feffe3;
+  opacity: 1;
+}
+
+.function-wrapper.active {
+  background-color: #fdffc4;
+}
+
+.control-wrapper {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -webkit-box-pack: end;
+      -ms-flex-pack: end;
+          justify-content: end;
+}
+
+.control-wrapper > * {
+  margin-left: 4px;
+}
+/*# sourceMappingURL=embedded-function-selection.component.css.map */

@@ -39,6 +39,8 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
+import { MatToolbarModule } from '@angular/material/toolbar';
+import { MatTabsModule } from '@angular/material/tabs';
 
 let rootStoreFeatures: any = {};
 rootStoreFeatures[fromICalculationAttributesState.calculationAttributesFeatureKey] = fromICalculationAttributesState.calculationAttributesReducer;
@@ -63,6 +65,8 @@ export default [
     MatSelectModule,
     MatSlideToggleModule,
     MatSnackBarModule,
+    MatTabsModule,
+    MatToolbarModule,
     NoopAnimationsModule,
     ReactiveFormsModule,
     StoreModule.forRoot(rootStoreFeatures, { }),

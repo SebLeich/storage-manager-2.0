@@ -3,6 +3,7 @@ import defaultImportsConstant from 'src/app/default-imports.constant';
 import { ProcessBuilderComponentService } from 'src/lib/process-builder/components/process-builder/process-builder-component.service';
 import { PROCESS_BUILDER_CONFIG_TOKEN } from 'src/lib/process-builder/globals/i-process-builder-config';
 import { BpmnjsService } from 'src/lib/process-builder/services/bpmnjs.service';
+import { ProcessBuilderWrapperModule } from '../../process-builder-wrapper.module';
 
 import { ProcessBuilderWrapperComponent } from './process-builder-wrapper.component';
 
@@ -14,7 +15,9 @@ describe('ProcessBuilderWrapperComponent', () => {
     await TestBed.configureTestingModule({
       declarations: [ProcessBuilderWrapperComponent],
       imports: [
-        ...defaultImportsConstant
+        ...defaultImportsConstant,
+
+        ProcessBuilderWrapperModule
       ],
       providers: [
         ProcessBuilderComponentService,

@@ -1,4 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import defaultImportsConstant from 'src/app/default-imports.constant';
 
 import { SelectUnitComponent } from './select-unit.component';
 
@@ -8,7 +9,10 @@ describe('SelectUnitComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ SelectUnitComponent ]
+      declarations: [ SelectUnitComponent ],
+      imports: [
+        ...defaultImportsConstant
+      ]
     })
     .compileComponents();
   });

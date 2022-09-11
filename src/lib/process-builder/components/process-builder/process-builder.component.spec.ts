@@ -17,7 +17,12 @@ describe('ProcessBuilderComponent', () => {
       providers: [
         {
           provide: ProcessBuilderComponentService, useValue: {
-            init: () => { }
+            dispose: () => {
+                
+            },
+            init: () => {
+
+            }
           }
         }
       ]

@@ -6,7 +6,6 @@ import { selectCurrentSolution, selectCurrentSolutionGoods, selectCurrentSolutio
 import { downloadCurrentSolution, setNextSolution, updateCurrentSolutionGroupColor } from 'src/app/store/actions/i-solution.actions';
 import { SolutionValidationService } from 'src/app/services/solution-validation.service';
 import { IGroup } from 'src/app/interfaces/i-group.interface';
-import { selectGroups } from 'src/app/store/selectors/i-group.selectors';
 
 @Component({
   selector: 'app-solution-preview',
