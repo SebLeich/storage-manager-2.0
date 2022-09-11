@@ -13,6 +13,18 @@ import { IProductEffects } from './store/effects/i-product.effects';
 import * as fromISolutionState from './store/reducers/i-solution.reducers';
 import { ISolutionEffects } from './store/effects/i-solution.effects';
 
+import * as fromIParamState from 'src/lib/process-builder/store/reducers/i-param.reducer';
+import { IParamEffects } from 'src/lib/process-builder/store/effects/i-param.effects';
+
+import * as fromIFunctionState from 'src/lib/process-builder/store/reducers/i-function.reducer';
+import { IFunctionEffects } from 'src/lib/process-builder/store/effects/i-function.effects';
+
+import * as fromIBpmnJSModelState from 'src/lib/process-builder/store/reducers/i-bpmn-js-model.reducer';
+import { IBpmnJSModelEffects } from 'src/lib/process-builder/store/effects/i-bpmn-js-model.effects';
+
+import * as fromIInterfaceState from 'src/lib/process-builder/store/reducers/i-interface.reducer';
+import { IInterfaceEffects } from 'src/lib/process-builder/store/effects/i-interface.effects';
+
 import { StoreModule } from '@ngrx/store';
 import { EffectsModule } from '@ngrx/effects';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
@@ -23,6 +35,10 @@ import { MatButtonModule } from '@angular/material/button';
 import { ReactiveFormsModule } from '@angular/forms';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatMenuModule } from '@angular/material/menu';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatSlideToggleModule } from '@angular/material/slide-toggle';
+import { MatInputModule } from '@angular/material/input';
+import { MatSelectModule } from '@angular/material/select';
 
 let rootStoreFeatures: any = {};
 rootStoreFeatures[fromICalculationAttributesState.calculationAttributesFeatureKey] = fromICalculationAttributesState.calculationAttributesReducer;
@@ -31,17 +47,35 @@ rootStoreFeatures[fromIOrderState.orderFeatureKey] = fromIOrderState.orderReduce
 rootStoreFeatures[fromIProductState.productFeatureKey] = fromIProductState.productReducer;
 rootStoreFeatures[fromISolutionState.solutionFeatureKey] = fromISolutionState.solutionReducer;
 
+rootStoreFeatures[fromIParamState.featureKey] = fromIParamState.reducer;
+rootStoreFeatures[fromIFunctionState.featureKey] = fromIFunctionState.reducer;
+rootStoreFeatures[fromIBpmnJSModelState.featureKey] = fromIBpmnJSModelState.featureKey;
+rootStoreFeatures[fromIInterfaceState.featureKey] = fromIInterfaceState.featureKey;
+
 export default [
     BrowserModule,
     HttpClientModule,
     MatButtonModule,
+    MatFormFieldModule,
     MatIconModule,
+    MatInputModule,
     MatMenuModule,
+    MatSelectModule,
+    MatSlideToggleModule,
     MatSnackBarModule,
     NoopAnimationsModule,
     ReactiveFormsModule,
-    StoreModule.forRoot(rootStoreFeatures, {
+    StoreModule.forRoot(rootStoreFeatures, { }),
+    EffectsModule.forRoot([
+        ICalculationAttributesEffects,
+        IGroupEffects,
+        IOrderEffects,
+        IProductEffects,
+        ISolutionEffects,
 
-    }),
-    EffectsModule.forRoot([ICalculationAttributesEffects, IGroupEffects, IOrderEffects, IProductEffects, ISolutionEffects]),
+        IParamEffects,
+        IFunctionEffects,
+        IBpmnJSModelEffects,
+        IInterfaceEffects
+    ]),
 ];

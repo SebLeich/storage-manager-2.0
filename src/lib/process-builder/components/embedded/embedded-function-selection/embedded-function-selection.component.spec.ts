@@ -1,4 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import defaultImportsConstant from 'src/app/default-imports.constant';
 
 import { EmbeddedFunctionSelectionComponent } from './embedded-function-selection.component';
 
@@ -8,7 +9,10 @@ describe('EmbeddedFunctionSelectionComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ EmbeddedFunctionSelectionComponent ]
+      declarations: [ EmbeddedFunctionSelectionComponent ],
+      imports: [
+        ...defaultImportsConstant
+      ]
     })
     .compileComponents();
   });

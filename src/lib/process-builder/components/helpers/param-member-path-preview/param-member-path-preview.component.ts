@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { ReplaySubject } from 'rxjs';
 import { map } from 'rxjs/operators';
 
@@ -9,7 +9,10 @@ import { map } from 'rxjs/operators';
 })
 export class ParamMemberPathPreviewComponent {
 
-  @Input() set path(path: string|null){
+  @Input() set path(path: string | null | undefined){
+    if(typeof path === 'undefined'){
+      return;
+    }
     this._pathSegments.next(this.toPathSegments(path));
   }
   private _pathSegments = new ReplaySubject<string[]>(1);

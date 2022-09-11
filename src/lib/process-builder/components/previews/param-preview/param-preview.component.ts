@@ -8,7 +8,7 @@ import { IParam } from 'src/lib/process-builder/globals/i-param';
 })
 export class ParamPreviewComponent implements OnInit {
 
-  @Input() param!: IParam;
+  @Input() param?: IParam;
 
   constructor() { }
 

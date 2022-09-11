@@ -54,7 +54,7 @@ describe('LocalDataComponent', () => {
     { groups: [exemplaryGroup], products: [exemplaryProduct] }
   ].forEach(entry => {
 
-    it('should show disabled add order menu trigger when no products or no groups setted', () => {
+    it(`should show disabled add order menu trigger when ${entry.products.length === 0? 'no products': 'some products'} and  ${entry.groups.length === 0? 'no groups': 'some groups'} setted`, () => {
       const addOrderMenuTrigger = fixture.debugElement.query(By.css('#add-order-menu-trigger'));
       expect(addOrderMenuTrigger).toBeTruthy();
 

@@ -1,13 +1,11 @@
-import { reducer, initialState } from './i-param.reducer';
+import * as fromReducer from './i-function.reducer';
 
-describe('Reducer', () => {
-  describe('an unknown action', () => {
-    it('should return the previous state', () => {
-      const action = {} as any;
+describe('FunctionReducer', () => {
 
-      const result = reducer(initialState, action);
+    const reducer = fromReducer.reducer;
 
-      expect(result).toBe(initialState);
-    });
-  });
+    it('should create reducer', () => {
+        expect(reducer).toBeTruthy();
+    })
+
 });

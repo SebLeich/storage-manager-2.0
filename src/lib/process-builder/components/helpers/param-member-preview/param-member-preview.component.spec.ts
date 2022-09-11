@@ -1,4 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import defaultImportsConstant from 'src/app/default-imports.constant';
 
 import { ParamMemberPreviewComponent } from './param-member-preview.component';
 
@@ -8,7 +9,10 @@ describe('ParamMemberPreviewComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ ParamMemberPreviewComponent ]
+      declarations: [ ParamMemberPreviewComponent ],
+      imports: [
+        ...defaultImportsConstant
+      ]
     })
     .compileComponents();
   });

@@ -3,8 +3,8 @@
     <div class="function-name-wrapper">
 
         <div class="function-name">
-            <div class="inner">{{func.name}}</div>
-            <div class="tag" *ngIf="func.finalizesFlow">final function</div>
+            <div class="inner">{{func?.name}}</div>
+            <div class="tag" *ngIf="func?.finalizesFlow">final function</div>
         </div>
 
     </div>
@@ -19,7 +19,7 @@
 
                 <ng-container *ngIf="inputParams.length === 0; else inputParamsList">
 
-                    <ng-container *ngIf="!func.useDynamicInputParams; else dynamicInputParams">
+                    <ng-container *ngIf="!func?.useDynamicInputParams; else dynamicInputParams">
 
                         no input arguments
 
@@ -37,9 +37,9 @@
 
             <div class="section-content">
 
-                <div class="function-description">
+                <div class="function-description" *ngIf="func">
                     
-                    <textarea matInput rows="3" [ngModel]="func.description" (ngModelChange)="updateFunctionDescription(func, $event)" [ngModelOptions]="{ updateOn: 'blur' }" placeholder="no procedure definition provided" (click)="$event.preventDefault()"></textarea>
+                    <textarea matInput rows="3" [ngModel]="func.description" (ngModelChange)="updateFunctionDescription($event)" [ngModelOptions]="{ updateOn: 'blur' }" placeholder="no procedure definition provided" (click)="$event.preventDefault()"></textarea>
 
                 </div>
                 
@@ -53,7 +53,7 @@
 
             <div class="section-content">
 
-                <ng-container *ngIf="!func.output; else outputParamPreview">
+                <ng-container *ngIf="!func?.output; else outputParamPreview">
 
                     provides no output
 
@@ -78,7 +78,7 @@
 <ng-template #dynamicInputParams>
 
     <div>
-        {{func.useDynamicInputParams!|dynamicInputParams}}
+        {{func?.useDynamicInputParams!|dynamicInputParams}}
     </div>
 
 </ng-template>
@@ -86,7 +86,7 @@
 <ng-template #outputParamPreview>
 
     <div>
-        {{func.output?.param === 'dynamic' && isNumber(func.output?.interface)? (func.output?.interface|interface|async): (func.output?.param|param|async)}}
+        {{func?.output?.param === 'dynamic' && isNumber(func?.output?.interface)? (func?.output?.interface|interface|async): (func?.output?.param|param|async)}}
     </div>
 
 </ng-template>

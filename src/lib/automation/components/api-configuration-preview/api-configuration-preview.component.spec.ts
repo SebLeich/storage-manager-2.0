@@ -1,4 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import defaultImportsConstant from 'src/app/default-imports.constant';
+import { AutomationModule } from '../../automation.module';
 
 import { ApiConfigurationPreviewComponent } from './api-configuration-preview.component';
 
@@ -8,7 +10,12 @@ describe('ApiConfigurationPreviewComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ ApiConfigurationPreviewComponent ]
+      declarations: [ ApiConfigurationPreviewComponent ],
+      imports: [
+        ...defaultImportsConstant,
+
+        AutomationModule
+      ]
     })
     .compileComponents();
   });

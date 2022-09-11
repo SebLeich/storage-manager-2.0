@@ -4,8 +4,6 @@ import { Store } from '@ngrx/store';
 import { BehaviorSubject, of, ReplaySubject, Subscription } from 'rxjs';
 import { IEmbeddedView } from 'src/lib/process-builder/globals/i-embedded-view';
 import { IParamDefinition } from 'src/lib/process-builder/globals/i-param-definition';
-import * as fromIParam from 'src/lib/process-builder/store/reducers/i-param.reducer';
-import * as fromIFunction from 'src/lib/process-builder/store/reducers/i-function.reducer';
 import { selectIFunction } from 'src/lib/process-builder/store/selectors/i-function.selector';
 import { filter, map, switchMap } from 'rxjs/operators';
 import { selectIInterface } from 'src/lib/process-builder/store/selectors/i-interface.selectors';
@@ -22,13 +20,13 @@ export class EmbeddedInputOutputMappingComponent implements IEmbeddedView, OnDes
 
   formGroup!: UntypedFormGroup;
 
-  outputParamName$ = this._funcStore
+  public outputParamName$ = this._store
     .select(selectIFunction(() => this.formGroup.controls['functionIdentifier'].value))
     .pipe(
       filter(func => !!func),
       switchMap((func) => {
         if (typeof func!.output?.interface === 'number') {
-          return this._interfaceStore
+          return this._store
             .select(selectIInterface(func!.output!.interface))
             .pipe(map(iface => iface?.name));
         }
@@ -44,11 +42,7 @@ export class EmbeddedInputOutputMappingComponent implements IEmbeddedView, OnDes
 
   private _subscriptions: Subscription[] = [];
 
-  constructor(
-    private _paramStore: Store<fromIParam.State>,
-    private _funcStore: Store<fromIFunction.State>,
-    private _interfaceStore: Store<fromIFunction.State>
-  ) { }
+  constructor(private _store: Store) { }
 
   menuOpened() {
     this._setAvailableTypes();
@@ -60,7 +54,6 @@ export class EmbeddedInputOutputMappingComponent implements IEmbeddedView, OnDes
   }
 
   ngOnInit(): void {
-    console.log(this.formGroup.value, this.inputParams);
     this._subscriptions.push(...[
       this.outputParamValueControl.valueChanges.subscribe((val: IParamDefinition | IParamDefinition[] | null | undefined) => {
         this._params.next(val ? Array.isArray(val) ? val : [val] : []);

@@ -2,7 +2,6 @@ import { Component, Input, OnInit } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { IFunction } from '../../../globals/i-function';
 import { IInputParam } from '../../../globals/i-input-param';
-import * as fromIFunction from 'src/lib/process-builder/store/reducers/i-function.reducer';
 import { updateIFunction } from '../../../store/actions/i-function.actions';
 
 @Component({
@@ -12,25 +11,27 @@ import { updateIFunction } from '../../../store/actions/i-function.actions';
 })
 export class FunctionPreviewComponent implements OnInit {
 
-  @Input() func!: IFunction;
+  @Input() func?: IFunction;
 
   inputParams: IInputParam[] = [];
 
   constructor(
-    private _funcStore: Store<fromIFunction.State>,
-    private _paramStore: Store<fromIFunction.State>
+    private _store: Store
   ) { }
 
   isNumber = (arg: any) => typeof arg === 'number';
 
-  ngOnInit(): void {
-    this.inputParams = Array.isArray(this.func.inputParams) ? this.func.inputParams : typeof this.func.inputParams === 'number' ? [this.func.inputParams] : [];
+  public ngOnInit(): void {
+    this.inputParams = this.func? Array.isArray(this.func.inputParams) ? this.func.inputParams : typeof this.func.inputParams === 'number' ? [this.func.inputParams] : [] : [];
   }
 
-  updateFunctionDescription(func: IFunction, description: string) {
-    let updatedFun = Object.assign({}, func);
+  updateFunctionDescription(description: string) {
+    if(!this.func){
+      return;
+    }
+    let updatedFun = Object.assign({}, this.func);
     updatedFun.description = description;
-    this._funcStore.dispatch(updateIFunction(updatedFun));
+    this._store.dispatch(updateIFunction(updatedFun));
   }
 
 }

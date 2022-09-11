@@ -1,4 +1,8 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { FormGroup } from '@angular/forms';
+import defaultImportsConstant from 'src/app/default-imports.constant';
+import { AutomationModule } from '../../automation.module';
+import { CONFIGURATION_FORM_GROUP_PROVIDER, FORM_GROUP_PROVIDER, IConfigurationFormGroupProvider, IFormGroupProvider, ISubmitConfigurationProvider, SUBMIT_CONFIGURATION_PROVIDER } from '../../interfaces';
 
 import { ApiCallConfiguratorComponent } from './api-call-configurator.component';
 
@@ -8,9 +12,33 @@ describe('ApiCallConfiguratorComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ ApiCallConfiguratorComponent ]
+      declarations: [ApiCallConfiguratorComponent],
+      imports: [
+        ...defaultImportsConstant,
+
+        AutomationModule
+      ],
+      providers: [
+        {
+          provide: FORM_GROUP_PROVIDER, useValue: {
+            formGroup: new FormGroup({
+
+            })
+          } as IFormGroupProvider,
+        },
+        {
+          provide: CONFIGURATION_FORM_GROUP_PROVIDER, useValue: {
+
+          } as IConfigurationFormGroupProvider,
+        },
+        {
+          provide: SUBMIT_CONFIGURATION_PROVIDER, useValue: {
+
+          } as ISubmitConfigurationProvider
+        }
+      ]
     })
-    .compileComponents();
+      .compileComponents();
   });
 
   beforeEach(() => {

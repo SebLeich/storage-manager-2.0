@@ -1,4 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { FormControl, FormGroup } from '@angular/forms';
+import defaultImportsConstant from 'src/app/default-imports.constant';
+import { FORM_GROUP } from 'src/lib/automation/interfaces';
 
 import { AccessTokenInputComponent } from './access-token-input.component';
 
@@ -8,9 +11,19 @@ describe('AccessTokenInputComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ AccessTokenInputComponent ]
+      declarations: [AccessTokenInputComponent],
+      imports: [
+        ...defaultImportsConstant
+      ],
+      providers: [
+        {
+          provide: FORM_GROUP, useValue: new FormGroup({
+            jwtToken: new FormControl(null)
+          })
+        }
+      ]
     })
-    .compileComponents();
+      .compileComponents();
   });
 
   beforeEach(() => {

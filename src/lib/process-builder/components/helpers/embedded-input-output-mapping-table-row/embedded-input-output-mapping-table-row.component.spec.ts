@@ -1,4 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import defaultImportsConstant from 'src/app/default-imports.constant';
 
 import { EmbeddedInputOutputMappingTableRowComponent } from './embedded-input-output-mapping-table-row.component';
 
@@ -8,7 +9,10 @@ describe('EmbeddedInputOutputMappingTableRowComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ EmbeddedInputOutputMappingTableRowComponent ]
+      declarations: [ EmbeddedInputOutputMappingTableRowComponent ],
+      imports: [
+        ...defaultImportsConstant
+      ]
     })
     .compileComponents();
   });

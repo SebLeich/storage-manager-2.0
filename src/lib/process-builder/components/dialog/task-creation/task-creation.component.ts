@@ -11,9 +11,7 @@ import { EmbeddedConfigureErrorGatewayEntranceConnectionComponent } from '../../
 import { EmbeddedFunctionImplementationComponent } from '../../embedded/embedded-function-implementation/embedded-function-implementation.component';
 import { EmbeddedFunctionSelectionComponent } from '../../embedded/embedded-function-selection/embedded-function-selection.component';
 import { ITaskCreationComponentInput } from './i-task-creation-component-input';
-import * as fromIFunction from 'src/lib/process-builder/store/reducers/i-function.reducer';
-import * as fromIParam from 'src/lib/process-builder/store/reducers/i-param.reducer';
-import * as fromIInterface from 'src/lib/process-builder/store/reducers/i-interface.reducer';
+
 import { selectIFunction } from 'src/lib/process-builder/store/selectors/i-function.selector';
 import { IEmbeddedFunctionImplementationData } from '../../embedded/embedded-function-implementation/i-embedded-function-implementation-output';
 import { IFunction } from 'src/lib/process-builder/globals/i-function';
@@ -136,7 +134,7 @@ export class TaskCreationComponent implements OnDestroy, OnInit {
     map(x => x.taskCreationStep === TaskCreationStep.ConfigureFunctionImplementation || x.taskCreationStep === TaskCreationStep.ConfigureFunctionOutput)
   );
 
-  func$: Observable<IFunction | null | undefined> = this._funcStore.select(selectIFunction(() => this.functionIdentifierControl.value));
+  func$: Observable<IFunction | null | undefined> = this._store.select(selectIFunction(() => this.functionIdentifierControl.value));
 
   private _statusMessage: Subject<string> = new Subject<string>();
   statusMessage$ = combineLatest([this._statusMessage.asObservable(), this._statusMessage.pipe(switchMap(() => interval(1000)))])
@@ -154,9 +152,7 @@ export class TaskCreationComponent implements OnDestroy, OnInit {
     @Inject(MAT_DIALOG_DATA) public data: ITaskCreationComponentInput,
     @Inject(INJECTOR_INTERFACE_TOKEN) private _injectorInterface: { injector: object },
     @Inject(INJECTOR_TOKEN) private _injector: { injector: object },
-    private _funcStore: Store<fromIFunction.State>,
-    private _paramStore: Store<fromIParam.State>,
-    private _interfaceStore: Store<fromIInterface.State>,
+    private _store: Store,
     private _formBuilder: UntypedFormBuilder
   ) {
     this.formGroup = this._formBuilder.group({
@@ -236,11 +232,11 @@ export class TaskCreationComponent implements OnDestroy, OnInit {
           filter(x => x ? true : false),
           switchMap((element: IElement | null) => {
             let inputParams = BPMNJsRepository.getAvailableInputParams(element as IElement);
-            return this._paramStore.select(selectIParams(inputParams));
+            return this._store.select(selectIParams(inputParams));
           }),
           take(1),
           filter(x => x ? true : false),
-          mapIParamsInterfaces(this._interfaceStore)
+          mapIParamsInterfaces(this._store)
         )
         .subscribe((allParams: IParam[]) => {
           for (let param of allParams) {
@@ -286,7 +282,7 @@ export class TaskCreationComponent implements OnDestroy, OnInit {
       });
       return;
     } else if (typeof this.functionIdentifierControl.value === 'number') {
-      this._funcStore.select(selectIFunction(this.functionIdentifierControl.value))
+      this._store.select(selectIFunction(this.functionIdentifierControl.value))
         .pipe(take(1))
         .subscribe((func: IFunction | null | undefined) => {
           if (func && typeof func.pseudoImplementation === 'function') {
@@ -301,10 +297,10 @@ export class TaskCreationComponent implements OnDestroy, OnInit {
   }
 
   validateFunctionSelection() {
-    this._funcStore.select(selectIFunction(this.functionIdentifierControl.value)).pipe(
+    this._store.select(selectIFunction(this.functionIdentifierControl.value)).pipe(
       take(1),
       filter(x => x ? true : false),
-      switchMap((fun: IFunction | null | undefined) => combineLatest([of(fun), this._paramStore.select(selectIParam(fun?.output?.param)), this._interfaceStore.select(selectIInterface(fun?.output?.interface))]))
+      switchMap((fun: IFunction | null | undefined) => combineLatest([of(fun), this._store.select(selectIParam(fun?.output?.param)), this._store.select(selectIInterface(fun?.output?.interface))]))
     ).subscribe(([fun, outputParam, outputParamInterface]: [IFunction | null | undefined, IParam | null | undefined, IInterface | null | undefined]) => {
       if (!fun) {
         return;

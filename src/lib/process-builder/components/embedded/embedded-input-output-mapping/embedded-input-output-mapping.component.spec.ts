@@ -1,4 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { FormControl, FormGroup } from '@angular/forms';
+import defaultImportsConstant from 'src/app/default-imports.constant';
 
 import { EmbeddedInputOutputMappingComponent } from './embedded-input-output-mapping.component';
 
@@ -8,7 +10,10 @@ describe('EmbeddedInputOutputMappingComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ EmbeddedInputOutputMappingComponent ]
+      declarations: [ EmbeddedInputOutputMappingComponent ],
+      imports: [
+        ...defaultImportsConstant
+      ]
     })
     .compileComponents();
   });
@@ -16,6 +21,9 @@ describe('EmbeddedInputOutputMappingComponent', () => {
   beforeEach(() => {
     fixture = TestBed.createComponent(EmbeddedInputOutputMappingComponent);
     component = fixture.componentInstance;
+    component.formGroup = new FormGroup({
+      outputParamValue: new FormControl()
+    });
     fixture.detectChanges();
   });
 

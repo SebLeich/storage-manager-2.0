@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, ElementRef, Inject, Input, OnDestroy, ViewChild } from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, Component, ElementRef, Inject, Input, OnDestroy, ViewChild } from '@angular/core';
 import { BehaviorSubject, ReplaySubject, Subscription } from 'rxjs';
 import { ProcessBuilderRepository } from 'src/lib/core/process-builder-repository';
 import { IEmbeddedView } from 'src/lib/process-builder/globals/i-embedded-view';
@@ -56,7 +56,8 @@ export class EmbeddedFunctionImplementationComponent implements IEmbeddedView, A
 
   constructor(
     @Inject(PROCESS_BUILDER_CONFIG_TOKEN) public config: IProcessBuilderConfig,
-    @Inject(INJECTOR_INTERFACE_TOKEN) private _injector: object
+    @Inject(INJECTOR_INTERFACE_TOKEN) private _injector: object,
+    private changeDetectorRef: ChangeDetectorRef
   ) { }
 
   blockTabPressEvent(event: KeyboardEvent) {
@@ -88,6 +89,7 @@ export class EmbeddedFunctionImplementationComponent implements IEmbeddedView, A
       parent: this.codeBody.nativeElement
     });
     this._implementationChanged.next(this.codeMirror.state.doc);
+    this.changeDetectorRef.detectChanges();
   }
 
   ngOnDestroy(): void {

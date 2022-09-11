@@ -9,9 +9,9 @@ import { IProcessBuilderConfig, PROCESS_BUILDER_CONFIG_TOKEN } from 'src/lib/pro
   templateUrl: './embedded-configure-error-gateway-entrance-connection.component.html',
   styleUrls: ['./embedded-configure-error-gateway-entrance-connection.component.sass']
 })
-export class EmbeddedConfigureErrorGatewayEntranceConnectionComponent implements IEmbeddedView, OnDestroy {
+export class EmbeddedConfigureErrorGatewayEntranceConnectionComponent implements IEmbeddedView {
 
-  formGroup!: UntypedFormGroup;
+  public formGroup!: UntypedFormGroup;
 
   constructor(
     @Inject(PROCESS_BUILDER_CONFIG_TOKEN) public config: IProcessBuilderConfig
@@ -28,7 +28,7 @@ export class EmbeddedConfigureErrorGatewayEntranceConnectionComponent implements
   ErrorGatewayEvent = ErrorGatewayEvent;
 
   get entranceGatewayTypeControl(): UntypedFormControl {
-    return this.formGroup.controls['entranceGatewayType'] as UntypedFormControl;
+    return this.formGroup?.controls['entranceGatewayType'] as UntypedFormControl;
   }
 
 }
