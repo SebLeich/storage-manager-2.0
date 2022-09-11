@@ -1,5 +1,5 @@
 import { BrowserModule } from '@angular/platform-browser';
-import { Injector, NgModule } from '@angular/core';
+import { NgModule } from '@angular/core';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -79,6 +79,10 @@ import { GroupsFormComponent } from './components/forms/groups-form/groups-form.
 import { ProductFormComponent } from './components/forms/products-form/products-form.component';
 import { CalculationContextOverviewComponent } from './components/calculation-context-overview/calculation-context-overview.component';
 import { MatFormFieldModule } from '@angular/material/form-field';
+import { SceneVisualizationComponent } from './components/scene-visualization/scene-visualization.component';
+import { SolutionVisualizationDialogComponent } from './components/dialog/solution-visualization-dialog/solution-visualization-dialog.component';
+import { ISolutionPreviewEffects } from './store/effects/i-solution-preview.effects';
+import { SolutionPreviewRenderingComponent } from './components/solution-preview-rendering/solution-preview-rendering.component';
 
 let rootStoreFeatures: any = {};
 rootStoreFeatures[fromICalculationAttributesState.calculationAttributesFeatureKey] = fromICalculationAttributesState.calculationAttributesReducer;
@@ -116,7 +120,10 @@ rootStoreFeatures[fromISolutionState.solutionFeatureKey] = fromISolutionState.so
     OrdersFormComponent,
     GroupsFormComponent,
     ProductFormComponent,
-    CalculationContextOverviewComponent
+    CalculationContextOverviewComponent,
+    SceneVisualizationComponent,
+    SolutionVisualizationDialogComponent,
+    SolutionPreviewRenderingComponent
   ],
   imports: [
     BrowserModule,
@@ -147,7 +154,7 @@ rootStoreFeatures[fromISolutionState.solutionFeatureKey] = fromISolutionState.so
     StoreModule.forRoot(rootStoreFeatures, {
 
     }),
-    EffectsModule.forRoot([ICalculationAttributesEffects, IGroupEffects, IOrderEffects, IProductEffects, ISolutionEffects]),
+    EffectsModule.forRoot([ICalculationAttributesEffects, IGroupEffects, IOrderEffects, IProductEffects, ISolutionEffects, ISolutionPreviewEffects]),
   ],
   providers: [
     { provide: PROCESS_BUILDER_CONFIG_TOKEN, useValue: PROCESS_BUILDER_CONFIG },

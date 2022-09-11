@@ -1,6 +1,5 @@
-import { createReducer, on, Store } from '@ngrx/store';
+import { createReducer, on } from '@ngrx/store';
 
-import { InjectionToken } from '@angular/core';
 import {
   setContainerHeight,
   setContainerWidth,
@@ -9,10 +8,6 @@ import {
 } from '../actions/i-calculation-attribute.actions';
 
 export const calculationAttributesFeatureKey = 'calculationAttributes';
-
-export const CALCULATION_CONTEXT_REDUCER_TOKEN = new InjectionToken<Store<State>>(
-  'Calculation Context Reducers'
-);
 
 export interface State {
   containerHeight: number;

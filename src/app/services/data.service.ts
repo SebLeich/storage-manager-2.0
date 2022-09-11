@@ -8,7 +8,7 @@ import * as fromISolutionState from 'src/app/store/reducers/i-solution.reducers'
 import { IContainer } from '../interfaces/i-container.interface';
 import { selectCurrentSolution } from '../store/selectors/i-solution.selectors';
 import { IGood } from '../interfaces/i-good.interface';
-import { IPosition } from '../interfaces/i-position';
+import { IPosition } from '../interfaces/i-position.interface';
 
 @Injectable({
   providedIn: 'root'

@@ -1,4 +1,4 @@
-import { IPosition } from "./i-position";
+import { IPosition } from "./i-position.interface";
 
 export interface IPossibilities {
     rotated: IPosition[];

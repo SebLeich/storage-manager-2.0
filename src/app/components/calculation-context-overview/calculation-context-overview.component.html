@@ -22,22 +22,32 @@
 
         <ng-container *ngIf="(solutionsAvailable$|async); else noSolutions">
 
-            <div *ngFor="let solution of solutions$|async" class="solution-preview">
+            <div *ngFor="let solution of solutions$|async" class="solution-preview" #solutionPreview>
 
-                <div class="headline">
-                    <div class="text">
-                        <input type="text" [value]="solution.description" (blur)="updateSolutionDescription(solution, input.value)" #input />
+                <div class="preview">
+
+                    <app-solution-preview-rendering [solution]="solution" [backgroundColor]="window.getComputedStyle(solutionPreview, null).backgroundColor"></app-solution-preview-rendering>
+
+                </div>
+
+                <div class="content">
+
+                    <div class="headline">
+                        <div class="text">
+                            <input type="text" [value]="solution.description" (blur)="updateSolutionDescription(solution, input.value)" #input />
+                        </div>
+                        <mat-icon class="button primary" matTooltip="visualize" (click)="visualizeSolution(solution)">view_in_ar</mat-icon>
+                        <mat-icon class="button danger" matTooltip="remove" (click)="removeSolution(solution)">delete_outline</mat-icon>
                     </div>
-                    <mat-icon class="button primary" matTooltip="visualize" (click)="visualizeSolution(solution)">view_in_ar</mat-icon>
-                    <mat-icon class="button danger" matTooltip="remove" (click)="removeSolution(solution)">delete_outline</mat-icon>
-                </div>
-                <div class="sub-title">
-                    calculated using {{solution.algorithm}} algorithm
-                </div>
+                    <div class="sub-title">
+                        calculated using {{solution.algorithm}} algorithm
+                    </div>
+    
+                    <div class="solution-data">
+                        <div class="data">length {{solution.container!.length | prettyLength:3:true:formGroup.controls['unit'].value | async}}</div>
+                        <div class="data">calculated {{solution.calculated|date:'dd.MM.yy HH:mm'}}</div>
+                    </div>
 
-                <div class="solution-data">
-                    <div class="data">length {{solution.container!.length | prettyLength:3:true:formGroup.controls['unit'].value | async}}</div>
-                    <div class="data">calculated {{solution.calculated|date:'dd.MM.yy HH:mm'}}</div>
                 </div>
 
             </div>

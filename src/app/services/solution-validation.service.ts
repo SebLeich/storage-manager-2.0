@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { SolutionError } from '../globals';
 import { IGood } from '../interfaces/i-good.interface';
-import { IPosition } from '../interfaces/i-position';
+import { IPosition } from '../interfaces/i-position.interface';
 import { ISolution } from '../interfaces/i-solution.interface';
 import { DataService } from './data.service';
 

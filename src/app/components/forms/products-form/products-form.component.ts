@@ -13,7 +13,7 @@ import { removeProduct } from 'src/app/store/actions/i-product.actions';
 })
 export class ProductFormComponent implements OnInit {
 
-  public columns: string[] = ['description', 'length', 'width', 'height', 'controls'];
+  public columns: string[] = ['description', 'length', 'width', 'height', '3dmodel', 'controls'];
   public productsControl!: FormArray<FormControl<IProduct>>;
   public active: string = 'description';
   public direction: SortDirection = 'asc';

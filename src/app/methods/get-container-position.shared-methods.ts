@@ -1,8 +1,9 @@
 import { v4 as generateGuid } from 'uuid';
 import { IContainer } from "../interfaces/i-container.interface";
-import { IPosition } from '../interfaces/i-position';
+import { IGood } from '../interfaces/i-good.interface';
+import { IPosition } from '../interfaces/i-position.interface';
 
-export default function (container: IContainer, index: number = 0): IPosition {
+export default function (container: IContainer | IGood, index: number = 0): IPosition {
     return {
         id: generateGuid(),
         index: index,

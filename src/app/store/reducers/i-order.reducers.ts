@@ -1,8 +1,7 @@
-import { createReducer, MetaReducer, on, Store } from '@ngrx/store';
+import { createReducer, MetaReducer, on } from '@ngrx/store';
 
 import { environment } from 'src/environments/environment';
 import { EntityState, EntityAdapter, createEntityAdapter, Update } from '@ngrx/entity';
-import { InjectionToken } from '@angular/core';
 import {
   addOrder,
   addOrders,
@@ -20,10 +19,6 @@ import { removeGroup } from '../actions/i-group.actions';
 import { productChanged, removeProduct } from '../actions/i-product.actions';
 
 export const orderFeatureKey = 'order';
-
-export const ORDER_REDUCER_TOKEN = new InjectionToken<Store<State>>(
-  'Order Reducers'
-);
 
 export interface State extends EntityState<IOrder> {
   selectedOrderId: string | null;

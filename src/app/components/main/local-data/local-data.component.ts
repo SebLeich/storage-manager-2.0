@@ -24,6 +24,8 @@ import { selectCalculationContextValid } from 'src/app/store/selectors/i-calcula
 import { ControlsOf } from 'src/lib/shared/globals/controls-of.type';
 import { selectSnapshot } from 'src/lib/process-builder/globals/select-snapshot';
 import { widgetFadeInAnimation } from 'src/lib/shared/animations/bottom-up-fade.animation';
+import { loadSolutionPreview } from 'src/app/store/actions/i-solution-preview.actions';
+import { selectSolutions } from 'src/app/store/selectors/i-solution.selectors';
 
 @Component({
   selector: 'app-local-data',
@@ -51,8 +53,6 @@ export class LocalDataComponent implements OnDestroy, OnInit {
       unit: this._formBuilder.control<'mm' | 'cm' | 'm' | 'km'>('mm'),
     })
   });
-
-  public animationState: 'shown' | 'hidden' = 'hidden';
 
   private _subscription = new Subscription();
 
@@ -134,10 +134,6 @@ export class LocalDataComponent implements OnDestroy, OnInit {
     this._subscription.add(this._store.select(selectGroups).subscribe(async groups => await this.patchFormArray(this.groupsControl, groups, 'group')));
     this._subscription.add(this._store.select(selectOrders).subscribe(async orders => await this.patchFormArray(this.ordersControl, orders, 'order')));
     this._subscription.add(this._store.select(selectProducts).subscribe(async products => await this.patchFormArray(this.productsControl, products, 'product')));
-    this._subscription.add(timer(100).subscribe(() => {
-      this.animationState = 'shown';
-      this._changeDetectorRef.detectChanges();
-    }));
   }
 
   private patchContainerHeight(containerHeight: number) {

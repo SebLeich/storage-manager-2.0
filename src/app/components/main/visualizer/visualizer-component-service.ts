@@ -17,13 +17,17 @@ import * as fromIGroupState from 'src/app/store/reducers/i-group.reducers';
 import { Store } from "@ngrx/store";
 import { selectCurrentSolution, selectCurrentSolutionGroups } from "src/app/store/selectors/i-solution.selectors";
 import { IContainer } from "src/app/interfaces/i-container.interface";
-import { IPosition } from "src/app/interfaces/i-position";
+import { IPosition } from "src/app/interfaces/i-position.interface";
+import { FileService } from "src/app/services/file.service";
 
 @Injectable()
 export class VisualizerComponentService {
 
     scene = new ThreeJS.Scene();
-    renderer = new ThreeJS.WebGLRenderer({ antialias: true });
+    renderer = new ThreeJS.WebGLRenderer({
+        antialias: true,
+        preserveDrawingBuffer: true
+    });
     camera!: ThreeJS.PerspectiveCamera;
     controls!: OrbitControls;
     gridHelper!: ThreeJS.GridHelper;
@@ -101,6 +105,12 @@ export class VisualizerComponentService {
     dispose() {
         for (let sub of this._subscriptions) sub.unsubscribe();
         this._subscriptions = [];
+    }
+
+    public downloadScreenshot() {
+        const strMime = "image/jpeg";
+        const imgData = this.renderer.domElement.toDataURL(strMime);
+        FileService.downloadFile(imgData, 'screenshot.jpg');
     }
 
     highlightGood(good: IGood) {

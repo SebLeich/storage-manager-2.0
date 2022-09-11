@@ -1,10 +1,9 @@
-import { createReducer, MetaReducer, on, Store } from '@ngrx/store';
+import { createReducer, MetaReducer, on } from '@ngrx/store';
 
 import defaultSolution from 'src/assets/exampleSolution.json';
 
 import { environment } from 'src/environments/environment';
 import { EntityState, EntityAdapter, createEntityAdapter, Update } from '@ngrx/entity';
-import { InjectionToken } from '@angular/core';
 import {
   addSolution,
   addSolutions,
@@ -23,10 +22,6 @@ import * as moment from 'moment';
 import { ISolution } from 'src/app/interfaces/i-solution.interface';
 
 export const solutionFeatureKey = 'solution';
-
-export const SOLUTION_REDUCER_TOKEN = new InjectionToken<Store<State>>(
-  'Solution Reducers'
-);
 
 export interface State extends EntityState<ISolution> {
   selectedSolutionId: string | null;
@@ -178,10 +173,6 @@ export const solutionReducer = createReducer(
     return adapter.updateOne(update, currentState);
   })
 );
-
-export const metaReducers: MetaReducer<State>[] = !environment.production
-  ? []
-  : [];
 
 function solutionCalculationSourcesMatch(solution1: ISolution | null | undefined, solution2: ISolution | null | undefined) {
   if (!!solution1?.calculationSource?.staticAlgorithm || !!solution2?.calculationSource?.staticAlgorithm) {

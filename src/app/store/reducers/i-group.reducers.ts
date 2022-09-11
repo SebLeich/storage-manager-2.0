@@ -1,8 +1,7 @@
-import { createReducer, MetaReducer, on, Store } from '@ngrx/store';
+import { createReducer, MetaReducer, on } from '@ngrx/store';
 
 import { environment } from 'src/environments/environment';
-import { EntityState, EntityAdapter, createEntityAdapter, Update } from '@ngrx/entity';
-import { InjectionToken } from '@angular/core';
+import { EntityState, EntityAdapter, createEntityAdapter } from '@ngrx/entity';
 import {
   addGroup,
   addGroups,
@@ -18,10 +17,6 @@ import { IGroup } from 'src/app/interfaces/i-group.interface';
 import { updateCalculationAttributes } from '../actions/i-calculation-attribute.actions';
 
 export const groupFeatureKey = 'group';
-
-export const ORDER_REDUCER_TOKEN = new InjectionToken<Store<State>>(
-  'Group Reducers'
-);
 
 export interface State extends EntityState<IGroup> {
   selectedGroupId: string | null;

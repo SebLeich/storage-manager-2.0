@@ -1,0 +1,26 @@
+@import 'src/lib/sass/gradients';
+
+.body {
+    height: 80vh;
+    width: 70vw;
+    display: flex;
+    flex-direction: column;
+    box-sizing: border-box;
+}
+
+.headline {
+    display: flex;
+}
+
+.text {
+    flex: 1;
+}
+
+.headline .closer {
+    background-color: transparent;
+    color: #e73939;
+}
+
+.content {
+    flex: 1;
+}

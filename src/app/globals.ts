@@ -1,3 +1,5 @@
+import { InjectionToken } from "@angular/core";
+
 export enum Algorithm {
     AllInOneRow, StartLeftBottom, SuperFlo, AISupportedSolver
 }
@@ -52,3 +54,5 @@ export const selectedGoodEdgeColor = '#ff7e00';
 export const keyboardControlMoveStep = 500;
 
 export const infinityReplacement = 100;
+
+export const RootViewContainerRef = new InjectionToken('RootViewContainerRef');

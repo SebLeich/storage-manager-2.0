@@ -36,6 +36,14 @@
             </td>
             <td mat-footer-cell *matFooterCellDef class="footer-cell"></td>
         </ng-container>
+        
+        <ng-container matColumnDef="3dmodel">
+            <th mat-header-cell *matHeaderCellDef>3d model</th>
+            <td mat-cell *matCellDef="let element" [formGroup]="element.value">
+                coming soon
+            </td>
+            <td mat-footer-cell *matFooterCellDef class="footer-cell"></td>
+        </ng-container>
 
         <ng-container matColumnDef="controls">
             <th mat-header-cell *matHeaderCellDef></th>
