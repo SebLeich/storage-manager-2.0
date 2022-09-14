@@ -41,6 +41,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatTabsModule } from '@angular/material/tabs';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatDialogModule } from '@angular/material/dialog';
 
 let rootStoreFeatures: any = {};
@@ -68,6 +69,7 @@ export default [
     MatSelectModule,
     MatSlideToggleModule,
     MatSnackBarModule,
+    MatProgressSpinnerModule,
     MatTabsModule,
     MatToolbarModule,
     NoopAnimationsModule,
