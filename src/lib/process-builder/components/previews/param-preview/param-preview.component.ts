@@ -6,13 +6,8 @@ import { IParam } from 'src/lib/process-builder/globals/i-param';
   templateUrl: './param-preview.component.html',
   styleUrls: ['./param-preview.component.sass']
 })
-export class ParamPreviewComponent implements OnInit {
+export class ParamPreviewComponent {
 
   @Input() param?: IParam;
-
-  constructor() { }
-
-  ngOnInit(): void {
-  }
 
 }

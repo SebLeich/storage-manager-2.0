@@ -11,21 +11,22 @@ import { updateIFunction } from '../../../store/actions/i-function.actions';
 })
 export class FunctionPreviewComponent implements OnInit {
 
-  @Input() func?: IFunction;
+  @Input() public func?: IFunction;
 
-  inputParams: IInputParam[] = [];
+  public inputParams: IInputParam[] = [];
+  public finalizesFlowMessage = 'final function';
 
   constructor(
     private _store: Store
   ) { }
 
-  isNumber = (arg: any) => typeof arg === 'number';
+  public isNumber = (arg: any) => typeof arg === 'number';
 
   public ngOnInit(): void {
     this.inputParams = this.func? Array.isArray(this.func.inputParams) ? this.func.inputParams : typeof this.func.inputParams === 'number' ? [this.func.inputParams] : [] : [];
   }
 
-  updateFunctionDescription(description: string) {
+  public updateFunctionDescription(description: string) {
     if(!this.func){
       return;
     }

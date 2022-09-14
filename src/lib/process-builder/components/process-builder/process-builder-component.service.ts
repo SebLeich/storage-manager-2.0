@@ -33,6 +33,7 @@ import { ValidationError } from '../../globals/validation-error';
 import { ValidationWarning } from '../../globals/validation-warning';
 import { ValidationWarningPipe } from '../../pipes/validation-warning.pipe';
 import { BpmnjsService } from '../../services/bpmnjs.service';
+import { selectSnapshot } from '../../globals/select-snapshot';
 
 @Injectable()
 export class ProcessBuilderComponentService {
@@ -88,7 +89,6 @@ export class ProcessBuilderComponentService {
             'xml': xml,
             'lastModified': moment().format('yyyy-MM-ddTHH:mm:ss')
           };
-          console.log(defaultBpmnModel);
           this._store.dispatch(addIBpmnJSModel(defaultBpmnModel));
           this._currentIBpmnJSModelGuid.next(defaultBpmnModel.guid);
         }
@@ -102,10 +102,9 @@ export class ProcessBuilderComponentService {
 
   hideAllHints = () => BPMNJsRepository.clearAllTooltips(this.bpmnjsService.bpmnjs);
 
-  init(parent: HTMLDivElement) {
-    // attach BpmnJS instance to DOM element
+  async init(parent: HTMLDivElement) {
     this.bpmnjsService.bpmnjs.attachTo(parent);
-    this.setDefaultModel().subscribe();
+    await selectSnapshot(this.setDefaultModel());
   }
 
   removeModel(bpmnJsModel?: IBpmnJSModel, event?: Event) {

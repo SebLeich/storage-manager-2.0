@@ -1,4 +1,4 @@
-import { AfterContentInit, Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { showAnimation } from 'src/lib/shared/animations/show';
 import { ProcessBuilderService } from '../../services/process-builder.service';
 import { ProcessBuilderComponentService } from './process-builder-component.service';
@@ -7,29 +7,29 @@ import { ProcessBuilderComponentService } from './process-builder-component.serv
   selector: 'app-process-builder',
   templateUrl: './process-builder.component.html',
   styleUrls: ['./process-builder.component.sass'],
-  animations: [
-    showAnimation
-  ]
+  animations: [showAnimation]
 })
-export class ProcessBuilderComponent implements AfterContentInit, OnDestroy, OnInit {
+export class ProcessBuilderComponent implements OnDestroy, OnInit {
 
   @ViewChild('diagramWrapper', { static: true }) private diagramWrapper!: ElementRef<HTMLDivElement>;
 
   constructor(
     public processBuilderService: ProcessBuilderService,
-    public processBuilderComponentService: ProcessBuilderComponentService
+    public processBuilderComponentService: ProcessBuilderComponentService,
+    private _changeDetectorRef: ChangeDetectorRef
   ) { }
 
-  ngAfterContentInit(): void {
-    this.processBuilderComponentService.init(this.diagramWrapper.nativeElement);
+  public ngOnInit(): void {
+    this.init();
   }
 
-  ngOnDestroy(): void {
+  public ngOnDestroy(): void {
     this.processBuilderComponentService.dispose();
   }
 
-  ngOnInit(): void {
-
+  private async init() {
+    await this.processBuilderComponentService.init(this.diagramWrapper.nativeElement);
+    this._changeDetectorRef.detectChanges();
   }
 
 }

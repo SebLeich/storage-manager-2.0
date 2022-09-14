@@ -32,7 +32,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { BrowserModule } from '@angular/platform-browser';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
-import { ReactiveFormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -57,6 +57,7 @@ rootStoreFeatures[fromIInterfaceState.featureKey] = fromIInterfaceState.featureK
 
 export default [
     BrowserModule,
+    FormsModule,
     HttpClientModule,
     MatButtonModule,
     MatDialogModule,
