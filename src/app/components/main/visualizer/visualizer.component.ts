@@ -95,7 +95,6 @@ export class VisualizerComponent implements AfterViewInit, OnDestroy, OnInit {
     this._subscriptions.add(
       this.hasCurrentSolution$
         .pipe(
-          debounceTime(1000),
           filter((hasCurrentSolution) => !hasCurrentSolution),
           switchMap(() => this._store.select(selectSolutions)),
           take(1)
@@ -103,13 +102,14 @@ export class VisualizerComponent implements AfterViewInit, OnDestroy, OnInit {
         .subscribe((solutions) => {
           if (solutions.length > 0) {
             this._store.dispatch(setCurrentSolution({ solution: solutions[0] }));
+          } else {
+            this._showNoSolutionDialog();
           }
-          this.showNoSolutionDialog();
         })
     );
   }
 
-  showNoSolutionDialog() {
+  private _showNoSolutionDialog() {
     this._dialog.open(NoSolutionDialogComponent, {
       panelClass: 'no-padding-dialog',
       disableClose: true,
@@ -117,7 +117,7 @@ export class VisualizerComponent implements AfterViewInit, OnDestroy, OnInit {
     });
   }
 
-  async toggleMenu() {
+  public async toggleMenu() {
     const menuVisible = await selectSnapshot(this._menuVisible);
     const userToggledMenu = await selectSnapshot(this._userToggledMenu);
 
@@ -126,18 +126,17 @@ export class VisualizerComponent implements AfterViewInit, OnDestroy, OnInit {
   }
 
   @HostListener('window:resize', ['$event'])
-  onResize() {
+  public onResize() {
     this.visualizerComponentService.triggerResizeEvent();
     this.validateClient();
   }
 
   @HostListener('document:keypress', ['$event'])
-  onKeydown = (event: KeyboardEvent) =>
-    this.visualizerComponentService.keydown(event);
+  public onKeydown = (event: KeyboardEvent) => this.visualizerComponentService.keydown(event);
 
-  selectedGoodEdgeColor = selectedGoodEdgeColor;
+  public selectedGoodEdgeColor = selectedGoodEdgeColor;
 
-  async validateClient() {
+  public async validateClient() {
     const userToggledMenu = await selectSnapshot(this._userToggledMenu);
     const wideView = window.innerWidth >= 1000;
 
