@@ -1,5 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import defaultImportsConstant from 'src/app/default-imports.constant';
+import { IParamMember } from 'src/lib/process-builder/globals/i-param-member';
 import { ProcessBuilderModule } from 'src/lib/process-builder/process-builder.module';
 
 import { ParamMemberPreviewComponent } from './param-member-preview.component';
@@ -18,11 +19,10 @@ describe('ParamMemberPreviewComponent', () => {
       ]
     })
     .compileComponents();
-  });
 
-  beforeEach(() => {
     fixture = TestBed.createComponent(ParamMemberPreviewComponent);
     component = fixture.componentInstance;
+    component.paramMember = { } as IParamMember;
     fixture.detectChanges();
   });
 

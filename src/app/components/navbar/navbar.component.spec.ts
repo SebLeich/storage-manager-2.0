@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { Store } from '@ngrx/store';
 import defaultImportsConstant from 'src/app/default-imports.constant';
-import { addSolution, setCurrentSolution } from 'src/app/store/actions/i-solution.actions';
+import { addSolution } from 'src/app/store/actions/i-solution.actions';
 import exampleSolution from 'src/config/example-solution';
 
 import { NavbarComponent } from './navbar.component';

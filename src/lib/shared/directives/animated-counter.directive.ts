@@ -45,7 +45,7 @@ export class AnimatedCounterDirective implements OnDestroy, OnInit {
       this.currentCount$
         .subscribe(
           (currentCount) => {
-            const count = Math.abs(Math.floor(currentCount)).toFixed(0);
+            const count = currentCount.toFixed(0);
             (this.counter.nativeElement as HTMLSpanElement).textContent = count;
           })
     );
