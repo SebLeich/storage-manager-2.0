@@ -43,7 +43,9 @@
       </div>
 
       <div class="percentage-wrapper">
-        <div class="percentage">{{ percentage }} %</div>
+        <div class="percentage">
+          <span appAnimatedCounter [value]="percentage" [animationDuration]=500></span> %  
+        </div>
         <div class="text">packaging load</div>
       </div>
     </div>

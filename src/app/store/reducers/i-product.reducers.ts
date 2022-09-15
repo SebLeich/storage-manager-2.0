@@ -108,10 +108,12 @@ export const productReducer = createReducer(
   }),
   on(updateCalculationAttributes, (_, { products }) => {
     const entities: { [key: string]: IProduct } = {};
-    products.forEach(product => entities[product.id] = product);
+    for(let product of products ?? []){
+      entities[product.id] = product;
+    }
     return {
       entities: entities,
-      ids: products.map(product => product.id),
+      ids: products?.map(product => product.id) ?? [],
       selectedProductId: null
     };
   }),

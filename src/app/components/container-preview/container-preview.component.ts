@@ -45,15 +45,15 @@ export class ContainerPreviewComponent implements OnChanges, OnInit {
       }
     },
   }
-  public percentage: string = '0';
+  public percentage: number = 0;
 
   constructor() { }
 
-  ngOnChanges(changes: SimpleChanges): void {
+  public ngOnChanges(changes: SimpleChanges): void {
     if (changes['container']) this._calculateUsedSpace();
   }
 
-  ngOnInit(): void {
+  public ngOnInit(): void {
     this._calculateUsedSpace();
   }
 
@@ -65,7 +65,7 @@ export class ContainerPreviewComponent implements OnChanges, OnInit {
       dataset.data = [used, total - used];
       return dataset;
     })];
-    this.percentage = ((used / total) * 100).toFixed(0);
+    this.percentage = ((used / total) * 100);
   }
 
 }

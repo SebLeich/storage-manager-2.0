@@ -97,8 +97,10 @@ export const validateBPMNConfig = (bpmnJS: any, injector: Injector) => {
     }
 
     _shapeAddedActions[shapeTypes.StartEvent] = (evt: IEvent) => {
-        getModelingModule(bpmnJS).updateLabel(evt.element, config.statusConfig.initialStatus);
-        validationFinishedSubject.next();
+        if(!!config?.statusConfig){
+            getModelingModule(bpmnJS).updateLabel(evt.element, config.statusConfig.initialStatus);
+            validationFinishedSubject.next();
+        }
     }
     _shapeAddedActions[shapeTypes.EndEvent] = (evt: IEvent) => {
         getModelingModule(bpmnJS).updateLabel(evt.element, config.statusConfig.finalStatus);

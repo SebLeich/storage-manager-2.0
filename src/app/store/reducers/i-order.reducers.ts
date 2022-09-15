@@ -127,10 +127,12 @@ export const orderReducer = createReducer(
   }),
   on(updateCalculationAttributes, (_, { orders }) => {
     const entities: { [key: string]: IOrder } = {};
-    orders.forEach(order => entities[order.id] = order);
+    for(let order of orders ?? []){
+      entities[order.id] = order;
+    }
     return {
       entities: entities,
-      ids: orders.map(order => order.id),
+      ids: orders?.map(order => order.id) ?? [],
       selectedOrderId: null
     };
   }),

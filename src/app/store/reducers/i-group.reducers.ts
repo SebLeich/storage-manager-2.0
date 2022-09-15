@@ -84,12 +84,12 @@ export const groupReducer = createReducer(
   }),
   on(updateCalculationAttributes, (_, { groups }) => {
     const entities: { [key: string]: IGroup } = {};
-    groups.forEach(group => {
+    for(let group of groups ?? []){
       entities[group.id] = group;
-    });
+    }
     return {
       entities: entities,
-      ids: groups.map(group => group.id),
+      ids: groups?.map(group => group.id) ?? [],
       selectedGroupId: null
     };
   }),

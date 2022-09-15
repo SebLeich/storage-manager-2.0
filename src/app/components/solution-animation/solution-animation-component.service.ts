@@ -1,11 +1,9 @@
 import { Injectable, OnDestroy, OnInit } from "@angular/core";
 import { Store } from "@ngrx/store";
-import { BehaviorSubject, combineLatest, interval, Subscription, timer } from "rxjs";
-import { filter, map, switchMap, take, takeUntil, tap } from "rxjs/operators";
+import { BehaviorSubject, combineLatest, Subscription, timer } from "rxjs";
+import { filter, map, takeUntil, tap } from "rxjs/operators";
 import { VisualizerComponentService } from "../main/visualizer/visualizer-component-service";
-
-import * as fromISolutionState from 'src/app/store/reducers/i-solution.reducers';
-import { selectCurrentSolution, selectCurrentSolutionSteps } from "src/app/store/selectors/i-solution.selectors";
+import { selectCurrentSolutionSteps } from "src/app/store/selectors/i-solution.selectors";
 import { IStep } from "src/app/interfaces/i-step.interface";
 import { selectSnapshot } from "src/lib/process-builder/globals/select-snapshot";
 
@@ -20,7 +18,7 @@ export class SolutionAnimationComponentService implements OnDestroy, OnInit {
     animationSpeed$ = this._animationSpeed.asObservable();
     stepIndex$ = this._stepIndex.asObservable();
 
-    currentStep$ = combineLatest([this._solutionStore.select(selectCurrentSolutionSteps), this.stepIndex$]).pipe(map(([steps, index]: [IStep[] | null, number]) => {
+    currentStep$ = combineLatest([this._store.select(selectCurrentSolutionSteps), this.stepIndex$]).pipe(map(([steps, index]: [IStep[] | null, number]) => {
         if (!Array.isArray(steps)) {
             return;
         }
@@ -31,7 +29,7 @@ export class SolutionAnimationComponentService implements OnDestroy, OnInit {
 
     constructor(
         private _visualizerComponentService: VisualizerComponentService,
-        private _solutionStore: Store<fromISolutionState.State>,
+        private _store: Store,
     ) { }
 
     public ngOnDestroy(): void {
@@ -40,7 +38,7 @@ export class SolutionAnimationComponentService implements OnDestroy, OnInit {
 
     public ngOnInit(): void {
         this._subscriptions.add(
-            combineLatest([this.animationRunning$, this.stepIndex$, this._solutionStore.select(selectCurrentSolutionSteps)])
+            combineLatest([this.animationRunning$, this.stepIndex$, this._store.select(selectCurrentSolutionSteps)])
                 .pipe(
                     filter(([animationRunning, _]) => animationRunning)
                 )
@@ -56,7 +54,7 @@ export class SolutionAnimationComponentService implements OnDestroy, OnInit {
     }
 
     async startAnimation() {
-        const currentSteps = await selectSnapshot(this._solutionStore.select(selectCurrentSolutionSteps));
+        const currentSteps = await selectSnapshot(this._store.select(selectCurrentSolutionSteps));
         if (!currentSteps || currentSteps.length === 0) {
             return;
         }

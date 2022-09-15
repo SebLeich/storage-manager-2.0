@@ -1,5 +1,5 @@
-import { firstValueFrom, Observable } from 'rxjs';
+import { endWith, firstValueFrom, Observable } from 'rxjs';
 
 export function selectSnapshot<T>(obs: Observable<T>): Promise<T> {
-    return firstValueFrom(obs);
+    return firstValueFrom(obs.pipe(endWith({} as T)));
 }
