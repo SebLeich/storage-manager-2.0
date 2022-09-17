@@ -1,13 +1,11 @@
 import * as ThreeJS from 'three';
 
-import { Injectable } from '@angular/core';
+import { Injectable, OnDestroy } from '@angular/core';
 
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 import { Scene } from 'three';
 
-@Injectable({
-  providedIn: 'root'
-})
+@Injectable()
 export class SceneVisualizationComponentService {
 
   private _camera: ThreeJS.PerspectiveCamera | undefined;

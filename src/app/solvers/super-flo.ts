@@ -14,9 +14,10 @@ import moment from 'moment';
 import { IOrder } from '../interfaces/i-order.interface';
 import { IGroup } from '../interfaces/i-group.interface';
 import { IPosition } from '../interfaces/i-position.interface';
-import { IPossibilities } from '../interfaces/i-possibilities';
+import { IPossibilities } from '../interfaces/i-possibilities.interface';
 import { IStep } from '../interfaces/i-step.interface';
 import { IGood } from '../interfaces/i-good.interface';
+import { Algorithm } from '../globals';
 
 export class SuperFloSolver extends Solver implements ISolver {
 
@@ -53,8 +54,11 @@ export class SuperFloSolver extends Solver implements ISolver {
                 goods: []
             },
             steps: [],
-            algorithm: this._description,
-            calculated: moment().format()
+            calculated: moment().format(),
+            calculationSource: {
+                title: this._description,
+                staticAlgorithm: Algorithm.SuperFlo
+            }
         } as ISolution;
 
         const containerPosition = getContainerPosition(solution.container!);
@@ -93,7 +97,8 @@ export class SuperFloSolver extends Solver implements ISolver {
                         id: generateGuid(),
                         stackingAllowed: order.stackingAllowed,
                         turningAllowed: order.turningAllowed,
-                        turned: addOrderResult.placedAtPosition?.rotated
+                        turned: addOrderResult.placedAtPosition?.rotated,
+                        orderGuid: order.id
                     } as IGood);
                     solution.steps!.push({ ...addOrderResult, sequenceNumber: sequenceNumber });
                     sequenceNumber++;
@@ -107,7 +112,6 @@ export class SuperFloSolver extends Solver implements ISolver {
         }
 
         solution.container!.length = Math.max(...solution.container!.goods.map(good => good.zCoord + good.length), 0);
-        solution.groups = groups;
         return solution;
     }
 
@@ -298,7 +302,7 @@ export class SuperFloSolver extends Solver implements ISolver {
 
         const goodPosition: IPosition = {
             ...position,
-            fCoord: position.fCoord - diff.z,
+            fCoord: position.fCoord === Infinity || diff.z === Infinity? Infinity: position.fCoord - diff.z,
             rCoord: position.rCoord - diff.x,
             tCoord: position.tCoord - diff.y,
             height: order.height,
@@ -332,7 +336,8 @@ export class SuperFloSolver extends Solver implements ISolver {
                     groupRestrictedBy: source.groupRestrictedBy,
                     length: source.length + candidate.length,
                     rotated: false,
-                    zCoord: candidate.zCoord
+                    zCoord: candidate.zCoord,
+                    fCoord: candidate.zCoord + source.length + candidate.length
                 };
             }
             if (source.fCoord === candidate.zCoord) {

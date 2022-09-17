@@ -1,6 +1,6 @@
 import { v4 as generateGuid } from 'uuid';
 import { selectSnapshot } from "src/lib/process-builder/globals/select-snapshot";
-import { compare } from "../globals";
+import { Algorithm, compare } from "../globals";
 import { ISolver } from "../interfaces";
 import { ISolution } from "../interfaces/i-solution.interface";
 
@@ -48,8 +48,12 @@ export class StartLeftBottomSolver extends Solver implements ISolver {
                 length: 0,
                 goods: []
             },
-            algorithm: this._description,
-            calculated: moment().format()
+            calculated: moment().format(),
+            calculationSource: {
+                staticAlgorithm: Algorithm.StartLeftBottom,
+                title: this._description
+            },
+            steps: [],
         } as ISolution;
         let sequenceNumber = 0, lastGood: IGood | null = null;
 
@@ -69,15 +73,18 @@ export class StartLeftBottomSolver extends Solver implements ISolver {
                         zCoord: position.zCoord,
                         stackedOnGood: position.stackedOn,
                         turned: false,
-                        group: group.id
+                        group: group.id,
+                        turningAllowed: order.turningAllowed,
+                        stackingAllowed: order.stackingAllowed,
+                        sequenceNr: sequenceNumber,
+                        orderGuid: order.id
                     };
-                    solution.container!.goods.push(lastGood);
+                    solution.container!.goods.push(lastGood as IGood);
                     sequenceNumber++;
                 }
             }
         }
         solution.container!.length = Math.max(...solution.container!.goods.map(x => x.zCoord + x.length), 0);
-        solution.groups = groups;
 
         return solution;
     }

@@ -1,33 +1,38 @@
 import { createReducer, on } from '@ngrx/store';
 
 import { EntityState, createEntityAdapter } from '@ngrx/entity';
-import { ISolution } from 'src/app/interfaces/i-solution.interface';
 import { ISolutionPreview } from 'src/app/interfaces/i-solution-preview.interface';
-import { upsertSolutionPreview } from '../actions/i-solution-preview.actions';
+import { announceSolutionPreview, upsertSolutionPreview } from '../actions/i-solution-preview.actions';
+import { SolutionPreviewStatus } from 'src/app/enumerations/solution-preview-status.enumeration';
 
 export const solutionPreviewFeatureKey = 'solutionPreview';
 
-export interface State extends EntityState<ISolution> {
-  selectedSolutionId: string | null;
+export interface State extends EntityState<ISolutionPreview> {
   ids: string[];
 }
 
 export const adapter = createEntityAdapter<ISolutionPreview>(
   {
     selectId: (solutionPreview) => solutionPreview.solutionId,
-    sortComparer: (solutionPreviewA, solutionPreview) =>
-    solutionPreviewA.solutionId > solutionPreview.solutionId ? 1 : -1,
+    sortComparer: (solutionPreviewA, solutionPreview) => solutionPreviewA.solutionId > solutionPreview.solutionId ? 1 : -1,
   }
 );
 
-export const initialState = adapter.getInitialState({
+export const initialState: State = adapter.getInitialState({
   entities: {},
   ids: [],
 });
 
 
-export const solutionReducer = createReducer(
+export const reducer = createReducer(
   initialState,
+
+  on(announceSolutionPreview, (state, { solutionId }) => {
+    if (state.ids.indexOf(solutionId) === -1) {
+      return adapter.addOne({ solutionId: solutionId, status: SolutionPreviewStatus.Generating }, state);
+    }
+    return state;
+  }),
 
   on(upsertSolutionPreview, (state, { solutionPreview }) => {
     return adapter.upsertOne(solutionPreview, state);

@@ -8,20 +8,52 @@ import { selectSnapshot } from 'src/lib/process-builder/globals/select-snapshot'
 
 import * as ThreeJS from 'three';
 
+import { announceSolutionPreview, upsertSolutionPreview } from 'src/app/store/actions/i-solution-preview.actions';
+import { SolutionPreviewStatus } from 'src/app/enumerations/solution-preview-status.enumeration';
+import { selectSolutionPreview } from 'src/app/store/selectors/i-solution-preview.selectors';
+import { filter, map, switchMap } from 'rxjs';
+import { DomSanitizer } from '@angular/platform-browser';
+import { showAnimation } from 'src/lib/shared/animations/show';
+
 @Component({
   selector: 'app-solution-preview-rendering',
   templateUrl: './solution-preview-rendering.component.html',
-  styleUrls: ['./solution-preview-rendering.component.css']
+  styleUrls: ['./solution-preview-rendering.component.css'],
+  animations: [showAnimation]
 })
 export class SolutionPreviewRenderingComponent implements OnChanges, OnInit {
 
-  @Input() solution?: ISolution;
-  @Input() backgroundColor: string = '#ffffff';
+  @Input() public solution!: ISolution;
+  @Input() public backgroundColor: string = '#ffffff';
+
+  public preview$ = this._store.select(selectSolutionPreview(() => this.solution.id));
+  public previewStatus$ = this.preview$.pipe(
+    map(
+      (preview) => {
+        if (preview) {
+          return preview.status;
+        }
+        return SolutionPreviewStatus.NotGenerated;
+      }
+    )
+  );
+  public previewRendering$ = this.previewStatus$.pipe(map(status => status === SolutionPreviewStatus.Generating));
+  public previewRenderingSucceeded$ = this.previewStatus$.pipe(map(status => status === SolutionPreviewStatus.Succeeded));
+  public previewImage$ = this.previewRenderingSucceeded$.pipe(
+    filter(succeeded => succeeded),
+    switchMap(() => this.preview$),
+    map(
+      preview => {
+        return this._domSanitizer.bypassSecurityTrustResourceUrl(preview!.dataURL!);
+      }
+    )
+  );
 
   public scene = new ThreeJS.Scene();
 
   constructor(
-    private _store: Store
+    private _store: Store,
+    private _domSanitizer: DomSanitizer
   ) { }
 
   public ngOnChanges(): void {
@@ -32,18 +64,29 @@ export class SolutionPreviewRenderingComponent implements OnChanges, OnInit {
     this._updateScene();
   }
 
-  private async _updateScene() {
-    if (this.solution?.container) {
-      this.scene.background = new ThreeJS.Color(this.backgroundColor);
-      const containerPosition = getContainerPositionSharedMethods(this.solution.container!);
-      const containerResult = VisualizationService.generateOutlinedBoxMesh(containerPosition, 'container');
-      this.scene.add(containerResult.edges);
-      const groups = await selectSnapshot(this._store.select(selectGroups));
-      for (let good of this.solution.container!.goods) {
-        const group = groups.find(group => group.id === good.group);
-        const goodResult = VisualizationService.generateFilledBoxMesh(getContainerPositionSharedMethods(good), group?.color ?? '#ffffff', 'good', containerPosition);
-        this.scene.add(goodResult.edges, goodResult.mesh);
+  public sceneRendered(args: { canvas: HTMLCanvasElement }) {
+    const strMime = "image/jpeg";
+    const imgData = args.canvas.toDataURL(strMime);
+    this._store.dispatch(upsertSolutionPreview({
+      solutionPreview: {
+        status: SolutionPreviewStatus.Succeeded,
+        dataURL: imgData,
+        solutionId: this.solution!.id
       }
+    }));
+  }
+
+  private async _updateScene() {
+    this._store.dispatch(announceSolutionPreview({ solutionId: this.solution.id }));
+    this.scene.background = new ThreeJS.Color(this.backgroundColor);
+    const containerPosition = getContainerPositionSharedMethods(this.solution.container!);
+    const containerResult = VisualizationService.generateOutlinedBoxMesh(containerPosition, 'container');
+    this.scene.add(containerResult.edges);
+    const groups = await selectSnapshot(this._store.select(selectGroups));
+    for (let good of this.solution.container!.goods) {
+      const group = groups.find(group => group.id === good.group);
+      const goodResult = VisualizationService.generateFilledBoxMesh(getContainerPositionSharedMethods(good), group?.color ?? '#ffffff', 'good', containerPosition);
+      this.scene.add(goodResult.edges, goodResult.mesh);
     }
   }
 

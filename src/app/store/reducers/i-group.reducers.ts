@@ -1,5 +1,7 @@
 import { createReducer, MetaReducer, on } from '@ngrx/store';
 
+import exemplarySolution from 'src/assets/exemplary-solution.json';
+
 import { environment } from 'src/environments/environment';
 import { EntityState, EntityAdapter, createEntityAdapter } from '@ngrx/entity';
 import {
@@ -15,6 +17,7 @@ import { v4 as generateGuid } from 'uuid';
 import * as moment from 'moment';
 import { IGroup } from 'src/app/interfaces/i-group.interface';
 import { updateCalculationAttributes } from '../actions/i-calculation-attribute.actions';
+import { setExemplarySolution } from '../actions/i-solution.actions';
 
 export const groupFeatureKey = 'group';
 
@@ -82,9 +85,21 @@ export const groupReducer = createReducer(
     };
     return state;
   }),
+  on(setExemplarySolution, () => {
+    let entities: { [key: string]: IGroup } = {};
+    for (let group of exemplarySolution.groups) {
+      entities[group.id] = group;
+    }
+    const state = {
+      entities: entities,
+      ids: exemplarySolution.groups.map(group => group.id),
+      selectedGroupId: null,
+    } as State;
+    return state;
+  }),
   on(updateCalculationAttributes, (_, { groups }) => {
     const entities: { [key: string]: IGroup } = {};
-    for(let group of groups ?? []){
+    for (let group of groups ?? []) {
       entities[group.id] = group;
     }
     return {

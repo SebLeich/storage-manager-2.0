@@ -72,6 +72,10 @@ import { IProductEffects } from './store/effects/i-product.effects';
 
 import * as fromISolutionState from './store/reducers/i-solution.reducers';
 import { ISolutionEffects } from './store/effects/i-solution.effects';
+
+import * as fromISolutionPreviewState from './store/reducers/i-solution-preview.reducers';
+import { ISolutionPreviewEffects } from './store/effects/i-solution-preview.effects';
+
 import { LocalDataComponent } from './components/main/local-data/local-data.component';
 import { WidgetComponent } from './components/widget/widget.component';
 import { OrdersFormComponent } from './components/forms/orders-form/orders-form.component';
@@ -81,8 +85,8 @@ import { CalculationContextOverviewComponent } from './components/calculation-co
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { SceneVisualizationComponent } from './components/scene-visualization/scene-visualization.component';
 import { SolutionVisualizationDialogComponent } from './components/dialog/solution-visualization-dialog/solution-visualization-dialog.component';
-import { ISolutionPreviewEffects } from './store/effects/i-solution-preview.effects';
 import { SolutionPreviewRenderingComponent } from './components/solution-preview-rendering/solution-preview-rendering.component';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 let rootStoreFeatures: any = {};
 rootStoreFeatures[fromICalculationAttributesState.calculationAttributesFeatureKey] = fromICalculationAttributesState.calculationAttributesReducer;
@@ -90,6 +94,7 @@ rootStoreFeatures[fromIGroupState.groupFeatureKey] = fromIGroupState.groupReduce
 rootStoreFeatures[fromIOrderState.orderFeatureKey] = fromIOrderState.orderReducer;
 rootStoreFeatures[fromIProductState.productFeatureKey] = fromIProductState.productReducer;
 rootStoreFeatures[fromISolutionState.solutionFeatureKey] = fromISolutionState.solutionReducer;
+rootStoreFeatures[fromISolutionPreviewState.solutionPreviewFeatureKey] = fromISolutionPreviewState.reducer;
 
 @NgModule({
   declarations: [
@@ -139,6 +144,7 @@ rootStoreFeatures[fromISolutionState.solutionFeatureKey] = fromISolutionState.so
     MatTooltipModule,
     MatToolbarModule,
     MatSnackBarModule,
+    MatProgressSpinnerModule,
     HttpClientModule,
     FormsModule,
     ReactiveFormsModule,

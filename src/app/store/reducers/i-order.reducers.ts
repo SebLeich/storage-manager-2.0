@@ -17,6 +17,9 @@ import { IOrder } from 'src/app/interfaces/i-order.interface';
 import { updateCalculationAttributes } from '../actions/i-calculation-attribute.actions';
 import { removeGroup } from '../actions/i-group.actions';
 import { productChanged, removeProduct } from '../actions/i-product.actions';
+import { setExemplarySolution } from '../actions/i-solution.actions';
+
+import exemplarySolution from 'src/assets/exemplary-solution.json';
 
 export const orderFeatureKey = 'order';
 
@@ -112,6 +115,18 @@ export const orderReducer = createReducer(
     };
     return state;
   }),
+  on(setExemplarySolution, () => {
+    let entities: { [key: string]: IOrder } = {};
+    for (let order of exemplarySolution.orders) {
+      entities[order.id] = order;
+    }
+    const state = {
+      entities: entities,
+      ids: exemplarySolution.orders.map(order => order.id),
+      selectedOrderId: null
+    } as State;
+    return state;
+  }),
   on(setOrders, (_, { orders }) => {
     const entities: { [key: string]: IOrder } = {};
     for (let order of orders) {
@@ -120,8 +135,7 @@ export const orderReducer = createReducer(
     const state = {
       entities: entities,
       ids: Object.keys(entities),
-      selectedOrderId: null,
-      selectedOrderIndex: null,
+      selectedOrderId: null
     };
     return state;
   }),

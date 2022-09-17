@@ -1,4 +1,5 @@
-import { Component, ElementRef, Input, OnChanges, OnInit, SimpleChanges, ViewChild } from '@angular/core';
+import { Component, ElementRef, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output, SimpleChanges, ViewChild } from '@angular/core';
+import { debounceTime, ReplaySubject, Subject, Subscription } from 'rxjs';
 import { Scene } from 'three';
 import { SceneVisualizationComponentService } from './scene-visualization-component.service';
 
@@ -6,16 +7,18 @@ import { SceneVisualizationComponentService } from './scene-visualization-compon
   selector: 'app-scene-visualization',
   templateUrl: './scene-visualization.component.html',
   styleUrls: ['./scene-visualization.component.css'],
-  providers: [
-    SceneVisualizationComponentService
-  ]
+  providers: [SceneVisualizationComponentService]
 })
-export class SceneVisualizationComponent implements OnChanges, OnInit {
+export class SceneVisualizationComponent implements OnChanges, OnDestroy, OnInit {
 
   @ViewChild('visualizationWrapper', { static: true }) public visualizerWrapperRef!: ElementRef<HTMLDivElement>;
 
   @Input() public scene!: Scene;
-  public currentCanvas?: HTMLCanvasElement;
+  @Output() public sceneRendered = new EventEmitter<{ canvas: HTMLCanvasElement }>();
+
+  private _sceneRendered = new ReplaySubject<{ canvas: HTMLCanvasElement }>(1);
+
+  private subscription = new Subscription();
 
   constructor(public solutionVisualizationComponentService: SceneVisualizationComponentService) { }
 
@@ -25,8 +28,17 @@ export class SceneVisualizationComponent implements OnChanges, OnInit {
     }
   }
 
+  public ngOnDestroy(): void {
+    this.subscription.unsubscribe();
+  }
+
   public ngOnInit(): void {
     this.tryToRender();
+    this.subscription.add(
+      this._sceneRendered.pipe(debounceTime(1500)).subscribe((arg) => {
+        this.sceneRendered.emit(arg);
+      })
+    );
   }
 
   public tryToRender() {
@@ -34,6 +46,7 @@ export class SceneVisualizationComponent implements OnChanges, OnInit {
       const canvas = this.solutionVisualizationComponentService.setScreenDimensions(this.visualizerWrapperRef.nativeElement.clientHeight, this.visualizerWrapperRef.nativeElement.clientWidth);
       this.visualizerWrapperRef.nativeElement.appendChild(canvas);
       this.solutionVisualizationComponentService.renderScene(this.scene);
+      this._sceneRendered.next({ canvas: canvas });
     }
   }
 

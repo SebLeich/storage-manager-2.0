@@ -68,7 +68,6 @@ export class CalculationComponentService {
 
     private _calculationCallback = {
         next: ([wrapper, solution]: [IAlgorithmStatusWrapper, ISolution]) => {
-            solution.calculationSource = { staticAlgorithm: wrapper.algorithm.code };
             wrapper.solution = solution;
             wrapper.status = AlgorithmCalculationStatus.Calculated;
             this._store.dispatch(updateAlgorithmSolution({ solution }))
@@ -96,7 +95,7 @@ export class CalculationComponentService {
             algorithm.status = AlgorithmCalculationStatus.Unchecked;
         }
         for (let solution of solutions) {
-            let wrapper = this.algorithms.find(x => x.algorithm.title === solution.algorithm);
+            let wrapper = this.algorithms.find(x => x.algorithm.title === solution.calculationSource.title);
             if (wrapper) {
                 wrapper.status = AlgorithmCalculationStatus.Calculated;
                 wrapper.solution = solution;

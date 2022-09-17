@@ -4,10 +4,11 @@ import { ISpace } from "./i-space.interface";
 
 export interface IGood extends IPositionedElement, ISpace, IEntity {
     desc: string | null;
-    group?: string;
-    turningAllowed?: boolean;
-    turned?: boolean;
-    stackingAllowed?: boolean;
+    group: string;
+    turningAllowed: boolean;
+    turned: boolean;
+    stackingAllowed: boolean;
     stackedOnGood: string | null;
-    sequenceNr?: number;
+    sequenceNr: number;
+    orderGuid: string;
 }

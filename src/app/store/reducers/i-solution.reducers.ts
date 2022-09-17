@@ -1,18 +1,16 @@
-import { createReducer, MetaReducer, on } from '@ngrx/store';
+import { createReducer, on } from '@ngrx/store';
 
-import defaultSolution from 'src/assets/exampleSolution.json';
+import exemplarySolution from 'src/assets/exemplary-solution.json';
 
-import { environment } from 'src/environments/environment';
 import { EntityState, EntityAdapter, createEntityAdapter, Update } from '@ngrx/entity';
 import {
   addSolution,
   addSolutions,
   duplicateSolution,
-  setDefaultSolution,
+  setExemplarySolution,
   removeSolution,
   setCurrentSolution,
   setNextSolution,
-  updateCurrentSolutionGroupColor,
   clearSolutions,
   updateAlgorithmSolution,
   updateSolution,
@@ -49,9 +47,23 @@ export const solutionReducer = createReducer(
   on(addSolution, (state, { solution }) => {
     return adapter.addOne(
       {
-        ...solution,
         id: solution.id ?? generateGuid(),
-        calculated: solution.calculated ?? moment().format()
+        calculated: solution.calculated ?? moment().format(),
+        calculationSource: solution.calculationSource ?? {
+          title: 'unknown source'
+        },
+        container: solution.container ?? {
+          goods: [],
+          xCoord: 0,
+          yCoord: 0,
+          zCoord: 0,
+          width: 0,
+          length: 0,
+          height: 0,
+          id: generateGuid()
+        },
+        steps: [],
+        description: solution.description ?? null
       },
       state
     );
@@ -102,13 +114,44 @@ export const solutionReducer = createReducer(
     }
   }),
 
-  on(setDefaultSolution, () => {
+  on(setExemplarySolution, () => {
     let entities: { [key: string]: ISolution } = {};
-    entities[defaultSolution.id] = defaultSolution as any;
+    entities[exemplarySolution.solution.id] = {
+      ...exemplarySolution.solution,
+      container: {
+        ...exemplarySolution.solution.container,
+        goods: [...exemplarySolution.solution.container.goods.map(good => ({
+          ...good,
+          fCoord: good.fCoord === null ? Infinity : good.fCoord
+        }))],
+      },
+      steps: [
+        ...exemplarySolution.solution.steps.map(step => ({
+          ...step,
+          usedPosition: step.usedPosition ? {
+            ...step.usedPosition,
+            fCoord: step.usedPosition.fCoord === null ? Infinity : step.usedPosition.fCoord,
+            length: step.usedPosition.length === null ? Infinity : step.usedPosition.length,
+            groupRestrictedBy: step.usedPosition.groupRestrictedBy ?? null
+          } : undefined,
+          placedAtPosition: step.placedAtPosition ? {
+            ...step.placedAtPosition,
+            fCoord: step.placedAtPosition.fCoord === null ? Infinity : step.placedAtPosition.fCoord,
+            length: step.placedAtPosition.length === null ? Infinity : step.placedAtPosition.length,
+            groupRestrictedBy: step.placedAtPosition.groupRestrictedBy ?? null
+          } : undefined,
+          createdPositions: [...step.createdPositions.map(position => ({
+            ...position,
+            fCoord: position.fCoord === null ? Infinity : position.fCoord,
+            length: position.length === null ? Infinity : position.length
+          }))]
+        }))
+      ]
+    }
     return {
       entities: entities,
-      ids: [defaultSolution.id],
-      selectedSolutionId: defaultSolution.id
+      ids: [exemplarySolution.solution.id],
+      selectedSolutionId: exemplarySolution.solution.id
     }
   }),
 
@@ -145,24 +188,7 @@ export const solutionReducer = createReducer(
     };
   }),
 
-  on(updateCurrentSolutionGroupColor, (currentState, { group, color }) => {
-    let state: State = { ...currentState };
-    if (typeof currentState.selectedSolutionId === 'string') {
-      const updatedGroups = currentState.entities[currentState.selectedSolutionId]!.groups?.map(currentGroup => {
-        return currentGroup === group ? { ...group, color: color } : currentGroup;
-      }) ?? [];
-      const updateCommand: Update<ISolution> = {
-        'id': currentState.selectedSolutionId,
-        'changes': {
-          'groups': updatedGroups
-        }
-      }
-      return adapter.updateOne(updateCommand, currentState);
-    }
-    return state;
-  }),
-
-  on(updateSolution, (currentState, { solution }) => {
+  on(updateSolution, (state, { solution }) => {
     const update = {
       id: solution.id,
       changes: {
@@ -170,7 +196,7 @@ export const solutionReducer = createReducer(
         calculationSource: solution.calculationSource
       }
     } as Update<ISolution>;
-    return adapter.updateOne(update, currentState);
+    return adapter.updateOne(update, state);
   })
 );
 

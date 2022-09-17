@@ -13,6 +13,9 @@ import { IProductEffects } from './store/effects/i-product.effects';
 import * as fromISolutionState from './store/reducers/i-solution.reducers';
 import { ISolutionEffects } from './store/effects/i-solution.effects';
 
+import * as fromISolutionPreviewState from './store/reducers/i-solution-preview.reducers';
+import { ISolutionPreviewEffects } from './store/effects/i-solution-preview.effects';
+
 import * as fromIParamState from 'src/lib/process-builder/store/reducers/i-param.reducer';
 import { IParamEffects } from 'src/lib/process-builder/store/effects/i-param.effects';
 
@@ -50,6 +53,7 @@ rootStoreFeatures[fromIGroupState.groupFeatureKey] = fromIGroupState.groupReduce
 rootStoreFeatures[fromIOrderState.orderFeatureKey] = fromIOrderState.orderReducer;
 rootStoreFeatures[fromIProductState.productFeatureKey] = fromIProductState.productReducer;
 rootStoreFeatures[fromISolutionState.solutionFeatureKey] = fromISolutionState.solutionReducer;
+rootStoreFeatures[fromISolutionPreviewState.solutionPreviewFeatureKey] = fromISolutionPreviewState.reducer;
 
 rootStoreFeatures[fromIParamState.featureKey] = fromIParamState.reducer;
 rootStoreFeatures[fromIFunctionState.featureKey] = fromIFunctionState.reducer;

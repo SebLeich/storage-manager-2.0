@@ -16,6 +16,9 @@ import { IProduct } from 'src/app/interfaces/i-product.interface';
 import { updateCalculationAttributes } from '../actions/i-calculation-attribute.actions';
 import { orderChanged } from '../actions/i-order.actions';
 
+import exemplarySolution from 'src/assets/exemplary-solution.json';
+import { setExemplarySolution } from '../actions/i-solution.actions';
+
 export const productFeatureKey = 'product';
 
 export interface State extends EntityState<IProduct> {
@@ -99,16 +102,25 @@ export const productReducer = createReducer(
   on(setCurrentProduct, (currentState, { product }) => {
     const state = {
       ...currentState,
-      selectedProductId: product?.id ?? null,
-      selectedProductIndex: product
-        ? currentState.ids.findIndex((id) => id === product.id)
-        : null,
+      selectedProductId: product?.id ?? null
     };
+    return state;
+  }),
+  on(setExemplarySolution, () => {
+    let entities: { [key: string]: IProduct } = {};
+    for (let product of exemplarySolution.products) {
+      entities[product.id] = product;
+    }
+    const state = {
+      entities: entities,
+      ids: exemplarySolution.products.map(product => product.id),
+      selectedProductId: null,
+    } as State;
     return state;
   }),
   on(updateCalculationAttributes, (_, { products }) => {
     const entities: { [key: string]: IProduct } = {};
-    for(let product of products ?? []){
+    for (let product of products ?? []) {
       entities[product.id] = product;
     }
     return {

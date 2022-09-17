@@ -10,6 +10,7 @@ import { selectContainerHeight, selectCalculationAttributesValid, selectContaine
 import { selectGroups } from "../store/selectors/i-group.selectors";
 import { selectOrders } from "../store/selectors/i-order.selectors";
 import { IGood } from "../interfaces/i-good.interface";
+import { Algorithm } from '../globals';
 
 export class AllInOneRowSolver extends Solver implements ISolver {
 
@@ -48,6 +49,10 @@ export class AllInOneRowSolver extends Solver implements ISolver {
             groups: groups,
             algorithm: this._description,
             calculated: moment().format(),
+            calculationSource: {
+                staticAlgorithm: Algorithm.AllInOneRow,
+                title: this._description
+            },
             steps: []
         } as ISolution;
         let currentPosition = { x: 0, y: 0, z: 0 };
@@ -69,7 +74,11 @@ export class AllInOneRowSolver extends Solver implements ISolver {
                         width: order.width,
                         length: order.length,
                         stackedOnGood: null,
-                        group: group.id
+                        turned: false,
+                        group: group.id,
+                        stackingAllowed: order.stackingAllowed,
+                        turningAllowed: order.turningAllowed,
+                        orderGuid: order.id
                     };
                     solution.container!.goods.push(good);
                     sequenceNumber++;

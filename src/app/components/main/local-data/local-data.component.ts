@@ -160,6 +160,12 @@ export class LocalDataComponent implements OnDestroy, OnInit {
       let formGroup = formArray.controls.find(control => control.value.id === value.id);
       if (formGroup) {
         if (!lodash.isEqual(formGroup.value, value)) {
+          if(type === 'product'){
+            debugger;
+          }
+          if(type === 'order'){
+            debugger;
+          }
           formGroup.patchValue(value);
         }
         continue;

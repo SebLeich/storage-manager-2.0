@@ -1,5 +1,10 @@
 <div class="body">
 
-    <app-scene-visualization [scene]="scene"></app-scene-visualization>
+    <div  *ngIf="previewRendering$|async" class="rendering-overlay">
+        <mat-spinner id="rendering-indicator" diameter="40"></mat-spinner>
+    </div>
+    <img @show id="solution-preview" *ngIf="previewRenderingSucceeded$|async" [src]="previewImage$|async" />
 
 </div>
+
+<app-scene-visualization *ngIf="!(previewRenderingSucceeded$|async)" class="visualization" [scene]="scene" (sceneRendered)="sceneRendered($event)"></app-scene-visualization>

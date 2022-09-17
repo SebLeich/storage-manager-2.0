@@ -5,7 +5,7 @@ import { Router } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { ISolution } from 'src/app/interfaces/i-solution.interface';
 import { setExemplaryInputData } from 'src/app/store/actions/i-calculation-attribute.actions';
-import { setCurrentSolution, setDefaultSolution } from 'src/app/store/actions/i-solution.actions';
+import { setCurrentSolution, setExemplarySolution } from 'src/app/store/actions/i-solution.actions';
 
 import * as fromICalculationAttributesState from 'src/app/store/reducers/i-calculation-attribute.reducers';
 import * as fromISolutionState from 'src/app/store/reducers/i-solution.reducers';
@@ -76,7 +76,7 @@ export class NoSolutionDialogComponent implements OnInit {
 
   useExampleSolution() {
     this.close();
-    this._solutionStore.dispatch(setDefaultSolution());
+    this._solutionStore.dispatch(setExemplarySolution());
     this._router.navigate(['/visualizer']);
   }
 

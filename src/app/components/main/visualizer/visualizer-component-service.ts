@@ -6,19 +6,19 @@ import { IGroup } from "src/app/interfaces/i-group.interface";
 import { IStep } from "src/app/interfaces/i-step.interface";
 import { DataService } from "src/app/services/data.service";
 import { selectSnapshot } from "src/lib/process-builder/globals/select-snapshot";
-import * as ThreeJS from 'three';
 import { v4 as generateGuid } from 'uuid';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 import { IGood } from "src/app/interfaces/i-good.interface";
 
-import * as fromISolutionState from 'src/app/store/reducers/i-solution.reducers';
-import * as fromIGroupState from 'src/app/store/reducers/i-group.reducers';
-
 import { Store } from "@ngrx/store";
-import { selectCurrentSolution, selectCurrentSolutionGroups } from "src/app/store/selectors/i-solution.selectors";
+import { selectCurrentSolution } from "src/app/store/selectors/i-solution.selectors";
 import { IContainer } from "src/app/interfaces/i-container.interface";
 import { IPosition } from "src/app/interfaces/i-position.interface";
 import { FileService } from "src/app/services/file.service";
+import { selectGroups } from "src/app/store/selectors/i-group.selectors";
+
+import * as ThreeJS from 'three';
+import { ISolution } from "src/app/interfaces/i-solution.interface";
 
 @Injectable()
 export class VisualizerComponentService {
@@ -57,16 +57,13 @@ export class VisualizerComponentService {
     resized$ = this._resized.pipe(debounceTime(100));
 
     private _meshes: { preview: string, groupColor: string | null, groupId: string | null, seqNr: number | null, goodId: string | null, mesh: ThreeJS.Mesh, edges: ThreeJS.LineSegments }[] = [];
-    private _subscriptions: Subscription[] = [];
+    private _subscriptions: Subscription = new Subscription();
 
-    constructor(
-        private _solutionStore: Store<fromISolutionState.State>,
-        private _groupStore: Store<fromIGroupState.State>,
-    ) {
+    constructor(private _store: Store) {
         this._setUp();
     }
 
-    addContainerToScene(container: IContainer, groups: IGroup[]) {
+    public addContainerToScene(container: IContainer, groups: IGroup[]) {
         this.clearScene();
         this._addUnloadingArrowToScene(container.height!, container.length!);
         this._addBaseGridToScene(container.height!, container.length!);
@@ -80,7 +77,7 @@ export class VisualizerComponentService {
     }
 
     async animateStep(step: IStep, keepPreviousGoods: boolean = false, keepPreviousUnusedSpaces: boolean = false) {
-        const container = await selectSnapshot(this._solutionStore.select(selectCurrentSolution).pipe(map(solution => solution?.container!)));
+        const container = await selectSnapshot(this._store.select(selectCurrentSolution).pipe(map(solution => solution?.container!)));
         if (!container) {
             return;
         }
@@ -102,10 +99,7 @@ export class VisualizerComponentService {
         for (let child of remove) this.scene.remove(child);
     }
 
-    dispose() {
-        for (let sub of this._subscriptions) sub.unsubscribe();
-        this._subscriptions = [];
-    }
+    dispose = () => this._subscriptions.unsubscribe();
 
     public downloadScreenshot() {
         const strMime = "image/jpeg";
@@ -179,8 +173,8 @@ export class VisualizerComponentService {
     }
 
     async reRenderCurrentContainer() {
-        const container = await selectSnapshot(this._solutionStore.select(selectCurrentSolution).pipe(map(solution => solution?.container!)));
-        const groups = await selectSnapshot(this._solutionStore.select(selectCurrentSolutionGroups));
+        const container = await selectSnapshot(this._store.select(selectCurrentSolution).pipe(map(solution => solution?.container!)));
+        const groups = await selectSnapshot(this._store.select(selectGroups));
         if (!container) {
             return;
         }
@@ -220,7 +214,7 @@ export class VisualizerComponentService {
     triggerResizeEvent = () => this._resized.next();
 
     async updateGroupColors() {
-        const groups: IGroup[] = await selectSnapshot(this._groupStore.select(selectCurrentSolutionGroups));
+        const groups: IGroup[] = await selectSnapshot(this._store.select(selectGroups));
         this._meshes.forEach(meshWrapper => {
             const group = groups.find(group => group.id === meshWrapper.goodId);
             meshWrapper.groupColor = group?.color ?? '';
@@ -351,10 +345,21 @@ export class VisualizerComponentService {
         this.scene.background = new ThreeJS.Color('rgb(238,238,238)');
         this.renderer.domElement.id = this._sceneBodyId;
 
-        this._subscriptions.push(...[
+        this._subscriptions.add(
             combineLatest([this.hoverIntersections$, this.visualizerWrapper$]).subscribe(([event, wrapper]) => {
                 this._highlightIntersections(event, wrapper);
-            }),
+            })
+        );
+
+        this._subscriptions.add(
+            combineLatest([this._store.select(selectCurrentSolution), this._store.select(selectGroups)])
+                .pipe(filter(([solution, _]) => !!solution && !!solution.container))
+                .subscribe(([solution, groups]) => {
+                    this.addContainerToScene((solution as ISolution).container, groups);
+                })
+        )
+
+        this._subscriptions.add(
             this._selectedElement.subscribe(element => {
                 for (let mesh of this._meshes) {
                     if (mesh && mesh.edges) {
@@ -362,15 +367,8 @@ export class VisualizerComponentService {
                         (mesh.edges.material as ThreeJS.LineBasicMaterial).color = new ThreeJS.Color(color);
                     }
                 }
-            }),
-            this._solutionStore.select(selectCurrentSolution)
-                .pipe(
-                    filter(solution => !!solution && !!solution.container)
-                )
-                .subscribe((solution) => {
-                    this.addContainerToScene(solution!.container!, solution!.groups!);
-                })
-        ]);
+            })
+        );
     }
 
 }   

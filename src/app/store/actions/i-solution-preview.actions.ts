@@ -3,9 +3,15 @@ import { ISolutionPreview } from "src/app/interfaces/i-solution-preview.interfac
 import { ISolution } from "src/app/interfaces/i-solution.interface";
 
 export const solutionActions = {
+    AnnounceSolutionPreview: '[SolutionPreview] Announce Solution Preview',
     LoadSolutionPreview: '[SolutionPreview] Load Solution Preview',
     UpsertSolutionPreview: '[SolutionPreview] Upsert Solution Preview'
 }
+
+export const announceSolutionPreview = createAction(
+    solutionActions.AnnounceSolutionPreview,
+    props<{ solutionId: string }>()
+);
 
 export const loadSolutionPreview = createAction(
     solutionActions.LoadSolutionPreview,

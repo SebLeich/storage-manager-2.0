@@ -1,5 +1,4 @@
 import { createAction, props } from '@ngrx/store';
-import { IGroup } from 'src/app/interfaces/i-group.interface';
 import { ISolution } from 'src/app/interfaces/i-solution.interface';
 
 export const solutionActions = {
@@ -7,12 +6,12 @@ export const solutionActions = {
   AddSolutions: '[Solution] Add Solutions',
   ClearSolutions: '[Solution] Clear Solution',
   DownloadCurrentSolution: '[Solution] Download Current Solution',
+  DuplicateSolution: '[Solution] Duplicate Solution',
   SetDefaultSolution: '[Solution] Set Default Solution',
-  RouteToSolution: '[Solution] Route To Solution',
+  RemoveSolution: '[Solution] Remove Solution',
   SetCurrentSolution: '[Solution] Set Current Solution',
   SetNextSolution: '[Solution] Set Next Solution',
   UpdateAlgorithmSolution: '[Solution] Update Algorithm Solution',
-  UpdateCurrentSolutionGroupColor: '[Solution] Update Current Solution Group Color',
   UpdateSolution: '[Solution] Update Solution'
 }
 
@@ -35,16 +34,16 @@ export const downloadCurrentSolution = createAction(
 );
 
 export const duplicateSolution = createAction(
-  solutionActions.SetCurrentSolution,
+  solutionActions.DuplicateSolution,
   props<{ duplicateSolution: ISolution }>()
 );
 
-export const setDefaultSolution = createAction(
+export const setExemplarySolution = createAction(
   solutionActions.SetDefaultSolution
 );
 
 export const removeSolution = createAction(
-  solutionActions.SetCurrentSolution,
+  solutionActions.RemoveSolution,
   props<{ removeSolution: ISolution }>()
 );
 
@@ -60,11 +59,6 @@ export const setNextSolution = createAction(
 export const updateAlgorithmSolution = createAction(
   solutionActions.UpdateAlgorithmSolution,
   props<{ solution: ISolution }>()
-)
-
-export const updateCurrentSolutionGroupColor = createAction(
-  solutionActions.UpdateCurrentSolutionGroupColor,
-  props<{ group: IGroup; color: string }>()
 )
 
 export const updateSolution = createAction(
