@@ -17,7 +17,7 @@ export const adapter: EntityAdapter<IInterface> = createEntityAdapter<IInterface
 });
 
 export interface State extends EntityState<IInterface> {
-  ids: string[];
+  ids: number[];
 }
 
 export const initialState: State = {

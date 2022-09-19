@@ -57,8 +57,8 @@ rootStoreFeatures[fromISolutionPreviewState.solutionPreviewFeatureKey] = fromISo
 
 rootStoreFeatures[fromIParamState.featureKey] = fromIParamState.reducer;
 rootStoreFeatures[fromIFunctionState.featureKey] = fromIFunctionState.reducer;
-rootStoreFeatures[fromIBpmnJSModelState.featureKey] = fromIBpmnJSModelState.featureKey;
-rootStoreFeatures[fromIInterfaceState.featureKey] = fromIInterfaceState.featureKey;
+rootStoreFeatures[fromIBpmnJSModelState.featureKey] = fromIBpmnJSModelState.reducer;
+rootStoreFeatures[fromIInterfaceState.featureKey] = fromIInterfaceState.reducer;
 
 export default [
     BrowserModule,
