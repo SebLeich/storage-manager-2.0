@@ -6,11 +6,14 @@ export const orderActions = {
   AddOrders: '[Order] Add Orders',
   AnnounceOrderUpdate: '[Order] Announce Order Update',
   ClearOrders: '[Order] Clear Orders',
-  OrderChanged: '[Order] Order Changed',
+  RemoveOrder: '[Order] Remove Order',
+  RemoveOrders: '[Order] Remove Orders',
   RouteToOrder: '[Order] Route To Order',
   SetCurrentOrder: '[Order] Set Current Order',
   SetNextOrder: '[Order] Set Next Order',
   SetOrders: '[Order] Set Orders',
+  UpdateOrder: '[Order] Update Order',
+  updateOrderDescriptions: '[Order] Update Orders By Description'
 }
 
 export const addOrder = createAction(
@@ -23,11 +26,6 @@ export const addOrders = createAction(
   props<{ orders: IOrder[] }>()
 );
 
-export const announceOrderUpdate = createAction(
-  orderActions.AnnounceOrderUpdate,
-  props<{ order: IOrder }>()
-);
-
 export const clearOrders = createAction(
   orderActions.ClearOrders
 );
@@ -37,14 +35,14 @@ export const duplicateOrder = createAction(
   props<{ duplicateOrder: IOrder }>()
 );
 
-export const orderChanged = createAction(
-  orderActions.OrderChanged,
-  props<{ currentOrder: IOrder, previousOrder: IOrder }>()
+export const removeOrder = createAction(
+  orderActions.RemoveOrder,
+  props<{ removeOrder: IOrder }>()
 );
 
-export const removeOrder = createAction(
-  orderActions.SetCurrentOrder,
-  props<{ removeOrder: IOrder }>()
+export const removeOrders = createAction(
+  orderActions.RemoveOrders,
+  props<{ removeOrders: IOrder[] }>()
 );
 
 export const setCurrentOrder = createAction(
@@ -59,4 +57,14 @@ export const setNextOrder = createAction(
 export const setOrders = createAction(
   orderActions.SetOrders,
   props<{ orders: IOrder[] }>()
+);
+
+export const updateOrder = createAction(
+  orderActions.UpdateOrder,
+  props<{ order: IOrder }>()
+);
+
+export const updateOrdersByDescription = createAction(
+  orderActions.updateOrderDescriptions,
+  props<{ previousDescription: string, currentValues: Partial<IOrder> }>()
 );

@@ -1,4 +1,4 @@
-import { Component, EventEmitter, forwardRef, OnDestroy, OnInit, Output } from '@angular/core';
+import { AfterViewChecked, Component, EventEmitter, forwardRef, OnDestroy, Output } from '@angular/core';
 import { ControlValueAccessor, UntypedFormControl, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { Store } from '@ngrx/store';
 import { Subscription } from 'rxjs';
@@ -21,7 +21,7 @@ import { selectProducts } from 'src/app/store/selectors/i-product.selectors';
     }
   ]
 })
-export class SelectProductComponent implements ControlValueAccessor, OnDestroy, OnInit {
+export class SelectProductComponent implements AfterViewChecked, ControlValueAccessor, OnDestroy {
 
   @Output() public productChanged = new EventEmitter<string>();
 
@@ -34,7 +34,7 @@ export class SelectProductComponent implements ControlValueAccessor, OnDestroy, 
     private _productStore: Store<fromIProductState.State>
   ) { }
 
-  addProduct(event: KeyboardEvent) {
+  public addProduct(event: KeyboardEvent) {
     event.stopPropagation();
     this._productStore.dispatch(addProduct({
       product: {
@@ -47,11 +47,12 @@ export class SelectProductComponent implements ControlValueAccessor, OnDestroy, 
     (event.target as HTMLInputElement).value = '';
   }
 
-  public ngOnInit() {
+  public ngAfterViewChecked(): void {
     this._subscriptions.add(
-      this.valueControl.valueChanges.subscribe((productDescription: string) => {
-        this.productChanged.next(productDescription);
-      })
+      this.valueControl.valueChanges
+        .subscribe((productDescription: string) => {
+          this.productChanged.next(productDescription);
+        })
     );
   }
   public ngOnDestroy = () => this._subscriptions.unsubscribe();

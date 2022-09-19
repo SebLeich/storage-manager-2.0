@@ -7,16 +7,16 @@ import {
   addOrders,
   clearOrders,
   duplicateOrder,
-  orderChanged,
+  updateOrder,
   removeOrder,
   setCurrentOrder,
   setOrders,
+  updateOrdersByDescription,
 } from '../actions/i-order.actions';
 import { v4 as generateGuid } from 'uuid';
 import { IOrder } from 'src/app/interfaces/i-order.interface';
 import { updateCalculationAttributes } from '../actions/i-calculation-attribute.actions';
 import { removeGroup } from '../actions/i-group.actions';
-import { productChanged, removeProduct } from '../actions/i-product.actions';
 import { setExemplarySolution } from '../actions/i-solution.actions';
 
 import exemplarySolution from 'src/assets/exemplary-solution.json';
@@ -63,36 +63,22 @@ export const orderReducer = createReducer(
     }
     return adapter.addOne({ ...duplicateOrder, id: generateGuid() }, state);
   }),
-  on(orderChanged, (state, { currentOrder }) => {
+  on(updateOrder, (state, { order }) => {
     const update = {
-      id: currentOrder.id,
+      id: order.id,
       changes: {
-        description: currentOrder.description,
-        group: currentOrder.group,
-        height: currentOrder.height,
-        index: currentOrder.index,
-        length: currentOrder.length,
-        quantity: currentOrder.quantity,
-        stackingAllowed: currentOrder.stackingAllowed,
-        turningAllowed: currentOrder.turningAllowed,
-        width: currentOrder.width
+        description: order.description,
+        group: order.group,
+        height: order.height,
+        index: order.index,
+        length: order.length,
+        quantity: order.quantity,
+        stackingAllowed: order.stackingAllowed,
+        turningAllowed: order.turningAllowed,
+        width: order.width
       }
     } as Update<IOrder>;
     return adapter.updateOne(update, state);
-  }),
-  on(productChanged, (state, { currentProduct, previousProduct }) => {
-    const effectedOrderIds = Object.values(state.entities).filter(order => order?.description === previousProduct.description).map(order => order!.id);
-    return adapter.updateMany(effectedOrderIds.map(orderId => {
-      return {
-        id: orderId,
-        changes: {
-          description: currentProduct.description,
-          height: currentProduct.height,
-          length: currentProduct.length,
-          width: currentProduct.width
-        }
-      }
-    }), state)
   }),
   on(removeGroup, (state, { removeGroup }) => {
     const groupOrders = Object.values(state.entities).filter(order => order && order.group === removeGroup.id).map(order => order!.id);
@@ -103,10 +89,6 @@ export const orderReducer = createReducer(
       return state;
     }
     return adapter.removeOne(removeOrder.id, state);
-  }),
-  on(removeProduct, (state, { removeProduct }) => {
-    const productOrders = Object.values(state.entities).filter(order => order && order.description === removeProduct.description).map(order => order!.id);
-    return adapter.removeMany(productOrders, state);
   }),
   on(setCurrentOrder, (currentState, { order }) => {
     const state: State = {
@@ -141,7 +123,7 @@ export const orderReducer = createReducer(
   }),
   on(updateCalculationAttributes, (_, { orders }) => {
     const entities: { [key: string]: IOrder } = {};
-    for(let order of orders ?? []){
+    for (let order of orders ?? []) {
       entities[order.id] = order;
     }
     return {
@@ -150,6 +132,15 @@ export const orderReducer = createReducer(
       selectedOrderId: null
     };
   }),
+  on(updateOrdersByDescription, (state, { previousDescription, currentValues }) => {
+    const matchingOrders: IOrder[] = Object.values(state.entities).filter(order => order?.description === previousDescription) as IOrder[];
+    return adapter.updateMany(matchingOrders.map(order => {
+      return {
+        id: order.id,
+        changes: currentValues
+      } as Update<IOrder>;
+    }), state);
+  })
 );
 
 export const metaReducers: MetaReducer<State>[] = !environment.production

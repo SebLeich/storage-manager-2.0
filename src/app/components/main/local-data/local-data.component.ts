@@ -1,7 +1,7 @@
-import { AfterViewChecked, ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
-import { AbstractControl, FormArray, FormBuilder, FormControl, FormGroup } from '@angular/forms';
+import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
+import { FormArray, FormBuilder, FormGroup } from '@angular/forms';
 import { Store } from '@ngrx/store';
-import { combineLatest, debounceTime, map, Observable, Subscription, timer } from 'rxjs';
+import { combineLatest, map, Observable, pairwise, startWith, Subscription } from 'rxjs';
 import { IEntity } from 'src/app/interfaces/i-entity.interface';
 import { IGroup } from 'src/app/interfaces/i-group.interface';
 import { IOrder } from 'src/app/interfaces/i-order.interface';
@@ -9,11 +9,11 @@ import { IProduct } from 'src/app/interfaces/i-product.interface';
 import calculateRandomColorSharedMethod from 'src/app/methods/calculate-random-color.shared-method';
 import { setContainerHeight, setContainerWidth } from 'src/app/store/actions/i-calculation-attribute.actions';
 import { addGroup, updateGroup } from 'src/app/store/actions/i-group.actions';
-import { addOrder, clearOrders, announceOrderUpdate } from 'src/app/store/actions/i-order.actions';
-import { addProduct, announceProductUpdate } from 'src/app/store/actions/i-product.actions';
+import { addOrder, clearOrders, updateOrder, updateOrdersByDescription } from 'src/app/store/actions/i-order.actions';
+import { addProduct, updateProduct, updateProductByDescription } from 'src/app/store/actions/i-product.actions';
 import { selectGroups } from 'src/app/store/selectors/i-group.selectors';
 import { selectOrders } from 'src/app/store/selectors/i-order.selectors';
-import { selectNextProductDescription, selectProducts } from 'src/app/store/selectors/i-product.selectors';
+import { selectNextProductDescription, selectProductByDescription, selectProducts } from 'src/app/store/selectors/i-product.selectors';
 import { showAnimation } from 'src/lib/shared/animations/show';
 
 import { v4 as generateGuid } from 'uuid';
@@ -31,7 +31,7 @@ import { selectSolutions } from 'src/app/store/selectors/i-solution.selectors';
   selector: 'app-local-data',
   templateUrl: './local-data.component.html',
   styleUrls: ['./local-data.component.css'],
-  animations: [ showAnimation, widgetFadeInAnimation ]
+  animations: [showAnimation, widgetFadeInAnimation]
 })
 export class LocalDataComponent implements OnDestroy, OnInit {
 
@@ -71,7 +71,7 @@ export class LocalDataComponent implements OnDestroy, OnInit {
   }
 
   public addOrder(event: MouseEvent, product: IProduct, group: IGroup) {
-    if(event){
+    if (event) {
       event.stopPropagation();
     }
     const existingOrderFormGroup = this.ordersControl
@@ -151,22 +151,41 @@ export class LocalDataComponent implements OnDestroy, OnInit {
   private async patchFormArray(formArray: FormArray<FormGroup>, values: IEntity[], type: 'group' | 'order' | 'product') {
 
     const actionMap = {
-      group: (value: IGroup) => this._store.dispatch(updateGroup({ group: value })),
-      order: (value: IOrder) => this._store.dispatch(announceOrderUpdate({ order: value })),
-      product: (value: IProduct) => this._store.dispatch(announceProductUpdate({ product: value })),
+      group: async ([previousValue, currentValue]: IGroup[]) => {
+        this._store.dispatch(updateGroup({ group: currentValue }));
+      },
+      order: async ([previousValue, currentValue]: IOrder[]) => {
+        let value = { ...currentValue };
+        if (previousValue.description !== currentValue.description) {
+          const product = await selectSnapshot(this._store.select(selectProductByDescription(currentValue.description!)));
+          if (!!product) {
+            value.height = product.height;
+            value.width = product.width;
+            value.length = product.length;
+          }
+        }
+        this._store.dispatch(updateOrder({ order: value }));
+        this._store.dispatch(updateProductByDescription({ previousDescription: previousValue.description!, currentValues: currentValue as IProduct }));
+      },
+      product: async ([previousValue, currentValue]: IProduct[]) => {
+        this._store.dispatch(updateProduct({ product: currentValue }));
+        this._store.dispatch(updateOrdersByDescription({
+          previousDescription: previousValue.description!,
+          currentValues: {
+            description: currentValue.description,
+            height: currentValue.height,
+            length: currentValue.length,
+            width: currentValue.width
+          }
+        }));
+      },
     }
 
     for (let value of values) {
       let formGroup = formArray.controls.find(control => control.value.id === value.id);
       if (formGroup) {
         if (!lodash.isEqual(formGroup.value, value)) {
-          if(type === 'product'){
-            debugger;
-          }
-          if(type === 'order'){
-            debugger;
-          }
-          formGroup.patchValue(value);
+          formGroup.patchValue(value, { emitEvent: false });
         }
         continue;
       }
@@ -174,8 +193,10 @@ export class LocalDataComponent implements OnDestroy, OnInit {
       formArray.push(formGroup!);
       this._subscription.add(
         formGroup!.valueChanges
-          .pipe(debounceTime(50))
-          .subscribe((updatedValue) => actionMap[type](updatedValue as any))
+          .pipe(startWith(formGroup?.value ?? null), pairwise())
+          .subscribe(async (args) => {
+            await actionMap[type](args as any);
+          })
       );
     }
 

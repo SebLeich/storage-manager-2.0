@@ -6,15 +6,16 @@ import {
   addProduct,
   addProducts,
   duplicateProduct,
-  productChanged,
   removeProduct,
   setCurrentProduct,
+  updateProduct,
+  updateProductByDescription,
 } from '../actions/i-product.actions';
 import { v4 as generateGuid } from 'uuid';
 import * as moment from 'moment';
 import { IProduct } from 'src/app/interfaces/i-product.interface';
 import { updateCalculationAttributes } from '../actions/i-calculation-attribute.actions';
-import { orderChanged } from '../actions/i-order.actions';
+import { updateOrder } from '../actions/i-order.actions';
 
 import exemplarySolution from 'src/assets/exemplary-solution.json';
 import { setExemplarySolution } from '../actions/i-solution.actions';
@@ -34,14 +35,14 @@ export const adapter: EntityAdapter<IProduct> = createEntityAdapter<IProduct>(
   }
 );
 
-export const initialState: State = adapter.getInitialState({
+export const productState: State = adapter.getInitialState({
   selectedProductId: null,
   entities: {},
   ids: [],
 });
 
 export const productReducer = createReducer(
-  initialState,
+  productState,
   on(addProduct, (state, { product }) => {
     return adapter.addOne(
       {
@@ -67,31 +68,6 @@ export const productReducer = createReducer(
       return state;
     }
     return adapter.addOne({ ...duplicateProduct, id: generateGuid() }, state);
-  }),
-  on(orderChanged, (state, { currentOrder, previousOrder }) => {
-    const effectedProductIds = Object.values(state.entities).filter(product => product && product.description === previousOrder.description).map(product => product!.id);
-    return adapter.updateMany(effectedProductIds.map(productId => {
-      return {
-        id: productId,
-        changes: {
-          description: currentOrder.description,
-          height: currentOrder.height,
-          length: currentOrder.length,
-          width: currentOrder.width
-        }
-      } as Update<IProduct>;
-    }), state);
-  }),
-  on(productChanged, (state, { currentProduct }) => {
-    return adapter.updateOne({
-      id: currentProduct.id,
-      changes: {
-        description: currentProduct.description,
-        height: currentProduct.height,
-        length: currentProduct.length,
-        width: currentProduct.width
-      }
-    }, state);
   }),
   on(removeProduct, (state, { removeProduct }) => {
     if (!removeProduct) {
@@ -128,6 +104,27 @@ export const productReducer = createReducer(
       ids: products?.map(product => product.id) ?? [],
       selectedProductId: null
     };
+  }),
+  on(updateProduct, (state, { product }) => {
+    return adapter.updateOne({
+      id: product.id,
+      changes: {
+        description: product.description,
+        height: product.height,
+        length: product.length,
+        width: product.width
+      }
+    }, state);
+  }),
+  on(updateProductByDescription, (state, { previousDescription, currentValues }) => {
+    const product = Object.values(state.entities).find(product => product?.description === previousDescription);
+    if (!product) {
+      return state;
+    }
+    return adapter.updateOne({
+      id: product.id,
+      changes: currentValues
+    }, state);
   }),
 );
 

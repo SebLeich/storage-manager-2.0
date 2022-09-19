@@ -1,13 +1,10 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
-import { ControlContainer, FormArray, FormControl } from '@angular/forms';
+import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
+import { ControlContainer, FormArray, FormControl, FormGroup } from '@angular/forms';
 import { SortDirection } from '@angular/material/sort';
 import { Store } from '@ngrx/store';
 import { Subscription } from 'rxjs';
 import { IOrder } from 'src/app/interfaces/i-order.interface';
-import { IProduct } from 'src/app/interfaces/i-product.interface';
-import { announceOrderUpdate, removeOrder } from 'src/app/store/actions/i-order.actions';
-import { selectProductByDescription } from 'src/app/store/selectors/i-product.selectors';
-import { selectSnapshot } from 'src/lib/process-builder/globals/select-snapshot';
+import { removeOrder } from 'src/app/store/actions/i-order.actions';
 import { fadeInAnimation } from 'src/lib/shared/animations/fade-in';
 
 @Component({
@@ -23,10 +20,11 @@ export class OrdersFormComponent implements OnDestroy, OnInit {
   public active: string = 'order';
   public direction: SortDirection = 'asc';
   public totalItemCount = 0;
+  public document = document;
 
   private _subscription = new Subscription();
 
-  constructor(private _controlContainer: ControlContainer, private _store: Store) { }
+  constructor(private _controlContainer: ControlContainer, private _store: Store, private _changeDetectorRef: ChangeDetectorRef) { }
 
   public ngOnDestroy(): void {
     this._subscription.unsubscribe();
@@ -36,28 +34,21 @@ export class OrdersFormComponent implements OnDestroy, OnInit {
     this.ordersControl = this._controlContainer.control as FormArray;
     this.updateTotalItemCount();
     this._subscription.add(
-      this.ordersControl.valueChanges.subscribe(() => this.updateTotalItemCount())
+      this.ordersControl.valueChanges.subscribe(() => {
+        this.updateTotalItemCount()
+      })
     );
+  }
+
+  public productChanged(productDescription: string, formGroup: FormGroup) {
+    formGroup.controls['description'].setValue(productDescription);
+    formGroup.updateValueAndValidity();
+    this._changeDetectorRef.detectChanges();
   }
 
   public removeOrder(index: number) {
     const order = this.ordersControl.controls[index].value;
     this._store.dispatch(removeOrder({ removeOrder: order }));
-  }
-
-  public async setOrderProduct(productId: string, order: IOrder) {
-    const product: IProduct | undefined = await selectSnapshot(this._store.select(selectProductByDescription(productId)));
-    if (!product) {
-      return;
-    }
-
-    const updatedOrder = {
-      ...order,
-      height: product.height,
-      length: product.length,
-      width: product.width
-    } as IOrder;
-    this._store.dispatch(announceOrderUpdate({ order: updatedOrder }));
   }
 
   private updateTotalItemCount() {

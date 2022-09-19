@@ -22,9 +22,10 @@
         </ng-container>
 
         <ng-container matColumnDef="description">
-            <th mat-header-cell *matHeaderCellDef>name</th>
-            <td mat-cell *matCellDef="let element" class="padding-cell" [formGroup]="element.value">
-                <app-select-product formControlName="description" (productChanged)="setOrderProduct($event, element.value.value)"></app-select-product>
+            <th mat-header-cell *matHeaderCellDef>product</th>
+            <td mat-cell *matCellDef="let element" class="padding-cell">
+                <app-select-product [ngModel]="element.value.controls['description'].value" (productChanged)="productChanged($event, element.value)">
+                </app-select-product>
             </td>
             <td mat-footer-cell *matFooterCellDef class="footer-cell"></td>
         </ng-container>

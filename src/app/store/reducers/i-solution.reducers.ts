@@ -29,8 +29,7 @@ export interface State extends EntityState<ISolution> {
 export const adapter: EntityAdapter<ISolution> = createEntityAdapter<ISolution>(
   {
     selectId: (solution) => solution.id,
-    sortComparer: (solution1, solution2) =>
-      solution1.id > solution2.id ? 1 : -1,
+    sortComparer: (solution1, solution2) => solution1.id > solution2.id ? 1 : -1,
   }
 );
 
