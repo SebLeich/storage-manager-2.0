@@ -18,7 +18,7 @@ export class AnimatedCounterDirective implements OnDestroy, OnInit {
 
   private readonly currentCount$ = combineLatest([this._value, this._animationDuration]).pipe(
     switchMap(([value, animationDuration]) => {
-      const frameDuration = 1000 / 60; // 60 frames per second
+      const frameDuration = animationDuration / 30;
       const totalFrames = Math.round(animationDuration / frameDuration);
       return interval(frameDuration, animationFrameScheduler).pipe(
         map((currentFrame) => currentFrame / totalFrames),

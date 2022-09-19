@@ -2,7 +2,7 @@
 
     <table mat-table class="smgr-table unsparing striped"
         [dataSource]="productsControl.controls | sortedFormArray: active:direction:productsControl.value.length"
-        (keyup.enter)="submit($event)">
+        (keydown.enter)="submit($event)">
 
         <ng-container matColumnDef="description">
             <th mat-header-cell *matHeaderCellDef>name</th>

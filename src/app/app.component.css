@@ -7,7 +7,8 @@
 }
 
 .body.loading { 
-    opacity: .5;
+    opacity: .4;
+    pointer-events: none;
 }
 
 .content {
