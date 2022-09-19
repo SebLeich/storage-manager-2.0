@@ -36,4 +36,12 @@ export class ProductFormComponent implements OnInit {
     this._store.dispatch(removeProduct({ removeProduct: product }));
   }
 
+  public submit(event?: Event) {
+    if(event){
+      event.stopPropagation();
+      event.preventDefault();
+    }
+    (document.activeElement as HTMLElement)?.blur();
+  }
+
 }

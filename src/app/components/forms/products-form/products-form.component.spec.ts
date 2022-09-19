@@ -1,5 +1,7 @@
+import { DebugElement } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ControlContainer, FormArray, FormControl, FormGroup } from '@angular/forms';
+import { By } from '@angular/platform-browser';
 import { AppRoutingModule } from 'src/app/app-routing.module';
 import { AppModule } from 'src/app/app.module';
 import defaultImportsConstant from 'src/app/default-imports.constant';
@@ -12,9 +14,9 @@ describe('ProductFormComponent', () => {
   let component: ProductFormComponent;
   let fixture: ComponentFixture<ProductFormComponent>;
 
-  beforeEach(async () => {
-    await TestBed.configureTestingModule({
-      declarations: [ ProductFormComponent ],
+  beforeEach(() => {
+    TestBed.configureTestingModule({
+      declarations: [ProductFormComponent],
       imports: [
         ...defaultImportsConstant,
 
@@ -32,13 +34,15 @@ describe('ProductFormComponent', () => {
                 width: new FormControl(100, { nonNullable: true }),
                 length: new FormControl(100, { nonNullable: true }),
                 id: new FormControl('productId', { nonNullable: true })
+              }, {
+                updateOn: 'blur'
               })
             ])
           }
         }
       ]
     })
-    .compileComponents();
+      .compileComponents();
 
     fixture = TestBed.createComponent(ProductFormComponent);
     component = fixture.componentInstance;

@@ -57,8 +57,8 @@
       </div>
    </div>
 
-   <div class="version" *ngIf="currentApplicationVersion">
-      version {{currentApplicationVersion}}
+   <div class="version">
+      version {{currentApplicationVersion ?? 'local dev'}}
    </div>
 
 </div>
