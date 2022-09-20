@@ -6,9 +6,11 @@ import { IDynamicInputParamsConfig } from '../globals/i-dynamic-input-params-con
 })
 export class DynamicInputParamsPipe implements PipeTransform {
 
-  transform(config: IDynamicInputParamsConfig | boolean): string {
-    if(typeof config === 'boolean') return config? 'dynamic input params used': 'no dynamic input params used';
-    return `dynamic input params of the following types allowed: ${config.typeLimits?.join(', ')}`;
+  transform(config: IDynamicInputParamsConfig | boolean | null | undefined): string {
+    if (config === null || typeof config !== 'object') {
+      return config ? 'dynamic input params used' : 'no dynamic input params used';
+    }
+    return config.typeLimits?.length === 0? 'no dynamic input params used': `dynamic input params of the following types allowed: ${config.typeLimits?.join(', ')}`;
   }
 
 }

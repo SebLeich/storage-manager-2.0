@@ -1,5 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
+import { AppModule } from 'src/app/app.module';
 import defaultImportsConstant from 'src/app/default-imports.constant';
 import { IContainer } from 'src/app/interfaces/i-container.interface';
 import { PrettyLengthPipe } from 'src/app/pipes/pretty-length.pipe';
@@ -15,7 +16,9 @@ describe('ContainerPreviewComponent', () => {
     await TestBed.configureTestingModule({
       declarations: [ContainerPreviewComponent, PrettyLengthPipe, PrettyVolumePipe],
       imports: [
-        ...defaultImportsConstant
+        ...defaultImportsConstant,
+
+        AppModule
       ]
     })
       .compileComponents();
