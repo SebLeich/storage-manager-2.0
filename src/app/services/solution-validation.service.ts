@@ -3,7 +3,7 @@ import { SolutionError } from '../globals';
 import { IGood } from '../interfaces/i-good.interface';
 import { IPosition } from '../interfaces/i-position.interface';
 import { ISolution } from '../interfaces/i-solution.interface';
-import { DataService } from './data.service';
+import getContainerPositionSharedMethods from '../methods/get-container-position.shared-methods';
 
 @Injectable()
 export class SolutionValidationService {
@@ -27,7 +27,7 @@ export class SolutionValidationService {
     let goodsZError2 = solution.container.goods.filter(x => (x.zCoord + x.length) > solution.container!.length);
     if (goodsZError2.length > 0) output.push({ error: SolutionError.GoodOutOfContainerZCoord, effectedGoods: goodsZError2 });
     let dimensions = solution.container.goods.map(good => {
-      return { good: good, dimension: DataService.getGoodDimension(good) };
+      return { good: good, dimension: getContainerPositionSharedMethods(good) };
     });
     for (let wrapper of dimensions) {
       let overlappingSet = this._cubeIsInAnotherCube(wrapper.dimension, Object.values(dimensions).map(x => x.dimension).filter(x => wrapper.dimension !== x));

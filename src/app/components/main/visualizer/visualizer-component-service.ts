@@ -4,7 +4,6 @@ import { debounceTime, filter, map, take } from "rxjs/operators";
 import { defaultGoodEdgeColor, infinityReplacement, keyboardControlMoveStep, selectedGoodEdgeColor } from "src/app/globals";
 import { IGroup } from "src/app/interfaces/i-group.interface";
 import { IStep } from "src/app/interfaces/i-step.interface";
-import { DataService } from "src/app/services/data.service";
 import { selectSnapshot } from "src/lib/process-builder/globals/select-snapshot";
 import { v4 as generateGuid } from 'uuid';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
@@ -19,6 +18,7 @@ import { selectGroups } from "src/app/store/selectors/i-group.selectors";
 
 import * as ThreeJS from 'three';
 import { ISolution } from "src/app/interfaces/i-solution.interface";
+import getContainerPositionSharedMethods from "src/app/methods/get-container-position.shared-methods";
 
 @Injectable()
 export class VisualizerComponentService {
@@ -67,12 +67,12 @@ export class VisualizerComponentService {
         this.clearScene();
         this._addUnloadingArrowToScene(container.height!, container.length!);
         this._addBaseGridToScene(container.height!, container.length!);
-        this._addContainerToScene(DataService.getContainerDimension(container));
+        this._addContainerToScene(getContainerPositionSharedMethods(container));
         this._container.next(container);
-        this._addElementToScene(DataService.getContainerDimension(container), 'Container', 'bordered');
+        this._addElementToScene(getContainerPositionSharedMethods(container), 'Container', 'bordered');
         for (var good of container.goods) {
             let group = groups.find(x => x.id === good.group);
-            this._addElementToScene(DataService.getGoodDimension(good), `${good.desc}`, 'good', good.sequenceNr, good.id, group, DataService.getContainerDimension(container));
+            this._addElementToScene(getContainerPositionSharedMethods(container), `${good.desc}`, 'good', good.sequenceNr, good.id, group, getContainerPositionSharedMethods(container));
         }
     }
 
@@ -84,10 +84,10 @@ export class VisualizerComponentService {
         this.clearScene(keepPreviousGoods, keepPreviousUnusedSpaces, [step.usedPosition?.id ?? null].filter(guid => !!guid) as string[]);
         this._addUnloadingArrowToScene(container.height, container.length);
         this._addBaseGridToScene(container.height, container.length);
-        this._addContainerToScene(DataService.getContainerDimension(container));
-        if (step.placedAtPosition) this._addElementToScene(step.placedAtPosition, '', 'good', step.sequenceNumber, null, null, DataService.getContainerDimension(container));
+        this._addContainerToScene(getContainerPositionSharedMethods(container));
+        if (step.placedAtPosition) this._addElementToScene(step.placedAtPosition, '', 'good', step.sequenceNumber, null, null, getContainerPositionSharedMethods(container));
         for (let unusedDimension of step.createdPositions ?? []) {
-            this._addElementToScene(unusedDimension, '', unusedDimension.length === Infinity ? 'infiniteSpace' : 'unusedSpace', step.sequenceNumber, null, null, DataService.getContainerDimension(container), unusedDimension.id);
+            this._addElementToScene(unusedDimension, '', unusedDimension.length === Infinity ? 'infiniteSpace' : 'unusedSpace', step.sequenceNumber, null, null, getContainerPositionSharedMethods(container), unusedDimension.id);
         }
     }
 

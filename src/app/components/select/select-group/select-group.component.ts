@@ -3,10 +3,8 @@ import { Component, forwardRef, OnDestroy } from '@angular/core';
 import { ControlValueAccessor, UntypedFormControl, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { Store } from '@ngrx/store';
 import { combineLatest, map, startWith, Subscription } from 'rxjs';
-import { DataService } from 'src/app/services/data.service';
 import { addGroup } from 'src/app/store/actions/i-group.actions';
 
-import * as fromIGroupState from 'src/app/store/reducers/i-group.reducers';
 import { selectGroups } from 'src/app/store/selectors/i-group.selectors';
 
 @Component({
@@ -23,7 +21,7 @@ import { selectGroups } from 'src/app/store/selectors/i-group.selectors';
 })
 export class SelectGroupComponent implements ControlValueAccessor, OnDestroy {
 
-  public groups$ = this._groupStore.select(selectGroups);
+  public groups$ = this._store.select(selectGroups);
   public valueControl: UntypedFormControl = new UntypedFormControl();
 
   public currentGroup$ = combineLatest([this.groups$, this.valueControl.valueChanges.pipe(startWith(this.valueControl.value))]).pipe(map(([groups, _]) => {
@@ -32,14 +30,11 @@ export class SelectGroupComponent implements ControlValueAccessor, OnDestroy {
 
   private _subscriptions = new Subscription();
 
-  constructor(
-    public dataService: DataService,
-    private _groupStore: Store<fromIGroupState.State>
-  ) { }
+  constructor(private _store: Store) { }
 
-  addGroup(event: KeyboardEvent) {
+  public addGroup(event: KeyboardEvent) {
     event.stopPropagation();
-    this._groupStore.dispatch(addGroup({
+    this._store.dispatch(addGroup({
       group: {
         id: generateGuid(),
         desc: (event.target as HTMLInputElement).value
@@ -51,17 +46,17 @@ export class SelectGroupComponent implements ControlValueAccessor, OnDestroy {
   public ngOnDestroy = () => this._subscriptions.unsubscribe();
 
   public onTouched: () => void = () => { };
-  registerOnTouched = (fn: any) => this.onTouched = fn;
+  public registerOnTouched = (fn: any) => this.onTouched = fn;
 
-  registerOnChange(fn: any): void {
+  public registerOnChange(fn: any): void {
     this._subscriptions.add(this.valueControl.valueChanges.subscribe(fn));
   }
 
-  setDisabledState?(isDisabled: boolean): void {
+  public setDisabledState?(isDisabled: boolean): void {
     isDisabled ? this.valueControl.disable() : this.valueControl.enable();
   }
 
-  writeValue(value: any) {
+  public writeValue(value: any) {
     this.valueControl.setValue(value);
   }
 
