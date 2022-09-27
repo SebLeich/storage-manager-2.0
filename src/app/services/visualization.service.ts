@@ -17,7 +17,7 @@ export class VisualizationService {
 
   constructor(private _store: Store) { }
 
-  public async configureSolutionScene(solution: ISolution, scene: ThreeJS.Scene = new ThreeJS.Scene(), fillColor: boolean | string = false) {
+  public async configureSolutionScene(solution: ISolution, scene: ThreeJS.Scene = new ThreeJS.Scene(), fillColor: boolean | string = false, addBaseGrid: boolean = true, addUnloadingArrow: boolean = true) {
     let goodMeshes: { goodId: string, mesh: ThreeJS.Mesh }[] = [];
     if (!!solution?.container) {
       if (fillColor) {
@@ -35,8 +35,31 @@ export class VisualizationService {
         goodMeshes.push({ goodId: good.id, mesh: goodResult.mesh });
         scene.add(goodResult.edges, goodResult.mesh);
       }
+      if (addBaseGrid) {
+        scene.add(VisualizationService.getContainerBaseGrid(solution.container.height, solution.container.length));
+      }
+      if (addUnloadingArrow) {
+        scene.add(VisualizationService.getContainerUnloadingArrow(solution.container.height, solution.container.length));
+      }
     }
     return { scene, goodMeshes };
+  }
+
+  public static getContainerUnloadingArrow(containerHeight: number, containerLength: number, arrowColor: string = "#e33268") {
+    const from = new ThreeJS.Vector3(0, (containerHeight / -2), (containerLength / 2));
+    const to = new ThreeJS.Vector3(0, (containerHeight / -2), (containerLength / 2) + 1000);
+    const direction = to.clone().sub(from);
+    const length = direction.length();
+    const arrowHelper = new ThreeJS.ArrowHelper(direction.normalize(), from, length, arrowColor, (.2 * length), ((.2 * length) * .5));
+    return arrowHelper;
+  }
+
+  public static calculateRelativePosition(position: IPosition, relativeToParent?: IPosition): IPositionedElement {
+    return {
+      xCoord: relativeToParent ? position.xCoord! - (relativeToParent.width! / 2) + (position.width! / 2) : position.xCoord,
+      yCoord: relativeToParent ? position.yCoord! - (relativeToParent.height! / 2) + (position.height! / 2) : position.yCoord,
+      zCoord: relativeToParent ? position.zCoord! - (relativeToParent.length! / 2) + ((position.length === Infinity ? infinityReplacement : position.length!) / 2) : position.zCoord
+    }
   }
 
   public static getContainerBaseGrid(containerHeight: number, containerLength: number): ThreeJS.GridHelper {
@@ -71,14 +94,6 @@ export class VisualizationService {
     edges.userData = { type: type, positionId: position.id };
 
     return { edges };
-  }
-
-  public static calculateRelativePosition(position: IPosition, relativeToParent?: IPosition): IPositionedElement {
-    return {
-      xCoord: relativeToParent ? position.xCoord! - (relativeToParent.width! / 2) + (position.width! / 2) : position.xCoord,
-      yCoord: relativeToParent ? position.yCoord! - (relativeToParent.height! / 2) + (position.height! / 2) : position.yCoord,
-      zCoord: relativeToParent ? position.zCoord! - (relativeToParent.length! / 2) + ((position.length === Infinity ? infinityReplacement : position.length!) / 2) : position.zCoord
-    }
   }
 
 }

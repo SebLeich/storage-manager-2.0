@@ -1,9 +1,11 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { Router } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { ISolution } from 'src/app/interfaces/i-solution.interface';
 import getContainerPositionSharedMethods from 'src/app/methods/get-container-position.shared-methods';
 import { VisualizationService } from 'src/app/services/visualization.service';
+import { setCurrentSolution } from 'src/app/store/actions/i-solution.actions';
 import { selectGroups } from 'src/app/store/selectors/i-group.selectors';
 import { selectSnapshot } from 'src/lib/process-builder/globals/select-snapshot';
 
@@ -24,10 +26,17 @@ export class SolutionVisualizationDialogComponent implements OnInit {
     @Inject(MAT_DIALOG_DATA) public solution: ISolution,
     private _visualizationService: VisualizationService,
     private _ref: MatDialogRef<SolutionVisualizationDialogComponent>,
+    private _router: Router,
     private _store: Store
   ) { }
 
   public close() {
+    this._ref.close();
+  }
+
+  public displaySolutionVisualization() {
+    this._store.dispatch(setCurrentSolution({ solution: this.solution }));
+    this._router.navigate(['/visualizer']);
     this._ref.close();
   }
 

@@ -6,6 +6,7 @@
     display: flex;
     flex-direction: column;
     box-sizing: border-box;
+    position: relative;
 }
 
 .headline {
@@ -23,4 +24,10 @@
 
 .content {
     flex: 1;
+}
+
+.control {
+    position: absolute;
+    right: 0px;
+    bottom: 0px;
 }

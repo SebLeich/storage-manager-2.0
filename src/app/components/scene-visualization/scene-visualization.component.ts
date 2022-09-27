@@ -10,6 +10,7 @@ import { selectGroups } from 'src/app/store/selectors/i-group.selectors';
 import { selectSnapshot } from 'src/lib/process-builder/globals/select-snapshot';
 import { selectCurrentSolutionGoods } from 'src/app/store/selectors/i-solution.selectors';
 import { IVisualizerContextService, VISUALIZER_CONTEXT } from 'src/app/interfaces/i-visualizer-context.service';
+import { VisualizationService } from 'src/app/services/visualization.service';
 
 @Component({
   selector: 'app-scene-visualization',
