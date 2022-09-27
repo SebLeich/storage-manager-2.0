@@ -1,24 +1,26 @@
 import { createReducer, on } from '@ngrx/store';
-
 import {
   setContainerHeight,
   setContainerWidth,
   setUnit,
   updateCalculationAttributes,
 } from '../actions/i-calculation-attribute.actions';
+import exampleSolution from 'src/config/example-solution';
+import { setExemplarySolution } from '../actions/i-solution.actions';
+import { Unit } from 'src/app/types/unit.type';
 
 export const calculationAttributesFeatureKey = 'calculationAttributes';
 
 export interface State {
   containerHeight: number;
   containerWidth: number;
-  unit: 'mm' | 'cm' | 'dm' | 'm';
+  unit: Unit;
 }
 
 export const initialState: State = {
   containerHeight: 1000,
   containerWidth: 1000,
-  unit: 'mm'
+  unit: 'mm' as Unit
 }
 
 export const calculationAttributesReducer = createReducer(
@@ -28,6 +30,13 @@ export const calculationAttributesReducer = createReducer(
   }),
   on(setContainerWidth, (state, { width }) => {
     return { ...state, containerWidth: width };
+  }),
+  on(setExemplarySolution, () => {
+    return {
+      containerHeight: exampleSolution.container.height,
+      containerWidth: exampleSolution.container.width,
+      unit: exampleSolution.container.unit as Unit
+    };
   }),
   on(setUnit, (state, { unit }) => {
     return { ...state, unit: unit };

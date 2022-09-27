@@ -1,48 +1,56 @@
-import {
-  AfterViewInit,
-  Component,
-  ElementRef,
-  HostListener,
-  OnDestroy,
-  OnInit,
-  ViewChild,
-  ViewContainerRef,
-} from '@angular/core';
+import { AfterViewInit, Component, Inject, OnDestroy, OnInit, ViewChild, ViewContainerRef } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Store } from '@ngrx/store';
 import { BehaviorSubject, Subscription, timer } from 'rxjs';
-import { debounceTime, filter, map, startWith, switchMap, take } from 'rxjs/operators';
+import { delay, filter, map, scan, startWith, switchMap, take } from 'rxjs/operators';
 import { selectedGoodEdgeColor } from 'src/app/globals';
 import { NoSolutionDialogComponent } from '../../dialog/no-solution-dialog/no-solution-dialog.component';
-import { VisualizerComponentService } from './visualizer-component-service';
 import { selectCurrentSolution, selectSolutions } from 'src/app/store/selectors/i-solution.selectors';
 import { fadeInAnimation } from 'src/lib/shared/animations/fade-in';
 import { selectSnapshot } from 'src/lib/process-builder/globals/select-snapshot';
 import { setCurrentSolution } from 'src/app/store/actions/i-solution.actions';
+import { VisualizationService } from 'src/app/services/visualization.service';
+
+import * as ThreeJS from 'three';
+
+import { ISolution } from 'src/app/interfaces/i-solution.interface';
+import { SceneVisualizationComponent } from '../../scene-visualization/scene-visualization.component';
+import { VisualizerComponentService } from './visualizer-component.service';
+import { IVisualizerContextService, VISUALIZER_CONTEXT } from 'src/app/interfaces/i-visualizer-context.service';
 
 @Component({
   selector: 'app-visualizer',
   templateUrl: './visualizer.component.html',
   styleUrls: ['./visualizer.component.css'],
-  providers: [VisualizerComponentService],
+  providers: [
+    VisualizationService,
+    { provide: VISUALIZER_CONTEXT, useClass: VisualizerComponentService }
+  ],
   animations: [fadeInAnimation],
 })
 export class VisualizerComponent implements AfterViewInit, OnDestroy, OnInit {
-  @ViewChild('visualizerWrapper', { static: false }) set visualizerWrapperRef(ref: ElementRef<HTMLDivElement>) {
-    if (!ref) {
-      return;
-    }
-    this.visualizerComponentService.setVisualizerWrapper(ref);
-  }
+
+  @ViewChild(SceneVisualizationComponent, { static: false }) private _visualization!: SceneVisualizationComponent;
 
   public currentSolution$ = this._store.select(selectCurrentSolution);
   public hasCurrentSolution$ = this.currentSolution$.pipe(
     map((solution) => !!solution)
   );
 
+  public selectedGoodPanelExpanded: boolean = false;
+
   private _menuVisible = new BehaviorSubject<boolean>(true);
   private _userToggledMenu = new BehaviorSubject<boolean>(false);
   menuVisible$ = this._menuVisible.asObservable();
+  menuToggling$ = this._menuVisible.pipe(
+    switchMap(
+      () => timer(200)
+        .pipe(
+          map(() => false),
+          startWith(true)
+        )
+    ),
+  );
 
   private _displayDetails = new BehaviorSubject<boolean>(true);
   displayDetails$ = this._displayDetails.asObservable();
@@ -51,10 +59,21 @@ export class VisualizerComponent implements AfterViewInit, OnDestroy, OnInit {
     switchMap(() => timer(500).pipe(map(() => true), startWith(false)))
   );
 
+  public scene$ = this.currentSolution$.pipe(
+    scan(
+      (scene: ThreeJS.Scene, solution: ISolution | null) => {
+        this._visualizationService.configureSolutionScene(solution!, scene, 'rgb(238,238,238)')
+        return scene;
+      },
+      new ThreeJS.Scene()
+    )
+  );
+
   private _subscriptions = new Subscription();
 
   constructor(
-    public visualizerComponentService: VisualizerComponentService,
+    @Inject(VISUALIZER_CONTEXT) public visualizerComponentService: IVisualizerContextService,
+    private _visualizationService: VisualizationService,
     private _dialog: MatDialog,
     private _viewContainerRef: ViewContainerRef,
     private _store: Store
@@ -66,30 +85,15 @@ export class VisualizerComponent implements AfterViewInit, OnDestroy, OnInit {
 
   public ngOnDestroy(): void {
     this._subscriptions.unsubscribe();
-    this.visualizerComponentService.dispose();
   }
 
   public ngOnInit(): void {
     this._subscriptions.add(
-      ...[
-        this.visualizerComponentService.resized$
-          .pipe(
-            switchMap(() =>
-              this.visualizerComponentService.visualizerWrapper$.pipe(take(1))
-            )
-          )
-          .subscribe((ref: ElementRef<HTMLDivElement>) => {
-            this.visualizerComponentService.setSceneDimensions(
-              ref.nativeElement.clientWidth,
-              ref.nativeElement.clientHeight,
-              true
-            );
-          }),
-
-        this.menuVisible$.subscribe(() =>
-          this.visualizerComponentService.triggerResizeEvent()
-        ),
-      ]
+      this.menuToggling$.pipe(
+        filter(toggling => !toggling), delay(1))
+        .subscribe(() => {
+          this._visualization?.updateSize();
+        })
     );
 
     this._subscriptions.add(
@@ -124,15 +128,6 @@ export class VisualizerComponent implements AfterViewInit, OnDestroy, OnInit {
     this._menuVisible.next(!menuVisible);
     this._userToggledMenu.next(!userToggledMenu);
   }
-
-  @HostListener('window:resize', ['$event'])
-  public onResize() {
-    this.visualizerComponentService.triggerResizeEvent();
-    this.validateClient();
-  }
-
-  @HostListener('document:keypress', ['$event'])
-  public onKeydown = (event: KeyboardEvent) => this.visualizerComponentService.keydown(event);
 
   public selectedGoodEdgeColor = selectedGoodEdgeColor;
 

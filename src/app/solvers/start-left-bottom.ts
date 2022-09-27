@@ -46,7 +46,8 @@ export class StartLeftBottomSolver extends Solver implements ISolver {
                 height: containerHeight,
                 width: containerWidth,
                 length: 0,
-                goods: []
+                goods: [],
+                unit: 'mm'
             },
             calculated: moment().format(),
             calculationSource: {

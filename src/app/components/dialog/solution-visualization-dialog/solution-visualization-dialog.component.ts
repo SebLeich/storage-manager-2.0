@@ -12,7 +12,8 @@ import * as ThreeJS from 'three';
 @Component({
   selector: 'app-solution-visualization-dialog',
   templateUrl: './solution-visualization-dialog.component.html',
-  styleUrls: ['./solution-visualization-dialog.component.scss']
+  styleUrls: ['./solution-visualization-dialog.component.scss'],
+  providers: [VisualizationService]
 })
 export class SolutionVisualizationDialogComponent implements OnInit {
 
@@ -21,6 +22,7 @@ export class SolutionVisualizationDialogComponent implements OnInit {
 
   constructor(
     @Inject(MAT_DIALOG_DATA) public solution: ISolution,
+    private _visualizationService: VisualizationService,
     private _ref: MatDialogRef<SolutionVisualizationDialogComponent>,
     private _store: Store
   ) { }
@@ -34,18 +36,7 @@ export class SolutionVisualizationDialogComponent implements OnInit {
   }
 
   private async _updateScene() {
-    if (this.solution?.container) {
-      this.scene.background = new ThreeJS.Color('rgb(255,255,255)');
-      const containerPosition = getContainerPositionSharedMethods(this.solution.container!);
-      const containerResult = VisualizationService.generateOutlinedBoxMesh(containerPosition, 'container');
-      this.scene.add(containerResult.edges);
-      const groups = await selectSnapshot(this._store.select(selectGroups));
-      for (let good of this.solution.container!.goods) {
-        const group = groups.find(group => group.id === good.group);
-        const goodResult = VisualizationService.generateFilledBoxMesh(getContainerPositionSharedMethods(good), group?.color ?? '#ffffff', 'good', containerPosition);
-        this.scene.add(goodResult.edges, goodResult.mesh);
-      }
-    }
+    this._visualizationService.configureSolutionScene(this.solution, this.scene, '#ffffff');
   }
 
 }

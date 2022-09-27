@@ -1,11 +1,11 @@
-import { Injectable, OnDestroy, OnInit } from "@angular/core";
+import { Inject, Injectable, OnDestroy, OnInit } from "@angular/core";
 import { Store } from "@ngrx/store";
 import { BehaviorSubject, combineLatest, Subscription, timer } from "rxjs";
 import { filter, map, takeUntil, tap } from "rxjs/operators";
-import { VisualizerComponentService } from "../main/visualizer/visualizer-component-service";
 import { selectCurrentSolutionSteps } from "src/app/store/selectors/i-solution.selectors";
 import { IStep } from "src/app/interfaces/i-step.interface";
 import { selectSnapshot } from "src/lib/process-builder/globals/select-snapshot";
+import { IVisualizerContextService, VISUALIZER_CONTEXT } from "src/app/interfaces/i-visualizer-context.service";
 
 @Injectable()
 export class SolutionAnimationComponentService implements OnDestroy, OnInit {
@@ -28,7 +28,7 @@ export class SolutionAnimationComponentService implements OnDestroy, OnInit {
     private _subscriptions = new Subscription();
 
     constructor(
-        private _visualizerComponentService: VisualizerComponentService,
+        @Inject(VISUALIZER_CONTEXT) private _visualizerComponentService: IVisualizerContextService,
         private _store: Store,
     ) { }
 
@@ -44,7 +44,7 @@ export class SolutionAnimationComponentService implements OnDestroy, OnInit {
                 )
                 .subscribe(([_, index, steps]) => {
                     const step = steps![index];
-                    this._visualizerComponentService.animateStep(step, false, true)
+                    //this._visualizerComponentService.animateStep(step, false, true)
                 })
         );
     }
@@ -59,7 +59,7 @@ export class SolutionAnimationComponentService implements OnDestroy, OnInit {
             return;
         }
 
-        this._visualizerComponentService.clearScene();
+        //this._visualizerComponentService.clearScene();
         this._animationRunning.next(true);
 
         this._subscriptions.add(

@@ -6,9 +6,38 @@ import { defaultGoodEdgeColor, infinityReplacement } from '../globals';
 
 import { IPositionedElement } from '../interfaces/i-positioned.interface';
 import { IPosition } from '../interfaces/i-position.interface';
+import { Store } from '@ngrx/store';
+import { ISolution } from '../interfaces/i-solution.interface';
+import { selectSnapshot } from 'src/lib/process-builder/globals/select-snapshot';
+import getContainerPosition from '../methods/get-container-position.shared-methods';
+import { selectGroups } from '../store/selectors/i-group.selectors';
 
 @Injectable()
 export class VisualizationService {
+
+  constructor(private _store: Store) { }
+
+  public async configureSolutionScene(solution: ISolution, scene: ThreeJS.Scene = new ThreeJS.Scene(), fillColor: boolean | string = false) {
+    let goodMeshes: { goodId: string, mesh: ThreeJS.Mesh }[] = [];
+    if (!!solution?.container) {
+      if (fillColor) {
+        scene.background = new ThreeJS.Color(typeof fillColor === 'string' ? fillColor : 'rgb(255,255,255)');
+      }
+      const containerPosition = getContainerPosition(solution.container);
+      const containerResult = VisualizationService.generateOutlinedBoxMesh(containerPosition, 'container');
+      scene.add(containerResult.edges);
+      const groups = await selectSnapshot(this._store.select(selectGroups));
+      for (let good of solution.container!.goods) {
+        const group = groups.find(group => group.id === good.group);
+        const goodResult = VisualizationService.generateFilledBoxMesh(getContainerPosition(good), group?.color ?? '#ffffff', 'good', containerPosition);
+        goodResult.mesh.userData['goodId'] = good.id;
+        goodResult.mesh.userData['groupId'] = good.group;
+        goodMeshes.push({ goodId: good.id, mesh: goodResult.mesh });
+        scene.add(goodResult.edges, goodResult.mesh);
+      }
+    }
+    return { scene, goodMeshes };
+  }
 
   public static getContainerBaseGrid(containerHeight: number, containerLength: number): ThreeJS.GridHelper {
     const gridHelper = new ThreeJS.GridHelper(1.5 * containerLength, 15);

@@ -28,9 +28,7 @@ export class SolutionPreviewComponent {
   public groups$ = this._store.select(selectGroups);
   public goods$ = this._store.select(selectCurrentSolutionGoods);
 
-  constructor(
-    private _store: Store
-  ) { }
+  constructor(private _store: Store) { }
 
   public downloadSolution = () => this._store.dispatch(downloadCurrentSolution());
 

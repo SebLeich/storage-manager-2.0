@@ -44,7 +44,8 @@ export class AllInOneRowSolver extends Solver implements ISolver {
                 height: containerHeight,
                 width: containerWidth,
                 length: 0,
-                goods: []
+                goods: [],
+                unit: 'mm'
             },
             groups: groups,
             algorithm: this._description,

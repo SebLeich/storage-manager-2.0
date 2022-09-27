@@ -18,6 +18,7 @@ import {
 import { v4 as generateGuid } from 'uuid';
 import * as moment from 'moment';
 import { ISolution } from 'src/app/interfaces/i-solution.interface';
+import { Unit } from 'src/app/types/unit.type';
 
 export const solutionFeatureKey = 'solution';
 
@@ -59,6 +60,7 @@ export const solutionReducer = createReducer(
           width: 0,
           length: 0,
           height: 0,
+          unit: 'mm',
           id: generateGuid()
         },
         steps: [],
@@ -119,6 +121,7 @@ export const solutionReducer = createReducer(
       ...exemplarySolution.solution,
       container: {
         ...exemplarySolution.solution.container,
+        unit: exemplarySolution.solution.container.unit as Unit,
         goods: [...exemplarySolution.solution.container.goods.map(good => ({
           ...good,
           fCoord: good.fCoord === null ? Infinity : good.fCoord

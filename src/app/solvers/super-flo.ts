@@ -51,7 +51,8 @@ export class SuperFloSolver extends Solver implements ISolver {
                 height: containerHeight,
                 width: containerWidth,
                 length: Infinity,
-                goods: []
+                goods: [],
+                unit: 'mm'
             },
             steps: [],
             calculated: moment().format(),
@@ -302,7 +303,7 @@ export class SuperFloSolver extends Solver implements ISolver {
 
         const goodPosition: IPosition = {
             ...position,
-            fCoord: position.fCoord === Infinity || diff.z === Infinity? Infinity: position.fCoord - diff.z,
+            fCoord: position.fCoord === Infinity || diff.z === Infinity ? Infinity : position.fCoord - diff.z,
             rCoord: position.rCoord - diff.x,
             tCoord: position.tCoord - diff.y,
             height: order.height,

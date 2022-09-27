@@ -1,10 +1,11 @@
 export default {
     "id": "ab34762f-ccd1-4258-b3e1-69558728e6b4",
     "container": {
-        "_Height": 1700,
-        "_Width": 2100,
-        "_Length": 3000,
-        "_Goods": [
+        "height": 1700,
+        "width": 2100,
+        "length": 3000,
+        "unit": "mm",
+        "goods": [
             {
                 "id": 1,
                 "desc": "Palette 1",
