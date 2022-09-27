@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { AppRoutingModule } from 'src/app/app-routing.module';
 import { AppModule } from 'src/app/app.module';
 import defaultImportsConstant from 'src/app/default-imports.constant';
-import { VisualizerComponentService } from '../main/visualizer/visualizer-component-service';
+import { IVisualizerContextService, VISUALIZER_CONTEXT } from 'src/app/interfaces/i-visualizer-context.service';
 
 import { SolutionValidationComponent } from './solution-validation.component';
 
@@ -12,7 +12,7 @@ describe('SolutionValidationComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ SolutionValidationComponent ],
+      declarations: [SolutionValidationComponent],
       imports: [
         ...defaultImportsConstant,
 
@@ -21,16 +21,16 @@ describe('SolutionValidationComponent', () => {
       ],
       providers: [
         {
-          provide: VisualizerComponentService,
+          provide: VISUALIZER_CONTEXT,
           useValue: {
-            reRenderCurrentContainer: () => {
+            reRenderCompletely: () => {
 
             }
-          }
+          } as IVisualizerContextService
         }
       ]
     })
-    .compileComponents();
+      .compileComponents();
   });
 
   beforeEach(() => {

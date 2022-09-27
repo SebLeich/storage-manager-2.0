@@ -6,12 +6,12 @@ import { AppModule } from 'src/app/app.module';
 import defaultImports from 'src/app/default-imports.constant';
 import { ISolution } from 'src/app/interfaces/i-solution.interface';
 import { addSolution, setCurrentSolution } from 'src/app/store/actions/i-solution.actions';
-import { VisualizerComponentService } from '../main/visualizer/visualizer-component-service';
 import { v4 as generateGuid } from 'uuid';
 
 import { SolutionPreviewComponent } from './solution-preview.component';
 import moment from 'moment';
 import { IGood } from 'src/app/interfaces/i-good.interface';
+import { VISUALIZER_CONTEXT } from 'src/app/interfaces/i-visualizer-context.service';
 
 describe('SolutionPreviewComponent', () => {
   let component: SolutionPreviewComponent;
@@ -36,7 +36,7 @@ describe('SolutionPreviewComponent', () => {
         AppRoutingModule
       ],
       providers: [
-        { provide: VisualizerComponentService, useValue: {} }
+        { provide: VISUALIZER_CONTEXT, useValue: {} }
       ]
     })
       .compileComponents();

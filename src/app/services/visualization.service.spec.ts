@@ -1,4 +1,5 @@
 import { TestBed } from '@angular/core/testing';
+import defaultImportsConstant from '../default-imports.constant';
 
 import { VisualizationService } from './visualization.service';
 
@@ -7,7 +8,10 @@ describe('SolutionVisualizationService', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [VisualizationService]
+      providers: [VisualizationService],
+      imports: [
+        ...defaultImportsConstant
+      ]
     });
     service = TestBed.inject(VisualizationService);
   });
