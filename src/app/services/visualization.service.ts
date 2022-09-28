@@ -18,6 +18,7 @@ export class VisualizationService {
   constructor(private _store: Store) { }
 
   public async configureSolutionScene(solution: ISolution, scene: ThreeJS.Scene = new ThreeJS.Scene(), fillColor: boolean | string = false, addBaseGrid: boolean = true, addUnloadingArrow: boolean = true) {
+    scene.clear();
     let goodMeshes: { goodId: string, mesh: ThreeJS.Mesh }[] = [];
     if (!!solution?.container) {
       if (fillColor) {

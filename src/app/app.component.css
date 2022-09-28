@@ -16,3 +16,9 @@
     background-color: rgb(243, 243, 243);
     overflow: hidden;
 }
+
+@media screen and (max-width: 500px) {
+    .body {
+        flex-direction: column-reverse;
+    }
+}

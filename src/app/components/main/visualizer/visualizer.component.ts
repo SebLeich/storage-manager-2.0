@@ -41,8 +41,8 @@ export class VisualizerComponent implements AfterViewInit, OnDestroy, OnInit {
 
   private _menuVisible = new BehaviorSubject<boolean>(true);
   private _userToggledMenu = new BehaviorSubject<boolean>(false);
-  menuVisible$ = this._menuVisible.asObservable();
-  menuToggling$ = this._menuVisible.pipe(
+  public menuVisible$ = this._menuVisible.asObservable();
+  public menuToggling$ = this._menuVisible.pipe(
     switchMap(
       () => timer(200)
         .pipe(
@@ -53,11 +53,7 @@ export class VisualizerComponent implements AfterViewInit, OnDestroy, OnInit {
   );
 
   private _displayDetails = new BehaviorSubject<boolean>(true);
-  displayDetails$ = this._displayDetails.asObservable();
-
-  displaySolution$ = this.menuVisible$.pipe(
-    switchMap(() => timer(500).pipe(map(() => true), startWith(false)))
-  );
+  public displayDetails$ = this._displayDetails.asObservable();
 
   public scene$ = this.currentSolution$.pipe(
     scan(
@@ -88,13 +84,7 @@ export class VisualizerComponent implements AfterViewInit, OnDestroy, OnInit {
   }
 
   public ngOnInit(): void {
-    this._subscriptions.add(
-      this.menuToggling$.pipe(
-        filter(toggling => !toggling), delay(1))
-        .subscribe(() => {
-          this._visualization?.updateSize();
-        })
-    );
+    this._subscriptions.add(this.menuToggling$.pipe(filter(toggling => !toggling), delay(1)).subscribe(() => this._visualization?.updateSize()));
 
     this._subscriptions.add(
       this.hasCurrentSolution$
@@ -111,6 +101,8 @@ export class VisualizerComponent implements AfterViewInit, OnDestroy, OnInit {
           }
         })
     );
+
+    this._subscriptions.add(this.visualizerComponentService.selectedGood$.pipe(filter(good => !!good)).subscribe(() => this.selectedGoodPanelExpanded = true));
   }
 
   private _showNoSolutionDialog() {
