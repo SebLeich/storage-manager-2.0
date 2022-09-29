@@ -1,7 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { Store } from '@ngrx/store';
-import { timer } from 'rxjs';
+import { delay, filter, take, timer } from 'rxjs';
 import { AppRoutingModule } from 'src/app/app-routing.module';
 import { AppModule } from 'src/app/app.module';
 import defaultImportsConstant from 'src/app/default-imports.constant';
@@ -35,6 +35,8 @@ describe('SolutionPreviewRenderingComponent', () => {
     fixture = TestBed.createComponent(SolutionPreviewRenderingComponent);
     component = fixture.componentInstance;
     component.solution = exemplarySolution.solution as any;
+
+    jasmine.DEFAULT_TIMEOUT_INTERVAL = 10000;
   });
 
   it('should create', () => {
@@ -59,7 +61,7 @@ describe('SolutionPreviewRenderingComponent', () => {
   it('should render solution preview and save it in store', async () => {
     fixture.detectChanges();
 
-    await selectSnapshot(timer(2000));
+    await selectSnapshot(fixture.componentInstance.previewRenderingInitiallySucceeded$);
     fixture.detectChanges();
 
     const solutionPreview = await selectSnapshot(TestBed.inject(Store).select(selectSolutionPreview(exemplarySolution.solution.id)));
@@ -70,7 +72,7 @@ describe('SolutionPreviewRenderingComponent', () => {
   it('should show rendered preview', async () => {
     fixture.detectChanges();
 
-    await selectSnapshot(timer(2000));
+    await selectSnapshot(fixture.componentInstance.previewRenderingInitiallySucceeded$);
     fixture.detectChanges();
 
     expect(fixture.debugElement.query(By.css('#solution-preview'))).toBeTruthy();
@@ -87,6 +89,18 @@ describe('SolutionPreviewRenderingComponent', () => {
     fixture.detectChanges();
 
     expect(fixture.debugElement.query(By.css('#solution-preview'))).toBeTruthy();
+  });
+
+  it('should always display image with the same height and width as the body', async () => {
+    fixture.detectChanges();
+
+    await selectSnapshot(fixture.componentInstance.previewRenderingInitiallySucceeded$);
+    fixture.detectChanges();
+
+    const solutionPreview = fixture.debugElement.query(By.css('#solution-preview'));
+    const body = fixture.debugElement.query(By.css('.body'));
+    expect(solutionPreview.nativeElement.offsetHeight).toBe(body.nativeElement.offsetHeight);
+    expect(solutionPreview.nativeElement.offsetWidth).toBe(body.nativeElement.offsetWidth);
   });
 
 });
