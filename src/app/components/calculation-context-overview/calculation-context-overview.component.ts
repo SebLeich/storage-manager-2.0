@@ -1,11 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { ControlContainer, FormGroup } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
-import { Router } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { map } from 'rxjs';
 import { ISolution } from 'src/app/interfaces/i-solution.interface';
-import { removeSolution, setCurrentSolution, updateSolution } from 'src/app/store/actions/i-solution.actions';
+import { removeSolution, updateSolution } from 'src/app/store/actions/i-solution.actions';
 import { selectSolutions } from 'src/app/store/selectors/i-solution.selectors';
 import { SolutionVisualizationDialogComponent } from '../dialog/solution-visualization-dialog/solution-visualization-dialog.component';
 
@@ -21,7 +20,7 @@ export class CalculationContextOverviewComponent implements OnInit {
   public solutions$ = this._store.select(selectSolutions);
   public solutionsAvailable$ = this.solutions$.pipe(map((solutions) => solutions?.length > 0 ? true : false));
 
-  constructor(private _controlContainer: ControlContainer, private _store: Store, private _router: Router, private _dialog: MatDialog) { }
+  constructor(private _controlContainer: ControlContainer, private _store: Store, private _dialog: MatDialog) { }
 
   public ngOnInit(): void {
     this.formGroup = this._controlContainer.control as FormGroup;

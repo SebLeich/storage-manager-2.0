@@ -87,6 +87,7 @@ import { SceneVisualizationComponent } from './components/scene-visualization/sc
 import { SolutionVisualizationDialogComponent } from './components/dialog/solution-visualization-dialog/solution-visualization-dialog.component';
 import { SolutionPreviewRenderingComponent } from './components/solution-preview-rendering/solution-preview-rendering.component';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { ComputedStylePipe } from './pipes/computed-style.pipe';
 
 let rootStoreFeatures: any = {};
 rootStoreFeatures[fromICalculationAttributesState.calculationAttributesFeatureKey] = fromICalculationAttributesState.calculationAttributesReducer;
@@ -128,7 +129,8 @@ rootStoreFeatures[fromISolutionPreviewState.solutionPreviewFeatureKey] = fromISo
     CalculationContextOverviewComponent,
     SceneVisualizationComponent,
     SolutionVisualizationDialogComponent,
-    SolutionPreviewRenderingComponent
+    SolutionPreviewRenderingComponent,
+    ComputedStylePipe
   ],
   imports: [
     BrowserModule,
