@@ -5,8 +5,8 @@ import { Pipe, PipeTransform } from '@angular/core';
 })
 export class ComputedStylePipe implements PipeTransform {
 
-  public transform(element: HTMLElement): string {
-    return window.getComputedStyle(element, null).backgroundColor;
+  public transform(element: HTMLElement, property: keyof CSSStyleDeclaration = 'backgroundColor') {
+    return window.getComputedStyle(element, null)[property];
   }
 
 }
