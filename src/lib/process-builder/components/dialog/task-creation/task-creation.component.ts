@@ -3,7 +3,7 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { Store } from '@ngrx/store';
 import { BehaviorSubject, combineLatest, interval, Observable, of, Subject, Subscription } from 'rxjs';
 import { IElement } from 'src/lib/bpmn-io/i-element';
-import { BPMNJsRepository } from 'src/lib/core/bpmn-js-repository';
+import { BPMNJsRepository } from 'src/lib/core/bpmn-js.repository';
 import { IEmbeddedView } from 'src/lib/process-builder/globals/i-embedded-view';
 import { ITaskCreationConfig } from 'src/lib/process-builder/globals/i-task-creation-config';
 import { TaskCreationStep } from 'src/lib/process-builder/globals/task-creation-step';
@@ -65,14 +65,14 @@ export class TaskCreationComponent implements OnDestroy, OnInit {
 
   @ViewChild('dynamicInner', { static: true, read: ViewContainerRef }) dynamicInner!: ViewContainerRef;
 
-  stepRegistry: {
+  public stepRegistry: {
     type: Type<IEmbeddedView>,
     provideInputParams?: (component: IEmbeddedView, element: IElement) => void,
     autoChangeTabOnValueEmission?: boolean
   }[] = [];
 
   private _currentStepIndex: BehaviorSubject<number> = new BehaviorSubject<number>(0);
-  currentStepIndex$ = this._currentStepIndex.asObservable();
+  public currentStepIndex$ = this._currentStepIndex.asObservable();
 
   private _configureGateway = new BehaviorSubject<IConnector | null>(null);
   private _customImplementation = new BehaviorSubject<IElement | null>(null);
@@ -82,51 +82,49 @@ export class TaskCreationComponent implements OnDestroy, OnInit {
   private _hasDataMapping = new BehaviorSubject<IElement | null | undefined>(null);
 
   hasOutputParam$ = this._hasOutputParam.asObservable();
-  steps$ = combineLatest([this._configureGateway.asObservable(), this._customImplementation.asObservable(), this._hasDynamicInputParam.asObservable(), this._hasDynamicOutputParam.asObservable(), this._hasDataMapping.asObservable()])
-    .pipe(
-      debounceTime(10),
-      map(([gatewayConfig, customImplementation, hasDynamicInputParam, dynamicOutputParam, dataMapping]) => {
-        let availableSteps: ITaskCreationConfig[] = [];
-        if (gatewayConfig) {
-          availableSteps.push({
-            'taskCreationStep': TaskCreationStep.ConfigureErrorGatewayEntranceConnection,
-            'element': gatewayConfig
-          } as ITaskCreationConfig);
-        }
-        if (this.data.data.payload.configureActivity) {
-          availableSteps.push({
-            'taskCreationStep': TaskCreationStep.ConfigureFunctionSelection,
-            'element': this.data.data.payload.configureActivity
-          } as ITaskCreationConfig);
-        }
-        if (hasDynamicInputParam) {
-          availableSteps.push({
-            'taskCreationStep': TaskCreationStep.ConfigureFunctionInput,
-            'element': hasDynamicInputParam
-          } as ITaskCreationConfig);
-        }
-        if (customImplementation) {
-          availableSteps.push({
-            'taskCreationStep': TaskCreationStep.ConfigureFunctionImplementation,
-            'element': customImplementation
-          } as ITaskCreationConfig);
-        }
-        if (dataMapping) {
-          availableSteps.push({
-            'taskCreationStep': TaskCreationStep.ConfigureInputOutputMapping,
-            'element': dataMapping
-          } as ITaskCreationConfig);
-        }
-        if (customImplementation || dynamicOutputParam) {
-          availableSteps.push({
-            'taskCreationStep': TaskCreationStep.ConfigureFunctionOutput,
-            'element': dynamicOutputParam
-          } as ITaskCreationConfig);
-        }
-        return availableSteps;
-      }),
-      shareReplay(1)
-    ) as Observable<ITaskCreationConfig[]>;
+  public steps$ = combineLatest([this._configureGateway.asObservable(), this._customImplementation.asObservable(), this._hasDynamicInputParam.asObservable(), this._hasDynamicOutputParam.asObservable(), this._hasDataMapping.asObservable()]).pipe(
+    map(([gatewayConfig, customImplementation, hasDynamicInputParam, dynamicOutputParam, dataMapping]) => {
+      let availableSteps: ITaskCreationConfig[] = [];
+      if (gatewayConfig) {
+        availableSteps.push({
+          'taskCreationStep': TaskCreationStep.ConfigureErrorGatewayEntranceConnection,
+          'element': gatewayConfig
+        } as ITaskCreationConfig);
+      }
+      if (this.data.data.payload.configureActivity) {
+        availableSteps.push({
+          'taskCreationStep': TaskCreationStep.ConfigureFunctionSelection,
+          'element': this.data.data.payload.configureActivity
+        } as ITaskCreationConfig);
+      }
+      if (hasDynamicInputParam) {
+        availableSteps.push({
+          'taskCreationStep': TaskCreationStep.ConfigureFunctionInput,
+          'element': hasDynamicInputParam
+        } as ITaskCreationConfig);
+      }
+      if (customImplementation) {
+        availableSteps.push({
+          'taskCreationStep': TaskCreationStep.ConfigureFunctionImplementation,
+          'element': customImplementation
+        } as ITaskCreationConfig);
+      }
+      if (dataMapping) {
+        availableSteps.push({
+          'taskCreationStep': TaskCreationStep.ConfigureInputOutputMapping,
+          'element': dataMapping
+        } as ITaskCreationConfig);
+      }
+      if (customImplementation || dynamicOutputParam) {
+        availableSteps.push({
+          'taskCreationStep': TaskCreationStep.ConfigureFunctionOutput,
+          'element': dynamicOutputParam
+        } as ITaskCreationConfig);
+      }
+      return availableSteps;
+    }),
+    shareReplay(1)
+  ) as Observable<ITaskCreationConfig[]>;
 
   currentStep$ = combineLatest([this.steps$, this.currentStepIndex$]).pipe(map(([steps, index]) => steps[index]));
   canAnalyzeCustomImplementation$ = this.currentStep$.pipe(
@@ -144,20 +142,20 @@ export class TaskCreationComponent implements OnDestroy, OnInit {
 
   formGroup!: UntypedFormGroup;
 
-  private _subscriptions: Subscription[] = [];
+  private _subscriptions = new Subscription();
 
   constructor(
-    private _ref: MatDialogRef<TaskCreationComponent>,
     @Inject(PROCESS_BUILDER_CONFIG_TOKEN) public config: IProcessBuilderConfig,
     @Inject(MAT_DIALOG_DATA) public data: ITaskCreationComponentInput,
     @Inject(INJECTOR_INTERFACE_TOKEN) private _injectorInterface: { injector: object },
     @Inject(INJECTOR_TOKEN) private _injector: { injector: object },
+    private _ref: MatDialogRef<TaskCreationComponent>,
     private _store: Store,
     private _formBuilder: UntypedFormBuilder
   ) {
     this.formGroup = this._formBuilder.group({
-      'functionIdentifier': null,
-      'canFail': false,
+      functionIdentifier: null,
+      canFail: false,
       'implementation': null,
       'requireCustomImplementation': null,
       'name': config.defaultFunctionName,
@@ -172,15 +170,12 @@ export class TaskCreationComponent implements OnDestroy, OnInit {
     this.formGroup.patchValue(this.data.data.data);
   }
 
-  abort = () => this._ref.close();
-  finish = () => this._ref.close(this.formGroup.value);
+  public abort = () => this._ref.close();
+  public finish = () => this._ref.close(this.formGroup.value);
 
-  ngOnDestroy(): void {
-    for (let sub of this._subscriptions) sub.unsubscribe();
-    this._subscriptions = [];
-  }
+  public ngOnDestroy = () => this._subscriptions.unsubscribe();
 
-  ngOnInit(): void {
+  public ngOnInit(): void {
     this.stepRegistry[TaskCreationStep.ConfigureErrorGatewayEntranceConnection] = {
       type: EmbeddedConfigureErrorGatewayEntranceConnectionComponent
     };
@@ -216,10 +211,7 @@ export class TaskCreationComponent implements OnDestroy, OnInit {
     this.validateFunctionSelection();
     this.setStep(0);
 
-    this._subscriptions.push(...[
-      this._customImplementation.subscribe((element: IElement | null) => {
-
-      }),
+    this._subscriptions.add(...[
       this.formGroup.controls['implementation'].valueChanges.pipe(debounceTime(2000)).subscribe(() => {
         let value = this.formGroup.controls['implementation'].value;
         let evaluationResult = CodemirrorRepository.evaluateCustomMethod(undefined, value);

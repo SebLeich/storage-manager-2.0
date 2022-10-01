@@ -10,7 +10,7 @@ import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { IParamEditorComponentInputData } from '../interfaces/i-param-editor-component-input-data.interface';
 import { IParam } from 'src/lib/process-builder/globals/i-param';
 import { selectIFunctionsByOutputParam } from 'src/lib/process-builder/store/selectors/i-function.selector';
-import { BPMNJsRepository } from 'src/lib/core/bpmn-js-repository';
+import { BPMNJsRepository } from 'src/lib/core/bpmn-js.repository';
 import {
   INJECTOR_INTERFACE_TOKEN,
   INJECTOR_TOKEN,

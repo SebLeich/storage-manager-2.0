@@ -36,7 +36,7 @@ describe('SolutionPreviewRenderingComponent', () => {
     component = fixture.componentInstance;
     component.solution = exemplarySolution.solution as any;
 
-    jasmine.DEFAULT_TIMEOUT_INTERVAL = 10000;
+    jasmine.DEFAULT_TIMEOUT_INTERVAL = 20000;
   });
 
   it('should create', () => {

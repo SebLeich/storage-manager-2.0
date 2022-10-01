@@ -1,6 +1,6 @@
 import { IBpmnJS } from "../process-builder/globals/i-bpmn-js";
 import { ValidationErrorPipe } from "../process-builder/pipes/validation-error.pipe";
-import { BPMNJsRepository } from "./bpmn-js-repository";
+import { BPMNJsRepository } from "./bpmn-js.repository";
 
 export const processPerformer = (bpmnJS: IBpmnJS) => {
 

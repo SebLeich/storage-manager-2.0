@@ -27,7 +27,7 @@ import { FUNCTION_STORE_TOKEN } from "../process-builder/store/reducers/i-functi
 import { PARAM_STORE_TOKEN } from "../process-builder/store/reducers/i-param.reducer";
 import * as fromIFunctionSelector from "../process-builder/store/selectors/i-function.selector";
 import * as fromIParmSelector from "../process-builder/store/selectors/i-param.selectors";
-import { BPMNJsRepository } from "./bpmn-js-repository";
+import { BPMNJsRepository } from "./bpmn-js.repository";
 import { CodemirrorRepository } from "./codemirror-repository";
 import { ProcessBuilderRepository } from "./process-builder-repository";
 

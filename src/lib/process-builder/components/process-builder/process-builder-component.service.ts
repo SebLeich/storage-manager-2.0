@@ -19,7 +19,7 @@ import { IViewbox } from 'src/lib/bpmn-io/i-viewbox';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { processPerformer } from 'src/lib/core/process-performer';
 import bpmnJsEventTypes from 'src/lib/bpmn-io/bpmn-js-event-types';
-import { BPMNJsRepository } from 'src/lib/core/bpmn-js-repository';
+import { BPMNJsRepository } from 'src/lib/core/bpmn-js.repository';
 
 import { IElement } from 'src/lib/bpmn-io/i-element';
 import { ValidationErrorPipe } from '../../pipes/validation-error.pipe';
@@ -229,14 +229,13 @@ export class ProcessBuilderComponentService {
     });
   }
 
-  showError(error: { element?: IElement, error: ValidationError }) {
+  public showError(error: { element?: IElement, error: ValidationError }) {
     this.hideAllHints();
     if (!error.element) {
       return;
     }
 
-    var tooltipModule = getTooltipModule(this.bpmnjsService.bpmnjs);
-    tooltipModule.add({
+    this.bpmnjsService.tooltipModule.add({
       position: {
         x: error.element.x,
         y: error.element.y + error.element.height + 3
@@ -246,14 +245,13 @@ export class ProcessBuilderComponentService {
     });
   }
 
-  showWarning(warning: { element?: IElement, warning: ValidationWarning }) {
+  public showWarning(warning: { element?: IElement, warning: ValidationWarning }) {
     this.hideAllHints();
     if (!warning.element) {
       return;
     }
 
-    var tooltipModule = getTooltipModule(this.bpmnjsService.bpmnjs);
-    tooltipModule.add({
+    this.bpmnjsService.tooltipModule.add({
       position: {
         x: warning.element?.x,
         y: warning.element?.y + warning.element?.height + 3
@@ -281,37 +279,23 @@ export class ProcessBuilderComponentService {
     this._store.dispatch(updateIFunction(func));
   }
 
-  undo = () => (window as any).cli.undo();
-  redo = () => (window as any).cli.redo();
-  zoomIn = () => this.bpmnjsService.bpmnjs.get('zoomScroll').stepZoom(1);
-  zoomOut = () => this.bpmnjsService.bpmnjs.get('zoomScroll').stepZoom(-1);
+  public undo = () => (window as any).cli.undo();
+  public redo = () => (window as any).cli.redo();
+  public zoomIn = () => this.bpmnjsService.bpmnjs.get('zoomScroll').stepZoom(1);
+  public zoomOut = () => this.bpmnjsService.bpmnjs.get('zoomScroll').stepZoom(-1);
 
 
   private _setBpmnModel(xml: string, viewbox: IViewbox | null = null) {
     this.bpmnjsService.bpmnjs.importXML(xml)
       .then(() => {
-        if (viewbox) getCanvasModule(this.bpmnjsService.bpmnjs).viewbox(viewbox);
+        if (viewbox) {
+          getCanvasModule(this.bpmnjsService.bpmnjs).viewbox(viewbox);
+        }
       })
       .catch((err: any) => console.log('error rendering', err));
   }
 
   private _setUp() {
-
-    // this.bpmnJS = new BpmnJS({
-    //   additionalModules: [
-    //     customRendererModule,
-    //     gridModule,
-    //     CliModule,
-    //     tooltips
-    //   ],
-    //   cli: {
-    //     bindTo: 'cli'
-    //   },
-    //   moddleExtensions: {
-    //     processBuilderExtension: sebleichProcessBuilderExtension
-    //   }
-    // });
-
     this._subscriptions.push(...[
       this.currentIBpmnJSModel$.subscribe((model: IBpmnJSModel | undefined) => {
         if (!model) return;

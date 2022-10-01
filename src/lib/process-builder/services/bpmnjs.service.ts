@@ -16,12 +16,14 @@ import * as tooltips from "diagram-js/lib/features/tooltips";
 import customRendererModule from '../extensions/custom-renderer';
 
 import sebleichProcessBuilderExtension from '../globals/sebleich-process-builder-extension';
+import { IBpmnJS } from '../globals/i-bpmn-js';
+import { getElementRegistryModule, getTooltipModule } from 'src/lib/bpmn-io/bpmn-modules';
 
 
 @Injectable()
 export class BpmnjsService {
 
-  bpmnjs = new BpmnJS({
+  public bpmnjs: IBpmnJS = new BpmnJS({
     additionalModules: [
       customRendererModule,
       gridModule,
@@ -35,4 +37,12 @@ export class BpmnjsService {
       processBuilderExtension: sebleichProcessBuilderExtension
     }
   });
+
+  public get elementRegistry() {
+    return getElementRegistryModule(this.bpmnjs);
+  }
+
+  public get tooltipModule() {
+    return getTooltipModule(this.bpmnjs);
+  }
 }
