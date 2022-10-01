@@ -26,7 +26,7 @@
 
                 <div class="preview">
 
-                    <app-solution-preview-rendering [solution]="solution" [backgroundColor]="solutionPreview|computedStyle"></app-solution-preview-rendering>
+                    <app-solution-preview-rendering [solution]="solution" [backgroundColor]="$any(solutionPreview|computedStyle)"></app-solution-preview-rendering>
 
                 </div>
 

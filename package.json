@@ -6,7 +6,7 @@
     "start": "ng test --watch=false && ng serve",
     "prebuild": "npm --no-git-tag-version version patch",
     "build": "ng build",
-    "publish-ghp": "ng test --watch=false && npm --no-git-tag-version version patch && ng build --configuration=production --base-href='https://sebleich.github.io/storage-manager-2.0/' && npx angular-cli-ghpages --dir=dist/storage-manager",
+    "publish-ghp": "ng test --watch=false && ng e2e && npm --no-git-tag-version version patch && ng build --configuration=production --base-href='https://sebleich.github.io/storage-manager-2.0/' && npx angular-cli-ghpages --dir=dist/storage-manager",
     "watch": "ng build --watch --configuration development",
     "test": "ng test"
   },
@@ -40,6 +40,7 @@
     "bpmn-js": "^9.4.1",
     "bpmn-js-cli": "^2.2.0",
     "chart.js": "^3.9.1",
+    "chromedriver": "^106.0.1",
     "codemirror": "^5.65.6",
     "diagram-js": "^8.9.0",
     "eslint4b-prebuilt": "^6.7.2",
@@ -66,11 +67,14 @@
     "angular-cli-ghpages": "^1.0.3",
     "jasmine": "^4.4.0",
     "jasmine-core": "^4.4.0",
+    "jasmine-spec-reporter": "^7.0.0",
     "karma": "^6.4.0",
     "karma-chrome-launcher": "~3.1.0",
     "karma-coverage": "^2.2.0",
     "karma-jasmine": "^5.1.0",
     "karma-jasmine-html-reporter": "^2.0.0",
+    "protractor": "^7.0.0",
+    "ts-node": "^10.9.1",
     "tslib": "^2.4.0",
     "typescript": "4.7.4"
   }
