@@ -96,6 +96,7 @@ describe('SolutionPreviewRenderingComponent', () => {
 
     await selectSnapshot(fixture.componentInstance.previewRenderingInitiallySucceeded$);
     fixture.detectChanges();
+    await fixture.whenRenderingDone();
 
     const solutionPreview = fixture.debugElement.query(By.css('#solution-preview'));
     const body = fixture.debugElement.query(By.css('.body'));
