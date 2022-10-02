@@ -1,5 +1,5 @@
-import { IConnector } from "./interfaces/i-connector.interface";
-import { IElement } from "./interfaces/i-element.interface";
+import { IConnector } from "./i-connector.interface";
+import { IElement } from "./i-element.interface";
 
 export interface IConnectionCreatePostExecutedEvent {
     command: "connection.create"

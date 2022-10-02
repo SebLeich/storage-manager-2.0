@@ -3,13 +3,10 @@ import { combineLatest, of, ReplaySubject, Subject, timer } from "rxjs";
 import { buffer, debounceTime, filter, map, switchMap, take } from "rxjs/operators";
 import bpmnJsEventTypes from "../bpmn-io/bpmn-js-event-types";
 import bpmnJsModules from "../bpmn-io/bpmn-js-modules";
-import { getDirectEditingModule, getElementRegistryModule, getEventBusModule, getModelingModule } from "../bpmn-io/bpmn-modules";
-import { IConnectionCreatePostExecutedEvent } from "../bpmn-io/i-connection-create-post-executed-event";
+import { getDirectEditingModule, getElementRegistryModule, getModelingModule } from "../bpmn-io/bpmn-modules";
+import { IConnectionCreatePostExecutedEvent } from "../bpmn-io/interfaces/i-connection-create-post-executed-event.interface";
 import { IConnector } from "../bpmn-io/interfaces/i-connector.interface";
-import { IDirectEditingEvent } from "../bpmn-io/i-direct-editing-event";
 import { IElement } from "../bpmn-io/interfaces/i-element.interface";
-import { IEvent } from "../bpmn-io/i-event";
-import { IShapeDeleteExecutedEvent } from "../bpmn-io/i-shape-delete-executed-event";
 import shapeTypes from "../bpmn-io/shape-types";
 import { ITaskCreationData, ITaskCreationPayload } from "../process-builder/interfaces/i-task-creation-component-inpu.interfacet";
 import defaultImplementation from "../process-builder/globals/default-implementation";
@@ -29,6 +26,9 @@ import { BPMNJsRepository } from "./bpmn-js.repository";
 import { CodemirrorRepository } from "./codemirror-repository";
 import { ProcessBuilderRepository } from "./process-builder-repository";
 import { Store } from "@ngrx/store";
+import { IDirectEditingEvent } from "../bpmn-io/interfaces/i-direct-editing-event.interface";
+import { IShapeDeleteExecutedEvent } from "../bpmn-io/interfaces/i-shape-delete-executed-event.interface";
+import { IEvent } from "../bpmn-io/interfaces/i-event.interface";
 
 /**
  * that method is deprecated and should be replaced

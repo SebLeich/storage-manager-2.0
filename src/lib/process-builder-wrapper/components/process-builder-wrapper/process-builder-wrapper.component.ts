@@ -45,9 +45,7 @@ export class ProcessBuilderWrapperComponent {
     private _store: Store, 
     public bpmnJsService: BpmnJsService, 
     private _snackBar: MatSnackBar
-  ) {
-    this.currentBpmnJSModel$.subscribe(arg => console.log(arg));
-  }
+  ) { }
 
   public blurElement(element: HTMLElement, event?: Event) {
     if (event) {

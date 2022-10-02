@@ -18,18 +18,18 @@ import customRendererModule from '../extensions/custom-renderer';
 import sebleichProcessBuilderExtension from '../globals/sebleich-process-builder-extension';
 import { IBpmnJS } from '../interfaces/i-bpmn-js.interface';
 import { getCanvasModule, getDirectEditingModule, getElementRegistryModule, getEventBusModule, getModelingModule, getTooltipModule, getZoomScrollModule } from 'src/lib/bpmn-io/bpmn-modules';
-import { BehaviorSubject, combineLatest, debounceTime, delay, filter, from, map, merge, Observable, ReplaySubject, shareReplay, switchMap, throttleTime } from 'rxjs';
-import { IDirectEditingEvent } from 'src/lib/bpmn-io/i-direct-editing-event';
-import { IShapeAddedEvent } from 'src/lib/bpmn-io/i-shape-added-event.interface';
-import { IEvent } from 'src/lib/bpmn-io/i-event';
-import { IShapeDeleteExecutedEvent } from 'src/lib/bpmn-io/i-shape-delete-executed-event';
-import { IConnectionCreatePostExecutedEvent } from 'src/lib/bpmn-io/i-connection-create-post-executed-event';
+import { BehaviorSubject, combineLatest, debounceTime, delay, filter, from, map, merge, Observable, shareReplay, switchMap, throttleTime } from 'rxjs';
+import { IConnectionCreatePostExecutedEvent } from 'src/lib/bpmn-io/interfaces/i-connection-create-post-executed-event.interface';
 import { IModelingModule } from 'src/lib/bpmn-io/interfaces/i-modeling-module.interface';
 import { IProcessValidationResult } from '../classes/validation-result';
 import { BPMNJsRepository } from 'src/lib/core/bpmn-js.repository';
 import { IZoomScrollModule } from 'src/lib/bpmn-io/interfaces/i-zoom-scroll-module.interface';
 import { Store } from '@ngrx/store';
 import { selectCurrentIBpmnJSModel } from '../store/selectors/i-bpmn-js-model.selectors';
+import { IEvent } from 'src/lib/bpmn-io/interfaces/i-event.interface';
+import { IDirectEditingEvent } from 'src/lib/bpmn-io/interfaces/i-direct-editing-event.interface';
+import { IShapeDeleteExecutedEvent } from 'src/lib/bpmn-io/interfaces/i-shape-delete-executed-event.interface';
+import { IShapeAddedEvent } from 'src/lib/bpmn-io/interfaces/i-shape-added-event.interface';
 
 
 @Injectable()
@@ -107,7 +107,7 @@ export class BpmnJsService {
   public validationContainsErrors$ = this.validation$.pipe(
     map(validation => (validation?.errors?.length ?? 0) > 0)
   );
-  public bpmnJsLoggingEnabled = true;
+  public bpmnJsLoggingEnabled = false;
 
   private currentBpmnJSModel$ = this._store.select(selectCurrentIBpmnJSModel);
 
