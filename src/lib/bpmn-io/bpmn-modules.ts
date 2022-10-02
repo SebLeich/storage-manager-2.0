@@ -4,6 +4,7 @@ import { IElement } from "./interfaces/i-element.interface";
 import { IViewbox } from "./interfaces/i-viewbox.interface";
 import { BpmnJsEventType } from "./bpmn-js-event-types";
 import { IModelingModule } from "./interfaces/i-modeling-module.interface";
+import { IZoomScrollModule } from "./interfaces/i-zoom-scroll-module.interface";
 
 export const getCanvasModule = (bpmnJS: IBpmnJS) => bpmnJS.get(bpmnJsModules.Canvas) as ICanvasModule;
 export const getDirectEditingModule = (bpmnJS: IBpmnJS) => bpmnJS.get(bpmnJsModules.DirectEditing) as IDirectEditingModule;
@@ -11,6 +12,7 @@ export const getModelingModule = (bpmnJS: IBpmnJS) => bpmnJS.get(bpmnJsModules.M
 export const getElementRegistryModule = (bpmnJS: IBpmnJS) => bpmnJS.get(bpmnJsModules.ElementRegistry) as IElementRegistry;
 export const getEventBusModule = (bpmnJS: IBpmnJS) => bpmnJS.get(bpmnJsModules.EventBus) as IEventBus;
 export const getTooltipModule = (bpmnJS: IBpmnJS) => bpmnJS.get(bpmnJsModules.Tooltip) as ITooltipModule;
+export const getZoomScrollModule = (bpmnJS: IBpmnJS) => bpmnJS.get(bpmnJsModules.ZoomScroll) as IZoomScrollModule;
 
 export interface ICanvasModule {
     viewbox: (viewbox?: IViewbox) => IViewbox;

@@ -17,7 +17,7 @@ import customRendererModule from '../extensions/custom-renderer';
 
 import sebleichProcessBuilderExtension from '../globals/sebleich-process-builder-extension';
 import { IBpmnJS } from '../interfaces/i-bpmn-js.interface';
-import { getCanvasModule, getDirectEditingModule, getElementRegistryModule, getEventBusModule, getModelingModule, getTooltipModule } from 'src/lib/bpmn-io/bpmn-modules';
+import { getCanvasModule, getDirectEditingModule, getElementRegistryModule, getEventBusModule, getModelingModule, getTooltipModule, getZoomScrollModule } from 'src/lib/bpmn-io/bpmn-modules';
 import { map, merge, Observable, shareReplay, throttleTime } from 'rxjs';
 import { IDirectEditingEvent } from 'src/lib/bpmn-io/i-direct-editing-event';
 import { IShapeAddedEvent } from 'src/lib/bpmn-io/i-shape-added-event.interface';
@@ -27,6 +27,7 @@ import { IConnectionCreatePostExecutedEvent } from 'src/lib/bpmn-io/i-connection
 import { IModelingModule } from 'src/lib/bpmn-io/interfaces/i-modeling-module.interface';
 import { IProcessValidationResult } from '../classes/validation-result';
 import { BPMNJsRepository } from 'src/lib/core/bpmn-js.repository';
+import { IZoomScrollModule } from 'src/lib/bpmn-io/interfaces/i-zoom-scroll-module.interface';
 
 
 @Injectable()
@@ -75,6 +76,10 @@ export class BpmnJsService {
     subscriber.next(evt);
   }));
 
+  public toolManagerUpdateEventFired$ = new Observable<IEvent>((subscriber) => this.eventBusModule.on('tool-manager.update', (evt) => {
+    subscriber.next(evt);
+  }));
+
   public eventFired$ = merge(
     this.attachEventFired$.pipe(map(event => ({ event: event, type: 'attach' }))),
     this.connectionCreatePostExecutedEventFired$.pipe(map(event => ({ event: event, type: 'commandStack.connection.create.postExecuted' }))),
@@ -83,6 +88,7 @@ export class BpmnJsService {
     this.shapeAddedEventFired$.pipe(map(event => ({ event: event, type: 'shape.added' }))),
     this.shapeDeleteExecutedEventFired$.pipe(map(event => ({ event: event, type: 'commandStack.shape.delete.executed' }))),
     this.shapeRemoveEventFired$.pipe(map(event => ({ event: event, type: 'shape.remove' }))),
+    this.toolManagerUpdateEventFired$.pipe(map(event => ({ event: event, type: 'tool-manager.update' }))),
   );
 
   public validation$: Observable<undefined | null | IProcessValidationResult> = this.eventFired$.pipe(
@@ -117,5 +123,9 @@ export class BpmnJsService {
 
   public get tooltipModule() {
     return getTooltipModule(this.bpmnjs);
+  }
+
+  public get zoomScrollModule(): IZoomScrollModule {
+    return getZoomScrollModule(this.bpmnjs);
   }
 }

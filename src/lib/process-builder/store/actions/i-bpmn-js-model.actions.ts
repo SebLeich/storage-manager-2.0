@@ -21,10 +21,9 @@ export const setCurrentIBpmnJSModel = createAction(
   (model: IBpmnJSModel) => ({ model })
 );
 
-
-export const updateCurrentIBpmnJSModelName = createAction(
+export const updateCurrentIBpmnJSModel = createAction(
   '[IBpmnJSModel] Update Current IBpmnJSModel',
-  (updatedName: string) => ({ updatedTitle: updatedName })
+  (properties: Partial<IBpmnJSModel>) => ({ properties })
 );
 
 export const updateIBpmnJSModel = createAction(

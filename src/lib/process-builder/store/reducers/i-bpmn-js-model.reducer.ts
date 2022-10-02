@@ -1,6 +1,6 @@
 import { createEntityAdapter, EntityAdapter, EntityState, Update } from '@ngrx/entity';
 import { createReducer, on } from '@ngrx/store';
-import { addIBpmnJSModel, addIBpmnJSModels, createIBpmnJsModel, removeIBpmnJSModel, setCurrentIBpmnJSModel, updateCurrentIBpmnJSModelName, updateIBpmnJSModel, upsertIBpmnJSModel, upsertIBpmnJSModels } from '../actions/i-bpmn-js-model.actions';
+import { addIBpmnJSModel, addIBpmnJSModels, createIBpmnJsModel, removeIBpmnJSModel, setCurrentIBpmnJSModel, updateCurrentIBpmnJSModel, updateIBpmnJSModel, upsertIBpmnJSModel, upsertIBpmnJSModels } from '../actions/i-bpmn-js-model.actions';
 import { v4 as generateGuid } from 'uuid';
 import { IBpmnJSModel } from '../../interfaces/i-bpmn-js-model.interface';
 
@@ -82,13 +82,11 @@ export const reducer = createReducer(
     return { ...state, currentBpmnJSModelGuid: model.guid };
   }),
 
-  on(updateCurrentIBpmnJSModelName, (state: State, { updatedTitle }) => {
+  on(updateCurrentIBpmnJSModel, (state: State, { properties }) => {
     if (state.currentBpmnJSModelGuid) {
       return adapter.updateOne({
         id: state.currentBpmnJSModelGuid,
-        changes: {
-          'name': updatedTitle
-        }
+        changes: { ...properties, lastModified: moment().format() }
       }, state);
     }
     return state;
