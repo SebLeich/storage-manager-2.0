@@ -18,7 +18,7 @@ import customRendererModule from '../extensions/custom-renderer';
 import sebleichProcessBuilderExtension from '../globals/sebleich-process-builder-extension';
 import { IBpmnJS } from '../interfaces/i-bpmn-js.interface';
 import { getCanvasModule, getDirectEditingModule, getElementRegistryModule, getEventBusModule, getModelingModule, getTooltipModule, getZoomScrollModule } from 'src/lib/bpmn-io/bpmn-modules';
-import { delay, filter, from, map, merge, Observable, shareReplay, switchMap, throttleTime } from 'rxjs';
+import { BehaviorSubject, combineLatest, debounceTime, delay, filter, from, map, merge, Observable, ReplaySubject, shareReplay, switchMap, throttleTime } from 'rxjs';
 import { IDirectEditingEvent } from 'src/lib/bpmn-io/i-direct-editing-event';
 import { IShapeAddedEvent } from 'src/lib/bpmn-io/i-shape-added-event.interface';
 import { IEvent } from 'src/lib/bpmn-io/i-event';
@@ -66,6 +66,10 @@ export class BpmnJsService {
     subscriber.next(evt);
   }));
 
+  public elementChangedEventFired$ = new Observable<IEvent>((subscriber) => this.eventBusModule.on('element.changed', (evt) => {
+    subscriber.next(evt);
+  }));
+
   public shapeAddedEventFired$ = new Observable<IShapeAddedEvent>((subscriber) => this.eventBusModule.on('shape.added', (evt) => {
     subscriber.next(evt);
   }));
@@ -87,6 +91,7 @@ export class BpmnJsService {
     this.connectionCreatePostExecutedEventFired$.pipe(map(event => ({ event: event, type: 'commandStack.connection.create.postExecuted' }))),
     this.detachEventFired$.pipe(map(event => ({ event: event, type: 'detach' }))),
     this.directEditingEventFired$.pipe(map(event => ({ event: event, type: 'directEditing.activate' }))),
+    this.elementChangedEventFired$.pipe(map(event => ({ event: event, type: 'element.changed' }))),
     this.shapeAddedEventFired$.pipe(map(event => ({ event: event, type: 'shape.added' }))),
     this.shapeDeleteExecutedEventFired$.pipe(map(event => ({ event: event, type: 'commandStack.shape.delete.executed' }))),
     this.shapeRemoveEventFired$.pipe(map(event => ({ event: event, type: 'shape.remove' }))),
@@ -102,22 +107,45 @@ export class BpmnJsService {
   public validationContainsErrors$ = this.validation$.pipe(
     map(validation => (validation?.errors?.length ?? 0) > 0)
   );
+  public bpmnJsLoggingEnabled = true;
 
   private currentBpmnJSModel$ = this._store.select(selectCurrentIBpmnJSModel);
+
+  private _containsChanges = new BehaviorSubject<boolean>(false);
+  public containsChanges$ = this._containsChanges.asObservable();
 
   constructor(private _store: Store) {
     this._setUp();
   }
 
+  public markAsUnchanged() {
+    this._containsChanges.next(false);
+  }
+
   private _setUp(): void {
-    this.currentBpmnJSModel$
-      .pipe(
-        filter(bpmnJsModel => !!bpmnJsModel),
-        switchMap(bpmnJsModel => from(this.bpmnJs.importXML(bpmnJsModel!.xml)).pipe(map(importResult => ({ importResult, bpmnJsModel }))))
-      )
+    this.currentBpmnJSModel$.pipe(
+      filter(bpmnJsModel => !!bpmnJsModel),
+      switchMap(bpmnJsModel => {
+        this.bpmnJs.clear();
+        return from(this.bpmnJs.importXML(bpmnJsModel!.xml)).pipe(map(importResult => ({ importResult, bpmnJsModel })));
+      }))
       .subscribe(args => {
         this.canvasModule.viewbox(args.bpmnJsModel!.viewbox);
       });
+    this.eventFired$.subscribe(event => {
+      if (this.bpmnJsLoggingEnabled) {
+        console.log(event);
+      }
+    });
+    this.eventFired$.pipe(
+      debounceTime(500),
+      switchMap(() => combineLatest([this.bpmnJs.saveXML(), this._store.select(selectCurrentIBpmnJSModel)])),
+      map(([currentValue, currentBpmnJsModel]) => {
+        return currentValue.xml != currentBpmnJsModel!.xml;
+      })
+    ).subscribe((isChanged) => {
+      this._containsChanges.next(isChanged);
+    });
   }
 
   public get canvasModule() {

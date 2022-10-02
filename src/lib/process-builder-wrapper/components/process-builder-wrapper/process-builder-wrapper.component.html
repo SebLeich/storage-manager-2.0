@@ -47,7 +47,7 @@
 
         </div>
 
-        <div class="control-footer-item accent" (click)="saveCurrentBpmnModel()">
+        <div class="control-footer-item accent" *ngIf="(bpmnJsService.containsChanges$|async)" @fadeIn (click)="saveCurrentBpmnModel()">
             <mat-icon>save</mat-icon>
         </div>
 
@@ -140,7 +140,7 @@
         <mat-icon class="interactable-icon" (click)="zoomIn()">add_circle_outline</mat-icon>
         <mat-icon class="interactable-icon" (click)="zoomOut()">remove_circle_outline</mat-icon>
     </div>
-    <div mat-menu-item (click)="saveCurrentBpmnModel()">
+    <div mat-menu-item [disabled]="!(bpmnJsService.containsChanges$|async)" (click)="saveCurrentBpmnModel()">
         <span class="text">save model</span>
     </div>
     <div mat-menu-item class="bordered">

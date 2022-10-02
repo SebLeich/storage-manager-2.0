@@ -1,4 +1,4 @@
-import { ApplicationRef, Injector, NgModule } from '@angular/core';
+import { Injector, NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ProcessBuilderComponent } from './components/process-builder/process-builder.component';
 import { HttpClientModule } from '@angular/common/http';

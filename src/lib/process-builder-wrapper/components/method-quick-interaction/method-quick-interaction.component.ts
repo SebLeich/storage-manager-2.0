@@ -68,6 +68,7 @@ export class MethodQuickInteractionComponent implements OnDestroy, OnInit {
     const result: { xml: string } = await this.bpmnJsService.bpmnJs.saveXML();
     this._store.dispatch(updateCurrentIBpmnJSModel({ xml: result.xml }));
     this._snackBar.open('model saved', 'ok', { duration: 2000 });
+    this.bpmnJsService.markAsUnchanged();
   }
 
   public resetState() {
