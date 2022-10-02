@@ -1,10 +1,12 @@
 <div class="body">
 
-    <app-process-builder style="flex: 1; overflow: hidden;"></app-process-builder>
+    <div class="process-builder-wrapper">
+        <app-process-builder *ngIf="hasCurrentBpmnJSModel$|async; else noBpmnModelSetted" @fadeIn></app-process-builder>
+    </div>
 
     <div class="control-footer">
 
-        <mat-form-field class="mat-form-field-outline-white-bg mat-form-field-no-padding" appearance="outline">
+        <mat-form-field class="mat-form-field-outline-white-bg mat-form-field-no-padding draft-selection-input" appearance="outline">
             <mat-label>current draft (total: {{(bpmnJSModels$|async)?.length ?? 0}})</mat-label>
             <mat-select [value]="currentBpmnJSModelGuid$|async">
                 <mat-select-trigger>
@@ -30,10 +32,9 @@
 
         <div class="spacer"></div>
 
-        <div class="hint" [ngClass]="((bpmnJsService.validation$|async)?.errors?.length ?? 0) > 0? 'error': 'success'"
-            (mouseleave)="hideAllHints()">
+        <div class="hint" [ngClass]="(bpmnJsService.validationContainsErrors$|async)? 'error': 'success'" (mouseleave)="hideAllHints()">
 
-            <span class="counter">{{(bpmnJsService.validation$|async)?.errors?.length ?? 0}}</span>
+            <span class="counter">{{(bpmnJsService.validation$|async)?.errors?.length}}</span>
             <span class="text">errors</span>
 
         </div>
@@ -150,3 +151,11 @@
         <mat-icon class="icon">delete_forever</mat-icon>
     </div>
 </mat-menu>
+
+<ng-template #noBpmnModelSetted>
+
+    <div class="no-bpmn-model-hint">
+        no bpmn model setted
+    </div>
+
+</ng-template>

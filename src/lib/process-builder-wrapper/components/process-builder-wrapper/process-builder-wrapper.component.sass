@@ -3,8 +3,8 @@
 .body
     display: flex
     flex-direction: column
-    height: 100%
-    width: 100%
+    height: -webkit-fill-available
+    width: -webkit-fill-available
 
 .control-footer
     background-color: rgba(255, 255, 255, 0.2705882353)
@@ -145,3 +145,20 @@
     overflow: hidden
     font-size: 10px
     line-height: 12px
+
+.draft-selection-input
+    width: min(30%, 300px)
+    min-width: 150px
+
+.process-builder-wrapper
+    flex: 1
+    overflow: hidden
+
+.no-bpmn-model-hint
+    font-weight: 100
+    font-family: monospace
+    display: flex
+    align-items: center
+    justify-content: center
+    height: -webkit-fill-available
+    width: -webkit-fill-available

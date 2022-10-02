@@ -1,7 +1,7 @@
 import { InjectionToken } from "@angular/core";
+import { ITaskConfig } from "../interfaces/i-task-config.interface";
 import { IErrorGatewayConfig } from "./i-error-gateway-config";
 import { IProcessStatusConfig } from "./i-process-status-config";
-import { ITaskConfig } from "./i-task-config";
 
 export interface IProcessBuilderConfig {
     editable: boolean;

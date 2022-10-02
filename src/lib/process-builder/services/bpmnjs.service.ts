@@ -18,7 +18,7 @@ import customRendererModule from '../extensions/custom-renderer';
 import sebleichProcessBuilderExtension from '../globals/sebleich-process-builder-extension';
 import { IBpmnJS } from '../interfaces/i-bpmn-js.interface';
 import { getCanvasModule, getDirectEditingModule, getElementRegistryModule, getEventBusModule, getModelingModule, getTooltipModule, getZoomScrollModule } from 'src/lib/bpmn-io/bpmn-modules';
-import { map, merge, Observable, shareReplay, throttleTime } from 'rxjs';
+import { delay, filter, from, map, merge, Observable, shareReplay, switchMap, throttleTime } from 'rxjs';
 import { IDirectEditingEvent } from 'src/lib/bpmn-io/i-direct-editing-event';
 import { IShapeAddedEvent } from 'src/lib/bpmn-io/i-shape-added-event.interface';
 import { IEvent } from 'src/lib/bpmn-io/i-event';
@@ -28,12 +28,14 @@ import { IModelingModule } from 'src/lib/bpmn-io/interfaces/i-modeling-module.in
 import { IProcessValidationResult } from '../classes/validation-result';
 import { BPMNJsRepository } from 'src/lib/core/bpmn-js.repository';
 import { IZoomScrollModule } from 'src/lib/bpmn-io/interfaces/i-zoom-scroll-module.interface';
+import { Store } from '@ngrx/store';
+import { selectCurrentIBpmnJSModel } from '../store/selectors/i-bpmn-js-model.selectors';
 
 
 @Injectable()
 export class BpmnJsService {
 
-  public bpmnjs: IBpmnJS = new BpmnJS({
+  public bpmnJs: IBpmnJS = new BpmnJS({
     additionalModules: [
       customRendererModule,
       gridModule,
@@ -93,39 +95,56 @@ export class BpmnJsService {
 
   public validation$: Observable<undefined | null | IProcessValidationResult> = this.eventFired$.pipe(
     throttleTime(500),
-    map(() => BPMNJsRepository.validateProcess(this.bpmnjs)),
-    shareReplay(1)
+    map(() => BPMNJsRepository.validateProcess(this.bpmnJs)),
+    shareReplay(1),
+    delay(0)
+  );
+  public validationContainsErrors$ = this.validation$.pipe(
+    map(validation => (validation?.errors?.length ?? 0) > 0)
   );
 
-  constructor() {
-    this.eventFired$.subscribe((arg: any) => console.log(arg));
+  private currentBpmnJSModel$ = this._store.select(selectCurrentIBpmnJSModel);
+
+  constructor(private _store: Store) {
+    this._setUp();
+  }
+
+  private _setUp(): void {
+    this.currentBpmnJSModel$
+      .pipe(
+        filter(bpmnJsModel => !!bpmnJsModel),
+        switchMap(bpmnJsModel => from(this.bpmnJs.importXML(bpmnJsModel!.xml)).pipe(map(importResult => ({ importResult, bpmnJsModel }))))
+      )
+      .subscribe(args => {
+        this.canvasModule.viewbox(args.bpmnJsModel!.viewbox);
+      });
   }
 
   public get canvasModule() {
-    return getCanvasModule(this.bpmnjs);
+    return getCanvasModule(this.bpmnJs);
   }
 
   public get directEditingModule() {
-    return getDirectEditingModule(this.bpmnjs);
+    return getDirectEditingModule(this.bpmnJs);
   }
 
   public get elementRegistryModule() {
-    return getElementRegistryModule(this.bpmnjs);
+    return getElementRegistryModule(this.bpmnJs);
   }
 
   public get eventBusModule() {
-    return getEventBusModule(this.bpmnjs);
+    return getEventBusModule(this.bpmnJs);
   }
 
   public get modelingModule(): IModelingModule {
-    return getModelingModule(this.bpmnjs);
+    return getModelingModule(this.bpmnJs);
   }
 
   public get tooltipModule() {
-    return getTooltipModule(this.bpmnjs);
+    return getTooltipModule(this.bpmnJs);
   }
 
   public get zoomScrollModule(): IZoomScrollModule {
-    return getZoomScrollModule(this.bpmnjs);
+    return getZoomScrollModule(this.bpmnJs);
   }
 }

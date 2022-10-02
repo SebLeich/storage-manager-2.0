@@ -18,7 +18,7 @@ export const createIBpmnJsModel = createAction(
 
 export const setCurrentIBpmnJSModel = createAction(
   '[IBpmnJSModel] Set Current IBpmnJSModel',
-  (model: IBpmnJSModel) => ({ model })
+  (arg: IBpmnJSModel | string) => ({ arg })
 );
 
 export const updateCurrentIBpmnJSModel = createAction(

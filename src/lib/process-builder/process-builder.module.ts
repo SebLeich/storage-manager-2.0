@@ -1,4 +1,4 @@
-import { Injector, NgModule } from '@angular/core';
+import { ApplicationRef, Injector, NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ProcessBuilderComponent } from './components/process-builder/process-builder.component';
 import { HttpClientModule } from '@angular/common/http';
@@ -39,14 +39,12 @@ import { DynamicInputParamsPipe } from './pipes/dynamic-input-params.pipe';
 import { EmbeddedFunctionImplementationComponent } from './components/embedded/embedded-function-implementation/embedded-function-implementation.component';
 import { CodemirrorModule } from '@ctrl/ngx-codemirror';
 import { ReturnValueStatusPipe } from './pipes/return-value-status.pipe';
-import { loadIFunctions } from './store/actions/i-function.actions';
 import { EmbeddedParamEditorComponent } from './components/embedded/embedded-param-editor/embedded-param-editor.component';
 import { localStorageAdapter, provideLocalStorageSettings } from './adapters/local-storage-adapter';
 import { loadIParams } from './store/actions/i-param.actions';
 import { ValidationErrorPipe } from './pipes/validation-error.pipe';
 import { EmbeddedFunctionInputSelectionComponent } from './components/embedded/embedded-function-input-selection/embedded-function-input-selection.component';
 import { ParamPreviewComponent } from './components/previews/param-preview/param-preview.component';
-import { ProcessBuilderComponentService } from './components/process-builder/process-builder-component.service';
 import { ValidationWarningPipe } from './pipes/validation-warning.pipe';
 import { EmbeddedInputOutputMappingComponent } from './components/embedded/embedded-input-output-mapping/embedded-input-output-mapping.component';
 import { EmbeddedInputOutputMappingTableRowComponent } from './components/helpers/embedded-input-output-mapping-table-row/embedded-input-output-mapping-table-row.component';
@@ -56,6 +54,7 @@ import { ParamMemberPreviewComponent } from './components/helpers/param-member-p
 import { ParamMemberPathPreviewComponent } from './components/helpers/param-member-path-preview/param-member-path-preview.component';
 import { BpmnJsService } from './services/bpmnjs.service';
 import { ProcessBuilderService } from './services/process-builder.service';
+import { loadIFunctions } from './store/actions/i-function.actions';
 
 
 @NgModule({
@@ -123,23 +122,21 @@ import { ProcessBuilderService } from './services/process-builder.service';
     BpmnJsService,
     ParamPipe,
     ProcessBuilderService
-  ]
+  ],
 })
 export class ProcessBuilderModule {
 
-  constructor(
-    injector: Injector,
-    private _store: Store,
-  ) {
+  constructor(store: Store, injector: Injector){
+    ProcessBuilderModule.initialize(store, injector);
+  }
 
-    this._store.dispatch(loadIFunctions());
-    this._store.dispatch(loadIParams());
-    this._store.dispatch(loadIInterfaces());
+  static initialize(store: Store, injector: Injector): void {
+    store.dispatch(loadIFunctions());
+    store.dispatch(loadIParams());
+    store.dispatch(loadIInterfaces());
 
     provideLocalStorageSettings(injector);
     localStorageAdapter(injector);
-
-
   }
 
 }

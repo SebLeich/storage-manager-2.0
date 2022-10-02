@@ -17,7 +17,7 @@ import { ErrorGatewayEvent } from "../process-builder/globals/error-gateway-even
 import { IFunction } from "../process-builder/globals/i-function";
 import { IParam } from "../process-builder/globals/i-param";
 import { IProcessBuilderConfig, PROCESS_BUILDER_CONFIG_TOKEN } from "../process-builder/globals/i-process-builder-config";
-import { ITaskCreationConfig } from "../process-builder/globals/i-task-creation-config";
+import { ITaskCreationConfig } from "../process-builder/interfaces/i-task-creation-config.interface";
 import { MethodEvaluationStatus } from "../process-builder/globals/method-evaluation-status";
 import { TaskCreationStep } from "../process-builder/globals/task-creation-step";
 import { DialogService } from "../process-builder/services/dialog.service";
@@ -99,7 +99,6 @@ export const validateBPMNConfig = (bpmnJS: any, injector: Injector) => {
         });
     }
     _directEditingActivateActions[shapeTypes.Label] = (evt: IDirectEditingEvent) => {
-        debugger;
         if (typeof _directEditingActivateActions[evt.active.element.businessObject.$type] === 'undefined') {
             return;
         }

@@ -83,9 +83,9 @@ describe('TaskCreationComponent', () => {
     ]));
 
     document.body.appendChild(diagramWrapper);
-    bpmnJsService.bpmnjs.attachTo(diagramWrapper);
+    bpmnJsService.bpmnJs.attachTo(diagramWrapper);
 
-    await bpmnJsService.bpmnjs.importXML(exemplaryBpmnModel.bpmnJsModel);
+    await bpmnJsService.bpmnJs.importXML(exemplaryBpmnModel.bpmnJsModel);
 
     taskCreationPayload.configureActivity = bpmnJsService.elementRegistryModule.get(exemplaryBpmnModel.activityGuid) as IElement;
   });

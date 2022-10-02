@@ -8,7 +8,7 @@ import { Store } from '@ngrx/store';
 import { selectIParams } from '../../store/selectors/i-param.selectors';
 import { validateBPMNConfig } from 'src/lib/core/config-validator';
 import { selectIFunctions, selectIFunctionsByOutputParam } from '../../store/selectors/i-function.selector';
-import { addIBpmnJSModel, createIBpmnJsModel, removeIBpmnJSModel, updateIBpmnJSModel, upsertIBpmnJSModel } from '../../store/actions/i-bpmn-js-model.actions';
+import { addIBpmnJSModel, createIBpmnJsModel, removeIBpmnJSModel, setCurrentIBpmnJSModel, updateIBpmnJSModel, upsertIBpmnJSModel } from '../../store/actions/i-bpmn-js-model.actions';
 import * as moment from 'moment';
 import { IProcessBuilderConfig, PROCESS_BUILDER_CONFIG_TOKEN } from '../../globals/i-process-builder-config';
 import { selectIBpmnJSModels, selectRecentlyUsedIBpmnJSModel } from '../../store/selectors/i-bpmn-js-model.selectors';
@@ -78,10 +78,10 @@ export class ProcessBuilderComponentService {
     this._subscriptions.unsubscribe();
   }
 
-  hideAllHints = () => BPMNJsRepository.clearAllTooltips(this.bpmnjsService.bpmnjs);
+  hideAllHints = () => BPMNJsRepository.clearAllTooltips(this.bpmnjsService.bpmnJs);
 
   async init(parent: HTMLDivElement) {
-    this.bpmnjsService.bpmnjs.attachTo(parent);
+    this.bpmnjsService.bpmnJs.attachTo(parent);
     await selectSnapshot(this.setDefaultModel());
   }
 
@@ -137,7 +137,7 @@ export class ProcessBuilderComponentService {
 
   saveModel() {
     this.currentIBpmnJSModel$.pipe(take(1)).subscribe((model: IBpmnJSModel | undefined) => {
-      this.bpmnjsService.bpmnjs.saveXML().then(({ xml }: { xml: any }) => {
+      this.bpmnjsService.bpmnJs.saveXML().then(({ xml }: { xml: any }) => {
 
         if (!model) return;
 
@@ -148,7 +148,7 @@ export class ProcessBuilderComponentService {
           'name': model.name,
           'xml': xml,
           'lastModified': moment().format('yyyy-MM-ddTHH:mm:ss'),
-          'viewbox': getCanvasModule(this.bpmnjsService.bpmnjs).viewbox()
+          'viewbox': getCanvasModule(this.bpmnjsService.bpmnJs).viewbox()
         }));
 
         this._snackBar.open(`the state was successfully saved`, 'Ok', {
@@ -170,7 +170,6 @@ export class ProcessBuilderComponentService {
       )
       .subscribe({
         next: (model: IBpmnJSModel | string) => {
-
           if (typeof model === 'string') {
             model = {
               'guid': generateGuid(),
@@ -182,7 +181,7 @@ export class ProcessBuilderComponentService {
             };
             this._store.dispatch(addIBpmnJSModel(model));
           }
-          this._currentIBpmnJSModelGuid.next(model.guid);
+          this._store.dispatch(setCurrentIBpmnJSModel(model.guid));
           subject.next();
         },
         complete: () => subject.complete()
@@ -242,7 +241,7 @@ export class ProcessBuilderComponentService {
   tryExecute() {
 
     try {
-      processPerformer(this.bpmnjsService.bpmnjs);
+      processPerformer(this.bpmnjsService.bpmnJs);
     } catch (error) {
       console.log(error);
     }
@@ -259,15 +258,15 @@ export class ProcessBuilderComponentService {
 
   public undo = () => (window as any).cli.undo();
   public redo = () => (window as any).cli.redo();
-  public zoomIn = () => this.bpmnjsService.bpmnjs.get('zoomScroll').stepZoom(1);
-  public zoomOut = () => this.bpmnjsService.bpmnjs.get('zoomScroll').stepZoom(-1);
+  public zoomIn = () => this.bpmnjsService.bpmnJs.get('zoomScroll').stepZoom(1);
+  public zoomOut = () => this.bpmnjsService.bpmnJs.get('zoomScroll').stepZoom(-1);
 
 
   private _setBpmnModel(xml: string, viewbox: IViewbox | null = null) {
-    this.bpmnjsService.bpmnjs.importXML(xml)
+    this.bpmnjsService.bpmnJs.importXML(xml)
       .then(() => {
         if (viewbox) {
-          getCanvasModule(this.bpmnjsService.bpmnjs).viewbox(viewbox);
+          getCanvasModule(this.bpmnjsService.bpmnJs).viewbox(viewbox);
         }
       })
       .catch((err: any) => console.log('error rendering', err));
@@ -279,20 +278,20 @@ export class ProcessBuilderComponentService {
         if (!model) return;
         this._setBpmnModel(model.xml, model.viewbox);
       }),
-      validateBPMNConfig(this.bpmnjsService.bpmnjs, this._injector).subscribe(() => {
+      validateBPMNConfig(this.bpmnjsService.bpmnJs, this._injector).subscribe(() => {
         this._modelChanged.next();
         this._pendingChanges.next(true);
       })
     ]);
 
-    getEventBusModule(this.bpmnjsService.bpmnjs).on(bpmnJsEventTypes.ElementChanged, () => this._modelChanged.next());
+    getEventBusModule(this.bpmnjsService.bpmnJs).on(bpmnJsEventTypes.ElementChanged, () => this._modelChanged.next());
 
     let prevSub: Subscription | undefined;
-    getEventBusModule(this.bpmnjsService.bpmnjs).on(bpmnJsEventTypes.ElementHover, (evt) => {
+    getEventBusModule(this.bpmnjsService.bpmnJs).on(bpmnJsEventTypes.ElementHover, (evt) => {
 
-      BPMNJsRepository.clearAllTooltips(this.bpmnjsService.bpmnjs);
+      BPMNJsRepository.clearAllTooltips(this.bpmnjsService.bpmnJs);
 
-      var tooltipModule = getTooltipModule(this.bpmnjsService.bpmnjs);
+      var tooltipModule = getTooltipModule(this.bpmnjsService.bpmnJs);
 
       if (prevSub) {
         prevSub.unsubscribe();

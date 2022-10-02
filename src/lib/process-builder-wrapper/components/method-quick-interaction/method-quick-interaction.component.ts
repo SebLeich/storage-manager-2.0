@@ -48,7 +48,7 @@ export class MethodQuickInteractionComponent implements OnDestroy, OnInit {
     this._store.dispatch(createIBpmnJsModel());
   }
 
-  public hideAllHints = () => BPMNJsRepository.clearAllTooltips(this.bpmnJsService.bpmnjs);
+  public hideAllHints = () => BPMNJsRepository.clearAllTooltips(this.bpmnJsService.bpmnJs);
   public ngOnDestroy = () => this._subscriptions.unsubscribe();
 
   public ngOnInit(): void {
@@ -65,7 +65,7 @@ export class MethodQuickInteractionComponent implements OnDestroy, OnInit {
   }
 
   public async saveCurrentBpmnModel() {
-    const result: { xml: string } = await this.bpmnJsService.bpmnjs.saveXML();
+    const result: { xml: string } = await this.bpmnJsService.bpmnJs.saveXML();
     this._store.dispatch(updateCurrentIBpmnJSModel({ xml: result.xml }));
     this._snackBar.open('model saved', 'ok', { duration: 2000 });
   }

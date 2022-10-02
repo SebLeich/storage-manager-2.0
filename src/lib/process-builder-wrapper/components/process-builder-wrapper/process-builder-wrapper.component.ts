@@ -2,24 +2,25 @@ import { Component, ViewChild } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Store } from '@ngrx/store';
 import { BehaviorSubject } from 'rxjs';
-import { take } from 'rxjs/operators';
+import { map, take } from 'rxjs/operators';
 import { BPMNJsRepository } from 'src/lib/core/bpmn-js.repository';
 import { ProcessBuilderComponent } from 'src/lib/process-builder/components/process-builder/process-builder.component';
 import { IFunction } from 'src/lib/process-builder/globals/i-function';
 import { IBpmnJSModel } from 'src/lib/process-builder/interfaces/i-bpmn-js-model.interface';
 import { BpmnJsService } from 'src/lib/process-builder/services/bpmnjs.service';
-import { createIBpmnJsModel, removeIBpmnJSModel, setCurrentIBpmnJSModel, updateCurrentIBpmnJSModel, upsertIBpmnJSModel } from 'src/lib/process-builder/store/actions/i-bpmn-js-model.actions';
+import { createIBpmnJsModel, removeIBpmnJSModel, setCurrentIBpmnJSModel, updateCurrentIBpmnJSModel } from 'src/lib/process-builder/store/actions/i-bpmn-js-model.actions';
 import { removeIFunction } from 'src/lib/process-builder/store/actions/i-function.actions';
 import { selectCurrentIBpmnJSModel, selectCurrentIBpmnJSModelGuid, selectIBpmnJSModels } from 'src/lib/process-builder/store/selectors/i-bpmn-js-model.selectors';
 import { selectIFunctions } from 'src/lib/process-builder/store/selectors/i-function.selector';
 import { selectIParams } from 'src/lib/process-builder/store/selectors/i-param.selectors';
+import { fadeInAnimation } from 'src/lib/shared/animations/fade-in';
 import { showListAnimation } from 'src/lib/shared/animations/show-list';
 
 @Component({
   selector: 'app-process-builder-wrapper',
   templateUrl: './process-builder-wrapper.component.html',
   styleUrls: ['./process-builder-wrapper.component.sass'],
-  animations: [showListAnimation]
+  animations: [fadeInAnimation, showListAnimation]
 })
 export class ProcessBuilderWrapperComponent {
 
@@ -29,6 +30,7 @@ export class ProcessBuilderWrapperComponent {
   public funcs$ = this._store.select(selectIFunctions());
   public params$ = this._store.select(selectIParams());
   public currentBpmnJSModel$ = this._store.select(selectCurrentIBpmnJSModel);
+  public hasCurrentBpmnJSModel$ = this.currentBpmnJSModel$.pipe(map(currentBpmnJSModel => !!currentBpmnJSModel));
   public currentBpmnJSModelGuid$ = this._store.select(selectCurrentIBpmnJSModelGuid);
 
   private _modelsVisible = new BehaviorSubject<boolean>(true);
@@ -39,7 +41,13 @@ export class ProcessBuilderWrapperComponent {
   public methodsVisible$ = this._methodsVisible.asObservable();
   public paramsVisible$ = this._paramsVisible.asObservable();
 
-  constructor(private _store: Store, public bpmnJsService: BpmnJsService, private _snackBar: MatSnackBar) { }
+  constructor(
+    private _store: Store, 
+    public bpmnJsService: BpmnJsService, 
+    private _snackBar: MatSnackBar
+  ) {
+    this.currentBpmnJSModel$.subscribe(arg => console.log(arg));
+  }
 
   public blurElement(element: HTMLElement, event?: Event) {
     if (event) {
@@ -53,7 +61,9 @@ export class ProcessBuilderWrapperComponent {
     this._store.dispatch(createIBpmnJsModel());
   }
 
-  public hideAllHints = () => BPMNJsRepository.clearAllTooltips(this.bpmnJsService.bpmnjs);
+  public hideAllHints(){
+    BPMNJsRepository.clearAllTooltips(this.bpmnJsService.bpmnJs);
+  }
 
   public removeFunction(func: IFunction) {
     this._store.dispatch(removeIFunction(func));
@@ -63,8 +73,9 @@ export class ProcessBuilderWrapperComponent {
     this._store.dispatch(removeIBpmnJSModel(bpmnJSModel));
   }
 
-  public renameCurrentModel(updatedTitle: string) {
-    this._store.dispatch(updateCurrentIBpmnJSModel({ description: updatedTitle }));
+  public async renameCurrentModel(updatedName: string) {
+    this._store.dispatch(updateCurrentIBpmnJSModel({ name: updatedName }));
+    await this.saveCurrentBpmnModel();
   }
 
   public resetState() {
@@ -75,7 +86,7 @@ export class ProcessBuilderWrapperComponent {
   }
 
   public async saveCurrentBpmnModel() {
-    const result: { xml: string } = await this.bpmnJsService.bpmnjs.saveXML();
+    const result: { xml: string } = await this.bpmnJsService.bpmnJs.saveXML();
     this._store.dispatch(updateCurrentIBpmnJSModel({ xml: result.xml }));
     this._snackBar.open('model saved', 'ok', { duration: 2000 });
   }

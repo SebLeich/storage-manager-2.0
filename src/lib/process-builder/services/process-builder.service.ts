@@ -1,7 +1,6 @@
-import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Inject, Injectable, Optional } from '@angular/core';
 import { ReplaySubject } from 'rxjs';
-import { map, shareReplay, take } from 'rxjs/operators';
+import { map, take } from 'rxjs/operators';
 import { IFunction } from '../globals/i-function';
 import { IProcessBuilderConfig, PROCESS_BUILDER_CONFIG_TOKEN } from '../globals/i-process-builder-config';
 import { Store } from '@ngrx/store';
@@ -19,7 +18,6 @@ export class ProcessBuilderService {
 
   constructor(
     @Optional() @Inject(PROCESS_BUILDER_CONFIG_TOKEN) private config: IProcessBuilderConfig,
-    private _httpClient: HttpClient,
     private _store: Store
   ) {
     if (!this.config) {

@@ -1,13 +1,13 @@
-import { Injector } from "@angular/core";
+import { ApplicationRef, Injector } from "@angular/core";
 import { selectIParams } from "../store/selectors/i-param.selectors";
 import { IParam } from "../globals/i-param";
 import { selectIFunctions } from "../store/selectors/i-function.selector";
 import { IFunction } from "../globals/i-function";
 import { upsertIFunctions } from "../store/actions/i-function.actions";
 import { upsertIParams } from "../store/actions/i-param.actions";
-import { selectIBpmnJSModels } from "../store/selectors/i-bpmn-js-model.selectors";
+import { selectCurrentIBpmnJSModelGuid, selectIBpmnJSModels } from "../store/selectors/i-bpmn-js-model.selectors";
 import { IBpmnJSModel } from "../interfaces/i-bpmn-js-model.interface";
-import { upsertIBpmnJSModels } from "../store/actions/i-bpmn-js-model.actions";
+import { setCurrentIBpmnJSModel, upsertIBpmnJSModels } from "../store/actions/i-bpmn-js-model.actions";
 import { selectIInterfaces } from "../store/selectors/i-interface.selectors";
 import { IInterface } from "../interfaces/i-interface.interface";
 import { upsertIInterfaces } from "../store/actions/i-interface.actions";
@@ -28,6 +28,10 @@ export const localStorageAdapter = (injector: Injector) => {
     store.select(selectIBpmnJSModels()).subscribe((models: IBpmnJSModel[]) => {
         localStorage.setItem('models', JSON.stringify(models));
     });
+
+    store.select(selectCurrentIBpmnJSModelGuid).subscribe((currentModelGuid: string | null) => {
+        localStorage.setItem('currentModelGuid', currentModelGuid ?? '');
+    });
     
     store.select(selectIInterfaces()).subscribe((ifaces: IInterface[]) => {
         localStorage.setItem('ifaces', JSON.stringify(ifaces));
@@ -41,6 +45,7 @@ export const provideLocalStorageSettings = (injector: Injector) => {
     const funcsSetting = localStorage.getItem('funcs'),
         paramsSetting = localStorage.getItem('params'),
         bpmnJSModelsSetting = localStorage.getItem('models'),
+        currentModelGuidSetting = localStorage.getItem('currentModelGuid'),
         interfacesSetting = localStorage.getItem('ifaces');
 
     if (funcsSetting) {
@@ -82,6 +87,16 @@ export const provideLocalStorageSettings = (injector: Injector) => {
 
     }
 
+    if (currentModelGuidSetting) {
+
+        try {
+            store.dispatch(setCurrentIBpmnJSModel(currentModelGuidSetting));
+        } catch (e) {
+            localStorage.removeItem('currentModelGuid');
+        }
+
+    }
+
     if (interfacesSetting) {
 
         try {
@@ -94,5 +109,7 @@ export const provideLocalStorageSettings = (injector: Injector) => {
         }
 
     }
+
+    injector.get(ApplicationRef).tick();
 
 }

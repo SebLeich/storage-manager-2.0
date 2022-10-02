@@ -5,7 +5,7 @@ import { BehaviorSubject, combineLatest, interval, Observable, of, Subject, Subs
 import { IElement } from 'src/lib/bpmn-io/interfaces/i-element.interface';
 import { BPMNJsRepository } from 'src/lib/core/bpmn-js.repository';
 import { IEmbeddedView } from 'src/lib/process-builder/globals/i-embedded-view';
-import { ITaskCreationConfig } from 'src/lib/process-builder/globals/i-task-creation-config';
+import { ITaskCreationConfig } from 'src/lib/process-builder/interfaces/i-task-creation-config.interface';
 import { TaskCreationStep } from 'src/lib/process-builder/globals/task-creation-step';
 import { EmbeddedConfigureErrorGatewayEntranceConnectionComponent } from '../../embedded/embedded-configure-error-gateway-entrance-connection/embedded-configure-error-gateway-entrance-connection.component';
 import { EmbeddedFunctionImplementationComponent } from '../../embedded/embedded-function-implementation/embedded-function-implementation.component';

@@ -78,8 +78,8 @@ export const reducer = createReducer(
     return adapter.addOne(bpmnJsModel, { ...state, currentBpmnJSModelGuid: preventAutoSet ? state.currentBpmnJSModelGuid : bpmnJsModel.guid });
   }),
 
-  on(setCurrentIBpmnJSModel, (state: State, { model }) => {
-    return { ...state, currentBpmnJSModelGuid: model.guid };
+  on(setCurrentIBpmnJSModel, (state: State, { arg }) => {
+    return { ...state, currentBpmnJSModelGuid: typeof arg === 'string'? arg: arg.guid };
   }),
 
   on(updateCurrentIBpmnJSModel, (state: State, { properties }) => {

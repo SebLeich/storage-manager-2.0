@@ -159,9 +159,7 @@ rootStoreFeatures[fromISolutionPreviewState.solutionPreviewFeatureKey] = fromISo
     AutomationModule,
     SharedModule,
 
-    StoreModule.forRoot(rootStoreFeatures, {
-
-    }),
+    StoreModule.forRoot(rootStoreFeatures, { }),
     EffectsModule.forRoot([ICalculationAttributesEffects, IGroupEffects, IOrderEffects, IProductEffects, ISolutionEffects, ISolutionPreviewEffects]),
   ],
   providers: [
