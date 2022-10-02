@@ -1,11 +1,11 @@
 import { Inject, Injectable } from "@angular/core";
 import { ParamCodes } from "src/config/param-codes";
 import { getElementRegistryModule, getModelingModule, getTooltipModule } from "../bpmn-io/bpmn-modules";
-import { IBusinessObject } from "../bpmn-io/i-business-object";
-import { IElement } from "../bpmn-io/i-element";
+import { IBusinessObject } from "../bpmn-io/interfaces/i-business-object.interface";
+import { IElement } from "../bpmn-io/interfaces/i-element.interface";
 import shapeTypes from "../bpmn-io/shape-types";
 import { IProcessValidationResult } from "../process-builder/classes/validation-result";
-import { IBpmnJS } from "../process-builder/globals/i-bpmn-js";
+import { IBpmnJS } from "../process-builder/interfaces/i-bpmn-js.interface";
 import { IFunction } from "../process-builder/globals/i-function";
 import { IParam } from "../process-builder/globals/i-param";
 import { IProcessBuilderConfig, PROCESS_BUILDER_CONFIG_TOKEN } from "../process-builder/globals/i-process-builder-config";

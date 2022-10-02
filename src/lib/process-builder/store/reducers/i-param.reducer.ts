@@ -1,6 +1,5 @@
-import { InjectionToken } from '@angular/core';
 import { createEntityAdapter, EntityAdapter, EntityState, Update } from '@ngrx/entity';
-import { createReducer, on, Store } from '@ngrx/store';
+import { createReducer, on } from '@ngrx/store';
 import { IParam } from '../../globals/i-param';
 import { addIParam, addIParams, removeIParam, updateIParam, upsertIParam, upsertIParams } from '../actions/i-param.actions';
 
@@ -129,5 +128,3 @@ export const nextId = (state: State) => {
   let ids = state && state.entities ? (Object.values(state.entities) as IParam[]).map(x => x.identifier) : [];
   return ids.length === 0 ? 0 : Math.max(...(ids.map(x => typeof x === 'number' ? x : 0))) + 1;
 }
-
-export const PARAM_STORE_TOKEN = new InjectionToken<Store<State>>("PARAM_STORE");

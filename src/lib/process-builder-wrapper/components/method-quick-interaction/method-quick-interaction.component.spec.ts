@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import defaultImportsConstant from 'src/app/default-imports.constant';
 import { ProcessBuilderComponentService } from 'src/lib/process-builder/components/process-builder/process-builder-component.service';
 import { PROCESS_BUILDER_CONFIG_TOKEN } from 'src/lib/process-builder/globals/i-process-builder-config';
-import { BpmnjsService } from 'src/lib/process-builder/services/bpmnjs.service';
+import { BpmnJsService } from 'src/lib/process-builder/services/bpmnjs.service';
 
 import { MethodQuickInteractionComponent } from './method-quick-interaction.component';
 
@@ -18,7 +18,7 @@ describe('MethodQuickInteractionComponent', () => {
       ],
       providers: [
         ProcessBuilderComponentService,
-        BpmnjsService,
+        BpmnJsService,
         { provide: PROCESS_BUILDER_CONFIG_TOKEN, useValue: {} }
       ]
     })

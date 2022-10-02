@@ -1,5 +1,5 @@
 import { InjectionToken } from "@angular/core";
-import { IParamDefinition } from "./i-param-definition";
+import { IParamDefinition } from "../globals/i-param-definition";
 
 export interface IInterface {
     identifier: number;

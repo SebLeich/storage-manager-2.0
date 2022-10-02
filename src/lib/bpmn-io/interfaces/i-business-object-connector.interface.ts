@@ -1,4 +1,4 @@
-import { IElement } from "./i-element"
+import { IElement } from "./i-element.interface"
 
 export interface IBusinessObjectConnector {
     $type: string;

@@ -1,4 +1,4 @@
-import { IStyle } from "./i-style";
+import { IStyle } from "./i-style.interface";
 
 export interface IEditingContext {
     bounds: { x: number, y: number, width: number, height: number };

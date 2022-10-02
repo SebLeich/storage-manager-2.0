@@ -1,10 +1,9 @@
 import { Observable, ReplaySubject } from "rxjs";
-import { IInterface } from "../process-builder/globals/i-interface";
+import { IInterface } from "../process-builder/interfaces/i-interface.interface";
 import { IParam } from "../process-builder/globals/i-param";
 import { IParamDefinition } from "../process-builder/globals/i-param-definition";
 
 export class ProcessBuilderRepository {
-
 
     static createPseudoObjectFromIParam(arg: IParam | null | undefined, parent: any = null, config: {
         string: () => string | undefined,
@@ -243,7 +242,7 @@ export class ProcessBuilderRepository {
         return text.substr(0, 1).toLowerCase() + text.substr(1);
     }
 
-    static testMethodAndGetResponse(doc: string[], injector: any): Observable<any> {
+    static executeUserMethodAndReturnResponse(doc: string[], injector: any): Observable<any> {
 
         let subject = new ReplaySubject<any>(1);
         let jsText = doc.join('\n');

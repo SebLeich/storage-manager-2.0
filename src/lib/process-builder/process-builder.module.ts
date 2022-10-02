@@ -54,7 +54,8 @@ import { loadIInterfaces } from './store/actions/i-interface.actions';
 import { InterfacePipe } from './pipes/interface.pipe';
 import { ParamMemberPreviewComponent } from './components/helpers/param-member-preview/param-member-preview.component';
 import { ParamMemberPathPreviewComponent } from './components/helpers/param-member-path-preview/param-member-path-preview.component';
-import { BpmnjsService } from './services/bpmnjs.service';
+import { BpmnJsService } from './services/bpmnjs.service';
+import { ProcessBuilderService } from './services/process-builder.service';
 
 
 @NgModule({
@@ -119,13 +120,9 @@ import { BpmnjsService } from './services/bpmnjs.service';
     ValidationWarningPipe
   ],
   providers: [
-    BpmnjsService,
+    BpmnJsService,
     ParamPipe,
-    ProcessBuilderComponentService,
-    { provide: fromIParamState.PARAM_STORE_TOKEN, useExisting: Store },
-    { provide: fromIFunctionState.FUNCTION_STORE_TOKEN, useExisting: Store },
-    { provide: fromIBpmnJSModelState.BPMN_JS_MODEL_STORE_TOKEN, useExisting: Store },
-    { provide: fromIInterfaceState.IINTERFACE_STORE_TOKEN, useExisting: Store }
+    ProcessBuilderService
   ]
 })
 export class ProcessBuilderModule {

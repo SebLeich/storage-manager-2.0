@@ -1,5 +1,6 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormControl, UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
+import { Store } from '@ngrx/store';
 import { Subscription } from 'rxjs';
 import { debounceTime } from 'rxjs/operators';
 import { ProcessBuilderComponentService } from 'src/lib/process-builder/components/process-builder/process-builder-component.service';
@@ -17,7 +18,8 @@ export class MethodQuickInteractionComponent implements OnDestroy, OnInit {
 
   constructor(
     public service: ProcessBuilderComponentService,
-    private _formBuilder: UntypedFormBuilder
+    private _formBuilder: UntypedFormBuilder,
+    private _store: Store
   ) {
     this.formGroup = this._formBuilder.group({
       name: '',

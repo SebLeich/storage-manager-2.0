@@ -1,4 +1,4 @@
-import { IElement } from "./i-element"
+import { IElement } from "./interfaces/i-element.interface"
 
 export interface IEvent {
     element: IElement;

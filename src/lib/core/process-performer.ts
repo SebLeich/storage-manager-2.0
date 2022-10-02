@@ -1,4 +1,4 @@
-import { IBpmnJS } from "../process-builder/globals/i-bpmn-js";
+import { IBpmnJS } from "../process-builder/interfaces/i-bpmn-js.interface";
 import { ValidationErrorPipe } from "../process-builder/pipes/validation-error.pipe";
 import { BPMNJsRepository } from "./bpmn-js.repository";
 

@@ -53,7 +53,7 @@ import { EffectsModule } from '@ngrx/effects';
 import { PROCESS_BUILDER_CONFIG_TOKEN } from 'src/lib/process-builder/globals/i-process-builder-config';
 import { PARAMS_CONFIG_TOKEN } from 'src/lib/process-builder/globals/i-param';
 import { FUNCTIONS_CONFIG_TOKEN } from 'src/lib/process-builder/globals/i-function';
-import { INTERFACES_CONFIG_TOKEN } from 'src/lib/process-builder/globals/i-interface';
+import { INTERFACES_CONFIG_TOKEN } from 'src/lib/process-builder/interfaces/i-interface.interface';
 
 import { SharedModule } from 'src/lib/shared/shared.module';
 import { MatMenuModule } from '@angular/material/menu';

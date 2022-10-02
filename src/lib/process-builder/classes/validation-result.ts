@@ -1,4 +1,4 @@
-import { IElement } from "src/lib/bpmn-io/i-element";
+import { IElement } from "src/lib/bpmn-io/interfaces/i-element.interface";
 import { ValidationError } from "../globals/validation-error";
 import { ValidationWarning } from "../globals/validation-warning";
 

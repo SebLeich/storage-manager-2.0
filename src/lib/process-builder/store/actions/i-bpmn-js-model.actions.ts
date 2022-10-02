@@ -1,5 +1,5 @@
 import { createAction } from '@ngrx/store';
-import { IBpmnJSModel } from '../../globals/i-bpmn-js-model';
+import { IBpmnJSModel } from '../../interfaces/i-bpmn-js-model.interface';
 
 export const addIBpmnJSModel = createAction(
   '[IBpmnJSModel] Add IBpmnJSModel',
@@ -9,6 +9,22 @@ export const addIBpmnJSModel = createAction(
 export const addIBpmnJSModels = createAction(
   '[IBpmnJSModel] Add IBpmnJSModels',
   (models: IBpmnJSModel[]) => ({ models })
+);
+
+export const createIBpmnJsModel = createAction(
+  '[IBpmnJSModel] Create IBpmnJSModel',
+  (properties?: Partial<IBpmnJSModel>, preventAutoSet: boolean = false) => ({ properties, preventAutoSet })
+);
+
+export const setCurrentIBpmnJSModel = createAction(
+  '[IBpmnJSModel] Set Current IBpmnJSModel',
+  (model: IBpmnJSModel) => ({ model })
+);
+
+
+export const updateCurrentIBpmnJSModelName = createAction(
+  '[IBpmnJSModel] Update Current IBpmnJSModel',
+  (updatedName: string) => ({ updatedTitle: updatedName })
 );
 
 export const updateIBpmnJSModel = createAction(
@@ -28,5 +44,5 @@ export const upsertIBpmnJSModels = createAction(
 
 export const removeIBpmnJSModel = createAction(
   '[IParam] Remove IBpmnJSModel',
-  (model: IBpmnJSModel|string) => ({ model })
+  (model: IBpmnJSModel | string) => ({ model })
 );

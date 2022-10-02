@@ -6,16 +6,16 @@ import { AppRoutingModule } from 'src/app/app-routing.module';
 import { AppModule } from 'src/app/app.module';
 import defaultImportsConstant from 'src/app/default-imports.constant';
 import processBuilderConfig from 'src/config/process-builder-config';
-import { IElement } from 'src/lib/bpmn-io/i-element';
+import { IElement } from 'src/lib/bpmn-io/interfaces/i-element.interface';
 import { IFunction } from 'src/lib/process-builder/globals/i-function';
 import { PROCESS_BUILDER_CONFIG_TOKEN } from 'src/lib/process-builder/globals/i-process-builder-config';
 import { INJECTOR_INTERFACE_TOKEN, INJECTOR_TOKEN } from 'src/lib/process-builder/globals/injector';
 import { selectSnapshot } from 'src/lib/process-builder/globals/select-snapshot';
 import { TaskCreationStep } from 'src/lib/process-builder/globals/task-creation-step';
 import { TaskCreationStepPipe } from 'src/lib/process-builder/pipes/task-creation-step.pipe';
-import { BpmnjsService } from 'src/lib/process-builder/services/bpmnjs.service';
+import { BpmnJsService } from 'src/lib/process-builder/services/bpmnjs.service';
 import { addIFunctions } from 'src/lib/process-builder/store/actions/i-function.actions';
-import { ITaskCreationPayload } from './i-task-creation-component-input';
+import { ITaskCreationPayload } from '../../../interfaces/i-task-creation-component-inpu.interfacet';
 
 import { TaskCreationComponent } from './task-creation.component';
 import { ExemplaryBpmnModel } from './test/exemplary-bpmn-model';
@@ -26,7 +26,7 @@ describe('TaskCreationComponent', () => {
   let fixture: ComponentFixture<TaskCreationComponent>;
   let debugElement: DebugElement;
   let exemplaryBpmnModel = new ExemplaryBpmnModel();
-  let bpmnJsService: BpmnjsService;
+  let bpmnJsService: BpmnJsService;
   const diagramWrapper = document.createElement('div');
   let taskCreationPayload: ITaskCreationPayload = {
     configureIncomingErrorGatewaySequenceFlow: {
@@ -47,7 +47,7 @@ describe('TaskCreationComponent', () => {
         AppRoutingModule
       ],
       providers: [
-        BpmnjsService,
+        BpmnJsService,
         {
           provide: MatDialogRef, useValue: {
             close: () => {
@@ -75,7 +75,7 @@ describe('TaskCreationComponent', () => {
     fixture = TestBed.createComponent(TaskCreationComponent);
     debugElement = fixture.debugElement;
     component = fixture.componentInstance;
-    bpmnJsService = TestBed.inject(BpmnjsService);
+    bpmnJsService = TestBed.inject(BpmnJsService);
 
     const store = TestBed.inject(Store);
     store.dispatch(addIFunctions([
@@ -87,7 +87,7 @@ describe('TaskCreationComponent', () => {
 
     await bpmnJsService.bpmnjs.importXML(exemplaryBpmnModel.bpmnJsModel);
 
-    taskCreationPayload.configureActivity = bpmnJsService.elementRegistry.get(exemplaryBpmnModel.activityGuid) as IElement;
+    taskCreationPayload.configureActivity = bpmnJsService.elementRegistryModule.get(exemplaryBpmnModel.activityGuid) as IElement;
   });
 
   it('should create', () => {
@@ -95,7 +95,7 @@ describe('TaskCreationComponent', () => {
   });
 
   it('should display function selection in case activity provided for configuration', async () => {
-    taskCreationPayload.configureActivity = bpmnJsService.elementRegistry.get(exemplaryBpmnModel.activityGuid) as IElement;
+    taskCreationPayload.configureActivity = bpmnJsService.elementRegistryModule.get(exemplaryBpmnModel.activityGuid) as IElement;
 
     component.validateFunctionSelection();
     fixture.detectChanges();

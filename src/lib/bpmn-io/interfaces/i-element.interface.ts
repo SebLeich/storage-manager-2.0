@@ -1,5 +1,5 @@
-import { IBusinessObject } from "./i-business-object";
-import { IConnector } from "./i-connector";
+import { IBusinessObject } from "./i-business-object.interface";
+import { IConnector } from "./i-connector.interface";
 
 export interface IElement {
     children: [];

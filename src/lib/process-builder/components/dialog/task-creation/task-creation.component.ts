@@ -2,7 +2,7 @@ import { Component, Inject, OnDestroy, OnInit, Type, ViewChild, ViewContainerRef
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { Store } from '@ngrx/store';
 import { BehaviorSubject, combineLatest, interval, Observable, of, Subject, Subscription } from 'rxjs';
-import { IElement } from 'src/lib/bpmn-io/i-element';
+import { IElement } from 'src/lib/bpmn-io/interfaces/i-element.interface';
 import { BPMNJsRepository } from 'src/lib/core/bpmn-js.repository';
 import { IEmbeddedView } from 'src/lib/process-builder/globals/i-embedded-view';
 import { ITaskCreationConfig } from 'src/lib/process-builder/globals/i-task-creation-config';
@@ -10,7 +10,7 @@ import { TaskCreationStep } from 'src/lib/process-builder/globals/task-creation-
 import { EmbeddedConfigureErrorGatewayEntranceConnectionComponent } from '../../embedded/embedded-configure-error-gateway-entrance-connection/embedded-configure-error-gateway-entrance-connection.component';
 import { EmbeddedFunctionImplementationComponent } from '../../embedded/embedded-function-implementation/embedded-function-implementation.component';
 import { EmbeddedFunctionSelectionComponent } from '../../embedded/embedded-function-selection/embedded-function-selection.component';
-import { ITaskCreationComponentInput } from './i-task-creation-component-input';
+import { ITaskCreationComponentInput } from '../../../interfaces/i-task-creation-component-inpu.interfacet';
 
 import { selectIFunction } from 'src/lib/process-builder/store/selectors/i-function.selector';
 import { IEmbeddedFunctionImplementationData } from '../../embedded/embedded-function-implementation/i-embedded-function-implementation-output';
@@ -26,13 +26,13 @@ import { UntypedFormBuilder, UntypedFormControl, UntypedFormGroup } from '@angul
 import { IProcessBuilderConfig, PROCESS_BUILDER_CONFIG_TOKEN } from 'src/lib/process-builder/globals/i-process-builder-config';
 import { INJECTOR_INTERFACE_TOKEN, INJECTOR_TOKEN } from 'src/lib/process-builder/globals/injector';
 import { InjectorInterfacesProvider, InjectorProvider } from 'src/lib/process-builder/globals/injector-interfaces-provider';
-import { IConnector } from 'src/lib/bpmn-io/i-connector';
+import { IConnector } from 'src/lib/bpmn-io/interfaces/i-connector.interface';
 import { EmbeddedFunctionInputSelectionComponent } from '../../embedded/embedded-function-input-selection/embedded-function-input-selection.component';
 import { debounceTime, filter, map, shareReplay, switchMap, take } from 'rxjs/operators';
 import { EmbeddedInputOutputMappingComponent } from '../../embedded/embedded-input-output-mapping/embedded-input-output-mapping.component';
 import { selectIInterface } from 'src/lib/process-builder/store/selectors/i-interface.selectors';
-import { IInterface } from 'src/lib/process-builder/globals/i-interface';
-import { mapIParamsInterfaces } from 'src/lib/process-builder/globals/rxjs-extensions';
+import { IInterface } from 'src/lib/process-builder/interfaces/i-interface.interface';
+import { mapIParamsInterfaces } from 'src/lib/process-builder/extensions/rxjs/map-i-params-interfaces.rxjs-extension';
 
 @Component({
   selector: 'app-task-creation',
@@ -63,7 +63,7 @@ import { mapIParamsInterfaces } from 'src/lib/process-builder/globals/rxjs-exten
 })
 export class TaskCreationComponent implements OnDestroy, OnInit {
 
-  @ViewChild('dynamicInner', { static: true, read: ViewContainerRef }) dynamicInner!: ViewContainerRef;
+  @ViewChild('dynamicInner', { static: true, read: ViewContainerRef }) private dynamicInner!: ViewContainerRef;
 
   public stepRegistry: {
     type: Type<IEmbeddedView>,
@@ -81,7 +81,7 @@ export class TaskCreationComponent implements OnDestroy, OnInit {
   private _hasDynamicOutputParam = new BehaviorSubject<IElement | null | undefined>(null);
   private _hasDataMapping = new BehaviorSubject<IElement | null | undefined>(null);
 
-  hasOutputParam$ = this._hasOutputParam.asObservable();
+  public hasOutputParam$ = this._hasOutputParam.asObservable();
   public steps$ = combineLatest([this._configureGateway.asObservable(), this._customImplementation.asObservable(), this._hasDynamicInputParam.asObservable(), this._hasDynamicOutputParam.asObservable(), this._hasDataMapping.asObservable()]).pipe(
     map(([gatewayConfig, customImplementation, hasDynamicInputParam, dynamicOutputParam, dataMapping]) => {
       let availableSteps: ITaskCreationConfig[] = [];
@@ -91,10 +91,10 @@ export class TaskCreationComponent implements OnDestroy, OnInit {
           'element': gatewayConfig
         } as ITaskCreationConfig);
       }
-      if (this.data.data.payload.configureActivity) {
+      if (this.data.data.taskCreationPayload.configureActivity) {
         availableSteps.push({
           'taskCreationStep': TaskCreationStep.ConfigureFunctionSelection,
-          'element': this.data.data.payload.configureActivity
+          'element': this.data.data.taskCreationPayload.configureActivity
         } as ITaskCreationConfig);
       }
       if (hasDynamicInputParam) {
@@ -167,7 +167,7 @@ export class TaskCreationComponent implements OnDestroy, OnInit {
       'inputParam': null,
       'isProcessOutput': null
     });
-    this.formGroup.patchValue(this.data.data.data);
+    this.formGroup.patchValue(this.data.data.taskCreationData);
   }
 
   public abort = () => this._ref.close();
@@ -207,7 +207,7 @@ export class TaskCreationComponent implements OnDestroy, OnInit {
         component.setInputParams(availableInputParams);
       }
     };
-    this._configureGateway.next(this.data.data.payload.configureIncomingErrorGatewaySequenceFlow ?? null);
+    this._configureGateway.next(this.data.data.taskCreationPayload.configureIncomingErrorGatewaySequenceFlow ?? null);
     this.validateFunctionSelection();
     this.setStep(0);
 
@@ -264,7 +264,7 @@ export class TaskCreationComponent implements OnDestroy, OnInit {
   testImplementation() {
     let customImplementation = this.formGroup.controls['implementation']?.value;
     if (customImplementation) {
-      let result = ProcessBuilderRepository.testMethodAndGetResponse(customImplementation, this._injector);
+      let result = ProcessBuilderRepository.executeUserMethodAndReturnResponse(customImplementation, this._injector);
       result.subscribe({
         'next': (result: any) => {
           let parsed: string = typeof result === 'object' ? JSON.stringify(result) : typeof result === 'number' ? result.toString() : result;
@@ -311,11 +311,11 @@ export class TaskCreationComponent implements OnDestroy, OnInit {
         'entranceGatewayType': null,
         'inputParam': inputParams.length === 1 ? inputParams[0].param : null
       } as IEmbeddedFunctionImplementationData);
-      let hasCustomImplementation = (this.requireCustomImplementationControl.value || this.implementationControl.value) && this.data.data.payload.configureActivity ? true : false;
-      this._customImplementation.next(hasCustomImplementation ? this.data.data.payload.configureActivity ?? null : null);
-      this._hasDynamicInputParam.next(((fun?.useDynamicInputParams) && !(fun.requireCustomImplementation || fun.customImplementation)) ?? false ? this.data.data.payload.configureActivity : null);
-      this._hasDynamicOutputParam.next(fun?.output?.param === 'dynamic' ?? false ? this.data.data.payload.configureActivity : null);
-      this._hasDataMapping.next(fun?.requireDataMapping ?? false ? this.data.data.payload.configureActivity : null);
+      let hasCustomImplementation = (this.requireCustomImplementationControl.value || this.implementationControl.value) && this.data.data.taskCreationPayload.configureActivity ? true : false;
+      this._customImplementation.next(hasCustomImplementation ? this.data.data.taskCreationPayload.configureActivity ?? null : null);
+      this._hasDynamicInputParam.next(((fun?.useDynamicInputParams) && !(fun.requireCustomImplementation || fun.customImplementation)) ?? false ? this.data.data.taskCreationPayload.configureActivity : null);
+      this._hasDynamicOutputParam.next(fun?.output?.param === 'dynamic' ?? false ? this.data.data.taskCreationPayload.configureActivity : null);
+      this._hasDataMapping.next(fun?.requireDataMapping ?? false ? this.data.data.taskCreationPayload.configureActivity : null);
     });
   }
 

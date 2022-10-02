@@ -1,10 +1,12 @@
-import { IBpmnJS } from "../process-builder/globals/i-bpmn-js";
+import { IBpmnJS } from "../process-builder/interfaces/i-bpmn-js.interface";
 import bpmnJsModules from "./bpmn-js-modules";
-import { IConnector } from "./i-connector";
-import { IElement } from "./i-element";
-import { IViewbox } from "./i-viewbox";
+import { IElement } from "./interfaces/i-element.interface";
+import { IViewbox } from "./interfaces/i-viewbox.interface";
+import { BpmnJsEventType } from "./bpmn-js-event-types";
+import { IModelingModule } from "./interfaces/i-modeling-module.interface";
 
 export const getCanvasModule = (bpmnJS: IBpmnJS) => bpmnJS.get(bpmnJsModules.Canvas) as ICanvasModule;
+export const getDirectEditingModule = (bpmnJS: IBpmnJS) => bpmnJS.get(bpmnJsModules.DirectEditing) as IDirectEditingModule;
 export const getModelingModule = (bpmnJS: IBpmnJS) => bpmnJS.get(bpmnJsModules.Modeling) as IModelingModule;
 export const getElementRegistryModule = (bpmnJS: IBpmnJS) => bpmnJS.get(bpmnJsModules.ElementRegistry) as IElementRegistry;
 export const getEventBusModule = (bpmnJS: IBpmnJS) => bpmnJS.get(bpmnJsModules.EventBus) as IEventBus;
@@ -13,6 +15,16 @@ export const getTooltipModule = (bpmnJS: IBpmnJS) => bpmnJS.get(bpmnJsModules.To
 export interface ICanvasModule {
     viewbox: (viewbox?: IViewbox) => IViewbox;
     zoom(viewbox: 'fit-viewport', focus?: 'auto'): void;
+}
+
+export interface IDirectEditingModule {
+    $textbox?: HTMLDivElement;
+    activate: () => void;
+    cancel: () => void;
+    complete: () => void;
+    getValue: () => string;
+    isActive: () => boolean;
+    registerProvider: (provider: any) => void;
 }
 
 export interface ITooltipModule {
@@ -24,15 +36,7 @@ export interface ITooltipModule {
 }
 
 export interface IEventBus {
-    on: (event: any, callback: (evt: any) => any) => void;
-}
-
-export interface IModelingModule {
-    appendShape: (origin: IElement, type: { type: string }, position: null | { x: number, y: number }) => IElement;
-    connect: (origin: IElement, target: IElement) => IConnector;
-    removeElements: (elements: IElement[] | IConnector[]) => void;
-    updateLabel: (element: IElement | IConnector, text: string) => void;
-    updateProperties: (element: IElement | IConnector, data: any) => void;
+    on: (event: BpmnJsEventType, callback: (evt: any) => any) => void;
 }
 
 export interface IElementRegistry {

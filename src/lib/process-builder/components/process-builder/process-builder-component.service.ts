@@ -2,26 +2,25 @@ import { Inject, Injectable, Injector } from '@angular/core';
 
 import { v4 as generateGuid } from 'uuid';
 
-import { ProcessBuilderService } from '../../services/process-builder.service';
 import { BehaviorSubject, combineLatest, Observable, of, Subject, Subscription } from 'rxjs';
 import { Store } from '@ngrx/store';
 
 import { selectIParams } from '../../store/selectors/i-param.selectors';
 import { validateBPMNConfig } from 'src/lib/core/config-validator';
 import { selectIFunctions, selectIFunctionsByOutputParam } from '../../store/selectors/i-function.selector';
-import { addIBpmnJSModel, removeIBpmnJSModel, updateIBpmnJSModel, upsertIBpmnJSModel } from '../../store/actions/i-bpmn-js-model.actions';
+import { addIBpmnJSModel, createIBpmnJsModel, removeIBpmnJSModel, updateIBpmnJSModel, upsertIBpmnJSModel } from '../../store/actions/i-bpmn-js-model.actions';
 import * as moment from 'moment';
 import { IProcessBuilderConfig, PROCESS_BUILDER_CONFIG_TOKEN } from '../../globals/i-process-builder-config';
 import { selectIBpmnJSModels, selectRecentlyUsedIBpmnJSModel } from '../../store/selectors/i-bpmn-js-model.selectors';
-import { IBpmnJSModel } from '../../globals/i-bpmn-js-model';
+import { IBpmnJSModel } from '../../interfaces/i-bpmn-js-model.interface';
 import { getCanvasModule, getEventBusModule, getTooltipModule } from 'src/lib/bpmn-io/bpmn-modules';
-import { IViewbox } from 'src/lib/bpmn-io/i-viewbox';
+import { IViewbox } from 'src/lib/bpmn-io/interfaces/i-viewbox.interface';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { processPerformer } from 'src/lib/core/process-performer';
 import bpmnJsEventTypes from 'src/lib/bpmn-io/bpmn-js-event-types';
 import { BPMNJsRepository } from 'src/lib/core/bpmn-js.repository';
 
-import { IElement } from 'src/lib/bpmn-io/i-element';
+import { IElement } from 'src/lib/bpmn-io/interfaces/i-element.interface';
 import { ValidationErrorPipe } from '../../pipes/validation-error.pipe';
 import { IProcessValidationResult } from '../../classes/validation-result';
 import { debounceTime, distinctUntilChanged, map, shareReplay, switchMap, take, throttleTime } from 'rxjs/operators';
@@ -32,8 +31,9 @@ import { removeIParam } from '../../store/actions/i-param.actions';
 import { ValidationError } from '../../globals/validation-error';
 import { ValidationWarning } from '../../globals/validation-warning';
 import { ValidationWarningPipe } from '../../pipes/validation-warning.pipe';
-import { BpmnjsService } from '../../services/bpmnjs.service';
+import { BpmnJsService } from '../../services/bpmnjs.service';
 import { selectSnapshot } from '../../globals/select-snapshot';
+import defaultBpmnXmlConstant from '../../globals/default-bpmn-xml.constant';
 
 @Injectable()
 export class ProcessBuilderComponentService {
@@ -44,7 +44,7 @@ export class ProcessBuilderComponentService {
 
   public params$ = this._store.select(selectIParams());
   public funcs$ = this._store.select(selectIFunctions());
-  public models$: Observable<IBpmnJSModel[]> = this._store.select(selectIBpmnJSModels());
+  public models$ = this._store.select(selectIBpmnJSModels());
   public pendingChanges$ = this._pendingChanges.asObservable();
   public noPendingChanges$ = this.pendingChanges$.pipe(map(x => !x));
   public currentIBpmnJSModelGuid$ = this._currentIBpmnJSModelGuid.pipe(distinctUntilChanged());
@@ -57,47 +57,25 @@ export class ProcessBuilderComponentService {
     debounceTime(10),
     map(([bpmnJSModels, bpmnJSModelGuid]: [IBpmnJSModel[], string | null]) => bpmnJSModels.find(x => x.guid === bpmnJSModelGuid))
   );
-  public validation$: Observable<undefined | null | IProcessValidationResult> = this._modelChanged.pipe(
-    throttleTime(500),
-    map(() => BPMNJsRepository.validateProcess(this.bpmnjsService.bpmnjs)),
-    shareReplay(1)
-  );
 
-  private _subscriptions: Subscription[] = [];
+  private _subscriptions = new Subscription();
 
   constructor(
     @Inject(PROCESS_BUILDER_CONFIG_TOKEN) private _config: IProcessBuilderConfig,
-    private bpmnjsService: BpmnjsService,
+    private bpmnjsService: BpmnJsService,
     private _snackBar: MatSnackBar,
     private _injector: Injector,
-    private _store: Store,
-    private _processBuilderService: ProcessBuilderService
+    private _store: Store
   ) {
     this._setUp();
   }
 
-  createModel() {
-    this._processBuilderService.defaultBPMNModel$
-      .pipe(take(1))
-      .subscribe({
-        next: (xml: string) => {
-          let defaultBpmnModel = {
-            'guid': generateGuid(),
-            'created': moment().format('yyyy-MM-ddTHH:mm:ss'),
-            'description': null,
-            'name': this._config.defaultBpmnModelName,
-            'xml': xml,
-            'lastModified': moment().format('yyyy-MM-ddTHH:mm:ss')
-          };
-          this._store.dispatch(addIBpmnJSModel(defaultBpmnModel));
-          this._currentIBpmnJSModelGuid.next(defaultBpmnModel.guid);
-        }
-      });
+  public createModel() {
+    this._store.dispatch(createIBpmnJsModel());
   }
 
-  dispose() {
-    for (let sub of this._subscriptions) sub.unsubscribe();
-    this._subscriptions = [];
+  public dispose() {
+    this._subscriptions.unsubscribe();
   }
 
   hideAllHints = () => BPMNJsRepository.clearAllTooltips(this.bpmnjsService.bpmnjs);
@@ -187,7 +165,7 @@ export class ProcessBuilderComponentService {
 
     this._store.select(selectRecentlyUsedIBpmnJSModel())
       .pipe(
-        switchMap((model: IBpmnJSModel | undefined) => model ? of(model) : this._processBuilderService.defaultBPMNModel$),
+        map((model: IBpmnJSModel | undefined) => model ? model : defaultBpmnXmlConstant),
         take(1)
       )
       .subscribe({
@@ -296,7 +274,7 @@ export class ProcessBuilderComponentService {
   }
 
   private _setUp() {
-    this._subscriptions.push(...[
+    this._subscriptions.add(...[
       this.currentIBpmnJSModel$.subscribe((model: IBpmnJSModel | undefined) => {
         if (!model) return;
         this._setBpmnModel(model.xml, model.viewbox);
@@ -321,7 +299,7 @@ export class ProcessBuilderComponentService {
         prevSub = undefined;
       }
 
-      prevSub = this.validation$.subscribe((validation) => {
+      prevSub = this.bpmnjsService.validation$.subscribe((validation) => {
 
         if (!validation) return;
 
