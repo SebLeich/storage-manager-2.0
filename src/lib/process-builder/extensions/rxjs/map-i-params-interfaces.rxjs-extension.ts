@@ -31,7 +31,7 @@ export const mapIParamsInterfaces: ((store: Store) => ((obs: Observable<IParam[]
                             take(1),
                             map(([param, iFace]: [IParam, IInterface | null | undefined]) => {
                                 let result = { ...param };
-                                result.typeDef = iFace?.typeDef;
+                                result.typeDef = iFace?.typeDef ?? null;
                                 return result as IParam;
                             }),
                             flatMap((param: IParam) =>

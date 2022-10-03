@@ -90,8 +90,12 @@ export class ProcessBuilderRepository {
 
         try {
 
-            if (!defaultValue) defaultValue = config[arg.type]();
-            if (!defaultValue) defaultValue = this._randomValueGenerator[arg.type]();
+            if (!defaultValue) {
+                defaultValue = config[arg.type]();
+            }
+            if (!defaultValue) {
+                defaultValue = this._randomValueGenerator[arg.type]();
+            }
 
             if (Array.isArray(parent)) parent.push(defaultValue);
             else if (parent && typeof parent === 'object') parent[arg.name] = defaultValue;
@@ -146,8 +150,12 @@ export class ProcessBuilderRepository {
 
             let defaultValue = {};
 
-            if (Array.isArray(parent)) parent.push(defaultValue);
-            else if (parent && typeof parent === 'object') parent[arg.name] = defaultValue;
+            if (Array.isArray(parent)) {
+                parent.push(defaultValue);
+            }
+            else if (parent && typeof parent === 'object') {
+                parent[arg.name] = defaultValue;
+            }
 
             if (arg.typeDef) {
                 let typeDefArray = Array.isArray(arg.typeDef) ? arg.typeDef : [arg.typeDef];
@@ -288,7 +296,7 @@ export class ProcessBuilderRepository {
             nullable: null,
             optional: null,
             type: type === 'object' && Array.isArray(entry[1]) ? 'array' : type,
-            typeDef: undefined,
+            typeDef: null,
             normalizedName: ProcessBuilderRepository.normalizeName(entry[0])!
         };
     }
