@@ -1,5 +1,5 @@
-import { IEditingContext } from "./i-editing-context";
-import { IElement } from "./i-element";
+import { IEditingContext } from "./i-editing-context.interface";
+import { IElement } from "./i-element.interface";
 
 export interface IDirectEditingEvent {
     active: {

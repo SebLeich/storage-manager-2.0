@@ -1,7 +1,7 @@
-import { Inject, Injectable, Optional } from '@angular/core';
+import { ApplicationRef, Inject, Injectable, Optional } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { of } from 'rxjs';
-import { mergeMap } from 'rxjs/operators';
+import { finalize, mergeMap } from 'rxjs/operators';
 import { FUNCTIONS_CONFIG_TOKEN, IFunction } from '../../globals/i-function';
 import { addIFunctions, loadIFunctions } from '../actions/i-function.actions';
 
@@ -11,7 +11,7 @@ import { addIFunctions, loadIFunctions } from '../actions/i-function.actions';
 export class IFunctionEffects {
 
   loadParams$ = createEffect(() =>
-    this.actions$.pipe(
+    this._actions$.pipe(
       ofType(loadIFunctions),
       mergeMap(
         () => of(addIFunctions(this._config ?? []))
@@ -21,7 +21,7 @@ export class IFunctionEffects {
 
   constructor(
     @Optional() @Inject(FUNCTIONS_CONFIG_TOKEN) private _config: IFunction[],
-    private actions$: Actions
+    private _actions$: Actions
   ) { }
 
 }

@@ -1,5 +1,5 @@
-import { IBusinessObjectConnector } from "./i-business-object-connector";
-import { IElement } from "./i-element";
+import { IBusinessObjectConnector } from "./i-business-object-connector.interface";
+import { IElement } from "./i-element.interface";
 
 export interface IBusinessObject {
     $type: string;

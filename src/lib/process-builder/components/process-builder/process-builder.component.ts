@@ -7,6 +7,7 @@ import { ProcessBuilderComponentService } from './process-builder-component.serv
   selector: 'app-process-builder',
   templateUrl: './process-builder.component.html',
   styleUrls: ['./process-builder.component.sass'],
+  providers: [ProcessBuilderComponentService],
   animations: [showAnimation]
 })
 export class ProcessBuilderComponent implements OnDestroy, OnInit {

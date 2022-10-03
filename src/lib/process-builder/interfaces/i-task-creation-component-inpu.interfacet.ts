@@ -1,5 +1,5 @@
-import { IConnector } from "src/lib/bpmn-io/i-connector";
-import { IElement } from "src/lib/bpmn-io/i-element";
+import { IConnector } from "src/lib/bpmn-io/interfaces/i-connector.interface";
+import { IElement } from "src/lib/bpmn-io/interfaces/i-element.interface";
 import { IParamDefinition } from "src/lib/process-builder/globals/i-param-definition";
 
 export interface ITaskCreationComponentInput {
@@ -8,8 +8,8 @@ export interface ITaskCreationComponentInput {
 }
 
 export interface ITaskCreationDataWrapper {
-    data: ITaskCreationData;
-    payload: ITaskCreationPayload;
+    taskCreationData: ITaskCreationData;
+    taskCreationPayload: ITaskCreationPayload;
 }
 
 export interface ITaskCreationData {

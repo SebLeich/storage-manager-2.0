@@ -1,10 +1,9 @@
 import { Observable, ReplaySubject } from "rxjs";
-import { IInterface } from "../process-builder/globals/i-interface";
+import { IInterface } from "../process-builder/interfaces/i-interface.interface";
 import { IParam } from "../process-builder/globals/i-param";
 import { IParamDefinition } from "../process-builder/globals/i-param-definition";
 
 export class ProcessBuilderRepository {
-
 
     static createPseudoObjectFromIParam(arg: IParam | null | undefined, parent: any = null, config: {
         string: () => string | undefined,
@@ -87,12 +86,16 @@ export class ProcessBuilderRepository {
         if (!arg) return {};
 
         let index = 0;
+        let defaultValue = arg.type === 'array' ? [] : arg.type === 'object' ? {} : arg.defaultValue;
 
         try {
 
-            let defaultValue = arg.type === 'array' ? [] : arg.type === 'object' ? {} : arg.defaultValue;
-            if (!defaultValue) defaultValue = config[arg.type]();
-            if (!defaultValue) defaultValue = this._randomValueGenerator[arg.type]();
+            if (!defaultValue) {
+                defaultValue = config[arg.type]();
+            }
+            if (!defaultValue) {
+                defaultValue = this._randomValueGenerator[arg.type]();
+            }
 
             if (Array.isArray(parent)) parent.push(defaultValue);
             else if (parent && typeof parent === 'object') parent[arg.name] = defaultValue;
@@ -109,12 +112,10 @@ export class ProcessBuilderRepository {
 
             index++;
 
-            return parent ?? defaultValue;
-
         } catch (e) {
             debugger;
         } finally {
-            return {};
+            return parent ?? defaultValue;
         }
 
     }
@@ -149,8 +150,12 @@ export class ProcessBuilderRepository {
 
             let defaultValue = {};
 
-            if (Array.isArray(parent)) parent.push(defaultValue);
-            else if (parent && typeof parent === 'object') parent[arg.name] = defaultValue;
+            if (Array.isArray(parent)) {
+                parent.push(defaultValue);
+            }
+            else if (parent && typeof parent === 'object') {
+                parent[arg.name] = defaultValue;
+            }
 
             if (arg.typeDef) {
                 let typeDefArray = Array.isArray(arg.typeDef) ? arg.typeDef : [arg.typeDef];
@@ -243,7 +248,7 @@ export class ProcessBuilderRepository {
         return text.substr(0, 1).toLowerCase() + text.substr(1);
     }
 
-    static testMethodAndGetResponse(doc: string[], injector: any): Observable<any> {
+    static executeUserMethodAndReturnResponse(doc: string[], injector: any): Observable<any> {
 
         let subject = new ReplaySubject<any>(1);
         let jsText = doc.join('\n');
@@ -291,7 +296,7 @@ export class ProcessBuilderRepository {
             nullable: null,
             optional: null,
             type: type === 'object' && Array.isArray(entry[1]) ? 'array' : type,
-            typeDef: undefined,
+            typeDef: null,
             normalizedName: ProcessBuilderRepository.normalizeName(entry[0])!
         };
     }

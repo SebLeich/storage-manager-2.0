@@ -1,9 +1,25 @@
 import { createFeatureSelector, createSelector } from '@ngrx/store';
-import { IBpmnJSModel } from '../../globals/i-bpmn-js-model';
+import { BPMNJsRepository } from 'src/lib/core/bpmn-js.repository';
+import { IBpmnJSModel } from '../../interfaces/i-bpmn-js-model.interface';
 import * as fromIBpmnJSModel from '../reducers/i-bpmn-js-model.reducer';
 
 export const selectIBpmnJSModelState = createFeatureSelector<fromIBpmnJSModel.State>(
     fromIBpmnJSModel.featureKey,
+);
+
+export const selectCurrentIBpmnJSModelGuid = createSelector(
+    selectIBpmnJSModelState,
+    (state: fromIBpmnJSModel.State) => {
+        return state.currentBpmnJSModelGuid;
+    }
+);
+
+export const selectCurrentIBpmnJSModel = createSelector(
+    selectIBpmnJSModelState,
+    (state: fromIBpmnJSModel.State) => {
+        if (!state || !state.currentBpmnJSModelGuid || !state.entities) return null;
+        return state.entities[state.currentBpmnJSModelGuid] ?? null;
+    }
 );
 
 export const selectIBpmnJSModel = (arg: string | (() => string)) => createSelector(
@@ -37,6 +53,6 @@ export const selectIBpmnJSModelsByName = (names: string[] | null | undefined) =>
 export const selectRecentlyUsedIBpmnJSModel = () => createSelector(
     selectIBpmnJSModelState,
     (state: fromIBpmnJSModel.State) => {
-        return Object.values(state.entities).sort((a, b) => (a?.lastModified ?? '') < (b?.lastModified ?? '')? 1: -1)[0];
+        return Object.values(state.entities).sort((a, b) => (a?.lastModified ?? '') < (b?.lastModified ?? '') ? 1 : -1)[0];
     }
 );

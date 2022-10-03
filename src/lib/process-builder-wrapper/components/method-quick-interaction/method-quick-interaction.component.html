@@ -4,18 +4,18 @@
 
     <div class="hint-wrapper">
 
-        <div class="hint error" *ngFor="let error of (service.validation$|async)?.errors" (mouseenter)="service.showError(error)" (mouseleave)="service.hideAllHints()">
+        <div class="hint error" *ngFor="let error of (bpmnJsService.validation$|async)?.errors" (mouseenter)="showError(error)" (mouseleave)="hideAllHints()">
             {{error.error|validationError}}
         </div>
     
-        <div class="hint warning" *ngFor="let warning of (service.validation$|async)?.warnings" (mouseenter)="service.showWarning(warning)" (mouseleave)="service.hideAllHints()">
+        <div class="hint warning" *ngFor="let warning of (bpmnJsService.validation$|async)?.warnings" (mouseenter)="showWarning(warning)" (mouseleave)="hideAllHints()">
             {{warning.warning|validationWarning}}
         </div>
 
     </div>
 
-    <div class="option" (click)="service.createModel()">add draft</div>
-    <div class="option" [class.disabled]="(service.noPendingChanges$|async)" (click)="service.saveModel()">save changes</div>
-    <div class="option reset-all" (click)="service.resetAll()">reset defaults</div>
+    <div class="option" (click)="createBpmnJsModel()">add draft</div>
+    <div class="option" (click)="saveCurrentBpmnModel()">save changes</div>
+    <div class="option reset-all" (click)="resetState()">reset defaults</div>
 
 </div>

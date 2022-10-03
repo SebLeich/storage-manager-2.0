@@ -1,5 +1,5 @@
 import { Observable } from "rxjs";
-import { TaskCreationStep } from "./task-creation-step";
+import { TaskCreationStep } from "../globals/task-creation-step";
 
 export interface ITaskCreationConfig {
     taskCreationStep: TaskCreationStep;

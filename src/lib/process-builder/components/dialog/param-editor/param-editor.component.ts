@@ -70,9 +70,9 @@ export class ParamEditorComponent implements OnInit, OnDestroy {
   private _subscriptions: Subscription = new Subscription();
 
   constructor(
-    private _ref: MatDialogRef<ParamEditorComponent>,
     @Inject(PROCESS_BUILDER_CONFIG_TOKEN) public config: IProcessBuilderConfig,
     @Inject(INJECTOR_TOKEN) private _injector: { injector: object },
+    private _ref: MatDialogRef<ParamEditorComponent>,
     private _store: Store,
     public paramEditorComponentService: ParamEditorComponentService,
     private _snackBar: MatSnackBar,

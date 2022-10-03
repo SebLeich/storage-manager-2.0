@@ -3,37 +3,43 @@ import { combineLatest, of, ReplaySubject, Subject, timer } from "rxjs";
 import { buffer, debounceTime, filter, map, switchMap, take } from "rxjs/operators";
 import bpmnJsEventTypes from "../bpmn-io/bpmn-js-event-types";
 import bpmnJsModules from "../bpmn-io/bpmn-js-modules";
-import { getElementRegistryModule, getModelingModule } from "../bpmn-io/bpmn-modules";
-import { IConnectionCreatePostExecutedEvent } from "../bpmn-io/i-connection-create-post-executed-event";
-import { IConnector } from "../bpmn-io/i-connector";
-import { IDirectEditingEvent } from "../bpmn-io/i-direct-editing-event";
-import { IElement } from "../bpmn-io/i-element";
-import { IEvent } from "../bpmn-io/i-event";
-import { IShapeDeleteExecutedEvent } from "../bpmn-io/i-shape-delete-executed-event";
+import { getDirectEditingModule, getElementRegistryModule, getModelingModule } from "../bpmn-io/bpmn-modules";
+import { IConnectionCreatePostExecutedEvent } from "../bpmn-io/interfaces/i-connection-create-post-executed-event.interface";
+import { IConnector } from "../bpmn-io/interfaces/i-connector.interface";
+import { IElement } from "../bpmn-io/interfaces/i-element.interface";
 import shapeTypes from "../bpmn-io/shape-types";
-import { ITaskCreationData, ITaskCreationPayload } from "../process-builder/components/dialog/task-creation/i-task-creation-component-input";
+import { ITaskCreationData, ITaskCreationPayload } from "../process-builder/interfaces/i-task-creation-component-inpu.interfacet";
 import defaultImplementation from "../process-builder/globals/default-implementation";
 import { ErrorGatewayEvent } from "../process-builder/globals/error-gateway-event";
 import { IFunction } from "../process-builder/globals/i-function";
 import { IParam } from "../process-builder/globals/i-param";
 import { IProcessBuilderConfig, PROCESS_BUILDER_CONFIG_TOKEN } from "../process-builder/globals/i-process-builder-config";
-import { ITaskCreationConfig } from "../process-builder/globals/i-task-creation-config";
+import { ITaskCreationConfig } from "../process-builder/interfaces/i-task-creation-config.interface";
 import { MethodEvaluationStatus } from "../process-builder/globals/method-evaluation-status";
 import { TaskCreationStep } from "../process-builder/globals/task-creation-step";
 import { DialogService } from "../process-builder/services/dialog.service";
 import { addIFunction, updateIFunction } from "../process-builder/store/actions/i-function.actions";
 import { removeIParam, upsertIParam } from "../process-builder/store/actions/i-param.actions";
-import { FUNCTION_STORE_TOKEN } from "../process-builder/store/reducers/i-function.reducer";
-import { PARAM_STORE_TOKEN } from "../process-builder/store/reducers/i-param.reducer";
 import * as fromIFunctionSelector from "../process-builder/store/selectors/i-function.selector";
 import * as fromIParmSelector from "../process-builder/store/selectors/i-param.selectors";
 import { BPMNJsRepository } from "./bpmn-js.repository";
 import { CodemirrorRepository } from "./codemirror-repository";
 import { ProcessBuilderRepository } from "./process-builder-repository";
+import { Store } from "@ngrx/store";
+import { IDirectEditingEvent } from "../bpmn-io/interfaces/i-direct-editing-event.interface";
+import { IShapeDeleteExecutedEvent } from "../bpmn-io/interfaces/i-shape-delete-executed-event.interface";
+import { IEvent } from "../bpmn-io/interfaces/i-event.interface";
 
+/**
+ * that method is deprecated and should be replaced
+ * @param bpmnJS 
+ * @param injector 
+ * @returns 
+ */
 export const validateBPMNConfig = (bpmnJS: any, injector: Injector) => {
 
     let validationFinishedSubject = new Subject<void>();
+    let tasks: any[] = [];
     let taskCreationSubject = new Subject<ITaskCreationConfig>();
     taskCreationSubject.pipe(
         buffer(taskCreationSubject.pipe(debounceTime(100))),
@@ -48,7 +54,7 @@ export const validateBPMNConfig = (bpmnJS: any, injector: Injector) => {
                 functionIdentifier: functionIdentifier
             } as ITaskCreationData;
             return combineLatest([
-                injector.get(DialogService).configTaskCreation({ data: initialValue, payload: inputData }, bpmnJS),
+                injector.get(DialogService).configTaskCreation({ taskCreationData: initialValue, taskCreationPayload: inputData }, bpmnJS),
                 of(inputData)
             ]).pipe(take(1));
         }))
@@ -61,6 +67,7 @@ export const validateBPMNConfig = (bpmnJS: any, injector: Injector) => {
     let _shapeDeletePreExecuteActions: { [key: string]: (evt: IShapeDeleteExecutedEvent) => void } = {};
 
     _connectionCreatePostExecutedActions[shapeTypes.SequenceFlow] = (evt: IConnectionCreatePostExecutedEvent) => {
+        tasks.push(evt);
         if (evt.context.source.type !== shapeTypes.ExclusiveGateway || !BPMNJsRepository.sLPBExtensionSetted(evt.context.source.businessObject, 'GatewayExtension', (ext) => ext.gatewayType === 'error_gateway')) return;
         if (!taskCreationSubject) taskCreationSubject = new ReplaySubject<ITaskCreationConfig>(1);
         taskCreationSubject.next({
@@ -70,7 +77,8 @@ export const validateBPMNConfig = (bpmnJS: any, injector: Injector) => {
     }
 
     _directEditingActivateActions[shapeTypes.Task] = (evt: IDirectEditingEvent) => {
-        bpmnJS.get(bpmnJsModules.DirectEditing).cancel();
+        tasks.push(evt);
+        getDirectEditingModule(bpmnJS).cancel();
         if (!taskCreationSubject) taskCreationSubject = new ReplaySubject<ITaskCreationConfig>(1);
         taskCreationSubject.next({
             taskCreationStep: TaskCreationStep.ConfigureFunctionSelection,
@@ -80,10 +88,10 @@ export const validateBPMNConfig = (bpmnJS: any, injector: Injector) => {
     _directEditingActivateActions[shapeTypes.DataObjectReference] = (evt: IDirectEditingEvent) => {
         bpmnJS.get(bpmnJsModules.DirectEditing).cancel();
         let service: DialogService = injector.get(DialogService);
-        let paramStore = injector.get(PARAM_STORE_TOKEN);
+        const store = injector.get(Store);
         let outputParam = BPMNJsRepository.getSLPBExtension(evt.active.element.businessObject, 'DataObjectExtension', (ext) => ext.outputParam);
         service.editParam(outputParam, evt.active.element).pipe(
-            switchMap(() => paramStore.select(fromIParmSelector.selectIParam(outputParam))),
+            switchMap(() => store.select(fromIParmSelector.selectIParam(outputParam))),
             take(1)
         ).subscribe((param: IParam | null | undefined) => {
             if (!param) return;
@@ -91,13 +99,15 @@ export const validateBPMNConfig = (bpmnJS: any, injector: Injector) => {
         });
     }
     _directEditingActivateActions[shapeTypes.Label] = (evt: IDirectEditingEvent) => {
-        if (typeof _directEditingActivateActions[evt.active.element.businessObject.$type] === 'undefined') return;
+        if (typeof _directEditingActivateActions[evt.active.element.businessObject.$type] === 'undefined') {
+            return;
+        }
         let element = getElementRegistryModule(bpmnJS).get(evt.active.element.businessObject.id);
         _directEditingActivateActions[evt.active.element.businessObject.$type]({ 'active': { 'element': element } } as any);
     }
 
     _shapeAddedActions[shapeTypes.StartEvent] = (evt: IEvent) => {
-        if(!!config?.statusConfig){
+        if (!!config?.statusConfig) {
             getModelingModule(bpmnJS).updateLabel(evt.element, config.statusConfig.initialStatus);
             validationFinishedSubject.next();
         }
@@ -120,8 +130,8 @@ export const validateBPMNConfig = (bpmnJS: any, injector: Injector) => {
             }
         }).filter(x => typeof x.activityFunctionId === 'number');
 
-        let funcStore = injector.get(FUNCTION_STORE_TOKEN), modelingModule = getModelingModule(bpmnJS);
-        funcStore.select(fromIFunctionSelector.selectIFunctions(incomingFunctionMap.map(x => x.activityFunctionId))).pipe(take(1), map(funcs => funcs.filter(func => func.finalizesFlow))).subscribe(finalizingFuncs => {
+        let store = injector.get(Store), modelingModule = getModelingModule(bpmnJS);
+        store.select(fromIFunctionSelector.selectIFunctions(incomingFunctionMap.map(x => x.activityFunctionId))).pipe(take(1), map(funcs => funcs.filter(func => func.finalizesFlow))).subscribe(finalizingFuncs => {
             let elements = incomingFunctionMap.filter(entry => finalizingFuncs.findIndex(x => x.identifier === entry.activityFunctionId) > -1).map(entry => entry.element);
             modelingModule.removeElements(elements);
         });
@@ -138,7 +148,9 @@ export const validateBPMNConfig = (bpmnJS: any, injector: Injector) => {
     });
 
     bpmnJS.get(bpmnJsModules.EventBus).on(bpmnJsEventTypes.CommandStackShapeDeletePreExecute, (evt: IShapeDeleteExecutedEvent) => {
-        if (typeof _shapeDeletePreExecuteActions[evt.context.shape.type] === 'undefined') return;
+        if (typeof _shapeDeletePreExecuteActions[evt.context.shape.type] === 'undefined') {
+            return;
+        }
         _shapeDeletePreExecuteActions[evt.context.shape.type](evt);
     });
 
@@ -148,13 +160,15 @@ export const validateBPMNConfig = (bpmnJS: any, injector: Injector) => {
     });
 
     const handleTaskCreationComponentOutput = (taskCreationComponentOutput: ITaskCreationData, payload: ITaskCreationPayload): void => {
-        
+
         if (!taskCreationComponentOutput) {
             if (!payload.configureActivity || typeof BPMNJsRepository.getSLPBExtension(payload.configureActivity.businessObject, 'ActivityExtension', (ext) => ext.activityFunctionId) !== 'number') getModelingModule(bpmnJS).removeElements([payload.configureActivity!]);
             return;
         }
 
-        let config = injector.get(PROCESS_BUILDER_CONFIG_TOKEN), modelingModule = getModelingModule(bpmnJS), funcStore = injector.get(FUNCTION_STORE_TOKEN), paramStore = injector.get(PARAM_STORE_TOKEN);
+        const config = injector.get(PROCESS_BUILDER_CONFIG_TOKEN),
+            modelingModule = getModelingModule(bpmnJS), 
+            store = injector.get(Store);
 
         if (typeof taskCreationComponentOutput.entranceGatewayType === 'number') {
             let connector: IConnector | null = payload.configureIncomingErrorGatewaySequenceFlow ?? null;
@@ -163,15 +177,15 @@ export const validateBPMNConfig = (bpmnJS: any, injector: Injector) => {
 
         const inputParams: { varName: string, propertyName: string | null }[] = taskCreationComponentOutput.implementation ? CodemirrorRepository.getUsedInputParams(undefined, taskCreationComponentOutput.implementation) : [];
         combineLatest([
-            funcStore.select(fromIFunctionSelector.selectIFunction(taskCreationComponentOutput.functionIdentifier)),
-            paramStore.select(fromIParmSelector.selectNextId()),
-            funcStore.select(fromIFunctionSelector.selectNextId()),
-            paramStore.select(fromIParmSelector.selectIParamsByNormalizedName(inputParams.filter(x => x.varName === 'injector' && typeof x.propertyName === 'string').map(x => x.propertyName!)))
+            store.select(fromIFunctionSelector.selectIFunction(taskCreationComponentOutput.functionIdentifier)),
+            store.select(fromIParmSelector.selectNextId()),
+            store.select(fromIFunctionSelector.selectNextId()),
+            store.select(fromIParmSelector.selectIParamsByNormalizedName(inputParams.filter(x => x.varName === 'injector' && typeof x.propertyName === 'string').map(x => x.propertyName!)))
         ])
             .pipe(
                 take(1),
                 switchMap(([func, paramId, funcId, usedInputParams]: [(IFunction | undefined | null), number, number, IParam[]]) => {
-                    return combineLatest([of(func), of(paramId), of(funcId), of(usedInputParams), paramStore.select(fromIParmSelector.selectIParam(func?.output?.param))]);
+                    return combineLatest([of(func), of(paramId), of(funcId), of(usedInputParams), store.select(fromIParmSelector.selectIParam(func?.output?.param))]);
                 }),
                 take(1)
             )
@@ -200,12 +214,12 @@ export const validateBPMNConfig = (bpmnJS: any, injector: Injector) => {
                             defaultValue: taskCreationComponentOutput.outputParamValue ?? [],
                             type: 'object'
                         } as IParam;
-                        paramStore.dispatch(upsertIParam(outputParam));
+                        store.dispatch(upsertIParam(outputParam));
 
                     } else if (outputParam && outputParam !== 'dynamic') {
                         let elements = payload.configureActivity?.outgoing.filter(x => x.type === shapeTypes.DataOutputAssociation && BPMNJsRepository.sLPBExtensionSetted(x.target.businessObject, 'DataObjectExtension', (ext) => ext.outputParam === (outputParam as IParam).identifier)).map(x => x.target);
                         if (Array.isArray(elements)) modelingModule.removeElements(elements);
-                        paramStore.dispatch(removeIParam(outputParam));
+                        store.dispatch(removeIParam(outputParam));
                         outputParam = undefined;
                     }
 
@@ -231,7 +245,7 @@ export const validateBPMNConfig = (bpmnJS: any, injector: Injector) => {
                         'useDynamicInputParams': func.useDynamicInputParams
                     };
 
-                    func.requireCustomImplementation || func.requireDynamicInput || func.output?.param === 'dynamic' ? funcStore.dispatch(addIFunction(f)) : funcStore.dispatch(updateIFunction(f));
+                    func.requireCustomImplementation || func.requireDynamicInput || func.output?.param === 'dynamic' ? store.dispatch(addIFunction(f)) : store.dispatch(updateIFunction(f));
 
                 }
 

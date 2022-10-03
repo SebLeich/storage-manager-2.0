@@ -1,5 +1,5 @@
 import { createFeatureSelector, createSelector } from '@ngrx/store';
-import { IInterface } from '../../globals/i-interface';
+import { IInterface } from '../../interfaces/i-interface.interface';
 import * as fromIInterface from '../reducers/i-interface.reducer';
 
 export const selectIInterfaceState = createFeatureSelector<fromIInterface.State>(

@@ -1,4 +1,4 @@
-import { IViewbox } from "src/lib/bpmn-io/i-viewbox";
+import { IViewbox } from "src/lib/bpmn-io/interfaces/i-viewbox.interface";
 
 export interface IBpmnJSModel {
     guid: string;
@@ -7,5 +7,5 @@ export interface IBpmnJSModel {
     created: string | null;
     xml: string;
     lastModified: string;
-    viewbox?: IViewbox;
+    viewbox?: IViewbox | undefined;
 }

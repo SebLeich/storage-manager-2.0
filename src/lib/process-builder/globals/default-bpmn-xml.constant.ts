@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
+export default `<?xml version="1.0" encoding="UTF-8"?>
 <bpmn:definitions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL"
   xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI"
@@ -16,4 +16,4 @@
       </bpmndi:BPMNShape>
     </bpmndi:BPMNPlane>
   </bpmndi:BPMNDiagram>
-</bpmn:definitions>
+</bpmn:definitions>`;
