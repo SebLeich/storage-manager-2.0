@@ -91,7 +91,7 @@ export class TaskCreationComponent implements OnDestroy, OnInit {
           'element': gatewayConfig
         } as ITaskCreationConfig);
       }
-      if (this.data.data.taskCreationPayload.configureActivity) {
+      if (!!this.data?.data?.taskCreationPayload?.configureActivity) {
         availableSteps.push({
           'taskCreationStep': TaskCreationStep.ConfigureFunctionSelection,
           'element': this.data.data.taskCreationPayload.configureActivity
@@ -207,7 +207,7 @@ export class TaskCreationComponent implements OnDestroy, OnInit {
         component.setInputParams(availableInputParams);
       }
     };
-    this._configureGateway.next(this.data.data.taskCreationPayload.configureIncomingErrorGatewaySequenceFlow ?? null);
+    this._configureGateway.next(this.data.data?.taskCreationPayload?.configureIncomingErrorGatewaySequenceFlow ?? null);
     this.validateFunctionSelection();
     this.setStep(0);
 

@@ -59,10 +59,10 @@ describe('TaskCreationComponent', () => {
         {
           provide: MAT_DIALOG_DATA, useValue: {
             data: {
-              data: {
+              taskCreationData: {
 
               },
-              payload: taskCreationPayload
+              taskCreationPayload: taskCreationPayload
             }
           }
         },

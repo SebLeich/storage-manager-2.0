@@ -141,7 +141,7 @@ export class BpmnJsService {
       debounceTime(500),
       switchMap(() => combineLatest([this.bpmnJs.saveXML(), this._store.select(selectCurrentIBpmnJSModel)])),
       map(([currentValue, currentBpmnJsModel]) => {
-        return currentValue.xml != currentBpmnJsModel!.xml;
+        return currentValue?.xml != currentBpmnJsModel?.xml;
       })
     ).subscribe((isChanged) => {
       this._containsChanges.next(isChanged);
