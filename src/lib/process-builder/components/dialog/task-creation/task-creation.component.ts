@@ -13,7 +13,7 @@ import { EmbeddedFunctionSelectionComponent } from '../../embedded/embedded-func
 import { ITaskCreationComponentInput } from '../../../interfaces/i-task-creation-component-inpu.interfacet';
 
 import { selectIFunction } from 'src/lib/process-builder/store/selectors/i-function.selector';
-import { IEmbeddedFunctionImplementationData } from '../../embedded/embedded-function-implementation/i-embedded-function-implementation-output';
+import { IEmbeddedFunctionImplementationData } from '../../../interfaces/i-embedded-function-implementation-output.interface';
 import { IFunction } from 'src/lib/process-builder/globals/i-function';
 import { selectIParam, selectIParams } from 'src/lib/process-builder/store/selectors/i-param.selectors';
 import { IParam } from 'src/lib/process-builder/globals/i-param';

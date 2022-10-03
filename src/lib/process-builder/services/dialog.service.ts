@@ -1,4 +1,4 @@
-import { Inject, Injectable } from '@angular/core';
+import { Inject, Injectable, Injector, ViewContainerRef } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Observable } from 'rxjs';
 import { ParamCodes } from 'src/config/param-codes';
@@ -16,11 +16,13 @@ export class DialogService {
 
   constructor(
     private _dialog: MatDialog,
-    @Inject(FUNCTIONS_CONFIG_TOKEN) public funcs: IFunction[]
+    @Inject(FUNCTIONS_CONFIG_TOKEN) public funcs: IFunction[],
+    private _injector: Injector
   ) { }
 
   public configTaskCreation(data: ITaskCreationDataWrapper, bpmnJS: IBpmnJSModel): Observable<ITaskCreationData> {
-    let ref = this._dialog.open(TaskCreationComponent, {
+    const ref = this._dialog.open(TaskCreationComponent, {
+      injector: this._injector,
       panelClass: 'no-padding-dialog',
       data: {
         'data': data,

@@ -86,10 +86,10 @@ export class ProcessBuilderRepository {
         if (!arg) return {};
 
         let index = 0;
+        let defaultValue = arg.type === 'array' ? [] : arg.type === 'object' ? {} : arg.defaultValue;
 
         try {
 
-            let defaultValue = arg.type === 'array' ? [] : arg.type === 'object' ? {} : arg.defaultValue;
             if (!defaultValue) defaultValue = config[arg.type]();
             if (!defaultValue) defaultValue = this._randomValueGenerator[arg.type]();
 
@@ -108,12 +108,10 @@ export class ProcessBuilderRepository {
 
             index++;
 
-            return parent ?? defaultValue;
-
         } catch (e) {
             debugger;
         } finally {
-            return {};
+            return parent ?? defaultValue;
         }
 
     }

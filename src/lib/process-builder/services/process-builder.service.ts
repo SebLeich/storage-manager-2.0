@@ -26,19 +26,6 @@ export class ProcessBuilderService {
     this._config.next(config);
   }
 
-  public removeFunction(func: IFunction) {
-    this._store.dispatch(removeIFunction(func));
-    if (typeof func.output?.param !== 'number') return;
-
-    this._store.select(selectIFunctionsByOutputParam(func.output.param))
-      .pipe(take(1))
-      .subscribe(arg => {
-        if (arg.length === 1 && arg[0].identifier === func.identifier) {
-          this._store.dispatch(removeIParam(func.output!.param as number));
-        }
-      });
-  }
-
   public setConfig(arg: any) {
     this._config.next(arg);
   }
