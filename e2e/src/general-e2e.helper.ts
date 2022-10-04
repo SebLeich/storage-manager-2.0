@@ -17,8 +17,9 @@ export class HelperMethods {
   getMainViews(){
     const mainViews = [
       { url: 'calculation', component: 'app-calculation' },
+      { url: 'data-pipeline-designer', component: 'app-process-builder-wrapper' },
       { url: 'local-data', component: 'app-local-data' },
-      { url: 'visualizer', component: 'app-visualizer' }
+      { url: 'visualizer', component: 'app-visualizer' },
     ];
     const fakeViews = [];
     for(let index = 0; index < 10; index++){
