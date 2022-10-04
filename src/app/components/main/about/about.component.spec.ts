@@ -1,4 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import defaultImportsConstant from 'src/app/default-imports.constant';
 
 import { AboutComponent } from './about.component';
 
@@ -8,7 +9,10 @@ describe('AboutComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ AboutComponent ]
+      declarations: [ AboutComponent ],
+      imports: [
+        ...defaultImportsConstant
+      ]
     })
     .compileComponents();
 
