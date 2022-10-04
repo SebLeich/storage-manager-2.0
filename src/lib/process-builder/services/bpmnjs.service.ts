@@ -30,6 +30,8 @@ import { IEvent } from 'src/lib/bpmn-io/interfaces/i-event.interface';
 import { IDirectEditingEvent } from 'src/lib/bpmn-io/interfaces/i-direct-editing-event.interface';
 import { IShapeDeleteExecutedEvent } from 'src/lib/bpmn-io/interfaces/i-shape-delete-executed-event.interface';
 import { IShapeAddedEvent } from 'src/lib/bpmn-io/interfaces/i-shape-added-event.interface';
+import { IViewboxChangedEvent } from '../interfaces/i-viewbox-changed-event.interface';
+import { isEqual } from 'lodash';
 
 
 @Injectable()
@@ -86,6 +88,10 @@ export class BpmnJsService {
     subscriber.next(evt);
   }));
 
+  public viewboxChangedEventFired$ = new Observable<IViewboxChangedEvent>((subscriber) => this.eventBusModule.on('canvas.viewbox.changed', (evt) => {
+    subscriber.next(evt);
+  }));
+
   public eventFired$ = merge(
     this.attachEventFired$.pipe(map(event => ({ event: event, type: 'attach' }))),
     this.connectionCreatePostExecutedEventFired$.pipe(map(event => ({ event: event, type: 'commandStack.connection.create.postExecuted' }))),
@@ -96,6 +102,7 @@ export class BpmnJsService {
     this.shapeDeleteExecutedEventFired$.pipe(map(event => ({ event: event, type: 'commandStack.shape.delete.executed' }))),
     this.shapeRemoveEventFired$.pipe(map(event => ({ event: event, type: 'shape.remove' }))),
     this.toolManagerUpdateEventFired$.pipe(map(event => ({ event: event, type: 'tool-manager.update' }))),
+    this.viewboxChangedEventFired$.pipe(map(event => ({ event: event, type: 'canvas.viewbox.changed' }))),
   );
 
   public validation$: Observable<undefined | null | IProcessValidationResult> = this.eventFired$.pipe(
@@ -107,7 +114,7 @@ export class BpmnJsService {
   public validationContainsErrors$ = this.validation$.pipe(
     map(validation => (validation?.errors?.length ?? 0) > 0)
   );
-  public bpmnJsLoggingEnabled = false;
+  public bpmnJsLoggingEnabled = true;
 
   private currentBpmnJSModel$ = this._store.select(selectCurrentIBpmnJSModel);
 
@@ -128,7 +135,9 @@ export class BpmnJsService {
       switchMap(bpmnJsModel => {
         this.bpmnJs.clear();
         return from(this.bpmnJs.importXML(bpmnJsModel!.xml)).pipe(map(importResult => ({ importResult, bpmnJsModel })));
-      }))
+      }),
+      delay(0)
+    )
       .subscribe(args => {
         this.canvasModule.viewbox(args.bpmnJsModel!.viewbox);
       });
@@ -141,7 +150,7 @@ export class BpmnJsService {
       debounceTime(500),
       switchMap(() => combineLatest([this.bpmnJs.saveXML(), this._store.select(selectCurrentIBpmnJSModel)])),
       map(([currentValue, currentBpmnJsModel]) => {
-        return currentValue?.xml != currentBpmnJsModel?.xml;
+        return currentValue?.xml != currentBpmnJsModel?.xml || !isEqual(this.canvasModule.viewbox(), currentBpmnJsModel.viewbox);
       })
     ).subscribe((isChanged) => {
       this._containsChanges.next(isChanged);

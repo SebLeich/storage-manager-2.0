@@ -3,6 +3,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { Store } from '@ngrx/store';
 import { BehaviorSubject } from 'rxjs';
 import { map, take } from 'rxjs/operators';
+import { getCanvasModule } from 'src/lib/bpmn-io/bpmn-modules';
 import { BPMNJsRepository } from 'src/lib/core/bpmn-js.repository';
 import { ProcessBuilderComponent } from 'src/lib/process-builder/components/process-builder/process-builder.component';
 import { IFunction } from 'src/lib/process-builder/globals/i-function';
@@ -13,7 +14,7 @@ import { removeIFunction } from 'src/lib/process-builder/store/actions/i-functio
 import { selectCurrentIBpmnJSModel, selectCurrentIBpmnJSModelGuid, selectIBpmnJSModels } from 'src/lib/process-builder/store/selectors/i-bpmn-js-model.selectors';
 import { selectIFunctions } from 'src/lib/process-builder/store/selectors/i-function.selector';
 import { selectIParams } from 'src/lib/process-builder/store/selectors/i-param.selectors';
-import { fadeInAnimation } from 'src/lib/shared/animations/fade-in';
+import { fadeInAnimation } from 'src/lib/shared/animations/fade-in.animation';
 import { showListAnimation } from 'src/lib/shared/animations/show-list';
 
 @Component({
@@ -85,7 +86,8 @@ export class ProcessBuilderWrapperComponent {
 
   public async saveCurrentBpmnModel() {
     const result: { xml: string } = await this.bpmnJsService.bpmnJs.saveXML();
-    this._store.dispatch(updateCurrentIBpmnJSModel({ xml: result.xml }));
+    const viewbox = getCanvasModule(this.bpmnJsService.bpmnJs).viewbox();
+    this._store.dispatch(updateCurrentIBpmnJSModel({ xml: result.xml, viewbox: viewbox }));
     this._snackBar.open('model saved', 'ok', { duration: 2000 });
     this.bpmnJsService.markAsUnchanged();
   }

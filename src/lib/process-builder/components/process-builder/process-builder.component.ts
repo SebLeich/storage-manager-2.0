@@ -1,5 +1,5 @@
 import { ChangeDetectorRef, Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { showAnimation } from 'src/lib/shared/animations/show';
+import { showAnimation } from 'src/lib/shared/animations/show-delayed.animation';
 import { ProcessBuilderService } from '../../services/process-builder.service';
 import { ProcessBuilderComponentService } from './process-builder-component.service';
 

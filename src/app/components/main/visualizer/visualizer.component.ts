@@ -6,7 +6,7 @@ import { delay, filter, map, scan, startWith, switchMap, take } from 'rxjs/opera
 import { selectedGoodEdgeColor } from 'src/app/globals';
 import { NoSolutionDialogComponent } from '../../dialog/no-solution-dialog/no-solution-dialog.component';
 import { selectCurrentSolution, selectSolutions } from 'src/app/store/selectors/i-solution.selectors';
-import { fadeInAnimation } from 'src/lib/shared/animations/fade-in';
+import { fadeInAnimation } from 'src/lib/shared/animations/fade-in.animation';
 import { selectSnapshot } from 'src/lib/process-builder/globals/select-snapshot';
 import { setCurrentSolution } from 'src/app/store/actions/i-solution.actions';
 import { VisualizationService } from 'src/app/services/visualization.service';
