@@ -1,5 +1,4 @@
 import { Component, ViewChild } from '@angular/core';
-import { MatSnackBar } from '@angular/material/snack-bar';
 import { Store } from '@ngrx/store';
 import { BehaviorSubject } from 'rxjs';
 import { map, take } from 'rxjs/operators';
@@ -13,7 +12,7 @@ import { removeIFunction } from 'src/lib/process-builder/store/actions/i-functio
 import { selectCurrentIBpmnJSModel, selectCurrentIBpmnJSModelGuid, selectIBpmnJSModels } from 'src/lib/process-builder/store/selectors/i-bpmn-js-model.selectors';
 import { selectIFunctions } from 'src/lib/process-builder/store/selectors/i-function.selector';
 import { selectIParams } from 'src/lib/process-builder/store/selectors/i-param.selectors';
-import { fadeInAnimation } from 'src/lib/shared/animations/fade-in';
+import { fadeInAnimation } from 'src/lib/shared/animations/fade-in.animation';
 import { showListAnimation } from 'src/lib/shared/animations/show-list';
 
 @Component({
@@ -41,11 +40,7 @@ export class ProcessBuilderWrapperComponent {
   public methodsVisible$ = this._methodsVisible.asObservable();
   public paramsVisible$ = this._paramsVisible.asObservable();
 
-  constructor(
-    private _store: Store, 
-    public bpmnJsService: BpmnJsService, 
-    private _snackBar: MatSnackBar
-  ) { }
+  constructor(private _store: Store, public bpmnJsService: BpmnJsService) { }
 
   public blurElement(element: HTMLElement, event?: Event) {
     if (event) {
@@ -59,7 +54,7 @@ export class ProcessBuilderWrapperComponent {
     this._store.dispatch(createIBpmnJsModel());
   }
 
-  public hideAllHints(){
+  public hideAllHints() {
     BPMNJsRepository.clearAllTooltips(this.bpmnJsService.bpmnJs);
   }
 
@@ -73,7 +68,6 @@ export class ProcessBuilderWrapperComponent {
 
   public async renameCurrentModel(updatedName: string) {
     this._store.dispatch(updateCurrentIBpmnJSModel({ name: updatedName }));
-    await this.saveCurrentBpmnModel();
   }
 
   public resetState() {
@@ -81,13 +75,6 @@ export class ProcessBuilderWrapperComponent {
     localStorage.removeItem('funcs');
     localStorage.removeItem('models');
     location.reload();
-  }
-
-  public async saveCurrentBpmnModel() {
-    const result: { xml: string } = await this.bpmnJsService.bpmnJs.saveXML();
-    this._store.dispatch(updateCurrentIBpmnJSModel({ xml: result.xml }));
-    this._snackBar.open('model saved', 'ok', { duration: 2000 });
-    this.bpmnJsService.markAsUnchanged();
   }
 
   public setModel(bpmnJSModel: IBpmnJSModel) {

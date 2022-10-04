@@ -1,12 +1,8 @@
 import { Inject, Injectable, Optional } from '@angular/core';
 import { ReplaySubject } from 'rxjs';
 import { map, take } from 'rxjs/operators';
-import { IFunction } from '../globals/i-function';
 import { IProcessBuilderConfig, PROCESS_BUILDER_CONFIG_TOKEN } from '../globals/i-process-builder-config';
 import { Store } from '@ngrx/store';
-import { removeIFunction } from '../store/actions/i-function.actions';
-import { selectIFunctionsByOutputParam } from '../store/selectors/i-function.selector';
-import { removeIParam } from '../store/actions/i-param.actions';
 import { selectCurrentParamOutput } from '../store/selectors/i-param.selectors';
 
 @Injectable()
