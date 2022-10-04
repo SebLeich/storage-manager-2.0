@@ -88,6 +88,7 @@ import { SolutionVisualizationDialogComponent } from './components/dialog/soluti
 import { SolutionPreviewRenderingComponent } from './components/solution-preview-rendering/solution-preview-rendering.component';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { ComputedStylePipe } from './pipes/computed-style.pipe';
+import { AboutComponent } from './components/main/about/about.component';
 
 let rootStoreFeatures: any = {};
 rootStoreFeatures[fromICalculationAttributesState.calculationAttributesFeatureKey] = fromICalculationAttributesState.calculationAttributesReducer;
@@ -130,7 +131,8 @@ rootStoreFeatures[fromISolutionPreviewState.solutionPreviewFeatureKey] = fromISo
     SceneVisualizationComponent,
     SolutionVisualizationDialogComponent,
     SolutionPreviewRenderingComponent,
-    ComputedStylePipe
+    ComputedStylePipe,
+    AboutComponent
   ],
   imports: [
     BrowserModule,

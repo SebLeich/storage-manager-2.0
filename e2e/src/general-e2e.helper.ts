@@ -16,6 +16,7 @@ export class HelperMethods {
 
   getMainViews(){
     const mainViews = [
+      { url: 'about', component: 'app-about' },
       { url: 'calculation', component: 'app-calculation' },
       { url: 'data-pipeline-designer', component: 'app-process-builder-wrapper' },
       { url: 'local-data', component: 'app-local-data' },
