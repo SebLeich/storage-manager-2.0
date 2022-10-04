@@ -1,9 +1,7 @@
 import { Component, ViewChild } from '@angular/core';
-import { MatSnackBar } from '@angular/material/snack-bar';
 import { Store } from '@ngrx/store';
 import { BehaviorSubject } from 'rxjs';
 import { map, take } from 'rxjs/operators';
-import { getCanvasModule } from 'src/lib/bpmn-io/bpmn-modules';
 import { BPMNJsRepository } from 'src/lib/core/bpmn-js.repository';
 import { ProcessBuilderComponent } from 'src/lib/process-builder/components/process-builder/process-builder.component';
 import { IFunction } from 'src/lib/process-builder/globals/i-function';
@@ -42,11 +40,7 @@ export class ProcessBuilderWrapperComponent {
   public methodsVisible$ = this._methodsVisible.asObservable();
   public paramsVisible$ = this._paramsVisible.asObservable();
 
-  constructor(
-    private _store: Store, 
-    public bpmnJsService: BpmnJsService, 
-    private _snackBar: MatSnackBar
-  ) { }
+  constructor(private _store: Store, public bpmnJsService: BpmnJsService) { }
 
   public blurElement(element: HTMLElement, event?: Event) {
     if (event) {
@@ -60,7 +54,7 @@ export class ProcessBuilderWrapperComponent {
     this._store.dispatch(createIBpmnJsModel());
   }
 
-  public hideAllHints(){
+  public hideAllHints() {
     BPMNJsRepository.clearAllTooltips(this.bpmnJsService.bpmnJs);
   }
 
@@ -74,7 +68,6 @@ export class ProcessBuilderWrapperComponent {
 
   public async renameCurrentModel(updatedName: string) {
     this._store.dispatch(updateCurrentIBpmnJSModel({ name: updatedName }));
-    await this.saveCurrentBpmnModel();
   }
 
   public resetState() {
@@ -82,14 +75,6 @@ export class ProcessBuilderWrapperComponent {
     localStorage.removeItem('funcs');
     localStorage.removeItem('models');
     location.reload();
-  }
-
-  public async saveCurrentBpmnModel() {
-    const result: { xml: string } = await this.bpmnJsService.bpmnJs.saveXML();
-    const viewbox = getCanvasModule(this.bpmnJsService.bpmnJs).viewbox();
-    this._store.dispatch(updateCurrentIBpmnJSModel({ xml: result.xml, viewbox: viewbox }));
-    this._snackBar.open('model saved', 'ok', { duration: 2000 });
-    this.bpmnJsService.markAsUnchanged();
   }
 
   public setModel(bpmnJSModel: IBpmnJSModel) {

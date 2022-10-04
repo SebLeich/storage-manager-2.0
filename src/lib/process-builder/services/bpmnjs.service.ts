@@ -18,7 +18,7 @@ import customRendererModule from '../extensions/custom-renderer';
 import sebleichProcessBuilderExtension from '../globals/sebleich-process-builder-extension';
 import { IBpmnJS } from '../interfaces/i-bpmn-js.interface';
 import { getCanvasModule, getDirectEditingModule, getElementRegistryModule, getEventBusModule, getModelingModule, getTooltipModule, getZoomScrollModule } from 'src/lib/bpmn-io/bpmn-modules';
-import { BehaviorSubject, combineLatest, debounceTime, delay, filter, from, map, merge, Observable, shareReplay, switchMap, throttleTime } from 'rxjs';
+import { BehaviorSubject, combineLatest, debounceTime, delay, filter, from, map, merge, Observable, shareReplay, switchMap, throttleTime, timer } from 'rxjs';
 import { IConnectionCreatePostExecutedEvent } from 'src/lib/bpmn-io/interfaces/i-connection-create-post-executed-event.interface';
 import { IModelingModule } from 'src/lib/bpmn-io/interfaces/i-modeling-module.interface';
 import { IProcessValidationResult } from '../classes/validation-result';
@@ -32,6 +32,9 @@ import { IShapeDeleteExecutedEvent } from 'src/lib/bpmn-io/interfaces/i-shape-de
 import { IShapeAddedEvent } from 'src/lib/bpmn-io/interfaces/i-shape-added-event.interface';
 import { IViewboxChangedEvent } from '../interfaces/i-viewbox-changed-event.interface';
 import { isEqual } from 'lodash';
+import { updateCurrentIBpmnJSModel } from '../store/actions/i-bpmn-js-model.actions';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { selectSnapshot } from '../globals/select-snapshot';
 
 
 @Injectable()
@@ -114,19 +117,35 @@ export class BpmnJsService {
   public validationContainsErrors$ = this.validation$.pipe(
     map(validation => (validation?.errors?.length ?? 0) > 0)
   );
-  public bpmnJsLoggingEnabled = true;
+  public bpmnJsLoggingEnabled = false;
 
   private currentBpmnJSModel$ = this._store.select(selectCurrentIBpmnJSModel);
 
   private _containsChanges = new BehaviorSubject<boolean>(false);
   public containsChanges$ = this._containsChanges.asObservable();
 
-  constructor(private _store: Store) {
+  private _isSaving = new BehaviorSubject<boolean>(false);
+  public isSaving$ = this._isSaving.asObservable();
+
+  constructor(private _store: Store, private _snackBar: MatSnackBar) {
     this._setUp();
   }
 
   public markAsUnchanged() {
     this._containsChanges.next(false);
+  }
+
+  public async saveCurrentBpmnModel(showHintAfterAction?: boolean | { successMessage: string }) {
+    this._isSaving.next(true);
+    await selectSnapshot(timer(0));
+    const result: { xml: string } = await this.bpmnJs.saveXML();
+    const viewbox = getCanvasModule(this.bpmnJs).viewbox();
+    this._store.dispatch(updateCurrentIBpmnJSModel({ xml: result.xml, viewbox: viewbox }));
+    this._containsChanges.next(false);
+    this._isSaving.next(false);
+    if (showHintAfterAction) {
+      this._snackBar.open(typeof showHintAfterAction === 'object' && showHintAfterAction.successMessage ? showHintAfterAction.successMessage : 'model saved successfully', 'ok', { duration: 2000 });
+    }
   }
 
   private _setUp(): void {

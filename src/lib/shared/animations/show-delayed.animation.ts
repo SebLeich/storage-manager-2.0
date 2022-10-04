@@ -1,15 +1,15 @@
 import { animate, state, style, transition, trigger } from "@angular/animations";
 
 export const showAnimation = trigger('show', [
-    state('void', style({
+    state('hidden', style({
         opacity: 0,
         transform: 'scale(.8)'
     })),
-    state('*', style({
+    state('visible', style({
         opacity: 1,
         transform: 'scale(1)'
     })),
-    transition('void => *', [
-        animate('.2s 1s ease-out')
+    transition('hidden => visible', [
+        animate('.2s .2s ease-out')
     ])
 ]);

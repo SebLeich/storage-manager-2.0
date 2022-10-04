@@ -83,10 +83,11 @@ export const reducer = createReducer(
   }),
 
   on(updateCurrentIBpmnJSModel, (state: State, { properties }) => {
-    if (state.currentBpmnJSModelGuid) {
+    if (state.currentBpmnJSModelGuid && state.entities[state.currentBpmnJSModelGuid]) {
+      const mergedModel = { ...state.entities[state.currentBpmnJSModelGuid], ...properties, lastModified: moment().format() };
       return adapter.updateOne({
         id: state.currentBpmnJSModelGuid,
-        changes: { ...properties, lastModified: moment().format() }
+        changes: mergedModel
       }, state);
     }
     return state;

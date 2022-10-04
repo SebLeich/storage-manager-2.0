@@ -135,33 +135,6 @@ export class ProcessBuilderComponentService {
     location.reload();
   }
 
-  public async saveModel() {
-    const currentIBpmnModel = await selectSnapshot(this.currentIBpmnJSModel$);
-    if (!currentIBpmnModel) {
-      return;
-    }
-
-    const currentModelState = await this.bpmnjsService.bpmnJs.saveXML();
-    if (!currentModelState) {
-      return;
-    }
-
-    this._store.dispatch(upsertIBpmnJSModel({
-      'guid': currentIBpmnModel.guid,
-      'created': currentIBpmnModel.created,
-      'description': currentIBpmnModel.description,
-      'name': currentIBpmnModel.name,
-      'xml': currentModelState.xml,
-      'lastModified': moment().format('yyyy-MM-ddTHH:mm:ss'),
-      'viewbox': getCanvasModule(this.bpmnjsService.bpmnJs).viewbox()
-    }));
-
-    this._snackBar.open(`the state was successfully saved`, 'Ok', {
-      duration: 2000
-    });
-    this._pendingChanges.next(false);
-  }
-
   setDefaultModel(): Observable<void> {
     let subject = new Subject<void>();
 
