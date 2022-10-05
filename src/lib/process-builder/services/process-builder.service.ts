@@ -19,6 +19,7 @@ export class ProcessBuilderService {
   public currentProcessOutput$ = this._store.select(selectCurrentParamOutput);
 
   private _config = new ReplaySubject<IProcessBuilderConfig>(1);
+  public config$ = this._config.asObservable();
 
   constructor(
     @Optional() @Inject(PROCESS_BUILDER_CONFIG_TOKEN) private config: IProcessBuilderConfig,
@@ -27,18 +28,18 @@ export class ProcessBuilderService {
     if (!this.config) {
       config = this.defaultConfig;
     }
-    this._config.next(config);
+    this.setConfig(config);
   }
 
-  public createModel() {
+  public createBpmnJsModel() {
     this._store.dispatch(createIBpmnJsModel());
   }
 
   public resetLocalState() {
-    localStorage.removeItem('params');
     localStorage.removeItem('funcs');
     localStorage.removeItem('models');
-    location.reload();
+    localStorage.removeItem('params');
+    this._reloadLocation();
   }
 
   public setConfig(arg: any) {
@@ -89,6 +90,10 @@ export class ProcessBuilderService {
       'hideSubProcesses': false,
       'hideTasks': false
     } as IProcessBuilderConfig;
+  }
+
+  private _reloadLocation() {
+    location.reload();
   }
 
 }

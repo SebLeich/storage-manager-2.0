@@ -6,7 +6,8 @@
 
     <div class="control-footer">
 
-        <mat-form-field class="mat-form-field-outline-white-bg mat-form-field-no-padding draft-selection-input" appearance="outline">
+        <mat-form-field class="mat-form-field-outline-white-bg mat-form-field-no-padding draft-selection-input"
+            appearance="outline">
             <mat-label>current draft (total: {{(bpmnJSModels$|async)?.length ?? 0}})</mat-label>
             <mat-select [value]="currentBpmnJSModelGuid$|async">
                 <mat-select-trigger>
@@ -24,7 +25,7 @@
                     <mat-icon class="icon">edit</mat-icon>
                     <mat-icon class="icon danger" (click)="removeModel(model)">delete_forever</mat-icon>
                 </mat-option>
-                <mat-option class="dropdown-interaction-control" (click)="createBpmnJsModel()">
+                <mat-option class="dropdown-interaction-control" (click)="processBuilderService.createBpmnJsModel()">
                     Add new draft
                 </mat-option>
             </mat-select>
@@ -32,14 +33,16 @@
 
         <div class="spacer"></div>
 
-        <div class="hint" [ngClass]="(bpmnJsService.validationContainsErrors$|async)? 'error': 'success'" (mouseleave)="hideAllHints()">
+        <div class="hint" [ngClass]="(bpmnJsService.validationContainsErrors$|async)? 'error': 'success'"
+            (mouseleave)="hideAllHints()">
 
             <span class="counter">{{(bpmnJsService.validation$|async)?.errors?.length}}</span>
             <span class="text">errors</span>
 
         </div>
 
-        <div class="hint" [ngClass]="((bpmnJsService.validation$|async)?.warnings?.length ?? 0) > 0? 'warning': 'success'"
+        <div class="hint"
+            [ngClass]="((bpmnJsService.validation$|async)?.warnings?.length ?? 0) > 0? 'warning': 'success'"
             (mouseleave)="hideAllHints()">
 
             <span class="counter">{{(bpmnJsService.validation$|async)?.warnings?.length ?? 0}}</span>
@@ -47,7 +50,8 @@
 
         </div>
 
-        <div class="control-footer-item accent" *ngIf="(bpmnJsService.containsChanges$|async)" @fadeIn (click)="bpmnJsService.saveCurrentBpmnModel(true)">
+        <div class="control-footer-item accent" *ngIf="(bpmnJsService.containsChanges$|async)" @fadeIn
+            (click)="bpmnJsService.saveCurrentBpmnModel(true)">
             <mat-icon>save</mat-icon>
         </div>
 
@@ -137,16 +141,17 @@
     </div>
     <div mat-menu-item class="inactive" (click)="$event.stopPropagation()">
         <span class="text">zoom</span>
-        <mat-icon class="interactable-icon" (click)="zoomIn()">add_circle_outline</mat-icon>
-        <mat-icon class="interactable-icon" (click)="zoomOut()">remove_circle_outline</mat-icon>
+        <mat-icon class="interactable-icon" (click)="bpmnJsService.zoomIn()">add_circle_outline</mat-icon>
+        <mat-icon class="interactable-icon" (click)="bpmnJsService.zoomOut()">remove_circle_outline</mat-icon>
     </div>
-    <div mat-menu-item [disabled]="!(bpmnJsService.containsChanges$|async)" (click)="bpmnJsService.saveCurrentBpmnModel(true)">
+    <div mat-menu-item [disabled]="!(bpmnJsService.containsChanges$|async)"
+        (click)="bpmnJsService.saveCurrentBpmnModel(true)">
         <span class="text">save model</span>
     </div>
     <div mat-menu-item class="bordered">
         <span class="text">run pipeline</span>
     </div>
-    <div mat-menu-item (click)="resetState()">
+    <div mat-menu-item (click)="processBuilderService.resetLocalState()">
         <span class="text">reset environment</span>
         <mat-icon class="icon">delete_forever</mat-icon>
     </div>
