@@ -216,7 +216,7 @@ export class TaskCreationComponent implements OnDestroy, OnInit {
         let value = this.formGroup.controls['implementation'].value;
         let evaluationResult = CodemirrorRepository.evaluateCustomMethod(undefined, value);
         let inputs = CodemirrorRepository.getUsedInputParams(undefined, value).map(x => x.propertyName).filter((x, index, array) => array.indexOf(x) === index);
-        this._hasOutputParam.next(evaluationResult === MethodEvaluationStatus.ReturnValueFound);
+        this._hasOutputParam.next(evaluationResult.status === MethodEvaluationStatus.ReturnValueFound);
         this._statusMessage.next(`input params: ${inputs.length === 0 ? '-' : inputs.join(', ')}`);
       }),
       this._customImplementation
@@ -261,10 +261,10 @@ export class TaskCreationComponent implements OnDestroy, OnInit {
     });
   }
 
-  testImplementation() {
+  public testImplementation() {
     let customImplementation = this.formGroup.controls['implementation']?.value;
     if (customImplementation) {
-      let result = ProcessBuilderRepository.executeUserMethodAndReturnResponse(customImplementation, this._injector);
+      const result = ProcessBuilderRepository.executeUserMethodAndReturnResponse(customImplementation, this._injector);
       result.subscribe({
         'next': (result: any) => {
           let parsed: string = typeof result === 'object' ? JSON.stringify(result) : typeof result === 'number' ? result.toString() : result;

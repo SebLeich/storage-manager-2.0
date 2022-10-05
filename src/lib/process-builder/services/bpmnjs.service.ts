@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Inject, Injectable } from '@angular/core';
 
 // @ts-ignore
 import * as BpmnJS from 'bpmn-js/dist/bpmn-modeler.production.min.js';
@@ -15,6 +15,8 @@ import * as tooltips from "diagram-js/lib/features/tooltips";
 // @ts-ignore
 import customRendererModule from '../extensions/custom-renderer';
 
+import { v4 as generateGuid } from 'uuid';
+
 import sebleichProcessBuilderExtension from '../globals/sebleich-process-builder-extension';
 import { IBpmnJS } from '../interfaces/i-bpmn-js.interface';
 import { getCanvasModule, getDirectEditingModule, getElementRegistryModule, getEventBusModule, getModelingModule, getTooltipModule, getZoomScrollModule } from 'src/lib/bpmn-io/bpmn-modules';
@@ -25,16 +27,19 @@ import { IProcessValidationResult } from '../classes/validation-result';
 import { BPMNJsRepository } from 'src/lib/core/bpmn-js.repository';
 import { IZoomScrollModule } from 'src/lib/bpmn-io/interfaces/i-zoom-scroll-module.interface';
 import { Store } from '@ngrx/store';
-import { selectCurrentIBpmnJSModel } from '../store/selectors/i-bpmn-js-model.selectors';
+import { selectCurrentIBpmnJSModel, selectRecentlyUsedIBpmnJSModel } from '../store/selectors/i-bpmn-js-model.selectors';
 import { IEvent } from 'src/lib/bpmn-io/interfaces/i-event.interface';
 import { IDirectEditingEvent } from 'src/lib/bpmn-io/interfaces/i-direct-editing-event.interface';
 import { IShapeDeleteExecutedEvent } from 'src/lib/bpmn-io/interfaces/i-shape-delete-executed-event.interface';
 import { IShapeAddedEvent } from 'src/lib/bpmn-io/interfaces/i-shape-added-event.interface';
 import { IViewboxChangedEvent } from '../interfaces/i-viewbox-changed-event.interface';
 import { isEqual } from 'lodash';
-import { updateCurrentIBpmnJSModel } from '../store/actions/i-bpmn-js-model.actions';
+import { addIBpmnJSModel, setCurrentIBpmnJSModel, updateCurrentIBpmnJSModel } from '../store/actions/i-bpmn-js-model.actions';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { selectSnapshot } from '../globals/select-snapshot';
+import defaultBpmnXmlConstant from '../globals/default-bpmn-xml.constant';
+import moment from 'moment';
+import { IProcessBuilderConfig, PROCESS_BUILDER_CONFIG_TOKEN } from '../globals/i-process-builder-config';
 
 
 @Injectable()
@@ -127,8 +132,25 @@ export class BpmnJsService {
   private _isSaving = new BehaviorSubject<boolean>(false);
   public isSaving$ = this._isSaving.asObservable();
 
-  constructor(private _store: Store, private _snackBar: MatSnackBar) {
+  constructor(@Inject(PROCESS_BUILDER_CONFIG_TOKEN) private _config: IProcessBuilderConfig, private _store: Store, private _snackBar: MatSnackBar) {
     this._setUp();
+  }
+
+  public async attachBpmnModelToDomElement(parent: HTMLDivElement) {
+    this.bpmnJs.attachTo(parent);
+    let recentlyUsedModel = await selectSnapshot(this._store.select(selectRecentlyUsedIBpmnJSModel()));
+    if (!recentlyUsedModel) {
+      recentlyUsedModel = {
+        'guid': generateGuid(),
+        'created': moment().format('yyyy-MM-ddTHH:mm:ss'),
+        'description': null,
+        'name': this._config.defaultBpmnModelName,
+        'xml': defaultBpmnXmlConstant,
+        'lastModified': moment().format('yyyy-MM-ddTHH:mm:ss')
+      };
+      this._store.dispatch(addIBpmnJSModel(recentlyUsedModel));
+    }
+    this._store.dispatch(setCurrentIBpmnJSModel(recentlyUsedModel.guid));
   }
 
   public markAsUnchanged() {
@@ -147,6 +169,11 @@ export class BpmnJsService {
       this._snackBar.open(typeof showHintAfterAction === 'object' && showHintAfterAction.successMessage ? showHintAfterAction.successMessage : 'model saved successfully', 'ok', { duration: 2000 });
     }
   }
+
+  public undo = () => (window as any).cli.undo();
+  public redo = () => (window as any).cli.redo();
+  public zoomIn = () => this.bpmnJs.get('zoomScroll').stepZoom(1);
+  public zoomOut = () => this.bpmnJs.get('zoomScroll').stepZoom(-1);
 
   private _setUp(): void {
     this.currentBpmnJSModel$.pipe(

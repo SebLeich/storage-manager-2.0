@@ -167,7 +167,7 @@ export const validateBPMNConfig = (bpmnJS: any, injector: Injector) => {
         }
 
         const config = injector.get(PROCESS_BUILDER_CONFIG_TOKEN),
-            modelingModule = getModelingModule(bpmnJS), 
+            modelingModule = getModelingModule(bpmnJS),
             store = injector.get(Store);
 
         if (typeof taskCreationComponentOutput.entranceGatewayType === 'number') {
@@ -205,7 +205,7 @@ export const validateBPMNConfig = (bpmnJS: any, injector: Injector) => {
                 if (func.requireCustomImplementation || func.customImplementation || func.useDynamicInputParams || func.output!.param === 'dynamic') {
 
                     let methodEvaluation = CodemirrorRepository.evaluateCustomMethod(undefined, taskCreationComponentOutput.implementation ?? defaultImplementation);
-                    if (methodEvaluation === MethodEvaluationStatus.ReturnValueFound || func.output?.param === 'dynamic') {
+                    if (methodEvaluation.status === MethodEvaluationStatus.ReturnValueFound || func.output?.param === 'dynamic') {
 
                         outputParam = {
                             identifier: outputParamId,
@@ -237,7 +237,7 @@ export const validateBPMNConfig = (bpmnJS: any, injector: Injector) => {
                         'name': taskCreationComponentOutput.name ?? config.defaultFunctionName,
                         'identifier': func.requireCustomImplementation ? funcId : func.identifier,
                         'normalizedName': taskCreationComponentOutput.normalizedName ?? ProcessBuilderRepository.normalizeName(taskCreationComponentOutput.name ?? undefined),
-                        'output': methodEvaluation === MethodEvaluationStatus.ReturnValueFound || func.output?.param === 'dynamic' ? { param: outputParamId } : null,
+                        'output': methodEvaluation.status === MethodEvaluationStatus.ReturnValueFound || func.output?.param === 'dynamic' ? { param: outputParamId } : null,
                         'pseudoImplementation': func.pseudoImplementation,
                         'inputParams': inputParams,
                         'requireCustomImplementation': false,
@@ -278,7 +278,7 @@ export const validateBPMNConfig = (bpmnJS: any, injector: Injector) => {
                             type: shapeTypes.ExclusiveGateway
                         }, { x: payload.configureActivity.x + 200, y: payload.configureActivity.y + 40 });
 
-                        BPMNJsRepository.updateBpmnElementSLPBExtension(bpmnJS, gatewayShape.businessObject, 'GatewayExtension', (e: any) => e.gatewayType = 'error_gateway');
+                        BPMNJsRepository.updateBpmnElementSLPBExtension(bpmnJS, gatewayShape!.businessObject, 'GatewayExtension', (e: any) => e.gatewayType = 'error_gateway');
 
                         modelingModule.updateLabel(gatewayShape, config.errorGatewayConfig.gatewayName);
 

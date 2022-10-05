@@ -1,36 +1,30 @@
-import { Inject, Injectable, Injector } from '@angular/core';
+import { Inject, Injectable } from '@angular/core';
 
 import { v4 as generateGuid } from 'uuid';
 
-import { BehaviorSubject, combineLatest, Observable, of, Subject, Subscription } from 'rxjs';
+import { BehaviorSubject, combineLatest, Observable, Subject, Subscription } from 'rxjs';
 import { Store } from '@ngrx/store';
 
 import { selectIParams } from '../../store/selectors/i-param.selectors';
-import { validateBPMNConfig } from 'src/lib/core/config-validator';
 import { selectIFunctions, selectIFunctionsByOutputParam } from '../../store/selectors/i-function.selector';
-import { addIBpmnJSModel, createIBpmnJsModel, removeIBpmnJSModel, setCurrentIBpmnJSModel, updateIBpmnJSModel, upsertIBpmnJSModel } from '../../store/actions/i-bpmn-js-model.actions';
+import { addIBpmnJSModel, createIBpmnJsModel, removeIBpmnJSModel, setCurrentIBpmnJSModel, updateIBpmnJSModel } from '../../store/actions/i-bpmn-js-model.actions';
 import * as moment from 'moment';
 import { IProcessBuilderConfig, PROCESS_BUILDER_CONFIG_TOKEN } from '../../globals/i-process-builder-config';
 import { selectIBpmnJSModels, selectRecentlyUsedIBpmnJSModel } from '../../store/selectors/i-bpmn-js-model.selectors';
 import { IBpmnJSModel } from '../../interfaces/i-bpmn-js-model.interface';
 import { getCanvasModule, getEventBusModule, getTooltipModule } from 'src/lib/bpmn-io/bpmn-modules';
 import { IViewbox } from 'src/lib/bpmn-io/interfaces/i-viewbox.interface';
-import { MatSnackBar } from '@angular/material/snack-bar';
 import { processPerformer } from 'src/lib/core/process-performer';
 import bpmnJsEventTypes from 'src/lib/bpmn-io/bpmn-js-event-types';
 import { BPMNJsRepository } from 'src/lib/core/bpmn-js.repository';
 
 import { IElement } from 'src/lib/bpmn-io/interfaces/i-element.interface';
 import { ValidationErrorPipe } from '../../pipes/validation-error.pipe';
-import { IProcessValidationResult } from '../../classes/validation-result';
-import { debounceTime, distinctUntilChanged, map, shareReplay, switchMap, take, throttleTime } from 'rxjs/operators';
+import { debounceTime, distinctUntilChanged, map, take } from 'rxjs/operators';
 import { IFunction } from '../../globals/i-function';
 import { removeIFunction, updateIFunction } from '../../store/actions/i-function.actions';
 import { IParam } from '../../globals/i-param';
 import { removeIParam } from '../../store/actions/i-param.actions';
-import { ValidationError } from '../../globals/validation-error';
-import { ValidationWarning } from '../../globals/validation-warning';
-import { ValidationWarningPipe } from '../../pipes/validation-warning.pipe';
 import { BpmnJsService } from '../../services/bpmnjs.service';
 import { selectSnapshot } from '../../globals/select-snapshot';
 import defaultBpmnXmlConstant from '../../globals/default-bpmn-xml.constant';
@@ -39,14 +33,10 @@ import defaultBpmnXmlConstant from '../../globals/default-bpmn-xml.constant';
 export class ProcessBuilderComponentService {
 
   private _currentIBpmnJSModelGuid = new BehaviorSubject<string | null>(null);
-  private _modelChanged = new Subject<void>();
-  private _pendingChanges = new BehaviorSubject<boolean>(false);
 
   public params$ = this._store.select(selectIParams());
   public funcs$ = this._store.select(selectIFunctions());
   public models$ = this._store.select(selectIBpmnJSModels());
-  public pendingChanges$ = this._pendingChanges.asObservable();
-  public noPendingChanges$ = this.pendingChanges$.pipe(map(x => !x));
   public currentIBpmnJSModelGuid$ = this._currentIBpmnJSModelGuid.pipe(distinctUntilChanged());
   public currentIBpmnJSModel$ = combineLatest(
     [
@@ -63,8 +53,6 @@ export class ProcessBuilderComponentService {
   constructor(
     @Inject(PROCESS_BUILDER_CONFIG_TOKEN) private _config: IProcessBuilderConfig,
     private bpmnjsService: BpmnJsService,
-    private _snackBar: MatSnackBar,
-    private _injector: Injector,
     private _store: Store
   ) {
     this._setUp();
@@ -77,8 +65,6 @@ export class ProcessBuilderComponentService {
   public dispose() {
     this._subscriptions.unsubscribe();
   }
-
-  hideAllHints = () => BPMNJsRepository.clearAllTooltips(this.bpmnjsService.bpmnJs);
 
   async init(parent: HTMLDivElement) {
     this.bpmnjsService.bpmnJs.attachTo(parent);
@@ -128,12 +114,6 @@ export class ProcessBuilderComponentService {
       });
   }
 
-  resetAll() {
-    localStorage.removeItem('params');
-    localStorage.removeItem('funcs');
-    localStorage.removeItem('models');
-    location.reload();
-  }
 
   setDefaultModel(): Observable<void> {
     let subject = new Subject<void>();
@@ -181,38 +161,6 @@ export class ProcessBuilderComponentService {
     });
   }
 
-  public showError(error: { element?: IElement, error: ValidationError }) {
-    this.hideAllHints();
-    if (!error.element) {
-      return;
-    }
-
-    this.bpmnjsService.tooltipModule.add({
-      position: {
-        x: error.element.x,
-        y: error.element.y + error.element.height + 3
-      },
-      html:
-        `<div style="width: 120px; background: #f44336de; color: white; font-size: .7rem; padding: .2rem .3rem; border-radius: 2px; line-height: .8rem;">${new ValidationErrorPipe().transform(error.error)}</div>`
-    });
-  }
-
-  public showWarning(warning: { element?: IElement, warning: ValidationWarning }) {
-    this.hideAllHints();
-    if (!warning.element) {
-      return;
-    }
-
-    this.bpmnjsService.tooltipModule.add({
-      position: {
-        x: warning.element?.x,
-        y: warning.element?.y + warning.element?.height + 3
-      },
-      html:
-        `<div style="width: 120px; background: #ffb200; color: white; font-size: .7rem; padding: .2rem .3rem; border-radius: 2px; line-height: .8rem;">${new ValidationWarningPipe().transform(warning.warning)}</div>`
-    });
-  }
-
   tryExecute() {
 
     try {
@@ -253,13 +201,15 @@ export class ProcessBuilderComponentService {
         if (!model) return;
         this._setBpmnModel(model.xml, model.viewbox);
       }),
+      /*
       validateBPMNConfig(this.bpmnjsService.bpmnJs, this._injector).subscribe(() => {
         this._modelChanged.next();
         this._pendingChanges.next(true);
       })
+      */
     ]);
 
-    getEventBusModule(this.bpmnjsService.bpmnJs).on(bpmnJsEventTypes.ElementChanged, () => this._modelChanged.next());
+    //getEventBusModule(this.bpmnjsService.bpmnJs).on(bpmnJsEventTypes.ElementChanged, () => this._modelChanged.next());
 
     let prevSub: Subscription | undefined;
     getEventBusModule(this.bpmnjsService.bpmnJs).on(bpmnJsEventTypes.ElementHover, (evt) => {

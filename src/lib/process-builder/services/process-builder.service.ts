@@ -3,10 +3,18 @@ import { ReplaySubject } from 'rxjs';
 import { map, take } from 'rxjs/operators';
 import { IProcessBuilderConfig, PROCESS_BUILDER_CONFIG_TOKEN } from '../globals/i-process-builder-config';
 import { Store } from '@ngrx/store';
-import { selectCurrentParamOutput } from '../store/selectors/i-param.selectors';
+import { selectCurrentParamOutput, selectIParams } from '../store/selectors/i-param.selectors';
+import { selectIFunctions } from '../store/selectors/i-function.selector';
+import { selectCurrentIBpmnJSModelGuid, selectIBpmnJSModels } from '../store/selectors/i-bpmn-js-model.selectors';
+import { createIBpmnJsModel, setCurrentIBpmnJSModel } from '../store/actions/i-bpmn-js-model.actions';
+import { selectSnapshot } from '../globals/select-snapshot';
 
 @Injectable()
 export class ProcessBuilderService {
+
+  public funcs$ = this._store.select(selectIFunctions());
+  public models$ = this._store.select(selectIBpmnJSModels());
+  public params$ = this._store.select(selectIParams());
 
   public currentProcessOutput$ = this._store.select(selectCurrentParamOutput);
 
@@ -22,8 +30,31 @@ export class ProcessBuilderService {
     this._config.next(config);
   }
 
+  public createModel() {
+    this._store.dispatch(createIBpmnJsModel());
+  }
+
+  public resetLocalState() {
+    localStorage.removeItem('params');
+    localStorage.removeItem('funcs');
+    localStorage.removeItem('models');
+    location.reload();
+  }
+
   public setConfig(arg: any) {
     this._config.next(arg);
+  }
+
+  public async setNextModel() {
+    const bpmnJsModels = await selectSnapshot(this._store.select(selectIBpmnJSModels()));
+    const currentBpmnJsModelGuid = await selectSnapshot(this._store.select(selectCurrentIBpmnJSModelGuid));
+    if (bpmnJsModels.length < 2 || typeof currentBpmnJsModelGuid !== 'string') {
+      return;
+    }
+
+    const index = bpmnJsModels.findIndex(bpmnJsModel => bpmnJsModel.guid === currentBpmnJsModelGuid);
+    const nextIndex = index >= (bpmnJsModels.length - 1) ? 0 : index + 1;
+    this._store.dispatch(setCurrentIBpmnJSModel(bpmnJsModels[nextIndex]));
   }
 
   public toggleEvents = () => this._config.pipe(take(1)).subscribe((value) => {

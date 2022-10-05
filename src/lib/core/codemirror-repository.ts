@@ -6,7 +6,7 @@ import { Tree, SyntaxNode } from 'node_modules/@lezer/common/dist/tree';
 
 export class CodemirrorRepository {
 
-    static evaluateCustomMethod(state?: EditorState, text?: string[] | string): MethodEvaluationStatus {
+    static evaluateCustomMethod(state?: EditorState, text?: string[] | string): { status: MethodEvaluationStatus, returnPropertyPath?: string } {
 
         let convertedText = Array.isArray(text) ? text.join('\n') : text;
 
@@ -23,12 +23,18 @@ export class CodemirrorRepository {
 
         let tree = syntaxTree(state);
         let mainMethod = this.getMainMethod(tree, state, text);
-        if (!mainMethod.node) return MethodEvaluationStatus.NoMainMethodFound;
+        if (!mainMethod.node) {
+            return { status: MethodEvaluationStatus.NoMainMethodFound };
+        }
 
         let arrowFunction = mainMethod.node.getChild('ArrowFunction');
         let block = arrowFunction ? arrowFunction.getChild('Block') : mainMethod.node.getChild('Block');
-        let returnStatement = block?.getChild('ReturnStatement') ?? undefined;
-        return returnStatement ? MethodEvaluationStatus.ReturnValueFound : MethodEvaluationStatus.NoReturnValue;
+        const returnStatement = block?.getChild('ReturnStatement') ?? undefined;
+        if (returnStatement) {
+            const memberExpression = returnStatement.getChild('MemberExpression');
+            return { status: MethodEvaluationStatus.ReturnValueFound, returnPropertyPath: state.sliceDoc(memberExpression?.from, memberExpression?.to) };
+        }
+        return { status: MethodEvaluationStatus.NoReturnValue };
 
     }
 
