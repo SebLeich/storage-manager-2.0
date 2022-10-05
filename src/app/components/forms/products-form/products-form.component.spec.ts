@@ -1,5 +1,7 @@
+import { DebugElement } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ControlContainer, FormArray, FormControl, FormGroup } from '@angular/forms';
+import { By } from '@angular/platform-browser';
 import { AppRoutingModule } from 'src/app/app-routing.module';
 import { AppModule } from 'src/app/app.module';
 import defaultImportsConstant from 'src/app/default-imports.constant';
@@ -11,6 +13,13 @@ import { ProductFormComponent } from './products-form.component';
 describe('ProductFormComponent', () => {
   let component: ProductFormComponent;
   let fixture: ComponentFixture<ProductFormComponent>;
+  let debugElement: DebugElement;
+  const expectedFormControls: { controlName: (keyof IProduct), inputType: string }[] = [
+    { controlName: 'description', inputType: 'text' },
+    { controlName: 'height', inputType: 'number' },
+    { controlName: 'length', inputType: 'number' },
+    { controlName: 'width', inputType: 'number' },
+  ];
 
   beforeEach(() => {
     TestBed.configureTestingModule({
@@ -44,10 +53,19 @@ describe('ProductFormComponent', () => {
 
     fixture = TestBed.createComponent(ProductFormComponent);
     component = fixture.componentInstance;
+    debugElement = fixture.debugElement;
     fixture.detectChanges();
   });
 
   it('should create', () => {
     expect(component).toBeTruthy();
+  });
+
+  expectedFormControls.forEach(control => {
+    it(`should contain form control for ${control.controlName}`, () => {
+      const controlDebugElement = debugElement.query(By.css(`[formcontrolname=${control.controlName}]`));
+      expect(controlDebugElement).toBeTruthy();
+      expect((controlDebugElement.nativeElement as HTMLInputElement).type).toBe(control.inputType);
+    });
   });
 });
