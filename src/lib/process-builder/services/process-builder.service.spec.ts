@@ -15,9 +15,6 @@ describe('ProcessBuilderService', () => {
   const bpmnJsModels = [
     { guid: 'model1' } as IBpmnJSModel,
     { guid: 'model2' } as IBpmnJSModel,
-    { guid: 'model3' } as IBpmnJSModel,
-    { guid: 'model4' } as IBpmnJSModel,
-    { guid: 'model5' } as IBpmnJSModel,
   ];
 
   beforeEach(() => {
@@ -62,16 +59,13 @@ describe('ProcessBuilderService', () => {
     expect(localStorage.getItem('params')).toBeFalsy();
   });
 
-  const bpmnJsModelGuids = bpmnJsModels.map(bpmnJsModel => bpmnJsModel.guid);
-  bpmnJsModels.forEach((bpmnJsModel) => {
+  bpmnJsModels.forEach(bpmnJsModel => {
 
-    it(`should set next bpmn js model (starting with ${bpmnJsModel.guid})`, async () => {
-      TestBed.inject(Store).dispatch(setCurrentIBpmnJSModel(bpmnJsModel));
+    it(`should set next bpmn js model, starting with ${bpmnJsModel.guid}`, async () => {
+      store.dispatch(setCurrentIBpmnJSModel(bpmnJsModel.guid));
       await service.setNextModel();
-      const currentIBpmnJsGuid = await selectSnapshot(TestBed.inject(Store).select(selectCurrentIBpmnJSModelGuid));
-      const guidIndex = bpmnJsModelGuids.findIndex(guid => guid === currentIBpmnJsGuid);
-      expect(guidIndex > -1).toBeTrue();
-      bpmnJsModelGuids.splice(guidIndex, 1);
+      const currentBpmnJsModelGuid = await selectSnapshot(store.select(selectCurrentIBpmnJSModelGuid));
+      expect(currentBpmnJsModelGuid).not.toBe(bpmnJsModel.guid);
     });
 
   });
