@@ -1,0 +1,12 @@
+.body {
+    padding: 2rem;
+}
+
+.headline-wrapper .headline {
+    font-size: 2rem;
+    line-height: 2rem;
+}
+
+.headline-wrapper .version {
+    font-weight: 100;
+}

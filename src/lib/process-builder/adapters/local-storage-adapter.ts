@@ -1,55 +1,51 @@
-import { Injector } from "@angular/core";
-import * as fromIParamState from 'src/lib/process-builder/store/reducers/i-param.reducer';
-import * as fromIFunctionState from 'src/lib/process-builder/store/reducers/i-function.reducer';
-import * as fromIBpmnJSModelState from 'src/lib/process-builder/store/reducers/i-bpmn-js-model.reducer';
-import * as fromIInterfaceState from 'src/lib/process-builder/store/reducers/i-interface.reducer';
+import { ApplicationRef, Injector } from "@angular/core";
 import { selectIParams } from "../store/selectors/i-param.selectors";
 import { IParam } from "../globals/i-param";
 import { selectIFunctions } from "../store/selectors/i-function.selector";
 import { IFunction } from "../globals/i-function";
 import { upsertIFunctions } from "../store/actions/i-function.actions";
 import { upsertIParams } from "../store/actions/i-param.actions";
-import { selectIBpmnJSModels } from "../store/selectors/i-bpmn-js-model.selectors";
-import { IBpmnJSModel } from "../globals/i-bpmn-js-model";
-import { upsertIBpmnJSModels } from "../store/actions/i-bpmn-js-model.actions";
+import { selectCurrentIBpmnJSModelGuid, selectIBpmnJSModels } from "../store/selectors/i-bpmn-js-model.selectors";
+import { IBpmnJSModel } from "../interfaces/i-bpmn-js-model.interface";
+import { setCurrentIBpmnJSModel, upsertIBpmnJSModels } from "../store/actions/i-bpmn-js-model.actions";
 import { selectIInterfaces } from "../store/selectors/i-interface.selectors";
-import { IInterface } from "../globals/i-interface";
+import { IInterface } from "../interfaces/i-interface.interface";
 import { upsertIInterfaces } from "../store/actions/i-interface.actions";
+import { Store } from "@ngrx/store";
 
 export const localStorageAdapter = (injector: Injector) => {
 
-    let paramStore = injector.get(fromIParamState.PARAM_STORE_TOKEN),
-        functionStore = injector.get(fromIFunctionState.FUNCTION_STORE_TOKEN),
-        bpmnJSModelStore = injector.get(fromIBpmnJSModelState.BPMN_JS_MODEL_STORE_TOKEN),
-        interfacesStore = injector.get(fromIInterfaceState.IINTERFACE_STORE_TOKEN);
+    const store = injector.get(Store);
 
-    paramStore.select(selectIParams()).subscribe((params: IParam[]) => {
+    store.select(selectIParams()).subscribe((params: IParam[]) => {
         localStorage.setItem('params', JSON.stringify(params));
     });
 
-    functionStore.select(selectIFunctions()).subscribe((funcs: IFunction[]) => {
+    store.select(selectIFunctions()).subscribe((funcs: IFunction[]) => {
         localStorage.setItem('funcs', JSON.stringify(funcs));
     });
 
-    bpmnJSModelStore.select(selectIBpmnJSModels()).subscribe((models: IBpmnJSModel[]) => {
+    store.select(selectIBpmnJSModels()).subscribe((models: IBpmnJSModel[]) => {
         localStorage.setItem('models', JSON.stringify(models));
     });
+
+    store.select(selectCurrentIBpmnJSModelGuid).subscribe((currentModelGuid: string | null) => {
+        localStorage.setItem('currentModelGuid', currentModelGuid ?? '');
+    });
     
-    bpmnJSModelStore.select(selectIInterfaces()).subscribe((ifaces: IInterface[]) => {
+    store.select(selectIInterfaces()).subscribe((ifaces: IInterface[]) => {
         localStorage.setItem('ifaces', JSON.stringify(ifaces));
     });
 }
 
 export const provideLocalStorageSettings = (injector: Injector) => {
 
-    let paramStore = injector.get(fromIParamState.PARAM_STORE_TOKEN),
-        functionStore = injector.get(fromIFunctionState.FUNCTION_STORE_TOKEN),
-        bpmnJSModelStore = injector.get(fromIBpmnJSModelState.BPMN_JS_MODEL_STORE_TOKEN),
-        interfacesStore = injector.get(fromIInterfaceState.IINTERFACE_STORE_TOKEN);
+    const store = injector.get(Store);
 
-    let funcsSetting = localStorage.getItem('funcs'),
+    const funcsSetting = localStorage.getItem('funcs'),
         paramsSetting = localStorage.getItem('params'),
         bpmnJSModelsSetting = localStorage.getItem('models'),
+        currentModelGuidSetting = localStorage.getItem('currentModelGuid'),
         interfacesSetting = localStorage.getItem('ifaces');
 
     if (funcsSetting) {
@@ -57,7 +53,7 @@ export const provideLocalStorageSettings = (injector: Injector) => {
         try {
 
             let funcs: IFunction[] = JSON.parse(funcsSetting);
-            functionStore.dispatch(upsertIFunctions(funcs));
+            store.dispatch(upsertIFunctions(funcs));
 
         } catch (e) {
             localStorage.removeItem('funcs');
@@ -70,7 +66,7 @@ export const provideLocalStorageSettings = (injector: Injector) => {
         try {
 
             let params: IParam[] = JSON.parse(paramsSetting) as IParam[];
-            paramStore.dispatch(upsertIParams(params));
+            store.dispatch(upsertIParams(params));
 
         } catch (e) {
             localStorage.removeItem('params');
@@ -83,10 +79,20 @@ export const provideLocalStorageSettings = (injector: Injector) => {
         try {
 
             let models: IBpmnJSModel[] = JSON.parse(bpmnJSModelsSetting) as IBpmnJSModel[];
-            bpmnJSModelStore.dispatch(upsertIBpmnJSModels(models));
+            store.dispatch(upsertIBpmnJSModels(models));
 
         } catch (e) {
             localStorage.removeItem('models');
+        }
+
+    }
+
+    if (currentModelGuidSetting) {
+
+        try {
+            store.dispatch(setCurrentIBpmnJSModel(currentModelGuidSetting));
+        } catch (e) {
+            localStorage.removeItem('currentModelGuid');
         }
 
     }
@@ -96,12 +102,14 @@ export const provideLocalStorageSettings = (injector: Injector) => {
         try {
 
             let ifaces: IInterface[] = JSON.parse(interfacesSetting) as IInterface[];
-            interfacesStore.dispatch(upsertIInterfaces(ifaces));
+            store.dispatch(upsertIInterfaces(ifaces));
 
         } catch (e) {
             localStorage.removeItem('ifaces');
         }
 
     }
+
+    injector.get(ApplicationRef).tick();
 
 }

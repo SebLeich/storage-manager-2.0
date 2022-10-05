@@ -1,7 +1,7 @@
 import { InjectionToken } from "@angular/core";
 import { IDynamicInputParamsConfig } from "./i-dynamic-input-params-config";
 import { IInputParam } from "./i-input-param";
-import { IOutputParam } from "./i-output-param";
+import { IOutputParam } from "../interfaces/i-output-param.interface";
 
 export interface IFunction {
     identifier: number;

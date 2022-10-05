@@ -1,7 +1,6 @@
-import { InjectionToken } from '@angular/core';
 import { createEntityAdapter, EntityAdapter, EntityState, Update } from '@ngrx/entity';
-import { createReducer, on, Store } from '@ngrx/store';
-import { IInterface } from '../../globals/i-interface';
+import { createReducer, on } from '@ngrx/store';
+import { IInterface } from '../../interfaces/i-interface.interface';
 import { addIInterface, addIInterfaces, removeIInterface, updateIInterface, upsertIInterface, upsertIInterfaces } from '../actions/i-interface.actions';
 
 
@@ -82,5 +81,3 @@ export const nextId = (state: State) => {
   let ids = state && state.entities ? (Object.values(state.entities) as IInterface[]).map(x => x.identifier) : [];
   return ids.length === 0 ? 0 : Math.max(...(ids.map(x => typeof x === 'number' ? x : 0))) + 1;
 }
-
-export const IINTERFACE_STORE_TOKEN = new InjectionToken<Store<State>>("INTERFACE_STORE");

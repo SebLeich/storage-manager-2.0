@@ -5,7 +5,7 @@ import { Store } from '@ngrx/store';
 import { Subscription } from 'rxjs';
 import { IOrder } from 'src/app/interfaces/i-order.interface';
 import { removeOrder } from 'src/app/store/actions/i-order.actions';
-import { fadeInAnimation } from 'src/lib/shared/animations/fade-in';
+import { fadeInAnimation } from 'src/lib/shared/animations/fade-in.animation';
 
 @Component({
   selector: 'app-orders-form',

@@ -8,7 +8,7 @@
        'hide-databases': (processBuilderService.hideDatabases$|async) === true? true: false,
        'hide-pools': (processBuilderService.hidePools$|async) === true? true: false,
        'hide-groups': (processBuilderService.hideGroups$|async) === true? true: false
-     }" @show>
+     }" [@show]="(animationStatus$|async) ?? 'hidden'">
 
   <div #diagramWrapper class="diagram-wrapper"></div>
 
@@ -40,7 +40,7 @@
       Redo
     </button>
 
-    <button mat-raised-button color="primary" (click)="processBuilderComponentService.saveModel()">
+    <button mat-raised-button color="primary" (click)="bpmnJsService.saveCurrentBpmnModel(true)">
       Save model
     </button>
 

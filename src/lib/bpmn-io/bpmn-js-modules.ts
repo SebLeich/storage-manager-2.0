@@ -7,5 +7,6 @@ export default {
     EventBus: 'eventBus',
     Selection: 'selection',
     Snapping: 'snapping',
-    Tooltip: 'tooltips'
+    Tooltip: 'tooltips',
+    ZoomScroll: 'zoomScroll'
 }

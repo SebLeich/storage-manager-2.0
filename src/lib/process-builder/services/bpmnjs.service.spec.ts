@@ -2,10 +2,10 @@ import { TestBed } from '@angular/core/testing';
 import defaultImportsConstant from 'src/app/default-imports.constant';
 import { ProcessBuilderModule } from '../process-builder.module';
 
-import { BpmnjsService } from './bpmnjs.service';
+import { BpmnJsService } from './bpmnjs.service';
 
 describe('BpmnjsService', () => {
-  let service: BpmnjsService;
+  let service: BpmnJsService;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
@@ -15,10 +15,10 @@ describe('BpmnjsService', () => {
         ProcessBuilderModule
       ],
       providers: [
-        BpmnjsService
+        BpmnJsService
       ]
     });
-    service = TestBed.inject(BpmnjsService);
+    service = TestBed.inject(BpmnJsService);
   });
 
   it('should be created', () => {

@@ -1,6 +1,11 @@
+:host {
+  flex: 1;
+  display: flex;
+}
+
 .visualization-wrapper {
-  height: 100%;
-  width: 100%;
+  height: -webkit-fill-available;
+  width: -webkit-fill-available;
   box-sizing: border-box;
 }
 

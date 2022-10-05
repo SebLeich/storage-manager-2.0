@@ -1,9 +1,9 @@
 <div class="body">
 
-    <div  *ngIf="previewRendering$|async" class="rendering-overlay">
+    <div  *ngIf="!!(previewRendering$|async)" class="rendering-overlay">
         <mat-spinner id="rendering-indicator" diameter="40"></mat-spinner>
     </div>
-    <img @show id="solution-preview" *ngIf="previewRenderingSucceeded$|async" [src]="previewImage$|async" />
+    <img @show id="solution-preview" *ngIf="!!(previewRenderingSucceeded$|async)" [src]="previewImage$|async" />
 
 </div>
 

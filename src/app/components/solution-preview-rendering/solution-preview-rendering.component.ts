@@ -1,4 +1,4 @@
-import { Component, Input, OnChanges, OnInit } from '@angular/core';
+import { Component, DoCheck, Input, OnChanges, OnInit } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { ISolution } from 'src/app/interfaces/i-solution.interface';
 import getContainerPositionSharedMethods from 'src/app/methods/get-container-position.shared-methods';
@@ -11,7 +11,7 @@ import * as ThreeJS from 'three';
 import { announceSolutionPreview, upsertSolutionPreview } from 'src/app/store/actions/i-solution-preview.actions';
 import { SolutionPreviewStatus } from 'src/app/enumerations/solution-preview-status.enumeration';
 import { selectSolutionPreview } from 'src/app/store/selectors/i-solution-preview.selectors';
-import { filter, map, switchMap } from 'rxjs';
+import { filter, map, switchMap, take } from 'rxjs';
 import { DomSanitizer } from '@angular/platform-browser';
 import { showAnimation } from 'src/lib/shared/animations/show';
 
@@ -39,6 +39,7 @@ export class SolutionPreviewRenderingComponent implements OnChanges, OnInit {
   );
   public previewRendering$ = this.previewStatus$.pipe(map(status => status === SolutionPreviewStatus.Generating));
   public previewRenderingSucceeded$ = this.previewStatus$.pipe(map(status => status === SolutionPreviewStatus.Succeeded));
+  public previewRenderingInitiallySucceeded$ = this.previewRenderingSucceeded$.pipe(filter(succeeded => !!succeeded), take(1));
   public previewImage$ = this.previewRenderingSucceeded$.pipe(
     filter(succeeded => succeeded),
     switchMap(() => this.preview$),

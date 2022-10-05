@@ -39,14 +39,12 @@ import { DynamicInputParamsPipe } from './pipes/dynamic-input-params.pipe';
 import { EmbeddedFunctionImplementationComponent } from './components/embedded/embedded-function-implementation/embedded-function-implementation.component';
 import { CodemirrorModule } from '@ctrl/ngx-codemirror';
 import { ReturnValueStatusPipe } from './pipes/return-value-status.pipe';
-import { loadIFunctions } from './store/actions/i-function.actions';
 import { EmbeddedParamEditorComponent } from './components/embedded/embedded-param-editor/embedded-param-editor.component';
 import { localStorageAdapter, provideLocalStorageSettings } from './adapters/local-storage-adapter';
 import { loadIParams } from './store/actions/i-param.actions';
 import { ValidationErrorPipe } from './pipes/validation-error.pipe';
 import { EmbeddedFunctionInputSelectionComponent } from './components/embedded/embedded-function-input-selection/embedded-function-input-selection.component';
 import { ParamPreviewComponent } from './components/previews/param-preview/param-preview.component';
-import { ProcessBuilderComponentService } from './components/process-builder/process-builder-component.service';
 import { ValidationWarningPipe } from './pipes/validation-warning.pipe';
 import { EmbeddedInputOutputMappingComponent } from './components/embedded/embedded-input-output-mapping/embedded-input-output-mapping.component';
 import { EmbeddedInputOutputMappingTableRowComponent } from './components/helpers/embedded-input-output-mapping-table-row/embedded-input-output-mapping-table-row.component';
@@ -54,7 +52,9 @@ import { loadIInterfaces } from './store/actions/i-interface.actions';
 import { InterfacePipe } from './pipes/interface.pipe';
 import { ParamMemberPreviewComponent } from './components/helpers/param-member-preview/param-member-preview.component';
 import { ParamMemberPathPreviewComponent } from './components/helpers/param-member-path-preview/param-member-path-preview.component';
-import { BpmnjsService } from './services/bpmnjs.service';
+import { BpmnJsService } from './services/bpmnjs.service';
+import { ProcessBuilderService } from './services/process-builder.service';
+import { loadIFunctions } from './store/actions/i-function.actions';
 
 
 @NgModule({
@@ -119,30 +119,24 @@ import { BpmnjsService } from './services/bpmnjs.service';
     ValidationWarningPipe
   ],
   providers: [
-    BpmnjsService,
+    BpmnJsService,
     ParamPipe,
-    ProcessBuilderComponentService,
-    { provide: fromIParamState.PARAM_STORE_TOKEN, useExisting: Store },
-    { provide: fromIFunctionState.FUNCTION_STORE_TOKEN, useExisting: Store },
-    { provide: fromIBpmnJSModelState.BPMN_JS_MODEL_STORE_TOKEN, useExisting: Store },
-    { provide: fromIInterfaceState.IINTERFACE_STORE_TOKEN, useExisting: Store }
-  ]
+    ProcessBuilderService
+  ],
 })
 export class ProcessBuilderModule {
 
-  constructor(
-    injector: Injector,
-    private _store: Store,
-  ) {
+  constructor(store: Store, injector: Injector){
+    ProcessBuilderModule.initialize(store, injector);
+  }
 
-    this._store.dispatch(loadIFunctions());
-    this._store.dispatch(loadIParams());
-    this._store.dispatch(loadIInterfaces());
+  static initialize(store: Store, injector: Injector): void {
+    store.dispatch(loadIFunctions());
+    store.dispatch(loadIParams());
+    store.dispatch(loadIInterfaces());
 
     provideLocalStorageSettings(injector);
     localStorageAdapter(injector);
-
-
   }
 
 }

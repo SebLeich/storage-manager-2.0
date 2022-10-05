@@ -7,7 +7,7 @@ import {
     remove as svgRemove
 } from 'tiny-svg';
 
-import { BPMNJsRepository } from 'src/lib/core/bpmn-js-repository';
+import { BPMNJsRepository } from 'src/lib/core/bpmn-js.repository';
 import { isAny } from 'bpmn-js/lib/features/modeling/util/ModelingUtil';
 import shapeTypes from 'src/lib/bpmn-io/shape-types';
 

@@ -11,7 +11,7 @@
     </button>
 
     <app-scene-visualization @fadeIn *ngIf="!(menuToggling$|async)" class="scene-visualization"
-      [scene]="(scene$ | async)!">
+      [scene]="(scene$ | async)!" [class.hidden]="menuVisible$|async">
     </app-scene-visualization>
 
     <div class="information-wrapper" *ngIf="(displayDetails$ | async)">

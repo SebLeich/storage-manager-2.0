@@ -3,11 +3,8 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { ISolution } from 'src/app/interfaces/i-solution.interface';
-import getContainerPositionSharedMethods from 'src/app/methods/get-container-position.shared-methods';
 import { VisualizationService } from 'src/app/services/visualization.service';
 import { setCurrentSolution } from 'src/app/store/actions/i-solution.actions';
-import { selectGroups } from 'src/app/store/selectors/i-group.selectors';
-import { selectSnapshot } from 'src/lib/process-builder/globals/select-snapshot';
 
 import * as ThreeJS from 'three';
 

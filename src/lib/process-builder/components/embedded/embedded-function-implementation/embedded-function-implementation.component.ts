@@ -52,7 +52,7 @@ export class EmbeddedFunctionImplementationComponent implements IEmbeddedView, A
   private _returnValueStatus: BehaviorSubject<MethodEvaluationStatus> = new BehaviorSubject<MethodEvaluationStatus>(MethodEvaluationStatus.Initial);
   returnValueStatus$ = this._returnValueStatus.asObservable();
 
-  private _subscriptions: Subscription[] = [];
+  private _subscriptions = new Subscription();
 
   constructor(
     @Inject(PROCESS_BUILDER_CONFIG_TOKEN) public config: IProcessBuilderConfig,
@@ -68,7 +68,7 @@ export class EmbeddedFunctionImplementationComponent implements IEmbeddedView, A
   }
 
   ngAfterViewInit(): void {
-    this._subscriptions.push(...[
+    this._subscriptions.add(...[
       this.implementationChanged$.pipe(debounceTime(500)).subscribe((value) => {
         this.formGroup.controls['implementation'].setValue((value as any)?.text);
       }),
@@ -78,13 +78,11 @@ export class EmbeddedFunctionImplementationComponent implements IEmbeddedView, A
         tap(() => this._returnValueStatus.next(MethodEvaluationStatus.Calculating)),
         debounceTime(500)
       ).subscribe(() => {
-        // @ts-ignore
         this._returnValueStatus.next(CodemirrorRepository.evaluateCustomMethod(this.codeMirror.state));
       }),
       this.returnValueStatus$.subscribe(status => status === MethodEvaluationStatus.ReturnValueFound ? this.formGroup.controls['outputParamName'].enable() : this.formGroup.controls['outputParamName'].disable())
     ]);
     this.codeMirror = new EditorView({
-      // @ts-ignore
       state: this.state(),
       parent: this.codeBody.nativeElement
     });
@@ -92,10 +90,7 @@ export class EmbeddedFunctionImplementationComponent implements IEmbeddedView, A
     this.changeDetectorRef.detectChanges();
   }
 
-  ngOnDestroy(): void {
-    for (let sub of this._subscriptions) sub.unsubscribe();
-    this._subscriptions = [];
-  }
+  public ngOnDestroy = () => this._subscriptions.unsubscribe();
 
   complete = (context: CompletionContext) => {
     let nodeBefore = syntaxTree(context.state).resolveInner(context.pos, -1);
@@ -105,7 +100,10 @@ export class EmbeddedFunctionImplementationComponent implements IEmbeddedView, A
       if (object?.name === 'VariableName' || object?.name === 'MemberExpression') {
         let from = /\./.test(nodeBefore.name) ? nodeBefore.to : nodeBefore.from;
         let variableName = context.state.sliceDoc(object.from, object.to);
-        if (typeof byString(this._injector, variableName) === "object") return completeProperties(from, byString(this._injector, variableName) as any)
+        if (typeof byString(this._injector, variableName) === "object"){
+          console.log(this._injector, variableName);
+          return completeProperties(from, byString(this._injector, variableName) as any);
+        }
       }
     } else if (nodeBefore.name == "VariableName") {
       return completeProperties(nodeBefore.from, this.globalsInjector);
@@ -123,7 +121,9 @@ export class EmbeddedFunctionImplementationComponent implements IEmbeddedView, A
       autocompletion({ override: [this.complete] }),
       javascript(),
       EditorView.updateListener.of((evt) => {
-        if (evt.docChanged) this._implementationChanged.next(this.codeMirror.state.doc);
+        if (evt.docChanged) {
+          this._implementationChanged.next(this.codeMirror.state.doc);
+        }
       }),
       linter(esLint(new Linter())),
       lintGutter()
@@ -157,9 +157,10 @@ const dontCompleteIn = [
 ]
 
 function completeProperties(from: number, object: { type: string, apply?: string }) {
+  console.log(from, object);
   let options = [];
   for (let name in object) {
-    if(!(object as any)[name]) continue;
+    if (!(object as any)[name]) continue;
     let option = {
       label: name,
       type: (object as any)[name].type,

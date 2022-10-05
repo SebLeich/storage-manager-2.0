@@ -1,28 +1,30 @@
 <div class="body">
 
-    <app-process-builder style="flex: 1; overflow: hidden;"></app-process-builder>
+    <div class="process-builder-wrapper">
+        <app-process-builder *ngIf="hasCurrentBpmnJSModel$|async; else noBpmnModelSetted" @fadeIn></app-process-builder>
+    </div>
 
     <div class="control-footer">
 
-        <mat-form-field class="mat-form-field-outline-white-bg mat-form-field-no-padding" appearance="outline">
-            <mat-label>current draft (total: {{(service.models$|async)?.length ?? 0}})</mat-label>
-            <mat-select [value]="service.currentIBpmnJSModelGuid$|async">
+        <mat-form-field class="mat-form-field-outline-white-bg mat-form-field-no-padding draft-selection-input" appearance="outline">
+            <mat-label>current draft (total: {{(bpmnJSModels$|async)?.length ?? 0}})</mat-label>
+            <mat-select [value]="currentBpmnJSModelGuid$|async">
                 <mat-select-trigger>
                     <div #element class="editable-select-trigger" contenteditable (click)="$event.stopPropagation()"
                         (keydown.enter)="blurElement(element, $event)" (keydown)="$event.stopPropagation()"
-                        (focusout)="service.renameCurrentModel(element.innerText)">
-                        {{(service.currentIBpmnJSModel$|async)?.name ?? 'no name'}}
+                        (focusout)="renameCurrentModel(element.innerText)">
+                        {{(currentBpmnJSModel$|async)?.name ?? 'no name'}}
                     </div>
                 </mat-select-trigger>
-                <mat-option class="dropdown-option" *ngFor="let model of ((service.models$|async) ?? [])"
-                    [value]="model.guid" (click)="service.setModel(model)">
+                <mat-option class="dropdown-option" *ngFor="let model of ((bpmnJSModels$|async) ?? [])"
+                    [value]="model.guid" (click)="setModel(model)">
                     <span class="text">
                         {{model.name ?? 'no name'}}
                     </span>
                     <mat-icon class="icon">edit</mat-icon>
-                    <mat-icon class="icon danger" (click)="service.removeModel(model)">delete_forever</mat-icon>
+                    <mat-icon class="icon danger" (click)="removeModel(model)">delete_forever</mat-icon>
                 </mat-option>
-                <mat-option class="dropdown-interaction-control" (click)="service.createModel()">
+                <mat-option class="dropdown-interaction-control" (click)="createBpmnJsModel()">
                     Add new draft
                 </mat-option>
             </mat-select>
@@ -30,23 +32,22 @@
 
         <div class="spacer"></div>
 
-        <div class="hint" [ngClass]="((service.validation$|async)?.errors?.length ?? 0) > 0? 'error': 'success'"
-            (mouseleave)="service.hideAllHints()">
+        <div class="hint" [ngClass]="(bpmnJsService.validationContainsErrors$|async)? 'error': 'success'" (mouseleave)="hideAllHints()">
 
-            <span class="counter">{{(service.validation$|async)?.errors?.length ?? 0}}</span>
+            <span class="counter">{{(bpmnJsService.validation$|async)?.errors?.length}}</span>
             <span class="text">errors</span>
 
         </div>
 
-        <div class="hint" [ngClass]="((service.validation$|async)?.warnings?.length ?? 0) > 0? 'warning': 'success'"
-            (mouseleave)="service.hideAllHints()">
+        <div class="hint" [ngClass]="((bpmnJsService.validation$|async)?.warnings?.length ?? 0) > 0? 'warning': 'success'"
+            (mouseleave)="hideAllHints()">
 
-            <span class="counter">{{(service.validation$|async)?.warnings?.length ?? 0}}</span>
+            <span class="counter">{{(bpmnJsService.validation$|async)?.warnings?.length ?? 0}}</span>
             <span class="text">warn's</span>
 
         </div>
 
-        <div class="control-footer-item accent" (click)="service.saveModel()">
+        <div class="control-footer-item accent" *ngIf="(bpmnJsService.containsChanges$|async)" @fadeIn (click)="bpmnJsService.saveCurrentBpmnModel(true)">
             <mat-icon>save</mat-icon>
         </div>
 
@@ -60,14 +61,14 @@
 
         <div class="option-wrapper">
 
-            <div class="headline" (click)="toggleModules()">
-                <span class="text">Models</span>
+            <div class="headline" (click)="toggleBpmnJsModels()">
+                <span class="text">BPMN Models</span>
                 <span class="counter">
-                    {{(service.models$|async)?.length}}
+                    {{(bpmnJSModels$|async)?.length}}
                 </span>
             </div>
 
-            <div [@showList]="(service.models$|async)?.length" *ngIf="modelsVisible$|async">
+            <div [@showList]="(bpmnJSModels$|async)?.length" *ngIf="modelsVisible$|async">
 
                 <div class="quick-interaction-wrapper">
 
@@ -84,16 +85,16 @@
             <div class="headline" (click)="toggleMethods()">
                 <span class="text">Functions</span>
                 <span class="counter">
-                    {{(service.funcs$|async)?.length}}
+                    {{(funcs$|async)?.length}}
                 </span>
             </div>
 
-            <div [@showList]="(service.funcs$|async)?.length" *ngIf="methodsVisible$|async">
+            <div [@showList]="(funcs$|async)?.length" *ngIf="methodsVisible$|async">
 
-                <div class="option" *ngFor="let func of (service.funcs$|async)">
+                <div class="option" *ngFor="let func of (funcs$|async)">
 
                     <div class="text">{{func.name}}</div>
-                    <mat-icon *ngIf="func.customImplementation" (click)="service.removeFunction(func)" class="control"
+                    <mat-icon *ngIf="func.customImplementation" (click)="removeFunction(func)" class="control"
                         color="warn">delete_forever</mat-icon>
 
                 </div>
@@ -107,13 +108,13 @@
             <div class="headline" (click)="toggleParams()">
                 <span class="text">Params</span>
                 <span class="counter">
-                    {{(service.params$|async)?.length}}
+                    {{(params$|async)?.length}}
                 </span>
             </div>
 
-            <div [@showList]="(service.params$|async)?.length" *ngIf="paramsVisible$|async">
+            <div [@showList]="(params$|async)?.length" *ngIf="paramsVisible$|async">
 
-                <div class="option" *ngFor="let param of (service.params$|async)">
+                <div class="option" *ngFor="let param of (params$|async)">
 
                     <div class="text">{{param.name}}</div>
 
@@ -129,24 +130,32 @@
 
 <mat-menu #menu="matMenu">
     <div mat-menu-item>
-        <span class="text">functions ({{(service.funcs$|async)?.length ?? 0}}) ...</span>
+        <span class="text">functions ({{(funcs$|async)?.length ?? 0}}) ...</span>
     </div>
     <div mat-menu-item class="bordered">
-        <span class="text">params ({{(service.params$|async)?.length ?? 0}}) ...</span>
+        <span class="text">params ({{(params$|async)?.length ?? 0}}) ...</span>
     </div>
     <div mat-menu-item class="inactive" (click)="$event.stopPropagation()">
         <span class="text">zoom</span>
-        <mat-icon class="interactable-icon" (click)="service.zoomIn()">add_circle_outline</mat-icon>
-        <mat-icon class="interactable-icon" (click)="service.zoomOut()">remove_circle_outline</mat-icon>
+        <mat-icon class="interactable-icon" (click)="zoomIn()">add_circle_outline</mat-icon>
+        <mat-icon class="interactable-icon" (click)="zoomOut()">remove_circle_outline</mat-icon>
     </div>
-    <div mat-menu-item (click)="service.saveModel()">
+    <div mat-menu-item [disabled]="!(bpmnJsService.containsChanges$|async)" (click)="bpmnJsService.saveCurrentBpmnModel(true)">
         <span class="text">save model</span>
     </div>
     <div mat-menu-item class="bordered">
         <span class="text">run pipeline</span>
     </div>
-    <div mat-menu-item (click)="service.resetAll()">
+    <div mat-menu-item (click)="resetState()">
         <span class="text">reset environment</span>
         <mat-icon class="icon">delete_forever</mat-icon>
     </div>
 </mat-menu>
+
+<ng-template #noBpmnModelSetted>
+
+    <div class="no-bpmn-model-hint">
+        no bpmn model setted
+    </div>
+
+</ng-template>

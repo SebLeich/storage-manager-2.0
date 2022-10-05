@@ -1,6 +1,6 @@
 <div class="body">
 
-    <div class="function-wrapper" *ngFor="let func of (availableFunctions$|async)" (click)="selectFunction(func)"
+    <div class="function-wrapper" [@showList]="(availableFunctions$|async)?.length" *ngFor="let func of (availableFunctions$|async)" (click)="selectFunction(func)"
         [ngClass]="{
         'active': func.identifier === functionIdentifierControl.value
     }">

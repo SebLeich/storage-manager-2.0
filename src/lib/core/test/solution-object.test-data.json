@@ -1,0 +1,17 @@
+{
+    "id": "ab34762f-ccd1-4258-b3e1-69558728e6b4",
+    "container": {
+        "height": 1700,
+        "width": 2100,
+        "length": 3000,
+        "goods": [
+            {
+                "id": "good1",
+                "turningAllowed": true
+            }
+        ]
+    },
+    "calculationSource": {
+        "title": "algorithm1"
+    }
+}

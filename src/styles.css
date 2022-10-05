@@ -1,7 +1,5 @@
 /* You can add global styles to this file, and also import other style files */
 
-body {}
-
 html,
 body {
     height: -webkit-fill-available;
@@ -18,8 +16,8 @@ body {
 }
 
 .main-component-body {
-    height: 100%;
-    width: 100%;
+    height: -webkit-fill-available;
+    width: -webkit-fill-available;
     position: relative;
 }
 
@@ -197,6 +195,12 @@ body {
     border-right: 1px solid lightgray;
     margin-right: 0.5rem;
     margin-bottom: 0.5rem;
+    cursor: text;
+}
+
+.editable-select-trigger:hover {
+    background-color: rgba(74, 166, 196, 0.056);
+    animation: background-color .5s ease-out;
 }
 
 .mat-menu-item {

@@ -5,18 +5,18 @@ import { Scene } from 'three';
 import { SceneVisualizationComponentService } from './scene-visualization-component.service';
 
 import * as ThreeJS from 'three';
+
 import { Store } from '@ngrx/store';
 import { selectGroups } from 'src/app/store/selectors/i-group.selectors';
 import { selectSnapshot } from 'src/lib/process-builder/globals/select-snapshot';
 import { selectCurrentSolutionGoods } from 'src/app/store/selectors/i-solution.selectors';
 import { IVisualizerContextService, VISUALIZER_CONTEXT } from 'src/app/interfaces/i-visualizer-context.service';
-import { VisualizationService } from 'src/app/services/visualization.service';
 
 @Component({
   selector: 'app-scene-visualization',
   templateUrl: './scene-visualization.component.html',
   styleUrls: ['./scene-visualization.component.css'],
-  providers: [SceneVisualizationComponentService]
+  providers: [SceneVisualizationComponentService],
 })
 export class SceneVisualizationComponent implements OnChanges, OnDestroy, OnInit {
 
