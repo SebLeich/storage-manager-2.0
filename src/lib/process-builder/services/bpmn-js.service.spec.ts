@@ -3,7 +3,7 @@ import defaultImportsConstant from 'src/app/default-imports.constant';
 import { PROCESS_BUILDER_CONFIG_TOKEN } from '../globals/i-process-builder-config';
 import { ProcessBuilderModule } from '../process-builder.module';
 
-import { BpmnJsService } from './bpmnjs.service';
+import { BpmnJsService } from './bpmn-js.service';
 
 describe('BpmnJsService', () => {
   let service: BpmnJsService;

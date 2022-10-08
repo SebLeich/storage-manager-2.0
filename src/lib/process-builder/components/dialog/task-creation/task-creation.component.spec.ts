@@ -13,7 +13,7 @@ import { INJECTOR_INTERFACE_TOKEN, INJECTOR_TOKEN } from 'src/lib/process-builde
 import { selectSnapshot } from 'src/lib/process-builder/globals/select-snapshot';
 import { TaskCreationStep } from 'src/lib/process-builder/globals/task-creation-step';
 import { TaskCreationStepPipe } from 'src/lib/process-builder/pipes/task-creation-step.pipe';
-import { BpmnJsService } from 'src/lib/process-builder/services/bpmnjs.service';
+import { BpmnJsService } from 'src/lib/process-builder/services/bpmn-js.service';
 import { addIFunctions } from 'src/lib/process-builder/store/actions/i-function.actions';
 import { ITaskCreationPayload } from '../../../interfaces/i-task-creation-component-inpu.interfacet';
 

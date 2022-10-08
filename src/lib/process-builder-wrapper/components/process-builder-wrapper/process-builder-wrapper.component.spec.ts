@@ -1,8 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import defaultImportsConstant from 'src/app/default-imports.constant';
-import { ProcessBuilderComponentService } from 'src/lib/process-builder/components/process-builder/process-builder-component.service';
 import { PROCESS_BUILDER_CONFIG_TOKEN } from 'src/lib/process-builder/globals/i-process-builder-config';
-import { BpmnJsService } from 'src/lib/process-builder/services/bpmnjs.service';
+import { BpmnJsService } from 'src/lib/process-builder/services/bpmn-js.service';
 import { ProcessBuilderWrapperModule } from '../../process-builder-wrapper.module';
 
 import { ProcessBuilderWrapperComponent } from './process-builder-wrapper.component';
@@ -20,7 +19,6 @@ describe('ProcessBuilderWrapperComponent', () => {
         ProcessBuilderWrapperModule
       ],
       providers: [
-        ProcessBuilderComponentService,
         BpmnJsService,
         { provide: PROCESS_BUILDER_CONFIG_TOKEN, useValue: {} }
       ]

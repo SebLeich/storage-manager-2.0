@@ -1,6 +1,6 @@
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { showAnimation } from 'src/lib/shared/animations/show-delayed.animation';
-import { BpmnJsService } from '../../services/bpmnjs.service';
+import { BpmnJsService } from '../../services/bpmn-js.service';
 import { ProcessBuilderService } from '../../services/process-builder.service';
 import { map, startWith, switchMap, timer } from 'rxjs';
 import { Store } from '@ngrx/store';
@@ -31,6 +31,10 @@ export class ProcessBuilderComponent implements OnInit {
 
   private async init() {
     await this.bpmnJsService.attachBpmnModelToDomElement(this.diagramWrapper.nativeElement);
+
+    this.bpmnJsService.bufferedTaskEditingEvents$.subscribe((events) => {
+      console.log(events);
+    })
   }
 
 }

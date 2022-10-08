@@ -52,7 +52,7 @@ import { loadIInterfaces } from './store/actions/i-interface.actions';
 import { InterfacePipe } from './pipes/interface.pipe';
 import { ParamMemberPreviewComponent } from './components/helpers/param-member-preview/param-member-preview.component';
 import { ParamMemberPathPreviewComponent } from './components/helpers/param-member-path-preview/param-member-path-preview.component';
-import { BpmnJsService } from './services/bpmnjs.service';
+import { BpmnJsService } from './services/bpmn-js.service';
 import { ProcessBuilderService } from './services/process-builder.service';
 import { loadIFunctions } from './store/actions/i-function.actions';
 

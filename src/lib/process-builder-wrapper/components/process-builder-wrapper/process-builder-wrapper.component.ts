@@ -6,7 +6,7 @@ import { BPMNJsRepository } from 'src/lib/core/bpmn-js.repository';
 import { ProcessBuilderComponent } from 'src/lib/process-builder/components/process-builder/process-builder.component';
 import { IFunction } from 'src/lib/process-builder/globals/i-function';
 import { IBpmnJSModel } from 'src/lib/process-builder/interfaces/i-bpmn-js-model.interface';
-import { BpmnJsService } from 'src/lib/process-builder/services/bpmnjs.service';
+import { BpmnJsService } from 'src/lib/process-builder/services/bpmn-js.service';
 import { ProcessBuilderService } from 'src/lib/process-builder/services/process-builder.service';
 import { removeIBpmnJSModel, setCurrentIBpmnJSModel, updateCurrentIBpmnJSModel } from 'src/lib/process-builder/store/actions/i-bpmn-js-model.actions';
 import { removeIFunction } from 'src/lib/process-builder/store/actions/i-function.actions';

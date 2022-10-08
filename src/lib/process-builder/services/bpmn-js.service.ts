@@ -20,7 +20,7 @@ import { v4 as generateGuid } from 'uuid';
 import sebleichProcessBuilderExtension from '../globals/sebleich-process-builder-extension';
 import { IBpmnJS } from '../interfaces/i-bpmn-js.interface';
 import { getCanvasModule, getDirectEditingModule, getElementRegistryModule, getEventBusModule, getModelingModule, getTooltipModule, getZoomScrollModule } from 'src/lib/bpmn-io/bpmn-modules';
-import { BehaviorSubject, combineLatest, debounceTime, delay, filter, from, map, merge, Observable, shareReplay, switchMap, throttleTime, timer } from 'rxjs';
+import { BehaviorSubject, buffer, combineLatest, debounceTime, delay, filter, from, map, merge, Observable, shareReplay, startWith, switchMap, throttleTime, timer } from 'rxjs';
 import { IConnectionCreatePostExecutedEvent } from 'src/lib/bpmn-io/interfaces/i-connection-create-post-executed-event.interface';
 import { IModelingModule } from 'src/lib/bpmn-io/interfaces/i-modeling-module.interface';
 import { IProcessValidationResult } from '../classes/validation-result';
@@ -80,6 +80,10 @@ export class BpmnJsService {
     subscriber.next(evt);
   }));
 
+  public elementHover$ = new Observable<IEvent>((subscriber) => this.eventBusModule.on('element.hover', (evt) => {
+    subscriber.next(evt);
+  }));
+
   public shapeAddedEventFired$ = new Observable<IShapeAddedEvent>((subscriber) => this.eventBusModule.on('shape.added', (evt) => {
     subscriber.next(evt);
   }));
@@ -106,6 +110,7 @@ export class BpmnJsService {
     this.detachEventFired$.pipe(map(event => ({ event: event, type: 'detach' }))),
     this.directEditingEventFired$.pipe(map(event => ({ event: event, type: 'directEditing.activate' }))),
     this.elementChangedEventFired$.pipe(map(event => ({ event: event, type: 'element.changed' }))),
+    this.elementHover$.pipe(map(event => ({ event: event, type: 'element.hover' }))),
     this.shapeAddedEventFired$.pipe(map(event => ({ event: event, type: 'shape.added' }))),
     this.shapeDeleteExecutedEventFired$.pipe(map(event => ({ event: event, type: 'commandStack.shape.delete.executed' }))),
     this.shapeRemoveEventFired$.pipe(map(event => ({ event: event, type: 'shape.remove' }))),
@@ -113,7 +118,31 @@ export class BpmnJsService {
     this.viewboxChangedEventFired$.pipe(map(event => ({ event: event, type: 'canvas.viewbox.changed' }))),
   );
 
-  public validation$: Observable<undefined | null | IProcessValidationResult> = this.eventFired$.pipe(
+  public taskEditingEventFired$ = merge(
+    this.directEditingEventFired$,
+    this.connectionCreatePostExecutedEventFired$
+  );
+
+  private _flushTaskEditingEvents$ = this.taskEditingEventFired$.pipe(debounceTime(3000));
+
+  public bufferedTaskEditingEvents$ = this.taskEditingEventFired$.pipe(
+    buffer(this._flushTaskEditingEvents$)
+  );
+
+  public potentialModelChangeEventFired$ = merge(
+    this.attachEventFired$.pipe(map(event => ({ event: event, type: 'attach' }))),
+    this.connectionCreatePostExecutedEventFired$.pipe(map(event => ({ event: event, type: 'commandStack.connection.create.postExecuted' }))),
+    this.detachEventFired$.pipe(map(event => ({ event: event, type: 'detach' }))),
+    this.directEditingEventFired$.pipe(map(event => ({ event: event, type: 'directEditing.activate' }))),
+    this.elementChangedEventFired$.pipe(map(event => ({ event: event, type: 'element.changed' }))),
+    this.shapeAddedEventFired$.pipe(map(event => ({ event: event, type: 'shape.added' }))),
+    this.shapeDeleteExecutedEventFired$.pipe(map(event => ({ event: event, type: 'commandStack.shape.delete.executed' }))),
+    this.shapeRemoveEventFired$.pipe(map(event => ({ event: event, type: 'shape.remove' }))),
+    this.toolManagerUpdateEventFired$.pipe(map(event => ({ event: event, type: 'tool-manager.update' }))),
+    this.viewboxChangedEventFired$.pipe(map(event => ({ event: event, type: 'canvas.viewbox.changed' }))),
+  );
+
+  public validation$: Observable<undefined | null | IProcessValidationResult> = this.potentialModelChangeEventFired$.pipe(
     throttleTime(500),
     map(() => BPMNJsRepository.validateProcess(this.bpmnJs)),
     shareReplay(1),
@@ -123,6 +152,13 @@ export class BpmnJsService {
     map(validation => (validation?.errors?.length ?? 0) > 0)
   );
   public bpmnJsLoggingEnabled = false;
+
+  public taskEditingStatus$ = merge(
+    this.taskEditingEventFired$.pipe(map(() => 'collecting')),
+    this._flushTaskEditingEvents$.pipe(map(() => 'idle'))
+  ).pipe(
+    startWith('idle')
+  );
 
   private currentBpmnJSModel$ = this._store.select(selectCurrentIBpmnJSModel);
 

@@ -24,6 +24,7 @@ import { PrettyLengthPipe } from './pipes/pretty-length.pipe';
 import { PrettyVolumePipe } from './pipes/pretty-volume.pipe';
 import { EditDataDialogComponent } from './components/dialog/edit-data-dialog/edit-data-dialog.component';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { SolutionPreviewComponent } from './components/solution-preview/solution-preview.component';
 import { ContainerPreviewComponent } from './components/container-preview/container-preview.component';
@@ -141,6 +142,7 @@ rootStoreFeatures[fromISolutionPreviewState.solutionPreviewFeatureKey] = fromISo
     MatIconModule,
     MatExpansionModule,
     MatTableModule,
+    MatProgressBarModule,
     MatButtonModule,
     MatDialogModule,
     MatInputModule,
