@@ -1,4 +1,4 @@
-<mat-progress-bar *ngIf="hasPendingTasks$|async" [mode]="(canProvideDeterminateProgress$|async)? 'determinate': 'indeterminate'" [value]="(globalProcedureProgress$|async)"></mat-progress-bar>
+<mat-progress-bar *ngIf="hasPendingTasks$|async" [mode]="(canProvideDeterminateProgress$|async)? 'determinate': 'indeterminate'" [value]="(globalProcedureProgress$|async)" class="progress-bar"></mat-progress-bar>
 <div class="body" [class.loading]="loadingRoute$|async">
   
   <app-navbar></app-navbar>

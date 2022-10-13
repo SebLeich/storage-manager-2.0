@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { NavigationEnd, NavigationStart, Router } from '@angular/router';
 import { Store } from '@ngrx/store';
-import { BehaviorSubject, interval } from 'rxjs';
+import { BehaviorSubject, debounceTime, interval } from 'rxjs';
 import { IProcedure } from './interfaces/i-pending-procedure.interface';
 import { announceProcedure, updateProcedure } from './store/actions/i-pending-procedure.actions';
 import { selectCanProvideDeterminateProgress, selectGlobalProcedureProgress, selectHasPendingTasks } from './store/selectors/i-pending-procedure.selectors';
@@ -21,7 +21,7 @@ export class AppComponent implements OnInit {
 
   public canProvideDeterminateProgress$ = this._store.select(selectCanProvideDeterminateProgress);
   public globalProcedureProgress$ = this._store.select(selectGlobalProcedureProgress);
-  public hasPendingTasks$ = this._store.select(selectHasPendingTasks);
+  public hasPendingTasks$ = this._store.select(selectHasPendingTasks).pipe(debounceTime(1000));
 
   constructor(
     private _snackBar: MatSnackBar,
