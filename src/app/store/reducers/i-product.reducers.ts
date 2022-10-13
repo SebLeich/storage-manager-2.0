@@ -15,7 +15,6 @@ import { v4 as generateGuid } from 'uuid';
 import * as moment from 'moment';
 import { IProduct } from 'src/app/interfaces/i-product.interface';
 import { updateCalculationAttributes } from '../actions/i-calculation-attribute.actions';
-import { updateOrder } from '../actions/i-order.actions';
 
 import exemplarySolution from 'src/assets/exemplary-solution.json';
 import { setExemplarySolution } from '../actions/i-solution.actions';

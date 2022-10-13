@@ -68,6 +68,9 @@ import { IGroupEffects } from './store/effects/i-group.effects';
 import * as fromIOrderState from './store/reducers/i-order.reducers';
 import { IOrderEffects } from './store/effects/i-order.effects';
 
+import * as fromIPendingProceduresState from './store/reducers/i-pending-procedure.reducers';
+import { IPendingProcedureEffects } from './store/effects/i-pending-procedure.effects';
+
 import * as fromIProductState from './store/reducers/i-product.reducers';
 import { IProductEffects } from './store/effects/i-product.effects';
 
@@ -95,6 +98,7 @@ let rootStoreFeatures: any = {};
 rootStoreFeatures[fromICalculationAttributesState.calculationAttributesFeatureKey] = fromICalculationAttributesState.calculationAttributesReducer;
 rootStoreFeatures[fromIGroupState.groupFeatureKey] = fromIGroupState.groupReducer;
 rootStoreFeatures[fromIOrderState.orderFeatureKey] = fromIOrderState.orderReducer;
+rootStoreFeatures[fromIPendingProceduresState.pendingProcedureFeatureKey] = fromIPendingProceduresState.pendingProcedureReducer;
 rootStoreFeatures[fromIProductState.productFeatureKey] = fromIProductState.productReducer;
 rootStoreFeatures[fromISolutionState.solutionFeatureKey] = fromISolutionState.solutionReducer;
 rootStoreFeatures[fromISolutionPreviewState.solutionPreviewFeatureKey] = fromISolutionPreviewState.reducer;
@@ -164,7 +168,7 @@ rootStoreFeatures[fromISolutionPreviewState.solutionPreviewFeatureKey] = fromISo
     SharedModule,
 
     StoreModule.forRoot(rootStoreFeatures, { }),
-    EffectsModule.forRoot([ICalculationAttributesEffects, IGroupEffects, IOrderEffects, IProductEffects, ISolutionEffects, ISolutionPreviewEffects]),
+    EffectsModule.forRoot([ICalculationAttributesEffects, IGroupEffects, IOrderEffects, IPendingProcedureEffects, IProductEffects, ISolutionEffects, ISolutionPreviewEffects]),
   ],
   providers: [
     { provide: PROCESS_BUILDER_CONFIG_TOKEN, useValue: PROCESS_BUILDER_CONFIG },
