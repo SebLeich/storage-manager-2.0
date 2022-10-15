@@ -3,9 +3,9 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { NavigationEnd, NavigationStart, Router } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { BehaviorSubject, debounceTime, interval } from 'rxjs';
-import { IProcedure } from './interfaces/i-pending-procedure.interface';
+import { IProcedure } from './interfaces/i-procedure.interface';
 import { announceProcedure, updateProcedure } from './store/actions/i-pending-procedure.actions';
-import { selectCanProvideDeterminateProgress, selectGlobalProcedureProgress, selectHasPendingTasks } from './store/selectors/i-pending-procedure.selectors';
+import { selectHasDeterminingProcedures, selectGlobalProcedureProgress, selectHasPendingProcedures } from './store/selectors/i-pending-procedure.selectors';
 
 @Component({
   selector: 'app-root',
@@ -19,9 +19,9 @@ export class AppComponent implements OnInit {
   private _loadingRoute: BehaviorSubject<boolean> = new BehaviorSubject(false);
   loadingRoute$ = this._loadingRoute.asObservable();
 
-  public canProvideDeterminateProgress$ = this._store.select(selectCanProvideDeterminateProgress);
+  public canProvideDeterminateProgress$ = this._store.select(selectHasDeterminingProcedures);
   public globalProcedureProgress$ = this._store.select(selectGlobalProcedureProgress);
-  public hasPendingTasks$ = this._store.select(selectHasPendingTasks).pipe(debounceTime(1000));
+  public hasPendingTasks$ = this._store.select(selectHasPendingProcedures).pipe(debounceTime(1000));
 
   constructor(
     private _snackBar: MatSnackBar,
@@ -33,7 +33,7 @@ export class AppComponent implements OnInit {
     let procedure = { 'guid': 'test', 'progress': 0 } as IProcedure;
     this._store.dispatch(announceProcedure({ procedure }));
     interval(1000).subscribe(() => {
-      procedure = { ...procedure, progress: procedure.progress! + 1 };
+      procedure = { ...procedure, progress: (procedure.progress as number) + 1 };
       this._store.dispatch(updateProcedure({ procedure }));
       console.log(procedure);
     });

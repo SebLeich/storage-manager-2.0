@@ -2,8 +2,8 @@ import { createReducer, on } from '@ngrx/store';
 import { EntityState, createEntityAdapter } from '@ngrx/entity';
 import * as moment from 'moment';
 import { v4 as generateGuid } from 'uuid';
-import { IProcedure } from 'src/app/interfaces/i-pending-procedure.interface';
-import { announceProcedure, updateGlobalProcedureProgress, updateProcedure } from '../actions/i-pending-procedure.actions';
+import { IProcedure } from 'src/app/interfaces/i-procedure.interface';
+import { announceProcedure, announceProcedures, clearFinishedProcedures, updateGlobalProcedureProgress, updateProcedure } from '../actions/i-pending-procedure.actions';
 
 export const pendingProcedureFeatureKey = 'pendingProcedures';
 
@@ -32,7 +32,39 @@ export const pendingProcedureReducer = createReducer(
   initialState,
 
   on(announceProcedure, (state, { procedure }) => {
-    const updatedState = adapter.addOne({ ...procedure, guid: procedure.guid ?? generateGuid(), startedUnix: moment().unix() }, { ...state, hasPendingTasks: true, });
+    if (!procedure) {
+      procedure = {} as IProcedure;
+    }
+    const updatedState = adapter.addOne({
+      ...procedure,
+      guid: procedure?.guid ?? generateGuid(),
+      startedUnix: moment().unix(),
+      finishedUnix: procedure.finishedUnix ?? null,
+      progress: procedure.progress ?? false
+    }, { ...state, hasPendingTasks: true, });
+    return updatedState;
+  }),
+
+  on(announceProcedures, (state, { procedures }) => {
+    const updatedProcedures = procedures.map(procedure => {
+      if (!procedure) {
+        procedure = {} as IProcedure;
+      }
+      return {
+        ...procedure,
+        guid: procedure.guid ?? generateGuid(),
+        startedUnix: moment().unix(),
+        finishedUnix: procedure.finishedUnix ?? null,
+        progress: procedure.progress ?? false
+      };
+    });
+    const updatedState = adapter.addMany(updatedProcedures, { ...state, hasPendingTasks: true });
+    return updatedState;
+  }),
+
+  on(clearFinishedProcedures, (state) => {
+    const finishedProcedures = Object.values(state.entities).filter(procedure => typeof procedure!.progress === 'number' && procedure!.progress === 100 || procedure!.progress === true);
+    const updatedState = adapter.removeMany(finishedProcedures.map(procedure => procedure!.guid), state);
     return updatedState;
   }),
 
@@ -45,8 +77,9 @@ export const pendingProcedureReducer = createReducer(
   }),
 
   on(updateGlobalProcedureProgress, (state) => {
+    const hasPendingTasks = Object.values(state.entities).some(procedure => (procedure!.progress === false) || (typeof procedure!.progress === 'number' && procedure!.progress < 100))
     const determinateProcedures = Object.values(state.entities).filter(procedure => typeof procedure?.progress === 'number' && procedure!.progress < 100);
-    const calculatedProgress = determinateProcedures.length === 0 ? null : determinateProcedures.map(procedure => procedure!.progress as number).reduce((prev, curr) => prev + curr, 0);
-    return { ...state, globalProgress: calculatedProgress };
+    const calculatedProgress = determinateProcedures.length === 0 ? null : determinateProcedures.map(procedure => procedure!.progress as number).reduce((prev, curr) => prev + curr, 0) / determinateProcedures.length;
+    return { ...state, globalProgress: calculatedProgress, hasPendingTasks: hasPendingTasks };
   })
 );

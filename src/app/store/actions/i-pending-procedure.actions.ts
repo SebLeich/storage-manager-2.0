@@ -1,15 +1,26 @@
 import { createAction, props } from '@ngrx/store';
-import { IProcedure } from 'src/app/interfaces/i-pending-procedure.interface';
+import { IProcedure } from 'src/app/interfaces/i-procedure.interface';
 
 export const procedureActions = {
   AnnounceProcedure: '[Procedure] Announce Procedure',
+  AnnounceProcedures: '[Procedure] Announce Procedures',
+  ClearFinishedProcedures: '[Procedure] Clear Finished Procedures',
   UpdateGlobalProcedureProgress: '[Procedure] Update Global Procedure',
   UpdateProcedure: '[Procedure] Update Procedure',
 }
 
 export const announceProcedure = createAction(
   procedureActions.AnnounceProcedure,
-  props<{ procedure: IProcedure }>()
+  props<{ procedure?: Partial<IProcedure> }>()
+);
+
+export const announceProcedures = createAction(
+  procedureActions.AnnounceProcedures,
+  props<{ procedures: Partial<IProcedure>[] }>()
+);
+
+export const clearFinishedProcedures = createAction(
+  procedureActions.ClearFinishedProcedures
 );
 
 export const updateGlobalProcedureProgress = createAction(
