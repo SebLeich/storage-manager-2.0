@@ -15,7 +15,7 @@ import { TaskCreationStep } from 'src/lib/process-builder/globals/task-creation-
 import { TaskCreationStepPipe } from 'src/lib/process-builder/pipes/task-creation-step.pipe';
 import { BpmnJsService } from 'src/lib/process-builder/services/bpmn-js.service';
 import { addIFunctions } from 'src/lib/process-builder/store/actions/i-function.actions';
-import { ITaskCreationPayload } from '../../../interfaces/i-task-creation-component-inpu.interfacet';
+import { ITaskCreationPayload } from '../../../interfaces/i-task-creation-component-input.interface';
 
 import { TaskCreationComponent } from './task-creation.component';
 import { ExemplaryBpmnModel } from './test/exemplary-bpmn-model';

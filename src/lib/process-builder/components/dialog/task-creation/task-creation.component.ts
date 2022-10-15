@@ -10,7 +10,7 @@ import { TaskCreationStep } from 'src/lib/process-builder/globals/task-creation-
 import { EmbeddedConfigureErrorGatewayEntranceConnectionComponent } from '../../embedded/embedded-configure-error-gateway-entrance-connection/embedded-configure-error-gateway-entrance-connection.component';
 import { EmbeddedFunctionImplementationComponent } from '../../embedded/embedded-function-implementation/embedded-function-implementation.component';
 import { EmbeddedFunctionSelectionComponent } from '../../embedded/embedded-function-selection/embedded-function-selection.component';
-import { ITaskCreationComponentInput } from '../../../interfaces/i-task-creation-component-inpu.interfacet';
+import { ITaskCreationComponentInput } from '../../../interfaces/i-task-creation-component-input.interface';
 
 import { selectIFunction } from 'src/lib/process-builder/store/selectors/i-function.selector';
 import { IEmbeddedFunctionImplementationData } from '../../../interfaces/i-embedded-function-implementation-output.interface';
@@ -156,7 +156,7 @@ export class TaskCreationComponent implements OnDestroy, OnInit {
     this.formGroup = this._formBuilder.group({
       functionIdentifier: null,
       canFail: false,
-      'implementation': null,
+      implementation: null,
       'requireCustomImplementation': null,
       'name': config.defaultFunctionName,
       'normalizedName': ProcessBuilderRepository.normalizeName(config.defaultFunctionName),

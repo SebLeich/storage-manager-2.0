@@ -40,6 +40,7 @@ import { selectSnapshot } from '../globals/select-snapshot';
 import defaultBpmnXmlConstant from '../globals/default-bpmn-xml.constant';
 import moment from 'moment';
 import { IProcessBuilderConfig, PROCESS_BUILDER_CONFIG_TOKEN } from '../globals/i-process-builder-config';
+import { TaskCreationStep } from '../globals/task-creation-step';
 
 
 @Injectable()
@@ -119,8 +120,22 @@ export class BpmnJsService {
   );
 
   public taskEditingEventFired$ = merge(
-    this.directEditingEventFired$,
-    this.connectionCreatePostExecutedEventFired$
+    this.directEditingEventFired$.pipe(
+      map(event => {
+        return {
+          taskCreationStep: TaskCreationStep.ConfigureFunctionSelection,
+          element: event.active.element
+        }
+      })
+    ),
+    this.connectionCreatePostExecutedEventFired$.pipe(
+      map(event => {
+        return {
+          taskCreationStep: TaskCreationStep.ConfigureErrorGatewayEntranceConnection,
+          element: event.context.connection
+        }
+      })
+    ),
   );
 
   private _flushTaskEditingEvents$ = this.taskEditingEventFired$.pipe(debounceTime(3000));

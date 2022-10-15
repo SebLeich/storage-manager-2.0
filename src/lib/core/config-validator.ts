@@ -8,7 +8,6 @@ import { IConnectionCreatePostExecutedEvent } from "../bpmn-io/interfaces/i-conn
 import { IConnector } from "../bpmn-io/interfaces/i-connector.interface";
 import { IElement } from "../bpmn-io/interfaces/i-element.interface";
 import shapeTypes from "../bpmn-io/shape-types";
-import { ITaskCreationData, ITaskCreationPayload } from "../process-builder/interfaces/i-task-creation-component-inpu.interfacet";
 import defaultImplementation from "../process-builder/globals/default-implementation";
 import { ErrorGatewayEvent } from "../process-builder/globals/error-gateway-event";
 import { IFunction } from "../process-builder/globals/i-function";
@@ -29,6 +28,8 @@ import { Store } from "@ngrx/store";
 import { IDirectEditingEvent } from "../bpmn-io/interfaces/i-direct-editing-event.interface";
 import { IShapeDeleteExecutedEvent } from "../bpmn-io/interfaces/i-shape-delete-executed-event.interface";
 import { IEvent } from "../bpmn-io/interfaces/i-event.interface";
+import { ITaskCreationPayload } from "../process-builder/interfaces/i-task-creation-payload.interface";
+import { ITaskCreationData } from "../process-builder/interfaces/i-task-creation-data.interface";
 
 /**
  * that method is deprecated and should be replaced
