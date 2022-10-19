@@ -3,7 +3,7 @@ import { EntityState, createEntityAdapter } from '@ngrx/entity';
 import * as moment from 'moment';
 import { v4 as generateGuid } from 'uuid';
 import { IProcedure } from 'src/app/interfaces/i-procedure.interface';
-import { announceProcedure, announceProcedures, clearFinishedProcedures, updateGlobalProcedureProgress, updateProcedure } from '../actions/i-pending-procedure.actions';
+import { announceProcedure, announceProcedures, clearFinishedProcedures, updateGlobalProcedureProgress, updateProcedure, upsertProcedure } from '../actions/i-pending-procedure.actions';
 
 export const pendingProcedureFeatureKey = 'pendingProcedures';
 
@@ -58,8 +58,7 @@ export const pendingProcedureReducer = createReducer(
         progress: procedure.progress ?? false
       };
     });
-    const updatedState = adapter.addMany(updatedProcedures, { ...state, hasPendingTasks: true });
-    return updatedState;
+    return adapter.addMany(updatedProcedures, state);
   }),
 
   on(clearFinishedProcedures, (state) => {
@@ -77,9 +76,25 @@ export const pendingProcedureReducer = createReducer(
   }),
 
   on(updateGlobalProcedureProgress, (state) => {
-    const hasPendingTasks = Object.values(state.entities).some(procedure => (procedure!.progress === false) || (typeof procedure!.progress === 'number' && procedure!.progress < 100))
+    const hasPendingTasks = Object.values(state.entities)
+      .some(procedure => (procedure!.progress === false) || (typeof procedure!.progress === 'number' && procedure!.progress < 100));
+
     const determinateProcedures = Object.values(state.entities).filter(procedure => typeof procedure?.progress === 'number' && procedure!.progress < 100);
     const calculatedProgress = determinateProcedures.length === 0 ? null : determinateProcedures.map(procedure => procedure!.progress as number).reduce((prev, curr) => prev + curr, 0) / determinateProcedures.length;
     return { ...state, globalProgress: calculatedProgress, hasPendingTasks: hasPendingTasks };
-  })
+  }),
+
+  on(upsertProcedure, (state, { procedure }) => {
+    if (!procedure) {
+      procedure = { guid: generateGuid() } as IProcedure;
+    }
+    const updatedState = adapter.upsertOne({
+      ...procedure,
+      guid: procedure?.guid ?? generateGuid(),
+      startedUnix: moment().unix(),
+      finishedUnix: procedure.finishedUnix ?? null,
+      progress: procedure.progress ?? false
+    }, state);
+    return updatedState;
+  }),
 );

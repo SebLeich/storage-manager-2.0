@@ -7,6 +7,7 @@ export const procedureActions = {
   ClearFinishedProcedures: '[Procedure] Clear Finished Procedures',
   UpdateGlobalProcedureProgress: '[Procedure] Update Global Procedure',
   UpdateProcedure: '[Procedure] Update Procedure',
+  UpsertProcedure: '[Procedure] Upsert Procedure',
 }
 
 export const announceProcedure = createAction(
@@ -30,4 +31,9 @@ export const updateGlobalProcedureProgress = createAction(
 export const updateProcedure = createAction(
   procedureActions.UpdateProcedure,
   props<{ procedure: Partial<IProcedure> }>()
+);
+
+export const upsertProcedure = createAction(
+  procedureActions.UpsertProcedure,
+  props<{ procedure?: Partial<IProcedure> }>()
 );

@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { map } from 'rxjs';
-import { announceProcedure, announceProcedures, updateGlobalProcedureProgress, updateProcedure } from '../actions/i-pending-procedure.actions';
+import { announceProcedure, announceProcedures, updateGlobalProcedureProgress, updateProcedure, upsertProcedure } from '../actions/i-pending-procedure.actions';
 
 
 
@@ -9,7 +9,7 @@ import { announceProcedure, announceProcedures, updateGlobalProcedureProgress, u
 export class IPendingProcedureEffects {
 
     updateGlobalProcedureProgress$ = createEffect(() => this._actions$.pipe(
-        ofType(announceProcedure, announceProcedures, updateProcedure),
+        ofType(announceProcedure, announceProcedures, updateProcedure, upsertProcedure),
         map(() => {
             return updateGlobalProcedureProgress();
         })

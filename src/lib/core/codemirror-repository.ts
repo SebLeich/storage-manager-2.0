@@ -3,10 +3,11 @@ import { syntaxTree } from "@codemirror/language";
 import { EditorState } from "@codemirror/state";
 import { MethodEvaluationStatus } from "../process-builder/globals/method-evaluation-status";
 import { Tree, SyntaxNode } from 'node_modules/@lezer/common/dist/tree';
+import { IMethodEvaluationResult } from "../process-builder/interfaces/i-method-evaluation-result.interface";
 
 export class CodemirrorRepository {
 
-    static evaluateCustomMethod(state?: EditorState, text?: string[] | string): { status: MethodEvaluationStatus, returnPropertyPath?: string } {
+    static evaluateCustomMethod(state?: EditorState, text?: string[] | string): IMethodEvaluationResult {
 
         let convertedText = Array.isArray(text) ? text.join('\n') : text;
 

@@ -2,13 +2,15 @@ import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/co
 import { showAnimation } from 'src/lib/shared/animations/show-delayed.animation';
 import { BpmnJsService } from '../../services/bpmn-js.service';
 import { ProcessBuilderService } from '../../services/process-builder.service';
-import { combineLatest, map, of, Subscription, startWith, switchMap, timer } from 'rxjs';
+import { map, Subscription, startWith, switchMap, timer } from 'rxjs';
 import { Store } from '@ngrx/store';
 import { selectCurrentIBpmnJSModel } from '../../store/selectors/i-bpmn-js-model.selectors';
 import { DialogService } from '../../services/dialog.service';
-import { TaskCreationStep } from '../../globals/task-creation-step';
-import { BPMNJsRepository } from 'src/lib/core/bpmn-js.repository';
 import { ProcessBuilderComponentService } from './process-builder-component.service';
+import { upsertProcedure } from 'src/app/store/actions/i-pending-procedure.actions';
+import { ITaskCreationData } from '../../interfaces/i-task-creation-data.interface';
+import { ITaskCreationPayload } from '../../interfaces/i-task-creation-payload.interface';
+import { BPMNJsRepository } from 'src/lib/core/bpmn-js.repository';
 
 @Component({
   selector: 'app-process-builder',
@@ -52,8 +54,12 @@ export class ProcessBuilderComponent implements OnDestroy, OnInit {
     this._processBuilderComponentService
       .taskEditingDialogResultReceived$
       .subscribe((args) => {
-        console.log(args);
-        //handleTaskCreationComponentOutput(data, payload);
+        this._processBuilderComponentService.applyTaskCreationConfig(args.taskCreationData, args.taskCreationPayload);
+      });
+
+    this.bpmnJsService.taskEditingProcedure$
+      .subscribe(procedure => {
+        this._store.dispatch(upsertProcedure({ procedure }));
       });
   }
 

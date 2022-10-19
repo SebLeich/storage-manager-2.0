@@ -20,7 +20,24 @@ import { v4 as generateGuid } from 'uuid';
 import sebleichProcessBuilderExtension from '../globals/sebleich-process-builder-extension';
 import { IBpmnJS } from '../interfaces/i-bpmn-js.interface';
 import { getCanvasModule, getDirectEditingModule, getElementRegistryModule, getEventBusModule, getModelingModule, getTooltipModule, getZoomScrollModule } from 'src/lib/bpmn-io/bpmn-modules';
-import { BehaviorSubject, buffer, combineLatest, debounceTime, delay, filter, from, map, merge, Observable, shareReplay, startWith, switchMap, throttleTime, timer } from 'rxjs';
+import {
+  BehaviorSubject,
+  buffer,
+  combineLatest,
+  debounceTime,
+  delay,
+  filter,
+  from,
+  map,
+  merge,
+  Observable,
+  scan,
+  shareReplay,
+  startWith,
+  switchMap,
+  throttleTime,
+  timer
+} from 'rxjs';
 import { IConnectionCreatePostExecutedEvent } from 'src/lib/bpmn-io/interfaces/i-connection-create-post-executed-event.interface';
 import { IModelingModule } from 'src/lib/bpmn-io/interfaces/i-modeling-module.interface';
 import { IProcessValidationResult } from '../classes/validation-result';
@@ -41,7 +58,9 @@ import defaultBpmnXmlConstant from '../globals/default-bpmn-xml.constant';
 import moment from 'moment';
 import { IProcessBuilderConfig, PROCESS_BUILDER_CONFIG_TOKEN } from '../globals/i-process-builder-config';
 import { TaskCreationStep } from '../globals/task-creation-step';
-
+import { IProcedure } from 'src/app/interfaces/i-procedure.interface';
+import { TaskEditingStatus } from '../types/task-editing-status.type';
+import shapeTypes from 'src/lib/bpmn-io/shape-types';
 
 @Injectable()
 export class BpmnJsService {
@@ -129,6 +148,10 @@ export class BpmnJsService {
       })
     ),
     this.connectionCreatePostExecutedEventFired$.pipe(
+      filter(event => {
+        return event.context.source.type === shapeTypes.ExclusiveGateway
+          && BPMNJsRepository.sLPBExtensionSetted(event.context.source.businessObject, 'GatewayExtension', (ext) => ext.gatewayType === 'error_gateway');
+      }),
       map(event => {
         return {
           taskCreationStep: TaskCreationStep.ConfigureErrorGatewayEntranceConnection,
@@ -138,7 +161,7 @@ export class BpmnJsService {
     ),
   );
 
-  private _flushTaskEditingEvents$ = this.taskEditingEventFired$.pipe(debounceTime(3000));
+  private _flushTaskEditingEvents$ = this.taskEditingEventFired$.pipe(debounceTime(500));
 
   public bufferedTaskEditingEvents$ = this.taskEditingEventFired$.pipe(
     buffer(this._flushTaskEditingEvents$)
@@ -168,11 +191,24 @@ export class BpmnJsService {
   );
   public bpmnJsLoggingEnabled = false;
 
-  public taskEditingStatus$ = merge(
-    this.taskEditingEventFired$.pipe(map(() => 'collecting')),
-    this._flushTaskEditingEvents$.pipe(map(() => 'idle'))
+  public taskEditingStatus$: Observable<TaskEditingStatus> = merge(
+    this.taskEditingEventFired$.pipe(map(() => {
+      return 'collecting' as TaskEditingStatus;
+    })),
+    this._flushTaskEditingEvents$.pipe(map(() => {
+      return 'idle' as TaskEditingStatus;
+    }))
   ).pipe(
-    startWith('idle')
+    startWith('idle' as TaskEditingStatus)
+  );
+
+  public taskEditingProcedure$ = this.taskEditingStatus$.pipe(
+    scan(
+      (previousValue: IProcedure, status: TaskEditingStatus) => {
+        return { ...previousValue, progress: status === 'idle' };
+      },
+      { guid: generateGuid(), progress: false, startedUnix: moment().unix(), finishedUnix: null } as IProcedure
+    )
   );
 
   private currentBpmnJSModel$ = this._store.select(selectCurrentIBpmnJSModel);
