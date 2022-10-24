@@ -1,5 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import defaultImportsConstant from 'src/app/default-imports.constant';
+import { FUNCTIONS_CONFIG_TOKEN } from '../../globals/i-function';
 import { PROCESS_BUILDER_CONFIG_TOKEN } from '../../globals/i-process-builder-config';
 import { ProcessBuilderModule } from '../../process-builder.module';
 
@@ -18,9 +19,8 @@ describe('ProcessBuilderComponent', () => {
         ProcessBuilderModule
       ],
       providers: [
-        {
-          provide: PROCESS_BUILDER_CONFIG_TOKEN, useValue: {}
-        }
+        { provide: FUNCTIONS_CONFIG_TOKEN, useValue: [] },
+        { provide: PROCESS_BUILDER_CONFIG_TOKEN, useValue: {} },
       ]
     })
       .compileComponents();

@@ -84,6 +84,11 @@ export class ProcessBuilderComponentService {
     }
 
     let resultingFunction = referencedFunction;
+    const nextParamId = await selectSnapshot(this._store.select(paramSelectors.selectNextId()));
+    const methodEvaluation = CodemirrorRepository.evaluateCustomMethod(undefined, taskCreationData.implementation ?? defaultImplementation);
+    const outputParam = await selectSnapshot(this._store.select(paramSelectors.selectIParam(referencedFunction?.output?.param)));
+    const outputParamId = typeof referencedFunction.output?.param === 'number' ? referencedFunction.output?.param as number : nextParamId;
+    const outputParamResult = this._handleFunctionOutputParam(referencedFunction, taskCreationData, taskCreationPayload, outputParamId, outputParam ?? undefined, methodEvaluation);
 
     if (
       referencedFunction.requireCustomImplementation
@@ -91,12 +96,6 @@ export class ProcessBuilderComponentService {
       || referencedFunction.useDynamicInputParams
       || referencedFunction.output!.param === 'dynamic'
     ) {
-
-      const nextParamId = await selectSnapshot(this._store.select(paramSelectors.selectNextId()));
-      const methodEvaluation = CodemirrorRepository.evaluateCustomMethod(undefined, taskCreationData.implementation ?? defaultImplementation);
-      const outputParam = await selectSnapshot(this._store.select(paramSelectors.selectIParam(referencedFunction?.output?.param)));
-      const outputParamId = typeof referencedFunction.output?.param === 'number' ? referencedFunction.output?.param as number : nextParamId;
-      const outputParamResult = this._handleFunctionOutputParam(referencedFunction, taskCreationData, taskCreationPayload, outputParamId, outputParam ?? undefined, methodEvaluation);
 
       let inputParams: { optional: boolean, param: number }[] = [];
       if (referencedFunction.useDynamicInputParams && typeof taskCreationData.inputParam === 'number') {

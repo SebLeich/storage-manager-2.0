@@ -24,7 +24,6 @@ import exemplarySolution from 'src/assets/exemplary-solution.json';
 export const orderFeatureKey = 'order';
 
 export interface State extends EntityState<IOrder> {
-  selectedOrderId: string | null;
   ids: string[];
 }
 
@@ -92,8 +91,7 @@ export const orderReducer = createReducer(
   }),
   on(setCurrentOrder, (currentState, { order }) => {
     const state: State = {
-      ...currentState,
-      selectedOrderId: order?.id ?? null
+      ...currentState
     };
     return state;
   }),
