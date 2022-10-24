@@ -264,9 +264,11 @@ export class BpmnJsService {
 
   private _setUp(): void {
     this.currentBpmnJSModel$.pipe(
-      filter(bpmnJsModel => !!bpmnJsModel),
-      switchMap(bpmnJsModel => {
+      filter(bpmnJsModel => {
         this.bpmnJs.clear();
+        return !!(bpmnJsModel?.xml);
+      }),
+      switchMap(bpmnJsModel => {
         return from(this.bpmnJs.importXML(bpmnJsModel!.xml)).pipe(map(importResult => ({ importResult, bpmnJsModel })));
       }),
       delay(0)
