@@ -8,7 +8,7 @@
     "build": "ng build",
     "publish-ghp": "ng test --watch=false && ng e2e && npm --no-git-tag-version version patch && ng build --configuration=production --base-href='https://sebleich.github.io/storage-manager-2.0/' && npx angular-cli-ghpages --dir=dist/storage-manager",
     "watch": "ng build --watch --configuration development",
-    "test": "ng test --watch=false && ng e2e"
+    "test": "ng test --watch=false && ng e2e --no-webdriver-update"
   },
   "private": true,
   "dependencies": {
@@ -40,7 +40,6 @@
     "bpmn-js": "^9.4.1",
     "bpmn-js-cli": "^2.2.0",
     "chart.js": "^3.9.1",
-    "chromedriver": "^106.0.1",
     "codemirror": "^5.65.6",
     "diagram-js": "^8.9.0",
     "eslint4b-prebuilt": "^6.7.2",
