@@ -46,10 +46,10 @@ describe('IOrder Selectors', () => {
     });
 
     it('should select all orders', async () => {
-        const sortedProcedureGuids = orders.map(order => order.id).sort();
+        const sorteOrderGuids = orders.map(order => order.id).sort();
         const allOrders: IOrder[] = await selectSnapshot(store.select(selectOrders));
 
-        expect(isEqual(allOrders.map(order => order!.id).sort(), sortedProcedureGuids)).toBeTrue();
+        expect(isEqual(allOrders.map(order => order!.id).sort(), sorteOrderGuids)).toBeTrue();
     });
 
     orders.forEach(order => {
