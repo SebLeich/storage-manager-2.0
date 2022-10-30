@@ -1,5 +1,4 @@
 import moment from "moment";
-import { ISolution } from "src/app/interfaces/i-solution.interface";
 import { v4 as generateGuid } from "uuid";
 
 export class SolutionDataGenerator {
