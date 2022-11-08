@@ -8,7 +8,6 @@ import { ITaskCreationPayload } from '../../interfaces/i-task-creation-payload.i
 import { ITaskCreationData } from '../../interfaces/i-task-creation-data.interface';
 import { IProcessBuilderConfig, PROCESS_BUILDER_CONFIG_TOKEN } from '../../globals/i-process-builder-config';
 import { IConnector } from 'src/lib/bpmn-io/interfaces/i-connector.interface';
-import { ErrorGatewayEvent } from '../../globals/error-gateway-event';
 import { CodemirrorRepository } from 'src/lib/core/codemirror-repository';
 import { selectSnapshot } from '../../globals/select-snapshot';
 import { Store } from '@ngrx/store';
@@ -20,7 +19,7 @@ import { MethodEvaluationStatus } from '../../globals/method-evaluation-status';
 import { IFunction } from '../../globals/i-function';
 import { IParam } from '../../globals/i-param';
 import { ProcessBuilderRepository } from 'src/lib/core/process-builder-repository';
-import { removeIParam, upsertIParam } from '../../store/actions/i-param.actions';
+import { upsertIParam } from '../../store/actions/i-param.actions';
 import shapeTypes from 'src/lib/bpmn-io/shape-types';
 import { addIFunction, updateIFunction } from '../../store/actions/i-function.actions';
 import { IElement } from 'src/lib/bpmn-io/interfaces/i-element.interface';
@@ -70,7 +69,7 @@ export class ProcessBuilderComponentService {
       return;
     }
 
-    if (typeof taskCreationData.entranceGatewayType === 'number') {
+    if (taskCreationData.entranceGatewayType) {
       const connector = taskCreationPayload.configureIncomingErrorGatewaySequenceFlow;
       if (!!connector) {
         this._applyConnectorDefaultLabels(connector, taskCreationData);
@@ -230,14 +229,15 @@ export class ProcessBuilderComponentService {
   }
 
   private _applyEmptyTaskCreationConfig(taskCreationPayload: ITaskCreationPayload) {
-    if (typeof BPMNJsRepository.getSLPBExtension(taskCreationPayload.configureActivity?.businessObject, 'ActivityExtension', (ext) => ext.activityFunctionId) !== 'number') {
+    const activityFunctionId = BPMNJsRepository.getSLPBExtension(taskCreationPayload.configureActivity?.businessObject, 'ActivityExtension', (ext) => ext.activityFunctionId);
+    if (typeof activityFunctionId !== 'number') {
       this._bpmnJsService.modelingModule.removeElements([taskCreationPayload.configureActivity!]);
     }
   }
 
 
   private _applyConnectorDefaultLabels(connector: IConnector, taskCreationData: ITaskCreationData) {
-    const connectorLabel = taskCreationData.entranceGatewayType === ErrorGatewayEvent.Success
+    const connectorLabel = taskCreationData.entranceGatewayType === 'Success'
       ? this._config.errorGatewayConfig.successConnectionName
       : this._config.errorGatewayConfig.errorConnectionName;
 
@@ -274,8 +274,8 @@ export class ProcessBuilderComponentService {
   }
 
   private _handleEmptyFunctionSelection(taskCreationPayload: ITaskCreationPayload) {
-    if (taskCreationPayload.configureActivity && typeof BPMNJsRepository.getSLPBExtension(taskCreationPayload.configureActivity.businessObject, 'ActivityExtension', (ext) => ext.activityFunctionId) !== 'number') {
-      this._bpmnJsService.modelingModule.removeElements([taskCreationPayload.configureActivity]);
+    if (typeof BPMNJsRepository.getSLPBExtension(taskCreationPayload.configureActivity?.businessObject, 'ActivityExtension', (ext) => ext.activityFunctionId) !== 'number') {
+      this._bpmnJsService.modelingModule.removeElements([taskCreationPayload.configureActivity!]);
     }
   }
 

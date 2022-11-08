@@ -1,3 +1,4 @@
+import { IExtensionElementsWrapper } from "./extension-elements-wrapper.interface";
 import { IBusinessObjectConnector } from "./i-business-object-connector.interface";
 import { IElement } from "./i-element.interface";
 
@@ -9,6 +10,6 @@ export interface IBusinessObject {
     incoming: IBusinessObjectConnector[];
     outgoing: IBusinessObjectConnector[];
     lanes: IElement[];
-    extensionElements: any;
+    extensionElements: IExtensionElementsWrapper;
     name?: string;
 }

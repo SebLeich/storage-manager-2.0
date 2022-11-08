@@ -9,9 +9,10 @@ import { IBpmnJS } from "../process-builder/interfaces/i-bpmn-js.interface";
 import { IFunction } from "../process-builder/globals/i-function";
 import { IParam } from "../process-builder/globals/i-param";
 import { IProcessBuilderConfig, PROCESS_BUILDER_CONFIG_TOKEN } from "../process-builder/globals/i-process-builder-config";
-import sebleichProcessBuilderExtension from "../process-builder/globals/sebleich-process-builder-extension";
+import { sebleichProcessBuilderExtension } from "../process-builder/globals/sebleich-process-builder-extension";
 import { ValidationError } from "../process-builder/globals/validation-error";
 import { ValidationWarning } from "../process-builder/globals/validation-warning";
+import { IExtensionElement } from "../bpmn-io/interfaces/extension-element.interface";
 
 @Injectable()
 export class BPMNJsRepository {
@@ -56,7 +57,10 @@ export class BPMNJsRepository {
 
     public static fillAnchestors(element: IElement, anchestors: IElement[] = []) {
         let index = 0;
-        if (!element || !Array.isArray(element.incoming) || element.incoming.length === 0) return;
+        if (!element || !Array.isArray(element.incoming) || element.incoming.length === 0) {
+            return;
+        }
+
         let notPassed = element.incoming.map(x => x.source).filter(x => anchestors.indexOf(x) === -1);
         while (index < notPassed.length) {
             let el = notPassed[index];
@@ -73,20 +77,26 @@ export class BPMNJsRepository {
     public static getAvailableInputParamsIElements(element: IElement) {
         let anchestors: IElement[] = [];
         this.fillAnchestors(element, anchestors);
-        let tasks = anchestors.filter(x => x.type === shapeTypes.Task);
-        let outputParams = tasks.flatMap(x => x.outgoing).filter(x => x.type === shapeTypes.DataOutputAssociation).map(x => x.target);
+
+        const tasks = anchestors.filter(x => x.type === shapeTypes.Task);
+        const outputParams = tasks.flatMap(x => x.outgoing).filter(x => x.type === shapeTypes.DataOutputAssociation).map(x => x.target);
         return outputParams.filter(x => BPMNJsRepository.sLPBExtensionSetted(x.businessObject, 'DataObjectExtension', (ext) => 'outputParam' in ext)) as IElement[];
     }
 
-    public static getExtensionElements(element: IBusinessObject, type: string): undefined | any[] {
-        if (!element.extensionElements || !Array.isArray(element.extensionElements.values)){
+    public static getExtensionElements(element: IBusinessObject, type: string): undefined | IExtensionElement[] {
+        if (!element.extensionElements || !Array.isArray(element.extensionElements.values)) {
             return undefined;
         }
-        return element.extensionElements.values.filter((x: any) => x.$instanceOf(type))[0];
+
+        const filteredExtensionElements = element.extensionElements.values.filter((value: any) => value.$instanceOf(type));
+        return filteredExtensionElements;
     }
 
     public static getNextNodes(currentNode: IElement | null | undefined): IElement[] {
-        if (!currentNode) return [];
+        if (!currentNode) {
+            return [];
+        }
+
         return currentNode.outgoing.filter(x => x.type === shapeTypes.SequenceFlow).map(x => x.target);
     }
 
@@ -94,13 +104,18 @@ export class BPMNJsRepository {
         if (!businessObject) {
             return undefined;
         }
-        let extension = BPMNJsRepository.getExtensionElements(businessObject, `${sebleichProcessBuilderExtension.prefix}:${type}`);
+
+        const prefix = sebleichProcessBuilderExtension.prefix;
+        const extension = BPMNJsRepository.getExtensionElements(businessObject, `${prefix}:${type}`)?.[0];
         return extension ? provider(extension) : undefined;
     }
 
     public static sLPBExtensionSetted(businessObject: IBusinessObject | undefined, type: 'ActivityExtension' | 'GatewayExtension' | 'DataObjectExtension', condition: (extensions: any) => boolean) {
-        if (!businessObject) return false;
-        let extension = BPMNJsRepository.getExtensionElements(businessObject, `${sebleichProcessBuilderExtension.prefix}:${type}`);
+        if (!businessObject) {
+            return false;
+        }
+
+        const extension = BPMNJsRepository.getExtensionElements(businessObject, `${sebleichProcessBuilderExtension.prefix}:${type}`);
         return extension ? condition(extension) : false;
     }
 

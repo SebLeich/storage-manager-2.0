@@ -1,4 +1,5 @@
 import { IParamDefinition } from "../globals/i-param-definition";
+import { GatewayType } from "../types/gateway.type";
 
 export interface ITaskCreationData {
     functionIdentifier: number | null;
@@ -9,6 +10,6 @@ export interface ITaskCreationData {
     outputParamName: string | null;
     normalizedOutputParamName: string | null;
     outputParamValue: IParamDefinition[] | null;
-    entranceGatewayType: number | null;
+    entranceGatewayType: GatewayType | null;
     inputParam: number | null;
 }

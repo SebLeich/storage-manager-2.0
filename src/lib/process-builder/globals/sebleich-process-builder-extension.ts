@@ -1,4 +1,4 @@
-export default {
+export const sebleichProcessBuilderExtension = {
     "name": "process builder extension",
     "uri": "https://www.sebleich.com/schema/xml/process-builder-extension",
     "prefix": "slpb",
@@ -49,3 +49,5 @@ export default {
     "emumerations": [],
     "associations": []
 }
+
+export default sebleichProcessBuilderExtension;
