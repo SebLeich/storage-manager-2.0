@@ -63,7 +63,7 @@ export class ProcessBuilderComponentService {
     private _store: Store
   ) { }
 
-  public async applyTaskCreationConfig(taskCreationData: ITaskCreationData, taskCreationPayload: ITaskCreationPayload) {
+  public async applyTaskCreationConfig(taskCreationPayload: ITaskCreationPayload, taskCreationData?: ITaskCreationData) {
 
     if (!taskCreationData) {
       this._applyEmptyTaskCreationConfig(taskCreationPayload);
@@ -230,7 +230,7 @@ export class ProcessBuilderComponentService {
   }
 
   private _applyEmptyTaskCreationConfig(taskCreationPayload: ITaskCreationPayload) {
-    if (!taskCreationPayload.configureActivity || typeof BPMNJsRepository.getSLPBExtension(taskCreationPayload.configureActivity.businessObject, 'ActivityExtension', (ext) => ext.activityFunctionId) !== 'number') {
+    if (typeof BPMNJsRepository.getSLPBExtension(taskCreationPayload.configureActivity?.businessObject, 'ActivityExtension', (ext) => ext.activityFunctionId) !== 'number') {
       this._bpmnJsService.modelingModule.removeElements([taskCreationPayload.configureActivity!]);
     }
   }
@@ -258,14 +258,17 @@ export class ProcessBuilderComponentService {
       } as IParam;
       this._store.dispatch(upsertIParam(outputParam));
 
-    } else if (outputParam && outputParam !== 'dynamic') {
-      const elements = taskCreationPayload.configureActivity?.outgoing.filter(x => x.type === shapeTypes.DataOutputAssociation && BPMNJsRepository.sLPBExtensionSetted(x.target.businessObject, 'DataObjectExtension', (ext) => ext.outputParam === (outputParam as IParam).identifier)).map(x => x.target);
-      if (Array.isArray(elements)) {
-        this._bpmnJsService.modelingModule.removeElements(elements);
-      }
-      this._store.dispatch(removeIParam(outputParam));
-      outputParam = undefined;
     }
+    /** 
+     * else if (outputParam && outputParam !== 'dynamic') {
+     *  const elements = taskCreationPayload.configureActivity?.outgoing.filter(x => x.type === shapeTypes.DataOutputAssociation && BPMNJsRepository.sLPBExtensionSetted(x.target.businessObject, 'DataObjectExtension', (ext) => ext.outputParam === (outputParam as IParam).identifier)).map(x => x.target);
+     *  if (Array.isArray(elements)) {
+     *    this._bpmnJsService.modelingModule.removeElements(elements);
+     *  }
+     *  this._store.dispatch(removeIParam(outputParam));
+     *  outputParam = undefined;
+     * }
+     */
 
     return { outputParam }
   }

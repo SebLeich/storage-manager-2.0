@@ -79,7 +79,9 @@ export class BPMNJsRepository {
     }
 
     public static getExtensionElements(element: IBusinessObject, type: string): undefined | any[] {
-        if (!element.extensionElements || !Array.isArray(element.extensionElements.values)) return undefined;
+        if (!element.extensionElements || !Array.isArray(element.extensionElements.values)){
+            return undefined;
+        }
         return element.extensionElements.values.filter((x: any) => x.$instanceOf(type))[0];
     }
 
@@ -89,7 +91,9 @@ export class BPMNJsRepository {
     }
 
     public static getSLPBExtension<T>(businessObject: IBusinessObject | undefined, type: 'ActivityExtension' | 'GatewayExtension' | 'DataObjectExtension', provider: (extensions: any) => T) {
-        if (!businessObject) return undefined;
+        if (!businessObject) {
+            return undefined;
+        }
         let extension = BPMNJsRepository.getExtensionElements(businessObject, `${sebleichProcessBuilderExtension.prefix}:${type}`);
         return extension ? provider(extension) : undefined;
     }

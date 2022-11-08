@@ -5,12 +5,8 @@ import { ProcessBuilderService } from '../../services/process-builder.service';
 import { map, Subscription, startWith, switchMap, timer } from 'rxjs';
 import { Store } from '@ngrx/store';
 import { selectCurrentIBpmnJSModel } from '../../store/selectors/i-bpmn-js-model.selectors';
-import { DialogService } from '../../services/dialog.service';
 import { ProcessBuilderComponentService } from './process-builder-component.service';
 import { upsertProcedure } from 'src/app/store/actions/i-pending-procedure.actions';
-import { ITaskCreationData } from '../../interfaces/i-task-creation-data.interface';
-import { ITaskCreationPayload } from '../../interfaces/i-task-creation-payload.interface';
-import { BPMNJsRepository } from 'src/lib/core/bpmn-js.repository';
 
 @Component({
   selector: 'app-process-builder',
@@ -36,7 +32,6 @@ export class ProcessBuilderComponent implements OnDestroy, OnInit {
     public processBuilderService: ProcessBuilderService,
     public bpmnJsService: BpmnJsService,
     private _store: Store,
-    private _dialogService: DialogService,
     private _processBuilderComponentService: ProcessBuilderComponentService,
   ) { }
 
@@ -54,7 +49,7 @@ export class ProcessBuilderComponent implements OnDestroy, OnInit {
     this._processBuilderComponentService
       .taskEditingDialogResultReceived$
       .subscribe((args) => {
-        this._processBuilderComponentService.applyTaskCreationConfig(args.taskCreationData, args.taskCreationPayload);
+        this._processBuilderComponentService.applyTaskCreationConfig(args.taskCreationPayload, args.taskCreationData);
       });
 
     this.bpmnJsService.taskEditingProcedure$
