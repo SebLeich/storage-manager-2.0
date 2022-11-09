@@ -7,7 +7,7 @@ import { TaskCreationStep } from '../../globals/task-creation-step';
 import { ITaskCreationPayload } from '../../interfaces/i-task-creation-payload.interface';
 import { ITaskCreationData } from '../../interfaces/i-task-creation-data.interface';
 import { IProcessBuilderConfig, PROCESS_BUILDER_CONFIG_TOKEN } from '../../globals/i-process-builder-config';
-import { IConnector } from 'src/lib/bpmn-io/interfaces/i-connector.interface';
+import { IConnector } from 'src/lib/bpmn-io/interfaces/connector.interface';
 import { CodemirrorRepository } from 'src/lib/core/codemirror-repository';
 import { selectSnapshot } from '../../globals/select-snapshot';
 import { Store } from '@ngrx/store';
@@ -231,7 +231,8 @@ export class ProcessBuilderComponentService {
   }
 
   private _handleNoFunctionSelected(taskCreationPayload: ITaskCreationPayload) {
-    this._bpmnJsService.modelingModule.removeElements([taskCreationPayload.configureActivity!]);
+    const elements = [taskCreationPayload.configureActivity].filter(element => !!element) as (IElement | IConnector)[];
+    this._bpmnJsService.modelingModule.removeElements(elements);
   }
 
 

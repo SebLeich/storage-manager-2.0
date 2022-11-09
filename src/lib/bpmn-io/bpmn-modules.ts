@@ -1,10 +1,11 @@
 import { IBpmnJS } from "../process-builder/interfaces/i-bpmn-js.interface";
 import bpmnJsModules from "./bpmn-js-modules";
-import { IElement } from "./interfaces/i-element.interface";
-import { BpmnJsEventType } from "./bpmn-js-event-types";
-import { IModelingModule } from "./interfaces/i-modeling-module.interface";
-import { IZoomScrollModule } from "./interfaces/i-zoom-scroll-module.interface";
+import { IElement } from "./interfaces/element.interface";
+import { IModelingModule } from "./interfaces/modeling-module.interface";
+import { IZoomScrollModule } from "./interfaces/zoom-scroll-module.interface";
 import { ICanvasModule } from "./interfaces/canvas-module.interface";
+import { IEventBusModule } from "./interfaces/event-bus-module.interface";
+import { IDirectEditingModule } from "./interfaces/direct-editing-module.interface";
 
 export const getCanvasModule = (bpmnJS: IBpmnJS) => bpmnJS.get(bpmnJsModules.Canvas) as ICanvasModule;
 export const getDirectEditingModule = (bpmnJS: IBpmnJS) => bpmnJS.get(bpmnJsModules.DirectEditing) as IDirectEditingModule;
@@ -14,26 +15,12 @@ export const getEventBusModule = (bpmnJS: IBpmnJS) => bpmnJS.get(bpmnJsModules.E
 export const getTooltipModule = (bpmnJS: IBpmnJS) => bpmnJS.get(bpmnJsModules.Tooltip) as ITooltipModule;
 export const getZoomScrollModule = (bpmnJS: IBpmnJS) => bpmnJS.get(bpmnJsModules.ZoomScroll) as IZoomScrollModule;
 
-export interface IDirectEditingModule {
-    $textbox?: HTMLDivElement;
-    activate: () => void;
-    cancel: () => void;
-    complete: () => void;
-    getValue: () => string;
-    isActive: () => boolean;
-    registerProvider: (provider: any) => void;
-}
-
 export interface ITooltipModule {
     add: (data: { position: { x: number, y: number }, html: string }) => void;
     hide: () => void;
     remove: (data: any) => void;
     show: () => void;
     _tooltips: { [key: string]: object };
-}
-
-export interface IEventBusModule {
-    on: (event: BpmnJsEventType, callback: (evt: any) => any) => void;
 }
 
 export interface IElementRegistryModule {
@@ -43,10 +30,10 @@ export interface IElementRegistryModule {
     forEach: (arg: (e: IElement) => void) => void;
     get: (id: string) => IElement | undefined;
     getAll: () => IElement[];
+    remove: (element: IElement) => void;
+    updateId: (element: IElement, id: string) => void;
     /*
     getGraphics: ƒ (e, t)
-    remove: ƒ (e)
     updateGraphics: ƒ (e, t, n)
-    updateId: ƒ (e, t)
     */
 }

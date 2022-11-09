@@ -1,6 +1,6 @@
 import { IExtensionElementsWrapper } from "./extension-elements-wrapper.interface";
 import { IBusinessObjectConnector } from "./business-object-connector.interface";
-import { IElement } from "./i-element.interface";
+import { IElement } from "./element.interface";
 
 export interface IBusinessObject {
     $type: string;

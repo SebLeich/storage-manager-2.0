@@ -1,10 +1,13 @@
 import { TestBed } from '@angular/core/testing';
 import { Store } from '@ngrx/store';
 import defaultImportsConstant from 'src/app/default-imports.constant';
+import { IBusinessObjectConnector } from 'src/lib/bpmn-io/interfaces/business-object-connector.interface';
 import { IExtensionElement } from 'src/lib/bpmn-io/interfaces/extension-element.interface';
-import { IConnector } from 'src/lib/bpmn-io/interfaces/i-connector.interface';
+import { IBusinessObject } from 'src/lib/bpmn-io/interfaces/business-object.interface';
+import { IConnector } from 'src/lib/bpmn-io/interfaces/connector.interface';
 import { IElement } from 'src/lib/bpmn-io/interfaces/i-element.interface';
-import { IModelingModule } from 'src/lib/bpmn-io/interfaces/i-modeling-module.interface';
+import { IModelingModule } from 'src/lib/bpmn-io/interfaces/modeling-module.interface';
+import shapeTypes from 'src/lib/bpmn-io/shape-types';
 import { FUNCTIONS_CONFIG_TOKEN, IFunction } from '../../globals/i-function';
 import { IProcessBuilderConfig, PROCESS_BUILDER_CONFIG_TOKEN } from '../../globals/i-process-builder-config';
 import { sebleichProcessBuilderExtension } from '../../globals/sebleich-process-builder-extension';
@@ -91,8 +94,14 @@ describe('ProcessBuilderComponentService', () => {
             {
               values: [activityExtension]
             }
-          }
-        };
+          },
+          incoming: [
+            {
+              type: shapeTypes.DataInputAssociation
+            } as IConnector,
+
+          ]
+        } as IElement;
 
         await service.applyTaskCreationConfig({
           configureActivity: activity

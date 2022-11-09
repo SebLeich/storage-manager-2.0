@@ -1,5 +1,5 @@
-import { IBusinessObject } from "./i-business-object.interface";
-import { IElement } from "./i-element.interface";
+import { IBusinessObject } from "./business-object.interface";
+import { IElement } from "./element.interface";
 
 export interface IConnector {
     height: number;

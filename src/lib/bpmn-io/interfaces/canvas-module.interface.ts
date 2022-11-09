@@ -1,4 +1,4 @@
-import { IViewbox } from "./i-viewbox.interface";
+import { IViewbox } from "./viewbox.interface";
 
 export interface ICanvasModule {
     viewbox: (viewbox?: IViewbox) => IViewbox;

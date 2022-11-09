@@ -39,13 +39,13 @@ import {
   timer
 } from 'rxjs';
 import { IConnectionCreatePostExecutedEvent } from 'src/lib/bpmn-io/interfaces/i-connection-create-post-executed-event.interface';
-import { IModelingModule } from 'src/lib/bpmn-io/interfaces/i-modeling-module.interface';
+import { IModelingModule } from 'src/lib/bpmn-io/interfaces/modeling-module.interface';
 import { IProcessValidationResult } from '../classes/validation-result';
 import { BPMNJsRepository } from 'src/lib/core/bpmn-js.repository';
-import { IZoomScrollModule } from 'src/lib/bpmn-io/interfaces/i-zoom-scroll-module.interface';
+import { IZoomScrollModule } from 'src/lib/bpmn-io/interfaces/zoom-scroll-module.interface';
 import { Store } from '@ngrx/store';
 import { selectCurrentIBpmnJSModel, selectRecentlyUsedIBpmnJSModel } from '../store/selectors/i-bpmn-js-model.selectors';
-import { IEvent } from 'src/lib/bpmn-io/interfaces/i-event.interface';
+import { IEvent } from 'src/lib/bpmn-io/interfaces/event.interface';
 import { IDirectEditingEvent } from 'src/lib/bpmn-io/interfaces/i-direct-editing-event.interface';
 import { IShapeDeleteExecutedEvent } from 'src/lib/bpmn-io/interfaces/i-shape-delete-executed-event.interface';
 import { IShapeAddedEvent } from 'src/lib/bpmn-io/interfaces/i-shape-added-event.interface';
