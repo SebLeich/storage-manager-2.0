@@ -69,8 +69,11 @@ export class ProcessBuilderComponentService {
       referencedFunction = await selectSnapshot(this._store.select(functionSelectors.selectIFunction(taskCreationData.functionIdentifier)));
     }
 
-    if (!taskCreationData || !referencedFunction) {
+    if (!referencedFunction) {
       this._handleNoFunctionSelected(taskCreationPayload);
+    }
+
+    if (!referencedFunction || !taskCreationData) {
       return;
     }
 
@@ -228,10 +231,7 @@ export class ProcessBuilderComponentService {
   }
 
   private _handleNoFunctionSelected(taskCreationPayload: ITaskCreationPayload) {
-    const activityFunctionId = BPMNJsRepository.getSLPBExtension(taskCreationPayload.configureActivity?.businessObject, 'ActivityExtension', (ext) => ext.activityFunctionId);
-    if (typeof activityFunctionId !== 'number') {
-      this._bpmnJsService.modelingModule.removeElements([taskCreationPayload.configureActivity!]);
-    }
+    this._bpmnJsService.modelingModule.removeElements([taskCreationPayload.configureActivity!]);
   }
 
 

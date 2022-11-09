@@ -9,6 +9,7 @@ import { FUNCTIONS_CONFIG_TOKEN, IFunction } from '../../globals/i-function';
 import { IProcessBuilderConfig, PROCESS_BUILDER_CONFIG_TOKEN } from '../../globals/i-process-builder-config';
 import { sebleichProcessBuilderExtension } from '../../globals/sebleich-process-builder-extension';
 import { ITaskCreationData } from '../../interfaces/i-task-creation-data.interface';
+import { ITaskCreationPayload } from '../../interfaces/i-task-creation-payload.interface';
 import { ProcessBuilderModule } from '../../process-builder.module';
 import { BpmnJsService } from '../../services/bpmn-js.service';
 import { addIFunction } from '../../store/actions/i-function.actions';
@@ -61,17 +62,17 @@ describe('ProcessBuilderComponentService', () => {
 
   describe('task creation aborted', () => {
 
-    [
+    for (var activityIdentifierConfiguration of [
       { value: undefined, valid: false },
       { value: null, valid: false },
       { value: 'some string value', valid: false },
       { value: true, valid: false },
-      { value: 0, valid: true },
+      { value: 0, valid: false },
       { value: 1, valid: true },
-      { value: 100, valid: true },
-    ].forEach(activityIdentifierConfiguration => {
+      { value: 100, valid: false },
+    ]) {
 
-      it(`should ${activityIdentifierConfiguration.valid ? 'not' : ''} remove activity if configured activity references activity with identifier ${activityIdentifierConfiguration.value}`, () => {
+      it(`should ${activityIdentifierConfiguration.valid ? 'not' : ''} remove activity if configured activity references activity with identifier ${activityIdentifierConfiguration.value}`, async () => {
         const modelingModuleMock = { 'removeElements': (elements: any[]) => { } };
         const modelingModuleRemoveElementsSpy = spyOn(modelingModuleMock, 'removeElements');
         spyOnProperty(bpmnJsService, 'modelingModule', 'get').and.returnValue(modelingModuleMock as any);
@@ -93,9 +94,11 @@ describe('ProcessBuilderComponentService', () => {
           }
         };
 
-        service.applyTaskCreationConfig({
+        await service.applyTaskCreationConfig({
           configureActivity: activity
-        } as any);
+        } as any, {
+          functionIdentifier: activityIdentifierConfiguration.value
+        } as ITaskCreationData);
 
         if (activityIdentifierConfiguration.valid) {
           expect(modelingModuleRemoveElementsSpy).not.toHaveBeenCalled();
@@ -105,26 +108,59 @@ describe('ProcessBuilderComponentService', () => {
         }
       });
 
-    });
+    }
 
   });
 
   describe('task creation confirmed', () => {
 
-    it('should not remove activity', () => {
-      const modelingModuleMock = { 'removeElements': () => { } };
-      const modelingModuleRemoveElementsSpy = spyOn(modelingModuleMock, 'removeElements');
-      spyOnProperty(bpmnJsService, 'modelingModule', 'get').and.returnValue(modelingModuleMock as any);
+    for (var activityIdentifierConfiguration of [
+      { value: undefined, valid: false },
+      { value: null, valid: false },
+      { value: 'some string value', valid: false },
+      { value: true, valid: false },
+      { value: 0, valid: false },
+      { value: 1, valid: true },
+      { value: 100, valid: false },
+    ]) {
 
-      const activity = {
-        businessObject: {}
-      };
-      service.applyTaskCreationConfig({
-        configureActivity: activity
-      } as any, {} as any);
+      it(`should ${activityIdentifierConfiguration.valid ? 'not' : ''} remove activity if configured activity references activity with identifier ${activityIdentifierConfiguration.value}`, async () => {
+        const modelingModuleMock = { 'removeElements': (elements: any[]) => { } };
+        const modelingModuleRemoveElementsSpy = spyOn(modelingModuleMock, 'removeElements');
+        spyOnProperty(bpmnJsService, 'modelingModule', 'get').and.returnValue(modelingModuleMock as any);
 
-      expect(modelingModuleRemoveElementsSpy).not.toHaveBeenCalled()
-    });
+        const activityExtension = {
+          $instanceOf: (type) => {
+            const prefix = sebleichProcessBuilderExtension.prefix;
+            return type === `${prefix}:ActivityExtension`;
+          },
+          activityFunctionId: activityIdentifierConfiguration.value
+        } as IExtensionElement;
+
+        const activity = {
+          businessObject: {
+            extensionElements:
+            {
+              values: [activityExtension]
+            }
+          }
+        };
+
+        await service.applyTaskCreationConfig({
+          configureActivity: activity
+        } as any, {
+          functionIdentifier: activityIdentifierConfiguration.value
+        } as ITaskCreationData);
+
+        if (activityIdentifierConfiguration.valid) {
+          expect(modelingModuleRemoveElementsSpy).not.toHaveBeenCalled();
+        } else {
+          expect(modelingModuleRemoveElementsSpy).toHaveBeenCalledTimes(1);
+          expect(modelingModuleRemoveElementsSpy).toHaveBeenCalledWith([activity]);
+        }
+      });
+
+    }
 
     for (let gatewayType of ['Error', 'Success'] as GatewayType[]) {
       const incomingGatewayConnectorLabel = gatewayType === 'Error' ? processBuilderConfig.errorGatewayConfig.errorConnectionName : processBuilderConfig.errorGatewayConfig.successConnectionName;
@@ -146,13 +182,12 @@ describe('ProcessBuilderComponentService', () => {
         await service.applyTaskCreationConfig({
           configureActivity: activityMock,
           configureIncomingErrorGatewaySequenceFlow: connectorMock
-        } as any, {
+        } as ITaskCreationPayload, {
           entranceGatewayType: gatewayType,
           functionIdentifier: mockFunction.identifier
         } as ITaskCreationData);
 
-        const count = updateLabelSpy.calls.count();
-        expect(updateLabelSpy).toHaveBeenCalledTimes(1);
+        expect(updateLabelSpy).toHaveBeenCalled();
         expect(updateLabelSpy).toHaveBeenCalledWith(connectorMock as any, incomingGatewayConnectorLabel);
       });
 
