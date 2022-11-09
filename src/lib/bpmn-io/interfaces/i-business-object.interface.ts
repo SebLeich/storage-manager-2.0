@@ -1,5 +1,5 @@
 import { IExtensionElementsWrapper } from "./extension-elements-wrapper.interface";
-import { IBusinessObjectConnector } from "./i-business-object-connector.interface";
+import { IBusinessObjectConnector } from "./business-object-connector.interface";
 import { IElement } from "./i-element.interface";
 
 export interface IBusinessObject {

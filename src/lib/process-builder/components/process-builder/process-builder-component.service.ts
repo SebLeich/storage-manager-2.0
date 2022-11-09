@@ -64,8 +64,13 @@ export class ProcessBuilderComponentService {
 
   public async applyTaskCreationConfig(taskCreationPayload: ITaskCreationPayload, taskCreationData?: ITaskCreationData) {
 
-    if (!taskCreationData) {
-      this._applyEmptyTaskCreationConfig(taskCreationPayload);
+    let referencedFunction: IFunction | undefined | null;
+    if (taskCreationData) {
+      referencedFunction = await selectSnapshot(this._store.select(functionSelectors.selectIFunction(taskCreationData.functionIdentifier)));
+    }
+
+    if (!taskCreationData || !referencedFunction) {
+      this._handleNoFunctionSelected(taskCreationPayload);
       return;
     }
 
@@ -74,12 +79,6 @@ export class ProcessBuilderComponentService {
       if (!!connector) {
         this._applyConnectorDefaultLabels(connector, taskCreationData);
       }
-    }
-
-    const referencedFunction = await selectSnapshot(this._store.select(functionSelectors.selectIFunction(taskCreationData.functionIdentifier)));
-    if (!referencedFunction) {
-      this._handleEmptyFunctionSelection(taskCreationPayload);
-      return;
     }
 
     let resultingFunction = referencedFunction;
@@ -93,7 +92,7 @@ export class ProcessBuilderComponentService {
       referencedFunction.requireCustomImplementation
       || referencedFunction.customImplementation
       || referencedFunction.useDynamicInputParams
-      || referencedFunction.output!.param === 'dynamic'
+      || referencedFunction.output?.param === 'dynamic'
     ) {
 
       let inputParams: { optional: boolean, param: number }[] = [];
@@ -156,7 +155,7 @@ export class ProcessBuilderComponentService {
         this._bpmnJsService.bpmnJs,
         taskCreationPayload.configureActivity.businessObject,
         'ActivityExtension',
-        (e: any) => e.activityFunctionId = referencedFunction.identifier
+        (e: any) => e.activityFunctionId = referencedFunction!.identifier
       );
       this._bpmnJsService.modelingModule.updateLabel(taskCreationPayload.configureActivity, referencedFunction.name);
 
@@ -228,7 +227,7 @@ export class ProcessBuilderComponentService {
     }
   }
 
-  private _applyEmptyTaskCreationConfig(taskCreationPayload: ITaskCreationPayload) {
+  private _handleNoFunctionSelected(taskCreationPayload: ITaskCreationPayload) {
     const activityFunctionId = BPMNJsRepository.getSLPBExtension(taskCreationPayload.configureActivity?.businessObject, 'ActivityExtension', (ext) => ext.activityFunctionId);
     if (typeof activityFunctionId !== 'number') {
       this._bpmnJsService.modelingModule.removeElements([taskCreationPayload.configureActivity!]);
@@ -271,12 +270,6 @@ export class ProcessBuilderComponentService {
      */
 
     return { outputParam }
-  }
-
-  private _handleEmptyFunctionSelection(taskCreationPayload: ITaskCreationPayload) {
-    if (typeof BPMNJsRepository.getSLPBExtension(taskCreationPayload.configureActivity?.businessObject, 'ActivityExtension', (ext) => ext.activityFunctionId) !== 'number') {
-      this._bpmnJsService.modelingModule.removeElements([taskCreationPayload.configureActivity!]);
-    }
   }
 
 }

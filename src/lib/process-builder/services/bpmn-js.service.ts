@@ -19,7 +19,7 @@ import { v4 as generateGuid } from 'uuid';
 
 import sebleichProcessBuilderExtension from '../globals/sebleich-process-builder-extension';
 import { IBpmnJS } from '../interfaces/i-bpmn-js.interface';
-import { getCanvasModule, getDirectEditingModule, getElementRegistryModule, getEventBusModule, getModelingModule, getTooltipModule, getZoomScrollModule } from 'src/lib/bpmn-io/bpmn-modules';
+import { getCanvasModule, getDirectEditingModule, getElementRegistryModule, getEventBusModule, getModelingModule, getTooltipModule, getZoomScrollModule, IDirectEditingModule, IElementRegistryModule, ITooltipModule } from 'src/lib/bpmn-io/bpmn-modules';
 import {
   BehaviorSubject,
   buffer,
@@ -61,6 +61,7 @@ import { TaskCreationStep } from '../globals/task-creation-step';
 import { IProcedure } from 'src/app/interfaces/i-procedure.interface';
 import { TaskEditingStatus } from '../types/task-editing-status.type';
 import shapeTypes from 'src/lib/bpmn-io/shape-types';
+import { ICanvasModule } from 'src/lib/bpmn-io/interfaces/canvas-module.interface';
 
 @Injectable()
 export class BpmnJsService {
@@ -292,15 +293,15 @@ export class BpmnJsService {
     });
   }
 
-  public get canvasModule() {
+  public get canvasModule(): ICanvasModule {
     return getCanvasModule(this.bpmnJs);
   }
 
-  public get directEditingModule() {
+  public get directEditingModule(): IDirectEditingModule {
     return getDirectEditingModule(this.bpmnJs);
   }
 
-  public get elementRegistryModule() {
+  public get elementRegistryModule(): IElementRegistryModule {
     return getElementRegistryModule(this.bpmnJs);
   }
 
@@ -312,7 +313,7 @@ export class BpmnJsService {
     return getModelingModule(this.bpmnJs);
   }
 
-  public get tooltipModule() {
+  public get tooltipModule(): ITooltipModule {
     return getTooltipModule(this.bpmnJs);
   }
 
