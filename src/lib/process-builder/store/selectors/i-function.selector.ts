@@ -10,9 +10,15 @@ export const selectIFunctionState = createFeatureSelector<fromIFunction.State>(
 export const selectIFunction = (arg: number | null | undefined | (() => number | null | undefined)) => createSelector(
     selectIFunctionState,
     (state: fromIFunction.State) => {
-        if(!state || !state.entities || typeof arg === 'undefined') return null;
-        let code = typeof arg === 'function'? arg(): arg;
-        if(typeof arg === 'undefined') return null;
+        if (!state || !state.entities || typeof arg === 'undefined') {
+            return null;
+        }
+
+        let code = typeof arg === 'function' ? arg() : arg;
+        if (typeof arg === 'undefined') {
+            return null;
+        }
+
         return Object.values(state.entities).find(x => x?.identifier === code);
     }
 );

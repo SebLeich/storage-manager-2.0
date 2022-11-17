@@ -16,7 +16,7 @@ export const adapter: EntityAdapter<IFunction> = createEntityAdapter<IFunction>(
 });
 
 export interface State extends EntityState<IFunction> {
-  ids: string[];
+  ids: number[];
 }
 
 export const initialState: State = {
@@ -29,13 +29,7 @@ export const reducer = createReducer(
   initialState,
 
   on(addIFunction, (state: State, { func }) => {
-    try {
-      return adapter.addOne(func, state);
-    } catch (exception) {
-
-    } finally {
-      return adapter.addOne(func, state);
-    }
+    return adapter.addOne(func, state);
   }),
 
   on(addIFunctions, (state: State, { funcs }) => {
@@ -49,7 +43,7 @@ export const reducer = createReducer(
   }),
 
   on(updateIFunction, (state: State, { func }) => {
-    let update: Update<IFunction> = {
+    const update: Update<IFunction> = {
       id: func.identifier,
       changes: {
         canFail: func.canFail,

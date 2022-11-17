@@ -13,13 +13,15 @@ import { ITaskCreationData } from '../../interfaces/i-task-creation-data.interfa
 import { ITaskCreationPayload } from '../../interfaces/i-task-creation-payload.interface';
 import { ProcessBuilderModule } from '../../process-builder.module';
 import { BpmnJsService } from '../../services/bpmn-js.service';
-import { addIFunction } from '../../store/actions/i-function.actions';
+import { addIFunction, updateIFunction, upsertIFunction } from '../../store/actions/i-function.actions';
 import { GatewayType } from '../../types/gateway.type';
 
 import { ProcessBuilderComponentService } from './process-builder-component.service';
 import { ProcessBuilderRepository } from 'src/lib/core/process-builder-repository';
 import { selectSnapshot } from '../../globals/select-snapshot';
 import { selectIFunction } from '../../store/selectors/i-function.selector';
+import { MockStore, provideMockStore } from '@ngrx/store/testing';
+import { State } from '../../store/reducers/i-function.reducer';
 
 describe('ProcessBuilderComponentService', () => {
   const processBuilderConfig = {
@@ -43,7 +45,16 @@ describe('ProcessBuilderComponentService', () => {
   let service: ProcessBuilderComponentService;
   let bpmnJsService: BpmnJsService;
   let modelingModule: IModelingModule;
-  let store: Store;
+  let mockStore: MockStore;
+
+  const initialState = {
+    'Func': {
+      entities: {
+        1: mockFunction
+      },
+      ids: [mockFunction.identifier]
+    } as State
+  };
 
   beforeEach(() => {
     TestBed.configureTestingModule({
@@ -53,6 +64,7 @@ describe('ProcessBuilderComponentService', () => {
         ProcessBuilderModule
       ],
       providers: [
+        provideMockStore({ initialState }),
         ProcessBuilderComponentService,
         {
           provide: PROCESS_BUILDER_CONFIG_TOKEN,
@@ -64,9 +76,7 @@ describe('ProcessBuilderComponentService', () => {
     service = TestBed.inject(ProcessBuilderComponentService);
     bpmnJsService = TestBed.inject(BpmnJsService);
     modelingModule = bpmnJsService.modelingModule;
-    store = TestBed.inject(Store);
-
-    store.dispatch(addIFunction(mockFunction));
+    mockStore = TestBed.inject(MockStore);
   });
 
   it('should be created', () => {
@@ -137,6 +147,9 @@ describe('ProcessBuilderComponentService', () => {
         outgoing: [] as IConnector[],
       } as IElement;
 
+      const store = TestBed.inject(Store);
+      const storeSpy = spyOn(store, 'dispatch');
+
       const connectorMock = {};
       const updatedCanFail = true;
       const updatedName = 'some new value';
@@ -153,11 +166,8 @@ describe('ProcessBuilderComponentService', () => {
         implementation: [`return ${updatedNormalizedName};`]
       } as ITaskCreationData);
 
-      const updatedFunction = await selectSnapshot(store.select(selectIFunction(mockFunction.identifier)));
-
-      expect(updatedFunction!.name).toBe(mockFunction.name);
-      expect(updatedFunction!.normalizedName).toBe(mockFunction.normalizedName);
-      expect(updatedFunction!.canFail).toBe(mockFunction.canFail);
+      const calls = storeSpy.calls.all();
+      expect(storeSpy).not.toHaveBeenCalled();
     });
 
   });
@@ -249,10 +259,14 @@ describe('ProcessBuilderComponentService', () => {
         outgoing: [] as IConnector[],
       } as IElement;
 
+      const store = TestBed.inject(Store);
+      const storeSpy = spyOn(store, 'dispatch');
+
       const connectorMock = {};
       const updatedCanFail = true;
       const updatedName = 'some new value';
       const updatedNormalizedName = ProcessBuilderRepository.normalizeName(updatedName);
+      const implementation = [`return ${updatedNormalizedName};`];
 
       await service.applyTaskCreationConfig({
         configureActivity: activityMock,
@@ -262,14 +276,19 @@ describe('ProcessBuilderComponentService', () => {
         canFail: updatedCanFail,
         normalizedName: updatedNormalizedName,
         name: updatedName,
-        implementation: [`return ${updatedNormalizedName};`]
+        implementation: implementation
       } as ITaskCreationData);
 
-      const updatedFunction = await selectSnapshot(store.select(selectIFunction(mockFunction.identifier)));
-
-      expect(updatedFunction!.name).toBe(updatedName);
-      expect(updatedFunction!.normalizedName).toBe(updatedNormalizedName);
-      expect(updatedFunction!.canFail).toBe(updatedCanFail);
+      const calls = storeSpy.calls.all();
+      expect(storeSpy).toHaveBeenCalledTimes(1);
+      expect(calls).toHaveSize(1);
+      expect(calls[0].args).toHaveSize(1);
+      expect(calls[0].args[0].type).toBe(upsertIFunction.type);
+      expect((calls[0].args[0] as any)?.func?.name).toBe(updatedName);
+      expect((calls[0].args[0] as any)?.func?.normalizedName).toBe(updatedNormalizedName);
+      expect((calls[0].args[0] as any)?.func?.customImplementation).toEqual(implementation);
+      expect((calls[0].args[0] as any)?.func?.canFail).toBe(updatedCanFail);
+      expect((calls[0].args[0] as any)?.func?.identifier).toBe(mockFunction.identifier);
     });
 
   });

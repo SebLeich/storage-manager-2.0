@@ -21,13 +21,14 @@ import { IParam } from '../../globals/i-param';
 import { ProcessBuilderRepository } from 'src/lib/core/process-builder-repository';
 import { upsertIParam } from '../../store/actions/i-param.actions';
 import shapeTypes from 'src/lib/bpmn-io/shape-types';
-import { addIFunction, updateIFunction, upsertIFunction } from '../../store/actions/i-function.actions';
+import { updateIFunction, upsertIFunction } from '../../store/actions/i-function.actions';
 import { IElement } from 'src/lib/bpmn-io/interfaces/element.interface';
 
 @Injectable()
 export class ProcessBuilderComponentService {
 
-  public taskEditingDialogResultReceived$ = this._bpmnJsService.bufferedTaskEditingEvents$
+  public taskEditingDialogResultReceived$ = this._bpmnJsService
+    .bufferedTaskEditingEvents$
     .pipe(
       switchMap((events) => {
         const functionSelectionConfig = events.find(event => event.taskCreationStep === TaskCreationStep.ConfigureFunctionSelection);
@@ -63,7 +64,6 @@ export class ProcessBuilderComponentService {
   ) { }
 
   public async applyTaskCreationConfig(taskCreationPayload: ITaskCreationPayload, taskCreationData?: ITaskCreationData) {
-
     let referencedFunction: IFunction | undefined | null;
     if (taskCreationData) {
       referencedFunction = await selectSnapshot(this._store.select(functionSelectors.selectIFunction(taskCreationData.functionIdentifier)));
