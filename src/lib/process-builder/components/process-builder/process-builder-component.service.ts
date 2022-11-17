@@ -100,15 +100,11 @@ export class ProcessBuilderComponentService {
       this._bpmnJsService.modelingModule.removeElements([resultingEndEvent, ...resultingEndEvent.incoming]);
     }
 
-
     if (taskCreationPayload.configureActivity) {
-      BPMNJsRepository.updateBpmnElementSLPBExtension(
-        this._bpmnJsService.bpmnJs,
-        taskCreationPayload.configureActivity.businessObject,
-        'ActivityExtension',
-        (e: any) => e.activityFunctionId = referencedFunction!.identifier
-      );
+      this._updateBpmnModelElementActivityIdentifier(taskCreationPayload, referencedFunction);
       this._bpmnJsService.modelingModule.updateLabel(taskCreationPayload.configureActivity, referencedFunction.name);
+
+      // tested
 
       const outputParam = await selectSnapshot(this._store.select(paramSelectors.selectIParam(referencedFunction?.output?.param)));
       const outputParamResult = this._handleFunctionOutputParam(referencedFunction, taskCreationData, taskCreationPayload, outputParamId, outputParam ?? undefined, methodEvaluation);
@@ -276,6 +272,15 @@ export class ProcessBuilderComponentService {
      */
 
     return { outputParam }
+  }
+
+  private _updateBpmnModelElementActivityIdentifier(taskCreationPayload: ITaskCreationPayload, referencedFunction: IFunction) {
+    BPMNJsRepository.updateBpmnElementSLPBExtension(
+      this._bpmnJsService.bpmnJs,
+      taskCreationPayload!.configureActivity!.businessObject,
+      'ActivityExtension',
+      (e: any) => e.activityFunctionId = referencedFunction!.identifier
+    );
   }
 
 }

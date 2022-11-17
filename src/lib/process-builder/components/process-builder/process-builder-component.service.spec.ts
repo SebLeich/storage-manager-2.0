@@ -22,6 +22,7 @@ import { selectSnapshot } from '../../globals/select-snapshot';
 import { selectIFunction } from '../../store/selectors/i-function.selector';
 import { MockStore, provideMockStore } from '@ngrx/store/testing';
 import { State } from '../../store/reducers/i-function.reducer';
+import { BPMNJsRepository } from 'src/lib/core/bpmn-js.repository';
 
 describe('ProcessBuilderComponentService', () => {
   const processBuilderConfig = {
@@ -383,6 +384,67 @@ describe('ProcessBuilderComponentService', () => {
 
       });
 
+    });
+
+    it('should update bpmn activity function identifier', async () => {
+      modelingModule.updateLabel = (...args) => { }
+      const activityMock = {
+        businessObject: {},
+        incoming: [] as IConnector[],
+        outgoing: [] as IConnector[],
+      } as IElement;
+
+      const connectorMock = {};
+      const updatedCanFail = true;
+      const updatedName = 'some new value';
+      const updatedNormalizedName = ProcessBuilderRepository.normalizeName(updatedName);
+      const implementation = [`return ${updatedNormalizedName};`];
+
+      await service.applyTaskCreationConfig({
+        configureActivity: activityMock,
+        configureIncomingErrorGatewaySequenceFlow: connectorMock
+      } as ITaskCreationPayload, {
+        functionIdentifier: mockFunction.identifier,
+        canFail: updatedCanFail,
+        normalizedName: updatedNormalizedName,
+        name: updatedName,
+        implementation: implementation
+      } as ITaskCreationData);
+
+      const settedActivityIdentifier = BPMNJsRepository.getSLPBExtension(activityMock.businessObject, 'ActivityExtension', (e: any) => e.activityFunctionId);
+      expect(settedActivityIdentifier).toBe(mockFunction.identifier);
+    });
+
+    it('should update bpmn activity function name', async () => {
+      modelingModule.updateLabel = (...args) => { }
+      const modelingModuleAppendShapeSpy = spyOn(modelingModule, 'updateLabel');
+
+      const activityMock = {
+        businessObject: {},
+        incoming: [] as IConnector[],
+        outgoing: [] as IConnector[],
+      } as IElement;
+
+      const connectorMock = {};
+      const updatedCanFail = true;
+      const updatedName = 'some new value';
+      const updatedNormalizedName = ProcessBuilderRepository.normalizeName(updatedName);
+      const implementation = [`return ${updatedNormalizedName};`];
+
+      await service.applyTaskCreationConfig({
+        configureActivity: activityMock,
+        configureIncomingErrorGatewaySequenceFlow: connectorMock
+      } as ITaskCreationPayload, {
+        functionIdentifier: mockFunction.identifier,
+        canFail: updatedCanFail,
+        normalizedName: updatedNormalizedName,
+        name: updatedName,
+        implementation: implementation
+      } as ITaskCreationData);
+
+      const calls = modelingModuleAppendShapeSpy.calls.all();
+      expect(modelingModuleAppendShapeSpy).toHaveBeenCalled();
+      expect(calls.some(call => call.args[0] === activityMock && call.args[1] === updatedName)).toBeTrue();
     });
 
   });
