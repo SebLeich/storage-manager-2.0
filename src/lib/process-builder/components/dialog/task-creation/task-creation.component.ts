@@ -1,23 +1,7 @@
-import {
-  Component,
-  Inject,
-  OnDestroy,
-  OnInit,
-  Type,
-  ViewChild,
-  ViewContainerRef,
-} from '@angular/core';
+import { Component, Inject, OnDestroy, OnInit, Type, ViewChild, ViewContainerRef } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { Store } from '@ngrx/store';
-import {
-  BehaviorSubject,
-  combineLatest,
-  interval,
-  Observable,
-  of,
-  Subject,
-  Subscription,
-} from 'rxjs';
+import { BehaviorSubject, combineLatest, interval, Observable, of, Subject, Subscription } from 'rxjs';
 import { IElement } from 'src/lib/bpmn-io/interfaces/element.interface';
 import { BPMNJsRepository } from 'src/lib/core/bpmn-js.repository';
 import { IEmbeddedView } from 'src/lib/process-builder/globals/i-embedded-view';
@@ -31,10 +15,7 @@ import { ITaskCreationComponentInput } from '../../../interfaces/i-task-creation
 import { selectIFunction } from 'src/lib/process-builder/store/selectors/i-function.selector';
 import { IEmbeddedFunctionImplementationData } from '../../../interfaces/i-embedded-function-implementation-output.interface';
 import { IFunction } from 'src/lib/process-builder/globals/i-function';
-import {
-  selectIParam,
-  selectIParams,
-} from 'src/lib/process-builder/store/selectors/i-param.selectors';
+import { selectIParam, selectIParams } from 'src/lib/process-builder/store/selectors/i-param.selectors';
 import { IParam } from 'src/lib/process-builder/globals/i-param';
 import { ProcessBuilderRepository } from 'src/lib/core/process-builder-repository';
 import { HttpClient } from '@angular/common/http';
@@ -198,7 +179,7 @@ export class TaskCreationComponent implements OnDestroy, OnInit {
     map(
       (x) =>
         x.taskCreationStep ===
-          TaskCreationStep.ConfigureFunctionImplementation ||
+        TaskCreationStep.ConfigureFunctionImplementation ||
         x.taskCreationStep === TaskCreationStep.ConfigureFunctionOutput
     )
   );
@@ -319,7 +300,7 @@ export class TaskCreationComponent implements OnDestroy, OnInit {
               .filter((x, index, array) => array.indexOf(x) === index);
             this._hasOutputParam.next(
               evaluationResult.status ===
-                MethodEvaluationStatus.ReturnValueFound
+              MethodEvaluationStatus.ReturnValueFound
             );
             this._statusMessage.next(
               `input params: ${inputs.length === 0 ? '-' : inputs.join(', ')}`
@@ -400,8 +381,8 @@ export class TaskCreationComponent implements OnDestroy, OnInit {
             typeof result === 'object'
               ? JSON.stringify(result)
               : typeof result === 'number'
-              ? result.toString()
-              : result;
+                ? result.toString()
+                : result;
           this._statusMessage.next(`succeeded! received: ${parsed}`);
           this.formGroup.controls['outputParamValue'].setValue(
             ProcessBuilderRepository.extractObjectTypeDefinition(result)
@@ -476,7 +457,7 @@ export class TaskCreationComponent implements OnDestroy, OnInit {
           let hasCustomImplementation =
             (this.requireCustomImplementationControl.value ||
               this.implementationControl.value) &&
-            this.data.data.taskCreationPayload.configureActivity
+              this.data.data.taskCreationPayload.configureActivity
               ? true
               : false;
           this._customImplementation.next(

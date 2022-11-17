@@ -166,7 +166,6 @@ describe('ProcessBuilderComponentService', () => {
         implementation: [`return ${updatedNormalizedName};`]
       } as ITaskCreationData);
 
-      const calls = storeSpy.calls.all();
       expect(storeSpy).not.toHaveBeenCalled();
     });
 
@@ -184,7 +183,7 @@ describe('ProcessBuilderComponentService', () => {
       { value: 100, valid: false },
     ]) {
 
-      it(`should ${activityIdentifierConfiguration.valid ? 'not' : ''} remove activity if configured activity references activity with identifier ${activityIdentifierConfiguration.value}`, async () => {
+      it(`should ${activityIdentifierConfiguration.valid ? 'not ' : ''}remove activity if configured activity references activity with identifier ${activityIdentifierConfiguration.value}`, async () => {
         const modelingModuleMock = { 'removeElements': (elements: any[]) => { } };
         const modelingModuleRemoveElementsSpy = spyOn(modelingModuleMock, 'removeElements');
         spyOnProperty(bpmnJsService, 'modelingModule', 'get').and.returnValue(modelingModuleMock as any);
@@ -289,6 +288,101 @@ describe('ProcessBuilderComponentService', () => {
       expect((calls[0].args[0] as any)?.func?.customImplementation).toEqual(implementation);
       expect((calls[0].args[0] as any)?.func?.canFail).toBe(updatedCanFail);
       expect((calls[0].args[0] as any)?.func?.identifier).toBe(mockFunction.identifier);
+    });
+
+    [true, false].forEach(finalizesFlow => {
+
+      it(`should ${finalizesFlow ? '' : 'not '}append sequence flow end event if function ${finalizesFlow ? '' : 'not '}finalizes flow`, async () => {
+        modelingModule.updateLabel = (...args) => { }
+        const activityMock = {
+          businessObject: {},
+          incoming: [] as IConnector[],
+          outgoing: [] as IConnector[],
+        } as IElement;
+
+        const modelingModuleAppendShapeSpy = spyOn(modelingModule, 'appendShape');
+
+        const connectorMock = {};
+        const updatedCanFail = true;
+        const updatedName = 'some new value';
+        const updatedNormalizedName = ProcessBuilderRepository.normalizeName(updatedName);
+        const implementation = [`return ${updatedNormalizedName};`];
+
+        await service.applyTaskCreationConfig({
+          configureActivity: activityMock,
+          configureIncomingErrorGatewaySequenceFlow: connectorMock
+        } as ITaskCreationPayload, {
+          functionIdentifier: mockFunction.identifier,
+          canFail: updatedCanFail,
+          normalizedName: updatedNormalizedName,
+          name: updatedName,
+          implementation: implementation,
+          isProcessOutput: finalizesFlow
+        } as ITaskCreationData);
+
+        const calls = modelingModuleAppendShapeSpy.calls.all();
+        if (finalizesFlow) {
+          expect(modelingModuleAppendShapeSpy).toHaveBeenCalledTimes(1);
+          expect(calls.some(call => call.args[0] === activityMock && call.args[1].type === 'bpmn:EndEvent')).toBeTrue();
+        } else {
+          expect(modelingModuleAppendShapeSpy).not.toHaveBeenCalled();
+        }
+
+      });
+
+    });
+
+    [true, false].forEach(finalizesFlow => {
+
+      it(`should ${finalizesFlow ? 'not ' : ''}remove sequence flow end event if end event exists and function ${finalizesFlow ? 'not ' : ''}finalizes flow`, async () => {
+        modelingModule.updateLabel = (...args) => { }
+        let sequenceFlow = {
+          type: "bpmn:SequenceFlow",
+          target: {
+            type: 'bpmn:EndEvent',
+            incoming: [] as any[]
+          }
+        };
+        sequenceFlow.target.incoming.push(sequenceFlow);
+
+        const activityMock = {
+          businessObject: {},
+          incoming: [] as IConnector[],
+          outgoing: [sequenceFlow] as IConnector[],
+        } as IElement;
+
+        const modelingModuleRemoveShapeSpy = spyOn(modelingModule, 'removeElements');
+
+        const connectorMock = {};
+        const updatedCanFail = true;
+        const updatedName = 'some new value';
+        const updatedNormalizedName = ProcessBuilderRepository.normalizeName(updatedName);
+        const implementation = [`return ${updatedNormalizedName};`];
+
+        await service.applyTaskCreationConfig({
+          configureActivity: activityMock,
+          configureIncomingErrorGatewaySequenceFlow: connectorMock
+        } as ITaskCreationPayload, {
+          functionIdentifier: mockFunction.identifier,
+          canFail: updatedCanFail,
+          normalizedName: updatedNormalizedName,
+          name: updatedName,
+          implementation: implementation,
+          isProcessOutput: finalizesFlow
+        } as ITaskCreationData);
+
+        const calls = modelingModuleRemoveShapeSpy.calls.all();
+        const deletedElements = calls.flatMap(call => call.args.flatMap(arg => arg));
+        const outgoingElements = [sequenceFlow.target, sequenceFlow];
+        if (finalizesFlow) {
+          expect(outgoingElements.some(element => deletedElements.indexOf(element as any) > -1)).toBeFalse();
+        } else {
+          expect(modelingModuleRemoveShapeSpy).toHaveBeenCalled();
+          expect(outgoingElements.every(element => deletedElements.indexOf(element as any) > -1)).toBeTrue();
+        }
+
+      });
+
     });
 
   });

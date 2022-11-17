@@ -12,4 +12,5 @@ export interface ITaskCreationData {
     outputParamValue: IParamDefinition[] | null;
     entranceGatewayType: GatewayType | null;
     inputParam: number | null;
+    isProcessOutput: boolean | null;
 }

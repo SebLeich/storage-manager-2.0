@@ -90,12 +90,16 @@ export class ProcessBuilderComponentService {
     const outputParamId = typeof referencedFunction.output?.param === 'number' ? referencedFunction.output?.param as number : nextParamId;
 
     if (referencedFunction.requireCustomImplementation || referencedFunction.customImplementation || taskCreationData.implementation) {
-      await this._applyFunctionConfiguration(taskCreationData, referencedFunction, methodEvaluation, outputParamId);
+      referencedFunction = await this._applyFunctionConfiguration(taskCreationData, referencedFunction, methodEvaluation, outputParamId) as IFunction;
     }
 
-    if (referencedFunction.finalizesFlow) {
+    const resultingEndEvent = taskCreationPayload.configureActivity?.outgoing?.find(outgoing => outgoing.target.type === 'bpmn:EndEvent')?.target;
+    if (referencedFunction.finalizesFlow && !resultingEndEvent) {
       this._appendSequenceFlowEndEvent(taskCreationPayload);
+    } else if (!referencedFunction?.finalizesFlow && resultingEndEvent) {
+      this._bpmnJsService.modelingModule.removeElements([resultingEndEvent, ...resultingEndEvent.incoming]);
     }
+
 
     if (taskCreationPayload.configureActivity) {
       BPMNJsRepository.updateBpmnElementSLPBExtension(
@@ -203,9 +207,11 @@ export class ProcessBuilderComponentService {
       inputParams: inputParams,
       requireCustomImplementation: false,
       requireDynamicInput: false,
-      useDynamicInputParams: referencedFunction.useDynamicInputParams
-    };
+      useDynamicInputParams: referencedFunction.useDynamicInputParams,
+      finalizesFlow: taskCreationData.isProcessOutput ?? false
+    } as IFunction;
     this._store.dispatch(upsertIFunction(resultingFunction));
+    return resultingFunction;
   }
 
   private async _appendSequenceFlowEndEvent(taskCreationPayload: ITaskCreationPayload) {
