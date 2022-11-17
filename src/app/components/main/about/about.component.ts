@@ -5,16 +5,13 @@ import { fadeInAnimation } from 'src/lib/shared/animations/fade-in.animation';
 @Component({
   selector: 'app-about',
   templateUrl: './about.component.html',
-  styleUrls: ['./about.component.css'],
-  animations: [ fadeInAnimation ]
+  styleUrls: ['./about.component.scss'],
+  animations: [fadeInAnimation],
 })
 export class AboutComponent implements OnInit {
-
   currentApplicationVersion = (environment as any).appVersion;
 
-  constructor() { }
+  constructor() {}
 
-  ngOnInit(): void {
-  }
-
+  ngOnInit(): void {}
 }
