@@ -21,8 +21,8 @@ import { IParam } from '../../globals/i-param';
 import { ProcessBuilderRepository } from 'src/lib/core/process-builder-repository';
 import { upsertIParam } from '../../store/actions/i-param.actions';
 import shapeTypes from 'src/lib/bpmn-io/shape-types';
-import { addIFunction, updateIFunction } from '../../store/actions/i-function.actions';
-import { IElement } from 'src/lib/bpmn-io/interfaces/i-element.interface';
+import { addIFunction, updateIFunction, upsertIFunction } from '../../store/actions/i-function.actions';
+import { IElement } from 'src/lib/bpmn-io/interfaces/element.interface';
 
 @Injectable()
 export class ProcessBuilderComponentService {
@@ -87,70 +87,14 @@ export class ProcessBuilderComponentService {
     let resultingFunction = referencedFunction;
     const nextParamId = await selectSnapshot(this._store.select(paramSelectors.selectNextId()));
     const methodEvaluation = CodemirrorRepository.evaluateCustomMethod(undefined, taskCreationData.implementation ?? defaultImplementation);
-    const outputParam = await selectSnapshot(this._store.select(paramSelectors.selectIParam(referencedFunction?.output?.param)));
     const outputParamId = typeof referencedFunction.output?.param === 'number' ? referencedFunction.output?.param as number : nextParamId;
-    const outputParamResult = this._handleFunctionOutputParam(referencedFunction, taskCreationData, taskCreationPayload, outputParamId, outputParam ?? undefined, methodEvaluation);
 
-    if (
-      referencedFunction.requireCustomImplementation
-      || referencedFunction.customImplementation
-      || referencedFunction.useDynamicInputParams
-      || referencedFunction.output?.param === 'dynamic'
-    ) {
-
-      let inputParams: { optional: boolean, param: number }[] = [];
-      if (referencedFunction.useDynamicInputParams && typeof taskCreationData.inputParam === 'number') {
-        inputParams.push({ optional: false, param: taskCreationData.inputParam });
-      }
-      else if (referencedFunction.requireCustomImplementation || referencedFunction.customImplementation) {
-        const usedInputParams: { varName: string, propertyName: string | null }[] = taskCreationData.implementation
-          ? CodemirrorRepository.getUsedInputParams(undefined, taskCreationData.implementation)
-          : [];
-
-        const usedInputParamEntities = await selectSnapshot(
-          this._store.select(
-            paramSelectors.selectIParamsByNormalizedName(
-              usedInputParams.filter(
-                usedInputParam => usedInputParam.varName === 'injector'
-                  && typeof usedInputParam.propertyName === 'string'
-              ).map(usedInputParam => usedInputParam.propertyName!)
-            )
-          )
-        );
-
-        inputParams.push(...usedInputParamEntities.map(usedInputParamEntity => {
-          return { optional: false, param: usedInputParamEntity.identifier }
-        }));
-
-        const nextFunctionIdentifier = await selectSnapshot(this._store.select(functionSelectors.selectNextId()));
-
-        resultingFunction = {
-          customImplementation: taskCreationData.implementation ?? undefined,
-          canFail: taskCreationData.canFail ?? false,
-          name: taskCreationData.name ?? this._config.defaultFunctionName,
-          identifier: referencedFunction.requireCustomImplementation ? nextFunctionIdentifier : referencedFunction.identifier,
-          normalizedName: taskCreationData.normalizedName ?? ProcessBuilderRepository.normalizeName(taskCreationData.name ?? undefined),
-          output: methodEvaluation.status === MethodEvaluationStatus.ReturnValueFound || referencedFunction.output?.param === 'dynamic' ? { param: outputParamId } : null,
-          pseudoImplementation: referencedFunction.pseudoImplementation,
-          inputParams: inputParams,
-          requireCustomImplementation: false,
-          requireDynamicInput: false,
-          useDynamicInputParams: referencedFunction.useDynamicInputParams
-        };
-
-        referencedFunction.requireCustomImplementation
-          || referencedFunction.requireDynamicInput
-          || referencedFunction.output?.param === 'dynamic'
-          ? this._store.dispatch(addIFunction(resultingFunction))
-          : this._store.dispatch(updateIFunction(resultingFunction));
-      }
+    if (referencedFunction.requireCustomImplementation || referencedFunction.customImplementation || taskCreationData.implementation) {
+      await this._applyFunctionConfiguration(taskCreationData, referencedFunction, methodEvaluation, outputParamId);
     }
 
     if (referencedFunction.finalizesFlow) {
-      this._bpmnJsService.modelingModule.appendShape(taskCreationPayload.configureActivity!, { type: shapeTypes.EndEvent }, {
-        x: taskCreationPayload.configureActivity!.x + 200,
-        y: taskCreationPayload.configureActivity!.y + 40
-      });
+      this._appendSequenceFlowEndEvent(taskCreationPayload);
     }
 
     if (taskCreationPayload.configureActivity) {
@@ -162,6 +106,8 @@ export class ProcessBuilderComponentService {
       );
       this._bpmnJsService.modelingModule.updateLabel(taskCreationPayload.configureActivity, referencedFunction.name);
 
+      const outputParam = await selectSnapshot(this._store.select(paramSelectors.selectIParam(referencedFunction?.output?.param)));
+      const outputParamResult = this._handleFunctionOutputParam(referencedFunction, taskCreationData, taskCreationPayload, outputParamId, outputParam ?? undefined, methodEvaluation);
       if (outputParamResult?.outputParam ?? 'dynamic' !== 'dynamic') {
         BPMNJsRepository.appendOutputParam(this._bpmnJsService.bpmnJs, taskCreationPayload.configureActivity!, outputParam, true, this._config.expectInterface);
       }
@@ -235,13 +181,66 @@ export class ProcessBuilderComponentService {
     this._bpmnJsService.modelingModule.removeElements(elements);
   }
 
-
   private _applyConnectorDefaultLabels(connector: IConnector, taskCreationData: ITaskCreationData) {
     const connectorLabel = taskCreationData.entranceGatewayType === 'Success'
       ? this._config.errorGatewayConfig.successConnectionName
       : this._config.errorGatewayConfig.errorConnectionName;
 
     this._bpmnJsService.modelingModule.updateLabel(connector, connectorLabel);
+  }
+
+  private async _applyFunctionConfiguration(taskCreationData: ITaskCreationData, referencedFunction: IFunction, methodEvaluation: IMethodEvaluationResult, outputParamId: number) {
+    const inputParams = await this._extractInputParams(taskCreationData, referencedFunction);
+    const functionIdentifier = referencedFunction.requireCustomImplementation ? await selectSnapshot(this._store.select(functionSelectors.selectNextId())) : referencedFunction.identifier;
+    const resultingFunction = {
+      customImplementation: taskCreationData.implementation ?? undefined,
+      canFail: taskCreationData.canFail ?? false,
+      name: taskCreationData.name ?? this._config.defaultFunctionName,
+      identifier: functionIdentifier,
+      normalizedName: taskCreationData.normalizedName ?? ProcessBuilderRepository.normalizeName(taskCreationData.name ?? undefined),
+      output: methodEvaluation.status === MethodEvaluationStatus.ReturnValueFound || referencedFunction.output?.param === 'dynamic' ? { param: outputParamId } : null,
+      pseudoImplementation: referencedFunction.pseudoImplementation,
+      inputParams: inputParams,
+      requireCustomImplementation: false,
+      requireDynamicInput: false,
+      useDynamicInputParams: referencedFunction.useDynamicInputParams
+    };
+    this._store.dispatch(upsertIFunction(resultingFunction));
+  }
+
+  private async _appendSequenceFlowEndEvent(taskCreationPayload: ITaskCreationPayload) {
+    this._bpmnJsService.modelingModule.appendShape(taskCreationPayload.configureActivity!, { type: shapeTypes.EndEvent }, {
+      x: taskCreationPayload.configureActivity!.x + 200,
+      y: taskCreationPayload.configureActivity!.y + 40
+    });
+  }
+
+  private async _extractInputParams(taskCreationData: ITaskCreationData, referencedFunction: IFunction) {
+    let inputParams: { optional: boolean, param: number }[] = [];
+    if (referencedFunction.useDynamicInputParams && typeof taskCreationData.inputParam === 'number') {
+      inputParams.push({ optional: false, param: taskCreationData.inputParam });
+    }
+    else if (referencedFunction.requireCustomImplementation || referencedFunction.customImplementation) {
+      const usedInputParams: { varName: string, propertyName: string | null }[] = taskCreationData.implementation
+        ? CodemirrorRepository.getUsedInputParams(undefined, taskCreationData.implementation)
+        : [];
+
+      const usedInputParamEntities = await selectSnapshot(
+        this._store.select(
+          paramSelectors.selectIParamsByNormalizedName(
+            usedInputParams.filter(
+              usedInputParam => usedInputParam.varName === 'injector'
+                && typeof usedInputParam.propertyName === 'string'
+            ).map(usedInputParam => usedInputParam.propertyName!)
+          )
+        )
+      );
+
+      inputParams.push(...usedInputParamEntities.map(usedInputParamEntity => {
+        return { optional: false, param: usedInputParamEntity.identifier }
+      }));
+    }
+    return inputParams;
   }
 
   private _handleFunctionOutputParam(respectiveFunction: IFunction, taskCreationData: ITaskCreationData, taskCreationPayload: ITaskCreationPayload, outputParamId: number, outputParam: IParam | undefined | number | 'dynamic', methodEvaluation?: IMethodEvaluationResult) {

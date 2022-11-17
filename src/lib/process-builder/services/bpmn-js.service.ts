@@ -19,7 +19,7 @@ import { v4 as generateGuid } from 'uuid';
 
 import sebleichProcessBuilderExtension from '../globals/sebleich-process-builder-extension';
 import { IBpmnJS } from '../interfaces/i-bpmn-js.interface';
-import { getCanvasModule, getDirectEditingModule, getElementRegistryModule, getEventBusModule, getModelingModule, getTooltipModule, getZoomScrollModule, IDirectEditingModule, IElementRegistryModule, ITooltipModule } from 'src/lib/bpmn-io/bpmn-modules';
+import { getCanvasModule, getDirectEditingModule, getElementRegistryModule, getEventBusModule, getModelingModule, getTooltipModule, getZoomScrollModule, IElementRegistryModule, ITooltipModule } from 'src/lib/bpmn-io/bpmn-modules';
 import {
   BehaviorSubject,
   buffer,
@@ -38,7 +38,7 @@ import {
   throttleTime,
   timer
 } from 'rxjs';
-import { IConnectionCreatePostExecutedEvent } from 'src/lib/bpmn-io/interfaces/i-connection-create-post-executed-event.interface';
+import { IConnectionCreatePostExecutedEvent } from 'src/lib/bpmn-io/interfaces/connection-create-post-executed-event.interface';
 import { IModelingModule } from 'src/lib/bpmn-io/interfaces/modeling-module.interface';
 import { IProcessValidationResult } from '../classes/validation-result';
 import { BPMNJsRepository } from 'src/lib/core/bpmn-js.repository';
@@ -62,6 +62,7 @@ import { IProcedure } from 'src/app/interfaces/i-procedure.interface';
 import { TaskEditingStatus } from '../types/task-editing-status.type';
 import shapeTypes from 'src/lib/bpmn-io/shape-types';
 import { ICanvasModule } from 'src/lib/bpmn-io/interfaces/canvas-module.interface';
+import { IDirectEditingModule } from 'src/lib/bpmn-io/interfaces/direct-editing-module.interface';
 
 @Injectable()
 export class BpmnJsService {

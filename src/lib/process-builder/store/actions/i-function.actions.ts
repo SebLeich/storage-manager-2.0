@@ -30,6 +30,11 @@ export const updateIFunctionOutputParam = createAction(
   (identifier: number, outputParam: number) => ({ identifier, outputParam })
 );
 
+export const upsertIFunction = createAction(
+  '[IFunction] Upsert IFunction',
+  (func: IFunction) => ({ func })
+);
+
 export const upsertIFunctions = createAction(
   '[IFunction] Upsert IFunctions',
   (funcs: IFunction[]) => ({ funcs })

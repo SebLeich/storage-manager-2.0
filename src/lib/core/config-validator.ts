@@ -4,7 +4,7 @@ import { buffer, debounceTime, filter, map, switchMap, take } from "rxjs/operato
 import bpmnJsEventTypes from "../bpmn-io/bpmn-js-event-types";
 import bpmnJsModules from "../bpmn-io/bpmn-js-modules";
 import { getDirectEditingModule, getElementRegistryModule, getModelingModule } from "../bpmn-io/bpmn-modules";
-import { IConnectionCreatePostExecutedEvent } from "../bpmn-io/interfaces/i-connection-create-post-executed-event.interface";
+import { IConnectionCreatePostExecutedEvent } from "../bpmn-io/interfaces/connection-create-post-executed-event.interface";
 import { IConnector } from "../bpmn-io/interfaces/connector.interface";
 import { IElement } from "../bpmn-io/interfaces/element.interface";
 import shapeTypes from "../bpmn-io/shape-types";

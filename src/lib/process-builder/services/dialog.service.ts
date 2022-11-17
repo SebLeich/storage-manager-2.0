@@ -2,7 +2,7 @@ import { Inject, Injectable, Injector } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Observable } from 'rxjs';
 import { ParamCodes } from 'src/config/param-codes';
-import { IElement } from 'src/lib/bpmn-io/interfaces/i-element.interface';
+import { IElement } from 'src/lib/bpmn-io/interfaces/element.interface';
 import { ParamEditorComponent } from '../components/dialog/param-editor/param-editor.component';
 import { ITaskCreationComponentInput } from '../interfaces/i-task-creation-component-input.interface';
 import { TaskCreationComponent } from '../components/dialog/task-creation/task-creation.component';

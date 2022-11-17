@@ -243,7 +243,9 @@ export class ProcessBuilderRepository {
     }
 
     static normalizeName(text?: string | null): string {
-        if (typeof text !== 'string') return '';
+        if (typeof text !== 'string') {
+            return '';
+        }
         text = text.toLowerCase().replace(/[\(\)-_?:*%!;¿\s.]+(.)?/g, (_, c) => c ? c.toUpperCase() : '');
         return text.substr(0, 1).toLowerCase() + text.substr(1);
     }

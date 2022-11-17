@@ -1,11 +1,9 @@
 import { TestBed } from '@angular/core/testing';
 import { Store } from '@ngrx/store';
 import defaultImportsConstant from 'src/app/default-imports.constant';
-import { IBusinessObjectConnector } from 'src/lib/bpmn-io/interfaces/business-object-connector.interface';
 import { IExtensionElement } from 'src/lib/bpmn-io/interfaces/extension-element.interface';
-import { IBusinessObject } from 'src/lib/bpmn-io/interfaces/business-object.interface';
 import { IConnector } from 'src/lib/bpmn-io/interfaces/connector.interface';
-import { IElement } from 'src/lib/bpmn-io/interfaces/i-element.interface';
+import { IElement } from 'src/lib/bpmn-io/interfaces/element.interface';
 import { IModelingModule } from 'src/lib/bpmn-io/interfaces/modeling-module.interface';
 import shapeTypes from 'src/lib/bpmn-io/shape-types';
 import { FUNCTIONS_CONFIG_TOKEN, IFunction } from '../../globals/i-function';
@@ -19,6 +17,9 @@ import { addIFunction } from '../../store/actions/i-function.actions';
 import { GatewayType } from '../../types/gateway.type';
 
 import { ProcessBuilderComponentService } from './process-builder-component.service';
+import { ProcessBuilderRepository } from 'src/lib/core/process-builder-repository';
+import { selectSnapshot } from '../../globals/select-snapshot';
+import { selectIFunction } from '../../store/selectors/i-function.selector';
 
 describe('ProcessBuilderComponentService', () => {
   const processBuilderConfig = {
@@ -28,7 +29,16 @@ describe('ProcessBuilderComponentService', () => {
     }
   } as IProcessBuilderConfig;
 
-  const mockFunction = { identifier: 1 } as IFunction;
+  const mockName = 'FUNCTION_NORMALIZED_NAME';
+  const mockFunction = {
+    identifier: 1,
+    customImplementation: ['return 1;'],
+    name: mockName,
+    normalizedName: ProcessBuilderRepository.normalizeName(mockName),
+    inputParams: [],
+    output: null,
+    canFail: false
+  } as IFunction;
 
   let service: ProcessBuilderComponentService;
   let bpmnJsService: BpmnJsService;
@@ -119,6 +129,37 @@ describe('ProcessBuilderComponentService', () => {
 
     }
 
+    it('should not apply function configuration', async () => {
+      modelingModule.updateLabel = (...args) => { }
+      const activityMock = {
+        businessObject: {},
+        incoming: [] as IConnector[],
+        outgoing: [] as IConnector[],
+      } as IElement;
+
+      const connectorMock = {};
+      const updatedCanFail = true;
+      const updatedName = 'some new value';
+      const updatedNormalizedName = ProcessBuilderRepository.normalizeName(updatedName);
+
+      await service.applyTaskCreationConfig({
+        configureActivity: activityMock,
+        configureIncomingErrorGatewaySequenceFlow: connectorMock
+      } as ITaskCreationPayload, {
+        functionIdentifier: null,
+        canFail: updatedCanFail,
+        normalizedName: updatedNormalizedName,
+        name: updatedName,
+        implementation: [`return ${updatedNormalizedName};`]
+      } as ITaskCreationData);
+
+      const updatedFunction = await selectSnapshot(store.select(selectIFunction(mockFunction.identifier)));
+
+      expect(updatedFunction!.name).toBe(mockFunction.name);
+      expect(updatedFunction!.normalizedName).toBe(mockFunction.normalizedName);
+      expect(updatedFunction!.canFail).toBe(mockFunction.canFail);
+    });
+
   });
 
   describe('task creation confirmed', () => {
@@ -175,9 +216,7 @@ describe('ProcessBuilderComponentService', () => {
       const incomingGatewayConnectorLabel = gatewayType === 'Error' ? processBuilderConfig.errorGatewayConfig.errorConnectionName : processBuilderConfig.errorGatewayConfig.successConnectionName;
 
       it(`should set correct label ${incomingGatewayConnectorLabel} to incoming connector if connector is coming from an error gateway`, async () => {
-        modelingModule.updateLabel = (...args) => {
-          console.log(args);
-        }
+        modelingModule.updateLabel = (...args) => { }
         const updateLabelSpy = spyOn(modelingModule, 'updateLabel').and.callThrough();
 
         const activityMock = {
@@ -201,6 +240,37 @@ describe('ProcessBuilderComponentService', () => {
       });
 
     }
+
+    it('should apply function configuration correctly', async () => {
+      modelingModule.updateLabel = (...args) => { }
+      const activityMock = {
+        businessObject: {},
+        incoming: [] as IConnector[],
+        outgoing: [] as IConnector[],
+      } as IElement;
+
+      const connectorMock = {};
+      const updatedCanFail = true;
+      const updatedName = 'some new value';
+      const updatedNormalizedName = ProcessBuilderRepository.normalizeName(updatedName);
+
+      await service.applyTaskCreationConfig({
+        configureActivity: activityMock,
+        configureIncomingErrorGatewaySequenceFlow: connectorMock
+      } as ITaskCreationPayload, {
+        functionIdentifier: mockFunction.identifier,
+        canFail: updatedCanFail,
+        normalizedName: updatedNormalizedName,
+        name: updatedName,
+        implementation: [`return ${updatedNormalizedName};`]
+      } as ITaskCreationData);
+
+      const updatedFunction = await selectSnapshot(store.select(selectIFunction(mockFunction.identifier)));
+
+      expect(updatedFunction!.name).toBe(updatedName);
+      expect(updatedFunction!.normalizedName).toBe(updatedNormalizedName);
+      expect(updatedFunction!.canFail).toBe(updatedCanFail);
+    });
 
   });
 });

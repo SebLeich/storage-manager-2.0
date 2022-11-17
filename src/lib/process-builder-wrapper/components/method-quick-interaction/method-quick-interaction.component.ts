@@ -4,7 +4,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { Store } from '@ngrx/store';
 import { Subscription } from 'rxjs';
 import { debounceTime } from 'rxjs/operators';
-import { IElement } from 'src/lib/bpmn-io/interfaces/i-element.interface';
+import { IElement } from 'src/lib/bpmn-io/interfaces/element.interface';
 import { BPMNJsRepository } from 'src/lib/core/bpmn-js.repository';
 import { ValidationError } from 'src/lib/process-builder/globals/validation-error';
 import { ValidationWarning } from 'src/lib/process-builder/globals/validation-warning';

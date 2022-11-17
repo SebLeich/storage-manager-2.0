@@ -1,7 +1,7 @@
 import { createEntityAdapter, EntityAdapter, EntityState, Update } from '@ngrx/entity';
 import { createReducer, on } from '@ngrx/store';
 import { IFunction } from '../../globals/i-function';
-import { addIFunction, addIFunctions, removeIFunction, updateIFunction, updateIFunctionOutputParam, upsertIFunctions } from '../actions/i-function.actions';
+import { addIFunction, addIFunctions, removeIFunction, updateIFunction, updateIFunctionOutputParam, upsertIFunction, upsertIFunctions } from '../actions/i-function.actions';
 
 
 export const featureKey = 'Func';
@@ -29,7 +29,13 @@ export const reducer = createReducer(
   initialState,
 
   on(addIFunction, (state: State, { func }) => {
-    return adapter.addOne(func, state);
+    try {
+      return adapter.addOne(func, state);
+    } catch (exception) {
+
+    } finally {
+      return adapter.addOne(func, state);
+    }
   }),
 
   on(addIFunctions, (state: State, { funcs }) => {
@@ -44,19 +50,19 @@ export const reducer = createReducer(
 
   on(updateIFunction, (state: State, { func }) => {
     let update: Update<IFunction> = {
-      'id': func.identifier,
-      'changes': {
-        'canFail': func.canFail,
-        'description': func.description,
-        'inputParams': func.inputParams,
-        'name': func.name,
-        'normalizedName': func.normalizedName,
-        'output': func.output,
-        'customImplementation': func.customImplementation,
-        'pseudoImplementation': func.pseudoImplementation,
-        'requireCustomImplementation': func.requireCustomImplementation,
-        'requireDynamicInput': func.requireDynamicInput,
-        'useDynamicInputParams': func.useDynamicInputParams
+      id: func.identifier,
+      changes: {
+        canFail: func.canFail,
+        description: func.description,
+        inputParams: func.inputParams,
+        name: func.name,
+        normalizedName: func.normalizedName,
+        output: func.output,
+        customImplementation: func.customImplementation,
+        pseudoImplementation: func.pseudoImplementation,
+        requireCustomImplementation: func.requireCustomImplementation,
+        requireDynamicInput: func.requireDynamicInput,
+        useDynamicInputParams: func.useDynamicInputParams
       }
     }
     return adapter.updateOne(update, state);
@@ -64,10 +70,14 @@ export const reducer = createReducer(
 
   on(updateIFunctionOutputParam, (state: State, { identifier, outputParam }) => {
     let update: Update<IFunction> = {
-      'id': identifier,
-      'changes': { 'output': { 'param': outputParam } }
+      id: identifier,
+      changes: { output: { 'param': outputParam } }
     }
     return adapter.updateOne(update, state);
+  }),
+
+  on(upsertIFunction, (state: State, { func }) => {
+    return adapter.upsertOne(func, state);
   }),
 
   on(upsertIFunctions, (state: State, { funcs }) => {
