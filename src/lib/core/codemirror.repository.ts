@@ -4,15 +4,17 @@ import { EditorState } from "@codemirror/state";
 import { MethodEvaluationStatus } from "../process-builder/globals/method-evaluation-status";
 import { Tree, SyntaxNode } from 'node_modules/@lezer/common/dist/tree';
 import { IMethodEvaluationResult } from "../process-builder/interfaces/i-method-evaluation-result.interface";
+import { ISyntaxNodeResponse } from "./interfaces/syntax-node-response.interface";
 
 export class CodemirrorRepository {
 
     static evaluateCustomMethod(state?: EditorState, text?: string[] | string): IMethodEvaluationResult {
 
-        let convertedText = Array.isArray(text) ? text.join('\n') : text;
-
+        const convertedText = Array.isArray(text) ? text.join('\n') : text;
         if (!state) {
-            if (!text) throw ('no state and no text passed');
+            if (!text) {
+                throw ('no state and no text passed');
+            }
 
             state = EditorState.create({
                 doc: convertedText,
@@ -22,21 +24,93 @@ export class CodemirrorRepository {
             });
         }
 
-        let tree = syntaxTree(state);
-        let mainMethod = this.getMainMethod(tree, state, text);
+        const tree = syntaxTree(state);
+        const mainMethod = this.getMainMethod(tree, state, text);
         if (!mainMethod.node) {
             return { status: MethodEvaluationStatus.NoMainMethodFound };
         }
 
-        let arrowFunction = mainMethod.node.getChild('ArrowFunction');
-        let block = arrowFunction ? arrowFunction.getChild('Block') : mainMethod.node.getChild('Block');
+        const arrowFunction = mainMethod.node.getChild('ArrowFunction');
+        const block = arrowFunction ? arrowFunction.getChild('Block') : mainMethod.node.getChild('Block');
         const returnStatement = block?.getChild('ReturnStatement') ?? undefined;
         if (returnStatement) {
-            const memberExpression = returnStatement.getChild('MemberExpression');
-            return { status: MethodEvaluationStatus.ReturnValueFound, returnPropertyPath: state.sliceDoc(memberExpression?.from, memberExpression?.to) };
+            const result = this.getEvaluationResult(state, returnStatement, block!);
+            if (result) {
+                return result;
+            }
         }
-        return { status: MethodEvaluationStatus.NoReturnValue };
 
+        return { status: MethodEvaluationStatus.NoReturnValue };
+    }
+
+    static getEvaluationResult(state: EditorState, parent: SyntaxNode, block: SyntaxNode): IMethodEvaluationResult {
+        const memberExpression = parent.getChild('MemberExpression');
+        if (memberExpression) {
+            const representation = state.sliceDoc(memberExpression?.from, memberExpression?.to);
+            const navigationPath = representation.split('.');
+            let dependsOnInjector = navigationPath[0] === 'injector';
+            if (!dependsOnInjector) {
+                return { status: MethodEvaluationStatus.ReturnValueFound };
+            }
+            return { status: MethodEvaluationStatus.ReturnValueFound, injectorNavigationPath: representation, type: 'member' };
+        }
+
+        const variableExpression = parent.getChild('VariableName');
+        if (variableExpression) {
+            const representation = state.sliceDoc(variableExpression?.from, variableExpression?.to);
+            let dependsOnInjector = representation === 'injector';
+            if (!dependsOnInjector) {
+                const variableValue = this.resolveVariableValue(state, block!, representation);
+                if (variableValue) {
+                    return this.getEvaluationResult(state, variableValue, block);
+                }
+
+                return { status: MethodEvaluationStatus.ReturnValueFound };
+            }
+            return { status: MethodEvaluationStatus.ReturnValueFound, injectorNavigationPath: representation, type: 'variable' };
+        }
+
+        const stringExpression = parent.getChild('String');
+        if (stringExpression) {
+            const representation = state.sliceDoc(stringExpression?.from, stringExpression?.to);
+            return { status: MethodEvaluationStatus.ReturnValueFound, detectedValue: representation, type: 'string' };
+        }
+
+        const numberExpression = parent.getChild('Number');
+        if (numberExpression) {
+            const representation = state.sliceDoc(numberExpression?.from, numberExpression?.to);
+            return { status: MethodEvaluationStatus.ReturnValueFound, detectedValue: parseFloat(representation), type: 'number' };
+        }
+
+        const objectExpression = parent.getChild('ObjectExpression');
+        if (objectExpression) {
+            const representation = state.sliceDoc(objectExpression?.from, objectExpression?.to);
+            return { status: MethodEvaluationStatus.ReturnValueFound, detectedValue: JSON.parse(representation), type: 'object' };
+        }
+
+        const booleanLiteral = parent.getChild('BooleanLiteral');
+        if (booleanLiteral) {
+            const representation = state.sliceDoc(booleanLiteral?.from, booleanLiteral?.to);
+            return { status: MethodEvaluationStatus.ReturnValueFound, detectedValue: representation === 'true', type: 'boolean' };
+        }
+
+        const arrayExpression = parent.getChild('ArrayExpression');
+        if (arrayExpression) {
+            const representation = state.sliceDoc(arrayExpression?.from, arrayExpression?.to);
+            return { status: MethodEvaluationStatus.ReturnValueFound, detectedValue: JSON.parse(representation), type: 'array' };
+        }
+
+        const nullExpression = parent.getChild('null');
+        if (nullExpression) {
+            return { status: MethodEvaluationStatus.ReturnValueFound, detectedValue: null, type: 'null' };
+        }
+
+        const undefinedExpression = parent.getChild('undefined');
+        if (undefinedExpression) {
+            return { status: MethodEvaluationStatus.ReturnValueFound, detectedValue: undefined, type: 'undefined' };
+        }
+
+        return { status: MethodEvaluationStatus.NoReturnValue };
     }
 
     static getMainMethod(tree?: Tree, state?: EditorState, text?: string[] | string): ISyntaxNodeResponse {
@@ -182,9 +256,22 @@ export class CodemirrorRepository {
         }
         return [];
     }
-}
 
-export interface ISyntaxNodeResponse {
-    node: SyntaxNode | null;
-    tree: Tree;
+    static resolveVariableValue(state: EditorState, blockNode: SyntaxNode, variableName: string) {
+        const declarations = blockNode.getChildren('VariableDeclaration');
+        if (declarations.length === 0) {
+            return undefined;
+        }
+
+        const definition = declarations.find(declaration => {
+            const child = declaration.getChild('VariableDefinition');
+            const representation = state.sliceDoc(child?.from, child?.to);
+            return representation === variableName;
+        });
+        if (!definition) {
+            return undefined;
+        }
+
+        return definition;
+    }
 }

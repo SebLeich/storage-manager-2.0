@@ -20,7 +20,7 @@ import { IParam } from 'src/lib/process-builder/globals/i-param';
 import { ProcessBuilderRepository } from 'src/lib/core/process-builder-repository';
 import { HttpClient } from '@angular/common/http';
 import { EmbeddedParamEditorComponent } from '../../embedded/embedded-param-editor/embedded-param-editor.component';
-import { CodemirrorRepository } from 'src/lib/core/codemirror-repository';
+import { CodemirrorRepository } from 'src/lib/core/codemirror.repository';
 import { MethodEvaluationStatus } from 'src/lib/process-builder/globals/method-evaluation-status';
 import {
   UntypedFormBuilder,

@@ -8,7 +8,7 @@ import { ITaskCreationPayload } from '../../interfaces/i-task-creation-payload.i
 import { ITaskCreationData } from '../../interfaces/i-task-creation-data.interface';
 import { IProcessBuilderConfig, PROCESS_BUILDER_CONFIG_TOKEN } from '../../globals/i-process-builder-config';
 import { IConnector } from 'src/lib/bpmn-io/interfaces/connector.interface';
-import { CodemirrorRepository } from 'src/lib/core/codemirror-repository';
+import { CodemirrorRepository } from 'src/lib/core/codemirror.repository';
 import { selectSnapshot } from '../../globals/select-snapshot';
 import { Store } from '@ngrx/store';
 import * as paramSelectors from '../../store/selectors/i-param.selectors';
@@ -23,6 +23,10 @@ import { upsertIParam } from '../../store/actions/i-param.actions';
 import shapeTypes from 'src/lib/bpmn-io/shape-types';
 import { updateIFunction, upsertIFunction } from '../../store/actions/i-function.actions';
 import { IElement } from 'src/lib/bpmn-io/interfaces/element.interface';
+import { InjectorInterfacesProvider, InjectorProvider } from '../../globals/injector-interfaces-provider';
+import { INJECTOR_INTERFACE_TOKEN, INJECTOR_TOKEN } from '../../globals/injector';
+import { MethodEvaluationResultType } from '../../types/method-evaluation-result.type';
+import { deepObjectLookup } from 'src/lib/shared/globals/deep-object-lookup.function';
 
 @Injectable()
 export class ProcessBuilderComponentService {
@@ -60,7 +64,9 @@ export class ProcessBuilderComponentService {
     @Inject(PROCESS_BUILDER_CONFIG_TOKEN) private _config: IProcessBuilderConfig,
     private _dialogService: DialogService,
     private _bpmnJsService: BpmnJsService,
-    private _store: Store
+    private _store: Store,
+    @Inject(INJECTOR_INTERFACE_TOKEN) private _injectorInterface: any,
+    @Inject(INJECTOR_TOKEN) private _injector: any,
   ) { }
 
   public async applyTaskCreationConfig(taskCreationPayload: ITaskCreationPayload, taskCreationData?: ITaskCreationData) {
@@ -250,12 +256,13 @@ export class ProcessBuilderComponentService {
       methodEvaluation = CodemirrorRepository.evaluateCustomMethod(undefined, taskCreationData.implementation ?? defaultImplementation);
     }
     if (methodEvaluation.status === MethodEvaluationStatus.ReturnValueFound || respectiveFunction.output?.param === 'dynamic') {
+
       outputParam = {
         identifier: outputParamId,
         name: taskCreationData.outputParamName ?? this._config.dynamicParamDefaultNaming,
         normalizedName: taskCreationData.normalizedOutputParamName ?? ProcessBuilderRepository.normalizeName(taskCreationData.outputParamName ?? this._config.dynamicParamDefaultNaming),
-        defaultValue: taskCreationData.outputParamValue ?? [],
-        type: 'object'
+        defaultValue: this._outputParamValue(methodEvaluation, taskCreationData.outputParamValue),
+        type: this._methodEvaluationTypeToOutputType(methodEvaluation)
       } as IParam;
       this._store.dispatch(upsertIParam(outputParam));
 
@@ -272,6 +279,44 @@ export class ProcessBuilderComponentService {
      */
 
     return { outputParam }
+  }
+
+  private _methodEvaluationTypeToOutputType(methodEvaluation?: IMethodEvaluationResult) {
+    if (methodEvaluation?.injectorNavigationPath) {
+      const injectedDef = deepObjectLookup(this._injectorInterface, methodEvaluation.injectorNavigationPath);
+      return injectedDef.type ?? 'object';
+    }
+    switch (methodEvaluation?.type) {
+      case 'number':
+        return 'number';
+
+      case 'string':
+        return 'string';
+
+      case 'boolean':
+        return 'boolean';
+
+      case 'array':
+        return 'array';
+    }
+    return 'object';
+  }
+
+  private _outputParamValue(methodEvaluation: IMethodEvaluationResult, defaultValue: any = []) {
+    if (methodEvaluation.injectorNavigationPath) {
+      const injectedValue = deepObjectLookup(this._injector, methodEvaluation.injectorNavigationPath);
+      return injectedValue;
+    }
+    switch (methodEvaluation.type) {
+      case 'number':
+      case 'string':
+      case 'object':
+      case 'boolean':
+      case 'array':
+        return methodEvaluation.detectedValue;
+    }
+
+    return defaultValue;
   }
 
   private _updateBpmnModelElementActivityIdentifier(taskCreationPayload: ITaskCreationPayload, referencedFunction: IFunction) {

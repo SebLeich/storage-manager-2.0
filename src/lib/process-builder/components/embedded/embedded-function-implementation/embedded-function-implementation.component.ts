@@ -7,7 +7,7 @@ import { autocompletion, CompletionContext } from "@codemirror/autocomplete";
 import { EditorState, Text } from '@codemirror/state';
 import { basicSetup, EditorView } from '@codemirror/basic-setup';
 import { esLint, javascript } from '@codemirror/lang-javascript';
-import { CodemirrorRepository } from 'src/lib/core/codemirror-repository';
+import { CodemirrorRepository } from 'src/lib/core/codemirror.repository';
 import { MethodEvaluationStatus } from 'src/lib/process-builder/globals/method-evaluation-status';
 import { IProcessBuilderConfig, PROCESS_BUILDER_CONFIG_TOKEN } from 'src/lib/process-builder/globals/i-process-builder-config';
 import { linter, lintGutter } from '@codemirror/lint';

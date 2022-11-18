@@ -22,7 +22,7 @@ import { removeIParam, upsertIParam } from "../process-builder/store/actions/i-p
 import * as fromIFunctionSelector from "../process-builder/store/selectors/i-function.selector";
 import * as fromIParmSelector from "../process-builder/store/selectors/i-param.selectors";
 import { BPMNJsRepository } from "./bpmn-js.repository";
-import { CodemirrorRepository } from "./codemirror-repository";
+import { CodemirrorRepository } from "./codemirror.repository";
 import { ProcessBuilderRepository } from "./process-builder-repository";
 import { Store } from "@ngrx/store";
 import { IDirectEditingEvent } from "../bpmn-io/interfaces/i-direct-editing-event.interface";

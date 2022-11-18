@@ -13,16 +13,18 @@ import { ITaskCreationData } from '../../interfaces/i-task-creation-data.interfa
 import { ITaskCreationPayload } from '../../interfaces/i-task-creation-payload.interface';
 import { ProcessBuilderModule } from '../../process-builder.module';
 import { BpmnJsService } from '../../services/bpmn-js.service';
-import { addIFunction, updateIFunction, upsertIFunction } from '../../store/actions/i-function.actions';
+import { upsertIFunction } from '../../store/actions/i-function.actions';
 import { GatewayType } from '../../types/gateway.type';
 
 import { ProcessBuilderComponentService } from './process-builder-component.service';
 import { ProcessBuilderRepository } from 'src/lib/core/process-builder-repository';
-import { selectSnapshot } from '../../globals/select-snapshot';
-import { selectIFunction } from '../../store/selectors/i-function.selector';
-import { MockStore, provideMockStore } from '@ngrx/store/testing';
+import { provideMockStore } from '@ngrx/store/testing';
 import { State } from '../../store/reducers/i-function.reducer';
 import { BPMNJsRepository } from 'src/lib/core/bpmn-js.repository';
+import { upsertIParam } from '../../store/actions/i-param.actions';
+import { IParam } from '../../globals/i-param';
+import { INJECTOR_INTERFACE_TOKEN, INJECTOR_TOKEN } from '../../globals/injector';
+import { deepObjectLookup } from 'src/lib/shared/globals/deep-object-lookup.function';
 
 describe('ProcessBuilderComponentService', () => {
   const processBuilderConfig = {
@@ -31,6 +33,27 @@ describe('ProcessBuilderComponentService', () => {
       successConnectionName: 'SUCCESS'
     }
   } as IProcessBuilderConfig;
+
+  const injectorInterface = {
+    injector: {
+      myValue: {
+        myProperty: { type: 'string' },
+        anotherProperty: { type: 'boolean' },
+        something: { type: 'array' }
+      }
+    }
+  };
+  const injector = {
+    injector: {
+      myValue: {
+        myProperty: 'my value',
+        anotherProperty: true,
+        something: [
+          'hello'
+        ]
+      }
+    }
+  };
 
   const mockName = 'FUNCTION_NORMALIZED_NAME';
   const mockFunction = {
@@ -46,7 +69,6 @@ describe('ProcessBuilderComponentService', () => {
   let service: ProcessBuilderComponentService;
   let bpmnJsService: BpmnJsService;
   let modelingModule: IModelingModule;
-  let mockStore: MockStore;
 
   const initialState = {
     'Func': {
@@ -71,16 +93,17 @@ describe('ProcessBuilderComponentService', () => {
           provide: PROCESS_BUILDER_CONFIG_TOKEN,
           useValue: processBuilderConfig
         },
-        { provide: FUNCTIONS_CONFIG_TOKEN, useValue: [] }
+        { provide: FUNCTIONS_CONFIG_TOKEN, useValue: [] },
+        { provide: INJECTOR_INTERFACE_TOKEN, useValue: injectorInterface },
+        { provide: INJECTOR_TOKEN, useValue: injector },
       ]
     });
     service = TestBed.inject(ProcessBuilderComponentService);
     bpmnJsService = TestBed.inject(BpmnJsService);
     modelingModule = bpmnJsService.modelingModule;
-    mockStore = TestBed.inject(MockStore);
   });
 
-  it('should be created', () => {
+  it('should create', () => {
     expect(service).toBeTruthy();
   });
 
@@ -447,5 +470,78 @@ describe('ProcessBuilderComponentService', () => {
       expect(calls.some(call => call.args[0] === activityMock && call.args[1] === updatedName)).toBeTrue();
     });
 
+    [
+      { value: { "myProperty": 100 } },
+      { value: 1.501 },
+      { value: 1 },
+      { value: 10065.123 },
+      { value: '"my custom string"' },
+      { value: 'injector.myValue', injectorType: 'object' },
+      { value: 'injector.myValue.myProperty', injectorType: 'string' },
+      { value: 'injector.myValue.anotherProperty', injectorType: 'boolean' },
+      { value: ['value1', 'value2'] },
+      { value: true },
+      { value: false },
+    ].forEach(entry => {
+
+      const value = entry.injectorType ? deepObjectLookup(injector, entry.value) : entry.value;
+      const title = typeof value === 'object' ? JSON.stringify(value) : value.toString();
+      const stringifiedValue = typeof entry.value === 'object' ? JSON.stringify(entry.value) : entry.value.toString();
+      const parsedType = entry.injectorType ?? (typeof entry.value === 'object' && Array.isArray(entry.value) ? 'array' : typeof entry.value);
+      it(`should correctly apply output param configuration ${title} (${parsedType}${entry.injectorType ? ', from injector' : ''})`, async () => {
+        modelingModule.updateLabel = (...args) => { }
+
+        const store = TestBed.inject(Store);
+        const storeSpy = spyOn(store, 'dispatch');
+
+        const activityMock = {
+          businessObject: {},
+          incoming: [] as IConnector[],
+          outgoing: [] as IConnector[],
+        } as IElement;
+
+        const connectorMock = {};
+        const updatedCanFail = true;
+        const updatedName = 'some new value';
+        const updatedNormalizedName = ProcessBuilderRepository.normalizeName(updatedName);
+        const outputParamName = 'My Object';
+        const normalizedOutputParamName = ProcessBuilderRepository.normalizeName(outputParamName);
+        const implementation = [
+          'async (injector) => {',
+          `return ${stringifiedValue};`,
+          '}',
+        ];
+
+        await service.applyTaskCreationConfig({
+          configureActivity: activityMock,
+          configureIncomingErrorGatewaySequenceFlow: connectorMock
+        } as ITaskCreationPayload, {
+          functionIdentifier: mockFunction.identifier,
+          canFail: updatedCanFail,
+          normalizedName: updatedNormalizedName,
+          name: updatedName,
+          implementation: implementation,
+          outputParamName: outputParamName,
+          normalizedOutputParamName: normalizedOutputParamName
+        } as ITaskCreationData);
+
+        expect(storeSpy).toHaveBeenCalled();
+
+        const calls = storeSpy.calls.all();
+        const upsertIParamCall = calls.find(call => call.args[0].type === upsertIParam.type);
+        expect(upsertIParamCall).toBeTruthy();
+
+        expect(((upsertIParamCall?.args[0] as any).param as IParam).name).toBe(outputParamName);
+        expect(((upsertIParamCall?.args[0] as any).param as IParam).normalizedName).toBe(normalizedOutputParamName);
+        expect(((upsertIParamCall?.args[0] as any).param as IParam).type).toBe(parsedType);
+
+        const finiteValue = entry.injectorType ? deepObjectLookup(injector, entry.value) : entry.value;
+        expect(((upsertIParamCall?.args[0] as any).param as IParam).defaultValue).toEqual(finiteValue);
+      });
+
+    });
+
   });
 });
+
+
