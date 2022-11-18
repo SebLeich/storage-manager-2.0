@@ -70,7 +70,7 @@ export class ProcessBuilderComponentService {
   ) { }
 
   public async applyTaskCreationConfig(taskCreationPayload: ITaskCreationPayload, taskCreationData?: ITaskCreationData) {
-    let referencedFunction: IFunction | undefined | null;
+    let referencedFunction: IFunction | undefined | null, outputParam: IParam | undefined;
     if (taskCreationData) {
       referencedFunction = await selectSnapshot(this._store.select(functionSelectors.selectIFunction(taskCreationData.functionIdentifier)));
     }
@@ -93,7 +93,7 @@ export class ProcessBuilderComponentService {
     let resultingFunction = referencedFunction;
     const nextParamId = await selectSnapshot(this._store.select(paramSelectors.selectNextId()));
     const methodEvaluation = CodemirrorRepository.evaluateCustomMethod(undefined, taskCreationData.implementation ?? defaultImplementation);
-    const outputParamId = typeof referencedFunction.output?.param === 'number' ? referencedFunction.output?.param as number : nextParamId;
+    const outputParamId = typeof referencedFunction.output?.param === 'number' ? referencedFunction.output?.param : nextParamId;
 
     if (referencedFunction.requireCustomImplementation || referencedFunction.customImplementation || taskCreationData.implementation) {
       referencedFunction = await this._applyFunctionConfiguration(taskCreationData, referencedFunction, methodEvaluation, outputParamId) as IFunction;
@@ -110,17 +110,8 @@ export class ProcessBuilderComponentService {
       this._updateBpmnModelElementActivityIdentifier(taskCreationPayload, referencedFunction);
       this._bpmnJsService.modelingModule.updateLabel(taskCreationPayload.configureActivity, referencedFunction.name);
 
-      // tested
-
-      const outputParam = await selectSnapshot(this._store.select(paramSelectors.selectIParam(referencedFunction?.output?.param)));
-      const outputParamResult = this._handleFunctionOutputParam(referencedFunction, taskCreationData, taskCreationPayload, outputParamId, outputParam ?? undefined, methodEvaluation);
-      if (outputParamResult?.outputParam ?? 'dynamic' !== 'dynamic') {
-        BPMNJsRepository.appendOutputParam(this._bpmnJsService.bpmnJs, taskCreationPayload.configureActivity!, outputParam, true, this._config.expectInterface);
-      }
-      else {
-        const dataOutputAssociations = taskCreationPayload.configureActivity.outgoing.filter(x => x.type === shapeTypes.DataOutputAssociation);
-        this._bpmnJsService.modelingModule.removeElements(dataOutputAssociations.map(dataOutputAssociation => dataOutputAssociation.target));
-      }
+      outputParam = await selectSnapshot(this._store.select(paramSelectors.selectIParam(outputParamId))) ?? { identifier: outputParamId } as IParam;
+      outputParam = this._handleFunctionOutputParam(referencedFunction, taskCreationData, taskCreationPayload, outputParam, methodEvaluation)?.outputParam;
 
       let gatewayShape = taskCreationPayload
         .configureActivity
@@ -180,6 +171,8 @@ export class ProcessBuilderComponentService {
         }
       }
     }
+
+    return { outputParam };
   }
 
   private _handleNoFunctionSelected(taskCreationPayload: ITaskCreationPayload) {
@@ -251,14 +244,13 @@ export class ProcessBuilderComponentService {
     return inputParams;
   }
 
-  private _handleFunctionOutputParam(respectiveFunction: IFunction, taskCreationData: ITaskCreationData, taskCreationPayload: ITaskCreationPayload, outputParamId: number, outputParam: IParam | undefined | number | 'dynamic', methodEvaluation?: IMethodEvaluationResult) {
+  private _handleFunctionOutputParam(respectiveFunction: IFunction, taskCreationData: ITaskCreationData, taskCreationPayload: ITaskCreationPayload, outputParam: IParam, methodEvaluation?: IMethodEvaluationResult) {
     if (!methodEvaluation) {
       methodEvaluation = CodemirrorRepository.evaluateCustomMethod(undefined, taskCreationData.implementation ?? defaultImplementation);
     }
     if (methodEvaluation.status === MethodEvaluationStatus.ReturnValueFound || respectiveFunction.output?.param === 'dynamic') {
-
       outputParam = {
-        identifier: outputParamId,
+        ...outputParam,
         name: taskCreationData.outputParamName ?? this._config.dynamicParamDefaultNaming,
         normalizedName: taskCreationData.normalizedOutputParamName ?? ProcessBuilderRepository.normalizeName(taskCreationData.outputParamName ?? this._config.dynamicParamDefaultNaming),
         defaultValue: this._outputParamValue(methodEvaluation, taskCreationData.outputParamValue),
@@ -266,19 +258,19 @@ export class ProcessBuilderComponentService {
       } as IParam;
       this._store.dispatch(upsertIParam(outputParam));
 
-    }
-    /** 
-     * else if (outputParam && outputParam !== 'dynamic') {
-     *  const elements = taskCreationPayload.configureActivity?.outgoing.filter(x => x.type === shapeTypes.DataOutputAssociation && BPMNJsRepository.sLPBExtensionSetted(x.target.businessObject, 'DataObjectExtension', (ext) => ext.outputParam === (outputParam as IParam).identifier)).map(x => x.target);
-     *  if (Array.isArray(elements)) {
-     *    this._bpmnJsService.modelingModule.removeElements(elements);
-     *  }
-     *  this._store.dispatch(removeIParam(outputParam));
-     *  outputParam = undefined;
-     * }
-     */
+      BPMNJsRepository.appendOutputParam(
+        this._bpmnJsService.bpmnJs,
+        taskCreationPayload.configureActivity!,
+        outputParam,
+        true,
+        this._config.expectInterface
+      );
 
-    return { outputParam }
+      return { outputParam }
+    } else {
+      const dataOutputAssociations = taskCreationPayload.configureActivity!.outgoing.filter(x => x.type === shapeTypes.DataOutputAssociation);
+      this._bpmnJsService.modelingModule.removeElements(dataOutputAssociations.map(dataOutputAssociation => dataOutputAssociation.target));
+    }
   }
 
   private _methodEvaluationTypeToOutputType(methodEvaluation?: IMethodEvaluationResult) {
@@ -299,6 +291,7 @@ export class ProcessBuilderComponentService {
       case 'array':
         return 'array';
     }
+
     return 'object';
   }
 

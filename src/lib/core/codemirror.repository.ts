@@ -8,7 +8,7 @@ import { ISyntaxNodeResponse } from "./interfaces/syntax-node-response.interface
 
 export class CodemirrorRepository {
 
-    static evaluateCustomMethod(state?: EditorState, text?: string[] | string): IMethodEvaluationResult {
+    static evaluateCustomMethod(state?: EditorState, text?: string[] | string, injector?: any): IMethodEvaluationResult {
 
         const convertedText = Array.isArray(text) ? text.join('\n') : text;
         if (!state) {
@@ -27,90 +27,96 @@ export class CodemirrorRepository {
         const tree = syntaxTree(state);
         const mainMethod = this.getMainMethod(tree, state, text);
         if (!mainMethod.node) {
-            return { status: MethodEvaluationStatus.NoMainMethodFound };
+            return { status: MethodEvaluationStatus.NoMainMethodFound, valueIsDefinite: false };
         }
 
         const arrowFunction = mainMethod.node.getChild('ArrowFunction');
         const block = arrowFunction ? arrowFunction.getChild('Block') : mainMethod.node.getChild('Block');
         const returnStatement = block?.getChild('ReturnStatement') ?? undefined;
         if (returnStatement) {
-            const result = this.getEvaluationResult(state, returnStatement, block!);
+            const result = this.getEvaluationResult(state, returnStatement, block!, injector);
             if (result) {
                 return result;
             }
         }
 
-        return { status: MethodEvaluationStatus.NoReturnValue };
+        return { status: MethodEvaluationStatus.NoReturnValue, valueIsDefinite: false };
     }
 
-    static getEvaluationResult(state: EditorState, parent: SyntaxNode, block: SyntaxNode): IMethodEvaluationResult {
+    static getEvaluationResult(state: EditorState, parent: SyntaxNode, block: SyntaxNode, injector: any): IMethodEvaluationResult {
         const memberExpression = parent.getChild('MemberExpression');
         if (memberExpression) {
             const representation = state.sliceDoc(memberExpression?.from, memberExpression?.to);
             const navigationPath = representation.split('.');
             let dependsOnInjector = navigationPath[0] === 'injector';
             if (!dependsOnInjector) {
-                return { status: MethodEvaluationStatus.ReturnValueFound };
+                const variableValue = this.resolveVariableValue(state, block!, representation);
+                if (variableValue) {
+                    let result = this.getEvaluationResult(state, variableValue, block, injector);
+                    result.valueIsDefinite = false;
+                    return result;
+                }
             }
-            return { status: MethodEvaluationStatus.ReturnValueFound, injectorNavigationPath: representation, type: 'member' };
+            return { status: MethodEvaluationStatus.ReturnValueFound, injectorNavigationPath: representation, type: 'member', valueIsDefinite: false };
         }
 
         const variableExpression = parent.getChild('VariableName');
         if (variableExpression) {
             const representation = state.sliceDoc(variableExpression?.from, variableExpression?.to);
+            if (representation === 'undefined') {
+                return { status: MethodEvaluationStatus.ReturnValueFound, detectedValue: undefined, type: 'undefined', valueIsDefinite: true };
+            }
+
             let dependsOnInjector = representation === 'injector';
             if (!dependsOnInjector) {
                 const variableValue = this.resolveVariableValue(state, block!, representation);
                 if (variableValue) {
-                    return this.getEvaluationResult(state, variableValue, block);
+                    let result = this.getEvaluationResult(state, variableValue, block, injector);
+                    result.valueIsDefinite = false;
+                    return result;
                 }
 
-                return { status: MethodEvaluationStatus.ReturnValueFound };
+                return { status: MethodEvaluationStatus.ReturnValueFound, valueIsDefinite: false };
             }
-            return { status: MethodEvaluationStatus.ReturnValueFound, injectorNavigationPath: representation, type: 'variable' };
+            return { status: MethodEvaluationStatus.ReturnValueFound, injectorNavigationPath: representation, type: 'variable', valueIsDefinite: true, detectedValue: injector };
         }
 
         const stringExpression = parent.getChild('String');
         if (stringExpression) {
             const representation = state.sliceDoc(stringExpression?.from, stringExpression?.to);
-            return { status: MethodEvaluationStatus.ReturnValueFound, detectedValue: representation, type: 'string' };
+            return { status: MethodEvaluationStatus.ReturnValueFound, detectedValue: representation, type: 'string', valueIsDefinite: true };
         }
 
         const numberExpression = parent.getChild('Number');
         if (numberExpression) {
             const representation = state.sliceDoc(numberExpression?.from, numberExpression?.to);
-            return { status: MethodEvaluationStatus.ReturnValueFound, detectedValue: parseFloat(representation), type: 'number' };
+            return { status: MethodEvaluationStatus.ReturnValueFound, detectedValue: parseFloat(representation), type: 'number', valueIsDefinite: true };
         }
 
         const objectExpression = parent.getChild('ObjectExpression');
         if (objectExpression) {
             const representation = state.sliceDoc(objectExpression?.from, objectExpression?.to);
-            return { status: MethodEvaluationStatus.ReturnValueFound, detectedValue: JSON.parse(representation), type: 'object' };
+            return { status: MethodEvaluationStatus.ReturnValueFound, detectedValue: JSON.parse(representation), type: 'object', valueIsDefinite: false };
         }
 
         const booleanLiteral = parent.getChild('BooleanLiteral');
         if (booleanLiteral) {
             const representation = state.sliceDoc(booleanLiteral?.from, booleanLiteral?.to);
-            return { status: MethodEvaluationStatus.ReturnValueFound, detectedValue: representation === 'true', type: 'boolean' };
+            return { status: MethodEvaluationStatus.ReturnValueFound, detectedValue: representation === 'true', type: 'boolean', valueIsDefinite: true };
         }
 
         const arrayExpression = parent.getChild('ArrayExpression');
         if (arrayExpression) {
             const representation = state.sliceDoc(arrayExpression?.from, arrayExpression?.to);
-            return { status: MethodEvaluationStatus.ReturnValueFound, detectedValue: JSON.parse(representation), type: 'array' };
+            return { status: MethodEvaluationStatus.ReturnValueFound, detectedValue: JSON.parse(representation), type: 'array', valueIsDefinite: false };
         }
 
         const nullExpression = parent.getChild('null');
         if (nullExpression) {
-            return { status: MethodEvaluationStatus.ReturnValueFound, detectedValue: null, type: 'null' };
+            return { status: MethodEvaluationStatus.ReturnValueFound, detectedValue: null, type: 'null', valueIsDefinite: true };
         }
 
-        const undefinedExpression = parent.getChild('undefined');
-        if (undefinedExpression) {
-            return { status: MethodEvaluationStatus.ReturnValueFound, detectedValue: undefined, type: 'undefined' };
-        }
-
-        return { status: MethodEvaluationStatus.NoReturnValue };
+        return { status: MethodEvaluationStatus.NoReturnValue, valueIsDefinite: false };
     }
 
     static getMainMethod(tree?: Tree, state?: EditorState, text?: string[] | string): ISyntaxNodeResponse {

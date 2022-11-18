@@ -20,7 +20,9 @@ export class BPMNJsRepository {
     constructor(@Inject(PROCESS_BUILDER_CONFIG_TOKEN) private _config: IProcessBuilderConfig) { }
 
     public static appendOutputParam(bpmnJS: any, element: IElement, param: IParam | null | undefined, preventDublet: boolean = true, expectedInterface?: number): null | IElement {
-        if (!param) return null;
+        if (!param) {
+            return null;
+        }
         let e = element.outgoing.find(x => x.type === shapeTypes.DataOutputAssociation)?.target;
         if (!preventDublet || !e) {
             e = getModelingModule(bpmnJS).appendShape(element, {

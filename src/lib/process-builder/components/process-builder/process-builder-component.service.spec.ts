@@ -483,23 +483,25 @@ describe('ProcessBuilderComponentService', () => {
       { value: true },
       { value: false },
     ].forEach(entry => {
-
       const value = entry.injectorType ? deepObjectLookup(injector, entry.value) : entry.value;
-      const title = typeof value === 'object' ? JSON.stringify(value) : value.toString();
+      const title = typeof value === 'object' ? JSON.stringify(value) : value;
       const stringifiedValue = typeof entry.value === 'object' ? JSON.stringify(entry.value) : entry.value.toString();
       const parsedType = entry.injectorType ?? (typeof entry.value === 'object' && Array.isArray(entry.value) ? 'array' : typeof entry.value);
+
       it(`should correctly apply output param configuration ${title} (${parsedType}${entry.injectorType ? ', from injector' : ''})`, async () => {
         modelingModule.updateLabel = (...args) => { }
+        spyOn(BPMNJsRepository, 'appendOutputParam');
 
         const store = TestBed.inject(Store);
         const storeSpy = spyOn(store, 'dispatch');
-
         const activityMock = {
           businessObject: {},
+          children: [],
           incoming: [] as IConnector[],
           outgoing: [] as IConnector[],
+          x: 0,
+          y: 0
         } as IElement;
-
         const connectorMock = {};
         const updatedCanFail = true;
         const updatedName = 'some new value';
@@ -538,6 +540,47 @@ describe('ProcessBuilderComponentService', () => {
         const finiteValue = entry.injectorType ? deepObjectLookup(injector, entry.value) : entry.value;
         expect(((upsertIParamCall?.args[0] as any).param as IParam).defaultValue).toEqual(finiteValue);
       });
+
+      it(`should correctly append output param ${title} (${parsedType}) to activity`, async () => {
+        modelingModule.updateLabel = (...args) => { }
+
+        const appendOutputParamSpy = spyOn(BPMNJsRepository, 'appendOutputParam');
+        const activityMock = {
+          businessObject: {},
+          children: [],
+          incoming: [] as IConnector[],
+          outgoing: [] as IConnector[],
+          x: 0,
+          y: 0
+        } as IElement;
+        const connectorMock = {};
+        const updatedCanFail = true;
+        const updatedName = 'some new value';
+        const updatedNormalizedName = ProcessBuilderRepository.normalizeName(updatedName);
+        const outputParamName = 'My Object';
+        const normalizedOutputParamName = ProcessBuilderRepository.normalizeName(outputParamName);
+        const implementation = [
+          'async (injector) => {',
+          `return ${stringifiedValue};`,
+          '}',
+        ];
+
+        const result = await service.applyTaskCreationConfig({
+          configureActivity: activityMock,
+          configureIncomingErrorGatewaySequenceFlow: connectorMock
+        } as ITaskCreationPayload, {
+          functionIdentifier: mockFunction.identifier,
+          canFail: updatedCanFail,
+          normalizedName: updatedNormalizedName,
+          name: updatedName,
+          implementation: implementation,
+          outputParamName: outputParamName,
+          normalizedOutputParamName: normalizedOutputParamName
+        } as ITaskCreationData);
+
+        expect(appendOutputParamSpy).toHaveBeenCalledTimes(1);
+        expect(appendOutputParamSpy).toHaveBeenCalledWith(bpmnJsService.bpmnJs, activityMock, result?.outputParam, true, result?.outputParam?.interface ?? undefined);
+      })
 
     });
 

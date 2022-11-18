@@ -6,4 +6,5 @@ export interface IMethodEvaluationResult {
     injectorNavigationPath?: string;
     type?: MethodEvaluationResultType;
     detectedValue?: string | number | object | [] | boolean | null;
+    valueIsDefinite: boolean;
 }

@@ -23,6 +23,9 @@ describe('CodemirrorRepository', () => {
             ]);
             expect(evaluationResult.detectedValue).toEqual(value);
             expect(evaluationResult.status).toBe(MethodEvaluationStatus.ReturnValueFound);
+
+            const valueShouldBeDefinite = ['number', 'string', 'boolean', 'null', 'undefined'].indexOf(value === null ? 'null' : typeof value) > -1;
+            expect(evaluationResult.valueIsDefinite).toBe(valueShouldBeDefinite);
         });
 
         it(`should correctly evaulate already declared variable with value ${preview}`, () => {
@@ -36,6 +39,7 @@ describe('CodemirrorRepository', () => {
             ]);
             expect(evaluationResult.detectedValue).toEqual(value);
             expect(evaluationResult.status).toBe(MethodEvaluationStatus.ReturnValueFound);
+            expect(evaluationResult.valueIsDefinite).toBe(false);
         });
 
     });
