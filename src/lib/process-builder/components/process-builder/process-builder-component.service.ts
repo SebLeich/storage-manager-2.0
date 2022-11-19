@@ -21,11 +21,9 @@ import { IParam } from '../../globals/i-param';
 import { ProcessBuilderRepository } from 'src/lib/core/process-builder-repository';
 import { upsertIParam } from '../../store/actions/i-param.actions';
 import shapeTypes from 'src/lib/bpmn-io/shape-types';
-import { updateIFunction, upsertIFunction } from '../../store/actions/i-function.actions';
+import { upsertIFunction } from '../../store/actions/i-function.actions';
 import { IElement } from 'src/lib/bpmn-io/interfaces/element.interface';
-import { InjectorInterfacesProvider, InjectorProvider } from '../../globals/injector-interfaces-provider';
 import { INJECTOR_INTERFACE_TOKEN, INJECTOR_TOKEN } from '../../globals/injector';
-import { MethodEvaluationResultType } from '../../types/method-evaluation-result.type';
 import { deepObjectLookup } from 'src/lib/shared/globals/deep-object-lookup.function';
 
 @Injectable()
@@ -70,7 +68,7 @@ export class ProcessBuilderComponentService {
   ) { }
 
   public async applyTaskCreationConfig(taskCreationPayload: ITaskCreationPayload, taskCreationData?: ITaskCreationData) {
-    let referencedFunction: IFunction | undefined | null, outputParam: IParam | undefined;
+    let referencedFunction: IFunction | undefined | null, outputParam: IParam | undefined, gatewayShape: IElement | undefined;
     if (taskCreationData) {
       referencedFunction = await selectSnapshot(this._store.select(functionSelectors.selectIFunction(taskCreationData.functionIdentifier)));
     }
@@ -113,42 +111,9 @@ export class ProcessBuilderComponentService {
       outputParam = await selectSnapshot(this._store.select(paramSelectors.selectIParam(outputParamId))) ?? { identifier: outputParamId } as IParam;
       outputParam = this._handleFunctionOutputParam(referencedFunction, taskCreationData, taskCreationPayload, outputParam, methodEvaluation)?.outputParam;
 
-      let gatewayShape = taskCreationPayload
-        .configureActivity
-        .outgoing
-        .find(outgoing => outgoing.type === shapeTypes.SequenceFlow
-          && BPMNJsRepository.sLPBExtensionSetted(
-            outgoing.target?.businessObject,
-            'GatewayExtension',
-            (ext) => ext.gatewayType === 'error_gateway'
-          )
-        )
-        ?.target;
+      gatewayShape = this._handleErrorGatewayConfiguration(taskCreationPayload, referencedFunction)?.gatewayShape;
 
-      if (resultingFunction.canFail && !gatewayShape) {
-        const outgoingSequenceFlows = taskCreationPayload.configureActivity.outgoing.filter(outgoing => outgoing.type === shapeTypes.SequenceFlow);
-        const formerConnectedTargets = outgoingSequenceFlows.map(outgoingSequenceFlow => outgoingSequenceFlow.target);
-        this._bpmnJsService.modelingModule.removeElements(formerConnectedTargets);
-
-        gatewayShape = this._bpmnJsService.modelingModule.appendShape(
-          taskCreationPayload.configureActivity,
-          { type: shapeTypes.ExclusiveGateway },
-          {
-            x: taskCreationPayload.configureActivity.x + 200,
-            y: taskCreationPayload.configureActivity.y + 40
-          }
-        );
-
-        BPMNJsRepository.updateBpmnElementSLPBExtension(this._bpmnJsService.bpmnJs, gatewayShape!.businessObject, 'GatewayExtension', (e: any) => e.gatewayType = 'error_gateway');
-        this._bpmnJsService.modelingModule.updateLabel(gatewayShape, this._config.errorGatewayConfig.gatewayName);
-
-        // reconnect the former connected targets
-        for (let formerConnectedTarget of formerConnectedTargets) {
-          this._bpmnJsService.modelingModule.connect(gatewayShape, formerConnectedTarget);
-        }
-      } else if (!resultingFunction.canFail && gatewayShape) {
-        this._bpmnJsService.modelingModule.removeElements([gatewayShape]);
-      }
+      // tested
 
       const dataInputAssociations = taskCreationPayload
         .configureActivity
@@ -172,7 +137,48 @@ export class ProcessBuilderComponentService {
       }
     }
 
-    return { outputParam };
+    return { gatewayShape, outputParam };
+  }
+
+  private _handleErrorGatewayConfiguration(taskCreationPayload: ITaskCreationPayload, resultingFunction: IFunction) {
+    let outgoingErrorGatewaySequenceFlow = taskCreationPayload
+      .configureActivity!
+      .outgoing
+      .find(outgoing => outgoing.type === shapeTypes.SequenceFlow
+        && BPMNJsRepository.sLPBExtensionSetted(
+          outgoing.target?.businessObject,
+          'GatewayExtension',
+          (ext) => ext.gatewayType === 'error_gateway'
+        )
+      );
+    let gatewayShape = outgoingErrorGatewaySequenceFlow?.target;
+
+    if (resultingFunction.canFail && !gatewayShape) {
+      const outgoingSequenceFlows = taskCreationPayload.configureActivity!.outgoing.filter(outgoing => outgoing.type === shapeTypes.SequenceFlow);
+      const formerConnectedTargets = outgoingSequenceFlows.map(outgoingSequenceFlow => outgoingSequenceFlow.target);
+      this._bpmnJsService.modelingModule.removeElements(formerConnectedTargets);
+
+      gatewayShape = this._bpmnJsService.modelingModule.appendShape(
+        taskCreationPayload.configureActivity!,
+        { type: shapeTypes.ExclusiveGateway },
+        {
+          x: taskCreationPayload.configureActivity!.x + 200,
+          y: taskCreationPayload.configureActivity!.y + 40
+        }
+      );
+
+      BPMNJsRepository.updateBpmnElementSLPBExtension(this._bpmnJsService.bpmnJs, gatewayShape!.businessObject, 'GatewayExtension', (e: any) => e.gatewayType = 'error_gateway');
+      this._bpmnJsService.modelingModule.updateLabel(gatewayShape, this._config.errorGatewayConfig.gatewayName);
+
+      // reconnect the former connected targets
+      for (let formerConnectedTarget of formerConnectedTargets) {
+        this._bpmnJsService.modelingModule.connect(gatewayShape, formerConnectedTarget);
+      }
+    } else if (!resultingFunction.canFail && gatewayShape) {
+      this._bpmnJsService.modelingModule.removeElements([gatewayShape, ...gatewayShape.incoming, ...gatewayShape.outgoing]);
+    }
+
+    return { gatewayShape };
   }
 
   private _handleNoFunctionSelected(taskCreationPayload: ITaskCreationPayload) {

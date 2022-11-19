@@ -85,12 +85,12 @@ export class BPMNJsRepository {
         return outputParams.filter(x => BPMNJsRepository.sLPBExtensionSetted(x.businessObject, 'DataObjectExtension', (ext) => 'outputParam' in ext)) as IElement[];
     }
 
-    public static getExtensionElements(element: IBusinessObject, type: string): undefined | IExtensionElement[] {
+    public static getExtensionElement(element: IBusinessObject, type: string): undefined | IExtensionElement {
         if (!element.extensionElements || !Array.isArray(element.extensionElements.values)) {
             return undefined;
         }
 
-        const filteredExtensionElements = element.extensionElements.values.filter((value: any) => value.$instanceOf(type));
+        const filteredExtensionElements = element.extensionElements.values.find((value: any) => value.$instanceOf(type));
         return filteredExtensionElements;
     }
 
@@ -108,7 +108,7 @@ export class BPMNJsRepository {
         }
 
         const prefix = sebleichProcessBuilderExtension.prefix;
-        const extension = BPMNJsRepository.getExtensionElements(businessObject, `${prefix}:${type}`)?.[0];
+        const extension = BPMNJsRepository.getExtensionElement(businessObject, `${prefix}:${type}`);
         return extension ? provider(extension) : undefined;
     }
 
@@ -117,8 +117,9 @@ export class BPMNJsRepository {
             return false;
         }
 
-        const extension = BPMNJsRepository.getExtensionElements(businessObject, `${sebleichProcessBuilderExtension.prefix}:${type}`);
-        return extension ? condition(extension) : false;
+        const extension = BPMNJsRepository.getExtensionElement(businessObject, `${sebleichProcessBuilderExtension.prefix}:${type}`);
+        const result = extension ? condition(extension) : false;
+        return result;
     }
 
     public static updateBpmnElementSLPBExtension(bpmnJS: IBpmnJS, businessObject: IBusinessObject, type: 'ActivityExtension' | 'GatewayExtension' | 'DataObjectExtension', setter: (extension: any) => void) {
@@ -128,7 +129,7 @@ export class BPMNJsRepository {
             businessObject.extensionElements = extensionElements;
         }
 
-        let activityExtension = BPMNJsRepository.getExtensionElements(businessObject, `${sebleichProcessBuilderExtension.prefix}:${type}`);
+        let activityExtension = BPMNJsRepository.getExtensionElement(businessObject, `${sebleichProcessBuilderExtension.prefix}:${type}`);
         if (!activityExtension) {
             activityExtension = bpmnJS._moddle.create(`${sebleichProcessBuilderExtension.prefix}:${type}`);
             extensionElements.get('values').push(activityExtension);

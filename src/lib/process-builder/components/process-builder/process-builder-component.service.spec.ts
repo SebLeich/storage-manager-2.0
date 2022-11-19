@@ -276,6 +276,10 @@ describe('ProcessBuilderComponentService', () => {
 
     it('should apply function configuration correctly', async () => {
       modelingModule.updateLabel = (...args) => { }
+      spyOn(modelingModule, 'appendShape').and.returnValue({
+        businessObject: {},
+        children: []
+      } as IElement);
       const activityMock = {
         businessObject: {},
         incoming: [] as IConnector[],
@@ -314,96 +318,102 @@ describe('ProcessBuilderComponentService', () => {
       expect((calls[0].args[0] as any)?.func?.identifier).toBe(mockFunction.identifier);
     });
 
-    [true, false].forEach(finalizesFlow => {
+    describe('Activity Process Termination End Event', () => {
 
-      it(`should ${finalizesFlow ? '' : 'not '}append sequence flow end event if function ${finalizesFlow ? '' : 'not '}finalizes flow`, async () => {
-        modelingModule.updateLabel = (...args) => { }
-        const activityMock = {
-          businessObject: {},
-          incoming: [] as IConnector[],
-          outgoing: [] as IConnector[],
-        } as IElement;
+      [true, false].forEach(finalizesFlow => {
 
-        const modelingModuleAppendShapeSpy = spyOn(modelingModule, 'appendShape');
+        it(`should ${finalizesFlow ? '' : 'not '}append sequence flow end event if function ${finalizesFlow ? '' : 'not '}finalizes flow`, async () => {
+          modelingModule.updateLabel = (...args) => { }
+          const activityMock = {
+            businessObject: {},
+            incoming: [] as IConnector[],
+            outgoing: [] as IConnector[],
+          } as IElement;
 
-        const connectorMock = {};
-        const updatedCanFail = true;
-        const updatedName = 'some new value';
-        const updatedNormalizedName = ProcessBuilderRepository.normalizeName(updatedName);
-        const implementation = [`return ${updatedNormalizedName};`];
+          const modelingModuleAppendShapeSpy = spyOn(modelingModule, 'appendShape').and.returnValue({
+            businessObject: {},
+            children: []
+          } as IElement);
 
-        await service.applyTaskCreationConfig({
-          configureActivity: activityMock,
-          configureIncomingErrorGatewaySequenceFlow: connectorMock
-        } as ITaskCreationPayload, {
-          functionIdentifier: mockFunction.identifier,
-          canFail: updatedCanFail,
-          normalizedName: updatedNormalizedName,
-          name: updatedName,
-          implementation: implementation,
-          isProcessOutput: finalizesFlow
-        } as ITaskCreationData);
+          const connectorMock = {};
+          const updatedCanFail = true;
+          const updatedName = 'some new value';
+          const updatedNormalizedName = ProcessBuilderRepository.normalizeName(updatedName);
+          const implementation = [`return ${updatedNormalizedName};`];
 
-        const calls = modelingModuleAppendShapeSpy.calls.all();
-        if (finalizesFlow) {
-          expect(modelingModuleAppendShapeSpy).toHaveBeenCalledTimes(1);
-          expect(calls.some(call => call.args[0] === activityMock && call.args[1].type === 'bpmn:EndEvent')).toBeTrue();
-        } else {
-          expect(modelingModuleAppendShapeSpy).not.toHaveBeenCalled();
-        }
+          await service.applyTaskCreationConfig({
+            configureActivity: activityMock,
+            configureIncomingErrorGatewaySequenceFlow: connectorMock
+          } as ITaskCreationPayload, {
+            functionIdentifier: mockFunction.identifier,
+            canFail: updatedCanFail,
+            normalizedName: updatedNormalizedName,
+            name: updatedName,
+            implementation: implementation,
+            isProcessOutput: finalizesFlow
+          } as ITaskCreationData);
 
-      });
-
-    });
-
-    [true, false].forEach(finalizesFlow => {
-
-      it(`should ${finalizesFlow ? 'not ' : ''}remove sequence flow end event if end event exists and function ${finalizesFlow ? 'not ' : ''}finalizes flow`, async () => {
-        modelingModule.updateLabel = (...args) => { }
-        let sequenceFlow = {
-          type: "bpmn:SequenceFlow",
-          target: {
-            type: 'bpmn:EndEvent',
-            incoming: [] as any[]
+          const calls = modelingModuleAppendShapeSpy.calls.all();
+          if (finalizesFlow) {
+            expect(modelingModuleAppendShapeSpy).toHaveBeenCalled();
+            expect(calls.some(call => call.args[0] === activityMock && call.args[1].type === 'bpmn:EndEvent')).toBeTrue();
+          } else {
+            expect(calls.some(call => call.args[0] === activityMock && call.args[1].type === 'bpmn:EndEvent')).toBeFalse();
           }
-        };
-        sequenceFlow.target.incoming.push(sequenceFlow);
 
-        const activityMock = {
-          businessObject: {},
-          incoming: [] as IConnector[],
-          outgoing: [sequenceFlow] as IConnector[],
-        } as IElement;
+        });
 
-        const modelingModuleRemoveShapeSpy = spyOn(modelingModule, 'removeElements');
+        it(`should ${finalizesFlow ? 'not ' : ''}remove sequence flow end event if end event exists and function ${finalizesFlow ? 'not ' : ''}finalizes flow`, async () => {
+          modelingModule.updateLabel = (...args) => { }
+          spyOn(modelingModule, 'appendShape').and.returnValue({
+            businessObject: {},
+            children: []
+          } as IElement);
+          let sequenceFlow = {
+            type: "bpmn:SequenceFlow",
+            target: {
+              type: 'bpmn:EndEvent',
+              incoming: [] as any[]
+            }
+          };
+          sequenceFlow.target.incoming.push(sequenceFlow);
 
-        const connectorMock = {};
-        const updatedCanFail = true;
-        const updatedName = 'some new value';
-        const updatedNormalizedName = ProcessBuilderRepository.normalizeName(updatedName);
-        const implementation = [`return ${updatedNormalizedName};`];
+          const activityMock = {
+            businessObject: {},
+            incoming: [] as IConnector[],
+            outgoing: [sequenceFlow] as IConnector[],
+          } as IElement;
 
-        await service.applyTaskCreationConfig({
-          configureActivity: activityMock,
-          configureIncomingErrorGatewaySequenceFlow: connectorMock
-        } as ITaskCreationPayload, {
-          functionIdentifier: mockFunction.identifier,
-          canFail: updatedCanFail,
-          normalizedName: updatedNormalizedName,
-          name: updatedName,
-          implementation: implementation,
-          isProcessOutput: finalizesFlow
-        } as ITaskCreationData);
+          const modelingModuleRemoveShapeSpy = spyOn(modelingModule, 'removeElements');
 
-        const calls = modelingModuleRemoveShapeSpy.calls.all();
-        const deletedElements = calls.flatMap(call => call.args.flatMap(arg => arg));
-        const outgoingElements = [sequenceFlow.target, sequenceFlow];
-        if (finalizesFlow) {
-          expect(outgoingElements.some(element => deletedElements.indexOf(element as any) > -1)).toBeFalse();
-        } else {
-          expect(modelingModuleRemoveShapeSpy).toHaveBeenCalled();
-          expect(outgoingElements.every(element => deletedElements.indexOf(element as any) > -1)).toBeTrue();
-        }
+          const connectorMock = {};
+          const updatedName = 'some new value';
+          const updatedNormalizedName = ProcessBuilderRepository.normalizeName(updatedName);
+          const implementation = [`return ${updatedNormalizedName};`];
+
+          await service.applyTaskCreationConfig({
+            configureActivity: activityMock,
+            configureIncomingErrorGatewaySequenceFlow: connectorMock
+          } as ITaskCreationPayload, {
+            functionIdentifier: mockFunction.identifier,
+            canFail: false,
+            normalizedName: updatedNormalizedName,
+            name: updatedName,
+            implementation: implementation,
+            isProcessOutput: finalizesFlow
+          } as ITaskCreationData);
+
+          const calls = modelingModuleRemoveShapeSpy.calls.all();
+          const deletedElements = calls.flatMap(call => call.args.flatMap(arg => arg));
+          const outgoingElements = [sequenceFlow.target, sequenceFlow];
+          if (finalizesFlow) {
+            expect(outgoingElements.some(element => deletedElements.indexOf(element as any) > -1)).toBeFalse();
+          } else {
+            expect(modelingModuleRemoveShapeSpy).toHaveBeenCalled();
+            expect(outgoingElements.every(element => deletedElements.indexOf(element as any) > -1)).toBeTrue();
+          }
+
+        });
 
       });
 
@@ -411,6 +421,10 @@ describe('ProcessBuilderComponentService', () => {
 
     it('should update bpmn activity function identifier', async () => {
       modelingModule.updateLabel = (...args) => { }
+      spyOn(modelingModule, 'appendShape').and.returnValue({
+        businessObject: {},
+        children: []
+      } as IElement);
       const activityMock = {
         businessObject: {},
         incoming: [] as IConnector[],
@@ -440,6 +454,10 @@ describe('ProcessBuilderComponentService', () => {
 
     it('should update bpmn activity function name', async () => {
       modelingModule.updateLabel = (...args) => { }
+      spyOn(modelingModule, 'appendShape').and.returnValue({
+        businessObject: {},
+        children: []
+      } as IElement);
       const modelingModuleAppendShapeSpy = spyOn(modelingModule, 'updateLabel');
 
       const activityMock = {
@@ -470,117 +488,237 @@ describe('ProcessBuilderComponentService', () => {
       expect(calls.some(call => call.args[0] === activityMock && call.args[1] === updatedName)).toBeTrue();
     });
 
-    [
-      { value: { "myProperty": 100 } },
-      { value: 1.501 },
-      { value: 1 },
-      { value: 10065.123 },
-      { value: '"my custom string"' },
-      { value: 'injector.myValue', injectorType: 'object' },
-      { value: 'injector.myValue.myProperty', injectorType: 'string' },
-      { value: 'injector.myValue.anotherProperty', injectorType: 'boolean' },
-      { value: ['value1', 'value2'] },
-      { value: true },
-      { value: false },
-    ].forEach(entry => {
-      const value = entry.injectorType ? deepObjectLookup(injector, entry.value) : entry.value;
-      const title = typeof value === 'object' ? JSON.stringify(value) : value;
-      const stringifiedValue = typeof entry.value === 'object' ? JSON.stringify(entry.value) : entry.value.toString();
-      const parsedType = entry.injectorType ?? (typeof entry.value === 'object' && Array.isArray(entry.value) ? 'array' : typeof entry.value);
+    describe('Custom Function Output Param', () => {
 
-      it(`should correctly apply output param configuration ${title} (${parsedType}${entry.injectorType ? ', from injector' : ''})`, async () => {
+      [
+        { value: { "myProperty": 100 } },
+        { value: 1.501 },
+        { value: 1 },
+        { value: 10065.123 },
+        { value: '"my custom string"' },
+        { value: 'injector.myValue', injectorType: 'object' },
+        { value: 'injector.myValue.myProperty', injectorType: 'string' },
+        { value: 'injector.myValue.anotherProperty', injectorType: 'boolean' },
+        { value: ['value1', 'value2'] },
+        { value: true },
+        { value: false },
+      ].forEach(entry => {
+        const value = entry.injectorType ? deepObjectLookup(injector, entry.value) : entry.value;
+        const title = typeof value === 'object' ? JSON.stringify(value) : value;
+        const stringifiedValue = typeof entry.value === 'object' ? JSON.stringify(entry.value) : entry.value.toString();
+        const parsedType = entry.injectorType ?? (typeof entry.value === 'object' && Array.isArray(entry.value) ? 'array' : typeof entry.value);
+
+        it(`should correctly apply output param configuration ${title} (${parsedType}${entry.injectorType ? ', from injector' : ''})`, async () => {
+          modelingModule.updateLabel = (...args) => { }
+          spyOn(BPMNJsRepository, 'appendOutputParam');
+          spyOn(modelingModule, 'appendShape').and.returnValue({
+            businessObject: {},
+            children: []
+          } as IElement);
+
+          const store = TestBed.inject(Store);
+          const storeSpy = spyOn(store, 'dispatch');
+          const activityMock = {
+            businessObject: {},
+            children: [],
+            incoming: [] as IConnector[],
+            outgoing: [] as IConnector[],
+            x: 0,
+            y: 0
+          } as IElement;
+          const connectorMock = {};
+          const updatedCanFail = true;
+          const updatedName = 'some new value';
+          const updatedNormalizedName = ProcessBuilderRepository.normalizeName(updatedName);
+          const outputParamName = 'My Object';
+          const normalizedOutputParamName = ProcessBuilderRepository.normalizeName(outputParamName);
+          const implementation = [
+            'async (injector) => {',
+            `return ${stringifiedValue};`,
+            '}',
+          ];
+
+          await service.applyTaskCreationConfig({
+            configureActivity: activityMock,
+            configureIncomingErrorGatewaySequenceFlow: connectorMock
+          } as ITaskCreationPayload, {
+            functionIdentifier: mockFunction.identifier,
+            canFail: updatedCanFail,
+            normalizedName: updatedNormalizedName,
+            name: updatedName,
+            implementation: implementation,
+            outputParamName: outputParamName,
+            normalizedOutputParamName: normalizedOutputParamName
+          } as ITaskCreationData);
+
+          expect(storeSpy).toHaveBeenCalled();
+
+          const calls = storeSpy.calls.all();
+          const upsertIParamCall = calls.find(call => call.args[0].type === upsertIParam.type);
+          expect(upsertIParamCall).toBeTruthy();
+
+          expect(((upsertIParamCall?.args[0] as any).param as IParam).name).toBe(outputParamName);
+          expect(((upsertIParamCall?.args[0] as any).param as IParam).normalizedName).toBe(normalizedOutputParamName);
+          expect(((upsertIParamCall?.args[0] as any).param as IParam).type).toBe(parsedType);
+
+          const finiteValue = entry.injectorType ? deepObjectLookup(injector, entry.value) : entry.value;
+          expect(((upsertIParamCall?.args[0] as any).param as IParam).defaultValue).toEqual(finiteValue);
+        });
+
+        it(`should correctly append output param ${title} (${parsedType}${entry.injectorType ? ', from injector' : ''}) to activity`, async () => {
+          modelingModule.updateLabel = (...args) => { }
+          spyOn(modelingModule, 'appendShape').and.returnValue({
+            businessObject: {},
+            children: []
+          } as IElement);
+
+          const appendOutputParamSpy = spyOn(BPMNJsRepository, 'appendOutputParam');
+          const activityMock = {
+            businessObject: {},
+            children: [],
+            incoming: [] as IConnector[],
+            outgoing: [] as IConnector[],
+            x: 0,
+            y: 0
+          } as IElement;
+          const connectorMock = {};
+          const updatedCanFail = true;
+          const updatedName = 'some new value';
+          const updatedNormalizedName = ProcessBuilderRepository.normalizeName(updatedName);
+          const outputParamName = 'My Object';
+          const normalizedOutputParamName = ProcessBuilderRepository.normalizeName(outputParamName);
+          const implementation = [
+            'async (injector) => {',
+            `return ${stringifiedValue};`,
+            '}',
+          ];
+
+          const result = await service.applyTaskCreationConfig({
+            configureActivity: activityMock,
+            configureIncomingErrorGatewaySequenceFlow: connectorMock
+          } as ITaskCreationPayload, {
+            functionIdentifier: mockFunction.identifier,
+            canFail: updatedCanFail,
+            normalizedName: updatedNormalizedName,
+            name: updatedName,
+            implementation: implementation,
+            outputParamName: outputParamName,
+            normalizedOutputParamName: normalizedOutputParamName
+          } as ITaskCreationData);
+
+          expect(appendOutputParamSpy).toHaveBeenCalledTimes(1);
+          expect(appendOutputParamSpy).toHaveBeenCalledWith(bpmnJsService.bpmnJs, activityMock, result?.outputParam, true, result?.outputParam?.interface ?? undefined);
+        })
+
+      });
+
+    });
+
+    [
+      { canFail: false, existingGateway: null, followingTask: null },
+      { canFail: true, existingGateway: null, followingTask: null },
+      { canFail: false, existingGateway: { businessObject: {}, incoming: [], outgoing: [] } as any, followingTask: null },
+      { canFail: true, existingGateway: { businessObject: {}, incoming: [], outgoing: [] } as any, followingTask: null },
+      { canFail: false, existingGateway: null, followingTask: { businessObject: {} } },
+      { canFail: true, existingGateway: null, followingTask: { businessObject: {} } },
+      { canFail: false, existingGateway: { businessObject: {}, incoming: [], outgoing: [] } as any, followingTask: { businessObject: {} } },
+      { canFail: true, existingGateway: { businessObject: {}, incoming: [], outgoing: [] } as any, followingTask: { businessObject: {} } }
+    ].forEach(configuration => {
+
+      const shouldAppend = configuration.canFail && !configuration.existingGateway;
+      const shouldDelete = !configuration.canFail && configuration.existingGateway;
+      const shouldReconnectGatewayToSuccessor = shouldAppend && configuration.followingTask;
+
+      it(`should ${shouldAppend ? 'append' : shouldDelete ? 'delete' : 'neither delete nor append'} error gateway ${shouldReconnectGatewayToSuccessor ? 'and reconnect the successor' : ''} (${configuration.canFail}, ${!!configuration.existingGateway}, ${configuration.followingTask})`, async () => {
         modelingModule.updateLabel = (...args) => { }
         spyOn(BPMNJsRepository, 'appendOutputParam');
 
-        const store = TestBed.inject(Store);
-        const storeSpy = spyOn(store, 'dispatch');
+        const appendShapeSpy = spyOn(modelingModule, 'appendShape').and.returnValue({
+          businessObject: {},
+          children: []
+        } as IElement);
+        const removeShapeSpy = spyOn(modelingModule, 'removeElements');
+        const connectShapeSpy = spyOn(modelingModule, 'connect');
+
+
+        let outgoing: IConnector[] = [], incoming: IConnector[] = [];
         const activityMock = {
           businessObject: {},
           children: [],
-          incoming: [] as IConnector[],
-          outgoing: [] as IConnector[],
+          incoming: incoming,
+          outgoing: outgoing,
           x: 0,
           y: 0
         } as IElement;
+
+        if (configuration.existingGateway) {
+          BPMNJsRepository.updateBpmnElementSLPBExtension(
+            bpmnJsService.bpmnJs,
+            configuration.existingGateway.businessObject,
+            'GatewayExtension',
+            (ext) => ext.gatewayType = 'error_gateway'
+          );
+          outgoing.push({
+            type: shapeTypes.SequenceFlow,
+            source: activityMock,
+            target: configuration.existingGateway,
+            businessObject: {}
+          } as IConnector);
+        }
+
+        if (shouldDelete) {
+          configuration.existingGateway.outgoing = [
+            {
+              businessObject: {},
+              source: configuration.existingGateway,
+              target: {},
+              type: shapeTypes.SequenceFlow
+            } as IConnector
+          ];
+        }
+
+        if (shouldReconnectGatewayToSuccessor) {
+          outgoing.push({
+            businessObject: {},
+            source: activityMock,
+            target: configuration.followingTask,
+            type: shapeTypes.SequenceFlow
+          } as IConnector);
+        }
+
         const connectorMock = {};
-        const updatedCanFail = true;
         const updatedName = 'some new value';
         const updatedNormalizedName = ProcessBuilderRepository.normalizeName(updatedName);
         const outputParamName = 'My Object';
         const normalizedOutputParamName = ProcessBuilderRepository.normalizeName(outputParamName);
-        const implementation = [
-          'async (injector) => {',
-          `return ${stringifiedValue};`,
-          '}',
-        ];
-
-        await service.applyTaskCreationConfig({
-          configureActivity: activityMock,
-          configureIncomingErrorGatewaySequenceFlow: connectorMock
-        } as ITaskCreationPayload, {
-          functionIdentifier: mockFunction.identifier,
-          canFail: updatedCanFail,
-          normalizedName: updatedNormalizedName,
-          name: updatedName,
-          implementation: implementation,
-          outputParamName: outputParamName,
-          normalizedOutputParamName: normalizedOutputParamName
-        } as ITaskCreationData);
-
-        expect(storeSpy).toHaveBeenCalled();
-
-        const calls = storeSpy.calls.all();
-        const upsertIParamCall = calls.find(call => call.args[0].type === upsertIParam.type);
-        expect(upsertIParamCall).toBeTruthy();
-
-        expect(((upsertIParamCall?.args[0] as any).param as IParam).name).toBe(outputParamName);
-        expect(((upsertIParamCall?.args[0] as any).param as IParam).normalizedName).toBe(normalizedOutputParamName);
-        expect(((upsertIParamCall?.args[0] as any).param as IParam).type).toBe(parsedType);
-
-        const finiteValue = entry.injectorType ? deepObjectLookup(injector, entry.value) : entry.value;
-        expect(((upsertIParamCall?.args[0] as any).param as IParam).defaultValue).toEqual(finiteValue);
-      });
-
-      it(`should correctly append output param ${title} (${parsedType}) to activity`, async () => {
-        modelingModule.updateLabel = (...args) => { }
-
-        const appendOutputParamSpy = spyOn(BPMNJsRepository, 'appendOutputParam');
-        const activityMock = {
-          businessObject: {},
-          children: [],
-          incoming: [] as IConnector[],
-          outgoing: [] as IConnector[],
-          x: 0,
-          y: 0
-        } as IElement;
-        const connectorMock = {};
-        const updatedCanFail = true;
-        const updatedName = 'some new value';
-        const updatedNormalizedName = ProcessBuilderRepository.normalizeName(updatedName);
-        const outputParamName = 'My Object';
-        const normalizedOutputParamName = ProcessBuilderRepository.normalizeName(outputParamName);
-        const implementation = [
-          'async (injector) => {',
-          `return ${stringifiedValue};`,
-          '}',
-        ];
 
         const result = await service.applyTaskCreationConfig({
           configureActivity: activityMock,
           configureIncomingErrorGatewaySequenceFlow: connectorMock
         } as ITaskCreationPayload, {
           functionIdentifier: mockFunction.identifier,
-          canFail: updatedCanFail,
+          canFail: configuration.canFail,
           normalizedName: updatedNormalizedName,
           name: updatedName,
-          implementation: implementation,
           outputParamName: outputParamName,
           normalizedOutputParamName: normalizedOutputParamName
         } as ITaskCreationData);
 
-        expect(appendOutputParamSpy).toHaveBeenCalledTimes(1);
-        expect(appendOutputParamSpy).toHaveBeenCalledWith(bpmnJsService.bpmnJs, activityMock, result?.outputParam, true, result?.outputParam?.interface ?? undefined);
-      })
+        if (shouldAppend) {
+          expect(appendShapeSpy).toHaveBeenCalledWith(activityMock, { type: shapeTypes.ExclusiveGateway }, { x: 200, y: 40 });
+        }
+
+        if (shouldDelete) {
+          const removedElements = removeShapeSpy.calls.all().flatMap(call => call.args.flatMap(arg => arg));
+          const shouldRemove = [configuration.existingGateway, ...configuration.existingGateway.outgoing];
+          expect(shouldRemove.every(toRemove => removedElements.indexOf(toRemove) > -1)).toBeTruthy();
+        }
+
+        if (shouldReconnectGatewayToSuccessor) {
+          expect(connectShapeSpy).toHaveBeenCalled();
+          expect(connectShapeSpy).toHaveBeenCalledWith(result!.gatewayShape!, configuration.followingTask as IElement);
+        }
+      });
 
     });
 
