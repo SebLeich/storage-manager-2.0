@@ -45,7 +45,7 @@ describe('TaskCreationComponent', () => {
         {
           provide: MatDialogRef,
           useValue: {
-            close: () => {},
+            close: () => { },
           },
         },
         {
@@ -87,40 +87,31 @@ describe('TaskCreationComponent', () => {
       ) as IElement;
   });
 
+  afterEach(() => {
+    if (diagramWrapper) {
+      document.body.removeChild(diagramWrapper);
+    }
+  });
+
   it('should create', () => {
     expect(component).toBeTruthy();
   });
 
   it('should display function selection in case activity provided for configuration', async () => {
-    taskCreationPayload.configureActivity =
-      bpmnJsService.elementRegistryModule.get(
-        exemplaryBpmnModel.activityGuid
-      ) as IElement;
+    taskCreationPayload.configureActivity = bpmnJsService.elementRegistryModule.get(
+      exemplaryBpmnModel.activityGuid
+    ) as IElement;
 
     component.validateFunctionSelection();
     fixture.detectChanges();
 
     const availableSteps = await selectSnapshot(component.steps$);
-    const tabLabels = debugElement.queryAll(By.css('.mat-tab-label-content'));
+    const tabLabels = debugElement.queryAll(By.css('.mdc-tab__text-label'));
+    const hasFunctionSelectionStep = availableSteps.some((step) => step.taskCreationStep === TaskCreationStep.ConfigureFunctionSelection);
+    const functionSelectionTitle = new TaskCreationStepPipe().transform(TaskCreationStep.ConfigureFunctionSelection);
+    const functionSelectionTabTitle = tabLabels.find((label) => (label.nativeElement as HTMLDivElement).textContent === functionSelectionTitle);
 
-    expect(
-      availableSteps.some(
-        (step) =>
-          step.taskCreationStep === TaskCreationStep.ConfigureFunctionSelection
-      )
-    ).toBeTrue();
-    expect(
-      tabLabels.find(
-        (label) =>
-          (label.nativeElement as HTMLDivElement).textContent ===
-          new TaskCreationStepPipe().transform(
-            TaskCreationStep.ConfigureFunctionSelection
-          )
-      )
-    ).toBeTruthy();
-  });
-
-  afterEach(() => {
-    document.body.removeChild(diagramWrapper);
+    expect(hasFunctionSelectionStep).toBeTrue();
+    expect(functionSelectionTabTitle).toBeTruthy();
   });
 });

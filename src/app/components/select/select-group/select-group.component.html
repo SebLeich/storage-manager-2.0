@@ -17,7 +17,7 @@
             </div>
         </mat-option>
 
-        <mat-option class="smgr-manual-select-add-input-option">
+        <mat-option id="input-option" class="smgr-manual-select-add-input-option">
 
             <input class="smgr-manual-select-add-input" type="text" (click)="$event.stopPropagation()"
                 (keydown)="$event.stopPropagation()" (keydown.enter)="addGroup($any($event))" placeholder="add group" />
