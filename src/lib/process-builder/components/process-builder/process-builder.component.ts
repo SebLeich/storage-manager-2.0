@@ -1,18 +1,19 @@
-import { ChangeDetectorRef, Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { showAnimation } from 'src/lib/shared/animations/show-delayed.animation';
-import { BpmnJsService } from '../../services/bpmnjs.service';
+import { BpmnJsService } from '../../services/bpmn-js.service';
 import { ProcessBuilderService } from '../../services/process-builder.service';
-import { ProcessBuilderComponentService } from './process-builder-component.service';
-import { delay, map, Observable, startWith, switchMap, timer } from 'rxjs';
+import { map, Subscription, startWith, switchMap, timer } from 'rxjs';
 import { Store } from '@ngrx/store';
 import { selectCurrentIBpmnJSModel } from '../../store/selectors/i-bpmn-js-model.selectors';
+import { ProcessBuilderComponentService } from './process-builder-component.service';
+import { upsertProcedure } from 'src/app/store/actions/i-pending-procedure.actions';
 
 @Component({
   selector: 'app-process-builder',
   templateUrl: './process-builder.component.html',
   styleUrls: ['./process-builder.component.sass'],
-  providers: [ProcessBuilderComponentService],
-  animations: [showAnimation]
+  animations: [showAnimation],
+  providers: [ProcessBuilderComponentService]
 })
 export class ProcessBuilderComponent implements OnDestroy, OnInit {
 
@@ -25,25 +26,36 @@ export class ProcessBuilderComponent implements OnDestroy, OnInit {
     ))
   );
 
+  private _subscription = new Subscription();
+
   constructor(
     public processBuilderService: ProcessBuilderService,
-    public processBuilderComponentService: ProcessBuilderComponentService,
     public bpmnJsService: BpmnJsService,
     private _store: Store,
-    private _changeDetectorRef: ChangeDetectorRef
+    private _processBuilderComponentService: ProcessBuilderComponentService,
   ) { }
+
+  public ngOnDestroy(): void {
+    this._subscription.unsubscribe();
+  }
 
   public ngOnInit(): void {
     this.init();
   }
 
-  public ngOnDestroy(): void {
-    this.processBuilderComponentService.dispose();
-  }
-
   private async init() {
-    await this.processBuilderComponentService.init(this.diagramWrapper.nativeElement);
-    this._changeDetectorRef.detectChanges();
+    await this.bpmnJsService.attachBpmnModelToDomElement(this.diagramWrapper.nativeElement);
+
+    this._processBuilderComponentService
+      .taskEditingDialogResultReceived$
+      .subscribe((args) => {
+        this._processBuilderComponentService.applyTaskCreationConfig(args.taskCreationPayload, args.taskCreationData);
+      });
+
+    this.bpmnJsService.taskEditingProcedure$
+      .subscribe(procedure => {
+        this._store.dispatch(upsertProcedure({ procedure }));
+      });
   }
 
 }

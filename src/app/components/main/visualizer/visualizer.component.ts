@@ -21,7 +21,7 @@ import { IVisualizerContextService, VISUALIZER_CONTEXT } from 'src/app/interface
 @Component({
   selector: 'app-visualizer',
   templateUrl: './visualizer.component.html',
-  styleUrls: ['./visualizer.component.css'],
+  styleUrls: ['./visualizer.component.scss'],
   providers: [
     VisualizationService,
     { provide: VISUALIZER_CONTEXT, useClass: VisualizerComponentService }

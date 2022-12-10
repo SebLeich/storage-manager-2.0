@@ -14,12 +14,14 @@ import { DebugElement } from '@angular/core';
 import { selectSnapshot } from 'src/lib/process-builder/globals/select-snapshot';
 import { selectGroups } from 'src/app/store/selectors/i-group.selectors';
 import { isEqual } from 'lodash';
+import { MatSelect } from '@angular/material/select';
 
 describe('SelectGroupComponent', () => {
   let component: SelectGroupComponent;
   let fixture: ComponentFixture<SelectGroupComponent>;
   let store: Store;
-  let groups = [
+
+  const groups = [
     { id: generateGuid(), color: '#ffffff', desc: 'first group', sequenceNumber: 1 } as IGroup,
     { id: generateGuid(), color: '#000000', desc: 'second group', sequenceNumber: 2 } as IGroup,
     { id: generateGuid(), color: '#00ccee', desc: 'third group', sequenceNumber: 3 } as IGroup,
@@ -51,33 +53,29 @@ describe('SelectGroupComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should show options for all groups', () => {
-    const trigger = fixture.debugElement.query(By.css('.mat-select-trigger'));
-    trigger.nativeElement.click();
-    fixture.detectChanges();
+  it('should have option to add group', () => {
+    const matSelect: MatSelect = fixture.debugElement.query(By.css('mat-select')).componentInstance;
+    const inputOption = getInputOption(matSelect);
 
-    const options = fixture.debugElement.queryAll(By.css('mat-option:not(.smgr-manual-select-add-input-option)'));
+    expect(inputOption).toBeTruthy();
+  });
+
+  it('should show options for all groups', () => {
+    const matSelect: MatSelect = fixture.debugElement.query(By.css('mat-select')).componentInstance;
+    const inputOption = getInputOption(matSelect);
+    const options = matSelect.options.filter(option => option !== inputOption);
 
     expect(options.length).toBe(groups.length);
   });
 
-  it('should have option to add group', () => {
-    const trigger = fixture.debugElement.query(By.css('.mat-select-trigger'));
-    trigger.nativeElement.click();
-    fixture.detectChanges();
-
-    const option = fixture.debugElement.query(By.css('mat-option.smgr-manual-select-add-input-option'));
-
-    expect(option).toBeTruthy();
-  });
-
   it('should add group on add group input enter', async () => {
-    const trigger = fixture.debugElement.query(By.css('.mat-select-trigger'));
     const newGroupName = 'TEST_GROUP';
-    trigger.nativeElement.click();
-    fixture.detectChanges();
+    const matSelect: MatSelect = fixture.debugElement.query(By.css('mat-select')).componentInstance;
 
-    const inputDebugElement: DebugElement = fixture.debugElement.query(By.css('mat-option.smgr-manual-select-add-input-option input'));
+    matSelect.open();
+    fixture.detectChanges();
+    
+    const inputDebugElement: DebugElement = fixture.debugElement.query(By.css('#input-option input'));
     const input: HTMLInputElement = inputDebugElement.nativeElement;
 
     expect(input).toBeTruthy();
@@ -95,3 +93,7 @@ describe('SelectGroupComponent', () => {
     expect(isEqual(allGroups.map(group => group.desc).sort(), [...groups.map(group => group.desc), newGroupName].sort())).toBeTrue();
   });
 });
+
+function getInputOption(matSelect: MatSelect){
+  return matSelect.options.find(option => option.id === 'input-option');
+}

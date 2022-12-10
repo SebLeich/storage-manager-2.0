@@ -10,6 +10,9 @@ import { IOrderEffects } from './store/effects/i-order.effects';
 import * as fromIProductState from './store/reducers/i-product.reducers';
 import { IProductEffects } from './store/effects/i-product.effects';
 
+import * as fromIProcedureState from './store/reducers/i-pending-procedure.reducers';
+import { IPendingProcedureEffects } from './store/effects/i-pending-procedure.effects';
+
 import * as fromISolutionState from './store/reducers/i-solution.reducers';
 import { ISolutionEffects } from './store/effects/i-solution.effects';
 
@@ -51,6 +54,7 @@ let rootStoreFeatures: any = {};
 rootStoreFeatures[fromICalculationAttributesState.calculationAttributesFeatureKey] = fromICalculationAttributesState.calculationAttributesReducer;
 rootStoreFeatures[fromIGroupState.groupFeatureKey] = fromIGroupState.groupReducer;
 rootStoreFeatures[fromIOrderState.orderFeatureKey] = fromIOrderState.orderReducer;
+rootStoreFeatures[fromIProcedureState.pendingProcedureFeatureKey] = fromIProcedureState.pendingProcedureReducer;
 rootStoreFeatures[fromIProductState.productFeatureKey] = fromIProductState.productReducer;
 rootStoreFeatures[fromISolutionState.solutionFeatureKey] = fromISolutionState.solutionReducer;
 rootStoreFeatures[fromISolutionPreviewState.solutionPreviewFeatureKey] = fromISolutionPreviewState.reducer;
@@ -83,6 +87,7 @@ export default [
         ICalculationAttributesEffects,
         IGroupEffects,
         IOrderEffects,
+        IPendingProcedureEffects,
         IProductEffects,
         ISolutionEffects,
 

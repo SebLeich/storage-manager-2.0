@@ -10,24 +10,24 @@ import { environment } from 'src/environments/environment';
 @Component({
   selector: 'app-navbar',
   templateUrl: './navbar.component.html',
-  styleUrls: ['./navbar.component.css']
+  styleUrls: ['./navbar.component.scss'],
 })
 export class NavbarComponent implements OnInit {
-
   currentApplicationVersion = (environment as any).appVersion;
 
-  solutionCount$ = this._solutionStore.select(selectSolutions).pipe(map(solutions => solutions?.length ?? 0));
+  solutionCount$ = this._solutionStore
+    .select(selectSolutions)
+    .pipe(map((solutions) => solutions?.length ?? 0));
 
   private _limitedHeight = new BehaviorSubject<boolean>(false);
   limitedHeight$ = this._limitedHeight.asObservable();
 
   constructor(
     public router: Router,
-    private _solutionStore: Store<fromISolutionState.State>,
+    private _solutionStore: Store<fromISolutionState.State>
   ) { }
 
-  ngOnInit(): void {
-  }
+  ngOnInit(): void { }
 
   @HostListener('window:resize', ['$event'])
   onResize(event: Event) {
@@ -37,5 +37,4 @@ export class NavbarComponent implements OnInit {
   validateClient() {
     this._limitedHeight.next(window.innerHeight <= 500);
   }
-
 }

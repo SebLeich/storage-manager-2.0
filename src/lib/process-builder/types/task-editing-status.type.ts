@@ -1,0 +1,1 @@
+export type TaskEditingStatus = 'idle' | 'collecting';

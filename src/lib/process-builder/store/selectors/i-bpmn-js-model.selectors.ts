@@ -10,24 +10,33 @@ export const selectIBpmnJSModelState = createFeatureSelector<fromIBpmnJSModel.St
 export const selectCurrentIBpmnJSModelGuid = createSelector(
     selectIBpmnJSModelState,
     (state: fromIBpmnJSModel.State) => {
-        return state.currentBpmnJSModelGuid;
+        return state?.currentBpmnJSModelGuid;
     }
 );
 
 export const selectCurrentIBpmnJSModel = createSelector(
     selectIBpmnJSModelState,
     (state: fromIBpmnJSModel.State) => {
-        if (!state || !state.currentBpmnJSModelGuid || !state.entities) return null;
-        return state.entities[state.currentBpmnJSModelGuid] ?? null;
+        if (!state || !state.currentBpmnJSModelGuid || !state.entities) {
+            return null;
+        }
+
+        return state?.entities[state.currentBpmnJSModelGuid] ?? null;
     }
 );
 
 export const selectIBpmnJSModel = (arg: string | (() => string)) => createSelector(
     selectIBpmnJSModelState,
     (state: fromIBpmnJSModel.State) => {
-        if (!state || !state.entities || !arg || arg === 'dynamic') return null;
+        if (!state || !state.entities || !arg || arg === 'dynamic') {
+            return null;
+        }
+
         let code = typeof arg === 'function' ? arg() : arg;
-        if (!code || code === 'dynamic') return null;
+        if (!code || code === 'dynamic') {
+            return null;
+        }
+
         return Object.values(state.entities).find(x => x?.guid === code);
     }
 );

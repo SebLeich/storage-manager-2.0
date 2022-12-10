@@ -1,8 +1,9 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import defaultImportsConstant from 'src/app/default-imports.constant';
+import { FUNCTIONS_CONFIG_TOKEN } from '../../globals/i-function';
 import { PROCESS_BUILDER_CONFIG_TOKEN } from '../../globals/i-process-builder-config';
+import { INJECTOR_INTERFACE_TOKEN, INJECTOR_TOKEN } from '../../globals/injector';
 import { ProcessBuilderModule } from '../../process-builder.module';
-import { ProcessBuilderComponentService } from './process-builder-component.service';
 
 import { ProcessBuilderComponent } from './process-builder.component';
 
@@ -19,19 +20,10 @@ describe('ProcessBuilderComponent', () => {
         ProcessBuilderModule
       ],
       providers: [
-        {
-          provide: ProcessBuilderComponentService, useValue: {
-            dispose: () => {
-
-            },
-            init: () => {
-
-            }
-          },
-        },
-        {
-          provide: PROCESS_BUILDER_CONFIG_TOKEN, useValue: {}
-        }
+        { provide: FUNCTIONS_CONFIG_TOKEN, useValue: [] },
+        { provide: PROCESS_BUILDER_CONFIG_TOKEN, useValue: {} },
+        { provide: INJECTOR_INTERFACE_TOKEN, useValue: {} },
+        { provide: INJECTOR_TOKEN, useValue: {} },
       ]
     })
       .compileComponents();
@@ -46,4 +38,4 @@ describe('ProcessBuilderComponent', () => {
   it('should create', () => {
     expect(component).toBeTruthy();
   });
-});
+}); 

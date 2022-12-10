@@ -4,13 +4,13 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { Store } from '@ngrx/store';
 import { Subscription } from 'rxjs';
 import { debounceTime } from 'rxjs/operators';
-import { IElement } from 'src/lib/bpmn-io/interfaces/i-element.interface';
+import { IElement } from 'src/lib/bpmn-io/interfaces/element.interface';
 import { BPMNJsRepository } from 'src/lib/core/bpmn-js.repository';
 import { ValidationError } from 'src/lib/process-builder/globals/validation-error';
 import { ValidationWarning } from 'src/lib/process-builder/globals/validation-warning';
 import { ValidationErrorPipe } from 'src/lib/process-builder/pipes/validation-error.pipe';
 import { ValidationWarningPipe } from 'src/lib/process-builder/pipes/validation-warning.pipe';
-import { BpmnJsService } from 'src/lib/process-builder/services/bpmnjs.service';
+import { BpmnJsService } from 'src/lib/process-builder/services/bpmn-js.service';
 import { createIBpmnJsModel, updateCurrentIBpmnJSModel, updateIBpmnJSModel } from 'src/lib/process-builder/store/actions/i-bpmn-js-model.actions';
 import { selectCurrentIBpmnJSModel } from 'src/lib/process-builder/store/selectors/i-bpmn-js-model.selectors';
 

@@ -7,7 +7,7 @@ import { autocompletion, CompletionContext } from "@codemirror/autocomplete";
 import { EditorState, Text } from '@codemirror/state';
 import { basicSetup, EditorView } from '@codemirror/basic-setup';
 import { esLint, javascript } from '@codemirror/lang-javascript';
-import { CodemirrorRepository } from 'src/lib/core/codemirror-repository';
+import { CodemirrorRepository } from 'src/lib/core/codemirror.repository';
 import { MethodEvaluationStatus } from 'src/lib/process-builder/globals/method-evaluation-status';
 import { IProcessBuilderConfig, PROCESS_BUILDER_CONFIG_TOKEN } from 'src/lib/process-builder/globals/i-process-builder-config';
 import { linter, lintGutter } from '@codemirror/lint';
@@ -50,7 +50,7 @@ export class EmbeddedFunctionImplementationComponent implements IEmbeddedView, A
   implementationChanged$ = this._implementationChanged.asObservable();
 
   private _returnValueStatus: BehaviorSubject<MethodEvaluationStatus> = new BehaviorSubject<MethodEvaluationStatus>(MethodEvaluationStatus.Initial);
-  returnValueStatus$ = this._returnValueStatus.asObservable();
+  public returnValueStatus$ = this._returnValueStatus.asObservable();
 
   private _subscriptions = new Subscription();
 
@@ -78,9 +78,17 @@ export class EmbeddedFunctionImplementationComponent implements IEmbeddedView, A
         tap(() => this._returnValueStatus.next(MethodEvaluationStatus.Calculating)),
         debounceTime(500)
       ).subscribe(() => {
-        this._returnValueStatus.next(CodemirrorRepository.evaluateCustomMethod(this.codeMirror.state));
+        const evaluationResult = CodemirrorRepository.evaluateCustomMethod(this.codeMirror.state);
+        this._returnValueStatus.next(evaluationResult.status);
       }),
-      this.returnValueStatus$.subscribe(status => status === MethodEvaluationStatus.ReturnValueFound ? this.formGroup.controls['outputParamName'].enable() : this.formGroup.controls['outputParamName'].disable())
+      this.returnValueStatus$.subscribe((status) => {
+        if (status === MethodEvaluationStatus.ReturnValueFound) {
+          this.formGroup.controls['outputParamName'].enable();
+
+        } else {
+          this.formGroup.controls['outputParamName'].disable();
+        }
+      }),
     ]);
     this.codeMirror = new EditorView({
       state: this.state(),
@@ -92,16 +100,14 @@ export class EmbeddedFunctionImplementationComponent implements IEmbeddedView, A
 
   public ngOnDestroy = () => this._subscriptions.unsubscribe();
 
-  complete = (context: CompletionContext) => {
+  public complete = (context: CompletionContext) => {
     let nodeBefore = syntaxTree(context.state).resolveInner(context.pos, -1);
-
     if (completePropertyAfter.includes(nodeBefore.name) && nodeBefore.parent?.name === "MemberExpression") {
       let object = nodeBefore.parent.getChild("Expression");
       if (object?.name === 'VariableName' || object?.name === 'MemberExpression') {
         let from = /\./.test(nodeBefore.name) ? nodeBefore.to : nodeBefore.from;
         let variableName = context.state.sliceDoc(object.from, object.to);
-        if (typeof byString(this._injector, variableName) === "object"){
-          console.log(this._injector, variableName);
+        if (typeof byString(this._injector, variableName) === "object") {
           return completeProperties(from, byString(this._injector, variableName) as any);
         }
       }
@@ -110,7 +116,6 @@ export class EmbeddedFunctionImplementationComponent implements IEmbeddedView, A
     } else if (/*context.explicit && */!dontCompleteIn.includes(nodeBefore.name)) {
       return completeProperties(context.pos, this._injector as any);
     }
-
     return null
   }
 
@@ -157,7 +162,6 @@ const dontCompleteIn = [
 ]
 
 function completeProperties(from: number, object: { type: string, apply?: string }) {
-  console.log(from, object);
   let options = [];
   for (let name in object) {
     if (!(object as any)[name]) continue;

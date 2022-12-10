@@ -24,6 +24,7 @@ import { PrettyLengthPipe } from './pipes/pretty-length.pipe';
 import { PrettyVolumePipe } from './pipes/pretty-volume.pipe';
 import { EditDataDialogComponent } from './components/dialog/edit-data-dialog/edit-data-dialog.component';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { SolutionPreviewComponent } from './components/solution-preview/solution-preview.component';
 import { ContainerPreviewComponent } from './components/container-preview/container-preview.component';
@@ -67,6 +68,9 @@ import { IGroupEffects } from './store/effects/i-group.effects';
 import * as fromIOrderState from './store/reducers/i-order.reducers';
 import { IOrderEffects } from './store/effects/i-order.effects';
 
+import * as fromIPendingProceduresState from './store/reducers/i-pending-procedure.reducers';
+import { IPendingProcedureEffects } from './store/effects/i-pending-procedure.effects';
+
 import * as fromIProductState from './store/reducers/i-product.reducers';
 import { IProductEffects } from './store/effects/i-product.effects';
 
@@ -94,6 +98,7 @@ let rootStoreFeatures: any = {};
 rootStoreFeatures[fromICalculationAttributesState.calculationAttributesFeatureKey] = fromICalculationAttributesState.calculationAttributesReducer;
 rootStoreFeatures[fromIGroupState.groupFeatureKey] = fromIGroupState.groupReducer;
 rootStoreFeatures[fromIOrderState.orderFeatureKey] = fromIOrderState.orderReducer;
+rootStoreFeatures[fromIPendingProceduresState.pendingProcedureFeatureKey] = fromIPendingProceduresState.pendingProcedureReducer;
 rootStoreFeatures[fromIProductState.productFeatureKey] = fromIProductState.productReducer;
 rootStoreFeatures[fromISolutionState.solutionFeatureKey] = fromISolutionState.solutionReducer;
 rootStoreFeatures[fromISolutionPreviewState.solutionPreviewFeatureKey] = fromISolutionPreviewState.reducer;
@@ -141,6 +146,7 @@ rootStoreFeatures[fromISolutionPreviewState.solutionPreviewFeatureKey] = fromISo
     MatIconModule,
     MatExpansionModule,
     MatTableModule,
+    MatProgressBarModule,
     MatButtonModule,
     MatDialogModule,
     MatInputModule,
@@ -162,7 +168,7 @@ rootStoreFeatures[fromISolutionPreviewState.solutionPreviewFeatureKey] = fromISo
     SharedModule,
 
     StoreModule.forRoot(rootStoreFeatures, { }),
-    EffectsModule.forRoot([ICalculationAttributesEffects, IGroupEffects, IOrderEffects, IProductEffects, ISolutionEffects, ISolutionPreviewEffects]),
+    EffectsModule.forRoot([ICalculationAttributesEffects, IGroupEffects, IOrderEffects, IPendingProcedureEffects, IProductEffects, ISolutionEffects, ISolutionPreviewEffects]),
   ],
   providers: [
     { provide: PROCESS_BUILDER_CONFIG_TOKEN, useValue: PROCESS_BUILDER_CONFIG },

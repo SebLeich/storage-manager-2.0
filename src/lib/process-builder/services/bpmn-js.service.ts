@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Inject, Injectable } from '@angular/core';
 
 // @ts-ignore
 import * as BpmnJS from 'bpmn-js/dist/bpmn-modeler.production.min.js';
@@ -15,27 +15,54 @@ import * as tooltips from "diagram-js/lib/features/tooltips";
 // @ts-ignore
 import customRendererModule from '../extensions/custom-renderer';
 
+import { v4 as generateGuid } from 'uuid';
+
 import sebleichProcessBuilderExtension from '../globals/sebleich-process-builder-extension';
 import { IBpmnJS } from '../interfaces/i-bpmn-js.interface';
-import { getCanvasModule, getDirectEditingModule, getElementRegistryModule, getEventBusModule, getModelingModule, getTooltipModule, getZoomScrollModule } from 'src/lib/bpmn-io/bpmn-modules';
-import { BehaviorSubject, combineLatest, debounceTime, delay, filter, from, map, merge, Observable, shareReplay, switchMap, throttleTime, timer } from 'rxjs';
-import { IConnectionCreatePostExecutedEvent } from 'src/lib/bpmn-io/interfaces/i-connection-create-post-executed-event.interface';
-import { IModelingModule } from 'src/lib/bpmn-io/interfaces/i-modeling-module.interface';
+import { getCanvasModule, getDirectEditingModule, getElementRegistryModule, getEventBusModule, getModelingModule, getTooltipModule, getZoomScrollModule, IElementRegistryModule, ITooltipModule } from 'src/lib/bpmn-io/bpmn-modules';
+import {
+  BehaviorSubject,
+  buffer,
+  combineLatest,
+  debounceTime,
+  delay,
+  filter,
+  from,
+  map,
+  merge,
+  Observable,
+  scan,
+  shareReplay,
+  startWith,
+  switchMap,
+  throttleTime,
+  timer
+} from 'rxjs';
+import { IConnectionCreatePostExecutedEvent } from 'src/lib/bpmn-io/interfaces/connection-create-post-executed-event.interface';
+import { IModelingModule } from 'src/lib/bpmn-io/interfaces/modeling-module.interface';
 import { IProcessValidationResult } from '../classes/validation-result';
 import { BPMNJsRepository } from 'src/lib/core/bpmn-js.repository';
-import { IZoomScrollModule } from 'src/lib/bpmn-io/interfaces/i-zoom-scroll-module.interface';
+import { IZoomScrollModule } from 'src/lib/bpmn-io/interfaces/zoom-scroll-module.interface';
 import { Store } from '@ngrx/store';
-import { selectCurrentIBpmnJSModel } from '../store/selectors/i-bpmn-js-model.selectors';
-import { IEvent } from 'src/lib/bpmn-io/interfaces/i-event.interface';
+import { selectCurrentIBpmnJSModel, selectRecentlyUsedIBpmnJSModel } from '../store/selectors/i-bpmn-js-model.selectors';
+import { IEvent } from 'src/lib/bpmn-io/interfaces/event.interface';
 import { IDirectEditingEvent } from 'src/lib/bpmn-io/interfaces/i-direct-editing-event.interface';
 import { IShapeDeleteExecutedEvent } from 'src/lib/bpmn-io/interfaces/i-shape-delete-executed-event.interface';
 import { IShapeAddedEvent } from 'src/lib/bpmn-io/interfaces/i-shape-added-event.interface';
 import { IViewboxChangedEvent } from '../interfaces/i-viewbox-changed-event.interface';
 import { isEqual } from 'lodash';
-import { updateCurrentIBpmnJSModel } from '../store/actions/i-bpmn-js-model.actions';
+import { addIBpmnJSModel, setCurrentIBpmnJSModel, updateCurrentIBpmnJSModel } from '../store/actions/i-bpmn-js-model.actions';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { selectSnapshot } from '../globals/select-snapshot';
-
+import defaultBpmnXmlConstant from '../globals/default-bpmn-xml.constant';
+import moment from 'moment';
+import { IProcessBuilderConfig, PROCESS_BUILDER_CONFIG_TOKEN } from '../globals/i-process-builder-config';
+import { TaskCreationStep } from '../globals/task-creation-step';
+import { IProcedure } from 'src/app/interfaces/i-procedure.interface';
+import { TaskEditingStatus } from '../types/task-editing-status.type';
+import shapeTypes from 'src/lib/bpmn-io/shape-types';
+import { ICanvasModule } from 'src/lib/bpmn-io/interfaces/canvas-module.interface';
+import { IDirectEditingModule } from 'src/lib/bpmn-io/interfaces/direct-editing-module.interface';
 
 @Injectable()
 export class BpmnJsService {
@@ -75,6 +102,10 @@ export class BpmnJsService {
     subscriber.next(evt);
   }));
 
+  public elementHover$ = new Observable<IEvent>((subscriber) => this.eventBusModule.on('element.hover', (evt) => {
+    subscriber.next(evt);
+  }));
+
   public shapeAddedEventFired$ = new Observable<IShapeAddedEvent>((subscriber) => this.eventBusModule.on('shape.added', (evt) => {
     subscriber.next(evt);
   }));
@@ -101,6 +132,7 @@ export class BpmnJsService {
     this.detachEventFired$.pipe(map(event => ({ event: event, type: 'detach' }))),
     this.directEditingEventFired$.pipe(map(event => ({ event: event, type: 'directEditing.activate' }))),
     this.elementChangedEventFired$.pipe(map(event => ({ event: event, type: 'element.changed' }))),
+    this.elementHover$.pipe(map(event => ({ event: event, type: 'element.hover' }))),
     this.shapeAddedEventFired$.pipe(map(event => ({ event: event, type: 'shape.added' }))),
     this.shapeDeleteExecutedEventFired$.pipe(map(event => ({ event: event, type: 'commandStack.shape.delete.executed' }))),
     this.shapeRemoveEventFired$.pipe(map(event => ({ event: event, type: 'shape.remove' }))),
@@ -108,7 +140,49 @@ export class BpmnJsService {
     this.viewboxChangedEventFired$.pipe(map(event => ({ event: event, type: 'canvas.viewbox.changed' }))),
   );
 
-  public validation$: Observable<undefined | null | IProcessValidationResult> = this.eventFired$.pipe(
+  public taskEditingEventFired$ = merge(
+    this.directEditingEventFired$.pipe(
+      map(event => {
+        return {
+          taskCreationStep: TaskCreationStep.ConfigureFunctionSelection,
+          element: event.active.element
+        }
+      })
+    ),
+    this.connectionCreatePostExecutedEventFired$.pipe(
+      filter(event => {
+        return event.context.source.type === shapeTypes.ExclusiveGateway
+          && BPMNJsRepository.sLPBExtensionSetted(event.context.source.businessObject, 'GatewayExtension', (ext) => ext.gatewayType === 'error_gateway');
+      }),
+      map(event => {
+        return {
+          taskCreationStep: TaskCreationStep.ConfigureErrorGatewayEntranceConnection,
+          element: event.context.connection
+        }
+      })
+    ),
+  );
+
+  private _flushTaskEditingEvents$ = this.taskEditingEventFired$.pipe(debounceTime(500));
+
+  public bufferedTaskEditingEvents$ = this.taskEditingEventFired$.pipe(
+    buffer(this._flushTaskEditingEvents$)
+  );
+
+  public potentialModelChangeEventFired$ = merge(
+    this.attachEventFired$.pipe(map(event => ({ event: event, type: 'attach' }))),
+    this.connectionCreatePostExecutedEventFired$.pipe(map(event => ({ event: event, type: 'commandStack.connection.create.postExecuted' }))),
+    this.detachEventFired$.pipe(map(event => ({ event: event, type: 'detach' }))),
+    this.directEditingEventFired$.pipe(map(event => ({ event: event, type: 'directEditing.activate' }))),
+    this.elementChangedEventFired$.pipe(map(event => ({ event: event, type: 'element.changed' }))),
+    this.shapeAddedEventFired$.pipe(map(event => ({ event: event, type: 'shape.added' }))),
+    this.shapeDeleteExecutedEventFired$.pipe(map(event => ({ event: event, type: 'commandStack.shape.delete.executed' }))),
+    this.shapeRemoveEventFired$.pipe(map(event => ({ event: event, type: 'shape.remove' }))),
+    this.toolManagerUpdateEventFired$.pipe(map(event => ({ event: event, type: 'tool-manager.update' }))),
+    this.viewboxChangedEventFired$.pipe(map(event => ({ event: event, type: 'canvas.viewbox.changed' }))),
+  );
+
+  public validation$: Observable<undefined | null | IProcessValidationResult> = this.potentialModelChangeEventFired$.pipe(
     throttleTime(500),
     map(() => BPMNJsRepository.validateProcess(this.bpmnJs)),
     shareReplay(1),
@@ -119,6 +193,26 @@ export class BpmnJsService {
   );
   public bpmnJsLoggingEnabled = false;
 
+  public taskEditingStatus$: Observable<TaskEditingStatus> = merge(
+    this.taskEditingEventFired$.pipe(map(() => {
+      return 'collecting' as TaskEditingStatus;
+    })),
+    this._flushTaskEditingEvents$.pipe(map(() => {
+      return 'idle' as TaskEditingStatus;
+    }))
+  ).pipe(
+    startWith('idle' as TaskEditingStatus)
+  );
+
+  public taskEditingProcedure$ = this.taskEditingStatus$.pipe(
+    scan(
+      (previousValue: IProcedure, status: TaskEditingStatus) => {
+        return { ...previousValue, progress: status === 'idle' };
+      },
+      { guid: generateGuid(), progress: false, startedUnix: moment().unix(), finishedUnix: null } as IProcedure
+    )
+  );
+
   private currentBpmnJSModel$ = this._store.select(selectCurrentIBpmnJSModel);
 
   private _containsChanges = new BehaviorSubject<boolean>(false);
@@ -127,8 +221,25 @@ export class BpmnJsService {
   private _isSaving = new BehaviorSubject<boolean>(false);
   public isSaving$ = this._isSaving.asObservable();
 
-  constructor(private _store: Store, private _snackBar: MatSnackBar) {
+  constructor(@Inject(PROCESS_BUILDER_CONFIG_TOKEN) private _config: IProcessBuilderConfig, private _store: Store, private _snackBar: MatSnackBar) {
     this._setUp();
+  }
+
+  public async attachBpmnModelToDomElement(parent: HTMLDivElement) {
+    this.bpmnJs.attachTo(parent);
+    let recentlyUsedModel = await selectSnapshot(this._store.select(selectRecentlyUsedIBpmnJSModel()));
+    if (!recentlyUsedModel) {
+      recentlyUsedModel = {
+        'guid': generateGuid(),
+        'created': moment().format('yyyy-MM-ddTHH:mm:ss'),
+        'description': null,
+        'name': this._config.defaultBpmnModelName,
+        'xml': defaultBpmnXmlConstant,
+        'lastModified': moment().format('yyyy-MM-ddTHH:mm:ss')
+      };
+      this._store.dispatch(addIBpmnJSModel(recentlyUsedModel));
+    }
+    this._store.dispatch(setCurrentIBpmnJSModel(recentlyUsedModel.guid));
   }
 
   public markAsUnchanged() {
@@ -148,11 +259,18 @@ export class BpmnJsService {
     }
   }
 
+  public undo = () => (window as any).cli.undo();
+  public redo = () => (window as any).cli.redo();
+  public zoomIn = () => this.bpmnJs.get('zoomScroll').stepZoom(1);
+  public zoomOut = () => this.bpmnJs.get('zoomScroll').stepZoom(-1);
+
   private _setUp(): void {
     this.currentBpmnJSModel$.pipe(
-      filter(bpmnJsModel => !!bpmnJsModel),
-      switchMap(bpmnJsModel => {
+      filter(bpmnJsModel => {
         this.bpmnJs.clear();
+        return !!(bpmnJsModel?.xml);
+      }),
+      switchMap(bpmnJsModel => {
         return from(this.bpmnJs.importXML(bpmnJsModel!.xml)).pipe(map(importResult => ({ importResult, bpmnJsModel })));
       }),
       delay(0)
@@ -176,15 +294,15 @@ export class BpmnJsService {
     });
   }
 
-  public get canvasModule() {
+  public get canvasModule(): ICanvasModule {
     return getCanvasModule(this.bpmnJs);
   }
 
-  public get directEditingModule() {
+  public get directEditingModule(): IDirectEditingModule {
     return getDirectEditingModule(this.bpmnJs);
   }
 
-  public get elementRegistryModule() {
+  public get elementRegistryModule(): IElementRegistryModule {
     return getElementRegistryModule(this.bpmnJs);
   }
 
@@ -196,7 +314,7 @@ export class BpmnJsService {
     return getModelingModule(this.bpmnJs);
   }
 
-  public get tooltipModule() {
+  public get tooltipModule(): ITooltipModule {
     return getTooltipModule(this.bpmnJs);
   }
 

@@ -1,298 +1,336 @@
-import { Inject, Injectable, Injector } from '@angular/core';
-
-import { v4 as generateGuid } from 'uuid';
-
-import { BehaviorSubject, combineLatest, Observable, of, Subject, Subscription } from 'rxjs';
-import { Store } from '@ngrx/store';
-
-import { selectIParams } from '../../store/selectors/i-param.selectors';
-import { validateBPMNConfig } from 'src/lib/core/config-validator';
-import { selectIFunctions, selectIFunctionsByOutputParam } from '../../store/selectors/i-function.selector';
-import { addIBpmnJSModel, createIBpmnJsModel, removeIBpmnJSModel, setCurrentIBpmnJSModel, updateIBpmnJSModel, upsertIBpmnJSModel } from '../../store/actions/i-bpmn-js-model.actions';
-import * as moment from 'moment';
-import { IProcessBuilderConfig, PROCESS_BUILDER_CONFIG_TOKEN } from '../../globals/i-process-builder-config';
-import { selectIBpmnJSModels, selectRecentlyUsedIBpmnJSModel } from '../../store/selectors/i-bpmn-js-model.selectors';
-import { IBpmnJSModel } from '../../interfaces/i-bpmn-js-model.interface';
-import { getCanvasModule, getEventBusModule, getTooltipModule } from 'src/lib/bpmn-io/bpmn-modules';
-import { IViewbox } from 'src/lib/bpmn-io/interfaces/i-viewbox.interface';
-import { MatSnackBar } from '@angular/material/snack-bar';
-import { processPerformer } from 'src/lib/core/process-performer';
-import bpmnJsEventTypes from 'src/lib/bpmn-io/bpmn-js-event-types';
+import { Inject, Injectable } from '@angular/core';
+import { BpmnJsService } from '../../services/bpmn-js.service';
+import { DialogService } from '../../services/dialog.service';
+import { combineLatest, map, of, switchMap } from 'rxjs';
 import { BPMNJsRepository } from 'src/lib/core/bpmn-js.repository';
-
-import { IElement } from 'src/lib/bpmn-io/interfaces/i-element.interface';
-import { ValidationErrorPipe } from '../../pipes/validation-error.pipe';
-import { IProcessValidationResult } from '../../classes/validation-result';
-import { debounceTime, distinctUntilChanged, map, shareReplay, switchMap, take, throttleTime } from 'rxjs/operators';
-import { IFunction } from '../../globals/i-function';
-import { removeIFunction, updateIFunction } from '../../store/actions/i-function.actions';
-import { IParam } from '../../globals/i-param';
-import { removeIParam } from '../../store/actions/i-param.actions';
-import { ValidationError } from '../../globals/validation-error';
-import { ValidationWarning } from '../../globals/validation-warning';
-import { ValidationWarningPipe } from '../../pipes/validation-warning.pipe';
-import { BpmnJsService } from '../../services/bpmnjs.service';
+import { TaskCreationStep } from '../../globals/task-creation-step';
+import { ITaskCreationPayload } from '../../interfaces/i-task-creation-payload.interface';
+import { ITaskCreationData } from '../../interfaces/i-task-creation-data.interface';
+import { IProcessBuilderConfig, PROCESS_BUILDER_CONFIG_TOKEN } from '../../globals/i-process-builder-config';
+import { IConnector } from 'src/lib/bpmn-io/interfaces/connector.interface';
+import { CodemirrorRepository } from 'src/lib/core/codemirror.repository';
 import { selectSnapshot } from '../../globals/select-snapshot';
-import defaultBpmnXmlConstant from '../../globals/default-bpmn-xml.constant';
+import { Store } from '@ngrx/store';
+import * as paramSelectors from '../../store/selectors/i-param.selectors';
+import * as functionSelectors from '../../store/selectors/i-function.selector';
+import defaultImplementation from '../../globals/default-implementation';
+import { IMethodEvaluationResult } from '../../interfaces/i-method-evaluation-result.interface';
+import { MethodEvaluationStatus } from '../../globals/method-evaluation-status';
+import { IFunction } from '../../globals/i-function';
+import { IParam } from '../../globals/i-param';
+import { ProcessBuilderRepository } from 'src/lib/core/process-builder-repository';
+import { upsertIParam } from '../../store/actions/i-param.actions';
+import shapeTypes from 'src/lib/bpmn-io/shape-types';
+import { upsertIFunction } from '../../store/actions/i-function.actions';
+import { IElement } from 'src/lib/bpmn-io/interfaces/element.interface';
+import { INJECTOR_INTERFACE_TOKEN, INJECTOR_TOKEN } from '../../globals/injector';
+import { deepObjectLookup } from 'src/lib/shared/globals/deep-object-lookup.function';
 
 @Injectable()
 export class ProcessBuilderComponentService {
 
-  private _currentIBpmnJSModelGuid = new BehaviorSubject<string | null>(null);
-  private _modelChanged = new Subject<void>();
-  private _pendingChanges = new BehaviorSubject<boolean>(false);
+  public taskEditingDialogResultReceived$ = this._bpmnJsService
+    .bufferedTaskEditingEvents$
+    .pipe(
+      switchMap((events) => {
+        const functionSelectionConfig = events.find(event => event.taskCreationStep === TaskCreationStep.ConfigureFunctionSelection);
+        const functionIdentifier = BPMNJsRepository.getSLPBExtension<number>(functionSelectionConfig?.element?.businessObject, 'ActivityExtension', (ext) => ext.activityFunctionId) ?? null;
+        const
+          taskCreationPayload = {
+            configureActivity: events.find(event => event.taskCreationStep === TaskCreationStep.ConfigureFunctionSelection)?.element,
+            configureIncomingErrorGatewaySequenceFlow: events.find(event => event.taskCreationStep === TaskCreationStep.ConfigureErrorGatewayEntranceConnection)?.element
+          } as ITaskCreationPayload,
+          taskCreationData = {
+            functionIdentifier: functionIdentifier
+          } as ITaskCreationData;
 
-  public params$ = this._store.select(selectIParams());
-  public funcs$ = this._store.select(selectIFunctions());
-  public models$ = this._store.select(selectIBpmnJSModels());
-  public pendingChanges$ = this._pendingChanges.asObservable();
-  public noPendingChanges$ = this.pendingChanges$.pipe(map(x => !x));
-  public currentIBpmnJSModelGuid$ = this._currentIBpmnJSModelGuid.pipe(distinctUntilChanged());
-  public currentIBpmnJSModel$ = combineLatest(
-    [
-      this._store.select(selectIBpmnJSModels()),
-      this.currentIBpmnJSModelGuid$
-    ]
-  ).pipe(
-    debounceTime(10),
-    map(([bpmnJSModels, bpmnJSModelGuid]: [IBpmnJSModel[], string | null]) => bpmnJSModels.find(x => x.guid === bpmnJSModelGuid))
-  );
-
-  private _subscriptions = new Subscription();
+        return combineLatest([
+          of(taskCreationPayload),
+          this._dialogService.configTaskCreation(
+            {
+              taskCreationData: taskCreationData,
+              taskCreationPayload: taskCreationPayload
+            }
+          )
+        ]).pipe(
+          map(([taskCreationPayload, taskCreationData]: [ITaskCreationPayload, ITaskCreationData]) => ({ taskCreationPayload, taskCreationData }))
+        );
+      })
+    );
 
   constructor(
     @Inject(PROCESS_BUILDER_CONFIG_TOKEN) private _config: IProcessBuilderConfig,
-    private bpmnjsService: BpmnJsService,
-    private _snackBar: MatSnackBar,
-    private _injector: Injector,
-    private _store: Store
-  ) {
-    this._setUp();
-  }
+    private _dialogService: DialogService,
+    private _bpmnJsService: BpmnJsService,
+    private _store: Store,
+    @Inject(INJECTOR_INTERFACE_TOKEN) private _injectorInterface: any,
+    @Inject(INJECTOR_TOKEN) private _injector: any,
+  ) { }
 
-  public createModel() {
-    this._store.dispatch(createIBpmnJsModel());
-  }
-
-  public dispose() {
-    this._subscriptions.unsubscribe();
-  }
-
-  hideAllHints = () => BPMNJsRepository.clearAllTooltips(this.bpmnjsService.bpmnJs);
-
-  async init(parent: HTMLDivElement) {
-    this.bpmnjsService.bpmnJs.attachTo(parent);
-    await selectSnapshot(this.setDefaultModel());
-  }
-
-  removeModel(bpmnJsModel?: IBpmnJSModel, event?: Event) {
-    if (event) {
-      event.preventDefault();
-      event.stopPropagation();
+  public async applyTaskCreationConfig(taskCreationPayload: ITaskCreationPayload, taskCreationData?: ITaskCreationData) {
+    let referencedFunction: IFunction | undefined | null, outputParam: IParam | undefined, gatewayShape: IElement | undefined;
+    if (taskCreationData) {
+      referencedFunction = await selectSnapshot(this._store.select(functionSelectors.selectIFunction(taskCreationData.functionIdentifier)));
     }
-    let callback = (model: IBpmnJSModel | string) => {
-      this._store.dispatch(removeIBpmnJSModel(model));
-      this.setDefaultModel();
+
+    if (!referencedFunction) {
+      this._handleNoFunctionSelected(taskCreationPayload);
     }
-    if (bpmnJsModel) callback(bpmnJsModel);
-    else {
-      this._currentIBpmnJSModelGuid.pipe(take(1)).subscribe((bpmnJSModelGuid: string | null) => {
-        if (typeof bpmnJSModelGuid !== 'string') return;
-        callback(bpmnJSModelGuid);
-      });
-    }
-  }
 
-  removeFunction(func: IFunction) {
-    this._store.dispatch(removeIFunction(func));
-    if (typeof func.output?.param !== 'number') return;
-
-    this._store.select(selectIFunctionsByOutputParam(func.output.param))
-      .pipe(take(1))
-      .subscribe(arg => {
-        if (arg.length === 1 && arg[0].identifier === func.identifier) this._store.dispatch(removeIParam(func.output!.param as number));
-      });
-  }
-
-  removeParameter(param: IParam) {
-    this._store.dispatch(removeIParam(param));
-  }
-
-  renameCurrentModel(name: string) {
-    this.currentIBpmnJSModel$.pipe(take(1))
-      .subscribe(model => {
-        if (!model) return;
-        let copy = { ...model };
-        copy.name = name;
-        this._store.dispatch(updateIBpmnJSModel(copy));
-      });
-  }
-
-  resetAll() {
-    localStorage.removeItem('params');
-    localStorage.removeItem('funcs');
-    localStorage.removeItem('models');
-    location.reload();
-  }
-
-  setDefaultModel(): Observable<void> {
-    let subject = new Subject<void>();
-
-    this._store.select(selectRecentlyUsedIBpmnJSModel())
-      .pipe(
-        map((model: IBpmnJSModel | undefined) => model ? model : defaultBpmnXmlConstant),
-        take(1)
-      )
-      .subscribe({
-        next: (model: IBpmnJSModel | string) => {
-          if (typeof model === 'string') {
-            model = {
-              'guid': generateGuid(),
-              'created': moment().format('yyyy-MM-ddTHH:mm:ss'),
-              'description': null,
-              'name': this._config.defaultBpmnModelName,
-              'xml': model,
-              'lastModified': moment().format('yyyy-MM-ddTHH:mm:ss')
-            };
-            this._store.dispatch(addIBpmnJSModel(model));
-          }
-          this._store.dispatch(setCurrentIBpmnJSModel(model.guid));
-          subject.next();
-        },
-        complete: () => subject.complete()
-      });
-
-    return subject.asObservable();
-  }
-
-  setModel = (arg: string | IBpmnJSModel) => this._currentIBpmnJSModelGuid.next(typeof arg === 'string' ? arg : arg.guid);
-
-  setNextModel() {
-    combineLatest([
-      this._store.select(selectIBpmnJSModels()),
-      this._currentIBpmnJSModelGuid.asObservable()
-    ]).pipe(
-      take(1)
-    ).subscribe(([models, modelGuid]: [IBpmnJSModel[], string | null]) => {
-      if (models.length < 2 || typeof modelGuid !== 'string') return;
-      let index = models.findIndex(x => x.guid === modelGuid);
-      index = index >= (models.length - 1) ? 0 : index + 1;
-      this._currentIBpmnJSModelGuid.next(models[index].guid);
-    });
-  }
-
-  public showError(error: { element?: IElement, error: ValidationError }) {
-    this.hideAllHints();
-    if (!error.element) {
+    if (!referencedFunction || !taskCreationData) {
       return;
     }
 
-    this.bpmnjsService.tooltipModule.add({
-      position: {
-        x: error.element.x,
-        y: error.element.y + error.element.height + 3
-      },
-      html:
-        `<div style="width: 120px; background: #f44336de; color: white; font-size: .7rem; padding: .2rem .3rem; border-radius: 2px; line-height: .8rem;">${new ValidationErrorPipe().transform(error.error)}</div>`
-    });
-  }
-
-  public showWarning(warning: { element?: IElement, warning: ValidationWarning }) {
-    this.hideAllHints();
-    if (!warning.element) {
-      return;
+    if (taskCreationData.entranceGatewayType) {
+      const connector = taskCreationPayload.configureIncomingErrorGatewaySequenceFlow;
+      if (!!connector) {
+        this._applyConnectorDefaultLabels(connector, taskCreationData);
+      }
     }
 
-    this.bpmnjsService.tooltipModule.add({
-      position: {
-        x: warning.element?.x,
-        y: warning.element?.y + warning.element?.height + 3
-      },
-      html:
-        `<div style="width: 120px; background: #ffb200; color: white; font-size: .7rem; padding: .2rem .3rem; border-radius: 2px; line-height: .8rem;">${new ValidationWarningPipe().transform(warning.warning)}</div>`
-    });
-  }
+    let resultingFunction = referencedFunction;
+    const nextParamId = await selectSnapshot(this._store.select(paramSelectors.selectNextId()));
+    const methodEvaluation = CodemirrorRepository.evaluateCustomMethod(undefined, taskCreationData.implementation ?? defaultImplementation);
+    const outputParamId = typeof referencedFunction.output?.param === 'number' ? referencedFunction.output?.param : nextParamId;
 
-  tryExecute() {
-
-    try {
-      processPerformer(this.bpmnjsService.bpmnJs);
-    } catch (error) {
-      console.log(error);
+    if (referencedFunction.requireCustomImplementation || referencedFunction.customImplementation || taskCreationData.implementation) {
+      referencedFunction = await this._applyFunctionConfiguration(taskCreationData, referencedFunction, methodEvaluation, outputParamId) as IFunction;
     }
 
+    const resultingEndEvent = taskCreationPayload.configureActivity?.outgoing?.find(outgoing => outgoing.target.type === 'bpmn:EndEvent')?.target;
+    if (referencedFunction.finalizesFlow && !resultingEndEvent) {
+      this._appendSequenceFlowEndEvent(taskCreationPayload);
+    } else if (!referencedFunction?.finalizesFlow && resultingEndEvent) {
+      this._bpmnJsService.modelingModule.removeElements([resultingEndEvent, ...resultingEndEvent.incoming]);
+    }
+
+    if (taskCreationPayload.configureActivity) {
+      this._updateBpmnModelElementActivityIdentifier(taskCreationPayload, referencedFunction);
+      this._bpmnJsService.modelingModule.updateLabel(taskCreationPayload.configureActivity, referencedFunction.name);
+
+      outputParam = await selectSnapshot(this._store.select(paramSelectors.selectIParam(outputParamId))) ?? { identifier: outputParamId } as IParam;
+      outputParam = this._handleFunctionOutputParam(referencedFunction, taskCreationData, taskCreationPayload, outputParam, methodEvaluation)?.outputParam;
+
+      gatewayShape = this._handleErrorGatewayConfiguration(taskCreationPayload, referencedFunction)?.gatewayShape;
+      
+      this._handleDataInputConfiguration(taskCreationData, taskCreationPayload, resultingFunction, referencedFunction);
+    }
+
+    return { gatewayShape, outputParam };
   }
 
-  updateIBpmnJSModel(model: IBpmnJSModel) {
-    this._store.dispatch(updateIBpmnJSModel(model));
-  }
+  private _handleDataInputConfiguration(taskCreationData: ITaskCreationData, taskCreationPayload: ITaskCreationPayload, resultingFunction: IFunction, referencedFunction: IFunction) {
+    const configureActivity = taskCreationPayload.configureActivity;
+    if (configureActivity) {
+      const dataInputAssociations = configureActivity.incoming.filter(incoming => incoming.type === shapeTypes.DataInputAssociation);
+      if (dataInputAssociations) {
+        this._bpmnJsService.modelingModule.removeElements(dataInputAssociations);
+      }
+    }
 
-  updateIFunction(func: IFunction) {
-    this._store.dispatch(updateIFunction(func));
-  }
-
-  public undo = () => (window as any).cli.undo();
-  public redo = () => (window as any).cli.redo();
-  public zoomIn = () => this.bpmnjsService.bpmnJs.get('zoomScroll').stepZoom(1);
-  public zoomOut = () => this.bpmnjsService.bpmnJs.get('zoomScroll').stepZoom(-1);
-
-
-  private _setBpmnModel(xml: string, viewbox: IViewbox | null = null) {
-    this.bpmnjsService.bpmnJs.importXML(xml)
-      .then(() => {
-        if (viewbox) {
-          getCanvasModule(this.bpmnjsService.bpmnJs).viewbox(viewbox);
-        }
-      })
-      .catch((err: any) => console.log('error rendering', err));
-  }
-
-  private _setUp() {
-    this._subscriptions.add(...[
-      this.currentIBpmnJSModel$.subscribe((model: IBpmnJSModel | undefined) => {
-        if (!model) return;
-        this._setBpmnModel(model.xml, model.viewbox);
-      }),
-      validateBPMNConfig(this.bpmnjsService.bpmnJs, this._injector).subscribe(() => {
-        this._modelChanged.next();
-        this._pendingChanges.next(true);
-      })
-    ]);
-
-    getEventBusModule(this.bpmnjsService.bpmnJs).on(bpmnJsEventTypes.ElementChanged, () => this._modelChanged.next());
-
-    let prevSub: Subscription | undefined;
-    getEventBusModule(this.bpmnjsService.bpmnJs).on(bpmnJsEventTypes.ElementHover, (evt) => {
-
-      BPMNJsRepository.clearAllTooltips(this.bpmnjsService.bpmnJs);
-
-      var tooltipModule = getTooltipModule(this.bpmnjsService.bpmnJs);
-
-      if (prevSub) {
-        prevSub.unsubscribe();
-        prevSub = undefined;
+    if (resultingFunction.inputParams || referencedFunction.useDynamicInputParams) {
+      const inputParams = resultingFunction.inputParams ? Array.isArray(resultingFunction.inputParams) ? [...resultingFunction.inputParams] : [resultingFunction.inputParams] : [];
+      if (typeof taskCreationData.inputParam === 'number') {
+        inputParams.push({ optional: false, param: taskCreationData.inputParam });
       }
 
-      prevSub = this.bpmnjsService.validation$.subscribe((validation) => {
-
-        if (!validation) return;
-
-        let errors = validation.errors.filter(x => x.element === evt.element);
-
-        if (errors.length > 0) {
-          tooltipModule.add({
-            position: {
-              x: (evt.element as IElement).x,
-              y: (evt.element as IElement).y + (evt.element as IElement).height + 3
-            },
-            html:
-              `<div style="width: 120px; background: #f44336de; color: white; font-size: .7rem; padding: .2rem .3rem; border-radius: 2px; line-height: .8rem;">${errors.map((x, index) => `${index + 1}: ${new ValidationErrorPipe().transform(x.error)}`).join('<br>')}</div>`
-          });
+      if(configureActivity){
+        const availableInputParamsIElements = BPMNJsRepository.getAvailableInputParamsIElements(configureActivity);
+        for (let param of inputParams.filter(inputParam => !(taskCreationPayload.configureActivity as IElement).incoming.some(y => BPMNJsRepository.sLPBExtensionSetted(y.source.businessObject, 'DataObjectExtension', (ext) => ext.outputParam === inputParam.param)))) {
+          const element = availableInputParamsIElements.find(x => BPMNJsRepository.sLPBExtensionSetted(x.businessObject, 'DataObjectExtension', (ext) => ext.outputParam === param.param));
+          if (!!element) {
+            this._bpmnJsService.modelingModule.connect(element, configureActivity);
+          }
         }
+      }
+    }
+  }
 
-      });
+  private _handleErrorGatewayConfiguration(taskCreationPayload: ITaskCreationPayload, resultingFunction: IFunction) {
+    let outgoingErrorGatewaySequenceFlow = taskCreationPayload
+      .configureActivity!
+      .outgoing
+      .find(outgoing => outgoing.type === shapeTypes.SequenceFlow
+        && BPMNJsRepository.sLPBExtensionSetted(
+          outgoing.target?.businessObject,
+          'GatewayExtension',
+          (ext) => ext.gatewayType === 'error_gateway'
+        )
+      );
+    let gatewayShape = outgoingErrorGatewaySequenceFlow?.target;
+
+    if (resultingFunction.canFail && !gatewayShape) {
+      const outgoingSequenceFlows = taskCreationPayload.configureActivity!.outgoing.filter(outgoing => outgoing.type === shapeTypes.SequenceFlow);
+      const formerConnectedTargets = outgoingSequenceFlows.map(outgoingSequenceFlow => outgoingSequenceFlow.target);
+      this._bpmnJsService.modelingModule.removeElements(formerConnectedTargets);
+
+      gatewayShape = this._bpmnJsService.modelingModule.appendShape(
+        taskCreationPayload.configureActivity!,
+        { type: shapeTypes.ExclusiveGateway },
+        {
+          x: taskCreationPayload.configureActivity!.x + 200,
+          y: taskCreationPayload.configureActivity!.y + 40
+        }
+      );
+
+      BPMNJsRepository.updateBpmnElementSLPBExtension(this._bpmnJsService.bpmnJs, gatewayShape!.businessObject, 'GatewayExtension', (e: any) => e.gatewayType = 'error_gateway');
+      this._bpmnJsService.modelingModule.updateLabel(gatewayShape, this._config.errorGatewayConfig.gatewayName);
+
+      // reconnect the former connected targets
+      for (let formerConnectedTarget of formerConnectedTargets) {
+        this._bpmnJsService.modelingModule.connect(gatewayShape, formerConnectedTarget);
+      }
+    } else if (!resultingFunction.canFail && gatewayShape) {
+      this._bpmnJsService.modelingModule.removeElements([gatewayShape, ...gatewayShape.incoming, ...gatewayShape.outgoing]);
+    }
+
+    return { gatewayShape };
+  }
+
+  private _handleNoFunctionSelected(taskCreationPayload: ITaskCreationPayload) {
+    const elements = [taskCreationPayload.configureActivity].filter(element => !!element) as (IElement | IConnector)[];
+    this._bpmnJsService.modelingModule.removeElements(elements);
+  }
+
+  private _applyConnectorDefaultLabels(connector: IConnector, taskCreationData: ITaskCreationData) {
+    const connectorLabel = taskCreationData.entranceGatewayType === 'Success'
+      ? this._config.errorGatewayConfig.successConnectionName
+      : this._config.errorGatewayConfig.errorConnectionName;
+
+    this._bpmnJsService.modelingModule.updateLabel(connector, connectorLabel);
+  }
+
+  private async _applyFunctionConfiguration(taskCreationData: ITaskCreationData, referencedFunction: IFunction, methodEvaluation: IMethodEvaluationResult, outputParamId: number) {
+    const inputParams = await this._extractInputParams(taskCreationData, referencedFunction);
+    const functionIdentifier = referencedFunction.requireCustomImplementation ? await selectSnapshot(this._store.select(functionSelectors.selectNextId())) : referencedFunction.identifier;
+    const resultingFunction = {
+      customImplementation: taskCreationData.implementation ?? undefined,
+      canFail: taskCreationData.canFail ?? false,
+      name: taskCreationData.name ?? this._config.defaultFunctionName,
+      identifier: functionIdentifier,
+      normalizedName: taskCreationData.normalizedName ?? ProcessBuilderRepository.normalizeName(taskCreationData.name ?? undefined),
+      output: methodEvaluation.status === MethodEvaluationStatus.ReturnValueFound || referencedFunction.output?.param === 'dynamic' ? { param: outputParamId } : null,
+      pseudoImplementation: referencedFunction.pseudoImplementation,
+      inputParams: inputParams,
+      requireCustomImplementation: false,
+      requireDynamicInput: false,
+      useDynamicInputParams: referencedFunction.useDynamicInputParams,
+      finalizesFlow: taskCreationData.isProcessOutput ?? false
+    } as IFunction;
+    this._store.dispatch(upsertIFunction(resultingFunction));
+    return resultingFunction;
+  }
+
+  private async _appendSequenceFlowEndEvent(taskCreationPayload: ITaskCreationPayload) {
+    this._bpmnJsService.modelingModule.appendShape(taskCreationPayload.configureActivity!, { type: shapeTypes.EndEvent }, {
+      x: taskCreationPayload.configureActivity!.x + 200,
+      y: taskCreationPayload.configureActivity!.y + 40
     });
+  }
 
+  private async _extractInputParams(taskCreationData: ITaskCreationData, referencedFunction: IFunction) {
+    let inputParams: { optional: boolean, param: number }[] = [];
+    if (referencedFunction.useDynamicInputParams && typeof taskCreationData.inputParam === 'number') {
+      inputParams.push({ optional: false, param: taskCreationData.inputParam });
+    }
+    else if (referencedFunction.requireCustomImplementation || referencedFunction.customImplementation) {
+      const usedInputParams: { varName: string, propertyName: string | null }[] = taskCreationData.implementation
+        ? CodemirrorRepository.getUsedInputParams(undefined, taskCreationData.implementation)
+        : [];
+
+      const usedInputParamEntities = await selectSnapshot(
+        this._store.select(
+          paramSelectors.selectIParamsByNormalizedName(
+            usedInputParams.filter(
+              usedInputParam => usedInputParam.varName === 'injector'
+                && typeof usedInputParam.propertyName === 'string'
+            ).map(usedInputParam => usedInputParam.propertyName!)
+          )
+        )
+      );
+
+      inputParams.push(...usedInputParamEntities.map(usedInputParamEntity => {
+        return { optional: false, param: usedInputParamEntity.identifier }
+      }));
+    }
+    return inputParams;
+  }
+
+  private _handleFunctionOutputParam(respectiveFunction: IFunction, taskCreationData: ITaskCreationData, taskCreationPayload: ITaskCreationPayload, outputParam: IParam, methodEvaluation?: IMethodEvaluationResult) {
+    if (!methodEvaluation) {
+      methodEvaluation = CodemirrorRepository.evaluateCustomMethod(undefined, taskCreationData.implementation ?? defaultImplementation);
+    }
+    if (methodEvaluation.status === MethodEvaluationStatus.ReturnValueFound || respectiveFunction.output?.param === 'dynamic') {
+      outputParam = {
+        ...outputParam,
+        name: taskCreationData.outputParamName ?? this._config.dynamicParamDefaultNaming,
+        normalizedName: taskCreationData.normalizedOutputParamName ?? ProcessBuilderRepository.normalizeName(taskCreationData.outputParamName ?? this._config.dynamicParamDefaultNaming),
+        defaultValue: this._outputParamValue(methodEvaluation, taskCreationData.outputParamValue),
+        type: this._methodEvaluationTypeToOutputType(methodEvaluation)
+      } as IParam;
+      this._store.dispatch(upsertIParam(outputParam));
+
+      BPMNJsRepository.appendOutputParam(
+        this._bpmnJsService.bpmnJs,
+        taskCreationPayload.configureActivity!,
+        outputParam,
+        true,
+        this._config.expectInterface
+      );
+
+      return { outputParam }
+    } else {
+      const dataOutputAssociations = taskCreationPayload.configureActivity!.outgoing.filter(x => x.type === shapeTypes.DataOutputAssociation);
+      this._bpmnJsService.modelingModule.removeElements(dataOutputAssociations.map(dataOutputAssociation => dataOutputAssociation.target));
+    }
+  }
+
+  private _methodEvaluationTypeToOutputType(methodEvaluation?: IMethodEvaluationResult) {
+    if (methodEvaluation?.injectorNavigationPath) {
+      const injectedDef = deepObjectLookup(this._injectorInterface, methodEvaluation.injectorNavigationPath);
+      return injectedDef.type ?? 'object';
+    }
+    switch (methodEvaluation?.type) {
+      case 'number':
+        return 'number';
+
+      case 'string':
+        return 'string';
+
+      case 'boolean':
+        return 'boolean';
+
+      case 'array':
+        return 'array';
+    }
+
+    return 'object';
+  }
+
+  private _outputParamValue(methodEvaluation: IMethodEvaluationResult, defaultValue: any = []) {
+    if (methodEvaluation.injectorNavigationPath) {
+      const injectedValue = deepObjectLookup(this._injector, methodEvaluation.injectorNavigationPath);
+      return injectedValue;
+    }
+    switch (methodEvaluation.type) {
+      case 'number':
+      case 'string':
+      case 'object':
+      case 'boolean':
+      case 'array':
+        return methodEvaluation.detectedValue;
+    }
+
+    return defaultValue;
+  }
+
+  private _updateBpmnModelElementActivityIdentifier(taskCreationPayload: ITaskCreationPayload, referencedFunction: IFunction) {
+    BPMNJsRepository.updateBpmnElementSLPBExtension(
+      this._bpmnJsService.bpmnJs,
+      taskCreationPayload!.configureActivity!.businessObject,
+      'ActivityExtension',
+      (e: any) => e.activityFunctionId = referencedFunction!.identifier
+    );
   }
 
 }

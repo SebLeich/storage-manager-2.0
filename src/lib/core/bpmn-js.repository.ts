@@ -1,17 +1,18 @@
 import { Inject, Injectable } from "@angular/core";
 import { ParamCodes } from "src/config/param-codes";
 import { getElementRegistryModule, getModelingModule, getTooltipModule } from "../bpmn-io/bpmn-modules";
-import { IBusinessObject } from "../bpmn-io/interfaces/i-business-object.interface";
-import { IElement } from "../bpmn-io/interfaces/i-element.interface";
+import { IBusinessObject } from "../bpmn-io/interfaces/business-object.interface";
+import { IElement } from "../bpmn-io/interfaces/element.interface";
 import shapeTypes from "../bpmn-io/shape-types";
 import { IProcessValidationResult } from "../process-builder/classes/validation-result";
 import { IBpmnJS } from "../process-builder/interfaces/i-bpmn-js.interface";
 import { IFunction } from "../process-builder/globals/i-function";
 import { IParam } from "../process-builder/globals/i-param";
 import { IProcessBuilderConfig, PROCESS_BUILDER_CONFIG_TOKEN } from "../process-builder/globals/i-process-builder-config";
-import sebleichProcessBuilderExtension from "../process-builder/globals/sebleich-process-builder-extension";
+import { sebleichProcessBuilderExtension } from "../process-builder/globals/sebleich-process-builder-extension";
 import { ValidationError } from "../process-builder/globals/validation-error";
 import { ValidationWarning } from "../process-builder/globals/validation-warning";
+import { IExtensionElement } from "../bpmn-io/interfaces/extension-element.interface";
 
 @Injectable()
 export class BPMNJsRepository {
@@ -19,7 +20,9 @@ export class BPMNJsRepository {
     constructor(@Inject(PROCESS_BUILDER_CONFIG_TOKEN) private _config: IProcessBuilderConfig) { }
 
     public static appendOutputParam(bpmnJS: any, element: IElement, param: IParam | null | undefined, preventDublet: boolean = true, expectedInterface?: number): null | IElement {
-        if (!param) return null;
+        if (!param) {
+            return null;
+        }
         let e = element.outgoing.find(x => x.type === shapeTypes.DataOutputAssociation)?.target;
         if (!preventDublet || !e) {
             e = getModelingModule(bpmnJS).appendShape(element, {
@@ -56,7 +59,10 @@ export class BPMNJsRepository {
 
     public static fillAnchestors(element: IElement, anchestors: IElement[] = []) {
         let index = 0;
-        if (!element || !Array.isArray(element.incoming) || element.incoming.length === 0) return;
+        if (!element || !Array.isArray(element.incoming) || element.incoming.length === 0) {
+            return;
+        }
+
         let notPassed = element.incoming.map(x => x.source).filter(x => anchestors.indexOf(x) === -1);
         while (index < notPassed.length) {
             let el = notPassed[index];
@@ -73,31 +79,47 @@ export class BPMNJsRepository {
     public static getAvailableInputParamsIElements(element: IElement) {
         let anchestors: IElement[] = [];
         this.fillAnchestors(element, anchestors);
-        let tasks = anchestors.filter(x => x.type === shapeTypes.Task);
-        let outputParams = tasks.flatMap(x => x.outgoing).filter(x => x.type === shapeTypes.DataOutputAssociation).map(x => x.target);
+
+        const tasks = anchestors.filter(x => x.type === shapeTypes.Task);
+        const outputParams = tasks.flatMap(x => x.outgoing).filter(x => x.type === shapeTypes.DataOutputAssociation).map(x => x.target);
         return outputParams.filter(x => BPMNJsRepository.sLPBExtensionSetted(x.businessObject, 'DataObjectExtension', (ext) => 'outputParam' in ext)) as IElement[];
     }
 
-    public static getExtensionElements(element: IBusinessObject, type: string): undefined | any[] {
-        if (!element.extensionElements || !Array.isArray(element.extensionElements.values)) return undefined;
-        return element.extensionElements.values.filter((x: any) => x.$instanceOf(type))[0];
+    public static getExtensionElement(element: IBusinessObject, type: string): undefined | IExtensionElement {
+        if (!element.extensionElements || !Array.isArray(element.extensionElements.values)) {
+            return undefined;
+        }
+
+        const filteredExtensionElements = element.extensionElements.values.find((value: any) => value.$instanceOf(type));
+        return filteredExtensionElements;
     }
 
     public static getNextNodes(currentNode: IElement | null | undefined): IElement[] {
-        if (!currentNode) return [];
+        if (!currentNode) {
+            return [];
+        }
+
         return currentNode.outgoing.filter(x => x.type === shapeTypes.SequenceFlow).map(x => x.target);
     }
 
     public static getSLPBExtension<T>(businessObject: IBusinessObject | undefined, type: 'ActivityExtension' | 'GatewayExtension' | 'DataObjectExtension', provider: (extensions: any) => T) {
-        if (!businessObject) return undefined;
-        let extension = BPMNJsRepository.getExtensionElements(businessObject, `${sebleichProcessBuilderExtension.prefix}:${type}`);
+        if (!businessObject) {
+            return undefined;
+        }
+
+        const prefix = sebleichProcessBuilderExtension.prefix;
+        const extension = BPMNJsRepository.getExtensionElement(businessObject, `${prefix}:${type}`);
         return extension ? provider(extension) : undefined;
     }
 
     public static sLPBExtensionSetted(businessObject: IBusinessObject | undefined, type: 'ActivityExtension' | 'GatewayExtension' | 'DataObjectExtension', condition: (extensions: any) => boolean) {
-        if (!businessObject) return false;
-        let extension = BPMNJsRepository.getExtensionElements(businessObject, `${sebleichProcessBuilderExtension.prefix}:${type}`);
-        return extension ? condition(extension) : false;
+        if (!businessObject) {
+            return false;
+        }
+
+        const extension = BPMNJsRepository.getExtensionElement(businessObject, `${sebleichProcessBuilderExtension.prefix}:${type}`);
+        const result = extension ? condition(extension) : false;
+        return result;
     }
 
     public static updateBpmnElementSLPBExtension(bpmnJS: IBpmnJS, businessObject: IBusinessObject, type: 'ActivityExtension' | 'GatewayExtension' | 'DataObjectExtension', setter: (extension: any) => void) {
@@ -107,7 +129,7 @@ export class BPMNJsRepository {
             businessObject.extensionElements = extensionElements;
         }
 
-        let activityExtension = BPMNJsRepository.getExtensionElements(businessObject, `${sebleichProcessBuilderExtension.prefix}:${type}`);
+        let activityExtension = BPMNJsRepository.getExtensionElement(businessObject, `${sebleichProcessBuilderExtension.prefix}:${type}`);
         if (!activityExtension) {
             activityExtension = bpmnJS._moddle.create(`${sebleichProcessBuilderExtension.prefix}:${type}`);
             extensionElements.get('values').push(activityExtension);

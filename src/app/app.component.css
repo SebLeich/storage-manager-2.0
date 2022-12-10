@@ -6,8 +6,8 @@
     overflow: hidden;
 }
 
-.body.loading { 
-    opacity: .4;
+.body.loading {
+    opacity: 0.4;
     pointer-events: none;
 }
 
@@ -15,6 +15,14 @@
     flex: 1;
     background-color: rgb(243, 243, 243);
     overflow: hidden;
+}
+
+.progress-bar {
+    position: absolute;
+    width: 100vw;
+    top: 0px;
+    left: 0px;
+    z-index: 1001;
 }
 
 @media screen and (max-width: 500px) {

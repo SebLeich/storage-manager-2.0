@@ -1,5 +1,6 @@
 import { Component, forwardRef, Input, OnDestroy, OnInit } from '@angular/core';
 import { ControlValueAccessor, UntypedFormControl, NG_VALUE_ACCESSOR, FormControl } from '@angular/forms';
+import { MatFormFieldAppearance } from '@angular/material/form-field';
 import { Subscription } from 'rxjs';
 import { apiCallAuthorizationTypeToString, API_CALL_AUTHORIZATION } from '../../globals';
 
@@ -17,7 +18,7 @@ import { apiCallAuthorizationTypeToString, API_CALL_AUTHORIZATION } from '../../
 })
 export class SelectApiAuthorizationComponent implements ControlValueAccessor, OnDestroy {
 
-  @Input() appearance: null | 'fill' | 'outline' | 'standard' = null;
+  @Input() public appearance: null | MatFormFieldAppearance = null;
 
   valueControl = new FormControl(API_CALL_AUTHORIZATION.NO_AUTH);
 

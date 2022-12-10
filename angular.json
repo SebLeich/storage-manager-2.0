@@ -5,7 +5,11 @@
   "projects": {
     "storage-manager": {
       "projectType": "application",
-      "schematics": {},
+      "schematics": {
+        "@schematics/angular:component": {
+          "style": "scss"
+        }
+      },
       "root": "",
       "sourceRoot": "src",
       "prefix": "app",
@@ -18,20 +22,14 @@
             "main": "src/main.ts",
             "polyfills": "src/polyfills.ts",
             "tsConfig": "tsconfig.app.json",
-            "assets": [
-              "src/favicon.ico",
-              "src/assets"
-            ],
+            "assets": ["src/favicon.ico", "src/assets"],
             "styles": [
               "src/custom-theme.scss",
               "src/custom-theme.sass",
               "src/styles.css",
               "./node_modules/bpmn-js/dist/assets/diagram-js.css",
               "./node_modules/bpmn-js/dist/assets/bpmn-font/css/bpmn.css",
-              "./node_modules/jsoneditor/dist/jsoneditor.min.css",
-              "./node_modules/codemirror/lib/codemirror.css",
-              "./node_modules/codemirror/addon/fold/foldgutter.css",
-              "./node_modules/codemirror/addon/hint/show-hint.css"
+              "./node_modules/jsoneditor/dist/jsoneditor.min.css"
             ],
             "scripts": [],
             "vendorChunk": true,
@@ -109,20 +107,14 @@
             "polyfills": "src/polyfills.ts",
             "tsConfig": "tsconfig.spec.json",
             "karmaConfig": "karma.conf.js",
-            "assets": [
-              "src/favicon.ico",
-              "src/assets"
-            ],
+            "assets": ["src/favicon.ico", "src/assets"],
             "styles": [
               "src/custom-theme.scss",
               "src/custom-theme.sass",
               "src/styles.css",
               "./node_modules/bpmn-js/dist/assets/diagram-js.css",
               "./node_modules/bpmn-js/dist/assets/bpmn-font/css/bpmn.css",
-              "./node_modules/jsoneditor/dist/jsoneditor.min.css",
-              "./node_modules/codemirror/lib/codemirror.css",
-              "./node_modules/codemirror/addon/fold/foldgutter.css",
-              "./node_modules/codemirror/addon/hint/show-hint.css"
+              "./node_modules/jsoneditor/dist/jsoneditor.min.css"
             ],
             "scripts": []
           }

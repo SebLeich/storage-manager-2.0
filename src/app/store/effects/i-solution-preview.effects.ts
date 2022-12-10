@@ -1,4 +1,4 @@
-import { Inject, Injectable, Injector, ViewContainerRef } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { loadSolutionPreview, upsertSolutionPreview } from '../actions/i-solution-preview.actions';
 
@@ -12,9 +12,6 @@ import { ISolutionPreview } from 'src/app/interfaces/i-solution-preview.interfac
 import { selectGroups } from '../selectors/i-group.selectors';
 import getContainerPositionSharedMethods from 'src/app/methods/get-container-position.shared-methods';
 import { VisualizationService } from 'src/app/services/visualization.service';
-import { RootViewContainerRef } from 'src/app/globals';
-import { SolutionVisualizationDialogComponent } from 'src/app/components/dialog/solution-visualization-dialog/solution-visualization-dialog.component';
-import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { SceneVisualizationComponent } from 'src/app/components/scene-visualization/scene-visualization.component';
 
 @Injectable()

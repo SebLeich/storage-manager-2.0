@@ -31,7 +31,8 @@ describe('EmbeddedFunctionImplementationComponent', () => {
       name: new FormControl(),
       implementation: new FormControl(),
       outputParamName: new FormControl(),
-      canFail: new FormControl()
+      canFail: new FormControl(),
+      normalizedOutputParamName: new FormControl(),
     });
     fixture.detectChanges();
   });
