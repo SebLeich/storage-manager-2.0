@@ -2,8 +2,8 @@ import { Pipe, PipeTransform } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { Observable, of } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { State } from '../store/reducers/i-interface.reducer';
-import { selectIInterface } from '../store/selectors/i-interface.selectors';
+import { State } from '../store/reducers/interface.reducer';
+import { selectIInterface } from '../store/selectors/interface.selectors';
 
 @Pipe({
   name: 'interface'

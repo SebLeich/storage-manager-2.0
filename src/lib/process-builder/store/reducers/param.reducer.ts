@@ -1,7 +1,7 @@
 import { createEntityAdapter, EntityAdapter, EntityState, Update } from '@ngrx/entity';
 import { createReducer, on } from '@ngrx/store';
 import { IParam } from '../../globals/i-param';
-import { addIParam, addIParams, removeIParam, updateIParam, upsertIParam, upsertIParams } from '../actions/i-param.actions';
+import { addIParam, addIParams, removeIParam, updateIParam, upsertIParam, upsertIParams } from '../actions/param.actions';
 
 
 export const featureKey = 'Param';

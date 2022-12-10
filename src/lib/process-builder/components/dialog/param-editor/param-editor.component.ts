@@ -6,46 +6,19 @@ import { combineLatest, ReplaySubject, Subject, Subscription } from 'rxjs';
 import { ProcessBuilderRepository } from 'src/lib/core/process-builder-repository';
 import { IParam } from 'src/lib/process-builder/globals/i-param';
 import { IProcessBuilderConfig, PROCESS_BUILDER_CONFIG_TOKEN, } from 'src/lib/process-builder/globals/i-process-builder-config';
-import { updateIParam } from 'src/lib/process-builder/store/actions/i-param.actions';
+import { updateIParam } from 'src/lib/process-builder/store/actions/param.actions';
 import { IFunction } from 'src/lib/process-builder/globals/i-function';
-import { INJECTOR_INTERFACE_TOKEN, INJECTOR_TOKEN, } from 'src/lib/process-builder/globals/injector';
-import { InjectorInterfacesProvider, InjectorProvider, } from 'src/lib/process-builder/globals/injector-interfaces-provider';
-import { HttpClient } from '@angular/common/http';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { debounceTime } from 'rxjs/operators';
 import { ParamEditorComponentService } from './service/param-editor-component.service';
 import { selectSnapshot } from 'src/lib/process-builder/globals/select-snapshot';
+import { injectValues } from 'src/lib/process-builder/store/selectors/injection-context.selectors';
 
 @Component({
   selector: 'app-param-editor',
   templateUrl: './param-editor.component.html',
   styleUrls: ['./param-editor.component.sass'],
-  providers: [
-    ParamEditorComponentService,
-    {
-      provide: INJECTOR_INTERFACE_TOKEN,
-      useFactory: () => {
-        return {
-          injector: {
-            httpClient: InjectorInterfacesProvider.httpClient(),
-            httpExtensions: InjectorInterfacesProvider.httpExtensions(),
-            rxjs: InjectorInterfacesProvider.rxjs(),
-          },
-        };
-      },
-    },
-    {
-      provide: INJECTOR_TOKEN,
-      useFactory: (httpClient: HttpClient) => {
-        return {
-          httpClient: httpClient,
-          httpExtensions: InjectorProvider.httpExtensions(),
-          rxjs: InjectorProvider.rxjs(),
-        };
-      },
-      deps: [HttpClient],
-    },
-  ],
+  providers: [ParamEditorComponentService],
 })
 export class ParamEditorComponent implements OnInit, OnDestroy {
   @ViewChild('parameterBody', { static: true, read: ElementRef })
@@ -71,17 +44,17 @@ export class ParamEditorComponent implements OnInit, OnDestroy {
 
   constructor(
     @Inject(PROCESS_BUILDER_CONFIG_TOKEN) public config: IProcessBuilderConfig,
-    @Inject(INJECTOR_TOKEN) private _injector: { injector: object },
     private _ref: MatDialogRef<ParamEditorComponent>,
     private _store: Store,
     public paramEditorComponentService: ParamEditorComponentService,
     private _snackBar: MatSnackBar,
   ) { }
 
-  async calculateFunctionOutput(func: IFunction) {
+  public async calculateFunctionOutput(func: IFunction) {
     const formGroup = await selectSnapshot(this.paramEditorComponentService.formGroup$);
     if (func.customImplementation) {
-      const output = await ProcessBuilderRepository.calculateCustomImplementationOutput(func.customImplementation, this._injector);
+      const injector = this._store.select(injectValues())
+      const output = await ProcessBuilderRepository.calculateCustomImplementationOutput(func.customImplementation, injector);
       const outputIParamDefinitions = ProcessBuilderRepository.extractObjectTypeDefinition(output);
 
       formGroup.controls['typeDef']?.setValue(outputIParamDefinitions);
@@ -99,7 +72,7 @@ export class ParamEditorComponent implements OnInit, OnDestroy {
     }
   }
 
-  async close() {
+  public async close() {
     const formGroup = await selectSnapshot(this.paramEditorComponentService.formGroup$);
     if (formGroup.dirty) {
       const editor = await selectSnapshot(this._editor);
@@ -118,16 +91,14 @@ export class ParamEditorComponent implements OnInit, OnDestroy {
     this._ref.close();
   }
 
-  ngOnDestroy() {
+  public ngOnDestroy() {
     this._subscriptions.unsubscribe();
   }
 
-  ngOnInit(): void {
+  public ngOnInit(): void {
     this._subscriptions.add(
       this.paramEditorComponentService.availableInputParams$.subscribe(
-        (iParams) => {
-          this.paramEditorComponentService.updateInjector(iParams);
-        }
+        (iParams) => this.paramEditorComponentService.updateInjector(iParams)
       )
     );
     this._subscriptions.add(

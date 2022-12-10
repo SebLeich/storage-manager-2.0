@@ -1,21 +1,23 @@
 import { Injector, NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ProcessBuilderComponent } from './components/process-builder/process-builder.component';
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { Store, StoreModule } from '@ngrx/store';
 import { EffectsModule } from '@ngrx/effects';
 
-import * as fromIParamState from './store/reducers/i-param.reducer';
-import { IParamEffects } from './store/effects/i-param.effects';
+import * as fromIParamState from './store/reducers/param.reducer';
+import { IParamEffects } from './store/effects/param.effects';
 
-import * as fromIFunctionState from './store/reducers/i-function.reducer';
+import * as fromIFunctionState from './store/reducers/function.reducer';
 import { IFunctionEffects } from './store/effects/i-function.effects';
 
-import * as fromIBpmnJSModelState from './store/reducers/i-bpmn-js-model.reducer';
+import * as fromIBpmnJSModelState from './store/reducers/bpmn-js-model.reducer';
 import { IBpmnJSModelEffects } from './store/effects/i-bpmn-js-model.effects';
 
-import * as fromIInterfaceState from './store/reducers/i-interface.reducer';
-import { IInterfaceEffects } from './store/effects/i-interface.effects';
+import * as fromIInterfaceState from './store/reducers/interface.reducer';
+import { IInterfaceEffects } from './store/effects/interface.effects';
+
+import * as fromInjectionContext from './store/reducers/injection-context.reducer';
 
 import { MatButtonModule } from '@angular/material/button';
 import { MatDialogModule } from '@angular/material/dialog';
@@ -41,7 +43,7 @@ import { CodemirrorModule } from '@ctrl/ngx-codemirror';
 import { ReturnValueStatusPipe } from './pipes/return-value-status.pipe';
 import { EmbeddedParamEditorComponent } from './components/embedded/embedded-param-editor/embedded-param-editor.component';
 import { localStorageAdapter, provideLocalStorageSettings } from './adapters/local-storage-adapter';
-import { loadIParams } from './store/actions/i-param.actions';
+import { loadIParams } from './store/actions/param.actions';
 import { ValidationErrorPipe } from './pipes/validation-error.pipe';
 import { EmbeddedFunctionInputSelectionComponent } from './components/embedded/embedded-function-input-selection/embedded-function-input-selection.component';
 import { ParamPreviewComponent } from './components/previews/param-preview/param-preview.component';
@@ -55,6 +57,8 @@ import { ParamMemberPathPreviewComponent } from './components/helpers/param-memb
 import { BpmnJsService } from './services/bpmn-js.service';
 import { ProcessBuilderService } from './services/process-builder.service';
 import { loadIFunctions } from './store/actions/i-function.actions';
+import { upsertProvider } from './store/actions/injection-context.actions';
+import { InjectorInterfacesProvider, InjectorProvider } from './globals/injector-interfaces-provider';
 
 
 @NgModule({
@@ -112,6 +116,8 @@ import { loadIFunctions } from './store/actions/i-function.actions';
     StoreModule.forFeature(fromIInterfaceState.featureKey, fromIInterfaceState.reducer),
     EffectsModule.forFeature([IInterfaceEffects]),
 
+    StoreModule.forFeature(fromInjectionContext.featureKey, fromInjectionContext.reducer),
+
   ],
   exports: [
     ProcessBuilderComponent,
@@ -126,7 +132,7 @@ import { loadIFunctions } from './store/actions/i-function.actions';
 })
 export class ProcessBuilderModule {
 
-  constructor(store: Store, injector: Injector){
+  constructor(store: Store, injector: Injector, ){
     ProcessBuilderModule.initialize(store, injector);
   }
 
@@ -137,6 +143,9 @@ export class ProcessBuilderModule {
 
     provideLocalStorageSettings(injector);
     localStorageAdapter(injector);
+
+    const httpClient = injector.get(HttpClient);
+    store.dispatch(upsertProvider('httpClient', { ...httpClient }, InjectorInterfacesProvider.httpClient()));
   }
 
 }

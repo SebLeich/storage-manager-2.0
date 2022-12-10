@@ -4,8 +4,8 @@ import { Store } from '@ngrx/store';
 import { BehaviorSubject, Subscription } from 'rxjs';
 import { IParamDefinition } from 'src/lib/process-builder/globals/i-param-definition';
 import { IParamMember } from 'src/lib/process-builder/globals/i-param-member';
-import { State } from 'src/lib/process-builder/store/reducers/i-interface.reducer';
-import { selectIInterface } from 'src/lib/process-builder/store/selectors/i-interface.selectors';
+import { State } from 'src/lib/process-builder/store/reducers/interface.reducer';
+import { selectIInterface } from 'src/lib/process-builder/store/selectors/interface.selectors';
 
 @Component({
   selector: 'app-embedded-input-output-mapping-table-row',

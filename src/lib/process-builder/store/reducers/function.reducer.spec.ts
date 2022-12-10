@@ -1,6 +1,6 @@
-import * as fromReducer from './i-interface.reducer';
+import * as fromReducer from './function.reducer';
 
-describe('InterfaceReducer', () => {
+describe('FunctionReducer', () => {
 
     const reducer = fromReducer.reducer;
 

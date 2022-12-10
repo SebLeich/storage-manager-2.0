@@ -3,7 +3,7 @@ import { combineLatest, forkJoin, Observable, of } from "rxjs";
 import { flatMap, map, switchMap, take, tap } from "rxjs/operators";
 import { IParam } from "../../globals/i-param";
 import { IParamDefinition } from "../../globals/i-param-definition";
-import { selectIInterface } from "../../store/selectors/i-interface.selectors";
+import { selectIInterface } from "../../store/selectors/interface.selectors";
 import { mapIParamsInterfaces } from "./map-i-params-interfaces.rxjs-extension";
 
 export const mapIParamInterfaces = (store: Store) => {

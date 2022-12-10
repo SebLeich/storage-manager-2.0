@@ -5,13 +5,13 @@ import { IEmbeddedView } from 'src/lib/process-builder/globals/i-embedded-view';
 import { IFunction } from 'src/lib/process-builder/globals/i-function';
 import { showAnimation } from 'src/lib/shared/animations/show';
 import { Store } from '@ngrx/store';
-import { selectIFunctions } from 'src/lib/process-builder/store/selectors/i-function.selector';
+import { selectIFunctions } from 'src/lib/process-builder/store/selectors/function.selector';
 import { FunctionPreviewComponent } from '../../previews/function-preview/function-preview.component';
 import { UntypedFormControl, UntypedFormGroup } from '@angular/forms';
 import { IInputParam } from 'src/lib/process-builder/globals/i-input-param';
 import { delay, map } from 'rxjs/operators';
 
-import * as fromIFunctionState from 'src/lib/process-builder/store/reducers/i-function.reducer';
+import * as fromIFunctionState from 'src/lib/process-builder/store/reducers/function.reducer';
 import { removeIFunction } from 'src/lib/process-builder/store/actions/i-function.actions';
 import { showListAnimation } from 'src/lib/shared/animations/show-list';
 

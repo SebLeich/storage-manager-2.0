@@ -4,9 +4,9 @@ import { Store } from '@ngrx/store';
 import { BehaviorSubject, of, ReplaySubject, Subscription } from 'rxjs';
 import { IEmbeddedView } from 'src/lib/process-builder/globals/i-embedded-view';
 import { IParamDefinition } from 'src/lib/process-builder/globals/i-param-definition';
-import { selectIFunction } from 'src/lib/process-builder/store/selectors/i-function.selector';
+import { selectIFunction } from 'src/lib/process-builder/store/selectors/function.selector';
 import { filter, map, switchMap } from 'rxjs/operators';
-import { selectIInterface } from 'src/lib/process-builder/store/selectors/i-interface.selectors';
+import { selectIInterface } from 'src/lib/process-builder/store/selectors/interface.selectors';
 import { IParamMember } from 'src/lib/process-builder/globals/i-param-member';
 
 @Component({

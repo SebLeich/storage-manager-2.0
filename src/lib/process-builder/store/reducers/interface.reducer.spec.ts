@@ -1,6 +1,6 @@
-import * as fromReducer from './i-param.reducer';
+import * as fromReducer from './interface.reducer';
 
-describe('BPMNJSModelReducer', () => {
+describe('InterfaceReducer', () => {
 
     const reducer = fromReducer.reducer;
 

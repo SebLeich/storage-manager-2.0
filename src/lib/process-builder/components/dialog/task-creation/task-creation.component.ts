@@ -12,33 +12,19 @@ import { EmbeddedFunctionImplementationComponent } from '../../embedded/embedded
 import { EmbeddedFunctionSelectionComponent } from '../../embedded/embedded-function-selection/embedded-function-selection.component';
 import { ITaskCreationComponentInput } from '../../../interfaces/i-task-creation-component-input.interface';
 
-import { selectIFunction } from 'src/lib/process-builder/store/selectors/i-function.selector';
+import { selectIFunction } from 'src/lib/process-builder/store/selectors/function.selector';
 import { IEmbeddedFunctionImplementationData } from '../../../interfaces/i-embedded-function-implementation-output.interface';
 import { IFunction } from 'src/lib/process-builder/globals/i-function';
-import { selectIParam, selectIParams } from 'src/lib/process-builder/store/selectors/i-param.selectors';
+import { selectIParam, selectIParams } from 'src/lib/process-builder/store/selectors/param.selectors';
 import { IParam } from 'src/lib/process-builder/globals/i-param';
 import { ProcessBuilderRepository } from 'src/lib/core/process-builder-repository';
 import { HttpClient } from '@angular/common/http';
 import { EmbeddedParamEditorComponent } from '../../embedded/embedded-param-editor/embedded-param-editor.component';
 import { CodemirrorRepository } from 'src/lib/core/codemirror.repository';
 import { MethodEvaluationStatus } from 'src/lib/process-builder/globals/method-evaluation-status';
-import {
-  UntypedFormBuilder,
-  UntypedFormControl,
-  UntypedFormGroup,
-} from '@angular/forms';
-import {
-  IProcessBuilderConfig,
-  PROCESS_BUILDER_CONFIG_TOKEN,
-} from 'src/lib/process-builder/globals/i-process-builder-config';
-import {
-  INJECTOR_INTERFACE_TOKEN,
-  INJECTOR_TOKEN,
-} from 'src/lib/process-builder/globals/injector';
-import {
-  InjectorInterfacesProvider,
-  InjectorProvider,
-} from 'src/lib/process-builder/globals/injector-interfaces-provider';
+import { UntypedFormBuilder, UntypedFormControl, UntypedFormGroup } from '@angular/forms';
+import { IProcessBuilderConfig, PROCESS_BUILDER_CONFIG_TOKEN } from 'src/lib/process-builder/globals/i-process-builder-config';
+import { InjectorInterfacesProvider, InjectorProvider } from 'src/lib/process-builder/globals/injector-interfaces-provider';
 import { IConnector } from 'src/lib/bpmn-io/interfaces/connector.interface';
 import { EmbeddedFunctionInputSelectionComponent } from '../../embedded/embedded-function-input-selection/embedded-function-input-selection.component';
 import {
@@ -50,39 +36,16 @@ import {
   take,
 } from 'rxjs/operators';
 import { EmbeddedInputOutputMappingComponent } from '../../embedded/embedded-input-output-mapping/embedded-input-output-mapping.component';
-import { selectIInterface } from 'src/lib/process-builder/store/selectors/i-interface.selectors';
+import { selectIInterface } from 'src/lib/process-builder/store/selectors/interface.selectors';
 import { IInterface } from 'src/lib/process-builder/interfaces/i-interface.interface';
 import { mapIParamsInterfaces } from 'src/lib/process-builder/extensions/rxjs/map-i-params-interfaces.rxjs-extension';
+import { injectInterfaces, injectValues } from 'src/lib/process-builder/store/selectors/injection-context.selectors';
+import { selectSnapshot } from 'src/lib/process-builder/globals/select-snapshot';
 
 @Component({
   selector: 'app-task-creation',
   templateUrl: './task-creation.component.html',
   styleUrls: ['./task-creation.component.sass'],
-  providers: [
-    {
-      provide: INJECTOR_INTERFACE_TOKEN,
-      useFactory: () => {
-        return {
-          injector: {
-            httpClient: InjectorInterfacesProvider.httpClient(),
-            httpExtensions: InjectorInterfacesProvider.httpExtensions(),
-            rxjs: InjectorInterfacesProvider.rxjs(),
-          },
-        };
-      },
-    },
-    {
-      provide: INJECTOR_TOKEN,
-      useFactory: (httpClient: HttpClient) => {
-        return {
-          httpClient: httpClient,
-          httpExtensions: InjectorProvider.httpExtensions(),
-          rxjs: InjectorProvider.rxjs(),
-        };
-      },
-      deps: [HttpClient],
-    },
-  ],
 })
 export class TaskCreationComponent implements OnDestroy, OnInit {
   @ViewChild('dynamicInner', { static: true, read: ViewContainerRef })
@@ -205,9 +168,6 @@ export class TaskCreationComponent implements OnDestroy, OnInit {
   constructor(
     @Inject(PROCESS_BUILDER_CONFIG_TOKEN) public config: IProcessBuilderConfig,
     @Inject(MAT_DIALOG_DATA) public data: ITaskCreationComponentInput,
-    @Inject(INJECTOR_INTERFACE_TOKEN)
-    private _injectorInterface: { injector: object },
-    @Inject(INJECTOR_TOKEN) private _injector: { injector: object },
     private _ref: MatDialogRef<TaskCreationComponent>,
     private _store: Store,
     private _formBuilder: UntypedFormBuilder
@@ -306,29 +266,21 @@ export class TaskCreationComponent implements OnDestroy, OnInit {
               `input params: ${inputs.length === 0 ? '-' : inputs.join(', ')}`
             );
           }),
-        this._customImplementation
-          .pipe(
-            filter((x) => (x ? true : false)),
-            switchMap((element: IElement | null) => {
-              let inputParams = BPMNJsRepository.getAvailableInputParams(
-                element as IElement
-              );
-              return this._store.select(selectIParams(inputParams));
-            }),
-            take(1),
-            filter((x) => (x ? true : false)),
-            mapIParamsInterfaces(this._store)
-          )
-          .subscribe((allParams: IParam[]) => {
+        this._customImplementation.pipe(
+          filter((customImplementation) => (customImplementation ? true : false)),
+          switchMap((customImplementation) => {
+            const inputParams = BPMNJsRepository.getAvailableInputParams(customImplementation!);
+            return this._store.select(selectIParams(inputParams));
+          }),
+          take(1),
+          filter((x) => (x ? true : false)),
+          mapIParamsInterfaces(this._store),
+          switchMap((params: IParam[]) => combineLatest([of(params), this._store.select(injectValues), this._store.select(injectInterfaces)]))
+        )
+          .subscribe(([allParams, injector, injectorInterfaces]) => {
             for (let param of allParams) {
-              (this._injector as any)[param!.normalizedName] =
-                ProcessBuilderRepository.createPseudoObjectFromIParamDefinition(
-                  param
-                );
-              (this._injectorInterface.injector as any)[param!.normalizedName] =
-                ProcessBuilderRepository.createPseudoObjectFromIParamDefinition(
-                  param
-                );
+              (injector as any)[param!.normalizedName] = ProcessBuilderRepository.createPseudoObjectFromIParamDefinition(param);
+              (injectorInterfaces as any)[param!.normalizedName] = ProcessBuilderRepository.createPseudoObjectFromIParamDefinition(param);
             }
           }),
         this.functionIdentifierControl.valueChanges.subscribe(
@@ -367,14 +319,11 @@ export class TaskCreationComponent implements OnDestroy, OnInit {
     });
   }
 
-  public testImplementation() {
+  public async testImplementation() {
+    const injector = await selectSnapshot(this._store.select(injectValues));
     let customImplementation = this.formGroup.controls['implementation']?.value;
     if (customImplementation) {
-      const result =
-        ProcessBuilderRepository.executeUserMethodAndReturnResponse(
-          customImplementation,
-          this._injector
-        );
+      const result = ProcessBuilderRepository.executeUserMethodAndReturnResponse(customImplementation, injector);
       result.subscribe({
         next: (result: any) => {
           let parsed: string =

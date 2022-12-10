@@ -12,7 +12,7 @@ import { ValidationErrorPipe } from 'src/lib/process-builder/pipes/validation-er
 import { ValidationWarningPipe } from 'src/lib/process-builder/pipes/validation-warning.pipe';
 import { BpmnJsService } from 'src/lib/process-builder/services/bpmn-js.service';
 import { createIBpmnJsModel, updateCurrentIBpmnJSModel, updateIBpmnJSModel } from 'src/lib/process-builder/store/actions/i-bpmn-js-model.actions';
-import { selectCurrentIBpmnJSModel } from 'src/lib/process-builder/store/selectors/i-bpmn-js-model.selectors';
+import { selectCurrentIBpmnJSModel } from 'src/lib/process-builder/store/selectors/bpmn-js-model.selectors';
 
 @Component({
   selector: 'app-method-quick-interaction',

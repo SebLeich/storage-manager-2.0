@@ -1,4 +1,4 @@
-import * as fromIParam from './i-param.actions';
+import * as fromIParam from './param.actions';
 
 describe('loadIParams', () => {
   it('should return an action', () => {

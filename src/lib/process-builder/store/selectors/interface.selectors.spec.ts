@@ -2,7 +2,7 @@ import { TestBed } from '@angular/core/testing';
 
 import { Store } from '@ngrx/store';
 import { selectSnapshot } from '../../globals/select-snapshot';
-import { selectIInterface, selectIInterfaces, selectIInterfacesByNormalizedName, selectNextId } from './i-interface.selectors';
+import { selectIInterface, selectIInterfaces, selectIInterfacesByNormalizedName, selectNextId } from './interface.selectors';
 import { isEqual } from 'lodash';
 import defaultImportsConstant from 'src/app/default-imports.constant';
 import { addIInterfaces } from '../actions/i-interface.actions';

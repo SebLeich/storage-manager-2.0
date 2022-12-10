@@ -19,17 +19,17 @@ import { ISolutionEffects } from './store/effects/i-solution.effects';
 import * as fromISolutionPreviewState from './store/reducers/i-solution-preview.reducers';
 import { ISolutionPreviewEffects } from './store/effects/i-solution-preview.effects';
 
-import * as fromIParamState from 'src/lib/process-builder/store/reducers/i-param.reducer';
-import { IParamEffects } from 'src/lib/process-builder/store/effects/i-param.effects';
+import * as fromIParamState from 'src/lib/process-builder/store/reducers/param.reducer';
+import { IParamEffects } from 'src/lib/process-builder/store/effects/param.effects';
 
-import * as fromIFunctionState from 'src/lib/process-builder/store/reducers/i-function.reducer';
+import * as fromIFunctionState from 'src/lib/process-builder/store/reducers/function.reducer';
 import { IFunctionEffects } from 'src/lib/process-builder/store/effects/i-function.effects';
 
-import * as fromIBpmnJSModelState from 'src/lib/process-builder/store/reducers/i-bpmn-js-model.reducer';
+import * as fromIBpmnJSModelState from 'src/lib/process-builder/store/reducers/bpmn-js-model.reducer';
 import { IBpmnJSModelEffects } from 'src/lib/process-builder/store/effects/i-bpmn-js-model.effects';
 
-import * as fromIInterfaceState from 'src/lib/process-builder/store/reducers/i-interface.reducer';
-import { IInterfaceEffects } from 'src/lib/process-builder/store/effects/i-interface.effects';
+import * as fromIInterfaceState from 'src/lib/process-builder/store/reducers/interface.reducer';
+import { IInterfaceEffects } from 'src/lib/process-builder/store/effects/interface.effects';
 
 import { StoreModule } from '@ngrx/store';
 import { EffectsModule } from '@ngrx/effects';

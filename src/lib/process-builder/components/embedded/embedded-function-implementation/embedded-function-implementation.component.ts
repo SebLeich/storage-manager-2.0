@@ -13,10 +13,11 @@ import { IProcessBuilderConfig, PROCESS_BUILDER_CONFIG_TOKEN } from 'src/lib/pro
 import { linter, lintGutter } from '@codemirror/lint';
 // @ts-ignore
 import Linter from "eslint4b-prebuilt";
-import { INJECTOR_INTERFACE_TOKEN } from 'src/lib/process-builder/globals/injector';
 import defaultImplementation from 'src/lib/process-builder/globals/default-implementation';
 import { debounceTime, tap } from 'rxjs/operators';
 import { UntypedFormControl, UntypedFormGroup } from '@angular/forms';
+import { Store } from '@ngrx/store';
+import { injectValues } from 'src/lib/process-builder/store/selectors/injection-context.selectors';
 
 @Component({
   selector: 'app-embedded-function-implementation',
@@ -52,12 +53,13 @@ export class EmbeddedFunctionImplementationComponent implements IEmbeddedView, A
   private _returnValueStatus: BehaviorSubject<MethodEvaluationStatus> = new BehaviorSubject<MethodEvaluationStatus>(MethodEvaluationStatus.Initial);
   public returnValueStatus$ = this._returnValueStatus.asObservable();
 
+  private _injector: any = { };
   private _subscriptions = new Subscription();
 
   constructor(
     @Inject(PROCESS_BUILDER_CONFIG_TOKEN) public config: IProcessBuilderConfig,
-    @Inject(INJECTOR_INTERFACE_TOKEN) private _injector: object,
-    private changeDetectorRef: ChangeDetectorRef
+    private changeDetectorRef: ChangeDetectorRef,
+    private _store: Store
   ) { }
 
   blockTabPressEvent(event: KeyboardEvent) {
@@ -89,7 +91,9 @@ export class EmbeddedFunctionImplementationComponent implements IEmbeddedView, A
           this.formGroup.controls['outputParamName'].disable();
         }
       }),
+      this._store.select(injectValues).subscribe(injector => this._injector = injectValues)
     ]);
+
     this.codeMirror = new EditorView({
       state: this.state(),
       parent: this.codeBody.nativeElement

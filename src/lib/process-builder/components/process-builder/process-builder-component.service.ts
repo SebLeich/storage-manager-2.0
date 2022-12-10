@@ -11,20 +11,20 @@ import { IConnector } from 'src/lib/bpmn-io/interfaces/connector.interface';
 import { CodemirrorRepository } from 'src/lib/core/codemirror.repository';
 import { selectSnapshot } from '../../globals/select-snapshot';
 import { Store } from '@ngrx/store';
-import * as paramSelectors from '../../store/selectors/i-param.selectors';
-import * as functionSelectors from '../../store/selectors/i-function.selector';
+import * as paramSelectors from '../../store/selectors/param.selectors';
+import * as functionSelectors from '../../store/selectors/function.selector';
 import defaultImplementation from '../../globals/default-implementation';
 import { IMethodEvaluationResult } from '../../interfaces/i-method-evaluation-result.interface';
 import { MethodEvaluationStatus } from '../../globals/method-evaluation-status';
 import { IFunction } from '../../globals/i-function';
 import { IParam } from '../../globals/i-param';
 import { ProcessBuilderRepository } from 'src/lib/core/process-builder-repository';
-import { upsertIParam } from '../../store/actions/i-param.actions';
+import { upsertIParam } from '../../store/actions/param.actions';
 import shapeTypes from 'src/lib/bpmn-io/shape-types';
 import { upsertIFunction } from '../../store/actions/i-function.actions';
 import { IElement } from 'src/lib/bpmn-io/interfaces/element.interface';
-import { INJECTOR_INTERFACE_TOKEN, INJECTOR_TOKEN } from '../../globals/injector';
 import { deepObjectLookup } from 'src/lib/shared/globals/deep-object-lookup.function';
+import { injectInterfaces, injectValues } from '../../store/selectors/injection-context.selectors';
 
 @Injectable()
 export class ProcessBuilderComponentService {
@@ -63,8 +63,6 @@ export class ProcessBuilderComponentService {
     private _dialogService: DialogService,
     private _bpmnJsService: BpmnJsService,
     private _store: Store,
-    @Inject(INJECTOR_INTERFACE_TOKEN) private _injectorInterface: any,
-    @Inject(INJECTOR_TOKEN) private _injector: any,
   ) { }
 
   public async applyTaskCreationConfig(taskCreationPayload: ITaskCreationPayload, taskCreationData?: ITaskCreationData) {
@@ -109,7 +107,7 @@ export class ProcessBuilderComponentService {
       this._bpmnJsService.modelingModule.updateLabel(taskCreationPayload.configureActivity, referencedFunction.name);
 
       outputParam = await selectSnapshot(this._store.select(paramSelectors.selectIParam(outputParamId))) ?? { identifier: outputParamId } as IParam;
-      outputParam = this._handleFunctionOutputParam(referencedFunction, taskCreationData, taskCreationPayload, outputParam, methodEvaluation)?.outputParam;
+      outputParam = (await this._handleFunctionOutputParam(referencedFunction, taskCreationData, taskCreationPayload, outputParam, methodEvaluation))?.outputParam;
 
       gatewayShape = this._handleErrorGatewayConfiguration(taskCreationPayload, referencedFunction)?.gatewayShape;
       
@@ -256,17 +254,18 @@ export class ProcessBuilderComponentService {
     return inputParams;
   }
 
-  private _handleFunctionOutputParam(respectiveFunction: IFunction, taskCreationData: ITaskCreationData, taskCreationPayload: ITaskCreationPayload, outputParam: IParam, methodEvaluation?: IMethodEvaluationResult) {
+  private async _handleFunctionOutputParam(respectiveFunction: IFunction, taskCreationData: ITaskCreationData, taskCreationPayload: ITaskCreationPayload, outputParam: IParam, methodEvaluation?: IMethodEvaluationResult) {
     if (!methodEvaluation) {
       methodEvaluation = CodemirrorRepository.evaluateCustomMethod(undefined, taskCreationData.implementation ?? defaultImplementation);
     }
-    if (methodEvaluation.status === MethodEvaluationStatus.ReturnValueFound || respectiveFunction.output?.param === 'dynamic') {
+    if (methodEvaluation.status === MethodEvaluationStatus.ReturnValueFound || outputParam) {
+      const outputType = await this._methodEvaluationTypeToOutputType(methodEvaluation);
       outputParam = {
         ...outputParam,
         name: taskCreationData.outputParamName ?? this._config.dynamicParamDefaultNaming,
         normalizedName: taskCreationData.normalizedOutputParamName ?? ProcessBuilderRepository.normalizeName(taskCreationData.outputParamName ?? this._config.dynamicParamDefaultNaming),
         defaultValue: this._outputParamValue(methodEvaluation, taskCreationData.outputParamValue),
-        type: this._methodEvaluationTypeToOutputType(methodEvaluation)
+        type: outputType
       } as IParam;
       this._store.dispatch(upsertIParam(outputParam));
 
@@ -285,9 +284,10 @@ export class ProcessBuilderComponentService {
     }
   }
 
-  private _methodEvaluationTypeToOutputType(methodEvaluation?: IMethodEvaluationResult) {
+  private async _methodEvaluationTypeToOutputType(methodEvaluation?: IMethodEvaluationResult) {
     if (methodEvaluation?.injectorNavigationPath) {
-      const injectedDef = deepObjectLookup(this._injectorInterface, methodEvaluation.injectorNavigationPath);
+      const injectorInterfaces = await selectSnapshot(this._store.select(injectInterfaces));
+      const injectedDef = deepObjectLookup(injectorInterfaces, methodEvaluation.injectorNavigationPath);
       return injectedDef.type ?? 'object';
     }
     switch (methodEvaluation?.type) {
@@ -307,9 +307,10 @@ export class ProcessBuilderComponentService {
     return 'object';
   }
 
-  private _outputParamValue(methodEvaluation: IMethodEvaluationResult, defaultValue: any = []) {
+  private async _outputParamValue(methodEvaluation: IMethodEvaluationResult, defaultValue: any = []) {
     if (methodEvaluation.injectorNavigationPath) {
-      const injectedValue = deepObjectLookup(this._injector, methodEvaluation.injectorNavigationPath);
+      const injector = await selectSnapshot(this._store.select(injectValues));
+      const injectedValue = deepObjectLookup(injector, methodEvaluation.injectorNavigationPath);
       return injectedValue;
     }
     switch (methodEvaluation.type) {

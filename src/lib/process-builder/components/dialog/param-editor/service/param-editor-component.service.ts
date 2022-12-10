@@ -2,21 +2,20 @@ import { Injectable, inject, Inject } from '@angular/core';
 import { scan, distinctUntilChanged, map, switchMap, shareReplay } from 'rxjs/operators';
 import { FormBuilder } from '@angular/forms';
 import { of, Observable } from 'rxjs';
-import * as fromIParam from 'src/lib/process-builder/store/reducers/i-param.reducer';
-import * as fromIFunction from 'src/lib/process-builder/store/reducers/i-function.reducer';
+import * as fromIParam from 'src/lib/process-builder/store/reducers/param.reducer';
+import * as fromIFunction from 'src/lib/process-builder/store/reducers/function.reducer';
 import { Store } from '@ngrx/store';
-import { selectIParam, selectIParams } from 'src/lib/process-builder/store/selectors/i-param.selectors';
+import { selectIParam, selectIParams } from 'src/lib/process-builder/store/selectors/param.selectors';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { IParamEditorComponentInputData } from '../../../../interfaces/i-param-editor-component-input-data.interface';
 import { IParam } from 'src/lib/process-builder/globals/i-param';
-import { selectIFunctionsByOutputParam } from 'src/lib/process-builder/store/selectors/i-function.selector';
+import { selectIFunctionsByOutputParam } from 'src/lib/process-builder/store/selectors/function.selector';
 import { BPMNJsRepository } from 'src/lib/core/bpmn-js.repository';
-import {
-  INJECTOR_INTERFACE_TOKEN,
-  INJECTOR_TOKEN,
-} from 'src/lib/process-builder/globals/injector';
 import { ProcessBuilderRepository } from 'src/lib/core/process-builder-repository';
 import { mapIParamInterfaces } from 'src/lib/process-builder/extensions/rxjs/map-i-param-interfaces.rxjs-extension';
+import { selectSnapshot } from 'src/lib/process-builder/globals/select-snapshot';
+import { injectInterfaces, injectValues } from 'src/lib/process-builder/store/selectors/injection-context.selectors';
+import { upsertProvider } from 'src/lib/process-builder/store/actions/injection-context.actions';
 
 @Injectable({
   providedIn: 'root',
@@ -92,21 +91,13 @@ export class ParamEditorComponentService {
 
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: IParamEditorComponentInputData,
-    @Inject(INJECTOR_TOKEN) private _injector: { injector: object },
-    @Inject(INJECTOR_INTERFACE_TOKEN) private _injectorInterface: { injector: object },
     private _store: Store,
   ) { }
 
   public updateInjector(iParams: IParam[]) {
     for (let param of iParams) {
-      (this._injector as any)[param!.normalizedName] =
-        ProcessBuilderRepository.createPseudoObjectFromIParamDefinition(
-          param!.defaultValue
-        );
-      (this._injectorInterface.injector as any)[param!.normalizedName] =
-        ProcessBuilderRepository.createPseudoObjectFromIParamDefinition(
-          param!.defaultValue
-        );
+      const value = ProcessBuilderRepository.createPseudoObjectFromIParamDefinition(param!.defaultValue), interfaceObject = ProcessBuilderRepository.createPseudoObjectFromIParamDefinition(param!.defaultValue);
+      this._store.dispatch(upsertProvider(param!.normalizedName, value, interfaceObject));
     }
   }
 }

@@ -4,7 +4,7 @@ import { Component, Input } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import defaultImportsConstant from 'src/app/default-imports.constant';
 import { Store } from '@ngrx/store';
-import { addIParams } from '../store/actions/i-param.actions';
+import { addIParams } from '../store/actions/param.actions';
 import { By } from '@angular/platform-browser';
 
 @Component({

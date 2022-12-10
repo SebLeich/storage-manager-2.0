@@ -4,7 +4,7 @@ import { BpmnJsService } from '../../services/bpmn-js.service';
 import { ProcessBuilderService } from '../../services/process-builder.service';
 import { map, Subscription, startWith, switchMap, timer } from 'rxjs';
 import { Store } from '@ngrx/store';
-import { selectCurrentIBpmnJSModel } from '../../store/selectors/i-bpmn-js-model.selectors';
+import { selectCurrentIBpmnJSModel } from '../../store/selectors/bpmn-js-model.selectors';
 import { ProcessBuilderComponentService } from './process-builder-component.service';
 import { upsertProcedure } from 'src/app/store/actions/i-pending-procedure.actions';
 

@@ -6,7 +6,7 @@ import { isEqual } from 'lodash';
 import defaultImportsConstant from 'src/app/default-imports.constant';
 import { IFunction } from '../../globals/i-function';
 import { addIFunctions } from '../actions/i-function.actions';
-import { selectIFunction, selectIFunctions, selectNextId } from './i-function.selector';
+import { selectIFunction, selectIFunctions, selectNextId } from './function.selector';
 
 describe('IFunction Selectors', () => {
 

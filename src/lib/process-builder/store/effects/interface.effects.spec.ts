@@ -2,21 +2,21 @@ import { TestBed } from '@angular/core/testing';
 import { provideMockActions } from '@ngrx/effects/testing';
 import { Observable } from 'rxjs';
 
-import { IParamEffects } from './i-param.effects';
+import { IInterfaceEffects } from './interface.effects';
 
-describe('IParamEffects', () => {
+describe('IInterfaceEffects', () => {
   let actions$: Observable<any>;
-  let effects: IParamEffects;
+  let effects: IInterfaceEffects;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
       providers: [
-        IParamEffects,
+        IInterfaceEffects,
         provideMockActions(() => actions$)
       ]
     });
 
-    effects = TestBed.inject(IParamEffects);
+    effects = TestBed.inject(IInterfaceEffects);
   });
 
   it('should be created', () => {

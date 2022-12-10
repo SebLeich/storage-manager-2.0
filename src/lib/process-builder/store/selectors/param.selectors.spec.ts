@@ -5,7 +5,7 @@ import { selectSnapshot } from '../../globals/select-snapshot';
 import { selectNextId } from './i-param.selectors';
 import { isEqual } from 'lodash';
 import defaultImportsConstant from 'src/app/default-imports.constant';
-import { addIParams } from '../actions/i-param.actions';
+import { addIParams } from '../actions/param.actions';
 import { selectIParam, selectIParams, selectIParamsByNormalizedName } from './i-param.selectors';
 
 describe('IParams Selectors', () => {

@@ -3,11 +3,11 @@ import { ReplaySubject } from 'rxjs';
 import { map, take } from 'rxjs/operators';
 import { IProcessBuilderConfig, PROCESS_BUILDER_CONFIG_TOKEN } from '../globals/i-process-builder-config';
 import { Store } from '@ngrx/store';
-import { selectCurrentParamOutput, selectIParams } from '../store/selectors/i-param.selectors';
-import { selectIFunctions } from '../store/selectors/i-function.selector';
-import { selectCurrentIBpmnJSModelGuid, selectIBpmnJSModels } from '../store/selectors/i-bpmn-js-model.selectors';
+import { selectIFunctions } from '../store/selectors/function.selector';
+import { selectCurrentIBpmnJSModelGuid, selectIBpmnJSModels } from '../store/selectors/bpmn-js-model.selectors';
 import { createIBpmnJsModel, setCurrentIBpmnJSModel } from '../store/actions/i-bpmn-js-model.actions';
 import { selectSnapshot } from '../globals/select-snapshot';
+import { selectCurrentParamOutput, selectIParams } from '../store/selectors/param.selectors';
 
 @Injectable()
 export class ProcessBuilderService {

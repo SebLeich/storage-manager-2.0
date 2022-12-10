@@ -4,15 +4,14 @@ import { BehaviorSubject } from 'rxjs';
 import { map, take } from 'rxjs/operators';
 import { BPMNJsRepository } from 'src/lib/core/bpmn-js.repository';
 import { IFunction } from 'src/lib/process-builder/globals/i-function';
-import { INJECTOR_INTERFACE_TOKEN, INJECTOR_TOKEN } from 'src/lib/process-builder/globals/injector';
 import { IBpmnJSModel } from 'src/lib/process-builder/interfaces/i-bpmn-js-model.interface';
 import { BpmnJsService } from 'src/lib/process-builder/services/bpmn-js.service';
 import { ProcessBuilderService } from 'src/lib/process-builder/services/process-builder.service';
 import { removeIBpmnJSModel, setCurrentIBpmnJSModel, updateCurrentIBpmnJSModel } from 'src/lib/process-builder/store/actions/i-bpmn-js-model.actions';
 import { removeIFunction } from 'src/lib/process-builder/store/actions/i-function.actions';
-import { selectCurrentIBpmnJSModel, selectCurrentIBpmnJSModelGuid, selectIBpmnJSModels } from 'src/lib/process-builder/store/selectors/i-bpmn-js-model.selectors';
-import { selectIFunctions } from 'src/lib/process-builder/store/selectors/i-function.selector';
-import { selectIParams } from 'src/lib/process-builder/store/selectors/i-param.selectors';
+import { selectCurrentIBpmnJSModel, selectCurrentIBpmnJSModelGuid, selectIBpmnJSModels } from 'src/lib/process-builder/store/selectors/bpmn-js-model.selectors';
+import { selectIFunctions } from 'src/lib/process-builder/store/selectors/function.selector';
+import { selectIParams } from 'src/lib/process-builder/store/selectors/param.selectors';
 import { fadeInAnimation } from 'src/lib/shared/animations/fade-in.animation';
 import { showListAnimation } from 'src/lib/shared/animations/show-list';
 
@@ -20,11 +19,7 @@ import { showListAnimation } from 'src/lib/shared/animations/show-list';
   selector: 'app-process-builder-wrapper',
   templateUrl: './process-builder-wrapper.component.html',
   styleUrls: ['./process-builder-wrapper.component.sass'],
-  animations: [fadeInAnimation, showListAnimation],
-  providers: [
-    { provide: INJECTOR_INTERFACE_TOKEN, useValue: {} },
-    { provide: INJECTOR_TOKEN, useValue: {} },
-  ]
+  animations: [fadeInAnimation, showListAnimation]
 })
 export class ProcessBuilderWrapperComponent {
 

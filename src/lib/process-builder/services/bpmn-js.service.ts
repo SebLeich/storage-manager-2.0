@@ -35,6 +35,7 @@ import {
   shareReplay,
   startWith,
   switchMap,
+  tap,
   throttleTime,
   timer
 } from 'rxjs';
@@ -44,7 +45,7 @@ import { IProcessValidationResult } from '../classes/validation-result';
 import { BPMNJsRepository } from 'src/lib/core/bpmn-js.repository';
 import { IZoomScrollModule } from 'src/lib/bpmn-io/interfaces/zoom-scroll-module.interface';
 import { Store } from '@ngrx/store';
-import { selectCurrentIBpmnJSModel, selectRecentlyUsedIBpmnJSModel } from '../store/selectors/i-bpmn-js-model.selectors';
+import { selectCurrentIBpmnJSModel, selectRecentlyUsedIBpmnJSModel } from '../store/selectors/bpmn-js-model.selectors';
 import { IEvent } from 'src/lib/bpmn-io/interfaces/event.interface';
 import { IDirectEditingEvent } from 'src/lib/bpmn-io/interfaces/i-direct-editing-event.interface';
 import { IShapeDeleteExecutedEvent } from 'src/lib/bpmn-io/interfaces/i-shape-delete-executed-event.interface';

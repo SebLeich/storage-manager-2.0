@@ -6,8 +6,8 @@ import { map } from 'rxjs/operators';
 import { ParamCodes } from 'src/config/param-codes';
 import { IEmbeddedView } from 'src/lib/process-builder/globals/i-embedded-view';
 import { IParam } from 'src/lib/process-builder/globals/i-param';
-import * as fromIParam from 'src/lib/process-builder/store/reducers/i-param.reducer';
-import { selectIParams } from 'src/lib/process-builder/store/selectors/i-param.selectors';
+import * as fromIParam from 'src/lib/process-builder/store/reducers/param.reducer';
+import { selectIParams } from 'src/lib/process-builder/store/selectors/param.selectors';
 
 @Component({
   selector: 'app-embedded-function-input-selection',

@@ -2,7 +2,7 @@ import { Pipe, PipeTransform } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { Observable, of } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { selectIParam } from '../store/selectors/i-param.selectors';
+import { selectIParam } from '../store/selectors/param.selectors';
 
 @Pipe({
   name: 'param'

@@ -1,4 +1,4 @@
-import * as fromReducer from './i-param.reducer';
+import * as fromReducer from './param.reducer';
 
 describe('ParamReducer', () => {
 
