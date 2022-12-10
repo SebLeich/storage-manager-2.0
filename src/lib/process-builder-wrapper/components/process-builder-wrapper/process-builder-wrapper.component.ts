@@ -1,10 +1,10 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { BehaviorSubject } from 'rxjs';
 import { map, take } from 'rxjs/operators';
 import { BPMNJsRepository } from 'src/lib/core/bpmn-js.repository';
-import { ProcessBuilderComponent } from 'src/lib/process-builder/components/process-builder/process-builder.component';
 import { IFunction } from 'src/lib/process-builder/globals/i-function';
+import { INJECTOR_INTERFACE_TOKEN, INJECTOR_TOKEN } from 'src/lib/process-builder/globals/injector';
 import { IBpmnJSModel } from 'src/lib/process-builder/interfaces/i-bpmn-js-model.interface';
 import { BpmnJsService } from 'src/lib/process-builder/services/bpmn-js.service';
 import { ProcessBuilderService } from 'src/lib/process-builder/services/process-builder.service';
@@ -20,11 +20,13 @@ import { showListAnimation } from 'src/lib/shared/animations/show-list';
   selector: 'app-process-builder-wrapper',
   templateUrl: './process-builder-wrapper.component.html',
   styleUrls: ['./process-builder-wrapper.component.sass'],
-  animations: [fadeInAnimation, showListAnimation]
+  animations: [fadeInAnimation, showListAnimation],
+  providers: [
+    { provide: INJECTOR_INTERFACE_TOKEN, useValue: {} },
+    { provide: INJECTOR_TOKEN, useValue: {} },
+  ]
 })
 export class ProcessBuilderWrapperComponent {
-
-  @ViewChild(ProcessBuilderComponent) processBuilderComponent!: ProcessBuilderComponent;
 
   public bpmnJSModels$ = this._store.select(selectIBpmnJSModels());
   public funcs$ = this._store.select(selectIFunctions());
