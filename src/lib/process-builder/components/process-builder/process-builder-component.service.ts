@@ -112,32 +112,38 @@ export class ProcessBuilderComponentService {
       outputParam = this._handleFunctionOutputParam(referencedFunction, taskCreationData, taskCreationPayload, outputParam, methodEvaluation)?.outputParam;
 
       gatewayShape = this._handleErrorGatewayConfiguration(taskCreationPayload, referencedFunction)?.gatewayShape;
+      
+      this._handleDataInputConfiguration(taskCreationData, taskCreationPayload, resultingFunction, referencedFunction);
+    }
 
-      // tested
+    return { gatewayShape, outputParam };
+  }
 
-      const dataInputAssociations = taskCreationPayload
-        .configureActivity
-        .incoming
-        .filter(incoming => incoming.type === shapeTypes.DataInputAssociation);
-      this._bpmnJsService.modelingModule.removeElements(dataInputAssociations);
+  private _handleDataInputConfiguration(taskCreationData: ITaskCreationData, taskCreationPayload: ITaskCreationPayload, resultingFunction: IFunction, referencedFunction: IFunction) {
+    const configureActivity = taskCreationPayload.configureActivity;
+    if (configureActivity) {
+      const dataInputAssociations = configureActivity.incoming.filter(incoming => incoming.type === shapeTypes.DataInputAssociation);
+      if (dataInputAssociations) {
+        this._bpmnJsService.modelingModule.removeElements(dataInputAssociations);
+      }
+    }
 
-      if (resultingFunction.inputParams || referencedFunction.useDynamicInputParams) {
-        const inputParams = resultingFunction.inputParams ? Array.isArray(resultingFunction.inputParams) ? [...resultingFunction.inputParams] : [resultingFunction.inputParams] : [];
-        if (typeof taskCreationData.inputParam === 'number') {
-          inputParams.push({ optional: false, param: taskCreationData.inputParam });
-        }
+    if (resultingFunction.inputParams || referencedFunction.useDynamicInputParams) {
+      const inputParams = resultingFunction.inputParams ? Array.isArray(resultingFunction.inputParams) ? [...resultingFunction.inputParams] : [resultingFunction.inputParams] : [];
+      if (typeof taskCreationData.inputParam === 'number') {
+        inputParams.push({ optional: false, param: taskCreationData.inputParam });
+      }
 
-        const availableInputParamsIElements = BPMNJsRepository.getAvailableInputParamsIElements(taskCreationPayload.configureActivity);
+      if(configureActivity){
+        const availableInputParamsIElements = BPMNJsRepository.getAvailableInputParamsIElements(configureActivity);
         for (let param of inputParams.filter(inputParam => !(taskCreationPayload.configureActivity as IElement).incoming.some(y => BPMNJsRepository.sLPBExtensionSetted(y.source.businessObject, 'DataObjectExtension', (ext) => ext.outputParam === inputParam.param)))) {
           const element = availableInputParamsIElements.find(x => BPMNJsRepository.sLPBExtensionSetted(x.businessObject, 'DataObjectExtension', (ext) => ext.outputParam === param.param));
           if (!!element) {
-            this._bpmnJsService.modelingModule.connect(element, taskCreationPayload.configureActivity);
+            this._bpmnJsService.modelingModule.connect(element, configureActivity);
           }
         }
       }
     }
-
-    return { gatewayShape, outputParam };
   }
 
   private _handleErrorGatewayConfiguration(taskCreationPayload: ITaskCreationPayload, resultingFunction: IFunction) {
