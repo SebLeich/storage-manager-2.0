@@ -2,11 +2,11 @@ import { TestBed } from '@angular/core/testing';
 
 import { Store } from '@ngrx/store';
 import { selectSnapshot } from '../../globals/select-snapshot';
-import { selectNextId } from './i-param.selectors';
+import { selectNextId } from './param.selectors';
 import { isEqual } from 'lodash';
 import defaultImportsConstant from 'src/app/default-imports.constant';
 import { addIParams } from '../actions/param.actions';
-import { selectIParam, selectIParams, selectIParamsByNormalizedName } from './i-param.selectors';
+import { selectIParam, selectIParams, selectIParamsByNormalizedName } from './param.selectors';
 
 describe('IParams Selectors', () => {
 

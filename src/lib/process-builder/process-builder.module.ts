@@ -50,13 +50,13 @@ import { ParamPreviewComponent } from './components/previews/param-preview/param
 import { ValidationWarningPipe } from './pipes/validation-warning.pipe';
 import { EmbeddedInputOutputMappingComponent } from './components/embedded/embedded-input-output-mapping/embedded-input-output-mapping.component';
 import { EmbeddedInputOutputMappingTableRowComponent } from './components/helpers/embedded-input-output-mapping-table-row/embedded-input-output-mapping-table-row.component';
-import { loadIInterfaces } from './store/actions/i-interface.actions';
+import { loadIInterfaces } from './store/actions/interface.actions';
 import { InterfacePipe } from './pipes/interface.pipe';
 import { ParamMemberPreviewComponent } from './components/helpers/param-member-preview/param-member-preview.component';
 import { ParamMemberPathPreviewComponent } from './components/helpers/param-member-path-preview/param-member-path-preview.component';
 import { BpmnJsService } from './services/bpmn-js.service';
 import { ProcessBuilderService } from './services/process-builder.service';
-import { loadIFunctions } from './store/actions/i-function.actions';
+import { loadIFunctions } from './store/actions/function.actions';
 import { upsertProvider } from './store/actions/injection-context.actions';
 import { InjectorInterfacesProvider, InjectorProvider } from './globals/injector-interfaces-provider';
 

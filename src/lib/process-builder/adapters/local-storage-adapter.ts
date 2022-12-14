@@ -3,14 +3,14 @@ import { selectIParams } from "../store/selectors/param.selectors";
 import { IParam } from "../globals/i-param";
 import { selectIFunctions } from "../store/selectors/function.selector";
 import { IFunction } from "../globals/i-function";
-import { upsertIFunctions } from "../store/actions/i-function.actions";
+import { upsertIFunctions } from "../store/actions/function.actions";
 import { upsertIParams } from "../store/actions/param.actions";
 import { selectCurrentIBpmnJSModelGuid, selectIBpmnJSModels } from "../store/selectors/bpmn-js-model.selectors";
 import { IBpmnJSModel } from "../interfaces/i-bpmn-js-model.interface";
-import { setCurrentIBpmnJSModel, upsertIBpmnJSModels } from "../store/actions/i-bpmn-js-model.actions";
+import { setCurrentIBpmnJSModel, upsertIBpmnJSModels } from "../store/actions/bpmn-js-model.actions";
 import { selectIInterfaces } from "../store/selectors/interface.selectors";
 import { IInterface } from "../interfaces/i-interface.interface";
-import { upsertIInterfaces } from "../store/actions/i-interface.actions";
+import { upsertIInterfaces } from "../store/actions/interface.actions";
 import { Store } from "@ngrx/store";
 
 export const localStorageAdapter = (injector: Injector) => {

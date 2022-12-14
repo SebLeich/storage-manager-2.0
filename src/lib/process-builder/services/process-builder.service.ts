@@ -5,7 +5,7 @@ import { IProcessBuilderConfig, PROCESS_BUILDER_CONFIG_TOKEN } from '../globals/
 import { Store } from '@ngrx/store';
 import { selectIFunctions } from '../store/selectors/function.selector';
 import { selectCurrentIBpmnJSModelGuid, selectIBpmnJSModels } from '../store/selectors/bpmn-js-model.selectors';
-import { createIBpmnJsModel, setCurrentIBpmnJSModel } from '../store/actions/i-bpmn-js-model.actions';
+import { createIBpmnJsModel, setCurrentIBpmnJSModel } from '../store/actions/bpmn-js-model.actions';
 import { selectSnapshot } from '../globals/select-snapshot';
 import { selectCurrentParamOutput, selectIParams } from '../store/selectors/param.selectors';
 

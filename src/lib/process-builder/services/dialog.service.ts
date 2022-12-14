@@ -1,6 +1,6 @@
 import { Inject, Injectable, Injector } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { Observable } from 'rxjs';
+import { finalize, Observable } from 'rxjs';
 import { ParamCodes } from 'src/config/param-codes';
 import { IElement } from 'src/lib/bpmn-io/interfaces/element.interface';
 import { ParamEditorComponent } from '../components/dialog/param-editor/param-editor.component';
@@ -32,7 +32,12 @@ export class DialogService {
       } as ITaskCreationComponentInput,
       disableClose: true
     });
-    return ref.afterClosed();
+    document.getElementsByClassName('cdk-overlay-container')[0]?.classList.add('z-index-1002');
+    return ref.afterClosed().pipe(
+      finalize(() => {
+        document.getElementsByClassName('cdk-overlay-container')[0]?.classList.remove('z-index-1002');
+      })
+    );
   }
 
   public editParam(paramCode: ParamCodes, element: IElement): Observable<Object> {

@@ -1,4 +1,4 @@
-import * as fromIInterface from './i-interface.actions';
+import * as fromIInterface from './interface.actions';
 
 describe('loadIInterfaces', () => {
   it('should return an action', () => {

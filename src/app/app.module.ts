@@ -172,7 +172,9 @@ rootStoreFeatures[fromISolutionPreviewState.solutionPreviewFeatureKey] = fromISo
   ],
   providers: [
     { provide: PROCESS_BUILDER_CONFIG_TOKEN, useValue: PROCESS_BUILDER_CONFIG },
-    { provide: PARAMS_CONFIG_TOKEN, useValue: PARAMS_CONFIG },
+    { provide: PARAMS_CONFIG_TOKEN, useFactory: () => {
+      return PARAMS_CONFIG;
+    } },
     { provide: FUNCTIONS_CONFIG_TOKEN, useValue: FUNCTIONS_CONFIG },
     { provide: INTERFACES_CONFIG_TOKEN, useValue: INTERFACES_CONFIG },
   ],

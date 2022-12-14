@@ -52,7 +52,7 @@ import { IShapeDeleteExecutedEvent } from 'src/lib/bpmn-io/interfaces/i-shape-de
 import { IShapeAddedEvent } from 'src/lib/bpmn-io/interfaces/i-shape-added-event.interface';
 import { IViewboxChangedEvent } from '../interfaces/i-viewbox-changed-event.interface';
 import { isEqual } from 'lodash';
-import { addIBpmnJSModel, setCurrentIBpmnJSModel, updateCurrentIBpmnJSModel } from '../store/actions/i-bpmn-js-model.actions';
+import { addIBpmnJSModel, setCurrentIBpmnJSModel, updateCurrentIBpmnJSModel } from '../store/actions/bpmn-js-model.actions';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { selectSnapshot } from '../globals/select-snapshot';
 import defaultBpmnXmlConstant from '../globals/default-bpmn-xml.constant';

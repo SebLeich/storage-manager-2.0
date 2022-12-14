@@ -4,7 +4,7 @@ import defaultImportsConstant from 'src/app/default-imports.constant';
 import { selectSnapshot } from '../globals/select-snapshot';
 import { IBpmnJSModel } from '../interfaces/i-bpmn-js-model.interface';
 import { ProcessBuilderModule } from '../process-builder.module';
-import { addIBpmnJSModels, setCurrentIBpmnJSModel } from '../store/actions/i-bpmn-js-model.actions';
+import { addIBpmnJSModels, setCurrentIBpmnJSModel } from '../store/actions/bpmn-js-model.actions';
 import { selectCurrentIBpmnJSModel, selectCurrentIBpmnJSModelGuid, selectIBpmnJSModels } from '../store/selectors/bpmn-js-model.selectors';
 
 import { ProcessBuilderService } from './process-builder.service';

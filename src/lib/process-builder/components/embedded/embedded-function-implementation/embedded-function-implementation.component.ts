@@ -18,6 +18,9 @@ import { debounceTime, tap } from 'rxjs/operators';
 import { UntypedFormControl, UntypedFormGroup } from '@angular/forms';
 import { Store } from '@ngrx/store';
 import { injectValues } from 'src/lib/process-builder/store/selectors/injection-context.selectors';
+import { combineLatest } from 'rxjs';
+import { selectIParams } from 'src/lib/process-builder/store/selectors/param.selectors';
+import { mapIParamsInterfaces } from 'src/lib/process-builder/extensions/rxjs/map-i-params-interfaces.rxjs-extension';
 
 @Component({
   selector: 'app-embedded-function-implementation',
@@ -26,12 +29,12 @@ import { injectValues } from 'src/lib/process-builder/store/selectors/injection-
 })
 export class EmbeddedFunctionImplementationComponent implements IEmbeddedView, AfterViewInit, OnDestroy {
 
-  @Input() inputParams!: number | number[] | null;
+  @Input() public inputParams!: number[];
 
   @ViewChild('codeBody', { static: true, read: ElementRef }) codeBody!: ElementRef<HTMLDivElement>;
-  codeMirror!: EditorView;
+  public codeMirror!: EditorView;
 
-  globalsInjector: any = {
+  public globalsInjector: any = {
     'const': { type: 'variable' },
     'injector': { type: 'variable', apply: 'injector' },
     'main': { type: 'function', apply: 'async () => {\n  // your code\n}\n', hint: 'async' },
@@ -40,20 +43,20 @@ export class EmbeddedFunctionImplementationComponent implements IEmbeddedView, A
     'var': { type: 'variable' },
   };
 
-  varNameInjector: any = {
+  public varNameInjector: any = {
     'var1': { type: 'variable' },
     'var2': { type: 'variable' }
   };
 
-  formGroup!: UntypedFormGroup;
+  public formGroup!: UntypedFormGroup;
 
   private _implementationChanged = new ReplaySubject<Text>(1);
-  implementationChanged$ = this._implementationChanged.asObservable();
+  public implementationChanged$ = this._implementationChanged.asObservable();
 
   private _returnValueStatus: BehaviorSubject<MethodEvaluationStatus> = new BehaviorSubject<MethodEvaluationStatus>(MethodEvaluationStatus.Initial);
   public returnValueStatus$ = this._returnValueStatus.asObservable();
 
-  private _injector: any = { };
+  private _injector: any = { injector: {} };
   private _subscriptions = new Subscription();
 
   constructor(
@@ -62,14 +65,14 @@ export class EmbeddedFunctionImplementationComponent implements IEmbeddedView, A
     private _store: Store
   ) { }
 
-  blockTabPressEvent(event: KeyboardEvent) {
+  public blockTabPressEvent(event: KeyboardEvent) {
     if (event.key === 'Tab') {
       event.stopPropagation();
       event.preventDefault();
     }
   }
 
-  ngAfterViewInit(): void {
+  public ngAfterViewInit(): void {
     this._subscriptions.add(...[
       this.implementationChanged$.pipe(debounceTime(500)).subscribe((value) => {
         this.formGroup.controls['implementation'].setValue((value as any)?.text);
@@ -91,7 +94,21 @@ export class EmbeddedFunctionImplementationComponent implements IEmbeddedView, A
           this.formGroup.controls['outputParamName'].disable();
         }
       }),
-      this._store.select(injectValues).subscribe(injector => this._injector = injectValues)
+      combineLatest([this._store.select(injectValues()), this._store.select(selectIParams(this.inputParams)).pipe(
+        mapIParamsInterfaces(this._store)
+      )])
+        .subscribe(([injector, inputParams]) => {
+          let injectorObject = { injector: { ...injector } };
+          inputParams.forEach(param => {
+            if (param.defaultValue) {
+              injectorObject.injector[param.normalizedName] = param.defaultValue;
+            } else {
+              const dummyValue = ProcessBuilderRepository.createPseudoObjectFromIParam(param);
+              injectorObject.injector[param.normalizedName] = dummyValue;
+            }
+          });
+          this._injector = injectorObject;
+        })
     ]);
 
     this.codeMirror = new EditorView({
@@ -105,7 +122,7 @@ export class EmbeddedFunctionImplementationComponent implements IEmbeddedView, A
   public ngOnDestroy = () => this._subscriptions.unsubscribe();
 
   public complete = (context: CompletionContext) => {
-    let nodeBefore = syntaxTree(context.state).resolveInner(context.pos, -1);
+    const nodeBefore = syntaxTree(context.state).resolveInner(context.pos, -1);
     if (completePropertyAfter.includes(nodeBefore.name) && nodeBefore.parent?.name === "MemberExpression") {
       let object = nodeBefore.parent.getChild("Expression");
       if (object?.name === 'VariableName' || object?.name === 'MemberExpression') {
@@ -123,7 +140,7 @@ export class EmbeddedFunctionImplementationComponent implements IEmbeddedView, A
     return null
   }
 
-  state = () => EditorState.create({
+  public state = () => EditorState.create({
     doc: Array.isArray(this.formGroup.controls['implementation'].value) ? this.formGroup.controls['implementation'].value.join('\n') : defaultImplementation,
     extensions: [
       basicSetup,
@@ -139,9 +156,9 @@ export class EmbeddedFunctionImplementationComponent implements IEmbeddedView, A
     ]
   });
 
-  MethodEvaluationStatus = MethodEvaluationStatus;
+  public MethodEvaluationStatus = MethodEvaluationStatus;
 
-  get canFailControl(): UntypedFormControl {
+  public get canFailControl(): UntypedFormControl {
     return this.formGroup.controls['canFail'] as UntypedFormControl;
   }
 

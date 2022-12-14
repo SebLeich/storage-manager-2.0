@@ -13,8 +13,6 @@ import { selectIFunctionsByOutputParam } from 'src/lib/process-builder/store/sel
 import { BPMNJsRepository } from 'src/lib/core/bpmn-js.repository';
 import { ProcessBuilderRepository } from 'src/lib/core/process-builder-repository';
 import { mapIParamInterfaces } from 'src/lib/process-builder/extensions/rxjs/map-i-param-interfaces.rxjs-extension';
-import { selectSnapshot } from 'src/lib/process-builder/globals/select-snapshot';
-import { injectInterfaces, injectValues } from 'src/lib/process-builder/store/selectors/injection-context.selectors';
 import { upsertProvider } from 'src/lib/process-builder/store/actions/injection-context.actions';
 
 @Injectable({
@@ -74,7 +72,7 @@ export class ParamEditorComponentService {
       );
     })
   );
-  public availableInputParams$ = inject(Store<fromIParam.State>).select(
+  public availableInputParams$ = inject(Store).select(
     selectIParams(() =>
       BPMNJsRepository.getAvailableInputParams(this.data.element)
     )

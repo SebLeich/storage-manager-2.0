@@ -21,7 +21,7 @@ import { IParam } from '../../globals/i-param';
 import { ProcessBuilderRepository } from 'src/lib/core/process-builder-repository';
 import { upsertIParam } from '../../store/actions/param.actions';
 import shapeTypes from 'src/lib/bpmn-io/shape-types';
-import { upsertIFunction } from '../../store/actions/i-function.actions';
+import { upsertIFunction } from '../../store/actions/function.actions';
 import { IElement } from 'src/lib/bpmn-io/interfaces/element.interface';
 import { deepObjectLookup } from 'src/lib/shared/globals/deep-object-lookup.function';
 import { injectInterfaces, injectValues } from '../../store/selectors/injection-context.selectors';
@@ -264,7 +264,7 @@ export class ProcessBuilderComponentService {
         ...outputParam,
         name: taskCreationData.outputParamName ?? this._config.dynamicParamDefaultNaming,
         normalizedName: taskCreationData.normalizedOutputParamName ?? ProcessBuilderRepository.normalizeName(taskCreationData.outputParamName ?? this._config.dynamicParamDefaultNaming),
-        defaultValue: this._outputParamValue(methodEvaluation, taskCreationData.outputParamValue),
+        defaultValue: await this._outputParamValue(methodEvaluation, taskCreationData.outputParamValue),
         type: outputType
       } as IParam;
       this._store.dispatch(upsertIParam(outputParam));
@@ -286,7 +286,7 @@ export class ProcessBuilderComponentService {
 
   private async _methodEvaluationTypeToOutputType(methodEvaluation?: IMethodEvaluationResult) {
     if (methodEvaluation?.injectorNavigationPath) {
-      const injectorInterfaces = await selectSnapshot(this._store.select(injectInterfaces));
+      const injectorInterfaces = await selectSnapshot(this._store.select(injectInterfaces()));
       const injectedDef = deepObjectLookup(injectorInterfaces, methodEvaluation.injectorNavigationPath);
       return injectedDef.type ?? 'object';
     }
@@ -307,7 +307,7 @@ export class ProcessBuilderComponentService {
     return 'object';
   }
 
-  private async _outputParamValue(methodEvaluation: IMethodEvaluationResult, defaultValue: any = []) {
+  private async _outputParamValue(methodEvaluation: IMethodEvaluationResult, defaultValue: any = null) {
     if (methodEvaluation.injectorNavigationPath) {
       const injector = await selectSnapshot(this._store.select(injectValues));
       const injectedValue = deepObjectLookup(injector, methodEvaluation.injectorNavigationPath);

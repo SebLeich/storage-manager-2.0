@@ -21,17 +21,18 @@ export const selectIParam = (
     return state.entities[code];
   });
 
-export const selectIParams = (arg?: number[] | (() => number[])) =>
-  createSelector(selectIParamState, (state: fromIParam.State) => {
-    if (!state || !state.entities) return [];
-    let params = Object.values(state.entities);
-    const paramCodes = typeof arg === 'function'? arg(): arg;
-    if (Array.isArray(paramCodes))
-      params = params.filter(
-        (param) => paramCodes.findIndex((y) => param?.identifier === y) > -1
-      );
-    return params as IParam[];
-  });
+export const selectIParams = (arg?: number[] | (() => number[])) => createSelector(selectIParamState, (state: fromIParam.State) => {
+  if (!state || !state.entities) {
+    return [];
+  }
+  let params = Object.values(state.entities);
+  const paramCodes = typeof arg === 'function' ? arg() : arg;
+  if (Array.isArray(paramCodes))
+    params = params.filter(
+      (param) => paramCodes.findIndex((y) => param?.identifier === y) > -1
+    );
+  return params as IParam[];
+});
 
 export const selectIParamsByNormalizedName = (
   names: string[] | null | undefined
@@ -49,11 +50,11 @@ export const selectNextId = () =>
     (state: fromIParam.State) =>
       (state && state.entities
         ? Math.max(
-            ...Object.values(state.entities)
-              .filter((x) => (x ? true : false))
-              .map((x) => (x as IParam).identifier),
-            -1
-          )
+          ...Object.values(state.entities)
+            .filter((x) => (x ? true : false))
+            .map((x) => (x as IParam).identifier),
+          -1
+        )
         : -1) + 1
   );
 

@@ -1,7 +1,7 @@
 import { createEntityAdapter, EntityAdapter, EntityState, Update } from '@ngrx/entity';
 import { createReducer, on } from '@ngrx/store';
 import { IFunction } from '../../globals/i-function';
-import { addIFunction, addIFunctions, removeIFunction, updateIFunction, updateIFunctionOutputParam, upsertIFunction, upsertIFunctions } from '../actions/i-function.actions';
+import { addIFunction, addIFunctions, removeIFunction, updateIFunction, updateIFunctionOutputParam, upsertIFunction, upsertIFunctions } from '../actions/function.actions';
 
 
 export const featureKey = 'Func';

@@ -11,7 +11,7 @@ import { ValidationWarning } from 'src/lib/process-builder/globals/validation-wa
 import { ValidationErrorPipe } from 'src/lib/process-builder/pipes/validation-error.pipe';
 import { ValidationWarningPipe } from 'src/lib/process-builder/pipes/validation-warning.pipe';
 import { BpmnJsService } from 'src/lib/process-builder/services/bpmn-js.service';
-import { createIBpmnJsModel, updateCurrentIBpmnJSModel, updateIBpmnJSModel } from 'src/lib/process-builder/store/actions/i-bpmn-js-model.actions';
+import { createIBpmnJsModel, updateCurrentIBpmnJSModel, updateIBpmnJSModel } from 'src/lib/process-builder/store/actions/bpmn-js-model.actions';
 import { selectCurrentIBpmnJSModel } from 'src/lib/process-builder/store/selectors/bpmn-js-model.selectors';
 
 @Component({

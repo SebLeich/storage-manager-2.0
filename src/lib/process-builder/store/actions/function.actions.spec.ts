@@ -1,4 +1,4 @@
-import * as fromIFunction from './i-function.actions';
+import * as fromIFunction from './function.actions';
 
 describe('loadIFunctions', () => {
   it('should return an action', () => {

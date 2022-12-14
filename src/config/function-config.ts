@@ -1,6 +1,6 @@
 import { IFunction } from "src/lib/process-builder/globals/i-function";
 import { PredefinedFunctions } from "src/lib/process-builder/globals/pre-defined-functions";
-import exampleSolution from "./example-solution";
+import * as exampleSolution from "./example-solution";
 import { InterfaceCodes } from "./interface-codes";
 import { ParamCodes } from "./param-codes";
 
@@ -14,7 +14,7 @@ export default [
         'description': 'method provides an exemplary solution',
         'output': { 'param': ParamCodes.ExemplarySolution },
         'pseudoImplementation': () => {
-            return new Promise((resolve) => resolve(exampleSolution));
+            return new Promise((resolve) => resolve(exampleSolution.default));
         },
         'canFail': false
     } as IFunction,

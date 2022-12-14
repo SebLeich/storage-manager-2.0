@@ -18,23 +18,14 @@ import { IFunction } from 'src/lib/process-builder/globals/i-function';
 import { selectIParam, selectIParams } from 'src/lib/process-builder/store/selectors/param.selectors';
 import { IParam } from 'src/lib/process-builder/globals/i-param';
 import { ProcessBuilderRepository } from 'src/lib/core/process-builder-repository';
-import { HttpClient } from '@angular/common/http';
 import { EmbeddedParamEditorComponent } from '../../embedded/embedded-param-editor/embedded-param-editor.component';
 import { CodemirrorRepository } from 'src/lib/core/codemirror.repository';
 import { MethodEvaluationStatus } from 'src/lib/process-builder/globals/method-evaluation-status';
 import { UntypedFormBuilder, UntypedFormControl, UntypedFormGroup } from '@angular/forms';
 import { IProcessBuilderConfig, PROCESS_BUILDER_CONFIG_TOKEN } from 'src/lib/process-builder/globals/i-process-builder-config';
-import { InjectorInterfacesProvider, InjectorProvider } from 'src/lib/process-builder/globals/injector-interfaces-provider';
 import { IConnector } from 'src/lib/bpmn-io/interfaces/connector.interface';
 import { EmbeddedFunctionInputSelectionComponent } from '../../embedded/embedded-function-input-selection/embedded-function-input-selection.component';
-import {
-  debounceTime,
-  filter,
-  map,
-  shareReplay,
-  switchMap,
-  take,
-} from 'rxjs/operators';
+import { debounceTime, filter, map, shareReplay, switchMap, take } from 'rxjs/operators';
 import { EmbeddedInputOutputMappingComponent } from '../../embedded/embedded-input-output-mapping/embedded-input-output-mapping.component';
 import { selectIInterface } from 'src/lib/process-builder/store/selectors/interface.selectors';
 import { IInterface } from 'src/lib/process-builder/interfaces/i-interface.interface';
@@ -64,15 +55,9 @@ export class TaskCreationComponent implements OnDestroy, OnInit {
   private _configureGateway = new BehaviorSubject<IConnector | null>(null);
   private _customImplementation = new BehaviorSubject<IElement | null>(null);
   private _hasOutputParam = new BehaviorSubject<boolean>(false);
-  private _hasDynamicInputParam = new BehaviorSubject<
-    IElement | null | undefined
-  >(null);
-  private _hasDynamicOutputParam = new BehaviorSubject<
-    IElement | null | undefined
-  >(null);
-  private _hasDataMapping = new BehaviorSubject<IElement | null | undefined>(
-    null
-  );
+  private _hasDynamicInputParam = new BehaviorSubject<IElement | null | undefined>(null);
+  private _hasDynamicOutputParam = new BehaviorSubject<IElement | null | undefined>(null);
+  private _hasDataMapping = new BehaviorSubject<IElement | null | undefined>(null);
 
   public hasOutputParam$ = this._hasOutputParam.asObservable();
   public steps$ = combineLatest([
@@ -207,13 +192,16 @@ export class TaskCreationComponent implements OnDestroy, OnInit {
     this.stepRegistry[TaskCreationStep.ConfigureFunctionSelection] = {
       type: EmbeddedFunctionSelectionComponent,
       provideInputParams: (arg: IEmbeddedView, element: IElement) => {
-        let component = arg as EmbeddedFunctionSelectionComponent;
-        component.inputParams =
-          BPMNJsRepository.getAvailableInputParams(element);
+        const component = arg as EmbeddedFunctionSelectionComponent;
+        component.inputParams = BPMNJsRepository.getAvailableInputParams(element);
       },
     };
     this.stepRegistry[TaskCreationStep.ConfigureFunctionImplementation] = {
       type: EmbeddedFunctionImplementationComponent,
+      provideInputParams(arg, element) {
+        const component = arg as EmbeddedFunctionImplementationComponent;
+        component.inputParams = BPMNJsRepository.getAvailableInputParams(element);
+      },
     };
     this.stepRegistry[TaskCreationStep.ConfigureFunctionOutput] = {
       type: EmbeddedParamEditorComponent,
@@ -221,7 +209,7 @@ export class TaskCreationComponent implements OnDestroy, OnInit {
     this.stepRegistry[TaskCreationStep.ConfigureInputOutputMapping] = {
       type: EmbeddedInputOutputMappingComponent,
       provideInputParams: (arg: IEmbeddedView, element: IElement) => {
-        let component = arg as EmbeddedInputOutputMappingComponent;
+        const component = arg as EmbeddedInputOutputMappingComponent;
         component.inputParams =
           BPMNJsRepository.getAvailableInputParams(element);
       },
@@ -230,8 +218,7 @@ export class TaskCreationComponent implements OnDestroy, OnInit {
       type: EmbeddedFunctionInputSelectionComponent,
       provideInputParams: (arg: IEmbeddedView, element: IElement) => {
         let component = arg as EmbeddedFunctionInputSelectionComponent;
-        let availableInputParams =
-          BPMNJsRepository.getAvailableInputParams(element);
+        let availableInputParams = BPMNJsRepository.getAvailableInputParams(element);
         component.setInputParams(availableInputParams);
       },
     };
@@ -293,7 +280,7 @@ export class TaskCreationComponent implements OnDestroy, OnInit {
     );
   }
 
-  setStep(index: number) {
+  public setStep(index: number) {
     this.steps$.pipe(take(1)).subscribe((steps: ITaskCreationConfig[]) => {
       this.dynamicInner.clear();
       this._currentStepIndex.next(index);

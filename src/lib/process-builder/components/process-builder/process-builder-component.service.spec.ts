@@ -13,7 +13,7 @@ import { ITaskCreationData } from '../../interfaces/i-task-creation-data.interfa
 import { ITaskCreationPayload } from '../../interfaces/i-task-creation-payload.interface';
 import { ProcessBuilderModule } from '../../process-builder.module';
 import { BpmnJsService } from '../../services/bpmn-js.service';
-import { upsertIFunction } from '../../store/actions/i-function.actions';
+import { upsertIFunction } from '../../store/actions/function.actions';
 import { GatewayType } from '../../types/gateway.type';
 
 import { ProcessBuilderComponentService } from './process-builder-component.service';
@@ -23,7 +23,6 @@ import { State } from '../../store/reducers/function.reducer';
 import { BPMNJsRepository } from 'src/lib/core/bpmn-js.repository';
 import { upsertIParam } from '../../store/actions/param.actions';
 import { IParam } from '../../globals/i-param';
-import { INJECTOR_INTERFACE_TOKEN, INJECTOR_TOKEN } from '../../globals/injector';
 import { deepObjectLookup } from 'src/lib/shared/globals/deep-object-lookup.function';
 
 describe('ProcessBuilderComponentService', () => {
@@ -94,8 +93,6 @@ describe('ProcessBuilderComponentService', () => {
           useValue: processBuilderConfig
         },
         { provide: FUNCTIONS_CONFIG_TOKEN, useValue: [] },
-        { provide: INJECTOR_INTERFACE_TOKEN, useValue: injectorInterface },
-        { provide: INJECTOR_TOKEN, useValue: injector },
       ]
     });
     service = TestBed.inject(ProcessBuilderComponentService);

@@ -12,7 +12,7 @@ import { IInputParam } from 'src/lib/process-builder/globals/i-input-param';
 import { delay, map } from 'rxjs/operators';
 
 import * as fromIFunctionState from 'src/lib/process-builder/store/reducers/function.reducer';
-import { removeIFunction } from 'src/lib/process-builder/store/actions/i-function.actions';
+import { removeIFunction } from 'src/lib/process-builder/store/actions/function.actions';
 import { showListAnimation } from 'src/lib/shared/animations/show-list';
 
 @Component({

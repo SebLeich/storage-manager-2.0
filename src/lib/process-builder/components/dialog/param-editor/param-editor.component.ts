@@ -96,11 +96,7 @@ export class ParamEditorComponent implements OnInit, OnDestroy {
   }
 
   public ngOnInit(): void {
-    this._subscriptions.add(
-      this.paramEditorComponentService.availableInputParams$.subscribe(
-        (iParams) => this.paramEditorComponentService.updateInjector(iParams)
-      )
-    );
+    this._subscriptions.add(this.paramEditorComponentService.availableInputParams$.subscribe((iParams) => this.paramEditorComponentService.updateInjector(iParams)));
     this._subscriptions.add(
       combineLatest([
         this._editor,
