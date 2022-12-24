@@ -16,8 +16,9 @@ export const selectIParam = (
 ) =>
   createSelector(selectIParamState, (state: fromIParam.State) => {
     if (!state || !state.entities || !arg || arg === 'dynamic') return null;
-    let code = typeof arg === 'function' ? arg() : arg;
+    const code = typeof arg === 'function' ? arg() : arg;
     if (typeof code !== 'number') return null;
+    
     return state.entities[code];
   });
 

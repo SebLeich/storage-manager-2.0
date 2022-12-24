@@ -6,6 +6,7 @@ import { selectIInterface, selectIInterfaces, selectIInterfacesByNormalizedName,
 import { isEqual } from 'lodash';
 import defaultImportsConstant from 'src/app/default-imports.constant';
 import { addIInterfaces } from '../actions/interface.actions';
+import { IInterface } from '../../interfaces/i-interface.interface';
 
 describe('IInterface Selectors', () => {
 
@@ -33,9 +34,9 @@ describe('IInterface Selectors', () => {
   Object.values(interfaces).forEach(iFace => {
 
     it(`should select the interface with the correct identifier ${iFace.identifier}`, async () => {
-      const selectionResult = await selectSnapshot(store.select(selectIInterface(iFace.identifier)));
+      const selectionResult = await selectSnapshot(store.select(selectIInterface(iFace.identifier))) as IInterface;
       expect(selectionResult).toBeTruthy();
-      expect(selectionResult!.normalizedName).toBe(iFace.normalizedName);
+      expect(selectionResult.normalizedName).toBe(iFace.normalizedName);
     });
 
   });
@@ -63,7 +64,7 @@ describe('IInterface Selectors', () => {
   for (let index = 0; index < Object.values(interfaces).length; index++) {
 
     const shuffled = Object.values(interfaces).sort(() => 0.5 - Math.random());
-    let selected = shuffled.slice(0, index);
+    const selected = shuffled.slice(0, index);
 
     it(`should select the interfaces with the correct normalized names: ${selected.map(iFace => iFace.normalizedName).join(', ')}`, async () => {
       const selectionResult = await selectSnapshot(store.select(selectIInterfacesByNormalizedName(selected.map(iFace => iFace.normalizedName))));

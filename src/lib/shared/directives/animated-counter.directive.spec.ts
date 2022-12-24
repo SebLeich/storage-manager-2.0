@@ -4,7 +4,7 @@ import { ComponentFixture, discardPeriodicTasks, fakeAsync, TestBed, tick } from
 import defaultImportsConstant from 'src/app/default-imports.constant';
 
 @Component({
-  selector: 'test-component',
+  selector: 'app-test-component',
   template: `
     <span appAnimatedCounter [value]=value [animationDuration]=duration></span>
   `
@@ -12,7 +12,7 @@ import defaultImportsConstant from 'src/app/default-imports.constant';
 export class TestComponent
 {
   @Input() value!: number;
-  @Input() duration: number = 2000;
+  @Input() duration = 2000;
 }
 
 

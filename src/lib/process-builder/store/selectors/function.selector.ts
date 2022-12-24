@@ -13,13 +13,9 @@ export const selectIFunction = (arg: number | null | undefined | (() => number |
         if (!state || !state.entities || typeof arg === 'undefined') {
             return null;
         }
-
-        let code = typeof arg === 'function' ? arg() : arg;
-        if (typeof arg === 'undefined') {
-            return null;
-        }
-
-        return Object.values(state.entities).find(x => x?.identifier === code);
+        const code = typeof arg === 'function' ? arg() : arg;
+        if (typeof code !== 'number') return null;
+        return state.entities[code];
     }
 );
 

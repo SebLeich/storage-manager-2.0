@@ -20,25 +20,7 @@ import { v4 as generateGuid } from 'uuid';
 import sebleichProcessBuilderExtension from '../globals/sebleich-process-builder-extension';
 import { IBpmnJS } from '../interfaces/i-bpmn-js.interface';
 import { getCanvasModule, getDirectEditingModule, getElementRegistryModule, getEventBusModule, getModelingModule, getTooltipModule, getZoomScrollModule, IElementRegistryModule, ITooltipModule } from 'src/lib/bpmn-io/bpmn-modules';
-import {
-  BehaviorSubject,
-  buffer,
-  combineLatest,
-  debounceTime,
-  delay,
-  filter,
-  from,
-  map,
-  merge,
-  Observable,
-  scan,
-  shareReplay,
-  startWith,
-  switchMap,
-  tap,
-  throttleTime,
-  timer
-} from 'rxjs';
+import { BehaviorSubject, buffer, combineLatest, debounceTime, delay, filter, from, map, merge, Observable, scan, shareReplay, startWith, switchMap, throttleTime, timer } from 'rxjs';
 import { IConnectionCreatePostExecutedEvent } from 'src/lib/bpmn-io/interfaces/connection-create-post-executed-event.interface';
 import { IModelingModule } from 'src/lib/bpmn-io/interfaces/modeling-module.interface';
 import { IProcessValidationResult } from '../classes/validation-result';

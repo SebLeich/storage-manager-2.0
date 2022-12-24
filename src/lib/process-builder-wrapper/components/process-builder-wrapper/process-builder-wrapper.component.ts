@@ -1,9 +1,10 @@
 import { Component } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { BehaviorSubject } from 'rxjs';
-import { map, take } from 'rxjs/operators';
+import { map } from 'rxjs/operators';
 import { BPMNJsRepository } from 'src/lib/core/bpmn-js.repository';
 import { IFunction } from 'src/lib/process-builder/globals/i-function';
+import { selectSnapshot } from 'src/lib/process-builder/globals/select-snapshot';
 import { IBpmnJSModel } from 'src/lib/process-builder/interfaces/i-bpmn-js-model.interface';
 import { BpmnJsService } from 'src/lib/process-builder/services/bpmn-js.service';
 import { ProcessBuilderService } from 'src/lib/process-builder/services/process-builder.service';
@@ -68,16 +69,19 @@ export class ProcessBuilderWrapperComponent {
     this._store.dispatch(setCurrentIBpmnJSModel(bpmnJSModel));
   }
 
-  public toggleBpmnJsModels() {
-    this._modelsVisible.pipe(take(1)).subscribe((val: boolean) => this._modelsVisible.next(!val));
+  public async toggleBpmnJsModels() {
+    const modelsVisible = await selectSnapshot(this._modelsVisible);
+    this._modelsVisible.next(!modelsVisible);
   }
 
-  public toggleMethods() {
-    this._methodsVisible.pipe(take(1)).subscribe((val: boolean) => this._methodsVisible.next(!val));
+  public async toggleMethods() {
+    const methodsVisible = await selectSnapshot(this._methodsVisible);
+    this._methodsVisible.next(!methodsVisible);
   }
 
-  public toggleParams() {
-    this._paramsVisible.pipe(take(1)).subscribe((val: boolean) => this._paramsVisible.next(!val));
+  public async toggleParams() {
+    const paramsVisible = await selectSnapshot(this._paramsVisible);
+    this._paramsVisible.next(!paramsVisible);
   }
 
 }

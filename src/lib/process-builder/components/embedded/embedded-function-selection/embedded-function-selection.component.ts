@@ -18,7 +18,7 @@ import { showListAnimation } from 'src/lib/shared/animations/show-list';
 @Component({
   selector: 'app-embedded-function-selection',
   templateUrl: './embedded-function-selection.component.html',
-  styleUrls: ['./embedded-function-selection.component.sass'],
+  styleUrls: ['./embedded-function-selection.component.scss'],
   animations: [showAnimation, showListAnimation]
 })
 export class EmbeddedFunctionSelectionComponent implements IEmbeddedView, OnDestroy, OnInit {
