@@ -15,7 +15,7 @@ import { linter, lintGutter } from '@codemirror/lint';
 import Linter from "eslint4b-prebuilt";
 import defaultImplementation from 'src/lib/process-builder/globals/default-implementation';
 import { debounceTime, tap } from 'rxjs/operators';
-import { UntypedFormControl, UntypedFormGroup } from '@angular/forms';
+import { FormControl, UntypedFormControl, UntypedFormGroup } from '@angular/forms';
 import { Store } from '@ngrx/store';
 import { injectValues } from 'src/lib/process-builder/store/selectors/injection-context.selectors';
 import { combineLatest } from 'rxjs';
@@ -56,7 +56,7 @@ export class EmbeddedFunctionImplementationComponent implements IEmbeddedView, A
   private _returnValueStatus: BehaviorSubject<MethodEvaluationStatus> = new BehaviorSubject<MethodEvaluationStatus>(MethodEvaluationStatus.Initial);
   public returnValueStatus$ = this._returnValueStatus.asObservable();
 
-  private _injector: any = { injector: {} };
+  private _injector: any = { injector: {}, injectorInterfaces: {} };
   private _subscriptions = new Subscription();
 
   constructor(
@@ -74,22 +74,32 @@ export class EmbeddedFunctionImplementationComponent implements IEmbeddedView, A
 
   public ngAfterViewInit(): void {
     this._subscriptions.add(...[
-      this.implementationChanged$.pipe(debounceTime(500)).subscribe((value) => {
-        this.formGroup.controls['implementation'].setValue((value as any)?.text);
-      }),
       this.formGroup.controls['name'].valueChanges.pipe(debounceTime(200)).subscribe(name => this.formGroup.controls['normalizedName'].setValue(ProcessBuilderRepository.normalizeName(name))),
       this.formGroup.controls['outputParamName'].valueChanges.pipe(debounceTime(200)).subscribe(name => this.formGroup.controls['normalizedOutputParamName'].setValue(ProcessBuilderRepository.normalizeName(name))),
-      this._implementationChanged.pipe(
+      this.implementationChanged$.pipe(
         tap(() => this._returnValueStatus.next(MethodEvaluationStatus.Calculating)),
         debounceTime(500)
-      ).subscribe(() => {
+      ).subscribe((implementation) => {
+        this.implementationControl.setValue((implementation as any)?.text);
+
         const evaluationResult = CodemirrorRepository.evaluateCustomMethod(this.codeMirror.state);
         this._returnValueStatus.next(evaluationResult.status);
+
+        if (evaluationResult?.injectorNavigationPath) {
+          const injectorDeepPathArray = evaluationResult.injectorNavigationPath.split('.');
+          const injectorDeepPath = injectorDeepPathArray.slice(1).join('.');
+          const interfaceDefinition = this._injector.injectorTypeDefMap[injectorDeepPath];
+          /**
+           * only getting root interfaces
+           * -> we require embedded interfaces as well
+           * -> method to convert navigation path to embedded interface
+           */
+          this.interfaceControl.setValue(interfaceDefinition?.interface);
+        }
       }),
       this.returnValueStatus$.subscribe((status) => {
         if (status === MethodEvaluationStatus.ReturnValueFound) {
           this.formGroup.controls['outputParamName'].enable();
-
         } else {
           this.formGroup.controls['outputParamName'].disable();
         }
@@ -98,7 +108,7 @@ export class EmbeddedFunctionImplementationComponent implements IEmbeddedView, A
         mapIParamsInterfaces(this._store)
       )])
         .subscribe(([injector, inputParams]) => {
-          let injectorObject = { injector: { ...injector } };
+          let injectorObject = { injector: { ...injector }, injectorTypeDefMap: {} as { [key: string]: unknown } };
           inputParams.forEach(param => {
             if (param.defaultValue) {
               injectorObject.injector[param.normalizedName] = param.defaultValue;
@@ -106,6 +116,7 @@ export class EmbeddedFunctionImplementationComponent implements IEmbeddedView, A
               const dummyValue = ProcessBuilderRepository.createPseudoObjectFromIParam(param);
               injectorObject.injector[param.normalizedName] = dummyValue;
             }
+            injectorObject.injectorTypeDefMap[param.normalizedName] = { interface: param.interface };
           });
           this._injector = injectorObject;
         })
@@ -141,7 +152,7 @@ export class EmbeddedFunctionImplementationComponent implements IEmbeddedView, A
   }
 
   public state = () => EditorState.create({
-    doc: Array.isArray(this.formGroup.controls['implementation'].value) ? this.formGroup.controls['implementation'].value.join('\n') : defaultImplementation,
+    doc: Array.isArray(this.implementationControl.value) ? this.implementationControl.value.join('\n') : defaultImplementation,
     extensions: [
       basicSetup,
       autocompletion({ override: [this.complete] }),
@@ -160,6 +171,14 @@ export class EmbeddedFunctionImplementationComponent implements IEmbeddedView, A
 
   public get canFailControl(): UntypedFormControl {
     return this.formGroup.controls['canFail'] as UntypedFormControl;
+  }
+
+  public get implementationControl(): FormControl {
+    return this.formGroup.controls['implementation'] as FormControl;
+  }
+
+  public get interfaceControl(): FormControl {
+    return this.formGroup.controls['interface'] as FormControl;
   }
 
 }

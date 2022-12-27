@@ -5,6 +5,10 @@ export const injectProviderState = createFeatureSelector<fromInjectionContext.St
     fromInjectionContext.featureKey
 );
 
+export const injectProviders = createSelector(injectProviderState, (state: fromInjectionContext.State) => {
+    return state;
+});
+
 export const injectInterfaces = () => createSelector(injectProviderState, (state: fromInjectionContext.State) => {
     return state.interfaces;
 });

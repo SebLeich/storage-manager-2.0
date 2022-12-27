@@ -36,9 +36,8 @@ export class ParamEditorComponent implements OnInit, OnDestroy {
   private _editor = new ReplaySubject<JSONEditor>(1);
   private _jsonChanged = new Subject<object>();
 
-  jsonChanged$ = this._jsonChanged.pipe(debounceTime(500));
-
-  selectedIndex: number = 0;
+  public jsonChanged$ = this._jsonChanged.pipe(debounceTime(500));
+  public selectedIndex: number = 0;
 
   private _subscriptions: Subscription = new Subscription();
 

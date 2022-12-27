@@ -107,7 +107,7 @@ export class ProcessBuilderComponentService {
       this._bpmnJsService.modelingModule.updateLabel(taskCreationPayload.configureActivity, referencedFunction.name);
 
       outputParam = await selectSnapshot(this._store.select(paramSelectors.selectIParam(outputParamId))) ?? { identifier: outputParamId } as IParam;
-      outputParam = (await this._handleFunctionOutputParam(referencedFunction, taskCreationData, taskCreationPayload, outputParam, methodEvaluation))?.outputParam;
+      outputParam = (await this._handleFunctionOutputParam(taskCreationData, taskCreationPayload, outputParam, methodEvaluation))?.outputParam;
 
       gatewayShape = this._handleErrorGatewayConfiguration(taskCreationPayload, referencedFunction)?.gatewayShape;
       
@@ -254,7 +254,7 @@ export class ProcessBuilderComponentService {
     return inputParams;
   }
 
-  private async _handleFunctionOutputParam(respectiveFunction: IFunction, taskCreationData: ITaskCreationData, taskCreationPayload: ITaskCreationPayload, outputParam: IParam, methodEvaluation?: IMethodEvaluationResult) {
+  private async _handleFunctionOutputParam(taskCreationData: ITaskCreationData, taskCreationPayload: ITaskCreationPayload, outputParam: IParam, methodEvaluation?: IMethodEvaluationResult) {
     if (!methodEvaluation) {
       methodEvaluation = CodemirrorRepository.evaluateCustomMethod(undefined, taskCreationData.implementation ?? defaultImplementation);
     }

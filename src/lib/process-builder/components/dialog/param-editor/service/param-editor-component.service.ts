@@ -51,7 +51,7 @@ export class ParamEditorComponentService {
         constant: null,
         isProcessOutput: undefined,
         nullable: null,
-        optional: null
+        optional: null,
       })
     ),
     distinctUntilChanged(),
@@ -73,9 +73,7 @@ export class ParamEditorComponentService {
     })
   );
   public availableInputParams$ = inject(Store).select(
-    selectIParams(() =>
-      BPMNJsRepository.getAvailableInputParams(this.data.element)
-    )
+    selectIParams(() => BPMNJsRepository.getAvailableInputParams(this.data.element))
   );
   public defaultValueControl$ = this.formGroup$.pipe(
     map((formGroup) => formGroup.controls['defaultValue'])
@@ -92,7 +90,7 @@ export class ParamEditorComponentService {
     private _store: Store,
   ) { }
 
-  public updateInjector(iParams: IParam[]) {
+  public updateInjector(iParams: IParam[]): void {
     for (let param of iParams) {
       const value = ProcessBuilderRepository.createPseudoObjectFromIParamDefinition(param!.defaultValue), interfaceObject = ProcessBuilderRepository.createPseudoObjectFromIParamDefinition(param!.defaultValue);
       this._store.dispatch(upsertProvider(param!.normalizedName, value, interfaceObject));
