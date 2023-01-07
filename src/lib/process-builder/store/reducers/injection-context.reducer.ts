@@ -3,7 +3,7 @@ import { InjectorInterfacesProvider, InjectorProvider } from '../../globals/inje
 import { upsertProvider, removeProvider } from '../actions/injection-context.actions';
 
 
-export const featureKey = 'InjectionContext';
+export const featureKey = 'injectionContext';
 
 export interface State {
     interfaces: {

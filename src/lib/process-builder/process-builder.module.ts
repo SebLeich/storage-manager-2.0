@@ -58,7 +58,7 @@ import { BpmnJsService } from './services/bpmn-js.service';
 import { ProcessBuilderService } from './services/process-builder.service';
 import { loadIFunctions } from './store/actions/function.actions';
 import { upsertProvider } from './store/actions/injection-context.actions';
-import { InjectorInterfacesProvider, InjectorProvider } from './globals/injector-interfaces-provider';
+import { InjectorInterfacesProvider } from './globals/injector-interfaces-provider';
 
 
 @NgModule({

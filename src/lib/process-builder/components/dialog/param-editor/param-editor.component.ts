@@ -52,7 +52,7 @@ export class ParamEditorComponent implements OnInit, OnDestroy {
   public async calculateFunctionOutput(func: IFunction) {
     const formGroup = await selectSnapshot(this.paramEditorComponentService.formGroup$);
     if (func.customImplementation) {
-      const injector = this._store.select(injectValues())
+      const injector = this._store.select(injectValues)
       const output = await ProcessBuilderRepository.calculateCustomImplementationOutput(func.customImplementation, injector);
       const outputIParamDefinitions = ProcessBuilderRepository.extractObjectTypeDefinition(output);
 

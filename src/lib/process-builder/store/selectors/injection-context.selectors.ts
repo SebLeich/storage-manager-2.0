@@ -9,11 +9,11 @@ export const injectProviders = createSelector(injectProviderState, (state: fromI
     return state;
 });
 
-export const injectInterfaces = () => createSelector(injectProviderState, (state: fromInjectionContext.State) => {
+export const injectInterfaces = createSelector(injectProviderState, (state: fromInjectionContext.State) => {
     return state.interfaces;
 });
 
-export const injectValues = () => createSelector(injectProviderState, (state: fromInjectionContext.State) => {
+export const injectValues = createSelector(injectProviderState, (state: fromInjectionContext.State) => {
     return state.values;
 });
 

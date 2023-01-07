@@ -293,7 +293,7 @@ export class ProcessBuilderComponentService {
 
   private async _methodEvaluationTypeToOutputType(methodEvaluation?: IMethodEvaluationResult) {
     if (methodEvaluation?.injectorNavigationPath) {
-      const injectorInterfaces = await selectSnapshot(this._store.select(injectInterfaces()));
+      const injectorInterfaces = await selectSnapshot(this._store.select(injectInterfaces));
       const injectedDef = deepObjectLookup(injectorInterfaces, methodEvaluation.injectorNavigationPath);
       return injectedDef.type ?? 'object';
     }

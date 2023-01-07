@@ -96,7 +96,7 @@ export class EmbeddedFunctionImplementationComponent extends EmbeddedView implem
       this.returnValueStatus$.subscribe((status) => {
         this.formGroup.controls.outputParamName![status === MethodEvaluationStatus.ReturnValueFound ? 'enable' : 'disable']();
       }),
-      combineLatest([this._store.select(injectValues()), this.inputParams$.pipe(
+      combineLatest([this._store.select(injectValues), this.inputParams$.pipe(
         mapIParamsInterfaces(this._store)
       )])
         .subscribe(([injector, inputParams]) => {

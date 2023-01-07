@@ -11,6 +11,7 @@ export interface ITaskCreationFormGroup {
     implementation: FormControl<string[] | null>;
     inputParam: FormControl<ParamCodes[] | number | null>;
     interface: FormControl<number | null>;
+    isProcessOutput: FormControl<boolean>;
     name: FormControl<string>;
     normalizedOutputParamName: FormControl<string>;
     normalizedName: FormControl<string>;

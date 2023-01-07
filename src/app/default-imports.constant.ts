@@ -65,7 +65,6 @@ rootStoreFeatures[fromParamState.featureKey] = fromParamState.reducer;
 rootStoreFeatures[fromFunctionState.featureKey] = fromFunctionState.reducer;
 rootStoreFeatures[fromBpmnJSModelState.featureKey] = fromBpmnJSModelState.reducer;
 rootStoreFeatures[fromInterfaceState.featureKey] = fromInterfaceState.reducer;
-rootStoreFeatures[fromInterfaceState.featureKey] = fromInterfaceState.reducer;
 rootStoreFeatures[fromInjectionContext.featureKey] = fromInjectionContext.reducer;
 
 export default [
