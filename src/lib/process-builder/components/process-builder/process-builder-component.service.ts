@@ -1,7 +1,7 @@
 import { Inject, Injectable } from '@angular/core';
 import { BpmnJsService } from '../../services/bpmn-js.service';
 import { DialogService } from '../../services/dialog.service';
-import { combineLatest, map, of, switchMap } from 'rxjs';
+import { combineLatest, tap, map, of, switchMap } from 'rxjs';
 import { BPMNJsRepository } from 'src/lib/core/bpmn-js.repository';
 import { TaskCreationStep } from '../../globals/task-creation-step';
 import { ITaskCreationPayload } from '../../interfaces/i-task-creation-payload.interface';
@@ -35,27 +35,29 @@ export class ProcessBuilderComponentService {
       switchMap((events) => {
         const functionSelectionConfig = events.find(event => event.taskCreationStep === TaskCreationStep.ConfigureFunctionSelection);
         const functionIdentifier = BPMNJsRepository.getSLPBExtension<number>(functionSelectionConfig?.element?.businessObject, 'ActivityExtension', (ext) => ext.activityFunctionId) ?? null;
-        const
-          taskCreationPayload = {
-            configureActivity: events.find(event => event.taskCreationStep === TaskCreationStep.ConfigureFunctionSelection)?.element,
-            configureIncomingErrorGatewaySequenceFlow: events.find(event => event.taskCreationStep === TaskCreationStep.ConfigureErrorGatewayEntranceConnection)?.element
-          } as ITaskCreationPayload,
-          taskCreationData = {
-            functionIdentifier: functionIdentifier
-          } as ITaskCreationData;
+        const taskCreationPayload = {
+          configureActivity: events.find(event => event.taskCreationStep === TaskCreationStep.ConfigureFunctionSelection)?.element,
+          configureIncomingErrorGatewaySequenceFlow: events.find(event => event.taskCreationStep === TaskCreationStep.ConfigureErrorGatewayEntranceConnection)?.element
+        } as ITaskCreationPayload, taskCreationData = {
+          functionIdentifier: functionIdentifier
+        } as ITaskCreationData;
 
         return combineLatest([
           of(taskCreationPayload),
-          this._dialogService.configTaskCreation(
-            {
-              taskCreationData: taskCreationData,
-              taskCreationPayload: taskCreationPayload
-            }
-          )
+          this._dialogService.configTaskCreation({
+            taskCreationData: taskCreationData,
+            taskCreationPayload: taskCreationPayload
+          })
         ]).pipe(
           map(([taskCreationPayload, taskCreationData]: [ITaskCreationPayload, ITaskCreationData]) => ({ taskCreationPayload, taskCreationData }))
         );
       })
+    );
+
+  public paramEditorDialogResultReceived$ = this._bpmnJsService
+    .bufferedDataObjectReferenceEditingEvents$
+    .pipe(
+      tap(result => console.log(result))
     );
 
   constructor(
@@ -117,7 +119,7 @@ export class ProcessBuilderComponentService {
     return { gatewayShape, outputParam };
   }
 
-  private _handleDataInputConfiguration(taskCreationData: ITaskCreationData, taskCreationPayload: ITaskCreationPayload, resultingFunction: IFunction, referencedFunction: IFunction) {
+  private _handleDataInputConfiguration(taskCreationData: ITaskCreationData, taskCreationPayload: ITaskCreationPayload, referencedFunction: IFunction, resultingFunction: IFunction) {
     const configureActivity = taskCreationPayload.configureActivity;
     if (configureActivity) {
       const dataInputAssociations = configureActivity.incoming.filter(incoming => incoming.type === shapeTypes.DataInputAssociation);

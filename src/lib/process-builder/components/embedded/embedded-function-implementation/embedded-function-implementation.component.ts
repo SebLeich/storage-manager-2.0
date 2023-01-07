@@ -29,6 +29,7 @@ import byStringMethods from './methods/by-string.methods';
 import { ProcessBuilderService } from 'src/lib/process-builder/services/process-builder.service';
 import globalsInjector from './constants/globals-injector.constant';
 import { selectSnapshot } from 'src/lib/process-builder/globals/select-snapshot';
+import { IInterface } from 'src/lib/process-builder/interfaces/i-interface.interface';
 
 @Component({
   selector: 'app-embedded-function-implementation',
@@ -68,7 +69,7 @@ export class EmbeddedFunctionImplementationComponent extends EmbeddedView implem
   private _returnValueStatus: BehaviorSubject<MethodEvaluationStatus> = new BehaviorSubject<MethodEvaluationStatus>(MethodEvaluationStatus.Initial);
   public returnValueStatus$ = this._returnValueStatus.asObservable();
 
-  private _injector: any = { injector: {}, injectorTypeDefMap: {} };
+  private _injector: any = { injector: {} };
   private _subscriptions = new Subscription();
 
   constructor(
@@ -99,7 +100,7 @@ export class EmbeddedFunctionImplementationComponent extends EmbeddedView implem
         mapIParamsInterfaces(this._store)
       )])
         .subscribe(([injector, inputParams]) => {
-          let injectorObject = { injector: { ...injector }, injectorTypeDefMap: {} as { [key: string]: unknown } };
+          let injectorObject = { injector: { ...injector } };
           inputParams.forEach(param => {
             if (param.defaultValue) {
               injectorObject.injector[param.normalizedName] = param.defaultValue;
@@ -107,7 +108,6 @@ export class EmbeddedFunctionImplementationComponent extends EmbeddedView implem
               const dummyValue = ProcessBuilderRepository.createPseudoObjectFromIParam(param);
               injectorObject.injector[param.normalizedName] = dummyValue;
             }
-            injectorObject.injectorTypeDefMap[param.normalizedName] = { interface: param.interface };
           });
           this._injector = injectorObject;
         })
@@ -203,13 +203,18 @@ export class EmbeddedFunctionImplementationComponent extends EmbeddedView implem
     if (evaluationResult?.injectorNavigationPath) {
       const inputParams = await selectSnapshot(this.inputParams$);
       const result = await this._processBuilderService.mapNavigationPathPropertyMetadata(evaluationResult.injectorNavigationPath, inputParams);
-      /**
-       * only getting root interfaces
-       * -> we require embedded interfaces as well
-       * -> method to convert navigation path to embedded interface
-       */
-      if(typeof (result as any)?.interface === 'object'){
-        this.formGroup.controls.interface!.setValue((result as any).interface.identifier);
+
+      if (typeof (result as any)?.interface === 'object') {
+        let iFace: IInterface = (result as any).interface;
+        this.formGroup.controls.interface!.setValue(iFace.identifier);
+
+        if (this.formGroup.controls.outputParamName?.pristine) {
+          this.formGroup.controls.outputParamName!.setValue(iFace.normalizedName);
+        }
+
+        if (this.formGroup.controls.name?.pristine) {
+          this.formGroup.controls.name!.setValue(`provide ${iFace.normalizedName}`);
+        }
       }
     }
   }
