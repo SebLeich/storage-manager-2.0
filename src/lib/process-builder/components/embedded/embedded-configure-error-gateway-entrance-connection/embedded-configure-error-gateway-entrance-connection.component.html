@@ -7,7 +7,7 @@
 
     <div class="option-wrapper">
 
-        <div class="option on-success" [ngClass]="{ 'active': entranceGatewayTypeControl.value === 'Success' }" (click)="setValue('Success')">
+        <div class="option on-success" [ngClass]="{ 'active': formGroup.controls.entranceGatewayType!.value === 'Success' }" (click)="setValue('Success')">
 
             <div class="header">
                 that method should be activated
@@ -16,7 +16,7 @@
 
         </div>
 
-        <div class="option on-error" [ngClass]="{ 'active': entranceGatewayTypeControl.value === 'Error' }" (click)="setValue('Error')">
+        <div class="option on-error" [ngClass]="{ 'active': formGroup.controls.entranceGatewayType!.value === 'Error' }" (click)="setValue('Error')">
             
             <div class="header">
                 that method should be activated

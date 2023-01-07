@@ -2,16 +2,16 @@
 
     <div class="function-wrapper" [@showList]="(availableFunctions$|async)?.length" *ngFor="let func of (availableFunctions$|async)" (click)="selectFunction(func)"
         [ngClass]="{
-        'active': func.identifier === functionIdentifierControl.value
+        'active': func.identifier === formGroup.controls.functionIdentifier!.value
     }">
 
         <app-function-preview [func]="func"
-            [attr.active]="func.identifier === functionIdentifierControl.value? true: undefined"></app-function-preview>
+            [attr.active]="func.identifier === formGroup.controls.functionIdentifier!.value? true: undefined"></app-function-preview>
 
         <div class="control-wrapper">
 
             <div class="control accent-2">
-                {{ func.identifier === functionIdentifierControl.value? 'unselect': 'select' }}
+                {{ func.identifier === formGroup.controls.functionIdentifier!.value? 'unselect': 'select' }}
             </div>
 
             <div *ngIf="func.customImplementation" class="control danger" (click)="removeFunction(func, $event)">

@@ -110,7 +110,7 @@ export class ProcessBuilderComponentService {
       outputParam = (await this._handleFunctionOutputParam(taskCreationData, taskCreationPayload, outputParam, methodEvaluation))?.outputParam;
 
       gatewayShape = this._handleErrorGatewayConfiguration(taskCreationPayload, referencedFunction)?.gatewayShape;
-      
+
       this._handleDataInputConfiguration(taskCreationData, taskCreationPayload, resultingFunction, referencedFunction);
     }
 
@@ -132,7 +132,7 @@ export class ProcessBuilderComponentService {
         inputParams.push({ optional: false, param: taskCreationData.inputParam });
       }
 
-      if(configureActivity){
+      if (configureActivity) {
         const availableInputParamsIElements = BPMNJsRepository.getAvailableInputParamsIElements(configureActivity);
         for (let param of inputParams.filter(inputParam => !(taskCreationPayload.configureActivity as IElement).incoming.some(y => BPMNJsRepository.sLPBExtensionSetted(y.source.businessObject, 'DataObjectExtension', (ext) => ext.outputParam === inputParam.param)))) {
           const element = availableInputParamsIElements.find(x => BPMNJsRepository.sLPBExtensionSetted(x.businessObject, 'DataObjectExtension', (ext) => ext.outputParam === param.param));
@@ -259,14 +259,19 @@ export class ProcessBuilderComponentService {
       methodEvaluation = CodemirrorRepository.evaluateCustomMethod(undefined, taskCreationData.implementation ?? defaultImplementation);
     }
     if (methodEvaluation.status === MethodEvaluationStatus.ReturnValueFound || outputParam) {
-      const outputType = await this._methodEvaluationTypeToOutputType(methodEvaluation);
       outputParam = {
         ...outputParam,
         name: taskCreationData.outputParamName ?? this._config.dynamicParamDefaultNaming,
         normalizedName: taskCreationData.normalizedOutputParamName ?? ProcessBuilderRepository.normalizeName(taskCreationData.outputParamName ?? this._config.dynamicParamDefaultNaming),
         defaultValue: await this._outputParamValue(methodEvaluation, taskCreationData.outputParamValue),
-        type: outputType
       } as IParam;
+      if (typeof taskCreationData.interface === 'number') {
+        outputParam.interface = taskCreationData.interface;
+        outputParam.type = 'object';
+      } else {
+        const outputType = await this._methodEvaluationTypeToOutputType(methodEvaluation);
+        outputParam.type = outputType;
+      }
       this._store.dispatch(upsertIParam(outputParam));
 
       BPMNJsRepository.appendOutputParam(

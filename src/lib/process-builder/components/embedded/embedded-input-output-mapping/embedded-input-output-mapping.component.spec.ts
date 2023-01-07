@@ -21,10 +21,6 @@ describe('EmbeddedInputOutputMappingComponent', () => {
   beforeEach(() => {
     fixture = TestBed.createComponent(EmbeddedInputOutputMappingComponent);
     component = fixture.componentInstance;
-    component.formGroup = new FormGroup({
-      functionIdentifier: new FormControl(),
-      outputParamValue: new FormControl()
-    });
     fixture.detectChanges();
   });
 

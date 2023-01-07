@@ -1,11 +1,12 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { UntypedFormControl, UntypedFormGroup } from '@angular/forms';
+import { FormControl, FormGroup, UntypedFormControl, UntypedFormGroup } from '@angular/forms';
 import { Store } from '@ngrx/store';
 import { combineLatest, ReplaySubject } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { ParamCodes } from 'src/config/param-codes';
-import { IEmbeddedView } from 'src/lib/process-builder/globals/i-embedded-view';
+import { EmbeddedView } from 'src/lib/process-builder/globals/i-embedded-view';
 import { IParam } from 'src/lib/process-builder/globals/i-param';
+import { ITaskCreationFormGroup } from 'src/lib/process-builder/interfaces/i-task-creation.interface';
 import * as fromIParam from 'src/lib/process-builder/store/reducers/param.reducer';
 import { selectIParams } from 'src/lib/process-builder/store/selectors/param.selectors';
 
@@ -14,38 +15,28 @@ import { selectIParams } from 'src/lib/process-builder/store/selectors/param.sel
   templateUrl: './embedded-function-input-selection.component.html',
   styleUrls: ['./embedded-function-input-selection.component.sass']
 })
-export class EmbeddedFunctionInputSelectionComponent implements IEmbeddedView, OnDestroy, OnInit {
+export class EmbeddedFunctionInputSelectionComponent extends EmbeddedView {
 
   private _inputParams = new ReplaySubject<ParamCodes[]>(1);
 
-  availableInputParams$ = combineLatest([this._inputParams.asObservable(), this._paramStore.select(selectIParams())]).pipe(
+  public availableInputParams$ = combineLatest([this._inputParams.asObservable(), this._paramStore.select(selectIParams())]).pipe(
     map(([codes, params]: [ParamCodes[], IParam[]]) => {
       return params.filter(x => codes.indexOf(x.identifier) > -1);
     })
   );
 
-  formGroup!: UntypedFormGroup;
+  public formGroup = new FormGroup({
+    'inputParam': new FormControl([] as ParamCodes[])
+  }) as FormGroup<Partial<ITaskCreationFormGroup>>;
 
-  constructor(
-    private _paramStore: Store<fromIParam.State>
-  ) { }
-
-  ngOnDestroy(): void {
-
+  constructor(private _paramStore: Store<fromIParam.State>) {
+    super();
   }
 
-  ngOnInit(): void {
-
+  public paramClicked(param: IParam) {
+    this.formGroup.controls.inputParam!.setValue(this.formGroup.controls.inputParam!.value === param.identifier ? null : param.identifier);
   }
 
-  paramClicked(param: IParam) {
-    this.inputParamControl.setValue(this.inputParamControl.value === param.identifier? null: param.identifier);
-  }
-
-  setInputParams = (inputParams: ParamCodes[]) => this._inputParams.next(inputParams);
-
-  get inputParamControl(): UntypedFormControl {
-    return this.formGroup.controls['inputParam'] as UntypedFormControl;
-  }
+  public setInputParams = (inputParams: ParamCodes[]) => this._inputParams.next(inputParams);
 
 }

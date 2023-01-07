@@ -4,7 +4,7 @@ import { Store } from '@ngrx/store';
 import { BehaviorSubject, combineLatest, interval, Observable, of, Subject, Subscription } from 'rxjs';
 import { IElement } from 'src/lib/bpmn-io/interfaces/element.interface';
 import { BPMNJsRepository } from 'src/lib/core/bpmn-js.repository';
-import { IEmbeddedView } from 'src/lib/process-builder/globals/i-embedded-view';
+import { EmbeddedView } from 'src/lib/process-builder/globals/i-embedded-view';
 import { ITaskCreationConfig } from 'src/lib/process-builder/interfaces/i-task-creation-config.interface';
 import { TaskCreationStep } from 'src/lib/process-builder/globals/task-creation-step';
 import { EmbeddedConfigureErrorGatewayEntranceConnectionComponent } from '../../embedded/embedded-configure-error-gateway-entrance-connection/embedded-configure-error-gateway-entrance-connection.component';
@@ -29,7 +29,7 @@ import { debounceTime, filter, map, shareReplay, switchMap, take } from 'rxjs/op
 import { EmbeddedInputOutputMappingComponent } from '../../embedded/embedded-input-output-mapping/embedded-input-output-mapping.component';
 import { selectIInterface } from 'src/lib/process-builder/store/selectors/interface.selectors';
 import { IInterface } from 'src/lib/process-builder/interfaces/i-interface.interface';
-import { mapIParamsInterfaces } from 'src/lib/process-builder/extensions/rxjs/map-i-params-interfaces.rxjs-extension';
+import { mapIParamsInterfaces } from 'src/lib/process-builder/extensions/rxjs/map-i-params-interfaces.rxjs';
 import { injectInterfaces, injectValues } from 'src/lib/process-builder/store/selectors/injection-context.selectors';
 import { selectSnapshot } from 'src/lib/process-builder/globals/select-snapshot';
 
@@ -43,8 +43,8 @@ export class TaskCreationComponent implements OnDestroy, OnInit {
   private dynamicInner!: ViewContainerRef;
 
   public stepRegistry: {
-    type: Type<IEmbeddedView>;
-    provideInputParams?: (component: IEmbeddedView, element: IElement) => void;
+    type: Type<EmbeddedView>;
+    provideInputParams?: (component: EmbeddedView, element: IElement) => void;
     autoChangeTabOnValueEmission?: boolean;
   }[] = [];
 
@@ -160,6 +160,7 @@ export class TaskCreationComponent implements OnDestroy, OnInit {
     this.formGroup = this._formBuilder.group({
       functionIdentifier: null,
       canFail: false,
+      interface: null,
       implementation: null,
       requireCustomImplementation: null,
       name: config.defaultFunctionName,
@@ -191,7 +192,7 @@ export class TaskCreationComponent implements OnDestroy, OnInit {
     };
     this.stepRegistry[TaskCreationStep.ConfigureFunctionSelection] = {
       type: EmbeddedFunctionSelectionComponent,
-      provideInputParams: (arg: IEmbeddedView, element: IElement) => {
+      provideInputParams: (arg: EmbeddedView, element: IElement) => {
         const component = arg as EmbeddedFunctionSelectionComponent;
         component.inputParams = BPMNJsRepository.getAvailableInputParams(element);
       },
@@ -208,7 +209,7 @@ export class TaskCreationComponent implements OnDestroy, OnInit {
     };
     this.stepRegistry[TaskCreationStep.ConfigureInputOutputMapping] = {
       type: EmbeddedInputOutputMappingComponent,
-      provideInputParams: (arg: IEmbeddedView, element: IElement) => {
+      provideInputParams: (arg: EmbeddedView, element: IElement) => {
         const component = arg as EmbeddedInputOutputMappingComponent;
         component.inputParams =
           BPMNJsRepository.getAvailableInputParams(element);
@@ -216,7 +217,7 @@ export class TaskCreationComponent implements OnDestroy, OnInit {
     };
     this.stepRegistry[TaskCreationStep.ConfigureFunctionInput] = {
       type: EmbeddedFunctionInputSelectionComponent,
-      provideInputParams: (arg: IEmbeddedView, element: IElement) => {
+      provideInputParams: (arg: EmbeddedView, element: IElement) => {
         let component = arg as EmbeddedFunctionInputSelectionComponent;
         let availableInputParams = BPMNJsRepository.getAvailableInputParams(element);
         component.setInputParams(availableInputParams);

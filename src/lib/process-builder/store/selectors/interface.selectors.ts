@@ -12,7 +12,8 @@ export const selectIInterface = (arg: undefined | null | number | (() => number)
         if (arg == null || !state || !state.entities) return null;
         const code = typeof arg === 'function' ? arg() : arg;
         if (typeof code !== 'number') return null;
-        return state.entities[code];
+        const iFace = state.entities[code];
+        return iFace ?? null;
     }
 );
 

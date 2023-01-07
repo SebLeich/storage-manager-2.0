@@ -31,9 +31,6 @@ describe('EmbeddedConfigureErrorGatewayEntranceConnectionComponent', () => {
   beforeEach(() => {
     fixture = TestBed.createComponent(EmbeddedConfigureErrorGatewayEntranceConnectionComponent);
     component = fixture.componentInstance;
-    component.formGroup = new FormGroup({
-      entranceGatewayType: new FormControl()
-    })
     fixture.detectChanges();
   });
 

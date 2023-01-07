@@ -1,22 +1,25 @@
 import { AfterViewInit, Component, ElementRef, Inject, OnDestroy, ViewChild } from '@angular/core';
-import { UntypedFormControl, UntypedFormGroup } from '@angular/forms';
+import { FormControl, FormGroup } from '@angular/forms';
 import JSONEditor from 'jsoneditor';
 import { combineLatest, ReplaySubject, Subject, Subscription } from 'rxjs';
 import { debounceTime, startWith } from 'rxjs/operators';
 import { ProcessBuilderRepository } from 'src/lib/core/process-builder-repository';
-import { IEmbeddedView } from 'src/lib/process-builder/globals/i-embedded-view';
+import { EmbeddedView } from 'src/lib/process-builder/globals/i-embedded-view';
 import { IProcessBuilderConfig, PROCESS_BUILDER_CONFIG_TOKEN } from 'src/lib/process-builder/globals/i-process-builder-config';
+import { ITaskCreationFormGroup } from 'src/lib/process-builder/interfaces/i-task-creation.interface';
 
 @Component({
   selector: 'app-embedded-param-editor',
   templateUrl: './embedded-param-editor.component.html',
-  styleUrls: ['./embedded-param-editor.component.sass']
+  styleUrls: ['./embedded-param-editor.component.scss']
 })
-export class EmbeddedParamEditorComponent implements IEmbeddedView, AfterViewInit, OnDestroy {
+export class EmbeddedParamEditorComponent extends EmbeddedView implements AfterViewInit, OnDestroy {
 
   @ViewChild('parameterBody', { static: true, read: ElementRef }) parameterBody!: ElementRef<HTMLDivElement>;
 
-  formGroup!: UntypedFormGroup;
+  public formGroup = new FormGroup({
+    outputParamValue: new FormControl(null)
+  }) as FormGroup<Partial<ITaskCreationFormGroup>>;
 
   private _instance: JSONEditor | undefined;
   private _editor = new ReplaySubject<JSONEditor>(1);
@@ -26,18 +29,23 @@ export class EmbeddedParamEditorComponent implements IEmbeddedView, AfterViewIni
   private _jsonChanged = new ReplaySubject<object>(1);
   jsonChanged$ = this._jsonChanged.pipe(debounceTime(500));
 
-  private _subscriptions: Subscription[] = [];
+  private _subscriptions: Subscription = new Subscription();
 
-  constructor(
-    @Inject(PROCESS_BUILDER_CONFIG_TOKEN) public config: IProcessBuilderConfig
-  ) { }
+  constructor(@Inject(PROCESS_BUILDER_CONFIG_TOKEN) public config: IProcessBuilderConfig) {
+    super();
+  }
 
-  editorBlurred = () => this._editorBlurred.next();
+  public editorBlurred = () => this._editorBlurred.next();
 
-  ngAfterViewInit(): void {
-    this._subscriptions.push(...[
-      this.jsonChanged$.pipe(debounceTime(500)).subscribe(json => this.outputParamValueControl.setValue(ProcessBuilderRepository.extractObjectTypeDefinition(json))),
-      combineLatest([this.editor$, this.outputParamValueControl.valueChanges.pipe(startWith(this.outputParamValueControl.value))])
+  public ngAfterViewInit(): void {
+    this._subscriptions.add(...[
+      this.jsonChanged$
+        .pipe(debounceTime(500))
+        .subscribe((json) => {
+          const extracted: any = ProcessBuilderRepository.extractObjectTypeDefinition(json);
+          this.formGroup.controls.outputParamValue!.setValue(extracted);
+        }),
+      combineLatest([this.editor$, this.formGroup.controls.outputParamValue!.valueChanges.pipe(startWith(this.formGroup.controls.outputParamValue!.value))])
         .pipe(debounceTime(100))
         .subscribe(([editor, param]: [JSONEditor, any]) => {
           let obj = ProcessBuilderRepository.createPseudoObjectFromIParamDefinition(param);
@@ -51,15 +59,10 @@ export class EmbeddedParamEditorComponent implements IEmbeddedView, AfterViewIni
     this._editor.next(this._instance);
   }
 
-  ngOnDestroy() {
-    let obj = this._instance?.get();
-    this.formGroup.controls['outputParamValue'].setValue(ProcessBuilderRepository.extractObjectTypeDefinition(obj));
-    for (let sub of this._subscriptions) sub.unsubscribe();
-    this._subscriptions = [];
-  }
-
-  get outputParamValueControl(): UntypedFormControl {
-    return this.formGroup.controls['outputParamValue'] as UntypedFormControl;
+  public ngOnDestroy() {
+    const obj = this._instance?.get();
+    this.formGroup.controls['outputParamValue']!.setValue(obj ? ProcessBuilderRepository.extractObjectTypeDefinition(obj) as any : null);
+    this._subscriptions.unsubscribe();
   }
 
 }

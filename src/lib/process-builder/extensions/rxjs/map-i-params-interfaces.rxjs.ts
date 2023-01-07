@@ -24,12 +24,9 @@ export const mapIParamsInterfaces: ((store: Store) => ((obs: Observable<IParam[]
                         );
                     }
                     else if (typeof param.interface === 'number') {
-                        return combineLatest([
-                            of(param),
-                            store.select(selectIInterface(param.interface))
-                        ]).pipe(
+                        return store.select(selectIInterface(param.interface)).pipe(
                             take(1),
-                            map(([param, iFace]: [IParam, IInterface | null | undefined]) => {
+                            map((iFace: IInterface | null) => {
                                 let result = { ...param };
                                 result.typeDef = iFace?.typeDef ?? null;
                                 return result as IParam;
