@@ -1,8 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { FormControl, FormGroup } from '@angular/forms';
 import defaultImportsConstant from 'src/app/default-imports.constant';
 import { PROCESS_BUILDER_CONFIG_TOKEN } from 'src/lib/process-builder/globals/i-process-builder-config';
-import { INJECTOR_INTERFACE_TOKEN } from 'src/lib/process-builder/globals/injector';
 
 import { EmbeddedFunctionImplementationComponent } from './embedded-function-implementation.component';
 
@@ -18,7 +16,6 @@ describe('EmbeddedFunctionImplementationComponent', () => {
       ],
       providers: [
         { provide: PROCESS_BUILDER_CONFIG_TOKEN, useValue: {} },
-        { provide: INJECTOR_INTERFACE_TOKEN, useValue: {} },
       ]
     })
       .compileComponents();
@@ -27,17 +24,20 @@ describe('EmbeddedFunctionImplementationComponent', () => {
   beforeEach(() => {
     fixture = TestBed.createComponent(EmbeddedFunctionImplementationComponent);
     component = fixture.componentInstance;
-    component.formGroup = new FormGroup({
-      name: new FormControl(),
-      implementation: new FormControl(),
-      outputParamName: new FormControl(),
-      canFail: new FormControl(),
-      normalizedOutputParamName: new FormControl(),
-    });
     fixture.detectChanges();
   });
 
   it('should create', () => {
+    expect(component).toBeTruthy();
+  });
+
+  it('should correctly update interface control', () => {
+    component.formGroup.controls.implementation!.setValue([
+      'async (injector) => {',
+      'return injector.mySolution',
+      '}'
+    ]);
+
     expect(component).toBeTruthy();
   });
 });

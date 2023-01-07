@@ -24,8 +24,6 @@ import { selectCalculationContextValid } from 'src/app/store/selectors/i-calcula
 import { ControlsOf } from 'src/lib/shared/globals/controls-of.type';
 import { selectSnapshot } from 'src/lib/process-builder/globals/select-snapshot';
 import { widgetFadeInAnimation } from 'src/lib/shared/animations/bottom-up-fade.animation';
-import { loadSolutionPreview } from 'src/app/store/actions/i-solution-preview.actions';
-import { selectSolutions } from 'src/app/store/selectors/i-solution.selectors';
 import { Unit } from 'src/app/types/unit.type';
 
 @Component({

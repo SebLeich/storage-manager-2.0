@@ -1,6 +1,6 @@
 import { createEntityAdapter, EntityAdapter, EntityState, Update } from '@ngrx/entity';
 import { createReducer, on } from '@ngrx/store';
-import { addIBpmnJSModel, addIBpmnJSModels, createIBpmnJsModel, removeIBpmnJSModel, setCurrentIBpmnJSModel, updateCurrentIBpmnJSModel, updateIBpmnJSModel, upsertIBpmnJSModel, upsertIBpmnJSModels } from '../actions/i-bpmn-js-model.actions';
+import { addIBpmnJSModel, addIBpmnJSModels, createIBpmnJsModel, removeIBpmnJSModel, setCurrentIBpmnJSModel, updateCurrentIBpmnJSModel, updateIBpmnJSModel, upsertIBpmnJSModel, upsertIBpmnJSModels } from '../actions/bpmn-js-model.actions';
 import { v4 as generateGuid } from 'uuid';
 import { IBpmnJSModel } from '../../interfaces/i-bpmn-js-model.interface';
 

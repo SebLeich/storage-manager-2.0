@@ -36,9 +36,8 @@ export class ParamEditorComponent implements OnInit, OnDestroy {
   private _editor = new ReplaySubject<JSONEditor>(1);
   private _jsonChanged = new Subject<object>();
 
-  jsonChanged$ = this._jsonChanged.pipe(debounceTime(500));
-
-  selectedIndex: number = 0;
+  public jsonChanged$ = this._jsonChanged.pipe(debounceTime(500));
+  public selectedIndex: number = 0;
 
   private _subscriptions: Subscription = new Subscription();
 
@@ -53,7 +52,7 @@ export class ParamEditorComponent implements OnInit, OnDestroy {
   public async calculateFunctionOutput(func: IFunction) {
     const formGroup = await selectSnapshot(this.paramEditorComponentService.formGroup$);
     if (func.customImplementation) {
-      const injector = this._store.select(injectValues())
+      const injector = this._store.select(injectValues)
       const output = await ProcessBuilderRepository.calculateCustomImplementationOutput(func.customImplementation, injector);
       const outputIParamDefinitions = ProcessBuilderRepository.extractObjectTypeDefinition(output);
 
@@ -96,11 +95,7 @@ export class ParamEditorComponent implements OnInit, OnDestroy {
   }
 
   public ngOnInit(): void {
-    this._subscriptions.add(
-      this.paramEditorComponentService.availableInputParams$.subscribe(
-        (iParams) => this.paramEditorComponentService.updateInjector(iParams)
-      )
-    );
+    this._subscriptions.add(this.paramEditorComponentService.availableInputParams$.subscribe((iParams) => this.paramEditorComponentService.updateInjector(iParams)));
     this._subscriptions.add(
       combineLatest([
         this._editor,

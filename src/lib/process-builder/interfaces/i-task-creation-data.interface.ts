@@ -5,6 +5,7 @@ export interface ITaskCreationData {
     functionIdentifier: number | null;
     canFail: boolean | null;
     implementation: string[] | null;
+    interface: number | null;
     name: string | null;
     normalizedName: string | null;
     outputParamName: string | null;

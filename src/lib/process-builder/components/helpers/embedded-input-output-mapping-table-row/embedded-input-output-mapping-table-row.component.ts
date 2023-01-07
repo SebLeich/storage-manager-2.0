@@ -1,5 +1,4 @@
 import { AfterViewInit, Component, Input, OnChanges, OnDestroy, SimpleChanges, TemplateRef, ViewChild } from '@angular/core';
-import { MatMenuTrigger } from '@angular/material/menu';
 import { Store } from '@ngrx/store';
 import { BehaviorSubject, Subscription } from 'rxjs';
 import { IParamDefinition } from 'src/lib/process-builder/globals/i-param-definition';

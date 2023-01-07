@@ -5,9 +5,12 @@ import { IProcessBuilderConfig, PROCESS_BUILDER_CONFIG_TOKEN } from '../globals/
 import { Store } from '@ngrx/store';
 import { selectIFunctions } from '../store/selectors/function.selector';
 import { selectCurrentIBpmnJSModelGuid, selectIBpmnJSModels } from '../store/selectors/bpmn-js-model.selectors';
-import { createIBpmnJsModel, setCurrentIBpmnJSModel } from '../store/actions/i-bpmn-js-model.actions';
+import { createIBpmnJsModel, setCurrentIBpmnJSModel } from '../store/actions/bpmn-js-model.actions';
 import { selectSnapshot } from '../globals/select-snapshot';
 import { selectCurrentParamOutput, selectIParams } from '../store/selectors/param.selectors';
+import { IInputParam } from '../globals/i-input-param';
+import { IParam } from '../globals/i-param';
+import { selectIInterface } from '../store/selectors/interface.selectors';
 
 @Injectable()
 export class ProcessBuilderService {
@@ -33,6 +36,46 @@ export class ProcessBuilderService {
 
   public createBpmnJsModel() {
     this._store.dispatch(createIBpmnJsModel());
+  }
+
+
+  public async mapNavigationPathPropertyMetadata(navigationPath: string, inputParams: IParam[]) {
+    let injectorDeepPathArray = navigationPath.split('.');
+    if (injectorDeepPathArray.length === 0) {
+      return null;
+    }
+
+    if (injectorDeepPathArray[0] === 'injector') {
+      injectorDeepPathArray = injectorDeepPathArray.slice(1);
+    }
+
+    const inputParam = inputParams.find(param => param.normalizedName === injectorDeepPathArray[0]);
+    if (typeof inputParam?.interface !== 'number') {
+      return null;
+    }
+
+    let iFace = await selectSnapshot(this._store.select(selectIInterface(inputParam.interface)));
+    let currentIndex = 1, metaData = { interface: iFace, type: inputParam.type };
+
+    while (currentIndex < injectorDeepPathArray.length) {
+      if (metaData.interface === null) {
+        return { warning: `deep path: ${navigationPath}, invalid navigation property at index ${currentIndex}` };
+      }
+
+      const childPropertyName = injectorDeepPathArray[currentIndex];
+      const childProperty = metaData.interface.typeDef.find(param => (typeof param.normalizedName === 'undefined'? param.name : param.normalizedName) === childPropertyName);
+
+      if (!childProperty) {
+        return { warning: `deep path: ${navigationPath}, navigation property not found on interface ${metaData.interface.normalizedName}` };
+      }
+
+      iFace = await selectSnapshot(this._store.select(selectIInterface(childProperty.interface)));
+      metaData = { interface: iFace, type: childProperty.type };
+
+      currentIndex++;
+    }
+
+    return metaData;
   }
 
   public resetLocalState() {

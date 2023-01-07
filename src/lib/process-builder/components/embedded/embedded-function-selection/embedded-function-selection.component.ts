@@ -1,40 +1,45 @@
 import { Component, Input, OnDestroy, OnInit, QueryList, ViewChildren, ViewContainerRef } from '@angular/core';
 import { ReplaySubject, Subscription } from 'rxjs';
 import { ParamCodes } from 'src/config/param-codes';
-import { IEmbeddedView } from 'src/lib/process-builder/globals/i-embedded-view';
+import { EmbeddedView } from 'src/lib/process-builder/globals/i-embedded-view';
 import { IFunction } from 'src/lib/process-builder/globals/i-function';
 import { showAnimation } from 'src/lib/shared/animations/show';
 import { Store } from '@ngrx/store';
 import { selectIFunctions } from 'src/lib/process-builder/store/selectors/function.selector';
 import { FunctionPreviewComponent } from '../../previews/function-preview/function-preview.component';
-import { UntypedFormControl, UntypedFormGroup } from '@angular/forms';
+import { FormControl, FormGroup, UntypedFormControl, UntypedFormGroup } from '@angular/forms';
 import { IInputParam } from 'src/lib/process-builder/globals/i-input-param';
 import { delay, map } from 'rxjs/operators';
 
 import * as fromIFunctionState from 'src/lib/process-builder/store/reducers/function.reducer';
-import { removeIFunction } from 'src/lib/process-builder/store/actions/i-function.actions';
+import { removeIFunction } from 'src/lib/process-builder/store/actions/function.actions';
 import { showListAnimation } from 'src/lib/shared/animations/show-list';
+import { ITaskCreationFormGroup } from 'src/lib/process-builder/interfaces/i-task-creation.interface';
 
 @Component({
   selector: 'app-embedded-function-selection',
   templateUrl: './embedded-function-selection.component.html',
-  styleUrls: ['./embedded-function-selection.component.sass'],
+  styleUrls: ['./embedded-function-selection.component.scss'],
   animations: [showAnimation, showListAnimation]
 })
-export class EmbeddedFunctionSelectionComponent implements IEmbeddedView, OnDestroy, OnInit {
+export class EmbeddedFunctionSelectionComponent extends EmbeddedView implements OnDestroy, OnInit {
 
   @Input() public inputParams!: ParamCodes | ParamCodes[] | null;
 
   @ViewChildren(FunctionPreviewComponent, { read: ViewContainerRef }) private activeFunctionWrappers!: QueryList<ViewContainerRef>;
 
-  public formGroup!: UntypedFormGroup;
+  public formGroup = new FormGroup({
+    'functionIdentifier': new FormControl(null)
+  }) as FormGroup<Partial<ITaskCreationFormGroup>>;
 
   private _availableFunctions = new ReplaySubject<IFunction[]>(1);
   public availableFunctions$ = this._availableFunctions.asObservable();
 
   private _subscriptions: Subscription[] = [];
 
-  constructor(private _store: Store<fromIFunctionState.State>) { }
+  constructor(private _store: Store<fromIFunctionState.State>) {
+    super();
+  }
 
   public ngOnDestroy(): void {
     for (let sub of this._subscriptions) sub.unsubscribe();
@@ -67,15 +72,13 @@ export class EmbeddedFunctionSelectionComponent implements IEmbeddedView, OnDest
       evt.stopPropagation();
       evt.preventDefault();
     }
+    
     this._store.dispatch(removeIFunction(func));
   }
 
   public selectFunction(func: IFunction) {
-    this.functionIdentifierControl.setValue(this.functionIdentifierControl.value === func.identifier ? null : func.identifier);
-  }
-
-  public get functionIdentifierControl(): UntypedFormControl {
-    return this.formGroup.controls['functionIdentifier'] as UntypedFormControl;
+    const functionIdentifier = this.formGroup.controls.functionIdentifier!.value === func.identifier ? null : func.identifier;
+    this.formGroup.controls.functionIdentifier!.setValue(functionIdentifier);
   }
 
 }

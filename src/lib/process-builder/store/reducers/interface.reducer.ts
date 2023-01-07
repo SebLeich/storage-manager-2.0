@@ -1,7 +1,7 @@
 import { createEntityAdapter, EntityAdapter, EntityState, Update } from '@ngrx/entity';
 import { createReducer, on } from '@ngrx/store';
 import { IInterface } from '../../interfaces/i-interface.interface';
-import { addIInterface, addIInterfaces, removeIInterface, updateIInterface, upsertIInterface, upsertIInterfaces } from '../actions/i-interface.actions';
+import { addIInterface, addIInterfaces, removeIInterface, updateIInterface, upsertIInterface, upsertIInterfaces } from '../actions/interface.actions';
 
 
 export const featureKey = 'Interface';

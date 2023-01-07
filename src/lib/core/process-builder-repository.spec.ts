@@ -26,7 +26,7 @@ describe('Test Process Builder Repository', () => {
             const displayIndex = index + 1;
             it(`should provide correct result in iteration ${displayIndex}`, () => {
 
-                let extractedTypeDef = ProcessBuilderRepository.extractObjectTypeDefinition(pseudoObject);
+                const extractedTypeDef = ProcessBuilderRepository.extractObjectTypeDefinition(pseudoObject);
                 expect(isEqual(extractedTypeDef, solutionTypeDef)).toBeTrue();
 
                 pseudoObject = ProcessBuilderRepository.createPseudoObjectFromIParamDefinition(extractedTypeDef as IParam) as object;

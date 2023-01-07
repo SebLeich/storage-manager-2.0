@@ -52,6 +52,12 @@ export class ProcessBuilderComponent implements OnDestroy, OnInit {
         this._processBuilderComponentService.applyTaskCreationConfig(args.taskCreationPayload, args.taskCreationData);
       });
 
+    this._processBuilderComponentService
+      .paramEditorDialogResultReceived$
+      .subscribe((args) => {
+        console.log(args);
+      });
+
     this.bpmnJsService.taskEditingProcedure$
       .subscribe(procedure => {
         this._store.dispatch(upsertProcedure({ procedure }));

@@ -2,7 +2,7 @@ import { Component, Input, OnInit } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { IFunction } from '../../../globals/i-function';
 import { IInputParam } from '../../../globals/i-input-param';
-import { updateIFunction } from '../../../store/actions/i-function.actions';
+import { updateIFunction } from '../../../store/actions/function.actions';
 
 @Component({
   selector: 'app-function-preview',

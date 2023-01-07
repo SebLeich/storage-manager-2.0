@@ -1,7 +1,7 @@
 import { Inject, Injectable } from '@angular/core';
 import { BpmnJsService } from '../../services/bpmn-js.service';
 import { DialogService } from '../../services/dialog.service';
-import { combineLatest, map, of, switchMap } from 'rxjs';
+import { combineLatest, tap, map, of, switchMap } from 'rxjs';
 import { BPMNJsRepository } from 'src/lib/core/bpmn-js.repository';
 import { TaskCreationStep } from '../../globals/task-creation-step';
 import { ITaskCreationPayload } from '../../interfaces/i-task-creation-payload.interface';
@@ -21,7 +21,7 @@ import { IParam } from '../../globals/i-param';
 import { ProcessBuilderRepository } from 'src/lib/core/process-builder-repository';
 import { upsertIParam } from '../../store/actions/param.actions';
 import shapeTypes from 'src/lib/bpmn-io/shape-types';
-import { upsertIFunction } from '../../store/actions/i-function.actions';
+import { upsertIFunction } from '../../store/actions/function.actions';
 import { IElement } from 'src/lib/bpmn-io/interfaces/element.interface';
 import { deepObjectLookup } from 'src/lib/shared/globals/deep-object-lookup.function';
 import { injectInterfaces, injectValues } from '../../store/selectors/injection-context.selectors';
@@ -35,27 +35,29 @@ export class ProcessBuilderComponentService {
       switchMap((events) => {
         const functionSelectionConfig = events.find(event => event.taskCreationStep === TaskCreationStep.ConfigureFunctionSelection);
         const functionIdentifier = BPMNJsRepository.getSLPBExtension<number>(functionSelectionConfig?.element?.businessObject, 'ActivityExtension', (ext) => ext.activityFunctionId) ?? null;
-        const
-          taskCreationPayload = {
-            configureActivity: events.find(event => event.taskCreationStep === TaskCreationStep.ConfigureFunctionSelection)?.element,
-            configureIncomingErrorGatewaySequenceFlow: events.find(event => event.taskCreationStep === TaskCreationStep.ConfigureErrorGatewayEntranceConnection)?.element
-          } as ITaskCreationPayload,
-          taskCreationData = {
-            functionIdentifier: functionIdentifier
-          } as ITaskCreationData;
+        const taskCreationPayload = {
+          configureActivity: events.find(event => event.taskCreationStep === TaskCreationStep.ConfigureFunctionSelection)?.element,
+          configureIncomingErrorGatewaySequenceFlow: events.find(event => event.taskCreationStep === TaskCreationStep.ConfigureErrorGatewayEntranceConnection)?.element
+        } as ITaskCreationPayload, taskCreationData = {
+          functionIdentifier: functionIdentifier
+        } as ITaskCreationData;
 
         return combineLatest([
           of(taskCreationPayload),
-          this._dialogService.configTaskCreation(
-            {
-              taskCreationData: taskCreationData,
-              taskCreationPayload: taskCreationPayload
-            }
-          )
+          this._dialogService.configTaskCreation({
+            taskCreationData: taskCreationData,
+            taskCreationPayload: taskCreationPayload
+          })
         ]).pipe(
           map(([taskCreationPayload, taskCreationData]: [ITaskCreationPayload, ITaskCreationData]) => ({ taskCreationPayload, taskCreationData }))
         );
       })
+    );
+
+  public paramEditorDialogResultReceived$ = this._bpmnJsService
+    .bufferedDataObjectReferenceEditingEvents$
+    .pipe(
+      tap(result => console.log(result))
     );
 
   constructor(
@@ -107,17 +109,17 @@ export class ProcessBuilderComponentService {
       this._bpmnJsService.modelingModule.updateLabel(taskCreationPayload.configureActivity, referencedFunction.name);
 
       outputParam = await selectSnapshot(this._store.select(paramSelectors.selectIParam(outputParamId))) ?? { identifier: outputParamId } as IParam;
-      outputParam = (await this._handleFunctionOutputParam(referencedFunction, taskCreationData, taskCreationPayload, outputParam, methodEvaluation))?.outputParam;
+      outputParam = (await this._handleFunctionOutputParam(taskCreationData, taskCreationPayload, outputParam, methodEvaluation))?.outputParam;
 
       gatewayShape = this._handleErrorGatewayConfiguration(taskCreationPayload, referencedFunction)?.gatewayShape;
-      
+
       this._handleDataInputConfiguration(taskCreationData, taskCreationPayload, resultingFunction, referencedFunction);
     }
 
     return { gatewayShape, outputParam };
   }
 
-  private _handleDataInputConfiguration(taskCreationData: ITaskCreationData, taskCreationPayload: ITaskCreationPayload, resultingFunction: IFunction, referencedFunction: IFunction) {
+  private _handleDataInputConfiguration(taskCreationData: ITaskCreationData, taskCreationPayload: ITaskCreationPayload, referencedFunction: IFunction, resultingFunction: IFunction) {
     const configureActivity = taskCreationPayload.configureActivity;
     if (configureActivity) {
       const dataInputAssociations = configureActivity.incoming.filter(incoming => incoming.type === shapeTypes.DataInputAssociation);
@@ -132,7 +134,7 @@ export class ProcessBuilderComponentService {
         inputParams.push({ optional: false, param: taskCreationData.inputParam });
       }
 
-      if(configureActivity){
+      if (configureActivity) {
         const availableInputParamsIElements = BPMNJsRepository.getAvailableInputParamsIElements(configureActivity);
         for (let param of inputParams.filter(inputParam => !(taskCreationPayload.configureActivity as IElement).incoming.some(y => BPMNJsRepository.sLPBExtensionSetted(y.source.businessObject, 'DataObjectExtension', (ext) => ext.outputParam === inputParam.param)))) {
           const element = availableInputParamsIElements.find(x => BPMNJsRepository.sLPBExtensionSetted(x.businessObject, 'DataObjectExtension', (ext) => ext.outputParam === param.param));
@@ -254,19 +256,24 @@ export class ProcessBuilderComponentService {
     return inputParams;
   }
 
-  private async _handleFunctionOutputParam(respectiveFunction: IFunction, taskCreationData: ITaskCreationData, taskCreationPayload: ITaskCreationPayload, outputParam: IParam, methodEvaluation?: IMethodEvaluationResult) {
+  private async _handleFunctionOutputParam(taskCreationData: ITaskCreationData, taskCreationPayload: ITaskCreationPayload, outputParam: IParam, methodEvaluation?: IMethodEvaluationResult) {
     if (!methodEvaluation) {
       methodEvaluation = CodemirrorRepository.evaluateCustomMethod(undefined, taskCreationData.implementation ?? defaultImplementation);
     }
     if (methodEvaluation.status === MethodEvaluationStatus.ReturnValueFound || outputParam) {
-      const outputType = await this._methodEvaluationTypeToOutputType(methodEvaluation);
       outputParam = {
         ...outputParam,
         name: taskCreationData.outputParamName ?? this._config.dynamicParamDefaultNaming,
         normalizedName: taskCreationData.normalizedOutputParamName ?? ProcessBuilderRepository.normalizeName(taskCreationData.outputParamName ?? this._config.dynamicParamDefaultNaming),
-        defaultValue: this._outputParamValue(methodEvaluation, taskCreationData.outputParamValue),
-        type: outputType
+        defaultValue: await this._outputParamValue(methodEvaluation, taskCreationData.outputParamValue),
       } as IParam;
+      if (typeof taskCreationData.interface === 'number') {
+        outputParam.interface = taskCreationData.interface;
+        outputParam.type = 'object';
+      } else {
+        const outputType = await this._methodEvaluationTypeToOutputType(methodEvaluation);
+        outputParam.type = outputType;
+      }
       this._store.dispatch(upsertIParam(outputParam));
 
       BPMNJsRepository.appendOutputParam(
@@ -307,7 +314,7 @@ export class ProcessBuilderComponentService {
     return 'object';
   }
 
-  private async _outputParamValue(methodEvaluation: IMethodEvaluationResult, defaultValue: any = []) {
+  private async _outputParamValue(methodEvaluation: IMethodEvaluationResult, defaultValue: any = null) {
     if (methodEvaluation.injectorNavigationPath) {
       const injector = await selectSnapshot(this._store.select(injectValues));
       const injectedValue = deepObjectLookup(injector, methodEvaluation.injectorNavigationPath);

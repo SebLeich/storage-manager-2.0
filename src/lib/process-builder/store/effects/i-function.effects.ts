@@ -3,7 +3,7 @@ import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { of } from 'rxjs';
 import { finalize, mergeMap } from 'rxjs/operators';
 import { FUNCTIONS_CONFIG_TOKEN, IFunction } from '../../globals/i-function';
-import { addIFunctions, loadIFunctions } from '../actions/i-function.actions';
+import { addIFunctions, loadIFunctions } from '../actions/function.actions';
 
 
 

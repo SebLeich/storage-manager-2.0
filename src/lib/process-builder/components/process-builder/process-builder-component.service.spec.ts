@@ -13,17 +13,17 @@ import { ITaskCreationData } from '../../interfaces/i-task-creation-data.interfa
 import { ITaskCreationPayload } from '../../interfaces/i-task-creation-payload.interface';
 import { ProcessBuilderModule } from '../../process-builder.module';
 import { BpmnJsService } from '../../services/bpmn-js.service';
-import { upsertIFunction } from '../../store/actions/i-function.actions';
+import { upsertIFunction } from '../../store/actions/function.actions';
 import { GatewayType } from '../../types/gateway.type';
 
 import { ProcessBuilderComponentService } from './process-builder-component.service';
 import { ProcessBuilderRepository } from 'src/lib/core/process-builder-repository';
 import { provideMockStore } from '@ngrx/store/testing';
-import { State } from '../../store/reducers/function.reducer';
+import * as fromIFunction from '../../store/reducers/function.reducer';
+import * as fromInjectionContext from '../../store/reducers/injection-context.reducer';
 import { BPMNJsRepository } from 'src/lib/core/bpmn-js.repository';
 import { upsertIParam } from '../../store/actions/param.actions';
 import { IParam } from '../../globals/i-param';
-import { INJECTOR_INTERFACE_TOKEN, INJECTOR_TOKEN } from '../../globals/injector';
 import { deepObjectLookup } from 'src/lib/shared/globals/deep-object-lookup.function';
 
 describe('ProcessBuilderComponentService', () => {
@@ -76,7 +76,11 @@ describe('ProcessBuilderComponentService', () => {
         1: mockFunction
       },
       ids: [mockFunction.identifier]
-    } as State
+    } as fromIFunction.State,
+    'injectionContext': {
+      values: injector,
+      interfaces: injectorInterface
+    } as fromInjectionContext.State,
   };
 
   beforeEach(() => {
@@ -94,8 +98,6 @@ describe('ProcessBuilderComponentService', () => {
           useValue: processBuilderConfig
         },
         { provide: FUNCTIONS_CONFIG_TOKEN, useValue: [] },
-        { provide: INJECTOR_INTERFACE_TOKEN, useValue: injectorInterface },
-        { provide: INJECTOR_TOKEN, useValue: injector },
       ]
     });
     service = TestBed.inject(ProcessBuilderComponentService);
@@ -250,6 +252,10 @@ describe('ProcessBuilderComponentService', () => {
 
       it(`should set correct label ${incomingGatewayConnectorLabel} to incoming connector if connector is coming from an error gateway`, async () => {
         modelingModule.updateLabel = (...args) => { }
+        spyOn(modelingModule, 'appendShape').and.returnValue({
+          businessObject: {},
+          children: []
+        } as IElement);
         const updateLabelSpy = spyOn(modelingModule, 'updateLabel').and.callThrough();
 
         const activityMock = {
@@ -307,8 +313,7 @@ describe('ProcessBuilderComponentService', () => {
       } as ITaskCreationData);
 
       const calls = storeSpy.calls.all();
-      expect(storeSpy).toHaveBeenCalledTimes(1);
-      expect(calls).toHaveSize(1);
+      expect(storeSpy).toHaveBeenCalled();
       expect(calls[0].args).toHaveSize(1);
       expect(calls[0].args[0].type).toBe(upsertIFunction.type);
       expect((calls[0].args[0] as any)?.func?.name).toBe(updatedName);

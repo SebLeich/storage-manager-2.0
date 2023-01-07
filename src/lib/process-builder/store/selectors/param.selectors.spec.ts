@@ -2,11 +2,12 @@ import { TestBed } from '@angular/core/testing';
 
 import { Store } from '@ngrx/store';
 import { selectSnapshot } from '../../globals/select-snapshot';
-import { selectNextId } from './i-param.selectors';
+import { selectNextId } from './param.selectors';
 import { isEqual } from 'lodash';
 import defaultImportsConstant from 'src/app/default-imports.constant';
 import { addIParams } from '../actions/param.actions';
-import { selectIParam, selectIParams, selectIParamsByNormalizedName } from './i-param.selectors';
+import { selectIParam, selectIParams, selectIParamsByNormalizedName } from './param.selectors';
+import { IParam } from '../../globals/i-param';
 
 describe('IParams Selectors', () => {
 
@@ -28,15 +29,15 @@ describe('IParams Selectors', () => {
       ]
     });
     store = TestBed.inject(Store);
-    store.dispatch(addIParams(Object.values(params) as any));
+    store.dispatch(addIParams(Object.values(params) as IParam[]));
   });
 
   Object.values(params).forEach(param => {
 
     it(`should select the param with the correct identifier ${param.identifier}`, async () => {
-      const selectionResult = await selectSnapshot(store.select(selectIParam(param.identifier)));
+      const selectionResult = await selectSnapshot(store.select(selectIParam(param.identifier))) as IParam;
       expect(selectionResult).toBeTruthy();
-      expect(selectionResult!.normalizedName).toBe(param.normalizedName);
+      expect(selectionResult.normalizedName).toBe(param.normalizedName);
     });
 
   });
@@ -64,13 +65,13 @@ describe('IParams Selectors', () => {
   for (let index = 0; index < Object.values(params).length; index++) {
 
     const shuffled = Object.values(params).sort(() => 0.5 - Math.random());
-    let selected = shuffled.slice(0, index);
+    const selected = shuffled.slice(0, index);
 
     it(`should select the params with the correct normalized names: ${selected.map(param => param.normalizedName).join(', ')}`, async () => {
       const selectionResult = await selectSnapshot(store.select(selectIParamsByNormalizedName(selected.map(param => param.normalizedName))));
       expect(selectionResult).toBeTruthy();
       expect(selectionResult.length).toBe(index);
-      expect(selected.every(param => selectionResult.findIndex(currIParam => currIParam.identifier === currIParam.identifier) > -1)).toBeTrue();
+      expect(selected.every(param => selectionResult.findIndex(currIParam => currIParam.identifier === param.identifier) > -1)).toBeTrue();
     });
 
   }

@@ -20,25 +20,7 @@ import { v4 as generateGuid } from 'uuid';
 import sebleichProcessBuilderExtension from '../globals/sebleich-process-builder-extension';
 import { IBpmnJS } from '../interfaces/i-bpmn-js.interface';
 import { getCanvasModule, getDirectEditingModule, getElementRegistryModule, getEventBusModule, getModelingModule, getTooltipModule, getZoomScrollModule, IElementRegistryModule, ITooltipModule } from 'src/lib/bpmn-io/bpmn-modules';
-import {
-  BehaviorSubject,
-  buffer,
-  combineLatest,
-  debounceTime,
-  delay,
-  filter,
-  from,
-  map,
-  merge,
-  Observable,
-  scan,
-  shareReplay,
-  startWith,
-  switchMap,
-  tap,
-  throttleTime,
-  timer
-} from 'rxjs';
+import { BehaviorSubject, buffer, combineLatest, debounceTime, delay, filter, from, map, merge, Observable, scan, shareReplay, startWith, switchMap, throttleTime, timer } from 'rxjs';
 import { IConnectionCreatePostExecutedEvent } from 'src/lib/bpmn-io/interfaces/connection-create-post-executed-event.interface';
 import { IModelingModule } from 'src/lib/bpmn-io/interfaces/modeling-module.interface';
 import { IProcessValidationResult } from '../classes/validation-result';
@@ -52,7 +34,7 @@ import { IShapeDeleteExecutedEvent } from 'src/lib/bpmn-io/interfaces/i-shape-de
 import { IShapeAddedEvent } from 'src/lib/bpmn-io/interfaces/i-shape-added-event.interface';
 import { IViewboxChangedEvent } from '../interfaces/i-viewbox-changed-event.interface';
 import { isEqual } from 'lodash';
-import { addIBpmnJSModel, setCurrentIBpmnJSModel, updateCurrentIBpmnJSModel } from '../store/actions/i-bpmn-js-model.actions';
+import { addIBpmnJSModel, setCurrentIBpmnJSModel, updateCurrentIBpmnJSModel } from '../store/actions/bpmn-js-model.actions';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { selectSnapshot } from '../globals/select-snapshot';
 import defaultBpmnXmlConstant from '../globals/default-bpmn-xml.constant';
@@ -143,12 +125,11 @@ export class BpmnJsService {
 
   public taskEditingEventFired$ = merge(
     this.directEditingEventFired$.pipe(
-      map(event => {
-        return {
-          taskCreationStep: TaskCreationStep.ConfigureFunctionSelection,
-          element: event.active.element
-        }
-      })
+      filter(event => event?.active?.element?.type === shapeTypes.Task),
+      map(event => ({
+        taskCreationStep: TaskCreationStep.ConfigureFunctionSelection,
+        element: event.active.element
+      }))
     ),
     this.connectionCreatePostExecutedEventFired$.pipe(
       filter(event => {
@@ -164,10 +145,18 @@ export class BpmnJsService {
     ),
   );
 
-  private _flushTaskEditingEvents$ = this.taskEditingEventFired$.pipe(debounceTime(500));
+  public dataObjectReferenceEditingEventFired$ = merge(
+    this.directEditingEventFired$.pipe(
+      filter(event => event?.active?.element?.type === shapeTypes.DataObjectReference)
+    )
+  );
 
   public bufferedTaskEditingEvents$ = this.taskEditingEventFired$.pipe(
-    buffer(this._flushTaskEditingEvents$)
+    buffer(this.taskEditingEventFired$.pipe(debounceTime(500)))
+  );
+
+  public bufferedDataObjectReferenceEditingEvents$ = this.dataObjectReferenceEditingEventFired$.pipe(
+    buffer(this.dataObjectReferenceEditingEventFired$.pipe(debounceTime(500)))
   );
 
   public potentialModelChangeEventFired$ = merge(
@@ -194,18 +183,24 @@ export class BpmnJsService {
   );
   public bpmnJsLoggingEnabled = false;
 
-  public taskEditingStatus$: Observable<TaskEditingStatus> = merge(
-    this.taskEditingEventFired$.pipe(map(() => {
-      return 'collecting' as TaskEditingStatus;
+  public status$: Observable<TaskEditingStatus> = merge(
+    this.taskEditingEventFired$.pipe(
+      map(() => 'collecting' as TaskEditingStatus)
+    ),
+    this.dataObjectReferenceEditingEventFired$.pipe(
+      map(() => 'collecting' as TaskEditingStatus)
+    ),
+    this.taskEditingEventFired$.pipe(debounceTime(500)).pipe(map(() => {
+      return 'idle' as TaskEditingStatus;
     })),
-    this._flushTaskEditingEvents$.pipe(map(() => {
+    this.dataObjectReferenceEditingEventFired$.pipe(debounceTime(500)).pipe(map(() => {
       return 'idle' as TaskEditingStatus;
     }))
   ).pipe(
     startWith('idle' as TaskEditingStatus)
   );
 
-  public taskEditingProcedure$ = this.taskEditingStatus$.pipe(
+  public taskEditingProcedure$ = this.status$.pipe(
     scan(
       (previousValue: IProcedure, status: TaskEditingStatus) => {
         return { ...previousValue, progress: status === 'idle' };

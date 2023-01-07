@@ -12,9 +12,7 @@ import { IParam } from 'src/lib/process-builder/globals/i-param';
 import { selectIFunctionsByOutputParam } from 'src/lib/process-builder/store/selectors/function.selector';
 import { BPMNJsRepository } from 'src/lib/core/bpmn-js.repository';
 import { ProcessBuilderRepository } from 'src/lib/core/process-builder-repository';
-import { mapIParamInterfaces } from 'src/lib/process-builder/extensions/rxjs/map-i-param-interfaces.rxjs-extension';
-import { selectSnapshot } from 'src/lib/process-builder/globals/select-snapshot';
-import { injectInterfaces, injectValues } from 'src/lib/process-builder/store/selectors/injection-context.selectors';
+import { mapIParamInterfaces } from 'src/lib/process-builder/extensions/rxjs/map-i-param-interfaces.rxjs';
 import { upsertProvider } from 'src/lib/process-builder/store/actions/injection-context.actions';
 
 @Injectable({
@@ -53,7 +51,7 @@ export class ParamEditorComponentService {
         constant: null,
         isProcessOutput: undefined,
         nullable: null,
-        optional: null
+        optional: null,
       })
     ),
     distinctUntilChanged(),
@@ -74,10 +72,8 @@ export class ParamEditorComponentService {
       );
     })
   );
-  public availableInputParams$ = inject(Store<fromIParam.State>).select(
-    selectIParams(() =>
-      BPMNJsRepository.getAvailableInputParams(this.data.element)
-    )
+  public availableInputParams$ = inject(Store).select(
+    selectIParams(() => BPMNJsRepository.getAvailableInputParams(this.data.element))
   );
   public defaultValueControl$ = this.formGroup$.pipe(
     map((formGroup) => formGroup.controls['defaultValue'])
@@ -94,7 +90,7 @@ export class ParamEditorComponentService {
     private _store: Store,
   ) { }
 
-  public updateInjector(iParams: IParam[]) {
+  public updateInjector(iParams: IParam[]): void {
     for (let param of iParams) {
       const value = ProcessBuilderRepository.createPseudoObjectFromIParamDefinition(param!.defaultValue), interfaceObject = ProcessBuilderRepository.createPseudoObjectFromIParamDefinition(param!.defaultValue);
       this._store.dispatch(upsertProvider(param!.normalizedName, value, interfaceObject));

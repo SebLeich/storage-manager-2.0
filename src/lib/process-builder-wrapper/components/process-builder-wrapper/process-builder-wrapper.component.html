@@ -19,11 +19,7 @@
                 </mat-select-trigger>
                 <mat-option class="dropdown-option" *ngFor="let model of ((bpmnJSModels$|async) ?? [])"
                     [value]="model.guid" (click)="setModel(model)">
-                    <span class="text">
-                        {{model.name ?? 'no name'}}
-                    </span>
-                    <mat-icon class="icon">edit</mat-icon>
-                    <mat-icon class="icon danger" (click)="removeModel(model)">delete_forever</mat-icon>
+                    {{model.name ?? 'no name'}}
                 </mat-option>
                 <mat-option class="dropdown-interaction-control" (click)="processBuilderService.createBpmnJsModel()">
                     Add new draft

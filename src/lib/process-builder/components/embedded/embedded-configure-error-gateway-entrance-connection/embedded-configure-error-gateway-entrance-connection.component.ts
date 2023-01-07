@@ -1,7 +1,8 @@
 import { Component, Inject, OnDestroy } from '@angular/core';
-import { UntypedFormControl, UntypedFormGroup } from '@angular/forms';
-import { IEmbeddedView } from 'src/lib/process-builder/globals/i-embedded-view';
+import { FormControl, FormGroup, UntypedFormControl, UntypedFormGroup } from '@angular/forms';
+import { EmbeddedView } from 'src/lib/process-builder/globals/i-embedded-view';
 import { IProcessBuilderConfig, PROCESS_BUILDER_CONFIG_TOKEN } from 'src/lib/process-builder/globals/i-process-builder-config';
+import { ITaskCreationFormGroup } from 'src/lib/process-builder/interfaces/i-task-creation.interface';
 import { GatewayType } from 'src/lib/process-builder/types/gateway.type';
 
 @Component({
@@ -9,24 +10,18 @@ import { GatewayType } from 'src/lib/process-builder/types/gateway.type';
   templateUrl: './embedded-configure-error-gateway-entrance-connection.component.html',
   styleUrls: ['./embedded-configure-error-gateway-entrance-connection.component.sass']
 })
-export class EmbeddedConfigureErrorGatewayEntranceConnectionComponent implements IEmbeddedView, OnDestroy {
+export class EmbeddedConfigureErrorGatewayEntranceConnectionComponent extends EmbeddedView {
 
-  public formGroup!: UntypedFormGroup;
+  public formGroup = new FormGroup({
+    'entranceGatewayType': new FormControl(null)
+  }) as FormGroup<Partial<ITaskCreationFormGroup>>;
 
-  constructor(
-    @Inject(PROCESS_BUILDER_CONFIG_TOKEN) public config: IProcessBuilderConfig
-  ) { }
-
-  public ngOnDestroy(): void {
-      
+  constructor(@Inject(PROCESS_BUILDER_CONFIG_TOKEN) public config: IProcessBuilderConfig) {
+    super();
   }
 
   public setValue(value: GatewayType) {
-    this.entranceGatewayTypeControl.setValue(value);
-  }
-
-  public get entranceGatewayTypeControl(): UntypedFormControl {
-    return this.formGroup?.controls['entranceGatewayType'] as UntypedFormControl;
+    this.formGroup.controls.entranceGatewayType!.setValue(value);
   }
 
 }

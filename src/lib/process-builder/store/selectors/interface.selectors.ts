@@ -10,9 +10,10 @@ export const selectIInterface = (arg: undefined | null | number | (() => number)
     selectIInterfaceState,
     (state: fromIInterface.State) => {
         if (arg == null || !state || !state.entities) return null;
-        let code = typeof arg === 'function' ? arg() : arg;
+        const code = typeof arg === 'function' ? arg() : arg;
         if (typeof code !== 'number') return null;
-        return Object.values(state.entities).find(x => x?.identifier === code);
+        const iFace = state.entities[code];
+        return iFace ?? null;
     }
 );
 

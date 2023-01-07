@@ -1,4 +1,4 @@
-import * as fromIBpmnJSModel from './i-bpmn-js-model.actions';
+import * as fromIBpmnJSModel from './bpmn-js-model.actions';
 
 describe('loadIBpmnJSModel', () => {
 

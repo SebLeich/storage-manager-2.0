@@ -255,3 +255,7 @@ body {
 .mat-menu-item .interactable-icon:hover {
     opacity: .8;
 }
+
+.z-index-1002 {
+    z-index: 1002 !important;
+}
