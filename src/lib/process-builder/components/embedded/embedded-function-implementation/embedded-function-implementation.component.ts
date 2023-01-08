@@ -204,7 +204,7 @@ export class EmbeddedFunctionImplementationComponent extends EmbeddedView implem
       const inputParams = await selectSnapshot(this.inputParams$);
       const result = await this._processBuilderService.mapNavigationPathPropertyMetadata(evaluationResult.injectorNavigationPath, inputParams);
 
-      if (typeof (result as any)?.interface === 'object') {
+      if ((result as any)?.interface) {
         let iFace: IInterface = (result as any).interface;
         this.formGroup.controls.interface!.setValue(iFace.identifier);
 

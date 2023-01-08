@@ -35,19 +35,16 @@ export class EmbeddedFunctionSelectionComponent extends EmbeddedView implements 
   private _availableFunctions = new ReplaySubject<IFunction[]>(1);
   public availableFunctions$ = this._availableFunctions.asObservable();
 
-  private _subscriptions: Subscription[] = [];
+  private _subscription: Subscription = new Subscription();
 
   constructor(private _store: Store<fromIFunctionState.State>) {
     super();
   }
 
-  public ngOnDestroy(): void {
-    for (let sub of this._subscriptions) sub.unsubscribe();
-    this._subscriptions = [];
-  }
+  public ngOnDestroy = () => this._subscription.unsubscribe();
 
   public ngOnInit(): void {
-    this._subscriptions.push(...[
+    this._subscription.add(...[
       this._store.select(selectIFunctions()).pipe(map(funcs => {
         return funcs.filter(x => {
           if (!x) return false;

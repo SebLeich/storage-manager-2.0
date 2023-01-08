@@ -11,6 +11,8 @@ import { selectCurrentParamOutput, selectIParams } from '../store/selectors/para
 import { IInputParam } from '../globals/i-input-param';
 import { IParam } from '../globals/i-param';
 import { selectIInterface } from '../store/selectors/interface.selectors';
+import { IElement } from 'src/lib/bpmn-io/interfaces/element.interface';
+import shapeTypes from 'src/lib/bpmn-io/shape-types';
 
 @Injectable()
 export class ProcessBuilderService {

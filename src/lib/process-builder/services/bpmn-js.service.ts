@@ -46,6 +46,7 @@ import { TaskEditingStatus } from '../types/task-editing-status.type';
 import shapeTypes from 'src/lib/bpmn-io/shape-types';
 import { ICanvasModule } from 'src/lib/bpmn-io/interfaces/canvas-module.interface';
 import { IDirectEditingModule } from 'src/lib/bpmn-io/interfaces/direct-editing-module.interface';
+import { IElement } from 'src/lib/bpmn-io/interfaces/element.interface';
 
 @Injectable()
 export class BpmnJsService {
@@ -94,6 +95,14 @@ export class BpmnJsService {
   }));
 
   public shapeRemoveEventFired$ = new Observable<IEvent>((subscriber) => this.eventBusModule.on('shape.remove', (evt) => {
+    subscriber.next(evt);
+  }));
+
+  public shapeDeletePreExecuteEventFired$ = new Observable<IShapeDeleteExecutedEvent>((subscriber) => this.eventBusModule.on('commandStack.shape.delete.preExecute', (evt) => {
+    subscriber.next(evt);
+  }));
+
+  public shapeDeletePostExecutedEventFired$ = new Observable<IShapeDeleteExecutedEvent>((subscriber) => this.eventBusModule.on('commandStack.shape.delete.postExecuted', (evt) => {
     subscriber.next(evt);
   }));
 
@@ -240,6 +249,11 @@ export class BpmnJsService {
 
   public markAsUnchanged() {
     this._containsChanges.next(false);
+  }
+
+  public removeOutgoingDataObjectReferences(element: IElement) {
+    const outgoingDataObjectReferences = element.outgoing.filter(outgoing => outgoing.type === shapeTypes.DataOutputAssociation);
+    this.modelingModule.removeElements(outgoingDataObjectReferences.map(reference => reference.target));
   }
 
   public async saveCurrentBpmnModel(showHintAfterAction?: boolean | { successMessage: string }) {

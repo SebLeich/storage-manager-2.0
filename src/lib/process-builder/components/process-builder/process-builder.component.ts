@@ -46,22 +46,36 @@ export class ProcessBuilderComponent implements OnDestroy, OnInit {
   private async init() {
     await this.bpmnJsService.attachBpmnModelToDomElement(this.diagramWrapper.nativeElement);
 
-    this._processBuilderComponentService
-      .taskEditingDialogResultReceived$
-      .subscribe((args) => {
-        this._processBuilderComponentService.applyTaskCreationConfig(args.taskCreationPayload, args.taskCreationData);
-      });
+    this._subscription.add(
+      this._processBuilderComponentService
+        .taskEditingDialogResultReceived$
+        .subscribe((args) => {
+          this._processBuilderComponentService.applyTaskCreationConfig(args.taskCreationPayload, args.taskCreationData);
+        })
+    );
 
-    this._processBuilderComponentService
-      .paramEditorDialogResultReceived$
-      .subscribe((args) => {
-        console.log(args);
-      });
+    this._subscription.add(
+      this._processBuilderComponentService
+        .paramEditorDialogResultReceived$
+        .subscribe((args) => {
+          console.log(args);
+        })
+    );
 
-    this.bpmnJsService.taskEditingProcedure$
-      .subscribe(procedure => {
-        this._store.dispatch(upsertProcedure({ procedure }));
-      });
+    this._subscription.add(
+      this.bpmnJsService.taskEditingProcedure$
+        .subscribe(procedure => {
+          this._store.dispatch(upsertProcedure({ procedure }));
+        })
+    );
+
+    this._subscription.add(
+      this.bpmnJsService.shapeDeletePreExecuteEventFired$
+        .subscribe(evt => {
+          this.bpmnJsService.removeOutgoingDataObjectReferences(evt.context.shape);
+        })
+    );
+
   }
 
 }

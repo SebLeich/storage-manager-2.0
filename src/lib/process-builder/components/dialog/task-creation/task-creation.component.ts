@@ -15,7 +15,7 @@ import { ITaskCreationComponentInput } from '../../../interfaces/i-task-creation
 import { selectIFunction } from 'src/lib/process-builder/store/selectors/function.selector';
 import { IEmbeddedFunctionImplementationData } from '../../../interfaces/i-embedded-function-implementation-output.interface';
 import { IFunction } from 'src/lib/process-builder/globals/i-function';
-import { selectIParam, selectIParams } from 'src/lib/process-builder/store/selectors/param.selectors';
+import { selectIParam } from 'src/lib/process-builder/store/selectors/param.selectors';
 import { IParam } from 'src/lib/process-builder/globals/i-param';
 import { ProcessBuilderRepository } from 'src/lib/core/process-builder-repository';
 import { EmbeddedParamEditorComponent } from '../../embedded/embedded-param-editor/embedded-param-editor.component';
@@ -29,8 +29,7 @@ import { debounceTime, filter, map, shareReplay, switchMap, take } from 'rxjs/op
 import { EmbeddedInputOutputMappingComponent } from '../../embedded/embedded-input-output-mapping/embedded-input-output-mapping.component';
 import { selectIInterface } from 'src/lib/process-builder/store/selectors/interface.selectors';
 import { IInterface } from 'src/lib/process-builder/interfaces/i-interface.interface';
-import { mapIParamsInterfaces } from 'src/lib/process-builder/extensions/rxjs/map-i-params-interfaces.rxjs';
-import { injectInterfaces, injectValues } from 'src/lib/process-builder/store/selectors/injection-context.selectors';
+import { injectValues } from 'src/lib/process-builder/store/selectors/injection-context.selectors';
 import { selectSnapshot } from 'src/lib/process-builder/globals/select-snapshot';
 
 @Component({
@@ -253,23 +252,6 @@ export class TaskCreationComponent implements OnDestroy, OnInit {
             this._statusMessage.next(
               `input params: ${inputs.length === 0 ? '-' : inputs.join(', ')}`
             );
-          }),
-        this._customImplementation.pipe(
-          filter((customImplementation) => (customImplementation ? true : false)),
-          switchMap((customImplementation) => {
-            const inputParams = BPMNJsRepository.getAvailableInputParams(customImplementation!);
-            return this._store.select(selectIParams(inputParams));
-          }),
-          take(1),
-          filter((x) => (x ? true : false)),
-          mapIParamsInterfaces(this._store),
-          switchMap((params: IParam[]) => combineLatest([of(params), this._store.select(injectValues), this._store.select(injectInterfaces)]))
-        )
-          .subscribe(([allParams, injector, injectorInterfaces]) => {
-            for (let param of allParams) {
-              (injector as any)[param!.normalizedName] = ProcessBuilderRepository.createPseudoObjectFromIParamDefinition(param);
-              (injectorInterfaces as any)[param!.normalizedName] = ProcessBuilderRepository.createPseudoObjectFromIParamDefinition(param);
-            }
           }),
         this.functionIdentifierControl.valueChanges.subscribe(
           (functionIdentifier: number | null) => {
