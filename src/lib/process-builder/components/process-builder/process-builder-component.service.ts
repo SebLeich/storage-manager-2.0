@@ -1,7 +1,7 @@
 import { Inject, Injectable } from '@angular/core';
 import { BpmnJsService } from '../../services/bpmn-js.service';
 import { DialogService } from '../../services/dialog.service';
-import { combineLatest, tap, map, of, switchMap } from 'rxjs';
+import { combineLatest, map, of, switchMap, filter } from 'rxjs';
 import { BPMNJsRepository } from 'src/lib/core/bpmn-js.repository';
 import { TaskCreationStep } from '../../globals/task-creation-step';
 import { ITaskCreationPayload } from '../../interfaces/i-task-creation-payload.interface';
@@ -57,7 +57,12 @@ export class ProcessBuilderComponentService {
   public paramEditorDialogResultReceived$ = this._bpmnJsService
     .bufferedDataObjectReferenceEditingEvents$
     .pipe(
-      tap(result => console.log(result))
+      filter(events => !events.length),
+      switchMap(events => {
+        const evt = events[0];
+        const param = BPMNJsRepository.getSLPBExtension(evt.active.element.businessObject, 'DataObjectExtension', (ext) => ext.outputParam);
+        return this._dialogService.editParam(param, evt.active.element);
+      })
     );
 
   constructor(
@@ -74,7 +79,10 @@ export class ProcessBuilderComponentService {
     }
 
     if (!referencedFunction) {
-      this._handleNoFunctionSelected(taskCreationPayload);
+      const alreadySelectedFunction = BPMNJsRepository.getSLPBExtension(taskCreationPayload.configureActivity?.businessObject, 'ActivityExtension', (ext) => ext.activityFunctionId);
+      if(typeof alreadySelectedFunction !== 'number'){
+        this._handleNoFunctionSelected(taskCreationPayload);
+      }
     }
 
     if (!referencedFunction || !taskCreationData) {
