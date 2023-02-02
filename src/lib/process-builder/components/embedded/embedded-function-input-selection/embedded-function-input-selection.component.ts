@@ -4,7 +4,7 @@ import { Store } from '@ngrx/store';
 import { combineLatest, ReplaySubject } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { ParamCodes } from 'src/config/param-codes';
-import { EmbeddedView } from 'src/lib/process-builder/globals/i-embedded-view';
+import { EmbeddedView } from 'src/lib/process-builder/classes/embedded-view';
 import { IParam } from 'src/lib/process-builder/globals/i-param';
 import { ITaskCreationFormGroup } from 'src/lib/process-builder/interfaces/i-task-creation.interface';
 import * as fromIParam from 'src/lib/process-builder/store/reducers/param.reducer';
@@ -15,7 +15,7 @@ import { selectIParams } from 'src/lib/process-builder/store/selectors/param.sel
   templateUrl: './embedded-function-input-selection.component.html',
   styleUrls: ['./embedded-function-input-selection.component.sass']
 })
-export class EmbeddedFunctionInputSelectionComponent extends EmbeddedView {
+export class EmbeddedFunctionInputSelectionComponent implements EmbeddedView {
 
   private _inputParams = new ReplaySubject<ParamCodes[]>(1);
 
@@ -29,9 +29,7 @@ export class EmbeddedFunctionInputSelectionComponent extends EmbeddedView {
     'inputParam': new FormControl([] as ParamCodes[])
   }) as FormGroup<Partial<ITaskCreationFormGroup>>;
 
-  constructor(private _paramStore: Store<fromIParam.State>) {
-    super();
-  }
+  constructor(private _paramStore: Store<fromIParam.State>) { }
 
   public paramClicked(param: IParam) {
     this.formGroup.controls.inputParam!.setValue(this.formGroup.controls.inputParam!.value === param.identifier ? null : param.identifier);

@@ -17,4 +17,5 @@ export interface ITaskCreationFormGroup {
     normalizedName: FormControl<string>;
     outputParamName: FormControl<string>;
     outputParamValue: FormControl<IParam | IParamDefinition[] | null>;
+    requireCustomImplementation: FormControl<boolean>;
 }

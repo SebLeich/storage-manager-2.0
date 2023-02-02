@@ -25,7 +25,8 @@
     ],
     "types": [
       "node",
-      "jasmine"
+      "jasmine",
+      "rxjs"
     ],
     "typeRoots": [
       "../node_modules/@types"

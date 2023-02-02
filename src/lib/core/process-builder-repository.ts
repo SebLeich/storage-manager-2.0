@@ -255,14 +255,14 @@ export class ProcessBuilderRepository {
         let subject = new ReplaySubject<any>(1);
         let jsText = doc.join('\n');
 
-        let main: (injector: any) => any | Promise<any> = eval(jsText);
-        if (this._returnsPromise(main)) (main(injector) as Promise<any>)
+        let mainMethod: (injector: any) => any | Promise<any> = eval(jsText);
+        if (this._returnsPromise(mainMethod)) (mainMethod(injector) as Promise<any>)
             .then((result: any) => subject.next(result))
             .catch((error: any) => subject.error(error))
             .finally(() => subject.complete());
         else {
             try {
-                subject.next(main(injector));
+                subject.next(mainMethod(injector));
             } catch (e) {
                 subject.error(e);
             } finally {

@@ -20,7 +20,7 @@
 
         </mat-tab-group>
 
-        <div class="content-wrapper">
+        <div class="content-wrapper" [formGroup]="formGroup">
             <div #dynamicInner></div>
         </div>
 
@@ -41,10 +41,10 @@
         </div>
 
         <div class="control secondary" *ngIf="canAnalyzeCustomImplementation$|async" (click)="testImplementation()">
-            {{(func$|async)?.pseudoImplementationComputationName ?? 'Execute'}}
+            {{(selectedFunction$|async)?.pseudoImplementationComputationName ?? 'Execute'}}
         </div>
 
-        <div class="control primary" [ngClass]="{ 'disabled': unfinished }" (click)="finish()">
+        <div class="control primary" [ngClass]="{ 'disabled': (formInvalid$|async) }" (click)="finish()">
             Finish
         </div>
 

@@ -1,9 +1,1 @@
-{
-    "version": 3,
-    "mappings": "",
-    "sources": [
-        "info-theme.sass"
-    ],
-    "names": [],
-    "file": "info-theme.css"
-}
+{"version":3,"sources":[],"names":[],"mappings":"","file":"info-theme.css"}

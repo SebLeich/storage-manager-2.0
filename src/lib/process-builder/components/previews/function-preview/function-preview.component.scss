@@ -1,0 +1,41 @@
+.headline {
+    font-size: 1.2rem;
+    white-space: nowrap;
+}
+
+.description {
+    font-weight: 100;
+    font-size: 0.8rem;
+    line-height: 0.8rem;
+    margin: 0.5rem 0px;
+}
+
+.io-wrapper {
+    display: flex;
+}
+
+.io-wrapper > * {
+    margin-right: 0.5rem;
+    flex: 1;
+    display: flex;
+    font-size: .7rem;
+    font-weight: 100;
+    align-items: center;
+}
+
+.io-wrapper > * > :nth-child(1) {
+    margin-right: 5px;
+}
+
+.io-wrapper > .input > :nth-child(1) {
+    color: green;
+}
+
+.io-wrapper > .output > :nth-child(1) {
+    color: rgb(69, 69, 186);
+}
+
+.io-wrapper > * > :nth-child(2) {
+    flex: 1;
+}
+

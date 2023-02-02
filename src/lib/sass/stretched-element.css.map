@@ -1,9 +1,1 @@
-{
-    "version": 3,
-    "mappings": "",
-    "sources": [
-        "stretched-element.sass"
-    ],
-    "names": [],
-    "file": "stretched-element.css"
-}
+{"version":3,"sources":[],"names":[],"mappings":"","file":"stretched-element.css"}

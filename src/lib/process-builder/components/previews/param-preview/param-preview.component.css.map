@@ -1,9 +1,1 @@
-{
-    "version": 3,
-    "mappings": "",
-    "sources": [
-        "param-preview.component.sass"
-    ],
-    "names": [],
-    "file": "param-preview.component.css"
-}
+{"version":3,"sources":[],"names":[],"mappings":"","file":"param-preview.component.css"}

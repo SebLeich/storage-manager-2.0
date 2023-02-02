@@ -2,7 +2,7 @@ import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { Store } from '@ngrx/store';
 import { BehaviorSubject, of, ReplaySubject, Subscription } from 'rxjs';
-import { EmbeddedView } from 'src/lib/process-builder/globals/i-embedded-view';
+import { EmbeddedView } from 'src/lib/process-builder/classes/embedded-view';
 import { IParamDefinition } from 'src/lib/process-builder/globals/i-param-definition';
 import { selectIFunction } from 'src/lib/process-builder/store/selectors/function.selector';
 import { filter, map, switchMap } from 'rxjs/operators';
@@ -16,7 +16,7 @@ import { IParam } from 'src/lib/process-builder/globals/i-param';
   templateUrl: './embedded-input-output-mapping.component.html',
   styleUrls: ['./embedded-input-output-mapping.component.scss']
 })
-export class EmbeddedInputOutputMappingComponent extends EmbeddedView implements OnDestroy, OnInit {
+export class EmbeddedInputOutputMappingComponent implements EmbeddedView, OnDestroy, OnInit {
 
   @Input() public inputParams!: number | number[] | null;
 
@@ -47,9 +47,7 @@ export class EmbeddedInputOutputMappingComponent extends EmbeddedView implements
 
   private _subscriptions: Subscription = new Subscription();
 
-  constructor(private _store: Store) {
-    super();
-  }
+  constructor(private _store: Store) { }
 
   public menuOpened() {
     this._setAvailableTypes();
@@ -63,7 +61,7 @@ export class EmbeddedInputOutputMappingComponent extends EmbeddedView implements
     this._subscriptions.add(...[
       this.formGroup.controls.outputParamValue!
         .valueChanges
-        .subscribe((val: IParam | IParamDefinition[] | null | undefined) => {
+        .subscribe((val: IParamDefinition | IParamDefinition[] | null | undefined) => {
           this._params.next(val ? Array.isArray(val) ? val : [val] : []);
         })
     ]);

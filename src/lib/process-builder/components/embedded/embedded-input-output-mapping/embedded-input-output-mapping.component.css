@@ -1,0 +1,29 @@
+table {
+  width: 100%;
+}
+
+th {
+  padding: 0.5rem;
+}
+
+th.input-column {
+  text-align: left;
+}
+
+.input-value {
+  padding: 0.4rem 0.5rem;
+  border-radius: 2px;
+  font-size: 0.7rem;
+  cursor: pointer;
+  width: 100%;
+}
+
+tr:nth-child(2n+2) .input-value {
+  background-color: rgba(216, 255, 217, 0.4392156863);
+}
+
+tr:nth-child(4n+2) .input-value {
+  background-color: rgba(230, 255, 231, 0.6156862745);
+}
+
+/*# sourceMappingURL=embedded-input-output-mapping.component.css.map *//*# sourceMappingURL=embedded-input-output-mapping.component.css.map */

@@ -1,12 +1,13 @@
 <div class="body">
 
-    <div class="function-wrapper" [@showList]="(availableFunctions$|async)?.length" *ngFor="let func of (availableFunctions$|async)" (click)="selectFunction(func)"
-        [ngClass]="{
+    <div class="function-wrapper" [@showList]="(availableFunctions$|async)?.length"
+        *ngFor="let func of (availableFunctions$|async)" (click)="selectFunction(func)" [ngClass]="{
         'active': func.identifier === formGroup.controls.functionIdentifier!.value
     }">
 
-        <app-function-preview [func]="func"
-            [attr.active]="func.identifier === formGroup.controls.functionIdentifier!.value? true: undefined"></app-function-preview>
+        <div class="preview">
+            <app-function-preview [func]="func"></app-function-preview>
+        </div>
 
         <div class="control-wrapper">
 

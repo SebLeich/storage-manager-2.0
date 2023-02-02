@@ -1,13 +1,13 @@
 import { Component, Input, OnDestroy, OnInit, QueryList, ViewChildren, ViewContainerRef } from '@angular/core';
 import { ReplaySubject, Subscription } from 'rxjs';
 import { ParamCodes } from 'src/config/param-codes';
-import { EmbeddedView } from 'src/lib/process-builder/globals/i-embedded-view';
+import { EmbeddedView } from 'src/lib/process-builder/classes/embedded-view';
 import { IFunction } from 'src/lib/process-builder/globals/i-function';
 import { showAnimation } from 'src/lib/shared/animations/show';
 import { Store } from '@ngrx/store';
 import { selectIFunctions } from 'src/lib/process-builder/store/selectors/function.selector';
 import { FunctionPreviewComponent } from '../../previews/function-preview/function-preview.component';
-import { FormControl, FormGroup, UntypedFormControl, UntypedFormGroup } from '@angular/forms';
+import { ControlContainer, FormGroup } from '@angular/forms';
 import { IInputParam } from 'src/lib/process-builder/globals/i-input-param';
 import { delay, map } from 'rxjs/operators';
 
@@ -22,24 +22,22 @@ import { ITaskCreationFormGroup } from 'src/lib/process-builder/interfaces/i-tas
   styleUrls: ['./embedded-function-selection.component.scss'],
   animations: [showAnimation, showListAnimation]
 })
-export class EmbeddedFunctionSelectionComponent extends EmbeddedView implements OnDestroy, OnInit {
+export class EmbeddedFunctionSelectionComponent implements EmbeddedView, OnDestroy, OnInit {
 
   @Input() public inputParams!: ParamCodes | ParamCodes[] | null;
 
   @ViewChildren(FunctionPreviewComponent, { read: ViewContainerRef }) private activeFunctionWrappers!: QueryList<ViewContainerRef>;
 
-  public formGroup = new FormGroup({
-    'functionIdentifier': new FormControl(null)
-  }) as FormGroup<Partial<ITaskCreationFormGroup>>;
+  public get formGroup(): FormGroup<Partial<ITaskCreationFormGroup>> {
+    return this._controlContainer.control as FormGroup<Partial<ITaskCreationFormGroup>>;
+  }
 
   private _availableFunctions = new ReplaySubject<IFunction[]>(1);
   public availableFunctions$ = this._availableFunctions.asObservable();
 
   private _subscription: Subscription = new Subscription();
 
-  constructor(private _store: Store<fromIFunctionState.State>) {
-    super();
-  }
+  constructor(private _store: Store<fromIFunctionState.State>, private _controlContainer: ControlContainer) { }
 
   public ngOnDestroy = () => this._subscription.unsubscribe();
 
@@ -69,7 +67,7 @@ export class EmbeddedFunctionSelectionComponent extends EmbeddedView implements 
       evt.stopPropagation();
       evt.preventDefault();
     }
-    
+
     this._store.dispatch(removeIFunction(func));
   }
 

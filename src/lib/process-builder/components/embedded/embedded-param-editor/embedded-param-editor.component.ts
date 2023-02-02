@@ -4,7 +4,7 @@ import JSONEditor from 'jsoneditor';
 import { combineLatest, ReplaySubject, Subject, Subscription } from 'rxjs';
 import { debounceTime, startWith } from 'rxjs/operators';
 import { ProcessBuilderRepository } from 'src/lib/core/process-builder-repository';
-import { EmbeddedView } from 'src/lib/process-builder/globals/i-embedded-view';
+import { EmbeddedView } from 'src/lib/process-builder/classes/embedded-view';
 import { IProcessBuilderConfig, PROCESS_BUILDER_CONFIG_TOKEN } from 'src/lib/process-builder/globals/i-process-builder-config';
 import { ITaskCreationFormGroup } from 'src/lib/process-builder/interfaces/i-task-creation.interface';
 
@@ -13,14 +13,14 @@ import { ITaskCreationFormGroup } from 'src/lib/process-builder/interfaces/i-tas
   templateUrl: './embedded-param-editor.component.html',
   styleUrls: ['./embedded-param-editor.component.scss']
 })
-export class EmbeddedParamEditorComponent extends EmbeddedView implements AfterViewInit, OnDestroy {
+export class EmbeddedParamEditorComponent implements EmbeddedView, AfterViewInit, OnDestroy {
 
   @ViewChild('parameterBody', { static: true, read: ElementRef }) parameterBody!: ElementRef<HTMLDivElement>;
 
   public formGroup = new FormGroup({
-    isProcessOutput: new FormControl(false),
-    name: new FormControl(''),
-    outputParamName: new FormControl('')
+    isProcessOutput: new FormControl<boolean>(false),
+    name: new FormControl<string>(''),
+    outputParamName: new FormControl<string>(''),
   }) as FormGroup<Partial<ITaskCreationFormGroup>>;
 
   private _instance: JSONEditor | undefined;
@@ -33,9 +33,7 @@ export class EmbeddedParamEditorComponent extends EmbeddedView implements AfterV
 
   private _subscriptions: Subscription = new Subscription();
 
-  constructor(@Inject(PROCESS_BUILDER_CONFIG_TOKEN) public config: IProcessBuilderConfig) {
-    super();
-  }
+  constructor(@Inject(PROCESS_BUILDER_CONFIG_TOKEN) public config: IProcessBuilderConfig) { }
 
   public editorBlurred = () => this._editorBlurred.next();
 

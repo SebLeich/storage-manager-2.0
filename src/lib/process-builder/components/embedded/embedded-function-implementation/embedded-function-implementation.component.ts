@@ -1,7 +1,7 @@
 import { AfterViewInit, ChangeDetectorRef, Component, ElementRef, Inject, Input, OnDestroy, ViewChild } from '@angular/core';
 import { BehaviorSubject, ReplaySubject, Subscription } from 'rxjs';
 import { ProcessBuilderRepository } from 'src/lib/core/process-builder-repository';
-import { EmbeddedView } from 'src/lib/process-builder/globals/i-embedded-view';
+import { EmbeddedView } from 'src/lib/process-builder/classes/embedded-view';
 import { syntaxTree } from "@codemirror/language";
 import { autocompletion, CompletionContext } from "@codemirror/autocomplete";
 import { EditorState, Text } from '@codemirror/state';
@@ -39,7 +39,7 @@ import { IInterface } from 'src/lib/process-builder/interfaces/i-interface.inter
     ProcessBuilderService
   ]
 })
-export class EmbeddedFunctionImplementationComponent extends EmbeddedView implements AfterViewInit, OnDestroy {
+export class EmbeddedFunctionImplementationComponent implements EmbeddedView, AfterViewInit, OnDestroy {
 
   @Input() public inputParams!: number[];
 
@@ -77,9 +77,7 @@ export class EmbeddedFunctionImplementationComponent extends EmbeddedView implem
     private _processBuilderService: ProcessBuilderService,
     private _store: Store,
     private _changeDetectorRef: ChangeDetectorRef
-  ) {
-    super();
-  }
+  ) { }
 
   public blockTabPressEvent(event: KeyboardEvent) {
     if (event.key === 'Tab') {
@@ -129,8 +127,7 @@ export class EmbeddedFunctionImplementationComponent extends EmbeddedView implem
     if (completePropertyAfter.includes(nodeBefore.name) && nodeBefore.parent?.name === "MemberExpression") {
       let object = nodeBefore.parent.getChild("Expression");
       if (object?.name === 'VariableName' || object?.name === 'MemberExpression') {
-        const variableName = context.state.sliceDoc(object.from, object.to),
-          injectedValue = byStringMethods(this._injector, variableName);
+        const variableName = context.state.sliceDoc(object.from, object.to), injectedValue = byStringMethods(this._injector, variableName);
         if (typeof injectedValue === "object") {
           const from = /\./.test(nodeBefore.name) ? nodeBefore.to : nodeBefore.from;
           return completeProperties(from, injectedValue as any);
@@ -173,26 +170,17 @@ export class EmbeddedFunctionImplementationComponent extends EmbeddedView implem
     return this.formGroup.controls['normalizedName'] as FormControl<string>;
   }
 
-  public get normalizedOutputParamNameControl() {
-    return this.formGroup.controls['normalizedOutputParamName'];
-  }
-
   private _autoNormalizeNames() {
     this._subscriptions.add(...[
       this.formGroup.controls.name!
         .valueChanges
-        .pipe(
-          debounceTime(200),
-          map((name) => ProcessBuilderRepository.normalizeName(name))
-        )
+        .pipe(debounceTime(200), map((name) => ProcessBuilderRepository.normalizeName(name)))
         .subscribe((normalizedName) => this.normalizedNameControl.setValue(normalizedName)),
+
       this.formGroup.controls.outputParamName!
         .valueChanges
-        .pipe(
-          debounceTime(200),
-          map((name) => ProcessBuilderRepository.normalizeName(name))
-        )
-        .subscribe((normalizedName) => this.normalizedOutputParamNameControl!.setValue(normalizedName)),
+        .pipe(debounceTime(200), map((name) => ProcessBuilderRepository.normalizeName(name)))
+        .subscribe((normalizedName) => this.formGroup.controls.normalizedName!.setValue(normalizedName)),
     ]);
   }
 

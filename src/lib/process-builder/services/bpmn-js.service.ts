@@ -23,7 +23,7 @@ import { getCanvasModule, getDirectEditingModule, getElementRegistryModule, getE
 import { BehaviorSubject, buffer, combineLatest, debounceTime, delay, filter, from, map, merge, Observable, scan, shareReplay, startWith, switchMap, throttleTime, timer } from 'rxjs';
 import { IConnectionCreatePostExecutedEvent } from 'src/lib/bpmn-io/interfaces/connection-create-post-executed-event.interface';
 import { IModelingModule } from 'src/lib/bpmn-io/interfaces/modeling-module.interface';
-import { IProcessValidationResult } from '../classes/validation-result';
+import { IProcessValidationResult } from '../interfaces/validation-result.interface';
 import { BPMNJsRepository } from 'src/lib/core/bpmn-js.repository';
 import { IZoomScrollModule } from 'src/lib/bpmn-io/interfaces/zoom-scroll-module.interface';
 import { Store } from '@ngrx/store';
@@ -32,7 +32,7 @@ import { IEvent } from 'src/lib/bpmn-io/interfaces/event.interface';
 import { IDirectEditingEvent } from 'src/lib/bpmn-io/interfaces/i-direct-editing-event.interface';
 import { IShapeDeleteExecutedEvent } from 'src/lib/bpmn-io/interfaces/i-shape-delete-executed-event.interface';
 import { IShapeAddedEvent } from 'src/lib/bpmn-io/interfaces/i-shape-added-event.interface';
-import { IViewboxChangedEvent } from '../interfaces/i-viewbox-changed-event.interface';
+import { IViewboxChangedEvent } from '../interfaces/viewbox-changed-event.interface';
 import { isEqual } from 'lodash';
 import { addIBpmnJSModel, setCurrentIBpmnJSModel, updateCurrentIBpmnJSModel } from '../store/actions/bpmn-js-model.actions';
 import { MatSnackBar } from '@angular/material/snack-bar';
