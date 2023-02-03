@@ -1,26 +1,46 @@
 <div class="body">
 
-    <div class="function-wrapper" [@showList]="(availableFunctions$|async)?.length"
-        *ngFor="let func of (availableFunctions$|async)" (click)="selectFunction(func)" [ngClass]="{
-        'active': func.identifier === formGroup.controls.functionIdentifier!.value
-    }">
+    <div class="search-wrapper" [class.expanded]="searchinputExpanded">
+        <input #searchInput [formControl]="filterControl" class="search-input" type="text"
+            (blur)="toggleSearchInput(false)" />
+        <mat-icon (click)="toggleSearchInput()">search</mat-icon>
+    </div>
 
-        <div class="preview">
-            <app-function-preview [func]="func"></app-function-preview>
-        </div>
+    <div class="content">
 
-        <div class="control-wrapper">
+        <ng-container *ngIf="(functions$|async)?.length; else noFunctions">
 
-            <div class="control accent-2">
-                {{ func.identifier === formGroup.controls.functionIdentifier!.value? 'unselect': 'select' }}
+            <div class="function-wrapper" [@showList]="(functions$|async)?.length" *ngFor="let func of (functions$|async)" (click)="selectFunction(func)" [ngClass]="{ 'active': func.identifier === formGroup.controls.functionIdentifier!.value }">
+
+                <div class="preview">
+                    <app-function-preview [func]="func"></app-function-preview>
+                </div>
+
+                <div class="control-wrapper">
+
+                    <div class="control accent-2">
+                        {{ func.identifier === formGroup.controls.functionIdentifier!.value? 'unselect': 'select' }}
+                    </div>
+
+                    <div *ngIf="func.customImplementation" class="control danger"
+                        (click)="removeFunction(func, $event)">
+                        remove
+                    </div>
+
+                </div>
+
             </div>
 
-            <div *ngIf="func.customImplementation" class="control danger" (click)="removeFunction(func, $event)">
-                remove
-            </div>
-
-        </div>
+        </ng-container>
 
     </div>
 
 </div>
+
+<ng-template #noFunctions>
+
+    <div class="no-function-found-hint">
+        no functions found
+    </div>
+
+</ng-template>
