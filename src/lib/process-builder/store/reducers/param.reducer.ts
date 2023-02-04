@@ -1,6 +1,7 @@
 import { createEntityAdapter, EntityAdapter, EntityState, Update } from '@ngrx/entity';
 import { createReducer, on } from '@ngrx/store';
 import { IParam } from '../../globals/i-param';
+import { removeIFunction } from '../actions/function.actions';
 import { addIParam, addIParams, removeIParam, updateIParam, upsertIParam, upsertIParams } from '../actions/param.actions';
 
 
@@ -115,6 +116,14 @@ export const reducer = createReducer(
         typeDef: param.typeDef
       }
     }), state);
+  }),
+
+  on(removeIFunction, (state: State, { func }) => {
+    const referencedOutputParam = func.output?.param;
+    if (typeof referencedOutputParam === 'number') {
+      return adapter.removeOne(referencedOutputParam, state);
+    }
+    return state;
   }),
 
   on(removeIParam, (state: State, { param }) => {

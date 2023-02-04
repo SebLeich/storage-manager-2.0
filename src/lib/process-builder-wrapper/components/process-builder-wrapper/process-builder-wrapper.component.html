@@ -133,7 +133,7 @@
         <span class="text">functions ({{(funcs$|async)?.length ?? 0}}) ...</span>
     </div>
     <div mat-menu-item class="bordered">
-        <span class="text">params ({{(params$|async)?.length ?? 0}}) ...</span>
+        <span class="text" (click)="logParams()">params ({{(params$|async)?.length ?? 0}}) ...</span>
     </div>
     <div mat-menu-item class="inactive" (click)="$event.stopPropagation()">
         <span class="text">zoom</span>

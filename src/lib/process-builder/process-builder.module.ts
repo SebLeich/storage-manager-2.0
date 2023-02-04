@@ -60,6 +60,7 @@ import { loadIFunctions } from './store/actions/function.actions';
 import { upsertProvider } from './store/actions/injection-context.actions';
 import { InjectorInterfacesProvider } from './globals/injector-interfaces-provider';
 import { ConfirmationModule } from '../confirmation/confirmation.module';
+import { ConfirmationService } from '../confirmation/services/confirmation.service';
 
 
 @NgModule({
@@ -126,6 +127,7 @@ import { ConfirmationModule } from '../confirmation/confirmation.module';
   ],
   providers: [
     BpmnJsService,
+    ConfirmationService,
     ParamPipe,
     ProcessBuilderService
   ],

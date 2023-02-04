@@ -1,5 +1,4 @@
 import { BpmnJsService } from 'src/lib/process-builder/services/bpmn-js.service';
-import removeGateway from './methods/remove-gateway.method';
 
 export default class CustomContextPad {
   public create: any;

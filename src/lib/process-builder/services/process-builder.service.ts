@@ -8,11 +8,9 @@ import { selectCurrentIBpmnJSModelGuid, selectIBpmnJSModels } from '../store/sel
 import { createIBpmnJsModel, setCurrentIBpmnJSModel } from '../store/actions/bpmn-js-model.actions';
 import { selectSnapshot } from '../globals/select-snapshot';
 import { selectCurrentParamOutput, selectIParams } from '../store/selectors/param.selectors';
-import { IInputParam } from '../globals/i-input-param';
 import { IParam } from '../globals/i-param';
 import { selectIInterface } from '../store/selectors/interface.selectors';
-import { IElement } from 'src/lib/bpmn-io/interfaces/element.interface';
-import shapeTypes from 'src/lib/bpmn-io/shape-types';
+import { BpmnJsService } from './bpmn-js.service';
 
 @Injectable()
 export class ProcessBuilderService {
@@ -26,10 +24,7 @@ export class ProcessBuilderService {
   private _config = new ReplaySubject<IProcessBuilderConfig>(1);
   public config$ = this._config.asObservable();
 
-  constructor(
-    @Optional() @Inject(PROCESS_BUILDER_CONFIG_TOKEN) private config: IProcessBuilderConfig,
-    private _store: Store
-  ) {
+  constructor(@Optional() @Inject(PROCESS_BUILDER_CONFIG_TOKEN) private config: IProcessBuilderConfig, private _store: Store) {
     if (!this.config) {
       config = this.defaultConfig;
     }
@@ -39,7 +34,6 @@ export class ProcessBuilderService {
   public createBpmnJsModel() {
     this._store.dispatch(createIBpmnJsModel());
   }
-
 
   public async mapNavigationPathPropertyMetadata(navigationPath: string, inputParams: IParam[]) {
     let injectorDeepPathArray = navigationPath.split('.');
@@ -65,7 +59,7 @@ export class ProcessBuilderService {
       }
 
       const childPropertyName = injectorDeepPathArray[currentIndex];
-      const childProperty = metaData.interface.typeDef.find(param => (typeof param.normalizedName === 'undefined'? param.name : param.normalizedName) === childPropertyName);
+      const childProperty = metaData.interface.typeDef.find(param => (typeof param.normalizedName === 'undefined' ? param.name : param.normalizedName) === childPropertyName);
 
       if (!childProperty) {
         return { warning: `deep path: ${navigationPath}, navigation property not found on interface ${metaData.interface.normalizedName}` };

@@ -21,10 +21,11 @@ import { IParam } from '../../globals/i-param';
 import { ProcessBuilderRepository } from 'src/lib/core/process-builder-repository';
 import { upsertIParam } from '../../store/actions/param.actions';
 import shapeTypes from 'src/lib/bpmn-io/shape-types';
-import { upsertIFunction } from '../../store/actions/function.actions';
+import { removeIFunction, setIFunctionsCanFailFlag, upsertIFunction } from '../../store/actions/function.actions';
 import { IElement } from 'src/lib/bpmn-io/interfaces/element.interface';
 import { deepObjectLookup } from 'src/lib/shared/globals/deep-object-lookup.function';
 import { injectInterfaces, injectValues } from '../../store/selectors/injection-context.selectors';
+import { ConfirmationService } from 'src/lib/confirmation/services/confirmation.service';
 
 @Injectable()
 export class ProcessBuilderComponentService {
@@ -65,6 +66,7 @@ export class ProcessBuilderComponentService {
     private _dialogService: DialogService,
     private _bpmnJsService: BpmnJsService,
     private _store: Store,
+    private _confirmationService: ConfirmationService
   ) { }
 
   public async applyTaskCreationConfig(taskCreationPayload: ITaskCreationPayload, taskCreationData?: ITaskCreationData) {
@@ -117,6 +119,46 @@ export class ProcessBuilderComponentService {
     }
 
     return { gatewayShape, outputParam };
+  }
+
+  public async tryDeleteErrorGateway(element: IElement) {
+    const comingFromActivities = element
+      .incoming
+      .filter(incoming => incoming.type === shapeTypes.SequenceFlow && incoming.source.type === shapeTypes.Task)
+      .map(incoming => incoming.source);
+
+    const referencedFunctionIdentifiers = comingFromActivities.map(activity => BPMNJsRepository.getSLPBExtension(activity.businessObject, 'ActivityExtension', (ext) => ext.activityFunctionId));
+    const referencedFunctions = await selectSnapshot(this._store.select(functionSelectors.selectIFunctions(referencedFunctionIdentifiers)));
+
+    const result = await this._confirmationService.requestConfirmation(
+      `${referencedFunctions.length === 1 ? 'One method' : referencedFunctions.length + ' methods'} will be changed`,
+      `By deleting that gateway, you will remove the 'canFail'-flag from the methods listed below.<ul>${referencedFunctions.map(func => '<li>' + func.normalizedName + '</li>')}</ul><b>Do you want to proceed?</b>`
+    );
+
+    if (result) {
+      const action = setIFunctionsCanFailFlag({ funcs: referencedFunctionIdentifiers, canFail: false });
+      this._store.dispatch(action);
+      this._bpmnJsService.modelingModule.removeElements([element]);
+      this._bpmnJsService.saveCurrentBpmnModel();
+    }
+  }
+
+  public async tryDeleteFunction(element: IElement) {
+    const referencedFunctionIdentifier = BPMNJsRepository.getSLPBExtension(element.businessObject, 'ActivityExtension', (ext) => ext.activityFunctionId);
+    const func = await selectSnapshot(this._store.select(functionSelectors.selectIFunction(referencedFunctionIdentifier)));
+
+    const result = await this._confirmationService.requestConfirmation(
+      `${func!.normalizedName} will be deleted`,
+      `By deleting that activity, you will remove the method '${func!.normalizedName}', all resulting params and all following gateways.</br><b>Do you want to proceed?</b>`
+    );
+
+    if (result) {
+      this._bpmnJsService.removeOutgoingDataObjectReferences(element);
+      this._bpmnJsService.removeOutgoingGateways(element);
+      this._bpmnJsService.modelingModule.removeElements([element]);
+      this._store.dispatch(removeIFunction(func!));
+      this._bpmnJsService.saveCurrentBpmnModel();
+    }
   }
 
   private _handleDataInputConfiguration(taskCreationData: ITaskCreationData, taskCreationPayload: ITaskCreationPayload, referencedFunction: IFunction, resultingFunction: IFunction) {

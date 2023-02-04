@@ -84,4 +84,9 @@ export class ProcessBuilderWrapperComponent {
     this._paramsVisible.next(!paramsVisible);
   }
 
+  public async logParams() {
+    const params = await selectSnapshot(this._store.select(selectIParams()));
+    console.log(params);
+  }
+
 }

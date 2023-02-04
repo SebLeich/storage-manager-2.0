@@ -17,7 +17,7 @@ export const addIFunctions = createAction(
 
 export const removeIFunction = createAction(
   '[IFunction] Remove IFunction',
-  (func: IFunction | number) => ({ func })
+  (func: IFunction ) => ({ func })
 );
 
 export const setIFunctionsCanFailFlag = createAction(
