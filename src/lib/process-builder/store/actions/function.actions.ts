@@ -20,6 +20,11 @@ export const removeIFunction = createAction(
   (func: IFunction | number) => ({ func })
 );
 
+export const setIFunctionsCanFailFlag = createAction(
+  '[IFunction] Set IFunctions CanFail Flag',
+  (args: { funcs: number[], canFail: boolean }) => args
+)
+
 export const updateIFunction = createAction(
   '[IFunction] Update IFunction',
   (func: IFunction) => ({ func })

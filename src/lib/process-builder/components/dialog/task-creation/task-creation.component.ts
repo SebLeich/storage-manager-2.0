@@ -1,7 +1,7 @@
 import { Component, Inject, OnDestroy, OnInit, ViewChild, ViewContainerRef } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { Store } from '@ngrx/store';
-import { BehaviorSubject, combineLatest, Observable, Subscription } from 'rxjs';
+import { BehaviorSubject, combineLatest, NEVER, never, Observable, Subscription } from 'rxjs';
 import { ITaskCreationConfig } from 'src/lib/process-builder/interfaces/i-task-creation-config.interface';
 import { TaskCreationStep } from 'src/lib/process-builder/globals/task-creation-step';
 import { ITaskCreationComponentInput } from '../../../interfaces/i-task-creation-component-input.interface';
@@ -14,11 +14,11 @@ import { CodemirrorRepository } from 'src/lib/core/codemirror.repository';
 import { MethodEvaluationStatus } from 'src/lib/process-builder/globals/method-evaluation-status';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { IProcessBuilderConfig, PROCESS_BUILDER_CONFIG_TOKEN } from 'src/lib/process-builder/globals/i-process-builder-config';
-import { debounceTime, distinctUntilChanged, filter, map, shareReplay, startWith } from 'rxjs/operators';
+import { debounceTime, distinctUntilChanged, filter, map, shareReplay, startWith, switchMap } from 'rxjs/operators';
 import { selectIInterface } from 'src/lib/process-builder/store/selectors/interface.selectors';
 import { injectProviderState, injectValues } from 'src/lib/process-builder/store/selectors/injection-context.selectors';
 import { selectSnapshot } from 'src/lib/process-builder/globals/select-snapshot';
-import { ITaskCreationFormGroup } from 'src/lib/process-builder/interfaces/i-task-creation.interface';
+import { ITaskCreationFormGroup } from 'src/lib/process-builder/interfaces/task-creation.interface';
 import { IParamDefinition } from 'src/lib/process-builder/globals/i-param-definition';
 import { GatewayType } from 'src/lib/process-builder/types/gateway.type';
 import { ParamCodes } from 'src/config/param-codes';
@@ -58,7 +58,7 @@ export class TaskCreationComponent implements OnDestroy, OnInit {
     .implementation
     .valueChanges
     .pipe(debounceTime(2000), map(implementation => {
-      if(!implementation){
+      if (!implementation) {
         return null;
       }
       return CodemirrorRepository.getUsedInputParams(undefined, implementation ?? undefined)
@@ -69,7 +69,7 @@ export class TaskCreationComponent implements OnDestroy, OnInit {
   public hasOutputParam$ = this.customEvaluationResult$.pipe(map(evaluationResult => evaluationResult.status === MethodEvaluationStatus.ReturnValueFound));
 
   public statusMessage$ = this.usedInputParams$.pipe(map(inputParams => {
-    if(!inputParams){
+    if (!inputParams) {
       return 'no input params used';
     }
     `input params: ${inputParams.length === 0 ? '-' : inputParams.join(', ')}`;
@@ -128,6 +128,8 @@ export class TaskCreationComponent implements OnDestroy, OnInit {
     )
   );
 
+  public stepToNextStep$: Observable<number> = this.currentStep$.pipe(switchMap(step => step?.autoProceed$ ?? NEVER)) as Observable<number>;
+
   public formInvalid$ = this.formGroup.statusChanges.pipe(map(status => status === 'INVALID'), startWith(this.formGroup.status));
 
   private _subscription = new Subscription();
@@ -161,7 +163,8 @@ export class TaskCreationComponent implements OnDestroy, OnInit {
             this.validateFunctionSelection();
           }
         ),
-        this.currentStep$.subscribe(step => this.renderStep(step))
+        this.currentStep$.subscribe(step => this.renderStep(step)),
+        this.stepToNextStep$.subscribe((stepIndex: number) => this.setStep(stepIndex + 1))
       ]
     );
   }
@@ -249,7 +252,11 @@ export class TaskCreationComponent implements OnDestroy, OnInit {
     if (this.data) {
       const gateway = this.data.data?.taskCreationPayload?.configureIncomingErrorGatewaySequenceFlow;
       if (gateway) {
-        availableSteps.push({ taskCreationStep: TaskCreationStep.ConfigureErrorGatewayEntranceConnection, element: gateway } as ITaskCreationConfig);
+        availableSteps.push({
+          taskCreationStep: TaskCreationStep.ConfigureErrorGatewayEntranceConnection,
+          element: gateway,
+          autoProceed$: this.formGroup.controls.entranceGatewayType.valueChanges.pipe(map(() => 0))
+        } as ITaskCreationConfig);
       }
 
       const activity = this.data.data?.taskCreationPayload?.configureActivity;

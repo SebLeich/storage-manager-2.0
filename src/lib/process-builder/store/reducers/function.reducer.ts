@@ -1,7 +1,7 @@
 import { createEntityAdapter, EntityAdapter, EntityState, Update } from '@ngrx/entity';
 import { createReducer, on } from '@ngrx/store';
 import { IFunction } from '../../globals/i-function';
-import { addIFunction, addIFunctions, removeIFunction, updateIFunction, updateIFunctionOutputParam, upsertIFunction, upsertIFunctions } from '../actions/function.actions';
+import { addIFunction, addIFunctions, removeIFunction, setIFunctionsCanFailFlag, updateIFunction, updateIFunctionOutputParam, upsertIFunction, upsertIFunctions } from '../actions/function.actions';
 
 
 export const featureKey = 'Func';
@@ -40,6 +40,16 @@ export const reducer = createReducer(
   on(removeIFunction, (state: State, { func }) => {
     let key = typeof func === 'number' ? func : func.identifier;
     return adapter.removeOne(key, state);
+  }),
+
+  on(setIFunctionsCanFailFlag, (state: State, { funcs, canFail }) => {
+    const effectedFuncs = Object.values(state.entities).filter(func => funcs.indexOf(func!.identifier) > -1);
+    return adapter.updateMany(effectedFuncs.map(func => ({
+      id: func!.identifier,
+      changes: {
+        canFail: canFail
+      }
+    })), state);
   }),
 
   on(updateIFunction, (state: State, { func }) => {

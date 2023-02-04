@@ -2,6 +2,8 @@
     position: relative;
     height: 100%;
     overflow: hidden;
+    display: flex;
+    flex-direction: column;
 }
 
 .content {
@@ -10,7 +12,7 @@
     gap: 0.6rem;
     padding: 1rem;
     overflow-y: scroll;
-    height: 100%;
+    flex: 1;
 }
 
 .search-wrapper {

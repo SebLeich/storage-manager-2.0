@@ -1,0 +1,27 @@
+<div class="body" [style.maxWidth.px]="data.maxWidth">
+
+    <div class="header-wrapper">
+        <mat-icon class="icon">support</mat-icon>
+        <div class="headline">
+            {{data.headline}}
+        </div>
+        <ng-container *ngIf="data.closeStatus !== 'HIDDEN'">
+            <button [disabled]="data.closeStatus === 'DISABLED'" mat-icon-button class="dialog-close-control" (click)="abort()">
+                <mat-icon>clear</mat-icon>
+            </button>
+        </ng-container>
+    </div>
+
+    <div class="content-wrapper" [innerHTML]="data.html"></div>
+
+    <div class="footer-wrapper">
+        <div class="confirmation-button" (click)="confirm()">
+            Confirm
+        </div>
+        <div class="spacer"></div>
+        <div class="abort-button" (click)="abort()">
+            Abort
+        </div>
+    </div>
+
+</div>

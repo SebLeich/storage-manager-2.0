@@ -9,7 +9,7 @@ import { TaskCreationComponent } from '../components/dialog/task-creation/task-c
 import { FUNCTIONS_CONFIG_TOKEN, IFunction } from '../globals/i-function';
 import { IBpmnJS } from '../interfaces/i-bpmn-js.interface';
 import { ITaskCreationDataWrapper } from '../interfaces/i-task-creation-data-wrapper.interface';
-import { ITaskCreationData } from '../interfaces/i-task-creation-data.interface';
+import { ITaskCreationData } from '../interfaces/task-creation-data.interface';
 
 @Injectable({
   providedIn: 'root'

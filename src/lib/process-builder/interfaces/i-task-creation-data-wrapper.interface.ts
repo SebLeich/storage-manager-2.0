@@ -1,5 +1,5 @@
-import { ITaskCreationData } from "./i-task-creation-data.interface";
-import { ITaskCreationPayload } from "./i-task-creation-payload.interface";
+import { ITaskCreationData } from "./task-creation-data.interface";
+import { ITaskCreationPayload } from "./task-creation-payload.interface";
 
 export interface ITaskCreationDataWrapper {
     taskCreationData: ITaskCreationData;

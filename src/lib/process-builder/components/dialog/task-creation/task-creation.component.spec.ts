@@ -18,7 +18,7 @@ import { addIFunctions } from 'src/lib/process-builder/store/actions/function.ac
 import { TaskCreationComponent } from './task-creation.component';
 import { ExemplaryBpmnModel } from './test/exemplary-bpmn-model';
 import { By } from '@angular/platform-browser';
-import { ITaskCreationPayload } from 'src/lib/process-builder/interfaces/i-task-creation-payload.interface';
+import { ITaskCreationPayload } from 'src/lib/process-builder/interfaces/task-creation-payload.interface';
 
 describe('TaskCreationComponent', () => {
   let component: TaskCreationComponent;

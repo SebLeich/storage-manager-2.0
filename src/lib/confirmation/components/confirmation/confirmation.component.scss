@@ -1,0 +1,50 @@
+@import 'src/lib/sass/button';
+@import 'src/lib/sass/gradients';
+
+.body {
+    width: 80vw;
+
+    .header-wrapper {
+        padding: 0.5rem;
+        display: flex;
+        align-items: center;
+
+        .icon {
+            margin-right: 0.5rem;
+            color: #5d5d5d;
+        }
+
+        .headline {
+            flex: 1;
+            font-size: 1.2rem;
+        }
+
+        .dialog-close-control {
+            color: red;
+        }
+    }
+
+    .content-wrapper {
+        padding: 1rem;
+        font-weight: 100;
+        font-size: 0.9rem;
+        line-height: 1.3rem;
+    }
+
+    .footer-wrapper {
+        padding: 0px 1rem 1rem 1rem;
+        display: flex;
+
+        .abort-button {
+            @include button;
+            @include gradient-darkgrey;
+            color: white;
+        }
+
+        .confirmation-button {
+            @include button;
+            @include gradient-darkblue;
+            color: white;
+        }
+    }
+}

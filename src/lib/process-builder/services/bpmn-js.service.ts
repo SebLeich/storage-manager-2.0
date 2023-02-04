@@ -13,9 +13,11 @@ import CliModule from 'bpmn-js-cli';
 import * as tooltips from "diagram-js/lib/features/tooltips";
 
 // @ts-ignore
-import customRendererModule from '../extensions/custom-renderer';
+import customBPMNJSModule from '../extensions/bpmn-js';
 
 import { v4 as generateGuid } from 'uuid';
+
+import { Subject } from 'rxjs';
 
 import sebleichProcessBuilderExtension from '../globals/sebleich-process-builder-extension';
 import { IBpmnJS } from '../interfaces/i-bpmn-js.interface';
@@ -29,9 +31,9 @@ import { IZoomScrollModule } from 'src/lib/bpmn-io/interfaces/zoom-scroll-module
 import { Store } from '@ngrx/store';
 import { selectCurrentIBpmnJSModel, selectRecentlyUsedIBpmnJSModel } from '../store/selectors/bpmn-js-model.selectors';
 import { IEvent } from 'src/lib/bpmn-io/interfaces/event.interface';
-import { IDirectEditingEvent } from 'src/lib/bpmn-io/interfaces/i-direct-editing-event.interface';
-import { IShapeDeleteExecutedEvent } from 'src/lib/bpmn-io/interfaces/i-shape-delete-executed-event.interface';
-import { IShapeAddedEvent } from 'src/lib/bpmn-io/interfaces/i-shape-added-event.interface';
+import { IDirectEditingEvent } from 'src/lib/bpmn-io/interfaces/direct-editing-event.interface';
+import { IShapeDeleteExecutedEvent } from 'src/lib/bpmn-io/interfaces/shape-delete-executed-event.interface';
+import { IShapeAddedEvent } from 'src/lib/bpmn-io/interfaces/shape-added-event.interface';
 import { IViewboxChangedEvent } from '../interfaces/viewbox-changed-event.interface';
 import { isEqual } from 'lodash';
 import { addIBpmnJSModel, setCurrentIBpmnJSModel, updateCurrentIBpmnJSModel } from '../store/actions/bpmn-js-model.actions';
@@ -53,7 +55,7 @@ export class BpmnJsService {
 
   public bpmnJs: IBpmnJS = new BpmnJS({
     additionalModules: [
-      customRendererModule,
+      customBPMNJSModule,
       gridModule,
       CliModule,
       tooltips
@@ -226,6 +228,8 @@ export class BpmnJsService {
   private _isSaving = new BehaviorSubject<boolean>(false);
   public isSaving$ = this._isSaving.asObservable();
 
+  public static elementDeletionRequested$ = new Subject<IElement>();
+
   constructor(@Inject(PROCESS_BUILDER_CONFIG_TOKEN) private _config: IProcessBuilderConfig, private _store: Store, private _snackBar: MatSnackBar) {
     this._setUp();
   }
@@ -253,6 +257,11 @@ export class BpmnJsService {
 
   public removeOutgoingDataObjectReferences(element: IElement) {
     const outgoingDataObjectReferences = element.outgoing.filter(outgoing => outgoing.type === shapeTypes.DataOutputAssociation);
+    this.modelingModule.removeElements(outgoingDataObjectReferences.map(reference => reference.target));
+  }
+
+  public removeOutgoingGateways(element: IElement) {
+    const outgoingDataObjectReferences = element.outgoing.filter(outgoing => outgoing.type === shapeTypes.SequenceFlow && (outgoing.target.type === shapeTypes.ExclusiveGateway || outgoing.target.type === shapeTypes.ParallelGateway));
     this.modelingModule.removeElements(outgoingDataObjectReferences.map(reference => reference.target));
   }
 
@@ -302,6 +311,8 @@ export class BpmnJsService {
     ).subscribe((isChanged) => {
       this._containsChanges.next(isChanged);
     });
+
+    BpmnJsService.elementDeletionRequested$.subscribe(element => console.log(element));
   }
 
   public get canvasModule(): ICanvasModule {

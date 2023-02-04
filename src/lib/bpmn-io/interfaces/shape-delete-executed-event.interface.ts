@@ -10,4 +10,6 @@ export interface IShapeDeleteExecutedEvent {
     }
     id: number;
     type: "commandStack.shape.delete.executed";
+    preventDefault: () => void;
+    stopPropagation: () => void;
 }

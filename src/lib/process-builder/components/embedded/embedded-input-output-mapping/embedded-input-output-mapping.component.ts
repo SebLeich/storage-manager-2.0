@@ -8,7 +8,7 @@ import { selectIFunction } from 'src/lib/process-builder/store/selectors/functio
 import { filter, map, switchMap } from 'rxjs/operators';
 import { selectIInterface } from 'src/lib/process-builder/store/selectors/interface.selectors';
 import { IParamMember } from 'src/lib/process-builder/globals/i-param-member';
-import { ITaskCreationFormGroup } from 'src/lib/process-builder/interfaces/i-task-creation.interface';
+import { ITaskCreationFormGroup } from 'src/lib/process-builder/interfaces/task-creation.interface';
 import { IParam } from 'src/lib/process-builder/globals/i-param';
 
 @Component({

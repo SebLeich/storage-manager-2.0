@@ -13,7 +13,6 @@ import { EmbeddedParamEditorComponent } from "../../../embedded/embedded-param-e
 export default new Map<TaskCreationStep, {
     type: Type<EmbeddedView>;
     provideInputParams?: (component: EmbeddedView, element: IElement) => void;
-    autoChangeTabOnValueEmission?: boolean;
 }>([
     [TaskCreationStep.ConfigureErrorGatewayEntranceConnection, { type: EmbeddedConfigureErrorGatewayEntranceConnectionComponent }],
     [TaskCreationStep.ConfigureFunctionImplementation, {

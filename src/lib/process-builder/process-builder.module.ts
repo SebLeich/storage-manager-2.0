@@ -59,6 +59,7 @@ import { ProcessBuilderService } from './services/process-builder.service';
 import { loadIFunctions } from './store/actions/function.actions';
 import { upsertProvider } from './store/actions/injection-context.actions';
 import { InjectorInterfacesProvider } from './globals/injector-interfaces-provider';
+import { ConfirmationModule } from '../confirmation/confirmation.module';
 
 
 @NgModule({
@@ -86,12 +87,11 @@ import { InjectorInterfacesProvider } from './globals/injector-interfaces-provid
     ParamMemberPathPreviewComponent
   ],
   imports: [
-
     CodemirrorModule,
     CommonModule,
+    ConfirmationModule,
     FormsModule,
     HttpClientModule,
-
     MatButtonModule,
     MatDialogModule,
     MatIconModule,

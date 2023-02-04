@@ -21,7 +21,7 @@ import { injectValues } from 'src/lib/process-builder/store/selectors/injection-
 import { combineLatest } from 'rxjs';
 import { selectIParams } from 'src/lib/process-builder/store/selectors/param.selectors';
 import { mapIParamsInterfaces } from 'src/lib/process-builder/extensions/rxjs/map-i-params-interfaces.rxjs';
-import { ITaskCreationFormGroup } from 'src/lib/process-builder/interfaces/i-task-creation.interface';
+import { ITaskCreationFormGroup } from 'src/lib/process-builder/interfaces/task-creation.interface';
 import completePropertyAfter from './constants/complete-property-after.contant';
 import doNotCompleteAfter from './constants/do-not-complete-after.constant';
 import completeProperties from './methods/complete-properties.method';

@@ -10,6 +10,16 @@
     margin: 0.5rem 0px;
 }
 
+.can-fail-hint {
+    margin-bottom: 0.5rem;
+    font-size: 0.7rem;
+    color: green;
+
+    &.can-fail {
+        color: red;
+    }
+}
+
 .io-wrapper {
     display: flex;
 }
@@ -18,7 +28,7 @@
     margin-right: 0.5rem;
     flex: 1;
     display: flex;
-    font-size: .7rem;
+    font-size: 0.7rem;
     font-weight: 100;
     align-items: center;
 }
@@ -38,4 +48,3 @@
 .io-wrapper > * > :nth-child(2) {
     flex: 1;
 }
-

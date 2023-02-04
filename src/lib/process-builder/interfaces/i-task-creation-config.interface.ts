@@ -6,4 +6,5 @@ export interface ITaskCreationConfig {
     payload?: any;
     element: any;
     disabled$?: Observable<boolean>;
+    autoProceed$: Observable<number>;
 }

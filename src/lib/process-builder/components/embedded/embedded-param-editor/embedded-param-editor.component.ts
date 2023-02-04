@@ -6,7 +6,7 @@ import { debounceTime, startWith } from 'rxjs/operators';
 import { ProcessBuilderRepository } from 'src/lib/core/process-builder-repository';
 import { EmbeddedView } from 'src/lib/process-builder/classes/embedded-view';
 import { IProcessBuilderConfig, PROCESS_BUILDER_CONFIG_TOKEN } from 'src/lib/process-builder/globals/i-process-builder-config';
-import { ITaskCreationFormGroup } from 'src/lib/process-builder/interfaces/i-task-creation.interface';
+import { ITaskCreationFormGroup } from 'src/lib/process-builder/interfaces/task-creation.interface';
 
 @Component({
   selector: 'app-embedded-param-editor',

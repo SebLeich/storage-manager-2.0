@@ -1,4 +1,4 @@
-import { IEditingContext } from "./i-editing-context.interface";
+import { IEditingContext } from "./editing-context.interface";
 import { IElement } from "./element.interface";
 
 export interface IDirectEditingEvent {

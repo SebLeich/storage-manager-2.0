@@ -2,6 +2,7 @@
     <div class="preview">
         <div class="headline">{{func?.name}}</div>
         <div class="description">{{func?.description}}</div>
+        <div class="can-fail-hint" [class.can-fail]="func?.canFail">{{func?.canFail? 'This method may fail!': 'This method can not fail.'}}</div>
         <div class="io-wrapper">
             <div class="input">
                 <mat-icon>login</mat-icon>

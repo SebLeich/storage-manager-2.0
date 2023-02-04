@@ -14,7 +14,7 @@ import { delay, map, startWith } from 'rxjs/operators';
 import * as fromIFunctionState from 'src/lib/process-builder/store/reducers/function.reducer';
 import { removeIFunction } from 'src/lib/process-builder/store/actions/function.actions';
 import { showListAnimation } from 'src/lib/shared/animations/show-list';
-import { ITaskCreationFormGroup } from 'src/lib/process-builder/interfaces/i-task-creation.interface';
+import { ITaskCreationFormGroup } from 'src/lib/process-builder/interfaces/task-creation.interface';
 import { combineLatest } from 'rxjs/internal/observable/combineLatest';
 
 @Component({
@@ -75,21 +75,11 @@ export class EmbeddedFunctionSelectionComponent implements EmbeddedView, OnDestr
 
   public ngOnInit(): void {
     this._subscription.add(...[
-      this._store.select(selectIFunctions()).pipe(map(funcs => {
-        return funcs.filter(x => {
-          if (!x) return false;
-          let requiredInputs: ParamCodes[] = (Array.isArray(x.inputParams) ? x.inputParams : [x.inputParams]).filter(y => y && typeof y === 'object' && !y.optional).map((x) => (x as IInputParam).param) as ParamCodes[];
-          if (requiredInputs.length === 0) return true;
-          let availableInputParams: ParamCodes[] = Array.isArray(this.inputParams) ? this.inputParams : this.inputParams ? [this.inputParams] : [];
-          return true;
-          return !requiredInputs.some(x => availableInputParams.indexOf(x) === -1);
-        })
-      })).subscribe((availableFunctions) => {
-        this._availableFunctions.next(availableFunctions as IFunction[]);
-      }),
       this.availableFunctions$.pipe(delay(800)).subscribe(() => {
         let ref = this.activeFunctionWrappers.find(x => (x.element.nativeElement as HTMLDivElement).hasAttribute('active'));
-        if (ref) ref.element.nativeElement.scrollIntoView({ behavior: 'smooth' });
+        if (ref) {
+          ref.element.nativeElement.scrollIntoView({ behavior: 'smooth' });
+        }
       })
     ])
   }
