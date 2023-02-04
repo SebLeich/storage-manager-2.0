@@ -13,7 +13,7 @@ import * as fromISolutionState from 'src/app/store/reducers/i-solution.reducers'
 @Component({
   selector: 'app-no-solution-dialog',
   templateUrl: './no-solution-dialog.component.html',
-  styleUrls: ['./no-solution-dialog.component.css']
+  styleUrls: ['./no-solution-dialog.component.scss']
 })
 export class NoSolutionDialogComponent implements OnInit {
 
@@ -30,19 +30,24 @@ export class NoSolutionDialogComponent implements OnInit {
     private _solutionStore: Store<fromISolutionState.State>,
   ) { }
 
-  close = () => this._ref.close();
+  public close = () => this._ref.close();
 
-  gotoOrders() {
+  public gotoLocalDataConfigurator() {
     this._ref.close();
     this._router.navigate(['/local-data']);
   }
 
-  gotoPipelineDesigner() {
+  public gotoPipelineDesigner() {
     this._ref.close();
     this._router.navigate(['/data-pipeline-designer']);
   }
 
-  ngOnInit(): void {
+  public gotoPipeRunner(){
+    this._ref.close();
+    this._router.navigate(['/pipe-runner']);
+  }
+
+  public ngOnInit(): void {
     this.canClose = this.data?.closeControlEnabled ?? false;
   }
 

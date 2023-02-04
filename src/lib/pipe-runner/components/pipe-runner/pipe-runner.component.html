@@ -1,0 +1,11 @@
+<div class="body" (click)="run()">
+
+    <div class="pipeline-name">
+        {{ (pipeline$|async)?.name }}
+    </div>
+
+    <div *ngFor="let action of (actions$|async)" class="pipeline-name">
+        {{ action.name }}
+    </div>
+
+</div>

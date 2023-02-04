@@ -12,6 +12,7 @@ const routes: Routes = [
   { path: 'calculation', component: CalculationComponent },
   { path: 'data-pipeline-designer', loadChildren: () => import('src/lib/process-builder-wrapper/process-builder-wrapper.module').then(m => m.ProcessBuilderWrapperModule) },
   { path: 'local-data', component: LocalDataComponent },
+  { path: 'pipe-runner', loadChildren: () => import('src/lib/pipe-runner/pipe-runner.module').then(m => m.PipeRunnerModule) },
   { path: 'visualizer', component: VisualizerComponent },
   { path: '**', component: ErrorComponent }
 ];

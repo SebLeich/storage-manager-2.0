@@ -16,7 +16,8 @@ export default [
         'pseudoImplementation': () => {
             return new Promise((resolve) => resolve(exampleSolution.default));
         },
-        'canFail': false
+        'canFail': false,
+        'requireCustomImplementation': false
     } as IFunction,
     {
         'identifier': 2,

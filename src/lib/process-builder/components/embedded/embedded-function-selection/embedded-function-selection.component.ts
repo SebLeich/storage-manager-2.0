@@ -1,5 +1,5 @@
 import { Component, ElementRef, Input, OnDestroy, OnInit, QueryList, ViewChild, ViewChildren, ViewContainerRef } from '@angular/core';
-import { ReplaySubject, Subscription } from 'rxjs';
+import { ReplaySubject, filter, Subscription } from 'rxjs';
 import { ParamCodes } from 'src/config/param-codes';
 import { EmbeddedView } from 'src/lib/process-builder/classes/embedded-view';
 import { IFunction } from 'src/lib/process-builder/globals/i-function';
@@ -66,6 +66,9 @@ export class EmbeddedFunctionSelectionComponent implements EmbeddedView, OnDestr
       return true;
     });
   }));
+
+  public functionTemplates$ = this.functions$.pipe(map(funcs => funcs.filter(func => func.requireCustomImplementation)));
+  public customFunctions$ = this.functions$.pipe(map(funcs => funcs.filter(func => func.customImplementation)));
 
   private _subscription: Subscription = new Subscription();
 

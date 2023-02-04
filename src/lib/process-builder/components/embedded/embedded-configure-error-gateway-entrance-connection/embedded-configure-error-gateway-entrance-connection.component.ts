@@ -13,10 +13,10 @@ import { GatewayType } from 'src/lib/process-builder/types/gateway.type';
 export class EmbeddedConfigureErrorGatewayEntranceConnectionComponent implements EmbeddedView {
 
   public get formGroup() {
-    return this.controlContainer.control as FormGroup<Partial<ITaskCreationFormGroup>>;
+    return this._controlContainer.control as FormGroup<Partial<ITaskCreationFormGroup>>;
   }
 
-  constructor(@Inject(PROCESS_BUILDER_CONFIG_TOKEN) public config: IProcessBuilderConfig, private controlContainer: ControlContainer) { }
+  constructor(@Inject(PROCESS_BUILDER_CONFIG_TOKEN) public config: IProcessBuilderConfig, private _controlContainer: ControlContainer) { }
 
   public setValue(value: GatewayType) {
     this.formGroup.controls.entranceGatewayType!.setValue(value);

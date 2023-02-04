@@ -15,7 +15,7 @@ import { linter, lintGutter } from '@codemirror/lint';
 import Linter from "eslint4b-prebuilt";
 import defaultImplementation from 'src/lib/process-builder/globals/default-implementation';
 import { debounceTime, map, shareReplay, tap } from 'rxjs/operators';
-import { FormControl, FormGroup, UntypedFormControl } from '@angular/forms';
+import { ControlContainer, FormControl, FormGroup, UntypedFormControl } from '@angular/forms';
 import { Store } from '@ngrx/store';
 import { injectValues } from 'src/lib/process-builder/store/selectors/injection-context.selectors';
 import { combineLatest } from 'rxjs';
@@ -53,16 +53,6 @@ export class EmbeddedFunctionImplementationComponent implements EmbeddedView, Af
     'var2': { type: 'variable' }
   };
 
-  public formGroup = new FormGroup({
-    'implementation': new FormControl<string[] | null>(null),
-    'canFail': new FormControl<boolean>(false),
-    'outputParamName': new FormControl<string>('output param'),
-    'normalizedOutputParamName': new FormControl<string>('outputParam'),
-    'name': new FormControl<string>('custom method'),
-    'normalizedName': new FormControl<string>('customMethod'),
-    'interface': new FormControl<number | null>(null),
-  }) as FormGroup<Partial<ITaskCreationFormGroup>>;
-
   private _implementationChanged = new ReplaySubject<Text>(1);
   public implementationChanged$ = this._implementationChanged.asObservable();
 
@@ -76,7 +66,8 @@ export class EmbeddedFunctionImplementationComponent implements EmbeddedView, Af
     @Inject(PROCESS_BUILDER_CONFIG_TOKEN) public config: IProcessBuilderConfig,
     private _processBuilderService: ProcessBuilderService,
     private _store: Store,
-    private _changeDetectorRef: ChangeDetectorRef
+    private _changeDetectorRef: ChangeDetectorRef,
+    private _controlContainer: ControlContainer
   ) { }
 
   public blockTabPressEvent(event: KeyboardEvent) {
@@ -161,6 +152,10 @@ export class EmbeddedFunctionImplementationComponent implements EmbeddedView, Af
   };
 
   public MethodEvaluationStatus = MethodEvaluationStatus;
+
+  public get formGroup() {
+    return this._controlContainer.control as FormGroup<Partial<ITaskCreationFormGroup>>;
+  }
 
   public get canFailControl(): UntypedFormControl {
     return this.formGroup.controls['canFail'] as FormControl<boolean>;

@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { Store } from '@ngrx/store';
 import { BehaviorSubject } from 'rxjs';
 import { map } from 'rxjs/operators';
@@ -39,7 +40,11 @@ export class ProcessBuilderWrapperComponent {
   public methodsVisible$ = this._methodsVisible.asObservable();
   public paramsVisible$ = this._paramsVisible.asObservable();
 
-  constructor(private _store: Store, public bpmnJsService: BpmnJsService, public processBuilderService: ProcessBuilderService) { }
+  constructor(private _store: Store, public bpmnJsService: BpmnJsService, public processBuilderService: ProcessBuilderService, private _snackBar: MatSnackBar) {
+    this._snackBar.open('under construction ;)', 'Ok', {
+      duration: 3000
+    });
+  }
 
   public blurElement(element: HTMLElement, event?: Event) {
     if (event) {
@@ -82,6 +87,11 @@ export class ProcessBuilderWrapperComponent {
   public async toggleParams() {
     const paramsVisible = await selectSnapshot(this._paramsVisible);
     this._paramsVisible.next(!paramsVisible);
+  }
+
+  public async logFunctions(){
+    const funcs = await selectSnapshot(this._store.select(selectIFunctions()));
+    console.log(funcs);
   }
 
   public async logParams() {

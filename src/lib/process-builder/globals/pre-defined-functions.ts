@@ -5,7 +5,7 @@ export class PredefinedFunctions {
     customJSMethod(identifier: number, name: string = 'custom JS function'): IFunction {
         return {
             'identifier': identifier,
-            'canFail': true,
+            'canFail': false,
             'description': 'a self-written, custom javascript code snippet',
             'inputParams': null,
             'name': name,
@@ -20,7 +20,7 @@ export class PredefinedFunctions {
     objectToObjectMappingMethod(identifier: number, name: string = 'object mapping'): IFunction {
         return {
             'identifier': identifier,
-            'canFail': true,
+            'canFail': false,
             'description': 'a method for object-to-object mapping',
             'inputParams': null,
             'name': name,

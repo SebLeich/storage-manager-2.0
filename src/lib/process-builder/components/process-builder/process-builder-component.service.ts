@@ -149,7 +149,7 @@ export class ProcessBuilderComponentService {
 
     const result = await this._confirmationService.requestConfirmation(
       `${func!.normalizedName} will be deleted`,
-      `By deleting that activity, you will remove the method '${func!.normalizedName}', all resulting params and all following gateways.</br><b>Do you want to proceed?</b>`
+      `By deleting that activity, you will remove the method '${func!.normalizedName}', all resulting parameters and all following gateways. That may break your pipeline!</br><b>Do you want to proceed?</b>`
     );
 
     if (result) {

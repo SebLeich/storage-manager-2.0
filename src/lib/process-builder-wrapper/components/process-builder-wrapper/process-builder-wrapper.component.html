@@ -130,7 +130,7 @@
 
 <mat-menu #menu="matMenu">
     <div mat-menu-item>
-        <span class="text">functions ({{(funcs$|async)?.length ?? 0}}) ...</span>
+        <span class="text" (click)="logFunctions()">functions ({{(funcs$|async)?.length ?? 0}}) ...</span>
     </div>
     <div mat-menu-item class="bordered">
         <span class="text" (click)="logParams()">params ({{(params$|async)?.length ?? 0}}) ...</span>
