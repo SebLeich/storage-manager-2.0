@@ -9,10 +9,10 @@ import * as fromIParamState from './store/reducers/param.reducer';
 import { IParamEffects } from './store/effects/param.effects';
 
 import * as fromIFunctionState from './store/reducers/function.reducer';
-import { IFunctionEffects } from './store/effects/i-function.effects';
+import { IFunctionEffects } from './store/effects/function.effects';
 
 import * as fromIBpmnJSModelState from './store/reducers/bpmn-js-model.reducer';
-import { IBpmnJSModelEffects } from './store/effects/i-bpmn-js-model.effects';
+import { IBpmnJSModelEffects } from './store/effects/bpmn-js-model.effects';
 
 import * as fromIInterfaceState from './store/reducers/interface.reducer';
 import { IInterfaceEffects } from './store/effects/interface.effects';

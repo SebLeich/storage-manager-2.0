@@ -1,16 +1,14 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { Store } from '@ngrx/store';
-import { delay, filter, take, timer } from 'rxjs';
 import { AppRoutingModule } from 'src/app/app-routing.module';
 import { AppModule } from 'src/app/app.module';
 import defaultImportsConstant from 'src/app/default-imports.constant';
 import { SolutionPreviewStatus } from 'src/app/enumerations/solution-preview-status.enumeration';
-import { upsertSolutionPreview } from 'src/app/store/actions/i-solution-preview.actions';
-import { selectSolutionPreview } from 'src/app/store/selectors/i-solution-preview.selectors';
-
 import exemplarySolution from 'src/assets/exemplary-solution.json';
 import { selectSnapshot } from 'src/lib/process-builder/globals/select-snapshot';
+import { upsertSolutionPreview } from 'src/lib/storage-manager-store/store/actions/solution-preview.actions';
+import { selectSolutionPreview } from 'src/lib/storage-manager-store/store/selectors/i-solution-preview.selectors';
 
 import { SolutionPreviewRenderingComponent } from './solution-preview-rendering.component';
 

@@ -1,3 +1,121 @@
 .body {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    box-sizing: border-box;
     padding: 1rem;
+}
+
+.header {
+    display: flex;
+    align-items: center;
+
+    .pipeline-name {
+        font-size: 1.4rem;
+        padding: 1rem 0.5rem;
+        font-weight: 500;
+        flex: 1;
+
+        .prefix {
+            font-weight: 400;
+        }
+    }
+}
+
+.control-wrapper {
+    margin-bottom: 0.5rem;
+
+    * {
+        margin-right: 0.5rem;
+    }
+}
+
+.content {
+    display: flex;
+    flex: 1;
+    overflow: hidden;
+
+    > * {
+        flex: 1;
+    }
+
+    .actions {
+        margin-right: 1rem;
+        max-width: 450px;
+        padding: 0.5rem;
+        overflow-y: auto;
+
+        .action-wrapper {
+            padding: 1rem;
+            background-color: white;
+            border-radius: 3px;
+            box-shadow: 0 0 4px #9d9d9d;
+            margin-bottom: 0.5rem;
+        }
+    }
+
+    .visualization {
+        height: 100%;
+        display: flex;
+        background-color: white;
+        overflow: hidden;
+        width: 100%;
+    }
+
+    .console {
+        background-color: #424242;
+        color: white;
+        font-family: monospace;
+        border-radius: 2px;
+        display: flex;
+        padding: 0.5rem;
+        box-sizing: border-box;
+        flex: 1;
+        overflow: hidden;
+        height: 100%;
+
+        .console-inner {
+            flex: 1;
+            overflow-y: scroll;
+            padding: 0.5rem;
+
+            .section {
+                display: -webkit-box;
+                -webkit-line-clamp: 3;
+                -webkit-box-orient: vertical;
+                overflow: hidden;
+                margin-bottom: 0.5rem;
+            }
+
+            .section.primary {
+                color: rgb(51, 133, 227);
+            }
+
+            .section.success {
+                color: rgb(166, 227, 51);
+            }
+
+            .section.error {
+                color: rgb(232, 79, 79);
+            }
+        }
+    }
+}
+
+.auto-size-tab-group {
+    overflow: hidden;
+    background-color: white;
+    border-radius: 3px;
+    overflow: hidden;
+    box-shadow: 0 0 4px #9d9d9d;
+    margin: 3px;
+    box-sizing: border-box;
+    
+    ::ng-deep .mat-mdc-tab-body-wrapper {
+        flex: 1;
+    }
+
+    .mat-mdc-tab-body-content {
+        height: 100%;
+    }
 }

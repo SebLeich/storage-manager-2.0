@@ -2,12 +2,11 @@ import { Component, Inject } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { take } from 'rxjs/operators';
 import { SolutionAnimationComponentService } from './solution-animation-component.service';
-import { selectCurrentSolution } from 'src/app/store/selectors/i-solution.selectors';
 import { map } from 'rxjs/operators';
-
-import * as fromISolutionState from 'src/app/store/reducers/i-solution.reducers';
+import * as fromISolutionState from 'src/lib/storage-manager-store/store/reducers/solution.reducers';
 
 import { IVisualizerContextService, VISUALIZER_CONTEXT } from 'src/app/interfaces/i-visualizer-context.service';
+import { selectCurrentSolution } from 'src/lib/storage-manager-store/store/selectors/i-solution.selectors';
 
 @Component({
   selector: 'app-solution-animation',

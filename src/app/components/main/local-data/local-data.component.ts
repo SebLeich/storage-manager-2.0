@@ -3,28 +3,26 @@ import { FormArray, FormBuilder, FormGroup } from '@angular/forms';
 import { Store } from '@ngrx/store';
 import { combineLatest, map, Observable, pairwise, startWith, Subscription } from 'rxjs';
 import { IEntity } from 'src/app/interfaces/i-entity.interface';
-import { IGroup } from 'src/app/interfaces/i-group.interface';
-import { IOrder } from 'src/app/interfaces/i-order.interface';
+import { IGroup } from 'src/lib/storage-manager-store/interfaces/group.interface';
+import { IOrder } from 'src/lib/storage-manager-store/interfaces/order.interface';
 import { IProduct } from 'src/app/interfaces/i-product.interface';
 import calculateRandomColorSharedMethod from 'src/app/methods/calculate-random-color.shared-method';
-import { setContainerHeight, setContainerWidth } from 'src/app/store/actions/i-calculation-attribute.actions';
-import { addGroup, updateGroup } from 'src/app/store/actions/i-group.actions';
-import { addOrder, clearOrders, updateOrder, updateOrdersByDescription } from 'src/app/store/actions/i-order.actions';
-import { addProduct, updateProduct, updateProductByDescription } from 'src/app/store/actions/i-product.actions';
-import { selectGroups } from 'src/app/store/selectors/i-group.selectors';
-import { selectOrders } from 'src/app/store/selectors/i-order.selectors';
-import { selectNextProductDescription, selectProductByDescription, selectProducts } from 'src/app/store/selectors/i-product.selectors';
 import { showAnimation } from 'src/lib/shared/animations/show';
-
 import { v4 as generateGuid } from 'uuid';
 import * as lodash from 'lodash';
-
-import { selectContainerHeight, selectContainerWidth } from 'src/app/store/selectors/i-calculation-attribute.selectors';
-import { selectCalculationContextValid } from 'src/app/store/selectors/i-calculation-context.selectors';
 import { ControlsOf } from 'src/lib/shared/globals/controls-of.type';
 import { selectSnapshot } from 'src/lib/process-builder/globals/select-snapshot';
 import { widgetFadeInAnimation } from 'src/lib/shared/animations/bottom-up-fade.animation';
 import { Unit } from 'src/app/types/unit.type';
+import { selectGroups } from 'src/lib/storage-manager-store/store/selectors/i-group.selectors';
+import { selectOrders } from 'src/lib/storage-manager-store/store/selectors/i-order.selectors';
+import { selectNextProductDescription, selectProductByDescription, selectProducts } from 'src/lib/storage-manager-store/store/selectors/i-product.selectors';
+import { selectCalculationContextValid } from 'src/lib/storage-manager-store/store/selectors/i-calculation-context.selectors';
+import { addGroup, updateGroup } from 'src/lib/storage-manager-store/store/actions/group.actions';
+import { addOrder, clearOrders, updateOrder, updateOrdersByDescription } from 'src/lib/storage-manager-store/store/actions/order.actions';
+import { addProduct, updateProduct, updateProductByDescription } from 'src/lib/storage-manager-store/store/actions/product.actions';
+import { selectContainerHeight, selectContainerWidth } from 'src/lib/storage-manager-store/store/selectors/i-calculation-attribute.selectors';
+import { setContainerHeight, setContainerWidth } from 'src/lib/storage-manager-store/store/actions/calculation-attribute.actions';
 
 @Component({
   selector: 'app-local-data',

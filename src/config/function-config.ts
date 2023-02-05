@@ -1,8 +1,8 @@
 import { IFunction } from "src/lib/process-builder/globals/i-function";
 import { PredefinedFunctions } from "src/lib/process-builder/globals/pre-defined-functions";
-import * as exampleSolution from "./example-solution";
 import { InterfaceCodes } from "./interface-codes";
 import { ParamCodes } from "./param-codes";
+import exemplarySolution from 'src/assets/exemplary-solution.json';
 
 export default [
     new PredefinedFunctions().customJSMethod(0),
@@ -12,10 +12,8 @@ export default [
         'name': 'Provide exemplary solution',
         'normalizedName': 'provideExemplarySolution',
         'description': 'method provides an exemplary solution',
-        'output': { 'param': ParamCodes.ExemplarySolution },
-        'implementation': () => {
-            return new Promise((resolve) => resolve(exampleSolution.default));
-        },
+        'output': { 'param': ParamCodes.ExemplarySolutionWrapper },
+        'implementation': () => new Promise((resolve) => resolve(exemplarySolution)),
         'canFail': false,
         'requireCustomImplementation': false
     } as IFunction,
@@ -106,4 +104,5 @@ export default [
         finalizesFlow: true
     } as IFunction,
     new PredefinedFunctions().delayMethod(5),
+    new PredefinedFunctions().failMethod(6),
 ];

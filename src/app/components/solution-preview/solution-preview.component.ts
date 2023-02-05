@@ -2,12 +2,13 @@ import { Component } from '@angular/core';
 import { filter, map } from 'rxjs/operators';
 import { showAnimation } from 'src/lib/shared/animations/show';
 import { Store } from '@ngrx/store';
-import { selectCurrentSolution, selectCurrentSolutionGoods, selectHasMultipleSolutions, selectSolutions } from 'src/app/store/selectors/i-solution.selectors';
-import { downloadCurrentSolution, setNextSolution } from 'src/app/store/actions/i-solution.actions';
 import { SolutionValidationService } from 'src/app/services/solution-validation.service';
-import { IGroup } from 'src/app/interfaces/i-group.interface';
-import { selectGroups } from 'src/app/store/selectors/i-group.selectors';
-import { updateGroup } from 'src/app/store/actions/i-group.actions';
+import { IGroup } from 'src/lib/storage-manager-store/interfaces/group.interface';
+import { selectCurrentSolution, selectCurrentSolutionGoods, selectHasMultipleSolutions, selectSolutions } from 'src/lib/storage-manager-store/store/selectors/i-solution.selectors';
+import { downloadCurrentSolution } from 'src/lib/storage-manager-store/store/actions/solution.actions';
+import { selectGroups } from 'src/lib/storage-manager-store/store/selectors/i-group.selectors';
+import { updateGroup } from 'src/lib/storage-manager-store/store/actions/group.actions';
+import { setNextSolution } from 'src/lib/storage-manager-store/store/actions/solution.actions';
 
 @Component({
   selector: 'app-solution-preview',

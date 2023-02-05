@@ -3,11 +3,9 @@ import { ControlValueAccessor, UntypedFormControl, NG_VALUE_ACCESSOR } from '@an
 import { Store } from '@ngrx/store';
 import { Subscription } from 'rxjs';
 import { IProduct } from 'src/app/interfaces/i-product.interface';
-import { addProduct } from 'src/app/store/actions/i-product.actions';
-
-import * as fromIProductState from 'src/app/store/reducers/i-product.reducers';
-
-import { selectProducts } from 'src/app/store/selectors/i-product.selectors';
+import { selectProducts } from 'src/lib/storage-manager-store/store/selectors/i-product.selectors';
+import * as fromIProductState from 'src/lib/storage-manager-store/store/reducers/product.reducers';
+import { addProduct } from 'src/lib/storage-manager-store/store/actions/product.actions';
 
 @Component({
   selector: 'app-select-product',

@@ -1,0 +1,15 @@
+:host {
+  flex: 1;
+  display: flex;
+  overflow: hidden;
+}
+
+.visualization-wrapper {
+  height: -webkit-fill-available;
+  width: -webkit-fill-available;
+  box-sizing: border-box;
+}
+
+.visualization-wrapper.cursor-pointer {
+  cursor: pointer;
+}

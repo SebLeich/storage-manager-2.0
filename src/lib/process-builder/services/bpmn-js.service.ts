@@ -55,9 +55,9 @@ import { IConnector } from 'src/lib/bpmn-io/interfaces/connector.interface';
 import { IPipelineAction } from 'src/lib/pipeline-store/interfaces/pipeline-action.interface';
 import { ConfirmationService } from 'src/lib/confirmation/services/confirmation.service';
 import { Router } from '@angular/router';
-import { addIPipeline } from 'src/lib/pipeline-store/store/actions/pipeline.actions';
-import { IPipelineDto } from 'src/lib/pipeline-store/interfaces/pipeline-dto.interface';
-import { addIPipelineAction, addIPipelineActions } from 'src/lib/pipeline-store/store/actions/pipeline-action.actions';
+import { addIPipeline, removeIPipeline } from 'src/lib/pipeline-store/store/actions/pipeline.actions';
+import { addIPipelineActions } from 'src/lib/pipeline-store/store/actions/pipeline-action.actions';
+import { selectPipelineByBpmnJsModel } from 'src/lib/pipeline-store/store/selectors/pipeline.selectors';
 
 @Injectable()
 export class BpmnJsService {
@@ -260,9 +260,14 @@ export class BpmnJsService {
     this._store.dispatch(setCurrentIBpmnJSModel(recentlyUsedModel.guid));
   }
 
-  public async compile() {
+  public async compile(bpmnJsModelIdentifier: string, name: string = generateGuid()) {
+    const existingPipeline = await selectSnapshot(this._store.select(selectPipelineByBpmnJsModel(bpmnJsModelIdentifier)));
+    if (existingPipeline) {
+      this._store.dispatch(removeIPipeline(existingPipeline));
+    }
+
     const startEvent = BPMNJsRepository.getStartEvents(this.elementRegistryModule)[0];
-    let cursor: IElement | null = startEvent.outgoing[0].target, pipeline: IPipeline = { name: generateGuid() }, pipelineActions = [];
+    let cursor: IElement | null = startEvent.outgoing[0].target, pipeline: IPipeline = { bpmnJsModelReference: bpmnJsModelIdentifier, name: name }, pipelineActions = [];
 
     let anchestor: IPipelineAction | null = null, index = 0;
     while (cursor) {

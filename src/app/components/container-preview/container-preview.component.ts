@@ -1,6 +1,6 @@
 import { Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
 import { ChartConfiguration } from 'chart.js';
-import { IContainer } from 'src/app/interfaces/i-container.interface';
+import { IContainer } from 'src/lib/storage-manager-store/interfaces/container.interface';
 
 @Component({
   selector: 'app-container-preview',

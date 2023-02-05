@@ -1,19 +1,17 @@
 import { Component, DoCheck, Input, OnChanges, OnInit } from '@angular/core';
 import { Store } from '@ngrx/store';
-import { ISolution } from 'src/app/interfaces/i-solution.interface';
+import { ISolution } from 'src/lib/storage-manager-store/interfaces/solution.interface';
 import getContainerPositionSharedMethods from 'src/app/methods/get-container-position.shared-methods';
-import { VisualizationService } from 'src/app/services/visualization.service';
-import { selectGroups } from 'src/app/store/selectors/i-group.selectors';
 import { selectSnapshot } from 'src/lib/process-builder/globals/select-snapshot';
-
 import * as ThreeJS from 'three';
-
-import { announceSolutionPreview, upsertSolutionPreview } from 'src/app/store/actions/i-solution-preview.actions';
 import { SolutionPreviewStatus } from 'src/app/enumerations/solution-preview-status.enumeration';
-import { selectSolutionPreview } from 'src/app/store/selectors/i-solution-preview.selectors';
 import { filter, map, switchMap, take } from 'rxjs';
 import { DomSanitizer } from '@angular/platform-browser';
 import { showAnimation } from 'src/lib/shared/animations/show';
+import { VisualizationService } from 'src/lib/visualization/services/visualization.service';
+import { selectSolutionPreview } from 'src/lib/storage-manager-store/store/selectors/i-solution-preview.selectors';
+import { announceSolutionPreview, upsertSolutionPreview } from 'src/lib/storage-manager-store/store/actions/solution-preview.actions';
+import { selectGroups } from 'src/lib/storage-manager-store/store/selectors/i-group.selectors';
 
 @Component({
   selector: 'app-solution-preview-rendering',

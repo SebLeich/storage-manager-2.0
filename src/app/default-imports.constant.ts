@@ -26,7 +26,7 @@ import * as fromFunctionState from 'src/lib/process-builder/store/reducers/funct
 import { IFunctionEffects } from 'src/lib/process-builder/store/effects/i-function.effects';
 
 import * as fromBpmnJSModelState from 'src/lib/process-builder/store/reducers/bpmn-js-model.reducer';
-import { IBpmnJSModelEffects } from 'src/lib/process-builder/store/effects/i-bpmn-js-model.effects';
+import { IBpmnJSModelEffects } from 'src/lib/process-builder/store/effects/bpmn-js-model.effects';
 
 import * as fromInterfaceState from 'src/lib/process-builder/store/reducers/interface.reducer';
 import { IInterfaceEffects } from 'src/lib/process-builder/store/effects/interface.effects';

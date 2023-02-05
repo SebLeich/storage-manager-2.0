@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Store } from '@ngrx/store';
 import { BehaviorSubject } from 'rxjs';
+import { firstValueFrom } from 'rxjs/internal/firstValueFrom';
 import { map } from 'rxjs/operators';
 import { BPMNJsRepository } from 'src/lib/core/bpmn-js.repository';
 import { IFunction } from 'src/lib/process-builder/globals/i-function';
@@ -52,6 +53,11 @@ export class ProcessBuilderWrapperComponent {
       event.preventDefault();
     }
     element.blur();
+  }
+
+  public async compile(){
+    const model = await firstValueFrom(this.currentBpmnJSModel$);
+    this.bpmnJsService.compile(model!.guid, model?.name ?? undefined);
   }
 
   public hideAllHints() {

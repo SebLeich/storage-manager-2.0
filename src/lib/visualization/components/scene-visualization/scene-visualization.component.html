@@ -1,0 +1,4 @@
+<div class="visualization-wrapper" #visualizationWrapper (mousemove)="onMousemove($event)" (click)="onClick($event)"
+    [ngClass]="{
+        'cursor-pointer': !!(hoveredGood$|async)
+    }"></div>

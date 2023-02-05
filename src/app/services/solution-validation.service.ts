@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 import { SolutionError } from '../globals';
-import { IGood } from '../interfaces/i-good.interface';
+import { IGood } from '../../lib/storage-manager-store/interfaces/good.interface';
 import { IPosition } from '../interfaces/i-position.interface';
-import { ISolution } from '../interfaces/i-solution.interface';
+import { ISolution } from '../../lib/storage-manager-store/interfaces/solution.interface';
 import getContainerPositionSharedMethods from '../methods/get-container-position.shared-methods';
 
 @Injectable()

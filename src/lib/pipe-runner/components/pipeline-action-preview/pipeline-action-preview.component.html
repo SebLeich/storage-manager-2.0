@@ -1,5 +1,15 @@
 <div class="body">
 
-    {{ (pipelineAction$|async)?.name }} {{ (actionStatus$|async)?.status }}
+    <div class="action-name">
+        {{ (pipelineAction$|async)?.name }}
+    </div>
+
+    <mat-icon class="icon pending" *ngIf="(actionStatus$|async)?.status === 'INITIALIZED'">more_horiz</mat-icon>
+
+    <mat-icon class="icon success" *ngIf="(actionStatus$|async)?.status === 'SUCCEEDED'">done</mat-icon>
+
+    <mat-spinner *ngIf="(actionStatus$|async)?.status === 'RUNNING'" diameter="20"></mat-spinner>
+
+    <mat-icon class="icon danger" *ngIf="(actionStatus$|async)?.status === 'FAILED'">clear</mat-icon>
 
 </div>

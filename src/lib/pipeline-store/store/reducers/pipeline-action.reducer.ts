@@ -2,6 +2,7 @@ import { createEntityAdapter, EntityAdapter, EntityState } from "@ngrx/entity";
 import { createReducer, on } from "@ngrx/store";
 import { IPipelineAction } from "src/lib/pipeline-store/interfaces/pipeline-action.interface";
 import { addIPipelineAction, addIPipelineActions } from "../actions/pipeline-action.actions";
+import { removeIPipeline } from "../actions/pipeline.actions";
 
 export const featureKey = 'pipelineAction';
 
@@ -36,5 +37,9 @@ export const reducer = createReducer(
             pipelineActions,
             state
         );
+    }),
+    on(removeIPipeline, (state, { pipeline }) => {
+        const effectedPipelineActions = Object.values(state.entities).filter(action => action?.pipeline === pipeline.name) as IPipelineAction[];
+        return adapter.removeMany(effectedPipelineActions.map(action => action.identifier), state);
     })
 )

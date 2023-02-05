@@ -2,17 +2,16 @@ import { v4 as generateGuid } from 'uuid';
 import { selectSnapshot } from "src/lib/process-builder/globals/select-snapshot";
 import { Algorithm, compare } from "../globals";
 import { ISolver } from "../interfaces";
-import { ISolution } from "../interfaces/i-solution.interface";
-
+import { ISolution } from "../../lib/storage-manager-store/interfaces/solution.interface";
 import { Solver } from "./solver";
 import { Store } from "@ngrx/store";
-import { selectCalculationAttributesValid, selectContainerHeight, selectContainerWidth } from "../store/selectors/i-calculation-attribute.selectors";
-import { selectGroups } from "../store/selectors/i-group.selectors";
-import { selectOrders } from "../store/selectors/i-order.selectors";
-import { IGood } from '../interfaces/i-good.interface';
-import { IContainer } from '../interfaces/i-container.interface';
-import { IOrder } from '../interfaces/i-order.interface';
+import { IGood } from '../../lib/storage-manager-store/interfaces/good.interface';
+import { IContainer } from '../../lib/storage-manager-store/interfaces/container.interface';
+import { IOrder } from '../../lib/storage-manager-store/interfaces/order.interface';
 import moment from 'moment';
+import { selectCalculationAttributesValid, selectContainerHeight, selectContainerWidth } from 'src/lib/storage-manager-store/store/selectors/i-calculation-attribute.selectors';
+import { selectGroups } from 'src/lib/storage-manager-store/store/selectors/i-group.selectors';
+import { selectOrders } from 'src/lib/storage-manager-store/store/selectors/i-order.selectors';
 
 export class StartLeftBottomSolver extends Solver implements ISolver {
 

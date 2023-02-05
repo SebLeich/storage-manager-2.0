@@ -5,6 +5,13 @@ import { RouterModule } from '@angular/router';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { PipelineStoreModule } from '../pipeline-store/pipeline-store.module';
 import { PipelineActionPreviewComponent } from './components/pipeline-action-preview/pipeline-action-preview.component';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatTabsModule } from '@angular/material/tabs';
+import { VisualizationModule } from '../visualization/visualization.module';
+import { StorageManagerStoreModule } from '../storage-manager-store/storage-manager-store.module';
 
 
 @NgModule({
@@ -14,8 +21,15 @@ import { PipelineActionPreviewComponent } from './components/pipeline-action-pre
   ],
   imports: [
     CommonModule,
+    MatButtonModule,
+    MatIconModule,
     MatSnackBarModule,
+    MatTooltipModule,
+    MatTabsModule,
+    MatProgressSpinnerModule,
     PipelineStoreModule,
+    StorageManagerStoreModule,
+    VisualizationModule,
 
     RouterModule.forChild([
       { path: '**', component: PipeRunnerComponent }

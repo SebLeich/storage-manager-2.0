@@ -1,5 +1,5 @@
 import { BrowserModule } from '@angular/platform-browser';
-import { NgModule } from '@angular/core';
+import { isDevMode, NgModule } from '@angular/core';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -49,8 +49,6 @@ import { SolutionAnimationComponent } from './components/solution-animation/solu
 import { NoSolutionDialogComponent } from './components/dialog/no-solution-dialog/no-solution-dialog.component';
 import { SolutionValidationComponent } from './components/solution-validation/solution-validation.component';
 import { SolutionValidationErrorPipe } from './pipes/solution-validation-error.pipe';
-import { StoreModule } from '@ngrx/store';
-import { EffectsModule } from '@ngrx/effects';
 import { PROCESS_BUILDER_CONFIG_TOKEN } from 'src/lib/process-builder/globals/i-process-builder-config';
 import { PARAMS_CONFIG_TOKEN } from 'src/lib/process-builder/globals/i-param';
 import { FUNCTIONS_CONFIG_TOKEN } from 'src/lib/process-builder/globals/i-function';
@@ -59,27 +57,6 @@ import { INTERFACES_CONFIG_TOKEN } from 'src/lib/process-builder/interfaces/i-in
 import { SharedModule } from 'src/lib/shared/shared.module';
 import { MatMenuModule } from '@angular/material/menu';
 
-import * as fromICalculationAttributesState from './store/reducers/i-calculation-attribute.reducers';
-import { ICalculationAttributesEffects } from './store/effects/i-calculation-attribute.effects';
-
-import * as fromIGroupState from './store/reducers/i-group.reducers';
-import { IGroupEffects } from './store/effects/i-group.effects';
-
-import * as fromIOrderState from './store/reducers/i-order.reducers';
-import { IOrderEffects } from './store/effects/i-order.effects';
-
-import * as fromIPendingProceduresState from './store/reducers/i-pending-procedure.reducers';
-import { IPendingProcedureEffects } from './store/effects/i-pending-procedure.effects';
-
-import * as fromIProductState from './store/reducers/i-product.reducers';
-import { IProductEffects } from './store/effects/i-product.effects';
-
-import * as fromISolutionState from './store/reducers/i-solution.reducers';
-import { ISolutionEffects } from './store/effects/i-solution.effects';
-
-import * as fromISolutionPreviewState from './store/reducers/i-solution-preview.reducers';
-import { ISolutionPreviewEffects } from './store/effects/i-solution-preview.effects';
-
 import { LocalDataComponent } from './components/main/local-data/local-data.component';
 import { WidgetComponent } from './components/widget/widget.component';
 import { OrdersFormComponent } from './components/forms/orders-form/orders-form.component';
@@ -87,21 +64,18 @@ import { GroupsFormComponent } from './components/forms/groups-form/groups-form.
 import { ProductFormComponent } from './components/forms/products-form/products-form.component';
 import { CalculationContextOverviewComponent } from './components/calculation-context-overview/calculation-context-overview.component';
 import { MatFormFieldModule } from '@angular/material/form-field';
-import { SceneVisualizationComponent } from './components/scene-visualization/scene-visualization.component';
 import { SolutionVisualizationDialogComponent } from './components/dialog/solution-visualization-dialog/solution-visualization-dialog.component';
 import { SolutionPreviewRenderingComponent } from './components/solution-preview-rendering/solution-preview-rendering.component';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { ComputedStylePipe } from './pipes/computed-style.pipe';
 import { AboutComponent } from './components/main/about/about.component';
+import { StoreDevtoolsModule } from '@ngrx/store-devtools';
+import { VisualizationModule } from 'src/lib/visualization/visualization.module';
+import { StorageManagerStoreModule } from 'src/lib/storage-manager-store/storage-manager-store.module';
+import { StoreModule } from '@ngrx/store';
+import { EffectsModule } from '@ngrx/effects';
 
-let rootStoreFeatures: any = {};
-rootStoreFeatures[fromICalculationAttributesState.calculationAttributesFeatureKey] = fromICalculationAttributesState.calculationAttributesReducer;
-rootStoreFeatures[fromIGroupState.groupFeatureKey] = fromIGroupState.groupReducer;
-rootStoreFeatures[fromIOrderState.orderFeatureKey] = fromIOrderState.orderReducer;
-rootStoreFeatures[fromIPendingProceduresState.pendingProcedureFeatureKey] = fromIPendingProceduresState.pendingProcedureReducer;
-rootStoreFeatures[fromIProductState.productFeatureKey] = fromIProductState.productReducer;
-rootStoreFeatures[fromISolutionState.solutionFeatureKey] = fromISolutionState.solutionReducer;
-rootStoreFeatures[fromISolutionPreviewState.solutionPreviewFeatureKey] = fromISolutionPreviewState.reducer;
+
 
 @NgModule({
   declarations: [
@@ -133,7 +107,6 @@ rootStoreFeatures[fromISolutionPreviewState.solutionPreviewFeatureKey] = fromISo
     GroupsFormComponent,
     ProductFormComponent,
     CalculationContextOverviewComponent,
-    SceneVisualizationComponent,
     SolutionVisualizationDialogComponent,
     SolutionPreviewRenderingComponent,
     ComputedStylePipe,
@@ -166,15 +139,26 @@ rootStoreFeatures[fromISolutionPreviewState.solutionPreviewFeatureKey] = fromISo
     NgChartsModule,
     AutomationModule,
     SharedModule,
+    VisualizationModule,
 
-    StoreModule.forRoot(rootStoreFeatures, { }),
-    EffectsModule.forRoot([ICalculationAttributesEffects, IGroupEffects, IOrderEffects, IPendingProcedureEffects, IProductEffects, ISolutionEffects, ISolutionPreviewEffects]),
+    StoreModule.forRoot(),
+    EffectsModule.forRoot(),
+
+    StorageManagerStoreModule,
+
+    StoreDevtoolsModule.instrument({
+      maxAge: 25, // Retains last 25 states
+      logOnly: !isDevMode(), // Restrict extension to log-only mode
+      autoPause: true, // Pauses recording actions and state changes when the extension window is not open
+      trace: false, //  If set to true, will include stack trace for every dispatched action, so you can see it in trace tab jumping directly to that part of code
+      traceLimit: 75, // maximum stack trace frames to be stored (in case trace option was provided as true)
+    }),
+
+    StoreDevtoolsModule.instrument({ maxAge: 25, logOnly: !isDevMode() }),
   ],
   providers: [
     { provide: PROCESS_BUILDER_CONFIG_TOKEN, useValue: PROCESS_BUILDER_CONFIG },
-    { provide: PARAMS_CONFIG_TOKEN, useFactory: () => {
-      return PARAMS_CONFIG;
-    } },
+    { provide: PARAMS_CONFIG_TOKEN, useFactory: () => PARAMS_CONFIG },
     { provide: FUNCTIONS_CONFIG_TOKEN, useValue: FUNCTIONS_CONFIG },
     { provide: INTERFACES_CONFIG_TOKEN, useValue: INTERFACES_CONFIG },
   ],

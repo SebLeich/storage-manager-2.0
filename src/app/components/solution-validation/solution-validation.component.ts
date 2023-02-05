@@ -1,11 +1,10 @@
 import { Component, Inject } from '@angular/core';
 import { SolutionError } from 'src/app/globals';
-import { IGood } from 'src/app/interfaces/i-good.interface';
-
-import * as fromISolutionState from 'src/app/store/reducers/i-solution.reducers';
+import { IGood } from 'src/lib/storage-manager-store/interfaces/good.interface';
 import { Store } from '@ngrx/store';
-import { selectCurrentSolutionValidation } from 'src/app/store/selectors/i-solution.selectors';
 import { IVisualizerContextService, VISUALIZER_CONTEXT } from 'src/app/interfaces/i-visualizer-context.service';
+import { selectCurrentSolutionValidation } from 'src/lib/storage-manager-store/store/selectors/i-solution.selectors';
+import * as fromISolutionState from 'src/lib/storage-manager-store/store/reducers/solution.reducers';
 
 @Component({
   selector: 'app-solution-validation',

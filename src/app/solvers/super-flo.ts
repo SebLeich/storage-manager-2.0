@@ -2,22 +2,20 @@ import { v4 as generateGuid } from 'uuid';
 import { Store } from "@ngrx/store";
 import { selectSnapshot } from "src/lib/process-builder/globals/select-snapshot";
 import { ISolver } from "../interfaces";
-import { ISolution } from "../interfaces/i-solution.interface";
+import { ISolution } from "../../lib/storage-manager-store/interfaces/solution.interface";
 import { Solver } from "./solver";
-
-import { selectCalculationAttributesValid, selectContainerHeight, selectContainerWidth } from "../store/selectors/i-calculation-attribute.selectors";
-import { selectOrders } from "../store/selectors/i-order.selectors";
-import { selectGroups } from "../store/selectors/i-group.selectors";
-
 import getContainerPosition from '../methods/get-container-position.shared-methods';
 import moment from 'moment';
-import { IOrder } from '../interfaces/i-order.interface';
-import { IGroup } from '../interfaces/i-group.interface';
+import { IOrder } from '../../lib/storage-manager-store/interfaces/order.interface';
+import { IGroup } from '../../lib/storage-manager-store/interfaces/group.interface';
 import { IPosition } from '../interfaces/i-position.interface';
 import { IPossibilities } from '../interfaces/i-possibilities.interface';
 import { IStep } from '../interfaces/i-step.interface';
-import { IGood } from '../interfaces/i-good.interface';
+import { IGood } from '../../lib/storage-manager-store/interfaces/good.interface';
 import { Algorithm } from '../globals';
+import { selectCalculationAttributesValid, selectContainerHeight, selectContainerWidth } from 'src/lib/storage-manager-store/store/selectors/i-calculation-attribute.selectors';
+import { selectGroups } from 'src/lib/storage-manager-store/store/selectors/i-group.selectors';
+import { selectOrders } from 'src/lib/storage-manager-store/store/selectors/i-order.selectors';
 
 export class SuperFloSolver extends Solver implements ISolver {
 

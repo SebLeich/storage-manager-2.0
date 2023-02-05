@@ -3,7 +3,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { NavigationEnd, NavigationStart, Router } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { BehaviorSubject } from 'rxjs';
-import { selectHasDeterminingProcedures, selectGlobalProcedureProgress, selectHasPendingProcedures } from './store/selectors/i-pending-procedure.selectors';
+import { selectGlobalProcedureProgress, selectHasDeterminingProcedures, selectHasPendingProcedures } from 'src/lib/storage-manager-store/store/selectors/i-pending-procedure.selectors';
 
 @Component({
   selector: 'app-root',

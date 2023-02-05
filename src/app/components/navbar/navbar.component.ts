@@ -2,10 +2,9 @@ import { Component, HostListener, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { BehaviorSubject, map } from 'rxjs';
-
-import * as fromISolutionState from 'src/app/store/reducers/i-solution.reducers';
-import { selectSolutions } from 'src/app/store/selectors/i-solution.selectors';
 import { environment } from 'src/environments/environment';
+import { selectSolutions } from 'src/lib/storage-manager-store/store/selectors/i-solution.selectors';
+import * as fromISolutionState from 'src/lib/storage-manager-store/store/reducers/solution.reducers';
 
 @Component({
   selector: 'app-navbar',

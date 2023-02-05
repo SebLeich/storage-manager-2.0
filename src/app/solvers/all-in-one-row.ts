@@ -1,16 +1,15 @@
 import { v4 as generateGuid } from 'uuid';
 import { ISolver } from "../interfaces";
 import { Solver } from "./solver";
-import { ISolution } from "../interfaces/i-solution.interface";
+import { ISolution } from "../../lib/storage-manager-store/interfaces/solution.interface";
 import * as moment from 'moment';
-
 import { Store } from "@ngrx/store";
 import { selectSnapshot } from "src/lib/process-builder/globals/select-snapshot";
-import { selectContainerHeight, selectCalculationAttributesValid, selectContainerWidth } from "../store/selectors/i-calculation-attribute.selectors";
-import { selectGroups } from "../store/selectors/i-group.selectors";
-import { selectOrders } from "../store/selectors/i-order.selectors";
-import { IGood } from "../interfaces/i-good.interface";
+import { IGood } from "../../lib/storage-manager-store/interfaces/good.interface";
 import { Algorithm } from '../globals';
+import { selectCalculationAttributesValid, selectContainerHeight, selectContainerWidth } from 'src/lib/storage-manager-store/store/selectors/i-calculation-attribute.selectors';
+import { selectGroups } from 'src/lib/storage-manager-store/store/selectors/i-group.selectors';
+import { selectOrders } from 'src/lib/storage-manager-store/store/selectors/i-order.selectors';
 
 export class AllInOneRowSolver extends Solver implements ISolver {
 

@@ -5,3 +5,8 @@ export const addIPipeline = createAction(
     '[IPipeline] Add IPipeline',
     (pipeline: IPipeline) => ({ pipeline })
 );
+
+export const removeIPipeline = createAction(
+    '[IPipeline] Remove IPipeline',
+    (pipeline: IPipeline) => ({ pipeline })
+);

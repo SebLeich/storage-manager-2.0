@@ -6,10 +6,9 @@ import { map, Subscription, startWith, switchMap, timer } from 'rxjs';
 import { Store } from '@ngrx/store';
 import { selectCurrentIBpmnJSModel } from '../../store/selectors/bpmn-js-model.selectors';
 import { ProcessBuilderComponentService } from './process-builder-component.service';
-import { upsertProcedure } from 'src/app/store/actions/i-pending-procedure.actions';
 import shapeTypes from 'src/lib/bpmn-io/shape-types';
 import { BPMNJsRepository } from 'src/lib/core/bpmn-js.repository';
-import { selectSnapshot } from '../../globals/select-snapshot';
+import { upsertProcedure } from 'src/lib/storage-manager-store/store/actions/pending-procedure.actions';
 
 @Component({
   selector: 'app-process-builder',

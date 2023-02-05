@@ -38,6 +38,23 @@ export class PredefinedFunctions {
         } as IFunction;
     }
 
+    public failMethod(identifier: number, name: string = 'fail'): IFunction {
+        return {
+            'identifier': identifier,
+            'canFail': true,
+            'description': 'the method throws an error',
+            'inputParams': null,
+            'name': name,
+            'useDynamicInputParams': false,
+            'implementation': () => {
+                throw 'mock error';
+            },
+            'payload': undefined,
+            'output': null,
+            'requireCustomImplementation': false
+        } as IFunction;
+    }
+
     public objectToObjectMappingMethod(identifier: number, name: string = 'object mapping'): IFunction {
         return {
             'identifier': identifier,

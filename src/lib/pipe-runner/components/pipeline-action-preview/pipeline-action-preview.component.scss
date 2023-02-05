@@ -1,0 +1,25 @@
+.body {
+    display: flex;
+
+    .action-name {
+        flex: 1;
+    }
+
+    .icon {
+        height: 1rem;
+        font-size: 1.2rem;
+        line-height: 1.2rem;
+
+        &.pending {
+            color: rgb(160, 160, 160);
+        }
+
+        &.success {
+            color: rgb(68, 150, 68);
+        }
+
+        &.danger {
+            color: rgb(193, 71, 41);
+        }
+    }
+}

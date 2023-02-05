@@ -10,3 +10,14 @@ export const selectPipelineActionStatus = (pipelineAction: string) => createSele
     return pipelineActionStatus ?? null;
   }
 );
+
+export const selectPipelineActionStates = (pipelineActions: string[]) => createSelector(
+  pipelineActionState,
+  (state: State) => {
+    const pipelineActionStates = Object.values(state.entities ?? {})
+      .filter(pipelineActionStatus => pipelineActions.indexOf(pipelineActionStatus!.pipelineAction) > -1)
+      .filter(pipelineActionStatus => pipelineActionStatus);
+
+    return pipelineActionStates;
+  }
+);

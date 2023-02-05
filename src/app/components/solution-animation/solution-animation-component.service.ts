@@ -2,10 +2,10 @@ import { Inject, Injectable, OnDestroy, OnInit } from "@angular/core";
 import { Store } from "@ngrx/store";
 import { BehaviorSubject, combineLatest, Subscription, timer } from "rxjs";
 import { filter, map, takeUntil, tap } from "rxjs/operators";
-import { selectCurrentSolutionSteps } from "src/app/store/selectors/i-solution.selectors";
 import { IStep } from "src/app/interfaces/i-step.interface";
 import { selectSnapshot } from "src/lib/process-builder/globals/select-snapshot";
 import { IVisualizerContextService, VISUALIZER_CONTEXT } from "src/app/interfaces/i-visualizer-context.service";
+import { selectCurrentSolutionSteps } from "src/lib/storage-manager-store/store/selectors/i-solution.selectors";
 
 @Injectable()
 export class SolutionAnimationComponentService implements OnDestroy, OnInit {

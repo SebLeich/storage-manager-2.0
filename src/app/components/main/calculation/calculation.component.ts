@@ -8,11 +8,9 @@ import { ApiCallConfiguratorDialogComponent } from '../../dialog/api-call-config
 import { NoSolutionDialogComponent } from '../../dialog/no-solution-dialog/no-solution-dialog.component';
 import { CalculationComponentService } from './calculation-component.service';
 import { AlgorithmCalculationStatus } from './enumerations/algorithm-calculation-status.enum';
-
 import { MatDialog } from '@angular/material/dialog';
-
-import { selectCalculationContextValid } from 'src/app/store/selectors/i-calculation-context.selectors';
 import { widgetFadeInAnimation } from 'src/lib/shared/animations/bottom-up-fade.animation';
+import { selectCalculationContextValid } from 'src/lib/storage-manager-store/store/selectors/i-calculation-context.selectors';
 
 @Component({
   selector: 'app-calculation',

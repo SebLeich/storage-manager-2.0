@@ -1,6 +1,6 @@
 import { createEntityAdapter, EntityAdapter, EntityState } from "@ngrx/entity";
 import { createReducer, on } from "@ngrx/store";
-import { addIPipeline } from "../actions/pipeline.actions";
+import { addIPipeline, removeIPipeline } from "../actions/pipeline.actions";
 import exemplarySolution from 'src/assets/exemplary-solution.json';
 import { timer } from 'rxjs';
 import { selectSnapshot } from "src/lib/process-builder/globals/select-snapshot";
@@ -32,9 +32,7 @@ export const initialState: State = adapter.getInitialState({
                     }
                 },
                 {
-                    name: 'provideExemplarySolution', executableCode: async () => {
-                        return exemplarySolution
-                    }
+                    name: 'provideExemplarySolution', executableCode: () => new Promise((resolve) => resolve(exemplarySolution))
                 }
             ]
         }
@@ -49,5 +47,6 @@ export const reducer = createReducer(
             { ...pipeline },
             state
         );
-    })
+    }),
+    on(removeIPipeline, (state, { pipeline }) => adapter.removeOne(pipeline.bpmnJsModelReference, state))
 )

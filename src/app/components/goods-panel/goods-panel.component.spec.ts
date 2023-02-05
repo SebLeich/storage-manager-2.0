@@ -6,7 +6,7 @@ import defaultImportsConstant from 'src/app/default-imports.constant';
 
 import { GoodsPanelComponent } from './goods-panel.component';
 import { By } from '@angular/platform-browser';
-import { IGood } from 'src/app/interfaces/i-good.interface';
+import { IGood } from 'src/lib/storage-manager-store/interfaces/good.interface';
 
 describe('GoodsPanelComponent', () => {
   let component: GoodsPanelComponent;

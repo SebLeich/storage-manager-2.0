@@ -2,17 +2,16 @@ import { Injectable } from "@angular/core";
 import { Router } from "@angular/router";
 import { Store } from "@ngrx/store";
 import { Algorithm, algorithms } from "src/app/globals";
-import { ISolution } from "src/app/interfaces/i-solution.interface";
+import { ISolution } from "src/lib/storage-manager-store/interfaces/solution.interface";
 import { AllInOneRowSolver } from "src/app/solvers/all-in-one-row";
 import { StartLeftBottomSolver } from "src/app/solvers/start-left-bottom";
 import { SuperFloSolver } from "src/app/solvers/super-flo";
 import { AlgorithmCalculationStatus } from "./enumerations/algorithm-calculation-status.enum";
 import { CalculationError } from "./enumerations/calculation-error";
 import { IAlgorithmStatusWrapper } from "./interfaces/i-algorithm-calculation-status-wrapper.interface";
-
-import { setCurrentSolution, updateAlgorithmSolution } from "src/app/store/actions/i-solution.actions";
 import { selectSnapshot } from "src/lib/process-builder/globals/select-snapshot";
-import { selectSolutions } from "src/app/store/selectors/i-solution.selectors";
+import { setCurrentSolution, updateAlgorithmSolution } from "src/lib/storage-manager-store/store/actions/solution.actions";
+import { selectSolutions } from "src/lib/storage-manager-store/store/selectors/i-solution.selectors";
 
 @Injectable()
 export class CalculationComponentService {

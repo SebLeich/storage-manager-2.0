@@ -3,12 +3,11 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
 import { Store } from '@ngrx/store';
-import { ISolution } from 'src/app/interfaces/i-solution.interface';
-import { setExemplaryInputData } from 'src/app/store/actions/i-calculation-attribute.actions';
-import { setCurrentSolution, setExemplarySolution } from 'src/app/store/actions/i-solution.actions';
-
-import * as fromICalculationAttributesState from 'src/app/store/reducers/i-calculation-attribute.reducers';
-import * as fromISolutionState from 'src/app/store/reducers/i-solution.reducers';
+import { ISolution } from 'src/lib/storage-manager-store/interfaces/solution.interface';
+import { setExemplaryInputData } from 'src/lib/storage-manager-store/store/actions/calculation-attribute.actions';
+import { setCurrentSolution, setExemplarySolution } from 'src/lib/storage-manager-store/store/actions/solution.actions';
+import * as fromICalculationAttributesState from 'src/lib/storage-manager-store/store/reducers/calculation-attribute.reducers';
+import * as fromISolutionState from 'src/lib/storage-manager-store/store/reducers/solution.reducers';
 
 @Component({
   selector: 'app-no-solution-dialog',

@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { AppRoutingModule } from 'src/app/app-routing.module';
 import { AppModule } from 'src/app/app.module';
 import defaultImportsConstant from 'src/app/default-imports.constant';
-import { IGroup } from 'src/app/interfaces/i-group.interface';
+import { IGroup } from 'src/lib/storage-manager-store/interfaces/group.interface';
 
 import { GroupsPanelComponent } from './groups-panel.component';
 

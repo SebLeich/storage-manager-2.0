@@ -8,7 +8,7 @@ import { AppRoutingModule } from 'src/app/app-routing.module';
 import { AppModule } from 'src/app/app.module';
 import { ControlContainer, FormArray, FormControl, FormGroup } from '@angular/forms';
 import { ControlsOf } from 'src/lib/shared/globals/controls-of.type';
-import { IOrder } from 'src/app/interfaces/i-order.interface';
+import { IOrder } from 'src/lib/storage-manager-store/interfaces/order.interface';
 import { By } from '@angular/platform-browser';
 
 describe('OrdersFormComponent', () => {

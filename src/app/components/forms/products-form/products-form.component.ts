@@ -4,7 +4,7 @@ import { SortDirection } from '@angular/material/sort';
 import { IProduct } from 'src/app/interfaces/i-product.interface';
 import { Subscription } from 'rxjs';
 import { Store } from '@ngrx/store';
-import { removeProduct } from 'src/app/store/actions/i-product.actions';
+import { removeProduct } from 'src/lib/storage-manager-store/store/actions/product.actions';
 
 @Component({
   selector: 'app-products-form',

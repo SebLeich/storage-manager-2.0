@@ -1,6 +1,5 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { IGood } from 'src/app/interfaces/i-good.interface';
-import { SceneVisualizationComponentService } from '../scene-visualization/scene-visualization-component.service';
+import { IGood } from 'src/lib/storage-manager-store/interfaces/good.interface';
 
 @Component({
   selector: 'app-goods-panel',
