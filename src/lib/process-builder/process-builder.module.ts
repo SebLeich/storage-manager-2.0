@@ -63,6 +63,7 @@ import { ConfirmationModule } from '../confirmation/confirmation.module';
 import { ConfirmationService } from '../confirmation/services/confirmation.service';
 import { PipeRunnerModule } from '../pipe-runner/pipe-runner.module';
 import { PipelineStoreModule } from '../pipeline-store/pipeline-store.module';
+import { UserInputComponent } from './components/helpers/user-input/user-input.component';
 
 
 @NgModule({
@@ -87,7 +88,8 @@ import { PipelineStoreModule } from '../pipeline-store/pipeline-store.module';
     EmbeddedInputOutputMappingTableRowComponent,
     InterfacePipe,
     ParamMemberPreviewComponent,
-    ParamMemberPathPreviewComponent
+    ParamMemberPathPreviewComponent,
+    UserInputComponent
   ],
   imports: [
     CodemirrorModule,

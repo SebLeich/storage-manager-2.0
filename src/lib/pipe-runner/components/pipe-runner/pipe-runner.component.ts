@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Component, EnvironmentInjector, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { switchMap, map, scan, Subscription, distinctUntilChanged, NEVER, delay, startWith, BehaviorSubject } from 'rxjs';
 import { selectSnapshot } from 'src/lib/process-builder/globals/select-snapshot';
@@ -14,12 +14,14 @@ import { VisualizationService } from 'src/lib/visualization/services/visualizati
 import { MatTabGroup } from '@angular/material/tabs';
 import { ISolutionWrapper } from 'src/lib/storage-manager-store/interfaces/solution-wrapper.interface';
 import { addGroups } from 'src/lib/storage-manager-store/store/actions/group.actions';
+import { showAnimation } from 'src/lib/shared/animations/show';
 
 @Component({
   selector: 'app-pipe-runner',
   templateUrl: './pipe-runner.component.html',
   styleUrls: ['./pipe-runner.component.scss'],
-  providers: [VisualizationService]
+  providers: [VisualizationService],
+  animations: [showAnimation]
 })
 export class PipeRunnerComponent implements OnDestroy, OnInit {
 
@@ -66,7 +68,7 @@ export class PipeRunnerComponent implements OnDestroy, OnInit {
 
   private _subscriptions = new Subscription();
 
-  constructor(private _store: Store, private _route: ActivatedRoute, private _router: Router, private _visualizationService: VisualizationService,) { }
+  constructor(private _store: Store, private _route: ActivatedRoute, private _router: Router, private _visualizationService: VisualizationService, private _environmentInjector: EnvironmentInjector) { }
 
   public designPipeline(): void {
     this._router.navigate(['/data-pipeline-designer']);
@@ -94,28 +96,28 @@ export class PipeRunnerComponent implements OnDestroy, OnInit {
   public async run() {
     const actions = await selectSnapshot(this.actions$);
     let index = 0;
-    let currentAction = actions![index];
     let result: ISolutionWrapper;
-    while (currentAction) {
-      this._store.dispatch(updateIPipelineActionStatus(currentAction.identifier, 'RUNNING'));
+    for (let currentAction of actions) {
+      this._store.dispatch(updateIPipelineActionStatus(currentAction!.identifier, 'RUNNING'));
       try {
-        result = await currentAction.executableCode();
-        const representation = typeof result === 'object' ? JSON.stringify(result) : result;
-        this._consoleOutputSections$$.next({
-          message: `${moment().format('HH:mm:ss')}: ${representation}`,
-          class: 'default'
+        this._environmentInjector.runInContext(async () => {
+          result = await currentAction!.executableCode();
+          const representation = typeof result! === 'object' ? JSON.stringify(result) : result!;
+          this._consoleOutputSections$$.next({
+            message: `${moment().format('HH:mm:ss')}: ${representation}`,
+            class: 'default'
+          });
+          this._store.dispatch(updateIPipelineActionStatus(currentAction!.identifier, 'SUCCEEDED'));
         });
-        this._store.dispatch(updateIPipelineActionStatus(currentAction.identifier, 'SUCCEEDED'));
       } catch (error) {
         this._consoleOutputSections$$.next({
           message: `${moment().format('HH:mm:ss')}: ${error}`,
           class: 'error'
         });
-        this._store.dispatch(updateIPipelineActionStatus(currentAction.identifier, 'FAILED'));
+        this._store.dispatch(updateIPipelineActionStatus(currentAction!.identifier, 'FAILED'));
       }
 
       index++;
-      currentAction = actions![index];
     }
     this._store.dispatch(addGroups({ groups: result!.groups }));
     this.solution = result!;

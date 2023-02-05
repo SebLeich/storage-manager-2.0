@@ -51,7 +51,7 @@
             </mat-tab>
             <mat-tab label="visualization" #visualizationTab [disabled]="!scene">
                 <div class="visualization">
-                    <app-scene-visualization *ngIf="visualizationTabRendered$|async" [scene]="scene"></app-scene-visualization>
+                    <app-scene-visualization *ngIf="visualizationTabRendered$|async" @show [scene]="scene"></app-scene-visualization>
                 </div>
             </mat-tab>
           </mat-tab-group>

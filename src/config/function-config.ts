@@ -105,4 +105,5 @@ export default [
     } as IFunction,
     new PredefinedFunctions().delayMethod(5),
     new PredefinedFunctions().failMethod(6),
+    new PredefinedFunctions().requestUserInput(7),
 ];

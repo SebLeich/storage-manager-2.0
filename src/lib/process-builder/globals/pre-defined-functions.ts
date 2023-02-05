@@ -1,7 +1,9 @@
-import { delay } from "rxjs";
+import { inject } from "@angular/core";
+import { MatDialog } from "@angular/material/dialog";
+import { firstValueFrom } from "rxjs/internal/firstValueFrom";
 import { lastValueFrom } from "rxjs/internal/lastValueFrom";
 import { timer } from "rxjs/internal/observable/timer";
-import { withLatestFrom } from "rxjs/internal/operators/withLatestFrom";
+import { UserInputComponent } from "../components/helpers/user-input/user-input.component";
 import { IFunction } from "./i-function";
 
 export class PredefinedFunctions {
@@ -64,6 +66,24 @@ export class PredefinedFunctions {
             'name': name,
             'useDynamicInputParams': { typeLimits: ['object'] },
             'implementation': (...args: any) => args,
+            'payload': undefined,
+            'output': { 'param': 'dynamic' }
+        } as IFunction;
+    }
+
+    public requestUserInput(identifier: number, name: string = 'request input'): IFunction {
+        return {
+            'identifier': identifier,
+            'canFail': true,
+            'description': 'request a set of custom inputs during runtime',
+            'inputParams': null,
+            'name': name,
+            'useDynamicInputParams': { typeLimits: ['object'] },
+            'implementation': async (inputs: { name: string, type: 'number' | 'string' | 'boolean' }[]) => {
+                const dialog = inject(MatDialog);
+                const result = await firstValueFrom(dialog.open(UserInputComponent, { data: inputs }).afterClosed());
+                return result;
+            },
             'payload': undefined,
             'output': { 'param': 'dynamic' }
         } as IFunction;
