@@ -1,11 +1,10 @@
 import { createEntityAdapter, EntityAdapter, EntityState } from "@ngrx/entity";
 import { createReducer, on } from "@ngrx/store";
-import { ISolution } from "src/app/interfaces/i-solution.interface";
-import { IPipeline } from "../../interfaces/pipeline.interface";
 import { addIPipeline } from "../actions/pipeline.actions";
 import exemplarySolution from 'src/assets/exemplary-solution.json';
 import { timer } from 'rxjs';
 import { selectSnapshot } from "src/lib/process-builder/globals/select-snapshot";
+import { IPipeline } from "src/lib/pipeline-store/interfaces/pipeline.interface";
 
 export const featureKey = 'pipeline';
 
@@ -47,9 +46,7 @@ export const reducer = createReducer(
     initialState,
     on(addIPipeline, (state, { pipeline }) => {
         return adapter.addOne(
-            {
-                ...pipeline
-            },
+            { ...pipeline },
             state
         );
     })

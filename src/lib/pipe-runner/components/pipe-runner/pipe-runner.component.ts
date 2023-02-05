@@ -1,9 +1,11 @@
 import { Component } from '@angular/core';
 import { Store } from '@ngrx/store';
-import { selectPipelineByName } from '../../store/selectors/pipeline.selectors';
-import { map } from 'rxjs';
+import { switchMap, map } from 'rxjs';
 import { selectSnapshot } from 'src/lib/process-builder/globals/select-snapshot';
-import { MatSnackBar } from '@angular/material/snack-bar';
+import { ActivatedRoute } from '@angular/router';
+import { selectPipelineByName } from 'src/lib/pipeline-store/store/selectors/pipeline.selectors';
+import { selectPipelineActionByPipelineName } from 'src/lib/pipeline-store/store/selectors/pipeline-action.selectors';
+import { updateIPipelineActionStatus } from 'src/lib/pipeline-store/store/actions/pipeline-action-status.action';
 
 @Component({
   selector: 'app-pipe-runner',
@@ -12,24 +14,24 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 })
 export class PipeRunnerComponent {
 
-  public pipeline$ = this._store.select(selectPipelineByName('myPipe'));
-  public actions$ = this.pipeline$.pipe(map(pipeline => pipeline?.actions));
+  public pipeline$ = this._route.queryParams.pipe(switchMap(queryParams => this._store.select(selectPipelineByName(queryParams.pipeline ?? 'myPipe'))));
+  public actions$ = this.pipeline$.pipe(
+    switchMap(pipeline => this._store.select(selectPipelineActionByPipelineName(pipeline!.name))),
+    map(actions => actions.sort((a, b) => a!.sequenceNumber > b!.sequenceNumber? 1: -1))
+  );
 
-  constructor(private _store: Store, private _snackBar: MatSnackBar){
-    this._snackBar.open('under construction ;)', 'Ok', {
-      duration: 3000
-    });
-  }
+  constructor(private _store: Store, private _route: ActivatedRoute) { }
 
-  public async run(){
+  public async run() {
     const actions = await selectSnapshot(this.actions$);
     let index = 0;
     let currentAction = actions![index];
-    while(currentAction){
-      const compiledCode = eval(currentAction.executableCode);
-      const result = await compiledCode();
+    while (currentAction) {
+      this._store.dispatch(updateIPipelineActionStatus(currentAction.identifier, 'RUNNING'));
+      const result = await currentAction.executableCode();
       console.log(result);
       index++;
+      this._store.dispatch(updateIPipelineActionStatus(currentAction.identifier, 'SUCCEEDED'));
       currentAction = actions![index];
     }
   }

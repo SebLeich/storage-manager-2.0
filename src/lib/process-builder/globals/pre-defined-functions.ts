@@ -1,8 +1,12 @@
+import { delay } from "rxjs";
+import { lastValueFrom } from "rxjs/internal/lastValueFrom";
+import { timer } from "rxjs/internal/observable/timer";
+import { withLatestFrom } from "rxjs/internal/operators/withLatestFrom";
 import { IFunction } from "./i-function";
 
 export class PredefinedFunctions {
 
-    customJSMethod(identifier: number, name: string = 'custom JS function'): IFunction {
+    public customJSMethod(identifier: number, name: string = 'custom JS function'): IFunction {
         return {
             'identifier': identifier,
             'canFail': false,
@@ -10,14 +14,31 @@ export class PredefinedFunctions {
             'inputParams': null,
             'name': name,
             'useDynamicInputParams': true,
-            'pseudoImplementation': (...args: any) => args,
+            'implementation': (...args: any) => args,
             'payload': undefined,
             'output': { 'param': 'dynamic' },
             'requireCustomImplementation': true
         } as IFunction;
     }
 
-    objectToObjectMappingMethod(identifier: number, name: string = 'object mapping'): IFunction {
+    public delayMethod(identifier: number, name: string = 'delay'): IFunction {
+        return {
+            'identifier': identifier,
+            'canFail': false,
+            'description': 'the method delays the further pipe execution',
+            'inputParams': null,
+            'name': name,
+            'useDynamicInputParams': false,
+            'implementation': (timeOutMs = 1000) => {
+                return lastValueFrom(timer(timeOutMs));
+            },
+            'payload': undefined,
+            'output': null,
+            'requireCustomImplementation': false
+        } as IFunction;
+    }
+
+    public objectToObjectMappingMethod(identifier: number, name: string = 'object mapping'): IFunction {
         return {
             'identifier': identifier,
             'canFail': false,
@@ -25,7 +46,7 @@ export class PredefinedFunctions {
             'inputParams': null,
             'name': name,
             'useDynamicInputParams': { typeLimits: ['object'] },
-            'pseudoImplementation': (...args: any) => args,
+            'implementation': (...args: any) => args,
             'payload': undefined,
             'output': { 'param': 'dynamic' }
         } as IFunction;

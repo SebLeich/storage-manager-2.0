@@ -17,7 +17,7 @@ import customBPMNJSModule from '../extensions/bpmn-js';
 
 import { v4 as generateGuid } from 'uuid';
 
-import { Subject } from 'rxjs';
+import { Subject, firstValueFrom } from 'rxjs';
 
 import sebleichProcessBuilderExtension from '../globals/sebleich-process-builder-extension';
 import { IBpmnJS } from '../interfaces/i-bpmn-js.interface';
@@ -49,6 +49,15 @@ import shapeTypes from 'src/lib/bpmn-io/shape-types';
 import { ICanvasModule } from 'src/lib/bpmn-io/interfaces/canvas-module.interface';
 import { IDirectEditingModule } from 'src/lib/bpmn-io/interfaces/direct-editing-module.interface';
 import { IElement } from 'src/lib/bpmn-io/interfaces/element.interface';
+import { IPipeline } from 'src/lib/pipeline-store/interfaces/pipeline.interface';
+import { selectIFunction } from '../store/selectors/function.selector';
+import { IConnector } from 'src/lib/bpmn-io/interfaces/connector.interface';
+import { IPipelineAction } from 'src/lib/pipeline-store/interfaces/pipeline-action.interface';
+import { ConfirmationService } from 'src/lib/confirmation/services/confirmation.service';
+import { Router } from '@angular/router';
+import { addIPipeline } from 'src/lib/pipeline-store/store/actions/pipeline.actions';
+import { IPipelineDto } from 'src/lib/pipeline-store/interfaces/pipeline-dto.interface';
+import { addIPipelineAction, addIPipelineActions } from 'src/lib/pipeline-store/store/actions/pipeline-action.actions';
 
 @Injectable()
 export class BpmnJsService {
@@ -230,7 +239,7 @@ export class BpmnJsService {
 
   public static elementDeletionRequested$ = new Subject<IElement>();
 
-  constructor(@Inject(PROCESS_BUILDER_CONFIG_TOKEN) private _config: IProcessBuilderConfig, private _store: Store, private _snackBar: MatSnackBar) {
+  constructor(@Inject(PROCESS_BUILDER_CONFIG_TOKEN) private _config: IProcessBuilderConfig, private _store: Store, private _snackBar: MatSnackBar, private _confirmationService: ConfirmationService, private _router: Router) {
     this._setUp();
   }
 
@@ -249,6 +258,55 @@ export class BpmnJsService {
       this._store.dispatch(addIBpmnJSModel(recentlyUsedModel));
     }
     this._store.dispatch(setCurrentIBpmnJSModel(recentlyUsedModel.guid));
+  }
+
+  public async compile() {
+    const startEvent = BPMNJsRepository.getStartEvents(this.elementRegistryModule)[0];
+    let cursor: IElement | null = startEvent.outgoing[0].target, pipeline: IPipeline = { name: generateGuid() }, pipelineActions = [];
+
+    let anchestor: IPipelineAction | null = null, index = 0;
+    while (cursor) {
+      const activityIdentifier: number = BPMNJsRepository.getSLPBExtension(cursor.businessObject, 'ActivityExtension', (ext => ext.activityFunctionId));
+      const func = await selectSnapshot(this._store.select(selectIFunction(activityIdentifier)));
+      const executableCode = func?.customImplementation ? eval(func!.customImplementation.join('\n')!) : func?.implementation;
+      const identifier = generateGuid();
+
+      switch (cursor.type) {
+        case shapeTypes.Task:
+          if (anchestor) {
+            (anchestor as IPipelineAction).onSuccess = identifier;
+          }
+          anchestor = {
+            identifier: identifier,
+            sequenceNumber: index,
+            pipeline: pipeline.name,
+            name: func!.name,
+            executableCode: executableCode,
+            onSuccess: ''
+          };
+          pipelineActions.push(anchestor);
+
+          const successorPointer: IConnector = cursor.outgoing.find(outgoing => outgoing.type === shapeTypes.SequenceFlow) as IConnector;
+          cursor = successorPointer!.target;
+          break;
+
+        case shapeTypes.ExclusiveGateway:
+          debugger;
+
+        default:
+          cursor = null;
+          break;
+      }
+
+      index++;
+    }
+
+    this._store.dispatch(addIPipeline(pipeline));
+    this._store.dispatch(addIPipelineActions(pipelineActions));
+    const redirect = await this._confirmationService.requestConfirmation('Pipeline compiled', 'Your model compiled successfully! Do you want to run your pipeline?');
+    if (redirect) {
+      this._router.navigate(['/pipe-runner'], { queryParams: { pipeline: pipeline.name } });
+    }
   }
 
   public markAsUnchanged() {

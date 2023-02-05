@@ -51,6 +51,10 @@
             <mat-icon>save</mat-icon>
         </div>
 
+        <div class="control-footer-item accent" *ngIf="(bpmnJsService.containsChanges$|async)" @fadeIn (click)="bpmnJsService.compile()">
+            <mat-icon>play_arrow</mat-icon>
+        </div>
+
         <div class="control-footer-item accent" matTooltip="more options" [matMenuTriggerFor]="menu">
             <mat-icon>more_horiz</mat-icon>
         </div>

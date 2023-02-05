@@ -63,7 +63,7 @@ export const reducer = createReducer(
         normalizedName: func.normalizedName,
         output: func.output,
         customImplementation: func.customImplementation,
-        pseudoImplementation: func.pseudoImplementation,
+        implementation: func.implementation,
         requireCustomImplementation: func.requireCustomImplementation,
         requireDynamicInput: func.requireDynamicInput,
         useDynamicInputParams: func.useDynamicInputParams

@@ -190,8 +190,8 @@ export class TaskCreationComponent implements OnDestroy, OnInit {
       }
     } else if (typeof this.formGroup.controls.functionIdentifier.value === 'number') {
       const func = await firstValueFrom(this._store.select(selectIFunction(this.formGroup.controls.functionIdentifier.value)));
-      if (typeof func?.pseudoImplementation === 'function') {
-        const objectTypeDefinition = await func.pseudoImplementation();
+      if (typeof func?.implementation === 'function') {
+        const objectTypeDefinition = await func.implementation();
         if (Array.isArray(objectTypeDefinition)) this.formGroup.controls['outputParamValue'].setValue(objectTypeDefinition);
         else {
           const param = await selectSnapshot(this._store.select(selectIParamByNormalizedName(objectTypeDefinition.normalizedName)));

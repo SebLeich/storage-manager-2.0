@@ -61,6 +61,8 @@ import { upsertProvider } from './store/actions/injection-context.actions';
 import { InjectorInterfacesProvider } from './globals/injector-interfaces-provider';
 import { ConfirmationModule } from '../confirmation/confirmation.module';
 import { ConfirmationService } from '../confirmation/services/confirmation.service';
+import { PipeRunnerModule } from '../pipe-runner/pipe-runner.module';
+import { PipelineStoreModule } from '../pipeline-store/pipeline-store.module';
 
 
 @NgModule({
@@ -104,6 +106,7 @@ import { ConfirmationService } from '../confirmation/services/confirmation.servi
     MatTabsModule,
     MatSlideToggleModule,
     ReactiveFormsModule,
+    PipelineStoreModule,
 
     StoreModule.forFeature(fromIParamState.featureKey, fromIParamState.reducer),
     EffectsModule.forFeature([IParamEffects]),

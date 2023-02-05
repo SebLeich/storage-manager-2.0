@@ -1,11 +1,13 @@
 <div class="body" (click)="run()">
 
     <div class="pipeline-name">
-        {{ (pipeline$|async)?.name }}
+        {{ (pipeline$|async)?.name }} Actions: {{(actions$|async)?.length ?? 0}}
     </div>
 
-    <div *ngFor="let action of (actions$|async)" class="pipeline-name">
-        {{ action.name }}
+    <div *ngFor="let pipelineAction of (actions$|async)" class="pipeline-name">
+        
+        <app-pipeline-action-preview [pipelineAction]="pipelineAction!"></app-pipeline-action-preview>
+
     </div>
 
 </div>

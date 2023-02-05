@@ -1,6 +1,6 @@
 import { Inject, Injectable } from "@angular/core";
 import { ParamCodes } from "src/config/param-codes";
-import { getElementRegistryModule, getModelingModule, getTooltipModule } from "../bpmn-io/bpmn-modules";
+import { getElementRegistryModule, getModelingModule, getTooltipModule, IElementRegistryModule } from "../bpmn-io/bpmn-modules";
 import { IBusinessObject } from "../bpmn-io/interfaces/business-object.interface";
 import { IElement } from "../bpmn-io/interfaces/element.interface";
 import shapeTypes from "../bpmn-io/shape-types";
@@ -13,6 +13,7 @@ import { sebleichProcessBuilderExtension } from "../process-builder/globals/sebl
 import { ValidationError } from "../process-builder/globals/validation-error";
 import { ValidationWarning } from "../process-builder/globals/validation-warning";
 import { IExtensionElement } from "../bpmn-io/interfaces/extension-element.interface";
+import { SebleichProcessBuilderExtensionType } from "../process-builder/globals/sebleich-process-builder-extension.type";
 
 @Injectable()
 export class BPMNJsRepository {
@@ -102,7 +103,7 @@ export class BPMNJsRepository {
         return currentNode.outgoing.filter(x => x.type === shapeTypes.SequenceFlow).map(x => x.target);
     }
 
-    public static getSLPBExtension<T>(businessObject: IBusinessObject | undefined, type: 'ActivityExtension' | 'GatewayExtension' | 'DataObjectExtension', provider: (extensions: any) => T) {
+    public static getSLPBExtension<T>(businessObject: IBusinessObject | undefined, type: SebleichProcessBuilderExtensionType, provider: (extensions: any) => T) {
         if (!businessObject) {
             return undefined;
         }
@@ -112,7 +113,7 @@ export class BPMNJsRepository {
         return extension ? provider(extension) : undefined;
     }
 
-    public static sLPBExtensionSetted(businessObject: IBusinessObject | undefined, type: 'ActivityExtension' | 'GatewayExtension' | 'DataObjectExtension', condition: (extensions: any) => boolean) {
+    public static sLPBExtensionSetted(businessObject: IBusinessObject | undefined, type: SebleichProcessBuilderExtensionType, condition: (extensions: any) => boolean) {
         if (!businessObject) {
             return false;
         }
@@ -122,7 +123,7 @@ export class BPMNJsRepository {
         return result;
     }
 
-    public static updateBpmnElementSLPBExtension(bpmnJS: IBpmnJS, businessObject: IBusinessObject, type: 'ActivityExtension' | 'GatewayExtension' | 'DataObjectExtension', setter: (extension: any) => void) {
+    public static updateBpmnElementSLPBExtension(bpmnJS: IBpmnJS, businessObject: IBusinessObject, type: SebleichProcessBuilderExtensionType, setter: (extension: any) => void) {
         let extensionElements = businessObject.extensionElements;
         if (!extensionElements) {
             extensionElements = bpmnJS._moddle.create('bpmn:ExtensionElements');
@@ -155,9 +156,13 @@ export class BPMNJsRepository {
         let errors: { error: ValidationError, element?: IElement }[] = [], warnings: { warning: ValidationWarning, element?: IElement }[] = [];
         let elementRegistry = getElementRegistryModule(bpmnJS);
 
-        let startEvents = elementRegistry.filter(x => x.type === shapeTypes.StartEvent), endEvents = elementRegistry.filter(x => x.type === shapeTypes.EndEvent);
-        if (startEvents.length === 0) errors.push({ error: ValidationError.NoStartEvent });
-        else if (startEvents.length > 1) startEvents.forEach(x => errors.push({ error: ValidationError.MultipleStartEvents, element: x }));
+        let startEvents = this.getStartEvents(elementRegistry), endEvents = this.getEndEvents(elementRegistry);
+        if (startEvents.length === 0) {
+            errors.push({ error: ValidationError.NoStartEvent });
+        }
+        else if (startEvents.length > 1) {
+            startEvents.forEach(x => errors.push({ error: ValidationError.MultipleStartEvents, element: x }));
+        }
 
         let fullPath: IElement[] = [];
 
@@ -210,6 +215,14 @@ export class BPMNJsRepository {
         if (endEvents.length === 0) warnings.push({ warning: ValidationWarning.NoEndEvent });
 
         return { warnings: warnings, errors: errors };
+    }
+
+    public static getEndEvents(elementRegistry: IElementRegistryModule) {
+        return elementRegistry.filter(x => x.type === shapeTypes.EndEvent);
+    }
+
+    public static getStartEvents(elementRegistry: IElementRegistryModule) {
+        return elementRegistry.filter(x => x.type === shapeTypes.StartEvent);
     }
 
 }

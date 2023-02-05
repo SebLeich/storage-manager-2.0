@@ -9,6 +9,7 @@ import { ProcessBuilderComponentService } from './process-builder-component.serv
 import { upsertProcedure } from 'src/app/store/actions/i-pending-procedure.actions';
 import shapeTypes from 'src/lib/bpmn-io/shape-types';
 import { BPMNJsRepository } from 'src/lib/core/bpmn-js.repository';
+import { selectSnapshot } from '../../globals/select-snapshot';
 
 @Component({
   selector: 'app-process-builder',

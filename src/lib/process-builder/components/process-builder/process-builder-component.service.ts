@@ -86,6 +86,7 @@ export class ProcessBuilderComponentService {
     if (taskCreationData.entranceGatewayType) {
       const connector = taskCreationPayload.configureIncomingErrorGatewaySequenceFlow;
       if (!!connector) {
+        BPMNJsRepository.updateBpmnElementSLPBExtension(this._bpmnJsService.bpmnJs, connector.businessObject, 'SequenceFlowExtension', (ext) => ext.sequenceFlowType = 'success');
         this._applyConnectorDefaultLabels(connector, taskCreationData);
       }
     }
@@ -199,6 +200,7 @@ export class ProcessBuilderComponentService {
           (ext) => ext.gatewayType === 'error_gateway'
         )
       );
+
     let gatewayShape = outgoingErrorGatewaySequenceFlow?.target;
 
     if (resultingFunction.canFail && !gatewayShape) {
@@ -218,9 +220,10 @@ export class ProcessBuilderComponentService {
       BPMNJsRepository.updateBpmnElementSLPBExtension(this._bpmnJsService.bpmnJs, gatewayShape!.businessObject, 'GatewayExtension', (e: any) => e.gatewayType = 'error_gateway');
       this._bpmnJsService.modelingModule.updateLabel(gatewayShape, this._config.errorGatewayConfig.gatewayName);
 
-      // reconnect the former connected targets
-      for (let formerConnectedTarget of formerConnectedTargets) {
-        this._bpmnJsService.modelingModule.connect(gatewayShape, formerConnectedTarget);
+      // reconnect the former connected target as success action
+      if(formerConnectedTargets[0]){
+        const connector = this._bpmnJsService.modelingModule.connect(gatewayShape, formerConnectedTargets[0]);
+        BPMNJsRepository.updateBpmnElementSLPBExtension(this._bpmnJsService.bpmnJs, connector.businessObject, 'SequenceFlowExtension', (ext) => ext.sequenceFlowType = 'success');
       }
     } else if (!resultingFunction.canFail && gatewayShape) {
       this._bpmnJsService.modelingModule.removeElements([gatewayShape, ...gatewayShape.incoming, ...gatewayShape.outgoing]);
@@ -252,7 +255,7 @@ export class ProcessBuilderComponentService {
       identifier: functionIdentifier,
       normalizedName: taskCreationData.normalizedName ?? ProcessBuilderRepository.normalizeName(taskCreationData.name ?? undefined),
       output: methodEvaluation.status === MethodEvaluationStatus.ReturnValueFound || referencedFunction.output?.param === 'dynamic' ? { param: outputParamId } : null,
-      pseudoImplementation: referencedFunction.pseudoImplementation,
+      implementation: referencedFunction.implementation,
       inputParams: inputParams,
       requireCustomImplementation: false,
       requireDynamicInput: false,

@@ -13,7 +13,7 @@ export default [
         'normalizedName': 'provideExemplarySolution',
         'description': 'method provides an exemplary solution',
         'output': { 'param': ParamCodes.ExemplarySolution },
-        'pseudoImplementation': () => {
+        'implementation': () => {
             return new Promise((resolve) => resolve(exampleSolution.default));
         },
         'canFail': false,
@@ -29,7 +29,7 @@ export default [
         'normalizedName': 'downloadJSON',
         'description': 'method downloads object as json',
         'output': null,
-        'pseudoImplementation': (arg: object) => {
+        'implementation': (arg: object) => {
             let sJson = JSON.stringify(arg), element = document.createElement('a');
             element.setAttribute('href', "data:text/json;charset=UTF-8," + encodeURIComponent(sJson));
             element.setAttribute('download', "storage-manager-download.json");
@@ -50,7 +50,7 @@ export default [
         'output': {
             'param': 'dynamic'
         },
-        'pseudoImplementation': () => {
+        'implementation': () => {
             let promise = new Promise((resolve, reject) => {
                 let input: HTMLInputElement = document.createElement('input');
                 input.setAttribute('type', 'file');
@@ -104,5 +104,6 @@ export default [
         requireCustomImplementation: false,
         requireDataMapping: true,
         finalizesFlow: true
-    } as IFunction
+    } as IFunction,
+    new PredefinedFunctions().delayMethod(5),
 ];
