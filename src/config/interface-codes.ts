@@ -1,4 +1,5 @@
 export enum InterfaceCodes {
+    SolutionWrapper,
     Solution,
     Good,
     Container,

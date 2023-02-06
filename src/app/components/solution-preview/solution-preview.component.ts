@@ -6,7 +6,7 @@ import { SolutionValidationService } from 'src/app/services/solution-validation.
 import { IGroup } from 'src/lib/storage-manager-store/interfaces/group.interface';
 import { selectCurrentSolution, selectCurrentSolutionGoods, selectHasMultipleSolutions, selectSolutions } from 'src/lib/storage-manager-store/store/selectors/i-solution.selectors';
 import { downloadCurrentSolution } from 'src/lib/storage-manager-store/store/actions/solution.actions';
-import { selectGroups } from 'src/lib/storage-manager-store/store/selectors/i-group.selectors';
+import { selectGroups } from 'src/lib/storage-manager-store/store/selectors/group.selectors';
 import { updateGroup } from 'src/lib/storage-manager-store/store/actions/group.actions';
 import { setNextSolution } from 'src/lib/storage-manager-store/store/actions/solution.actions';
 

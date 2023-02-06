@@ -9,7 +9,7 @@ import { SolutionPreviewStatus } from 'src/app/enumerations/solution-preview-sta
 import { Store } from '@ngrx/store';
 import { selectSolutionById } from '../selectors/i-solution.selectors';
 import { ISolutionPreview } from 'src/lib/storage-manager-store/interfaces/solution-preview.interface';
-import { selectGroups } from '../selectors/i-group.selectors';
+import { selectGroups } from '../selectors/group.selectors';
 import getContainerPositionSharedMethods from 'src/app/methods/get-container-position.shared-methods';
 import { VisualizationService } from 'src/lib/visualization/services/visualization.service';
 

@@ -1,41 +1,41 @@
-<div class="body">
-
-    <div class="header">
-        <div class="pipeline-name">
-            <ng-container *ngIf="(pipeline$|async); else noPipeline">
-                <span class="prefix">Run pipeline</span> {{ (pipeline$|async)?.name }}
-            </ng-container>
-            <ng-template #noPipeline>
-                No pipeline to run
-            </ng-template>
-        </div>
-        <div class="status">
-            {{status$|async}}
-        </div>
-    </div>
-
-    <div class="control-wrapper">
-        <button mat-icon-button [disabled]="!(pipeline$|async)" (click)="designPipeline()" matTooltip="design pipeline"
-            matTooltipPosition="right">
-            <mat-icon>hub</mat-icon>
-        </button>
-        <button mat-icon-button [disabled]="!(pipeline$|async)" (click)="run()" matTooltip="run pipeline"
-            matTooltipPosition="right">
-            <mat-icon>play_arrow</mat-icon>
-        </button>
-        <button mat-icon-button [disabled]="true" matTooltip="pause pipeline" matTooltipPosition="right">
-            <mat-icon>pause</mat-icon>
-        </button>
-        <button mat-icon-button [disabled]="true" matTooltip="stop pipeline" matTooltipPosition="right">
-            <mat-icon>stop</mat-icon>
-        </button>
-        <button mat-icon-button [disabled]="true" matTooltip="clear all data" matTooltipPosition="right">
-            <mat-icon>refresh</mat-icon>
-        </button>
-    </div>
+<div class="body" @show>
 
     <div class="content">
         <div class="actions">
+            <div class="header">
+                <div class="pipeline-name">
+                    <ng-container *ngIf="(pipeline$|async); else noPipeline">
+                        <span class="prefix">Run pipeline</span> {{ (pipeline$|async)?.name }}
+                    </ng-container>
+                    <ng-template #noPipeline>
+                        No pipeline to run
+                    </ng-template>
+                </div>
+            </div>
+
+            <div class="control-wrapper">
+                <button mat-icon-button [disabled]="!(pipeline$|async)" (click)="designPipeline()"
+                    matTooltip="design pipeline" matTooltipPosition="right">
+                    <mat-icon>hub</mat-icon>
+                </button>
+                <button mat-icon-button [disabled]="!(pipeline$|async)" (click)="run()" matTooltip="run pipeline"
+                    matTooltipPosition="right">
+                    <mat-icon>play_arrow</mat-icon>
+                </button>
+                <button mat-icon-button [disabled]="true" matTooltip="pause pipeline" matTooltipPosition="right">
+                    <mat-icon>pause</mat-icon>
+                </button>
+                <button mat-icon-button [disabled]="true" matTooltip="stop pipeline" matTooltipPosition="right">
+                    <mat-icon>stop</mat-icon>
+                </button>
+                <button mat-icon-button [disabled]="true" matTooltip="clear all data" matTooltipPosition="right">
+                    <mat-icon>refresh</mat-icon>
+                </button>
+                <button mat-icon-button [disabled]="!(solution$|async)" (click)="openVisualization()"
+                    matTooltip="open visualization" matTooltipPosition="right">
+                    <mat-icon>view_in_ar</mat-icon>
+                </button>
+            </div>
             <div *ngFor="let pipelineAction of (actions$|async)" class="action-wrapper">
                 <app-pipeline-action-preview [pipelineAction]="pipelineAction!"></app-pipeline-action-preview>
             </div>
@@ -51,10 +51,11 @@
             </mat-tab>
             <mat-tab label="visualization" #visualizationTab [disabled]="!scene">
                 <div class="visualization">
-                    <app-scene-visualization *ngIf="visualizationTabRendered$|async" @show [scene]="scene"></app-scene-visualization>
+                    <app-scene-visualization *ngIf="visualizationTabRendered$|async" @show
+                        [scene]="scene"></app-scene-visualization>
                 </div>
             </mat-tab>
-          </mat-tab-group>
+        </mat-tab-group>
     </div>
 
 </div>

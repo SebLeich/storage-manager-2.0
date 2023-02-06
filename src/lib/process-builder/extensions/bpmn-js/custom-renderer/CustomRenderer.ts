@@ -13,6 +13,7 @@ import { BPMNJsRepository } from 'src/lib/core/bpmn-js.repository';
 // @ts-ignore
 import { isAny } from 'bpmn-js/lib/features/modeling/util/ModelingUtil';
 import shapeTypes from 'src/lib/bpmn-io/shape-types';
+import { IElement } from 'src/lib/bpmn-io/interfaces/element.interface';
 
 const HIGH_PRIORITY = 1500;
 
@@ -33,18 +34,17 @@ export default class CustomRenderer extends BaseRenderer {
         return isAny(element, [shapeTypes.DataObjectReference]) && !element.labelTarget;
     }
 
-    drawShape(parentNode: any, element: any) {
-
-        const shape = this.bpmnRenderer.drawShape(parentNode, element);
-
-        let matchesProcessOutputInterface = BPMNJsRepository.getSLPBExtension(element.businessObject, 'DataObjectExtension', (ext) => ext.matchesProcessOutputInterface), isProcessOutput = BPMNJsRepository.getSLPBExtension(element.businessObject, 'DataObjectExtension', (ext) => ext.isProcessOutput);
+    drawShape(parentNode: any, element: IElement) {
+        const shape = this.bpmnRenderer.drawShape(parentNode, element),
+            matchesProcessOutputInterface = BPMNJsRepository.getSLPBExtension(element.businessObject, 'DataObjectExtension', (ext) => ext.matchesProcessOutputInterface),
+            isProcessOutput = BPMNJsRepository.getSLPBExtension(element.businessObject, 'DataObjectExtension', (ext) => ext.isProcessOutput);
 
         if (matchesProcessOutputInterface) {
             let transform = 'translate(-10, 0)';
             const rect = CustomRenderer.drawRect(parentNode, 20, 20, CustomRenderer.TASK_BORDER_RADIUS, '#e8e8e8');
             svgAttr(rect, { transform: transform });
             if (isProcessOutput) {
-                const checkmark = CustomRenderer.drawCheckmark(parentNode, '#4d7a25');
+                const checkmark = CustomRenderer.drawCheckmark(parentNode, 20, 20);
                 svgAttr(checkmark, { transform: transform });
             }
         }
@@ -52,40 +52,29 @@ export default class CustomRenderer extends BaseRenderer {
         return shape;
     }
 
-    static TASK_BORDER_RADIUS = 2;
-    static drawRect(parentNode: any, width: any, height: any, borderRadius: any, strokeColor: any) {
-
+    static TASK_BORDER_RADIUS = 10;
+    static drawRect(parentNode: any, width: number, height: number, borderRadius: any, strokeColor: string = '#000', fillColor: string = '#fff') {
         const rect = svgCreate('rect');
-
         svgAttr(rect, {
             width: width,
             height: height,
             rx: borderRadius,
             ry: borderRadius,
-            stroke: strokeColor || '#000',
+            stroke: strokeColor,
             strokeWidth: 2,
-            fill: '#fff',
-
+            fill: fillColor,
         });
-
         svgAppend(parentNode, rect);
-
         return rect;
     }
-    static drawCheckmark(parentNode: any, strokeColor: any) {
-
-        const checkmark = svgCreate('path');
-
-        svgAttr(checkmark, {
-            stroke: strokeColor || '#000',
-            strokeWidth: 3,
-            fill: '#fff',
-            d: 'M 4 9 l 4 4 l 8 -8'
+    static drawCheckmark(parentNode: any, width: number, height: number) {
+        const checkMark = svgCreate('path');
+        svgAttr(checkMark, {
+            d: `M${width / 4} ${height / 2}, L${width / 2} ${height - 4}, L${width} 4`,
+            style: 'stroke: #7cbe4f;stroke-width:3;fill:none;'
         });
-
-        svgAppend(parentNode, checkmark);
-
-        return checkmark;
+        svgAppend(parentNode, checkMark);
+        return checkMark;
     }
     static prependTo(newNode: any, parentNode: any, siblingNode: any) {
         parentNode.insertBefore(newNode, siblingNode || parentNode.firstChild);

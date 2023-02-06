@@ -21,7 +21,7 @@ import { Subject, firstValueFrom } from 'rxjs';
 
 import sebleichProcessBuilderExtension from '../globals/sebleich-process-builder-extension';
 import { IBpmnJS } from '../interfaces/i-bpmn-js.interface';
-import { getCanvasModule, getDirectEditingModule, getElementRegistryModule, getEventBusModule, getModelingModule, getTooltipModule, getZoomScrollModule, IElementRegistryModule, ITooltipModule } from 'src/lib/bpmn-io/bpmn-modules';
+import { getCanvasModule, getDirectEditingModule, getElementRegistryModule, getEventBusModule, getGraphicsFactory, getModelingModule, getTooltipModule, getZoomScrollModule, IElementRegistryModule, ITooltipModule } from 'src/lib/bpmn-io/bpmn-modules';
 import { BehaviorSubject, buffer, combineLatest, debounceTime, delay, filter, from, map, merge, Observable, scan, shareReplay, startWith, switchMap, throttleTime, timer } from 'rxjs';
 import { IConnectionCreatePostExecutedEvent } from 'src/lib/bpmn-io/interfaces/connection-create-post-executed-event.interface';
 import { IModelingModule } from 'src/lib/bpmn-io/interfaces/modeling-module.interface';
@@ -58,6 +58,7 @@ import { Router } from '@angular/router';
 import { addIPipeline, removeIPipeline } from 'src/lib/pipeline-store/store/actions/pipeline.actions';
 import { addIPipelineActions } from 'src/lib/pipeline-store/store/actions/pipeline-action.actions';
 import { selectPipelineByBpmnJsModel } from 'src/lib/pipeline-store/store/selectors/pipeline.selectors';
+import { IShapeCreateEvent } from 'src/lib/bpmn-io/interfaces/shape-create-event.interface';
 
 @Injectable()
 export class BpmnJsService {
@@ -102,6 +103,10 @@ export class BpmnJsService {
   }));
 
   public shapeAddedEventFired$ = new Observable<IShapeAddedEvent>((subscriber) => this.eventBusModule.on('shape.added', (evt) => {
+    subscriber.next(evt);
+  }));
+
+  public shapeCreatedPostExecutedEventFired$ = new Observable<IShapeCreateEvent>((subscriber) => this.eventBusModule.on('commandStack.shape.create.postExecuted', (evt) => {
     subscriber.next(evt);
   }));
 
@@ -238,6 +243,7 @@ export class BpmnJsService {
   public isSaving$ = this._isSaving.asObservable();
 
   public static elementDeletionRequested$ = new Subject<IElement>();
+  public static elementEndEventCreationRequested = new Subject<IElement>();
 
   constructor(@Inject(PROCESS_BUILDER_CONFIG_TOKEN) private _config: IProcessBuilderConfig, private _store: Store, private _snackBar: MatSnackBar, private _confirmationService: ConfirmationService, private _router: Router) {
     this._setUp();
@@ -267,7 +273,9 @@ export class BpmnJsService {
     }
 
     const startEvent = BPMNJsRepository.getStartEvents(this.elementRegistryModule)[0];
-    let cursor: IElement | null = startEvent.outgoing[0].target, pipeline: IPipeline = { bpmnJsModelReference: bpmnJsModelIdentifier, name: name }, pipelineActions = [];
+    let cursor: IElement | null = startEvent.outgoing[0].target,
+      pipeline: IPipeline = { bpmnJsModelReference: bpmnJsModelIdentifier, name: name, solutionReference: null },
+      pipelineActions = [];
 
     let anchestor: IPipelineAction | null = null, index = 0;
     while (cursor) {
@@ -281,13 +289,20 @@ export class BpmnJsService {
           if (anchestor) {
             (anchestor as IPipelineAction).onSuccess = identifier;
           }
+          const outgoingDataObjectReference = cursor.outgoing.find(connector => connector.type === shapeTypes.DataOutputAssociation)?.target;
+          let isProvidingSolutionWrapper = false;
+          if(outgoingDataObjectReference){
+            isProvidingSolutionWrapper = BPMNJsRepository.getSLPBExtension(outgoingDataObjectReference.businessObject, 'DataObjectExtension', (ext) => ext.isProcessOutput);
+          }
+
           anchestor = {
             identifier: identifier,
             sequenceNumber: index,
             pipeline: pipeline.name,
             name: func!.name,
             executableCode: executableCode,
-            onSuccess: ''
+            onSuccess: '',
+            isProvidingSolutionWrapper: isProvidingSolutionWrapper
           };
           pipelineActions.push(anchestor);
 
@@ -392,6 +407,10 @@ export class BpmnJsService {
 
   public get eventBusModule() {
     return getEventBusModule(this.bpmnJs);
+  }
+
+  public get graphicsFactory(){
+    return getGraphicsFactory(this.bpmnJs);
   }
 
   public get modelingModule(): IModelingModule {

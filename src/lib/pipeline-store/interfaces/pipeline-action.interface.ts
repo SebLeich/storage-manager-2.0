@@ -6,4 +6,5 @@ export interface IPipelineAction {
     sequenceNumber: number;
     onSuccess: string;
     onError?: string;
+    isProvidingSolutionWrapper: boolean;
 }

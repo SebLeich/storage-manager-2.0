@@ -1,7 +1,7 @@
 import { Component, Inject, OnDestroy, OnInit, ViewChild, ViewContainerRef } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { Store } from '@ngrx/store';
-import { BehaviorSubject, combineLatest, NEVER, never, Observable, Subscription } from 'rxjs';
+import { BehaviorSubject, combineLatest, NEVER, Observable, Subscription } from 'rxjs';
 import { ITaskCreationConfig } from 'src/lib/process-builder/interfaces/i-task-creation-config.interface';
 import { TaskCreationStep } from 'src/lib/process-builder/globals/task-creation-step';
 import { ITaskCreationComponentInput } from '../../../interfaces/i-task-creation-component-input.interface';
@@ -14,7 +14,7 @@ import { CodemirrorRepository } from 'src/lib/core/codemirror.repository';
 import { MethodEvaluationStatus } from 'src/lib/process-builder/globals/method-evaluation-status';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { IProcessBuilderConfig, PROCESS_BUILDER_CONFIG_TOKEN } from 'src/lib/process-builder/globals/i-process-builder-config';
-import { debounceTime, distinctUntilChanged, filter, map, shareReplay, startWith, switchMap } from 'rxjs/operators';
+import { debounceTime, distinctUntilChanged, filter, map, startWith, switchMap } from 'rxjs/operators';
 import { selectIInterface } from 'src/lib/process-builder/store/selectors/interface.selectors';
 import { injectProviderState, injectValues } from 'src/lib/process-builder/store/selectors/injection-context.selectors';
 import { selectSnapshot } from 'src/lib/process-builder/globals/select-snapshot';
@@ -234,7 +234,6 @@ export class TaskCreationComponent implements OnDestroy, OnInit {
   }
 
   private renderStep(step: ITaskCreationConfig) {
-    console.log(step);
     this.dynamicInner.clear();
     const stepConfiguration = STEP_REGISTRY.get(step.taskCreationStep);
     if (!stepConfiguration) {

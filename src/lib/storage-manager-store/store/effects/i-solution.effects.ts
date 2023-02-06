@@ -9,7 +9,7 @@ import { CsvService } from 'src/app/services/csv.service';
 import { setExemplaryInputData, updateCalculationAttributes } from '../actions/calculation-attribute.actions';
 import { ISolutionWrapper } from 'src/lib/storage-manager-store/interfaces/solution-wrapper.interface';
 import { combineLatest } from 'rxjs';
-import { selectGroups } from '../selectors/i-group.selectors';
+import { selectGroups } from '../selectors/group.selectors';
 import { selectOrders } from '../selectors/i-order.selectors';
 import { selectProducts } from '../selectors/i-product.selectors';
 

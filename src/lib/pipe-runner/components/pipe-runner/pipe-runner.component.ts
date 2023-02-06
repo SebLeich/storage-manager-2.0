@@ -1,6 +1,6 @@
 import { Component, EnvironmentInjector, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { Store } from '@ngrx/store';
-import { switchMap, map, scan, Subscription, distinctUntilChanged, NEVER, delay, startWith, BehaviorSubject } from 'rxjs';
+import { switchMap, debounceTime, filter, map, scan, Subscription, distinctUntilChanged, NEVER, delay, startWith, BehaviorSubject, firstValueFrom } from 'rxjs';
 import { selectSnapshot } from 'src/lib/process-builder/globals/select-snapshot';
 import { ActivatedRoute, Router } from '@angular/router';
 import { selectPipelineByName } from 'src/lib/pipeline-store/store/selectors/pipeline.selectors';
@@ -15,13 +15,19 @@ import { MatTabGroup } from '@angular/material/tabs';
 import { ISolutionWrapper } from 'src/lib/storage-manager-store/interfaces/solution-wrapper.interface';
 import { addGroups } from 'src/lib/storage-manager-store/store/actions/group.actions';
 import { showAnimation } from 'src/lib/shared/animations/show';
+import { addSolution } from 'src/lib/storage-manager-store/store/actions/solution.actions';
+import { setIPipelineSolutionReference } from 'src/lib/pipeline-store/store/actions/pipeline.actions';
+import { selectSolutionById } from 'src/lib/storage-manager-store/store/selectors/i-solution.selectors';
+import { ISolution } from 'src/lib/storage-manager-store/interfaces/solution.interface';
+import { fadeInAnimation } from 'src/lib/shared/animations/fade-in.animation';
+import { highlightSolutionNavItem } from 'src/app/store/actions/application.actions';
 
 @Component({
   selector: 'app-pipe-runner',
   templateUrl: './pipe-runner.component.html',
   styleUrls: ['./pipe-runner.component.scss'],
   providers: [VisualizationService],
-  animations: [showAnimation]
+  animations: [fadeInAnimation, showAnimation]
 })
 export class PipeRunnerComponent implements OnDestroy, OnInit {
 
@@ -36,6 +42,14 @@ export class PipeRunnerComponent implements OnDestroy, OnInit {
   }, []));
 
   public pipeline$ = this._route.queryParams.pipe(switchMap(queryParams => this._store.select(selectPipelineByName(queryParams.pipeline ?? 'myPipe'))));
+  public pipelineName$ = this.pipeline$.pipe(map(pipeline => pipeline?.name));
+  public solution$ = this.pipeline$.pipe(
+    map(pipeline => {
+      return pipeline?.solutionReference;
+    }),
+    filter(solutionReference => !!solutionReference),
+    switchMap(solutionReference => this._store.select(selectSolutionById(solutionReference ?? null)))
+  );
   public actions$ = this.pipeline$.pipe(
     switchMap(pipeline => {
       if (!pipeline) {
@@ -61,7 +75,6 @@ export class PipeRunnerComponent implements OnDestroy, OnInit {
     }),
     distinctUntilChanged((prev, curr) => prev === curr)
   );
-  public solution: ISolutionWrapper | null = null;
 
   public scene = new ThreeJS.Scene();
   public meshRegistry = [];
@@ -91,18 +104,25 @@ export class PipeRunnerComponent implements OnDestroy, OnInit {
         distinctUntilChanged()
       ).subscribe(value => this._visualizationTabRendered$$.next(value))
     );
+    this._subscriptions.add(
+      this.solution$.pipe(debounceTime(500)).subscribe(async solution => await this._updateScene(solution))
+    );
   }
+
+  public openVisualization = () => this._router.navigate(['/visualizer']);
 
   public async run() {
     const actions = await selectSnapshot(this.actions$);
-    let index = 0;
-    let result: ISolutionWrapper;
+    let solutionWrapper: ISolutionWrapper;
     for (let currentAction of actions) {
       this._store.dispatch(updateIPipelineActionStatus(currentAction!.identifier, 'RUNNING'));
       try {
-        this._environmentInjector.runInContext(async () => {
-          result = await currentAction!.executableCode();
-          const representation = typeof result! === 'object' ? JSON.stringify(result) : result!;
+        await this._environmentInjector.runInContext(async () => {
+          const result = await currentAction!.executableCode();
+          if(currentAction!.isProvidingSolutionWrapper){
+            solutionWrapper = result;
+          }
+          const representation = typeof solutionWrapper! === 'object' ? JSON.stringify(solutionWrapper) : solutionWrapper!;
           this._consoleOutputSections$$.next({
             message: `${moment().format('HH:mm:ss')}: ${representation}`,
             class: 'default'
@@ -116,17 +136,22 @@ export class PipeRunnerComponent implements OnDestroy, OnInit {
         });
         this._store.dispatch(updateIPipelineActionStatus(currentAction!.identifier, 'FAILED'));
       }
-
-      index++;
     }
-    this._store.dispatch(addGroups({ groups: result!.groups }));
-    this.solution = result!;
-    await this._updateScene();
-    this.tabGroup.selectedIndex = 1;
+
+    const pipeName = await firstValueFrom(this.pipelineName$);
+
+    this._store.dispatch(addGroups({ groups: solutionWrapper!.groups }));
+    this._store.dispatch(addSolution({ solution: solutionWrapper!.solution }));
+    this._store.dispatch(setIPipelineSolutionReference(pipeName!, solutionWrapper!.solution.id));
+    this._store.dispatch(highlightSolutionNavItem());
   }
 
-  private async _updateScene() {
-    this._visualizationService.configureSolutionScene(this.solution!.solution, this.scene, '#ffffff');
+  private async _updateScene(solution: ISolution | undefined | null) {
+    if (!solution) {
+      return;
+    }
+    this._visualizationService.configureSolutionScene(solution, this.scene, '#ffffff');
+    this.tabGroup.selectedIndex = 1;
   }
 
 }

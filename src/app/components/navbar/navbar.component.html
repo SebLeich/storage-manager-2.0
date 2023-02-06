@@ -38,7 +38,10 @@
    </div>
 
    <div id="visualization-option-wrapper" class="option-wrapper" [class.disabled]="(solutionCount$|async) === 0">
-      <div class="option" routerLink="visualizer" [class.active]="router.url === '/visualizer'">
+      <div class="option" routerLink="visualizer" [ngClass]="{
+         'active': router.url === '/visualizer',
+         'highlighted': solutionNavItemHighlighted$|async
+      }">
 
          <mat-icon class="icon">view_in_ar</mat-icon>
          <div class="text">visualization</div>

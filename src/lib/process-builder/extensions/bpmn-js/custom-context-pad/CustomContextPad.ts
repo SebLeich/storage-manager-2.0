@@ -22,16 +22,23 @@ export default class CustomContextPad {
     const { autoPlace, create, elementFactory, translate } = this;
     return function (entries: any) {
       delete entries["delete"];
+      delete entries["append.end-event"];
       return {
         ...entries,
-        delete: {
+        "append.end-event": {
+          group: "model",
+          className: "bpmn-icon-end-event-none",
+          title: translate("Append EndEvent"),
+          action: () => BpmnJsService.elementEndEventCreationRequested.next(element),
+        },
+        "delete": {
           group: "edit",
           className: "bpmn-icon-trash",
           title: translate("Remove"),
           action: {
             click: () => BpmnJsService.elementDeletionRequested$.next(element),
           },
-        },
+        }
       };
     };
   }

@@ -19,7 +19,7 @@ import { updateCalculationAttributes } from '../actions/calculation-attribute.ac
 import exemplarySolution from 'src/assets/exemplary-solution.json';
 import { setExemplarySolution } from '../actions/solution.actions';
 
-export const productFeatureKey = 'product';
+export const featureKey = 'product';
 
 export interface State extends EntityState<IProduct> {
   selectedProductId: string | null;

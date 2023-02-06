@@ -38,6 +38,10 @@
   border-left: 3px solid transparent;
   box-sizing: border-box;
   padding-right: 5px;
+
+  &.highlighted {
+    animation: blinking 1s infinite;
+  }
 }
 
 .option.active {
@@ -120,5 +124,11 @@
 
   .version {
     display: none;
+  }
+}
+
+@keyframes blinking {
+  50% {
+    background-color: rgba(255, 217, 0, 0.638);
   }
 }

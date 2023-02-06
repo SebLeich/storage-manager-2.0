@@ -6,10 +6,12 @@ import { IZoomScrollModule } from "./interfaces/zoom-scroll-module.interface";
 import { ICanvasModule } from "./interfaces/canvas-module.interface";
 import { IEventBusModule } from "./interfaces/event-bus-module.interface";
 import { IDirectEditingModule } from "./interfaces/direct-editing-module.interface";
+import { IGraphicsFactory } from "./interfaces/graphics-factory.interface";
 
 export const getCanvasModule = (bpmnJS: IBpmnJS) => bpmnJS.get(bpmnJsModules.Canvas) as ICanvasModule;
 export const getDirectEditingModule = (bpmnJS: IBpmnJS) => bpmnJS.get(bpmnJsModules.DirectEditing) as IDirectEditingModule;
 export const getModelingModule = (bpmnJS: IBpmnJS) => bpmnJS.get(bpmnJsModules.Modeling) as IModelingModule;
+export const getGraphicsFactory = (bpmnJS: IBpmnJS) => bpmnJS.get(bpmnJsModules.GraphicsFactory) as IGraphicsFactory;
 export const getElementRegistryModule = (bpmnJS: IBpmnJS) => bpmnJS.get(bpmnJsModules.ElementRegistry) as IElementRegistryModule;
 export const getEventBusModule = (bpmnJS: IBpmnJS) => bpmnJS.get(bpmnJsModules.EventBus) as IEventBusModule;
 export const getTooltipModule = (bpmnJS: IBpmnJS) => bpmnJS.get(bpmnJsModules.Tooltip) as ITooltipModule;

@@ -11,7 +11,7 @@ import { DebugElement } from '@angular/core';
 import { selectSnapshot } from 'src/lib/process-builder/globals/select-snapshot';
 import { isEqual } from 'lodash';
 import { MatSelect } from '@angular/material/select';
-import { selectGroups } from 'src/lib/storage-manager-store/store/selectors/i-group.selectors';
+import { selectGroups } from 'src/lib/storage-manager-store/store/selectors/group.selectors';
 import { addGroups } from 'src/lib/storage-manager-store/store/actions/group.actions';
 
 describe('SelectGroupComponent', () => {

@@ -5,7 +5,7 @@ import defaultImportsConstant from '../../default-imports.constant';
 import { selectSnapshot } from "../../../lib/process-builder/globals/select-snapshot";
 
 import { isEqual } from 'lodash';
-import { State } from '../reducers/i-solution-preview.reducers';
+import { State } from '../reducers/solution-preview.reducers';
 import { ISolutionPreview } from 'src/lib/storage-manager-store/interfaces/solution-preview.interface';
 import { SolutionPreviewDataGenerator } from './test/solution-preview.data-generator';
 import { selectSolutionPreview } from './i-solution-preview.selectors';

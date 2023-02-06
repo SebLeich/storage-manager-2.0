@@ -10,7 +10,7 @@ import { Store } from '@ngrx/store';
 import { selectSnapshot } from 'src/lib/process-builder/globals/select-snapshot';
 import { IVisualizerContextService, VISUALIZER_CONTEXT } from 'src/app/interfaces/i-visualizer-context.service';
 import { selectCurrentSolutionGoods } from 'src/lib/storage-manager-store/store/selectors/i-solution.selectors';
-import { selectGroups } from 'src/lib/storage-manager-store/store/selectors/i-group.selectors';
+import { selectGroups } from 'src/lib/storage-manager-store/store/selectors/group.selectors';
 
 @Component({
   selector: 'app-scene-visualization',

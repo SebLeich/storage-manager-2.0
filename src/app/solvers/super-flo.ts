@@ -14,7 +14,7 @@ import { IStep } from '../interfaces/i-step.interface';
 import { IGood } from '../../lib/storage-manager-store/interfaces/good.interface';
 import { Algorithm } from '../globals';
 import { selectCalculationAttributesValid, selectContainerHeight, selectContainerWidth } from 'src/lib/storage-manager-store/store/selectors/i-calculation-attribute.selectors';
-import { selectGroups } from 'src/lib/storage-manager-store/store/selectors/i-group.selectors';
+import { selectGroups } from 'src/lib/storage-manager-store/store/selectors/group.selectors';
 import { selectOrders } from 'src/lib/storage-manager-store/store/selectors/i-order.selectors';
 
 export class SuperFloSolver extends Solver implements ISolver {

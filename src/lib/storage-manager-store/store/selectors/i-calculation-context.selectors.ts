@@ -8,7 +8,7 @@ import * as fromIProducts from '../reducers/product.reducers';
 export const calculationAttributesState = (state: any) => state[fromICalculationAttributes.calculationAttributesFeatureKey] as fromICalculationAttributes.State;
 export const groupsState = (state: any) => state[fromIGroups.groupFeatureKey] as fromIGroups.State;
 export const ordersState = (state: any) => state[fromIOrders.orderFeatureKey] as fromIOrders.State;
-export const productsState = (state: any) => state[fromIProducts.productFeatureKey] as fromIProducts.State;
+export const productsState = (state: any) => state[fromIProducts.featureKey] as fromIProducts.State;
 
 export const selectCalculationContextValid = createSelector(
     calculationAttributesState,

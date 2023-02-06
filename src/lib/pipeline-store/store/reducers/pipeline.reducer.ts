@@ -1,6 +1,6 @@
 import { createEntityAdapter, EntityAdapter, EntityState } from "@ngrx/entity";
 import { createReducer, on } from "@ngrx/store";
-import { addIPipeline, removeIPipeline } from "../actions/pipeline.actions";
+import { addIPipeline, removeIPipeline, setIPipelineSolutionReference } from "../actions/pipeline.actions";
 import exemplarySolution from 'src/assets/exemplary-solution.json';
 import { timer } from 'rxjs';
 import { selectSnapshot } from "src/lib/process-builder/globals/select-snapshot";
@@ -48,5 +48,13 @@ export const reducer = createReducer(
             state
         );
     }),
-    on(removeIPipeline, (state, { pipeline }) => adapter.removeOne(pipeline.bpmnJsModelReference, state))
+    on(removeIPipeline, (state, { pipeline }) => adapter.removeOne(pipeline.bpmnJsModelReference, state)),
+    on(setIPipelineSolutionReference, (state, { pipelineName, solutionIdentifier }) => {
+        return adapter.updateOne({
+            id: pipelineName,
+            changes: {
+                solutionReference: solutionIdentifier
+            }
+        }, state);
+    })
 )

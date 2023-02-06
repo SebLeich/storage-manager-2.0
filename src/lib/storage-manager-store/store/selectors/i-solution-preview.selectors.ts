@@ -1,5 +1,5 @@
 import { createSelector } from "@ngrx/store";
-import { solutionPreviewFeatureKey, State } from "../reducers/i-solution-preview.reducers";
+import { solutionPreviewFeatureKey, State } from "../reducers/solution-preview.reducers";
 
 export const solutionsState = (state: any) => state[solutionPreviewFeatureKey] as State;
 

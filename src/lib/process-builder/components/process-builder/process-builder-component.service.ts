@@ -91,13 +91,11 @@ export class ProcessBuilderComponentService {
       }
     }
 
-    let resultingFunction = referencedFunction;
     const nextParamId = await selectSnapshot(this._store.select(paramSelectors.selectNextId()));
     const methodEvaluation = CodemirrorRepository.evaluateCustomMethod(undefined, taskCreationData.implementation ?? defaultImplementation);
-    const outputParamId = typeof referencedFunction.output?.param === 'number' ? referencedFunction.output?.param : nextParamId;
 
     if (referencedFunction.requireCustomImplementation || referencedFunction.customImplementation || taskCreationData.implementation) {
-      referencedFunction = await this._applyFunctionConfiguration(taskCreationData, referencedFunction, methodEvaluation, outputParamId) as IFunction;
+      referencedFunction = await this._applyFunctionConfiguration(taskCreationData, referencedFunction, methodEvaluation, typeof referencedFunction.output?.param === 'number' ? referencedFunction.output?.param : nextParamId) as IFunction;
     }
 
     const resultingEndEvent = taskCreationPayload.configureActivity?.outgoing?.find(outgoing => outgoing.target.type === 'bpmn:EndEvent')?.target;
@@ -111,12 +109,14 @@ export class ProcessBuilderComponentService {
       this._updateBpmnModelElementActivityIdentifier(taskCreationPayload, referencedFunction);
       this._bpmnJsService.modelingModule.updateLabel(taskCreationPayload.configureActivity, referencedFunction.name);
 
-      outputParam = await selectSnapshot(this._store.select(paramSelectors.selectIParam(outputParamId))) ?? { identifier: outputParamId } as IParam;
-      outputParam = (await this._handleFunctionOutputParam(taskCreationData, taskCreationPayload, outputParam, methodEvaluation))?.outputParam;
+      if (typeof referencedFunction.output?.param === 'number') {
+        outputParam = (typeof referencedFunction.output?.param === 'number' ? await selectSnapshot(this._store.select(paramSelectors.selectIParam(referencedFunction.output.param))) : { identifier: nextParamId }) as IParam;
+        outputParam = (await this._handleFunctionOutputParam(taskCreationData, taskCreationPayload, outputParam, methodEvaluation))?.outputParam;
+      }
 
       gatewayShape = this._handleErrorGatewayConfiguration(taskCreationPayload, referencedFunction)?.gatewayShape;
 
-      this._handleDataInputConfiguration(taskCreationData, taskCreationPayload, resultingFunction, referencedFunction);
+      this._handleDataInputConfiguration(taskCreationData, taskCreationPayload, referencedFunction);
     }
 
     return { gatewayShape, outputParam };
@@ -148,21 +148,21 @@ export class ProcessBuilderComponentService {
     const referencedFunctionIdentifier = BPMNJsRepository.getSLPBExtension(element.businessObject, 'ActivityExtension', (ext) => ext.activityFunctionId);
     const func = await selectSnapshot(this._store.select(functionSelectors.selectIFunction(referencedFunctionIdentifier)));
 
-    const result = await this._confirmationService.requestConfirmation(
+    const result = func?.customImplementation ? await this._confirmationService.requestConfirmation(
       `${func!.normalizedName} will be deleted`,
       `By deleting that activity, you will remove the method '${func!.normalizedName}', all resulting parameters and all following gateways. That may break your pipeline!</br><b>Do you want to proceed?</b>`
-    );
+    ) : true;
 
     if (result) {
       this._bpmnJsService.removeOutgoingDataObjectReferences(element);
       this._bpmnJsService.removeOutgoingGateways(element);
       this._bpmnJsService.modelingModule.removeElements([element]);
-      this._store.dispatch(removeIFunction(func!));
+      if (func?.customImplementation) this._store.dispatch(removeIFunction(func!));
       this._bpmnJsService.saveCurrentBpmnModel();
     }
   }
 
-  private _handleDataInputConfiguration(taskCreationData: ITaskCreationData, taskCreationPayload: ITaskCreationPayload, referencedFunction: IFunction, resultingFunction: IFunction) {
+  private _handleDataInputConfiguration(taskCreationData: ITaskCreationData, taskCreationPayload: ITaskCreationPayload, resultingFunction: IFunction) {
     const configureActivity = taskCreationPayload.configureActivity;
     if (configureActivity) {
       const dataInputAssociations = configureActivity.incoming.filter(incoming => incoming.type === shapeTypes.DataInputAssociation);
@@ -171,7 +171,7 @@ export class ProcessBuilderComponentService {
       }
     }
 
-    if (resultingFunction.inputParams || referencedFunction.useDynamicInputParams) {
+    if (resultingFunction.inputParams || resultingFunction.useDynamicInputParams) {
       const inputParams = resultingFunction.inputParams ? Array.isArray(resultingFunction.inputParams) ? [...resultingFunction.inputParams] : [resultingFunction.inputParams] : [];
       if (typeof taskCreationData.inputParam === 'number') {
         inputParams.push({ optional: false, param: taskCreationData.inputParam });
@@ -221,7 +221,7 @@ export class ProcessBuilderComponentService {
       this._bpmnJsService.modelingModule.updateLabel(gatewayShape, this._config.errorGatewayConfig.gatewayName);
 
       // reconnect the former connected target as success action
-      if(formerConnectedTargets[0]){
+      if (formerConnectedTargets[0]) {
         const connector = this._bpmnJsService.modelingModule.connect(gatewayShape, formerConnectedTargets[0]);
         BPMNJsRepository.updateBpmnElementSLPBExtension(this._bpmnJsService.bpmnJs, connector.businessObject, 'SequenceFlowExtension', (ext) => ext.sequenceFlowType = 'success');
       }

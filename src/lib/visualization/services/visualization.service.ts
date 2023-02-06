@@ -6,7 +6,7 @@ import { IPositionedElement } from 'src/app/interfaces/i-positioned.interface';
 import { ISolution } from 'src/lib/storage-manager-store/interfaces/solution.interface';
 import getContainerPositionSharedMethods from 'src/app/methods/get-container-position.shared-methods';
 import { selectSnapshot } from 'src/lib/process-builder/globals/select-snapshot';
-import { selectGroups } from 'src/lib/storage-manager-store/store/selectors/i-group.selectors';
+import { selectGroups } from 'src/lib/storage-manager-store/store/selectors/group.selectors';
 
 import * as ThreeJS from 'three';
 

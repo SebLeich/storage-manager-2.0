@@ -11,7 +11,7 @@ import { showAnimation } from 'src/lib/shared/animations/show';
 import { VisualizationService } from 'src/lib/visualization/services/visualization.service';
 import { selectSolutionPreview } from 'src/lib/storage-manager-store/store/selectors/i-solution-preview.selectors';
 import { announceSolutionPreview, upsertSolutionPreview } from 'src/lib/storage-manager-store/store/actions/solution-preview.actions';
-import { selectGroups } from 'src/lib/storage-manager-store/store/selectors/i-group.selectors';
+import { selectGroups } from 'src/lib/storage-manager-store/store/selectors/group.selectors';
 
 @Component({
   selector: 'app-solution-preview-rendering',

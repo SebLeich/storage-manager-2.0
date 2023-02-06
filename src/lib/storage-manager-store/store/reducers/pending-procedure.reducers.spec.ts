@@ -1,15 +1,14 @@
 import { TestBed } from '@angular/core/testing';
-
-import { IProcedure } from '../../interfaces/i-procedure.interface';
-import defaultImportsConstant from '../../default-imports.constant';
 import { announceProcedure, announceProcedures } from '../actions/pending-procedure.actions';
 import { selectAllProcedures, selectPendingProcedures } from '../selectors/i-pending-procedure.selectors';
-import { selectSnapshot } from "../../../lib/process-builder/globals/select-snapshot";
 
 import { Store } from '@ngrx/store';
 
 import * as moment from 'moment';
 import { v4 as generateGuid } from 'uuid';
+import defaultImportsConstant from 'src/app/default-imports.constant';
+import { IProcedure } from 'src/app/interfaces/i-procedure.interface';
+import { selectSnapshot } from 'src/lib/process-builder/globals/select-snapshot';
 
 describe('IPendingProcedures Reducers', () => {
 
@@ -17,9 +16,7 @@ describe('IPendingProcedures Reducers', () => {
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-            imports: [
-                ...defaultImportsConstant
-            ]
+            imports: [ ...defaultImportsConstant ]
         });
 
         store = TestBed.inject(Store);

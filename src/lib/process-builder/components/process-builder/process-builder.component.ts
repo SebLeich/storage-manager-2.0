@@ -57,14 +57,6 @@ export class ProcessBuilderComponent implements OnDestroy, OnInit {
     );
 
     this._subscription.add(
-      this._processBuilderComponentService
-        .paramEditorDialogResultReceived$
-        .subscribe((args) => {
-          console.log(args);
-        })
-    );
-
-    this._subscription.add(
       this.bpmnJsService.taskEditingProcedure$
         .subscribe(procedure => {
           this._store.dispatch(upsertProcedure({ procedure }));
@@ -87,10 +79,39 @@ export class ProcessBuilderComponent implements OnDestroy, OnInit {
             }
             break;
 
+          case shapeTypes.EndEvent:
+            const incomingActivity = element.incoming.find(connector => connector.type === shapeTypes.SequenceFlow && connector.source?.type === shapeTypes.Task)?.source;
+            if(incomingActivity){
+              const resultingParameterAssociation = incomingActivity.outgoing.find(dataOutputRef => dataOutputRef.type === shapeTypes.DataOutputAssociation && dataOutputRef.target?.type === shapeTypes.DataObjectReference);
+              if (resultingParameterAssociation) {
+                const isProcessOutput = BPMNJsRepository.getSLPBExtension(resultingParameterAssociation.target.businessObject, 'DataObjectExtension', (ext) => ext.isProcessOutput);
+                if (isProcessOutput) {
+                  BPMNJsRepository.updateBpmnElementSLPBExtension(this.bpmnJsService.bpmnJs, resultingParameterAssociation.target.businessObject, 'DataObjectExtension', (ext) => ext.isProcessOutput = false);
+                }
+              }
+            }
+            this.bpmnJsService.modelingModule.removeElements([element]);
+            this.bpmnJsService.saveCurrentBpmnModel();
+            break;
+
           default:
             this.bpmnJsService.modelingModule.removeElements([element]);
             break;
         }
+      })
+    );
+
+    this._subscription.add(
+      BpmnJsService.elementEndEventCreationRequested.subscribe(async element => {
+        const resultingParameterAssociation = element.outgoing.find(dataOutputRef => dataOutputRef.type === shapeTypes.DataOutputAssociation && dataOutputRef.target?.type === shapeTypes.DataObjectReference);
+        if (resultingParameterAssociation) {
+          const matchesProcessOutputInterface = BPMNJsRepository.getSLPBExtension(resultingParameterAssociation.target.businessObject, 'DataObjectExtension', (ext) => ext.matchesProcessOutputInterface);
+          if (matchesProcessOutputInterface) {
+            BPMNJsRepository.updateBpmnElementSLPBExtension(this.bpmnJsService.bpmnJs, resultingParameterAssociation.target.businessObject, 'DataObjectExtension', (ext) => ext.isProcessOutput = true);
+          }
+        }
+        this.bpmnJsService.modelingModule.appendShape(element, { type: shapeTypes.EndEvent });
+        this.bpmnJsService.saveCurrentBpmnModel();
       })
     );
 

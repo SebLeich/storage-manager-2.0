@@ -9,7 +9,7 @@ import { IOrder } from 'src/lib/storage-manager-store/interfaces/order.interface
 import { GroupDataGenerator } from './test/group.data-generator';
 import { IGroup } from 'src/lib/storage-manager-store/interfaces/group.interface';
 import { State } from '../reducers/group.reducers';
-import { selectGroupById, selectGroups } from './i-group.selectors';
+import { selectGroupById, selectGroups } from './group.selectors';
 
 describe('IGroup Selectors', () => {
 

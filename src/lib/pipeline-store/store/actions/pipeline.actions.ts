@@ -10,3 +10,8 @@ export const removeIPipeline = createAction(
     '[IPipeline] Remove IPipeline',
     (pipeline: IPipeline) => ({ pipeline })
 );
+
+export const setIPipelineSolutionReference = createAction(
+    '[IPipeline] Set IPipeline Solution Reference',
+    (pipelineName: string, solutionIdentifier: string) => ({ pipelineName, solutionIdentifier })
+);

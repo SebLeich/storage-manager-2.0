@@ -3,7 +3,7 @@ import { Component, forwardRef, OnDestroy } from '@angular/core';
 import { ControlValueAccessor, UntypedFormControl, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { Store } from '@ngrx/store';
 import { combineLatest, map, startWith, Subscription } from 'rxjs';
-import { selectGroups } from 'src/lib/storage-manager-store/store/selectors/i-group.selectors';
+import { selectGroups } from 'src/lib/storage-manager-store/store/selectors/group.selectors';
 import { addGroup } from 'src/lib/storage-manager-store/store/actions/group.actions';
 
 @Component({

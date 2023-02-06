@@ -22,5 +22,5 @@ export default {
     },
     dynamicParamDefaultNaming: 'unnamed param',
     defaultFunctionName: 'unnamed function',
-    expectInterface: InterfaceCodes.Solution
+    expectInterface: InterfaceCodes.SolutionWrapper
 } as IProcessBuilderConfig;

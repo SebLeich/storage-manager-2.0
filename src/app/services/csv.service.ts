@@ -10,7 +10,7 @@ import { ICalculationAttributesVariables } from '../interfaces/i-calculation-con
 import calculateRandomColorSharedMethod from '../methods/calculate-random-color.shared-method';
 import { selectCalculationAttributesValid, selectContainerHeight, selectContainerWidth, selectUnit } from 'src/lib/storage-manager-store/store/selectors/i-calculation-attribute.selectors';
 import { selectOrders } from 'src/lib/storage-manager-store/store/selectors/i-order.selectors';
-import { selectGroups } from 'src/lib/storage-manager-store/store/selectors/i-group.selectors';
+import { selectGroups } from 'src/lib/storage-manager-store/store/selectors/group.selectors';
 
 @Injectable({
   providedIn: 'root'

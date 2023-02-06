@@ -1,7 +1,5 @@
 import { createAction, props } from '@ngrx/store';
-import { ISolutionWrapper } from 'src/lib/storage-manager-store/interfaces/solution-wrapper.interface';
 import { IGroup } from 'src/lib/storage-manager-store/interfaces/group.interface';
-import { ISolution } from 'src/lib/storage-manager-store/interfaces/solution.interface';
 
 export const groupActions = {
   AddGroup: '[Group] Add Group',

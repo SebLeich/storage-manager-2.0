@@ -10,7 +10,7 @@ import { IContainer } from '../../lib/storage-manager-store/interfaces/container
 import { IOrder } from '../../lib/storage-manager-store/interfaces/order.interface';
 import moment from 'moment';
 import { selectCalculationAttributesValid, selectContainerHeight, selectContainerWidth } from 'src/lib/storage-manager-store/store/selectors/i-calculation-attribute.selectors';
-import { selectGroups } from 'src/lib/storage-manager-store/store/selectors/i-group.selectors';
+import { selectGroups } from 'src/lib/storage-manager-store/store/selectors/group.selectors';
 import { selectOrders } from 'src/lib/storage-manager-store/store/selectors/i-order.selectors';
 
 export class StartLeftBottomSolver extends Solver implements ISolver {

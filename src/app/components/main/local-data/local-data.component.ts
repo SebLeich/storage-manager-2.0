@@ -14,7 +14,7 @@ import { ControlsOf } from 'src/lib/shared/globals/controls-of.type';
 import { selectSnapshot } from 'src/lib/process-builder/globals/select-snapshot';
 import { widgetFadeInAnimation } from 'src/lib/shared/animations/bottom-up-fade.animation';
 import { Unit } from 'src/app/types/unit.type';
-import { selectGroups } from 'src/lib/storage-manager-store/store/selectors/i-group.selectors';
+import { selectGroups } from 'src/lib/storage-manager-store/store/selectors/group.selectors';
 import { selectOrders } from 'src/lib/storage-manager-store/store/selectors/i-order.selectors';
 import { selectNextProductDescription, selectProductByDescription, selectProducts } from 'src/lib/storage-manager-store/store/selectors/i-product.selectors';
 import { selectCalculationContextValid } from 'src/lib/storage-manager-store/store/selectors/i-calculation-context.selectors';

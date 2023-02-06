@@ -1,8 +1,8 @@
 import { IProduct } from 'src/app/interfaces/i-product.interface';
 import { createSelector } from '@ngrx/store';
-import { productFeatureKey, State } from '../reducers/product.reducers';
+import { featureKey, State } from '../reducers/product.reducers';
 
-export const productsState = (state: any) => state[productFeatureKey] as State;
+export const productsState = (state: any) => state[featureKey] as State;
 
 export const selectNextProductId = createSelector(
   productsState,

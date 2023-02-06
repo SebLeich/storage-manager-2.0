@@ -4,11 +4,11 @@ import { ParamCodes } from "./param-codes";
 
 export default [
     {
-        'identifier': ParamCodes.ExemplarySolution,
+        'identifier': ParamCodes.ExemplarySolutionWrapper,
         'name': 'exemplary solution',
         'normalizedName': 'exemplarySolution',
         'constant': true,
-        'interface': InterfaceCodes.Solution,
+        'interface': InterfaceCodes.SolutionWrapper,
         'type': 'object'
     } as IParam,
 ];
