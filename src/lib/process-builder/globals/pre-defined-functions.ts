@@ -1,7 +1,6 @@
 import { inject } from "@angular/core";
 import { MatDialog } from "@angular/material/dialog";
 import { firstValueFrom } from "rxjs/internal/firstValueFrom";
-import { lastValueFrom } from "rxjs/internal/lastValueFrom";
 import { timer } from "rxjs/internal/observable/timer";
 import { UserInputComponent } from "../components/helpers/user-input/user-input.component";
 import { IFunction } from "./i-function";
@@ -31,8 +30,8 @@ export class PredefinedFunctions {
             'inputParams': null,
             'name': name,
             'useDynamicInputParams': false,
-            'implementation': (timeOutMs = 1000) => {
-                return lastValueFrom(timer(timeOutMs));
+            'implementation': () => {
+                return firstValueFrom(timer(1000));
             },
             'payload': undefined,
             'output': null,
@@ -79,9 +78,9 @@ export class PredefinedFunctions {
             'inputParams': null,
             'name': name,
             'useDynamicInputParams': { typeLimits: ['object'] },
-            'implementation': async (inputs: { name: string, type: 'number' | 'string' | 'boolean' }[]) => {
+            'implementation': async () => {
                 const dialog = inject(MatDialog);
-                const result = await firstValueFrom(dialog.open(UserInputComponent, { data: inputs }).afterClosed());
+                const result = await firstValueFrom(dialog.open(UserInputComponent, { data: [] }).afterClosed());
                 return result;
             },
             'payload': undefined,

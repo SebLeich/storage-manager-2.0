@@ -113,12 +113,16 @@ export class PipeRunnerComponent implements OnDestroy, OnInit {
 
   public async run() {
     const actions = await selectSnapshot(this.actions$);
-    let solutionWrapper: ISolutionWrapper;
+    let solutionWrapper: ISolutionWrapper, injector: { [key: string]: any } = { };
     for (let currentAction of actions) {
       this._store.dispatch(updateIPipelineActionStatus(currentAction!.identifier, 'RUNNING'));
       try {
         await this._environmentInjector.runInContext(async () => {
-          const result = await currentAction!.executableCode();
+          const r1 = currentAction!.executableCode(injector);
+          const result = await r1;
+          if(currentAction?.ouputParamName){
+            injector[currentAction.ouputParamName] = result;
+          }
           if(currentAction!.isProvidingSolutionWrapper){
             solutionWrapper = result;
           }

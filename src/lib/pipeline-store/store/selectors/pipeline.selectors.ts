@@ -3,7 +3,7 @@ import { featureKey, State } from "../reducers/pipeline.reducer";
 
 export const pipelinesState = (state: any) => state[featureKey] as State;
 
-export const selectPipelineByBpmnJsModel = (bpmnJsModel: string) => createSelector(
+export const selectPipelineByBpmnJsModel = (bpmnJsModel: string | null | undefined) => createSelector(
   pipelinesState,
   (state: State) => {
     const pipeline = Object.values(state.entities ?? {}).find(pipeline => pipeline?.bpmnJsModelReference === bpmnJsModel);

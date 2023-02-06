@@ -59,6 +59,7 @@ import { addIPipeline, removeIPipeline } from 'src/lib/pipeline-store/store/acti
 import { addIPipelineActions } from 'src/lib/pipeline-store/store/actions/pipeline-action.actions';
 import { selectPipelineByBpmnJsModel } from 'src/lib/pipeline-store/store/selectors/pipeline.selectors';
 import { IShapeCreateEvent } from 'src/lib/bpmn-io/interfaces/shape-create-event.interface';
+import { selectIParam } from '../store/selectors/param.selectors';
 
 @Injectable()
 export class BpmnJsService {
@@ -281,6 +282,7 @@ export class BpmnJsService {
     while (cursor) {
       const activityIdentifier: number = BPMNJsRepository.getSLPBExtension(cursor.businessObject, 'ActivityExtension', (ext => ext.activityFunctionId));
       const func = await selectSnapshot(this._store.select(selectIFunction(activityIdentifier)));
+      const outputParam = typeof func?.output?.param === 'number'? await selectSnapshot(this._store.select(selectIParam(func.output.param))): undefined;
       const executableCode = func?.customImplementation ? eval(func!.customImplementation.join('\n')!) : func?.implementation;
       const identifier = generateGuid();
 
@@ -302,7 +304,8 @@ export class BpmnJsService {
             name: func!.name,
             executableCode: executableCode,
             onSuccess: '',
-            isProvidingSolutionWrapper: isProvidingSolutionWrapper
+            isProvidingSolutionWrapper: isProvidingSolutionWrapper,
+            ouputParamName: outputParam?.normalizedName
           };
           pipelineActions.push(anchestor);
 

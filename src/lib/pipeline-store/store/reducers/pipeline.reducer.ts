@@ -48,7 +48,7 @@ export const reducer = createReducer(
             state
         );
     }),
-    on(removeIPipeline, (state, { pipeline }) => adapter.removeOne(pipeline.bpmnJsModelReference, state)),
+    on(removeIPipeline, (state, { pipeline }) => adapter.removeOne(pipeline.name, state)),
     on(setIPipelineSolutionReference, (state, { pipelineName, solutionIdentifier }) => {
         return adapter.updateOne({
             id: pipelineName,

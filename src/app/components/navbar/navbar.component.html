@@ -38,7 +38,7 @@
    </div>
 
    <div id="visualization-option-wrapper" class="option-wrapper" [class.disabled]="(solutionCount$|async) === 0">
-      <div class="option" routerLink="visualizer" [ngClass]="{
+      <div class="option" (click)="gotoVisualizer()" [ngClass]="{
          'active': router.url === '/visualizer',
          'highlighted': solutionNavItemHighlighted$|async
       }">

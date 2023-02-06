@@ -1,10 +1,15 @@
-import { Component } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Store } from '@ngrx/store';
 import { BehaviorSubject } from 'rxjs';
 import { firstValueFrom } from 'rxjs/internal/firstValueFrom';
-import { map } from 'rxjs/operators';
+import { combineLatest } from 'rxjs/internal/observable/combineLatest';
+import { switchMap } from 'rxjs/internal/operators/switchMap';
+import { Subscription } from 'rxjs/internal/Subscription';
+import { map, filter } from 'rxjs/operators';
 import { BPMNJsRepository } from 'src/lib/core/bpmn-js.repository';
+import { removeIPipeline } from 'src/lib/pipeline-store/store/actions/pipeline.actions';
+import { selectPipelineByBpmnJsModel } from 'src/lib/pipeline-store/store/selectors/pipeline.selectors';
 import { IFunction } from 'src/lib/process-builder/globals/i-function';
 import { selectSnapshot } from 'src/lib/process-builder/globals/select-snapshot';
 import { IBpmnJSModel } from 'src/lib/process-builder/interfaces/i-bpmn-js-model.interface';
@@ -55,8 +60,10 @@ export class ProcessBuilderWrapperComponent {
     element.blur();
   }
 
-  public async compile(){
+  public async compile() {
     const model = await firstValueFrom(this.currentBpmnJSModel$);
+    const existingPipeline = await selectSnapshot(this._store.select(selectPipelineByBpmnJsModel(model!.guid)));
+    if(existingPipeline) this._store.dispatch(removeIPipeline(existingPipeline));
     this.bpmnJsService.compile(model!.guid, model?.name ?? undefined);
   }
 
@@ -95,7 +102,7 @@ export class ProcessBuilderWrapperComponent {
     this._paramsVisible.next(!paramsVisible);
   }
 
-  public async logFunctions(){
+  public async logFunctions() {
     const funcs = await selectSnapshot(this._store.select(selectIFunctions()));
     console.log(funcs);
   }

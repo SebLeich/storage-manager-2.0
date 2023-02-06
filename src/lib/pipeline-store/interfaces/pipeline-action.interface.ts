@@ -7,4 +7,5 @@ export interface IPipelineAction {
     onSuccess: string;
     onError?: string;
     isProvidingSolutionWrapper: boolean;
+    ouputParamName?: string;
 }
