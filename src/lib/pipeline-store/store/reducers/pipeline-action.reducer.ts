@@ -13,8 +13,8 @@ export interface State extends EntityState<IPipelineAction> {
 export const adapter: EntityAdapter<IPipelineAction> = createEntityAdapter<IPipelineAction>(
     {
         selectId: (pipeline) => pipeline.identifier,
-        sortComparer: (pipeline1, pipeline2) => {
-            return pipeline1.sequenceNumber > pipeline2.sequenceNumber ? 1 : -1;
+        sortComparer: (action1, action2) => {
+            return action1.name > action2.name ? 1 : -1;
         }
     }
 );

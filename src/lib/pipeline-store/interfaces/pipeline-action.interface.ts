@@ -3,9 +3,9 @@ export interface IPipelineAction {
     pipeline: string;
     name: string;
     executableCode: any;
-    sequenceNumber: number;
     onSuccess: string;
     onError?: string;
-    isProvidingSolutionWrapper: boolean;
+    isProvidingPipelineOutput: boolean;
+    isPipelineStart: boolean;
     ouputParamName?: string;
 }

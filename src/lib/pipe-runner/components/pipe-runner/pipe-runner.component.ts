@@ -21,7 +21,6 @@ import { selectSolutionById } from 'src/lib/storage-manager-store/store/selector
 import { ISolution } from 'src/lib/storage-manager-store/interfaces/solution.interface';
 import { fadeInAnimation } from 'src/lib/shared/animations/fade-in.animation';
 import { highlightSolutionNavItem } from 'src/app/store/actions/application.actions';
-
 @Component({
   selector: 'app-pipe-runner',
   templateUrl: './pipe-runner.component.html',
@@ -57,7 +56,16 @@ export class PipeRunnerComponent implements OnDestroy, OnInit {
       }
       return this._store.select(selectPipelineActionByPipelineName(pipeline.name));
     }),
-    map(actions => actions.sort((a, b) => a!.sequenceNumber > b!.sequenceNumber ? 1 : -1))
+    map(actions => {
+      let initialAction = actions.find(actions => actions!.isPipelineStart);
+      let sortedActions = [initialAction], currentActions = [initialAction];
+      while(currentActions.length > 0){
+        const successors = actions.filter(action => currentActions.flatMap(action => [action?.onSuccess, action?.onError]).filter(identifier => !!identifier).indexOf(action?.identifier) > -1);
+        sortedActions.push(...successors);
+        currentActions = successors;
+      }
+      return sortedActions;
+    })
   );
   public status$ = this.actions$.pipe(
     switchMap(actions => this._store.select(selectPipelineActionStates(actions.map(action => action!.identifier)))),
@@ -114,7 +122,8 @@ export class PipeRunnerComponent implements OnDestroy, OnInit {
   public async run() {
     const actions = await selectSnapshot(this.actions$);
     let solutionWrapper: ISolutionWrapper, injector: { [key: string]: any } = { };
-    for (let currentAction of actions) {
+    let currentAction = actions.find(action => action!.isPipelineStart);
+    while(currentAction) {
       this._store.dispatch(updateIPipelineActionStatus(currentAction!.identifier, 'RUNNING'));
       try {
         await this._environmentInjector.runInContext(async () => {
@@ -123,7 +132,7 @@ export class PipeRunnerComponent implements OnDestroy, OnInit {
           if(currentAction?.ouputParamName){
             injector[currentAction.ouputParamName] = result;
           }
-          if(currentAction!.isProvidingSolutionWrapper){
+          if(currentAction!.isProvidingPipelineOutput){
             solutionWrapper = result;
           }
           const representation = typeof solutionWrapper! === 'object' ? JSON.stringify(solutionWrapper) : solutionWrapper!;
@@ -132,6 +141,7 @@ export class PipeRunnerComponent implements OnDestroy, OnInit {
             class: 'default'
           });
           this._store.dispatch(updateIPipelineActionStatus(currentAction!.identifier, 'SUCCEEDED'));
+          currentAction = actions.find(action => action?.identifier === currentAction!.onSuccess);
         });
       } catch (error) {
         this._consoleOutputSections$$.next({
@@ -139,6 +149,10 @@ export class PipeRunnerComponent implements OnDestroy, OnInit {
           class: 'error'
         });
         this._store.dispatch(updateIPipelineActionStatus(currentAction!.identifier, 'FAILED'));
+        if(!!currentAction.onError){
+          throw(`the action ${currentAction.name} failed, but no error successor was defined!`);
+        }
+        currentAction = actions.find(action => action?.identifier === currentAction!.onError);
       }
     }
 

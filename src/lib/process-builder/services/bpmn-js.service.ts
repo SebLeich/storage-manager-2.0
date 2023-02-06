@@ -298,13 +298,13 @@ export class BpmnJsService {
           }
 
           anchestor = {
+            isPipelineStart: index === 0,
             identifier: identifier,
-            sequenceNumber: index,
             pipeline: pipeline.name,
             name: func!.name,
             executableCode: executableCode,
             onSuccess: '',
-            isProvidingSolutionWrapper: isProvidingSolutionWrapper,
+            isProvidingPipelineOutput: isProvidingSolutionWrapper,
             ouputParamName: outputParam?.normalizedName
           };
           pipelineActions.push(anchestor);
