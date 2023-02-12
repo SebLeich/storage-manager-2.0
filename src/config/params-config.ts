@@ -11,4 +11,12 @@ export default [
         'interface': InterfaceCodes.SolutionWrapper,
         'type': 'object'
     } as IParam,
+    {
+        'identifier': ParamCodes.ExemplarySolutionWrapper2,
+        'name': 'exemplary solution 2',
+        'normalizedName': 'exemplarySolution2',
+        'constant': true,
+        'interface': InterfaceCodes.SolutionWrapper,
+        'type': 'object'
+    } as IParam,
 ];

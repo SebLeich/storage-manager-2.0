@@ -3,6 +3,7 @@ import { PredefinedFunctions } from "src/lib/process-builder/globals/pre-defined
 import { InterfaceCodes } from "./interface-codes";
 import { ParamCodes } from "./param-codes";
 import exemplarySolution from 'src/assets/exemplary-solution.json';
+import exemplarySolution2 from 'src/assets/exemplary-solution-2.json';
 
 export default [
     new PredefinedFunctions().customJSMethod(0),
@@ -106,4 +107,15 @@ export default [
     new PredefinedFunctions().delayMethod(5),
     new PredefinedFunctions().failMethod(6),
     new PredefinedFunctions().requestUserInput(7),
+    {
+        'identifier': 8,
+        'inputParams': [],
+        'name': 'Provide another exemplary solution',
+        'normalizedName': 'provideExemplarySolution',
+        'description': 'method provides an exemplary solution',
+        'output': { 'param': ParamCodes.ExemplarySolutionWrapper2 },
+        'implementation': () => new Promise((resolve) => resolve(exemplarySolution2)),
+        'canFail': false,
+        'requireCustomImplementation': false
+    } as IFunction,
 ];

@@ -9,13 +9,12 @@ import { ProcessBuilderComponentService } from './process-builder-component.serv
 import shapeTypes from 'src/lib/bpmn-io/shape-types';
 import { BPMNJsRepository } from 'src/lib/core/bpmn-js.repository';
 import { upsertProcedure } from 'src/lib/storage-manager-store/store/actions/pending-procedure.actions';
-import { selectSnapshot } from '../../globals/select-snapshot';
-import { selectPipelineByBpmnJsModel } from 'src/lib/pipeline-store/store/selectors/pipeline.selectors';
+import { IElement } from 'src/lib/bpmn-io/interfaces/element.interface';
 
 @Component({
   selector: 'app-process-builder',
   templateUrl: './process-builder.component.html',
-  styleUrls: ['./process-builder.component.sass'],
+  styleUrls: ['./process-builder.component.scss'],
   animations: [showAnimation],
   providers: [ProcessBuilderComponentService]
 })
@@ -82,15 +81,9 @@ export class ProcessBuilderComponent implements OnDestroy, OnInit {
             break;
 
           case shapeTypes.EndEvent:
-            const incomingActivity = element.incoming.find(connector => connector.type === shapeTypes.SequenceFlow && connector.source?.type === shapeTypes.Task)?.source;
-            if(incomingActivity){
-              const resultingParameterAssociation = incomingActivity.outgoing.find(dataOutputRef => dataOutputRef.type === shapeTypes.DataOutputAssociation && dataOutputRef.target?.type === shapeTypes.DataObjectReference);
-              if (resultingParameterAssociation) {
-                const isProcessOutput = BPMNJsRepository.getSLPBExtension(resultingParameterAssociation.target.businessObject, 'DataObjectExtension', (ext) => ext.isProcessOutput);
-                if (isProcessOutput) {
-                  BPMNJsRepository.updateBpmnElementSLPBExtension(this.bpmnJsService.bpmnJs, resultingParameterAssociation.target.businessObject, 'DataObjectExtension', (ext) => ext.isProcessOutput = false);
-                }
-              }
+            const firstOuputProvidingActivity = this._getFirstProvidedOutputWithSLPBExtension(element, 'isProcessOutput');
+            if (firstOuputProvidingActivity) {
+              BPMNJsRepository.updateBpmnElementSLPBExtension(this.bpmnJsService.bpmnJs, firstOuputProvidingActivity.businessObject, 'DataObjectExtension', (ext) => ext.isProcessOutput = false);
             }
             this.bpmnJsService.modelingModule.removeElements([element]);
             this.bpmnJsService.saveCurrentBpmnModel();
@@ -105,12 +98,9 @@ export class ProcessBuilderComponent implements OnDestroy, OnInit {
 
     this._subscription.add(
       BpmnJsService.elementEndEventCreationRequested.subscribe(async element => {
-        const resultingParameterAssociation = element.outgoing.find(dataOutputRef => dataOutputRef.type === shapeTypes.DataOutputAssociation && dataOutputRef.target?.type === shapeTypes.DataObjectReference);
-        if (resultingParameterAssociation) {
-          const matchesProcessOutputInterface = BPMNJsRepository.getSLPBExtension(resultingParameterAssociation.target.businessObject, 'DataObjectExtension', (ext) => ext.matchesProcessOutputInterface);
-          if (matchesProcessOutputInterface) {
-            BPMNJsRepository.updateBpmnElementSLPBExtension(this.bpmnJsService.bpmnJs, resultingParameterAssociation.target.businessObject, 'DataObjectExtension', (ext) => ext.isProcessOutput = true);
-          }
+        const firstOutputMatchingActivity = this._getFirstProvidedOutputWithSLPBExtension(element, 'matchesProcessOutputInterface');
+        if (firstOutputMatchingActivity) {
+          BPMNJsRepository.updateBpmnElementSLPBExtension(this.bpmnJsService.bpmnJs, firstOutputMatchingActivity.businessObject, 'DataObjectExtension', (ext) => ext.isProcessOutput = true);
         }
         this.bpmnJsService.modelingModule.appendShape(element, { type: shapeTypes.EndEvent });
         this.bpmnJsService.saveCurrentBpmnModel();
@@ -121,4 +111,19 @@ export class ProcessBuilderComponent implements OnDestroy, OnInit {
 
   }
 
+  private _getFirstProvidedOutputWithSLPBExtension(currentElement: IElement, extension: 'matchesProcessOutputInterface' | 'isProcessOutput') {
+    let sourceElement: IElement | undefined = currentElement;
+    while (sourceElement) {
+      const dataOutputRef = sourceElement.outgoing.find(outgoing => outgoing.type === shapeTypes.DataOutputAssociation)?.target;
+      if (dataOutputRef) {
+        const matchesProcessOutputInterface = BPMNJsRepository.getSLPBExtension(dataOutputRef.businessObject, 'DataObjectExtension', (ext) => ext[extension]);
+        if (matchesProcessOutputInterface) {
+          return dataOutputRef;
+        }
+      }
+      
+      sourceElement = sourceElement.incoming.find(incoming => incoming.type === shapeTypes.SequenceFlow && incoming.source?.type === shapeTypes.Task)?.source;
+    }
+    return undefined;
+  }
 }

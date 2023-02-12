@@ -50,15 +50,10 @@ export const selectIParamsByNormalizedName = (
 export const selectNextId = () =>
   createSelector(
     selectIParamState,
-    (state: fromIParam.State) =>
-      (state && state.entities
-        ? Math.max(
-          ...Object.values(state.entities)
-            .filter((x) => (x ? true : false))
-            .map((x) => (x as IParam).identifier),
-          -1
-        )
-        : -1) + 1
+    (state: fromIParam.State) => {
+      const ids = Object.values(state.entities).map(param => param?.identifier).filter((id) => typeof id === 'number') as number[];
+      return Math.max(...ids, 1) + 1;
+    }
   );
 
 export const selectCurrentParamOutput = createSelector(

@@ -1,15 +1,41 @@
-<div class="body">
+<div class="body" [ngClass]="{
+    'is-providing-output': isSelectedOutput$|async
+}" (click)="trySetOutput()">
 
-    <div class="action-name">
-        {{ (pipelineAction$|async)?.name }}
+    <div class="content">
+
+        <div class="action-name">
+            {{ (pipelineAction$|async)?.name }}
+        </div>
+
+        <mat-icon class="icon pending" *ngIf="(actionStatus$|async)?.status === 'INITIALIZED'"
+            matTooltip="that action is initialized but not run yet">more_horiz</mat-icon>
+
+        <mat-icon class="icon success" *ngIf="(actionStatus$|async)?.status === 'SUCCEEDED'"
+            matTooltip="that action was executed successfully">done</mat-icon>
+
+        <mat-spinner *ngIf="(actionStatus$|async)?.status === 'RUNNING'" diameter="20"
+            matTooltip="running ..."></mat-spinner>
+
+        <mat-icon class="icon danger" *ngIf="(actionStatus$|async)?.status === 'FAILED'"
+            matTooltip="that action failed">clear</mat-icon>
+
+        <mat-icon class="icon pending" *ngIf="(actionStatus$|async)?.status === 'SKIPPED'"
+            matTooltip="that action was skipped due to a previous event">shortcut</mat-icon>
+
     </div>
 
-    <mat-icon class="icon pending" *ngIf="(actionStatus$|async)?.status === 'INITIALIZED'">more_horiz</mat-icon>
-
-    <mat-icon class="icon success" *ngIf="(actionStatus$|async)?.status === 'SUCCEEDED'">done</mat-icon>
-
-    <mat-spinner *ngIf="(actionStatus$|async)?.status === 'RUNNING'" diameter="20"></mat-spinner>
-
-    <mat-icon class="icon danger" *ngIf="(actionStatus$|async)?.status === 'FAILED'">clear</mat-icon>
+    <div class="process-output-hint" *ngIf="providesOutput$|async">
+        <span *ngIf="(actionStatus$|async)?.status === 'INITIALIZED'">
+            That action may provide a process output.
+        </span>
+        <span *ngIf="isSelectedOutput$|async; else outputMatchesPipelineOutput">
+            The solution is currently selected: {{solutionDescription$|async}}
+        </span>
+    </div>
 
 </div>
+
+<ng-template #outputMatchesPipelineOutput>
+    <span>The output can be used for visualization</span>
+</ng-template>

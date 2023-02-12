@@ -86,7 +86,7 @@ export class ProcessBuilderComponentService {
     if (taskCreationData.entranceGatewayType) {
       const connector = taskCreationPayload.configureIncomingErrorGatewaySequenceFlow;
       if (!!connector) {
-        BPMNJsRepository.updateBpmnElementSLPBExtension(this._bpmnJsService.bpmnJs, connector.businessObject, 'SequenceFlowExtension', (ext) => ext.sequenceFlowType = 'success');
+        BPMNJsRepository.updateBpmnElementSLPBExtension(this._bpmnJsService.bpmnJs, connector.businessObject, 'SequenceFlowExtension', (ext) => ext.sequenceFlowType = taskCreationData.entranceGatewayType === 'Success'? 'success': 'error');
         this._applyConnectorDefaultLabels(connector, taskCreationData);
       }
     }

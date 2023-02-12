@@ -227,7 +227,6 @@ export class TaskCreationComponent implements OnDestroy, OnInit {
         normalizedOutputParamName: outputParam?.normalizedName,
         outputParamName: outputParam?.name,
         outputParamValue: objectTypeDefinition,
-        entranceGatewayType: null,
         inputParam: inputParams.length === 1 ? inputParams[0].param : null,
       });
     }

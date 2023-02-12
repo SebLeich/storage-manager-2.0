@@ -1,25 +1,38 @@
 .body {
-    display: flex;
+    padding: 1rem;
 
-    .action-name {
-        flex: 1;
+    .content {
+        display: flex;
+
+        .action-name {
+            flex: 1;
+        }
+
+        .icon {
+            height: 1rem;
+            font-size: 1.2rem;
+            line-height: 1.2rem;
+
+            &.pending {
+                color: rgb(160, 160, 160);
+            }
+
+            &.success {
+                color: rgb(68, 150, 68);
+            }
+
+            &.danger {
+                color: rgb(193, 71, 41);
+            }
+        }
     }
 
-    .icon {
-        height: 1rem;
-        font-size: 1.2rem;
-        line-height: 1.2rem;
+    .process-output-hint {
+        font-weight: 100;
+        font-size: 0.8rem;
+    }
 
-        &.pending {
-            color: rgb(160, 160, 160);
-        }
-
-        &.success {
-            color: rgb(68, 150, 68);
-        }
-
-        &.danger {
-            color: rgb(193, 71, 41);
-        }
+    &.is-providing-output {
+        background-color: #ffd70026;
     }
 }

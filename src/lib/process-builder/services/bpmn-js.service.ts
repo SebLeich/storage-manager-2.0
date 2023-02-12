@@ -60,6 +60,7 @@ import { addIPipelineActions } from 'src/lib/pipeline-store/store/actions/pipeli
 import { selectPipelineByBpmnJsModel } from 'src/lib/pipeline-store/store/selectors/pipeline.selectors';
 import { IShapeCreateEvent } from 'src/lib/bpmn-io/interfaces/shape-create-event.interface';
 import { selectIParam } from '../store/selectors/param.selectors';
+import { GatewayType } from '../types/gateway.type';
 
 @Injectable()
 export class BpmnJsService {
@@ -274,54 +275,48 @@ export class BpmnJsService {
     }
 
     const startEvent = BPMNJsRepository.getStartEvents(this.elementRegistryModule)[0];
-    let cursor: IElement | null = startEvent.outgoing[0].target,
+    let cursor: { element: IElement, gatewayType?: GatewayType, successorFor: IElement[] } | null = { element: startEvent.outgoing[0].target, successorFor: [] },
       pipeline: IPipeline = { bpmnJsModelReference: bpmnJsModelIdentifier, name: name, solutionReference: null },
-      pipelineActions = [];
+      pipelineActions: IPipelineAction[] = [],
+      stack: {element: IElement, successorFor: IElement[], gatewayType: GatewayType }[] = [];
 
-    let anchestor: IPipelineAction | null = null, index = 0;
+    let anchestors: IPipelineAction[] = [], index = 0;
     while (cursor) {
-      const activityIdentifier: number = BPMNJsRepository.getSLPBExtension(cursor.businessObject, 'ActivityExtension', (ext => ext.activityFunctionId));
-      const func = await selectSnapshot(this._store.select(selectIFunction(activityIdentifier)));
-      const outputParam = typeof func?.output?.param === 'number'? await selectSnapshot(this._store.select(selectIParam(func.output.param))): undefined;
-      const executableCode = func?.customImplementation ? eval(func!.customImplementation.join('\n')!) : func?.implementation;
-      const identifier = generateGuid();
-
-      switch (cursor.type) {
+      switch (cursor.element.type) {
         case shapeTypes.Task:
-          if (anchestor) {
-            (anchestor as IPipelineAction).onSuccess = identifier;
-          }
-          const outgoingDataObjectReference = cursor.outgoing.find(connector => connector.type === shapeTypes.DataOutputAssociation)?.target;
-          let isProvidingSolutionWrapper = false;
-          if(outgoingDataObjectReference){
-            isProvidingSolutionWrapper = BPMNJsRepository.getSLPBExtension(outgoingDataObjectReference.businessObject, 'DataObjectExtension', (ext) => ext.isProcessOutput);
-          }
-
-          anchestor = {
-            isPipelineStart: index === 0,
-            identifier: identifier,
-            pipeline: pipeline.name,
-            name: func!.name,
-            executableCode: executableCode,
-            onSuccess: '',
-            isProvidingPipelineOutput: isProvidingSolutionWrapper,
-            ouputParamName: outputParam?.normalizedName
-          };
-          pipelineActions.push(anchestor);
-
-          const successorPointer: IConnector = cursor.outgoing.find(outgoing => outgoing.type === shapeTypes.SequenceFlow) as IConnector;
-          cursor = successorPointer!.target;
-          break;
-
-        case shapeTypes.ExclusiveGateway:
-          debugger;
-
-        default:
-          cursor = null;
+          const { action } = await this._buildPipelineAction(index, pipeline, cursor.element);
+          anchestors.forEach((anchestor: IPipelineAction) => {
+            anchestor[cursor?.gatewayType === 'Success' ? 'onSuccess' : 'onError'] = action.identifier;
+          });
+          pipelineActions.push(action);
+          anchestors = [action];
           break;
       }
 
-      index++;
+      if(cursor){
+        const connectors: IConnector[] = cursor.element!.outgoing.filter(outgoing => outgoing.type === shapeTypes.SequenceFlow);
+        const mapping = connectors.map(connector => {
+          const connectorGatewayType = BPMNJsRepository.getSLPBExtension(connector.businessObject, 'SequenceFlowExtension', (ext) => ext.sequenceFlowType);
+          const successorFor = this._getLastActivities(connector);
+          return {
+            element: connector.target,
+            successorFor: successorFor,
+            gatewayType: connectorGatewayType === 'error'? 'Error': 'Success' as GatewayType
+          };
+        });
+        cursor = mapping[0];
+        stack.push(...mapping.slice(1));
+  
+        index++;
+      }
+
+      if(!cursor){
+        cursor = stack[0];
+        stack = stack.slice(1);
+
+        const successorForIdentifiers = cursor?.successorFor.map(successor => successor.id) ?? [];
+        anchestors = pipelineActions.filter((action) => successorForIdentifiers.indexOf(action.bpmnElementIdentifier) > -1);
+      }
     }
 
     this._store.dispatch(addIPipeline(pipeline));
@@ -330,6 +325,45 @@ export class BpmnJsService {
     if (redirect) {
       this._router.navigate(['/pipe-runner'], { queryParams: { pipeline: pipeline.name } });
     }
+  }
+
+  private _getLastActivities(connector: IConnector){
+    let incomingElements = [connector.source];
+    while(incomingElements.length > 0 && incomingElements.every(element => element.type !== shapeTypes.Task)){
+      incomingElements = incomingElements.flatMap(element => element.incoming.map(incoming => incoming.source));
+    }
+    return incomingElements.filter(element => element.type === shapeTypes.Task);
+  }
+
+  private async _buildPipelineAction(index: number, pipeline: IPipeline, cursor: IElement): Promise<{ action: IPipelineAction, activityIdentifier: number }> {
+    const identifier = generateGuid(),
+      activityIdentifier: number = BPMNJsRepository.getSLPBExtension(cursor.businessObject, 'ActivityExtension', (ext => ext.activityFunctionId)),
+      func = await selectSnapshot(this._store.select(selectIFunction(activityIdentifier))),
+      outputParam = typeof func?.output?.param === 'number' ? await selectSnapshot(this._store.select(selectIParam(func.output.param))) : undefined,
+      executableCode = func?.customImplementation ? eval(func!.customImplementation.join('\n')!) : func?.implementation;
+
+    const outgoingDataObjectReference = cursor.outgoing.find(connector => connector.type === shapeTypes.DataOutputAssociation)?.target;
+    let isProvidingSolutionWrapper = false, isMatchingProcessOutput = false;
+    if (outgoingDataObjectReference) {
+      isMatchingProcessOutput = BPMNJsRepository.getSLPBExtension(outgoingDataObjectReference.businessObject, 'DataObjectExtension', (ext) => ext.matchesProcessOutputInterface);
+      isProvidingSolutionWrapper = BPMNJsRepository.getSLPBExtension(outgoingDataObjectReference.businessObject, 'DataObjectExtension', (ext) => ext.isProcessOutput);
+    }
+
+    let action: IPipelineAction = {
+      isPipelineStart: index === 0,
+      identifier: identifier,
+      pipeline: pipeline.name,
+      name: func!.name,
+      executableCode: executableCode,
+      onSuccess: '',
+      isProvidingPipelineOutput: isProvidingSolutionWrapper,
+      outputMatchesPipelineOutput: isMatchingProcessOutput,
+      ouputParamName: outputParam?.normalizedName,
+      bpmnElementIdentifier: cursor.id,
+      solutionReference: null
+    };
+    
+    return { action, activityIdentifier };
   }
 
   public markAsUnchanged() {
@@ -412,7 +446,7 @@ export class BpmnJsService {
     return getEventBusModule(this.bpmnJs);
   }
 
-  public get graphicsFactory(){
+  public get graphicsFactory() {
     return getGraphicsFactory(this.bpmnJs);
   }
 

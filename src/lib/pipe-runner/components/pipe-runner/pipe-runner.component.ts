@@ -4,8 +4,8 @@ import { switchMap, debounceTime, filter, map, scan, Subscription, distinctUntil
 import { selectSnapshot } from 'src/lib/process-builder/globals/select-snapshot';
 import { ActivatedRoute, Router } from '@angular/router';
 import { selectPipelineByName } from 'src/lib/pipeline-store/store/selectors/pipeline.selectors';
-import { selectPipelineActionByPipelineName } from 'src/lib/pipeline-store/store/selectors/pipeline-action.selectors';
-import { updateIPipelineActionStatus } from 'src/lib/pipeline-store/store/actions/pipeline-action-status.action';
+import { selectPipelineActionAndSuccessors, selectPipelineActionByPipelineName } from 'src/lib/pipeline-store/store/selectors/pipeline-action.selectors';
+import { updateIPipelineActionStatus, updateIPipelineActionStatuses } from 'src/lib/pipeline-store/store/actions/pipeline-action-status.action';
 import { selectPipelineActionStates } from 'src/lib/pipeline-store/store/selectors/pipeline-action-status.selectors';
 import { Subject } from 'rxjs/internal/Subject';
 import moment from 'moment';
@@ -15,12 +15,14 @@ import { MatTabGroup } from '@angular/material/tabs';
 import { ISolutionWrapper } from 'src/lib/storage-manager-store/interfaces/solution-wrapper.interface';
 import { addGroups } from 'src/lib/storage-manager-store/store/actions/group.actions';
 import { showAnimation } from 'src/lib/shared/animations/show';
-import { addSolution } from 'src/lib/storage-manager-store/store/actions/solution.actions';
+import { addSolution, setCurrentSolution } from 'src/lib/storage-manager-store/store/actions/solution.actions';
 import { setIPipelineSolutionReference } from 'src/lib/pipeline-store/store/actions/pipeline.actions';
 import { selectSolutionById } from 'src/lib/storage-manager-store/store/selectors/i-solution.selectors';
 import { ISolution } from 'src/lib/storage-manager-store/interfaces/solution.interface';
 import { fadeInAnimation } from 'src/lib/shared/animations/fade-in.animation';
 import { highlightSolutionNavItem } from 'src/app/store/actions/application.actions';
+import { setIPipelineActionSolution } from 'src/lib/pipeline-store/store/actions/pipeline-action.actions';
+
 @Component({
   selector: 'app-pipe-runner',
   templateUrl: './pipe-runner.component.html',
@@ -59,8 +61,17 @@ export class PipeRunnerComponent implements OnDestroy, OnInit {
     map(actions => {
       let initialAction = actions.find(actions => actions!.isPipelineStart);
       let sortedActions = [initialAction], currentActions = [initialAction];
-      while(currentActions.length > 0){
-        const successors = actions.filter(action => currentActions.flatMap(action => [action?.onSuccess, action?.onError]).filter(identifier => !!identifier).indexOf(action?.identifier) > -1);
+      while (currentActions.length > 0) {
+        const successors = actions.filter(action => currentActions
+          .flatMap(action => {
+            const successors = [action?.onSuccess, action?.onError];
+            return successors;
+          })
+          .filter(identifier => {
+            return !!identifier;
+          })
+          .indexOf(action?.identifier) > -1);
+
         sortedActions.push(...successors);
         currentActions = successors;
       }
@@ -121,19 +132,20 @@ export class PipeRunnerComponent implements OnDestroy, OnInit {
 
   public async run() {
     const actions = await selectSnapshot(this.actions$);
-    let solutionWrapper: ISolutionWrapper, injector: { [key: string]: any } = { };
+    let solutionWrapper: ISolutionWrapper | null = null, injector: { [key: string]: any } = {};
     let currentAction = actions.find(action => action!.isPipelineStart);
-    while(currentAction) {
+    while (currentAction) {
       this._store.dispatch(updateIPipelineActionStatus(currentAction!.identifier, 'RUNNING'));
       try {
         await this._environmentInjector.runInContext(async () => {
-          const r1 = currentAction!.executableCode(injector);
-          const result = await r1;
-          if(currentAction?.ouputParamName){
+          const result = await currentAction!.executableCode(injector);
+          if (currentAction?.ouputParamName) {
             injector[currentAction.ouputParamName] = result;
           }
-          if(currentAction!.isProvidingPipelineOutput){
+          if (currentAction!.outputMatchesPipelineOutput) {
             solutionWrapper = result;
+            this._store.dispatch(setIPipelineActionSolution(currentAction!.identifier, solutionWrapper!));
+            this._store.dispatch(addSolution({ solution: (solutionWrapper as ISolutionWrapper)!.solution }));
           }
           const representation = typeof solutionWrapper! === 'object' ? JSON.stringify(solutionWrapper) : solutionWrapper!;
           this._consoleOutputSections$$.next({
@@ -141,6 +153,13 @@ export class PipeRunnerComponent implements OnDestroy, OnInit {
             class: 'default'
           });
           this._store.dispatch(updateIPipelineActionStatus(currentAction!.identifier, 'SUCCEEDED'));
+
+          const skippedAction = actions.find(action => action?.identifier === currentAction!.onError);
+          if (skippedAction) {
+            const actionAndSuccessors = await selectSnapshot(this._store.select(selectPipelineActionAndSuccessors(skippedAction!.identifier, 'onSuccess')));
+            this._store.dispatch(updateIPipelineActionStatuses(actionAndSuccessors, 'SKIPPED'));
+          }
+
           currentAction = actions.find(action => action?.identifier === currentAction!.onSuccess);
         });
       } catch (error) {
@@ -149,19 +168,33 @@ export class PipeRunnerComponent implements OnDestroy, OnInit {
           class: 'error'
         });
         this._store.dispatch(updateIPipelineActionStatus(currentAction!.identifier, 'FAILED'));
-        if(!!currentAction.onError){
-          throw(`the action ${currentAction.name} failed, but no error successor was defined!`);
+        if (!currentAction.onError) {
+          throw (`the action ${currentAction.name} failed, but no error successor was defined!`);
         }
+
+        const skippedAction = actions.find(action => action?.identifier === currentAction!.onSuccess);
+        if (skippedAction) {
+          const actionAndSuccessors = await selectSnapshot(this._store.select(selectPipelineActionAndSuccessors(skippedAction!.identifier, 'onError')));
+          this._store.dispatch(updateIPipelineActionStatuses(actionAndSuccessors, 'SKIPPED'));
+        }
+
         currentAction = actions.find(action => action?.identifier === currentAction!.onError);
       }
     }
 
-    const pipeName = await firstValueFrom(this.pipelineName$);
+    if (!solutionWrapper) {
+      throw ('no solution found!');
+    }
 
-    this._store.dispatch(addGroups({ groups: solutionWrapper!.groups }));
-    this._store.dispatch(addSolution({ solution: solutionWrapper!.solution }));
-    this._store.dispatch(setIPipelineSolutionReference(pipeName!, solutionWrapper!.solution.id));
+    await this.setOutput(solutionWrapper as ISolutionWrapper);
     this._store.dispatch(highlightSolutionNavItem());
+  }
+
+  public async setOutput(solutionWrapper: ISolutionWrapper) {
+    const pipeName = await firstValueFrom(this.pipelineName$);
+    this._store.dispatch(setCurrentSolution({ solution: solutionWrapper.solution }));
+    this._store.dispatch(addGroups({ groups: (solutionWrapper as ISolutionWrapper).groups }));
+    this._store.dispatch(setIPipelineSolutionReference(pipeName!, (solutionWrapper as ISolutionWrapper)!.solution.id));
   }
 
   private async _updateScene(solution: ISolution | undefined | null) {

@@ -1,5 +1,5 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
-import { FormControl, FormGroup, UntypedFormControl, UntypedFormGroup } from '@angular/forms';
+import { Component } from '@angular/core';
+import { FormControl, FormGroup } from '@angular/forms';
 import { Store } from '@ngrx/store';
 import { combineLatest, ReplaySubject } from 'rxjs';
 import { map } from 'rxjs/operators';
@@ -13,7 +13,7 @@ import { selectIParams } from 'src/lib/process-builder/store/selectors/param.sel
 @Component({
   selector: 'app-embedded-function-input-selection',
   templateUrl: './embedded-function-input-selection.component.html',
-  styleUrls: ['./embedded-function-input-selection.component.sass']
+  styleUrls: ['./embedded-function-input-selection.component.scss']
 })
 export class EmbeddedFunctionInputSelectionComponent implements EmbeddedView {
 

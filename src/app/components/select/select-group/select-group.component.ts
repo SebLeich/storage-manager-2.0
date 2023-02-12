@@ -9,7 +9,7 @@ import { addGroup } from 'src/lib/storage-manager-store/store/actions/group.acti
 @Component({
   selector: 'app-select-group',
   templateUrl: './select-group.component.html',
-  styleUrls: ['./select-group.component.css'],
+  styleUrls: ['./select-group.component.scss'],
   providers: [
     {
       provide: NG_VALUE_ACCESSOR,

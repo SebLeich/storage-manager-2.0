@@ -1,0 +1,57 @@
+@import "src/lib/sass/stretched-element";
+
+.PB_diagram-body {
+    @include stretched-element;
+    display: flex;
+
+    .diagram-wrapper {
+        flex: 1;
+    }
+
+    .info {
+        width: 200px;
+        border-left: 2px solid #f2f2f2;
+        padding: 0.5rem 1rem;
+        box-sizing: border-box;
+        overflow-y: scroll;
+        display: none;
+    }
+}
+
+::ng-deep .PB_diagram-body.not-editable .djs-palette {
+    display: none;
+}
+
+::ng-deep .PB_diagram-body.hide-events .bpmn-icon-intermediate-event-none,
+::ng-deep .PB_diagram-body.hide-events .bpmn-icon-start-event-none,
+::ng-deep .PB_diagram-body.hide-events .bpmn-icon-end-event-none {
+    display: none;
+}
+
+::ng-deep .PB_diagram-body.hide-tasks .bpmn-icon-task {
+    display: none;
+}
+
+::ng-deep .PB_diagram-body.hide-gateways .bpmn-icon-gateway-none {
+    display: none;
+}
+
+::ng-deep .PB_diagram-body.hide-sub-processes .bpmn-icon-subprocess-expanded {
+    display: none;
+}
+
+::ng-deep .PB_diagram-body.hide-data-object-references .bpmn-icon-data-object {
+    display: none;
+}
+
+::ng-deep .PB_diagram-body.hide-databases .bpmn-icon-data-store {
+    display: none;
+}
+
+::ng-deep .PB_diagram-body.hide-pools .bpmn-icon-participant {
+    display: none;
+}
+
+::ng-deep .PB_diagram-body.hide-groups .bpmn-icon-group {
+    display: none;
+}
