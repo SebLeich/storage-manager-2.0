@@ -36,12 +36,17 @@
 
         </div>
 
-        <div class="control secondary" *ngIf="(currentStep$|async)?.taskCreationStep === TaskCreationStep.ConfigureFunctionImplementation">
+        <div class="control secondary"
+            *ngIf="(currentStep$|async)?.taskCreationStep === TaskCreationStep.ConfigureFunctionImplementation">
             Help
         </div>
 
-        <div class="control secondary" *ngIf="canAnalyzeCustomImplementation$|async" (click)="testImplementation()">
-            {{(selectedFunction$|async)?.pseudoImplementationComputationName ?? 'Execute'}}
+        <div (click)="previousStep()" class="control secondary" *ngIf="hasPreviousStep$|async">
+            Previous
+        </div>
+
+        <div (click)="nextStep()" class="control secondary" *ngIf="hasNextStep$|async">
+            Next
         </div>
 
         <div class="control primary" [ngClass]="{ 'disabled': (formInvalid$|async) }" (click)="finish()">

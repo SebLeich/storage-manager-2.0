@@ -140,12 +140,12 @@ export class BPMNJsRepository {
     }
 
     public validateErrorGateway(bpmnJS: IBpmnJS, element: IElement, func: IFunction, gatewayName: string = this._config.errorGatewayConfig.gatewayName) {
-        let gatewayShape: IElement | undefined = element.outgoing.find(x => x.type === shapeTypes.SequenceFlow && BPMNJsRepository.sLPBExtensionSetted(x.businessObject, 'GatewayExtension', (ext) => ext.gatewayType === 'error_gateway'))?.target, modelingModule = getModelingModule(bpmnJS);
+        let gatewayShape: IElement | undefined = element.outgoing.find(sequenceFlow => sequenceFlow.type === shapeTypes.SequenceFlow && sequenceFlow.target?.type === shapeTypes.ExclusiveGateway)?.target,
+            modelingModule = getModelingModule(bpmnJS);
         if (func.canFail && !gatewayShape) {
             gatewayShape = modelingModule.appendShape(element, {
                 type: shapeTypes.ExclusiveGateway
             }, { x: element.x + 200, y: element.y + 40 });
-            BPMNJsRepository.updateBpmnElementSLPBExtension(bpmnJS, element.businessObject, 'GatewayExtension', (ext) => ext.gatewayType = 'error_gateway');
             modelingModule.updateLabel(gatewayShape, gatewayName);
         } else if (!func.canFail && gatewayShape) {
             modelingModule.removeElements([gatewayShape]);

@@ -159,16 +159,11 @@ export class BpmnJsService {
       }))
     ),
     this.connectionCreatePostExecutedEventFired$.pipe(
-      filter(event => {
-        return event.context.source.type === shapeTypes.ExclusiveGateway
-          && BPMNJsRepository.sLPBExtensionSetted(event.context.source.businessObject, 'GatewayExtension', (ext) => ext.gatewayType === 'error_gateway');
-      }),
-      map(event => {
-        return {
-          taskCreationStep: TaskCreationStep.ConfigureErrorGatewayEntranceConnection,
-          element: event.context.connection
-        }
-      })
+      filter(event => event.context.source.type === shapeTypes.ExclusiveGateway),
+      map(event => ({
+        taskCreationStep: TaskCreationStep.ConfigureErrorGatewayEntranceConnection,
+        element: event.context.connection
+      }))
     ),
   );
 
@@ -278,7 +273,7 @@ export class BpmnJsService {
     let cursor: { element: IElement, gatewayType?: GatewayType, successorFor: IElement[] } | null = { element: startEvent.outgoing[0].target, successorFor: [] },
       pipeline: IPipeline = { bpmnJsModelReference: bpmnJsModelIdentifier, name: name, solutionReference: null },
       pipelineActions: IPipelineAction[] = [],
-      stack: {element: IElement, successorFor: IElement[], gatewayType: GatewayType }[] = [];
+      stack: { element: IElement, successorFor: IElement[], gatewayType: GatewayType }[] = [];
 
     let anchestors: IPipelineAction[] = [], index = 0;
     while (cursor) {
@@ -293,7 +288,7 @@ export class BpmnJsService {
           break;
       }
 
-      if(cursor){
+      if (cursor) {
         const connectors: IConnector[] = cursor.element!.outgoing.filter(outgoing => outgoing.type === shapeTypes.SequenceFlow);
         const mapping = connectors.map(connector => {
           const connectorGatewayType = BPMNJsRepository.getSLPBExtension(connector.businessObject, 'SequenceFlowExtension', (ext) => ext.sequenceFlowType);
@@ -301,16 +296,16 @@ export class BpmnJsService {
           return {
             element: connector.target,
             successorFor: successorFor,
-            gatewayType: connectorGatewayType === 'error'? 'Error': 'Success' as GatewayType
+            gatewayType: connectorGatewayType === 'error' ? 'Error' : 'Success' as GatewayType
           };
         });
         cursor = mapping[0];
         stack.push(...mapping.slice(1));
-  
+
         index++;
       }
 
-      if(!cursor){
+      if (!cursor) {
         cursor = stack[0];
         stack = stack.slice(1);
 
@@ -327,9 +322,9 @@ export class BpmnJsService {
     }
   }
 
-  private _getLastActivities(connector: IConnector){
+  private _getLastActivities(connector: IConnector) {
     let incomingElements = [connector.source];
-    while(incomingElements.length > 0 && incomingElements.every(element => element.type !== shapeTypes.Task)){
+    while (incomingElements.length > 0 && incomingElements.every(element => element.type !== shapeTypes.Task)) {
       incomingElements = incomingElements.flatMap(element => element.incoming.map(incoming => incoming.source));
     }
     return incomingElements.filter(element => element.type === shapeTypes.Task);
@@ -362,7 +357,7 @@ export class BpmnJsService {
       bpmnElementIdentifier: cursor.id,
       solutionReference: null
     };
-    
+
     return { action, activityIdentifier };
   }
 

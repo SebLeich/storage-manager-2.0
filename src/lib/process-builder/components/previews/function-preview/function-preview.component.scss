@@ -1,6 +1,8 @@
 .headline {
     font-size: 1.2rem;
     white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .description {

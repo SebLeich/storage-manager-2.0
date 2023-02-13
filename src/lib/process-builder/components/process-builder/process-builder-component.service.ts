@@ -193,13 +193,7 @@ export class ProcessBuilderComponentService {
     let outgoingErrorGatewaySequenceFlow = taskCreationPayload
       .configureActivity!
       .outgoing
-      .find(outgoing => outgoing.type === shapeTypes.SequenceFlow
-        && BPMNJsRepository.sLPBExtensionSetted(
-          outgoing.target?.businessObject,
-          'GatewayExtension',
-          (ext) => ext.gatewayType === 'error_gateway'
-        )
-      );
+      .find(sequenceFlow => sequenceFlow.type === shapeTypes.SequenceFlow && sequenceFlow.target?.type === shapeTypes.ExclusiveGateway);
 
     let gatewayShape = outgoingErrorGatewaySequenceFlow?.target;
 
@@ -217,7 +211,6 @@ export class ProcessBuilderComponentService {
         }
       );
 
-      BPMNJsRepository.updateBpmnElementSLPBExtension(this._bpmnJsService.bpmnJs, gatewayShape!.businessObject, 'GatewayExtension', (e: any) => e.gatewayType = 'error_gateway');
       this._bpmnJsService.modelingModule.updateLabel(gatewayShape, this._config.errorGatewayConfig.gatewayName);
 
       // reconnect the former connected target as success action

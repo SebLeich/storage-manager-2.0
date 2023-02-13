@@ -657,12 +657,6 @@ describe('ProcessBuilderComponentService', () => {
         } as IElement;
 
         if (configuration.existingGateway) {
-          BPMNJsRepository.updateBpmnElementSLPBExtension(
-            bpmnJsService.bpmnJs,
-            configuration.existingGateway.businessObject,
-            'GatewayExtension',
-            (ext) => ext.gatewayType = 'error_gateway'
-          );
           outgoing.push({
             type: shapeTypes.SequenceFlow,
             source: activityMock,

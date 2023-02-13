@@ -9,20 +9,18 @@ import { selectIFunction } from 'src/lib/process-builder/store/selectors/functio
 import { IFunction } from 'src/lib/process-builder/globals/i-function';
 import { selectIParam, selectIParamByNormalizedName } from 'src/lib/process-builder/store/selectors/param.selectors';
 import { IParam } from 'src/lib/process-builder/globals/i-param';
-import { ProcessBuilderRepository } from 'src/lib/core/process-builder-repository';
 import { CodemirrorRepository } from 'src/lib/core/codemirror.repository';
 import { MethodEvaluationStatus } from 'src/lib/process-builder/globals/method-evaluation-status';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { AbstractControl, FormControl, FormGroup, Validators } from '@angular/forms';
 import { IProcessBuilderConfig, PROCESS_BUILDER_CONFIG_TOKEN } from 'src/lib/process-builder/globals/i-process-builder-config';
 import { debounceTime, distinctUntilChanged, filter, map, startWith, switchMap } from 'rxjs/operators';
+import { firstValueFrom } from 'rxjs';
 import { selectIInterface } from 'src/lib/process-builder/store/selectors/interface.selectors';
-import { injectProviderState, injectValues } from 'src/lib/process-builder/store/selectors/injection-context.selectors';
 import { selectSnapshot } from 'src/lib/process-builder/globals/select-snapshot';
 import { ITaskCreationFormGroup } from 'src/lib/process-builder/interfaces/task-creation.interface';
 import { IParamDefinition } from 'src/lib/process-builder/globals/i-param-definition';
 import { GatewayType } from 'src/lib/process-builder/types/gateway.type';
 import { ParamCodes } from 'src/config/param-codes';
-import { firstValueFrom } from 'rxjs/internal/firstValueFrom';
 import STEP_REGISTRY from './constants/step-registry.constant';
 
 @Component({
@@ -47,7 +45,7 @@ export class TaskCreationComponent implements OnDestroy, OnInit {
     outputParamName: new FormControl<string>(''),
     outputParamValue: new FormControl<IParam | IParamDefinition[] | null>(null),
     requireCustomImplementation: new FormControl<boolean>(false),
-  }) as FormGroup<ITaskCreationFormGroup>;
+  }, this.implementationExistsWhenRequiredValidator) as FormGroup<ITaskCreationFormGroup>;
 
   public customEvaluationResult$ = this.formGroup.controls
     .implementation
@@ -118,6 +116,8 @@ export class TaskCreationComponent implements OnDestroy, OnInit {
     map(([steps, index]) => steps[index]),
     distinctUntilChanged((prev, curr) => prev.taskCreationStep === curr.taskCreationStep)
   );
+  public hasPreviousStep$ = this.currentStepIndex$.pipe(map(index => index > 0));
+  public hasNextStep$ = combineLatest([this.steps$, this.currentStepIndex$]).pipe(map(([steps, index]) => index < steps.length - 1));
   public canAnalyzeCustomImplementation$ = this.currentStep$.pipe(
     filter((x) => (x ? true : false)),
     map(
@@ -146,6 +146,16 @@ export class TaskCreationComponent implements OnDestroy, OnInit {
   public abort = () => this._ref.close();
   public finish = () => this._ref.close(this.formGroup.value);
 
+  public async nextStep() {
+    const stepIndex = await firstValueFrom(this.currentStepIndex$);
+    this.setStep(stepIndex + 1);
+  }
+
+  public async previousStep() {
+    const stepIndex = await firstValueFrom(this.currentStepIndex$);
+    this.setStep(stepIndex - 1);
+  }
+
   public ngOnDestroy = () => this._subscription.unsubscribe();
 
   public ngOnInit(): void {
@@ -171,33 +181,6 @@ export class TaskCreationComponent implements OnDestroy, OnInit {
 
   public setStep(index: number) {
     this._currentStepIndex.next(index);
-  }
-
-  public async testImplementation() {
-    const injector = await selectSnapshot(this._store.select(injectValues)), state = await selectSnapshot(this._store.select(injectProviderState));
-    let customImplementation = this.formGroup.controls['implementation']?.value;
-    if (customImplementation) {
-      const result = await firstValueFrom(ProcessBuilderRepository.executeUserMethodAndReturnResponse(customImplementation, injector));
-
-      const parsed: string = typeof result === 'object' ? JSON.stringify(result) : typeof result === 'number' ? result.toString() : result;
-      //this._statusMessage.next(`succeeded! received: ${parsed}`);
-      console.log(parsed);
-
-      const objectTypeDefinition = ProcessBuilderRepository.extractObjectTypeDefinition(result);
-      if (Array.isArray(objectTypeDefinition)) this.formGroup.controls['outputParamValue'].setValue(objectTypeDefinition);
-      else {
-        const param = await selectSnapshot(this._store.select(selectIParamByNormalizedName(objectTypeDefinition.normalizedName)));
-      }
-    } else if (typeof this.formGroup.controls.functionIdentifier.value === 'number') {
-      const func = await firstValueFrom(this._store.select(selectIFunction(this.formGroup.controls.functionIdentifier.value)));
-      if (typeof func?.implementation === 'function') {
-        const objectTypeDefinition = await func.implementation();
-        if (Array.isArray(objectTypeDefinition)) this.formGroup.controls['outputParamValue'].setValue(objectTypeDefinition);
-        else {
-          const param = await selectSnapshot(this._store.select(selectIParamByNormalizedName(objectTypeDefinition.normalizedName)));
-        }
-      }
-    }
   }
 
   public async validateFunctionSelection() {
@@ -282,4 +265,12 @@ export class TaskCreationComponent implements OnDestroy, OnInit {
   public get implementationControl(): FormControl<string[] | null> {
     return this.formGroup.controls['implementation'];
   }
+
+  private implementationExistsWhenRequiredValidator(control: AbstractControl) {
+    const formGroup = control as FormGroup<ITaskCreationFormGroup>;
+    if (formGroup.controls.implementation.value || !formGroup.controls.requireCustomImplementation.value) {
+      return null;
+    }
+    return { noImplementation: true };
+  };
 }

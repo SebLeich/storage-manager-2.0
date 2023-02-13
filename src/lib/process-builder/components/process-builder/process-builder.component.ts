@@ -72,12 +72,7 @@ export class ProcessBuilderComponent implements OnDestroy, OnInit {
             break;
 
           case shapeTypes.ExclusiveGateway:
-            const isErrorGateway = BPMNJsRepository.sLPBExtensionSetted(element.businessObject, 'GatewayExtension', (ext) => ext.gatewayType === 'error_gateway');
-            if (isErrorGateway) {
-              await this._processBuilderComponentService.tryDeleteErrorGateway(element);
-            } else {
-              this.bpmnJsService.modelingModule.removeElements([element]);
-            }
+            await this._processBuilderComponentService.tryDeleteErrorGateway(element);
             break;
 
           case shapeTypes.EndEvent:
