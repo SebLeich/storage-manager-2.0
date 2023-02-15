@@ -1,4 +1,4 @@
-import { IParamDefinition } from "../globals/i-param-definition";
+import { IParamDefinition } from "./param-definition.interface";
 import { GatewayType } from "../types/gateway.type";
 
 export interface ITaskCreationData {

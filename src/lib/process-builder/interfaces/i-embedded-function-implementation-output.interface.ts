@@ -1,4 +1,4 @@
-import { IParamDefinition } from "src/lib/process-builder/globals/i-param-definition";
+import { IParamDefinition } from "src/lib/process-builder/interfaces/param-definition.interface";
 
 export interface IEmbeddedFunctionImplementationData {
     implementation: string[];

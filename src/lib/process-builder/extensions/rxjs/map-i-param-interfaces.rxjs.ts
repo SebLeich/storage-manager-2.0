@@ -1,8 +1,8 @@
 import { Store } from "@ngrx/store";
 import { combineLatest, forkJoin, Observable, of } from "rxjs";
 import { flatMap, map, switchMap, take, tap } from "rxjs/operators";
-import { IParam } from "../../globals/i-param";
-import { IParamDefinition } from "../../globals/i-param-definition";
+import { IParam } from "../../interfaces/param.interface";
+import { IParamDefinition } from "../../interfaces/param-definition.interface";
 import { selectIInterface } from "../../store/selectors/interface.selectors";
 import { mapIParamsInterfaces } from "./map-i-params-interfaces.rxjs";
 

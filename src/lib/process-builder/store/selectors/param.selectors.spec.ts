@@ -7,7 +7,7 @@ import { isEqual } from 'lodash';
 import defaultImportsConstant from 'src/app/default-imports.constant';
 import { addIParams } from '../actions/param.actions';
 import { selectIParam, selectIParams, selectIParamsByNormalizedName } from './param.selectors';
-import { IParam } from '../../globals/i-param';
+import { IParam } from '../../interfaces/param.interface';
 
 describe('IParams Selectors', () => {
 

@@ -1,4 +1,4 @@
-import { ITaskCreationConfig } from "src/lib/process-builder/interfaces/i-task-creation-config.interface";
+import { ITaskCreationConfig } from "src/lib/process-builder/interfaces/task-creation-config.interface";
 
 export interface ITaskCreationComponentOutput {
     config: ITaskCreationConfig;

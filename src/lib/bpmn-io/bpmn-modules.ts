@@ -1,4 +1,4 @@
-import { IBpmnJS } from "../process-builder/interfaces/i-bpmn-js.interface";
+import { IBpmnJS } from "../process-builder/interfaces/bpmn-js.interface";
 import bpmnJsModules from "./bpmn-js-modules";
 import { IElement } from "./interfaces/element.interface";
 import { IModelingModule } from "./interfaces/modeling-module.interface";

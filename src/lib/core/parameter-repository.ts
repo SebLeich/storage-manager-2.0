@@ -1,5 +1,5 @@
-import { IParam } from "../process-builder/globals/i-param";
-import { IParamDefinition } from "../process-builder/globals/i-param-definition";
+import { IParam } from "../process-builder/interfaces/param.interface";
+import { IParamDefinition } from "../process-builder/interfaces/param-definition.interface";
 
 export class ParameterRepository {
 

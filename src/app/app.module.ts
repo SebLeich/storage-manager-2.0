@@ -49,10 +49,10 @@ import { SolutionAnimationComponent } from './components/solution-animation/solu
 import { NoSolutionDialogComponent } from './components/dialog/no-solution-dialog/no-solution-dialog.component';
 import { SolutionValidationComponent } from './components/solution-validation/solution-validation.component';
 import { SolutionValidationErrorPipe } from './pipes/solution-validation-error.pipe';
-import { PROCESS_BUILDER_CONFIG_TOKEN } from 'src/lib/process-builder/globals/i-process-builder-config';
-import { PARAMS_CONFIG_TOKEN } from 'src/lib/process-builder/globals/i-param';
-import { FUNCTIONS_CONFIG_TOKEN } from 'src/lib/process-builder/globals/i-function';
-import { INTERFACES_CONFIG_TOKEN } from 'src/lib/process-builder/interfaces/i-interface.interface';
+import { PROCESS_BUILDER_CONFIG_TOKEN } from 'src/lib/process-builder/interfaces/process-builder-config.interface';
+import { PARAMS_CONFIG_TOKEN } from 'src/lib/process-builder/interfaces/param.interface';
+import { FUNCTIONS_CONFIG_TOKEN } from 'src/lib/process-builder/interfaces/function.interface';
+import { INTERFACES_CONFIG_TOKEN } from 'src/lib/process-builder/interfaces/interface.interface';
 
 import { SharedModule } from 'src/lib/shared/shared.module';
 import { MatMenuModule } from '@angular/material/menu';

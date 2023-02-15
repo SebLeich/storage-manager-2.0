@@ -2,7 +2,7 @@ import { Inject, Injectable, Optional } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { of } from 'rxjs';
 import { mergeMap } from 'rxjs/operators';
-import { IInterface, INTERFACES_CONFIG_TOKEN } from '../../interfaces/i-interface.interface';
+import { IInterface, INTERFACES_CONFIG_TOKEN } from '../../interfaces/interface.interface';
 import { addIInterfaces, loadIInterfaces } from '../actions/interface.actions';
 
 

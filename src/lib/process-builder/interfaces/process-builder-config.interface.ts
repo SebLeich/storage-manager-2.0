@@ -1,18 +1,9 @@
 import { InjectionToken } from "@angular/core";
-import { ITaskConfig } from "../interfaces/i-task-config.interface";
-import { IErrorGatewayConfig } from "./i-error-gateway-config";
-import { IProcessStatusConfig } from "./i-process-status-config";
+import { ITaskConfig } from "./task-config.interface";
+import { IErrorGatewayConfig } from "./error-gateway-config.interface";
+import { IProcessStatusConfig } from "../globals/i-process-status-config";
 
 export interface IProcessBuilderConfig {
-    editable: boolean;
-    hideEvents: boolean;
-    hideTasks: boolean;
-    hideGateways: boolean;
-    hideSubProcesses: boolean;
-    hideDataObjectReferences: boolean;
-    hideDatabases: boolean;
-    hidePools: boolean;
-    hideGroups: boolean;
     dynamicParamDefaultNaming: string;
     defaultFunctionName: string;
     statusConfig: IProcessStatusConfig;

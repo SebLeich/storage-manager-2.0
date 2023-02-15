@@ -1,5 +1,5 @@
 import { createAction } from '@ngrx/store';
-import { IInterface } from '../../interfaces/i-interface.interface';
+import { IInterface } from '../../interfaces/interface.interface';
 
 export const addIInterface = createAction(
   '[IInterface] Add IInterface',

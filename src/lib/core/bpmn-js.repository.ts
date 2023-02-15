@@ -5,10 +5,10 @@ import { IBusinessObject } from "../bpmn-io/interfaces/business-object.interface
 import { IElement } from "../bpmn-io/interfaces/element.interface";
 import shapeTypes from "../bpmn-io/shape-types";
 import { IProcessValidationResult } from "../process-builder/interfaces/validation-result.interface";
-import { IBpmnJS } from "../process-builder/interfaces/i-bpmn-js.interface";
-import { IFunction } from "../process-builder/globals/i-function";
-import { IParam } from "../process-builder/globals/i-param";
-import { IProcessBuilderConfig, PROCESS_BUILDER_CONFIG_TOKEN } from "../process-builder/globals/i-process-builder-config";
+import { IBpmnJS } from "../process-builder/interfaces/bpmn-js.interface";
+import { IFunction } from "../process-builder/interfaces/function.interface";
+import { IParam } from "../process-builder/interfaces/param.interface";
+import { IProcessBuilderConfig, PROCESS_BUILDER_CONFIG_TOKEN } from "../process-builder/interfaces/process-builder-config.interface";
 import { sebleichProcessBuilderExtension } from "../process-builder/globals/sebleich-process-builder-extension";
 import { ValidationError } from "../process-builder/globals/validation-error";
 import { ValidationWarning } from "../process-builder/globals/validation-warning";

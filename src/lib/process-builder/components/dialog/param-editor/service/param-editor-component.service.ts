@@ -8,7 +8,7 @@ import { Store } from '@ngrx/store';
 import { selectIParam, selectIParams } from 'src/lib/process-builder/store/selectors/param.selectors';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { IParamEditorComponentInputData } from '../../../../interfaces/i-param-editor-component-input-data.interface';
-import { IParam } from 'src/lib/process-builder/globals/i-param';
+import { IParam } from 'src/lib/process-builder/interfaces/param.interface';
 import { selectIFunctionsByOutputParam } from 'src/lib/process-builder/store/selectors/function.selector';
 import { BPMNJsRepository } from 'src/lib/core/bpmn-js.repository';
 import { ProcessBuilderRepository } from 'src/lib/core/process-builder-repository';

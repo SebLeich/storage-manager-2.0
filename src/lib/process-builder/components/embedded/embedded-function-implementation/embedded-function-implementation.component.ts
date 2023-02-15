@@ -9,7 +9,7 @@ import { basicSetup, EditorView } from '@codemirror/basic-setup';
 import { esLint, javascript } from '@codemirror/lang-javascript';
 import { CodemirrorRepository } from 'src/lib/core/codemirror.repository';
 import { MethodEvaluationStatus } from 'src/lib/process-builder/globals/method-evaluation-status';
-import { IProcessBuilderConfig, PROCESS_BUILDER_CONFIG_TOKEN } from 'src/lib/process-builder/globals/i-process-builder-config';
+import { IProcessBuilderConfig, PROCESS_BUILDER_CONFIG_TOKEN } from 'src/lib/process-builder/interfaces/process-builder-config.interface';
 import { linter, lintGutter } from '@codemirror/lint';
 // @ts-ignore
 import Linter from "eslint4b-prebuilt";
@@ -29,7 +29,7 @@ import byStringMethods from './methods/by-string.methods';
 import { ProcessBuilderService } from 'src/lib/process-builder/services/process-builder.service';
 import globalsInjector from './constants/globals-injector.constant';
 import { selectSnapshot } from 'src/lib/process-builder/globals/select-snapshot';
-import { IInterface } from 'src/lib/process-builder/interfaces/i-interface.interface';
+import { IInterface } from 'src/lib/process-builder/interfaces/interface.interface';
 
 @Component({
   selector: 'app-embedded-function-implementation',

@@ -1,7 +1,7 @@
 import { Observable, ReplaySubject } from "rxjs";
-import { IInterface } from "../process-builder/interfaces/i-interface.interface";
-import { IParam } from "../process-builder/globals/i-param";
-import { IParamDefinition } from "../process-builder/globals/i-param-definition";
+import { IInterface } from "../process-builder/interfaces/interface.interface";
+import { IParam } from "../process-builder/interfaces/param.interface";
+import { IParamDefinition } from "../process-builder/interfaces/param-definition.interface";
 
 export class ProcessBuilderRepository {
 

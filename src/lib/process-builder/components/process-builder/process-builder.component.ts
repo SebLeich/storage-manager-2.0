@@ -101,9 +101,6 @@ export class ProcessBuilderComponent implements OnDestroy, OnInit {
         this.bpmnJsService.saveCurrentBpmnModel();
       })
     );
-
-    this.bpmnJsService.toolManagerUpdateEventFired$.subscribe(evt => console.log(evt));
-
   }
 
   private _getFirstProvidedOutputWithSLPBExtension(currentElement: IElement, extension: 'matchesProcessOutputInterface' | 'isProcessOutput') {
@@ -116,7 +113,7 @@ export class ProcessBuilderComponent implements OnDestroy, OnInit {
           return dataOutputRef;
         }
       }
-      
+
       sourceElement = sourceElement.incoming.find(incoming => incoming.type === shapeTypes.SequenceFlow && incoming.source?.type === shapeTypes.Task)?.source;
     }
     return undefined;

@@ -3,7 +3,7 @@ import { FormControl, FormGroup } from '@angular/forms';
 import { Store } from '@ngrx/store';
 import { BehaviorSubject, of, ReplaySubject, Subscription } from 'rxjs';
 import { EmbeddedView } from 'src/lib/process-builder/classes/embedded-view';
-import { IParamDefinition } from 'src/lib/process-builder/globals/i-param-definition';
+import { IParamDefinition } from 'src/lib/process-builder/interfaces/param-definition.interface';
 import { selectIFunction } from 'src/lib/process-builder/store/selectors/function.selector';
 import { filter, map, switchMap } from 'rxjs/operators';
 import { selectIInterface } from 'src/lib/process-builder/store/selectors/interface.selectors';

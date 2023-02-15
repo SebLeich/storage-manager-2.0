@@ -1,7 +1,7 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { ControlContainer, FormGroup } from '@angular/forms';
 import { EmbeddedView } from 'src/lib/process-builder/classes/embedded-view';
-import { IProcessBuilderConfig, PROCESS_BUILDER_CONFIG_TOKEN } from 'src/lib/process-builder/globals/i-process-builder-config';
+import { IProcessBuilderConfig, PROCESS_BUILDER_CONFIG_TOKEN } from 'src/lib/process-builder/interfaces/process-builder-config.interface';
 import { ITaskCreationFormGroup } from 'src/lib/process-builder/interfaces/task-creation.interface';
 import { GatewayType } from 'src/lib/process-builder/types/gateway.type';
 

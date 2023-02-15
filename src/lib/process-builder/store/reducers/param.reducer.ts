@@ -1,6 +1,6 @@
 import { createEntityAdapter, EntityAdapter, EntityState, Update } from '@ngrx/entity';
 import { createReducer, on } from '@ngrx/store';
-import { IParam } from '../../globals/i-param';
+import { IParam } from '../../interfaces/param.interface';
 import { removeIFunction } from '../actions/function.actions';
 import { addIParam, addIParams, removeIParam, updateIParam, upsertIParam, upsertIParams } from '../actions/param.actions';
 

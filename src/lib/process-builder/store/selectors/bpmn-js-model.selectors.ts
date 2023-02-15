@@ -1,6 +1,6 @@
 import { createFeatureSelector, createSelector } from '@ngrx/store';
 import { BPMNJsRepository } from 'src/lib/core/bpmn-js.repository';
-import { IBpmnJSModel } from '../../interfaces/i-bpmn-js-model.interface';
+import { IBpmnJSModel } from '../../interfaces/bpmn-js-model.interface';
 import * as fromIBpmnJSModel from '../reducers/bpmn-js-model.reducer';
 
 export const selectIBpmnJSModelState = createFeatureSelector<fromIBpmnJSModel.State>(

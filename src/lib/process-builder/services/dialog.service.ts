@@ -6,9 +6,9 @@ import { IElement } from 'src/lib/bpmn-io/interfaces/element.interface';
 import { ParamEditorComponent } from '../components/dialog/param-editor/param-editor.component';
 import { ITaskCreationComponentInput } from '../interfaces/i-task-creation-component-input.interface';
 import { TaskCreationComponent } from '../components/dialog/task-creation/task-creation.component';
-import { FUNCTIONS_CONFIG_TOKEN, IFunction } from '../globals/i-function';
-import { IBpmnJS } from '../interfaces/i-bpmn-js.interface';
-import { ITaskCreationDataWrapper } from '../interfaces/i-task-creation-data-wrapper.interface';
+import { FUNCTIONS_CONFIG_TOKEN, IFunction } from '../interfaces/function.interface';
+import { IBpmnJS } from '../interfaces/bpmn-js.interface';
+import { ITaskCreationDataWrapper } from '../interfaces/task-creation-data-wrapper.interface';
 import { ITaskCreationData } from '../interfaces/task-creation-data.interface';
 
 @Injectable({

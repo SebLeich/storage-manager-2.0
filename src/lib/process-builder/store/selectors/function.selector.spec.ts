@@ -4,7 +4,7 @@ import { Store } from '@ngrx/store';
 import { selectSnapshot } from '../../globals/select-snapshot';
 import { isEqual } from 'lodash';
 import defaultImportsConstant from 'src/app/default-imports.constant';
-import { IFunction } from '../../globals/i-function';
+import { IFunction } from '../../interfaces/function.interface';
 import { addIFunctions } from '../actions/function.actions';
 import { selectIFunction, selectIFunctions, selectNextId } from './function.selector';
 

@@ -1,7 +1,7 @@
 import { AfterViewInit, Component, Input, OnChanges, OnDestroy, SimpleChanges, TemplateRef, ViewChild } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { BehaviorSubject, Subscription } from 'rxjs';
-import { IParamDefinition } from 'src/lib/process-builder/globals/i-param-definition';
+import { IParamDefinition } from 'src/lib/process-builder/interfaces/param-definition.interface';
 import { IParamMember } from 'src/lib/process-builder/globals/i-param-member';
 import { State } from 'src/lib/process-builder/store/reducers/interface.reducer';
 import { selectIInterface } from 'src/lib/process-builder/store/selectors/interface.selectors';

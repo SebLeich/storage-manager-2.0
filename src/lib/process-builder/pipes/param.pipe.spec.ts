@@ -1,4 +1,4 @@
-import { IParam } from '../globals/i-param';
+import { IParam } from '../interfaces/param.interface';
 import { ParamPipe } from './param.pipe';
 import { Component, Input } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';

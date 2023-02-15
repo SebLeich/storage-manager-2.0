@@ -1,61 +1,56 @@
 import { IElement } from 'src/lib/bpmn-io/interfaces/element.interface';
 import shapeTypes from 'src/lib/bpmn-io/shape-types';
 import { BpmnJsService } from 'src/lib/process-builder/services/bpmn-js.service';
-import { ContextPadEntryTypes } from './context-pad-entry.types';
+import { ContextPadEntryTypes } from './context-pad-entry.type';
 import { IContextPadEntry } from './context-pad-entry.interface';
-import { IAutoPlace } from './auto-place.interface';
-import { BPMNJsRepository } from 'src/lib/core/bpmn-js.repository';
+import { IAutoPlace } from '../interfaces/auto-place.interface';
 
 export default class CustomContextPad {
-  public create: any;
-  public elementFactory: any;
-  public translate: any;
-  public autoPlace!: IAutoPlace;
-  public static $inject: any;
-  public nonExisting = ['append.intermediate-event', 'replace'];
-  constructor(config: any, contextPad: any, create: any, elementFactory: any, injector: any, translate: any) {
-    this.create = create;
-    this.elementFactory = elementFactory;
-    this.translate = translate;
-
-    if (config.autoPlace !== false) {
-      this.autoPlace = injector.get("autoPlace", false);
-    }
-
+  public static $inject = [
+    "autoPlace",
+    "contextPad",
+    "create",
+    "elementFactory",
+    "connect"
+  ];
+  constructor(public autoPlace: IAutoPlace, public contextPad: any, public create: any, public elementFactory: any, public connect: any) {
     contextPad.registerProvider(this);
   }
 
   public getContextPadEntries(element: IElement): (entries: any) => { [key in ContextPadEntryTypes]?: IContextPadEntry } {
-    const { autoPlace, create, elementFactory, translate } = this;
     let contextPad: { [key in ContextPadEntryTypes]?: IContextPadEntry } = {};
     switch (element.type) {
       case shapeTypes.Task:
-        this._addAddEndEventAction(contextPad, element, translate);
-        this._addAppendTaskAction(contextPad, element, translate, elementFactory, create, autoPlace);
-        this._addDeleteAction(contextPad, element, translate);
-        this._addAddExclusiveGatewayAction(contextPad, element, translate, elementFactory, create, autoPlace);
+        this._addAddEndEventAction(contextPad, element);
+        this._addAppendTaskAction(contextPad, element, this.elementFactory, this.create, this.autoPlace);
+        this._addConnectAction(contextPad, element, this.connect);
+        this._addDeleteAction(contextPad, element);
+        this._addAddExclusiveGatewayAction(contextPad, element, this.elementFactory, this.create, this.autoPlace);
         break;
+
       case shapeTypes.EndEvent:
-        this._addAppendTaskAction(contextPad, element, translate, elementFactory, create, autoPlace);
-        this._addDeleteAction(contextPad, element, translate);
+        this._addDeleteAction(contextPad, element);
         break;
+
       case shapeTypes.ExclusiveGateway:
-        this._addAppendTaskAction(contextPad, element, translate, elementFactory, create, autoPlace);
-        this._addDeleteAction(contextPad, element, translate);
+        this._addAppendTaskAction(contextPad, element, this.elementFactory, this.create, this.autoPlace);
+        this._addDeleteAction(contextPad, element);
         break;
+
       case shapeTypes.StartEvent:
-        this._addAppendTaskAction(contextPad, element, translate, elementFactory, create, autoPlace);
-        this._addDeleteAction(contextPad, element, translate);
+        this._addAppendTaskAction(contextPad, element, this.elementFactory, this.create, this.autoPlace);
+        this._addDeleteAction(contextPad, element);
         break;
+        
     }
     return (entries: any) => contextPad;
   }
 
-  private _addAppendTaskAction(contextPad: { [key in ContextPadEntryTypes]?: IContextPadEntry }, element: IElement, translate: (toTranslate: string) => string, elementFactory: any, create: any, autoPlace: any) {
+  private _addAppendTaskAction(contextPad: { [key in ContextPadEntryTypes]?: IContextPadEntry }, element: IElement, elementFactory: any, create: any, autoPlace: any) {
     contextPad['append.append-task'] = {
       group: "model",
       className: 'bpmn-icon-task',
-      title: translate("Append Activity") as string,
+      title: "Append Task",
       action: {
         click: () => {
           const shape = elementFactory.createShape({ type: shapeTypes.Task });
@@ -65,11 +60,11 @@ export default class CustomContextPad {
     }
   }
 
-  private _addAddEndEventAction(contextPad: { [key in ContextPadEntryTypes]?: IContextPadEntry }, element: IElement, translate: (toTranslate: string) => string) {
+  private _addAddEndEventAction(contextPad: { [key in ContextPadEntryTypes]?: IContextPadEntry }, element: IElement) {
     contextPad['append.end-event'] = {
       group: "model",
       className: "bpmn-icon-end-event-none",
-      title: translate("Append EndEvent") as string,
+      title: "Append End Event",
       action: {
         click: () => {
           BpmnJsService.elementEndEventCreationRequested.next(element)
@@ -78,11 +73,24 @@ export default class CustomContextPad {
     }
   }
 
-  private _addDeleteAction(contextPad: { [key in ContextPadEntryTypes]?: IContextPadEntry }, element: IElement, translate: (toTranslate: string) => string) {
+  private _addConnectAction(contextPad: { [key in ContextPadEntryTypes]?: IContextPadEntry }, element: IElement, connect: any, autoActivate: boolean = false) {
+    contextPad['connect'] = {
+      group: 'edit',
+      className: 'bpmn-icon-connection-multi',
+      title: 'Connect',
+      action: {
+        click: (event) => {
+          connect.start(event, element, autoActivate);
+        }
+      }
+    }
+  }
+
+  private _addDeleteAction(contextPad: { [key in ContextPadEntryTypes]?: IContextPadEntry }, element: IElement) {
     contextPad['delete'] = {
       group: "edit",
       className: "bpmn-icon-trash",
-      title: translate("Remove") as string,
+      title: "Remove",
       action: {
         click: () => {
           console.log(element);
@@ -92,7 +100,7 @@ export default class CustomContextPad {
     }
   }
 
-  private _addAddExclusiveGatewayAction(contextPad: { [key in ContextPadEntryTypes]?: IContextPadEntry }, element: IElement, translate: (toTranslate: string) => string, elementFactory: any, create: any, autoPlace: any) {
+  private _addAddExclusiveGatewayAction(contextPad: { [key in ContextPadEntryTypes]?: IContextPadEntry }, element: IElement, elementFactory: any, create: any, autoPlace: any) {
     contextPad['append.exclusive-gateway'] = {
       group: "model",
       className: 'bpmn-icon-gateway-xor',
@@ -106,12 +114,3 @@ export default class CustomContextPad {
     }
   }
 }
-
-CustomContextPad.$inject = [
-  "config",
-  "contextPad",
-  "create",
-  "elementFactory",
-  "injector",
-  "translate",
-];

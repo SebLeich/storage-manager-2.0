@@ -6,8 +6,8 @@ import { IConnector } from 'src/lib/bpmn-io/interfaces/connector.interface';
 import { IElement } from 'src/lib/bpmn-io/interfaces/element.interface';
 import { IModelingModule } from 'src/lib/bpmn-io/interfaces/modeling-module.interface';
 import shapeTypes from 'src/lib/bpmn-io/shape-types';
-import { FUNCTIONS_CONFIG_TOKEN, IFunction } from '../../globals/i-function';
-import { IProcessBuilderConfig, PROCESS_BUILDER_CONFIG_TOKEN } from '../../globals/i-process-builder-config';
+import { FUNCTIONS_CONFIG_TOKEN, IFunction } from '../../interfaces/function.interface';
+import { IProcessBuilderConfig, PROCESS_BUILDER_CONFIG_TOKEN } from '../../interfaces/process-builder-config.interface';
 import { sebleichProcessBuilderExtension } from '../../globals/sebleich-process-builder-extension';
 import { ITaskCreationData } from '../../interfaces/task-creation-data.interface';
 import { ITaskCreationPayload } from '../../interfaces/task-creation-payload.interface';
@@ -23,7 +23,7 @@ import * as fromIFunction from '../../store/reducers/function.reducer';
 import * as fromInjectionContext from '../../store/reducers/injection-context.reducer';
 import { BPMNJsRepository } from 'src/lib/core/bpmn-js.repository';
 import { upsertIParam } from '../../store/actions/param.actions';
-import { IParam } from '../../globals/i-param';
+import { IParam } from '../../interfaces/param.interface';
 import { deepObjectLookup } from 'src/lib/shared/globals/deep-object-lookup.function';
 
 describe('ProcessBuilderComponentService', () => {

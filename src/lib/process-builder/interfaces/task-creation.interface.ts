@@ -1,7 +1,7 @@
 import { FormControl } from "@angular/forms";
 import { ParamCodes } from "src/config/param-codes";
-import { IParam } from "../globals/i-param";
-import { IParamDefinition } from "../globals/i-param-definition";
+import { IParam } from "./param.interface";
+import { IParamDefinition } from "./param-definition.interface";
 import { GatewayType } from "../types/gateway.type";
 
 export interface ITaskCreationFormGroup {

@@ -1,5 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { IParam } from 'src/lib/process-builder/globals/i-param';
+import { IParam } from 'src/lib/process-builder/interfaces/param.interface';
 
 @Component({
   selector: 'app-param-preview',

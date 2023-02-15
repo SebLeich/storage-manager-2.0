@@ -1,4 +1,4 @@
-import { IFunction } from "src/lib/process-builder/globals/i-function";
+import { IFunction } from "src/lib/process-builder/interfaces/function.interface";
 import { PredefinedFunctions } from "src/lib/process-builder/globals/pre-defined-functions";
 import { InterfaceCodes } from "./interface-codes";
 import { ParamCodes } from "./param-codes";

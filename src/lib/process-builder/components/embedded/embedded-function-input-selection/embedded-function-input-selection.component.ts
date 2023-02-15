@@ -5,7 +5,7 @@ import { combineLatest, ReplaySubject } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { ParamCodes } from 'src/config/param-codes';
 import { EmbeddedView } from 'src/lib/process-builder/classes/embedded-view';
-import { IParam } from 'src/lib/process-builder/globals/i-param';
+import { IParam } from 'src/lib/process-builder/interfaces/param.interface';
 import { ITaskCreationFormGroup } from 'src/lib/process-builder/interfaces/task-creation.interface';
 import * as fromIParam from 'src/lib/process-builder/store/reducers/param.reducer';
 import { selectIParams } from 'src/lib/process-builder/store/selectors/param.selectors';

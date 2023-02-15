@@ -6,7 +6,7 @@ import { selectIInterface, selectIInterfaces, selectIInterfacesByNormalizedName,
 import { isEqual } from 'lodash';
 import defaultImportsConstant from 'src/app/default-imports.constant';
 import { addIInterfaces } from '../actions/interface.actions';
-import { IInterface } from '../../interfaces/i-interface.interface';
+import { IInterface } from '../../interfaces/interface.interface';
 
 describe('IInterface Selectors', () => {
 

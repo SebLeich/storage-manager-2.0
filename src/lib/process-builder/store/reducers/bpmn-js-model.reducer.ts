@@ -2,7 +2,7 @@ import { createEntityAdapter, EntityAdapter, EntityState, Update } from '@ngrx/e
 import { createReducer, on } from '@ngrx/store';
 import { addIBpmnJSModel, addIBpmnJSModels, createIBpmnJsModel, removeIBpmnJSModel, setCurrentIBpmnJSModel, updateCurrentIBpmnJSModel, updateIBpmnJSModel, upsertIBpmnJSModel, upsertIBpmnJSModels } from '../actions/bpmn-js-model.actions';
 import { v4 as generateGuid } from 'uuid';
-import { IBpmnJSModel } from '../../interfaces/i-bpmn-js-model.interface';
+import { IBpmnJSModel } from '../../interfaces/bpmn-js-model.interface';
 
 import defaultBpmnXmlConstant from '../../globals/default-bpmn-xml.constant';
 

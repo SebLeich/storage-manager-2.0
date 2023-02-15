@@ -1,9 +1,9 @@
 import { Store } from "@ngrx/store";
 import { combineLatest, forkJoin, Observable, of } from "rxjs";
 import { flatMap, map, switchMap, take, tap } from "rxjs/operators";
-import { IParam } from "../../globals/i-param";
-import { IParamDefinition } from "../../globals/i-param-definition";
-import { IInterface } from "../../interfaces/i-interface.interface";
+import { IParam } from "../../interfaces/param.interface";
+import { IParamDefinition } from "../../interfaces/param-definition.interface";
+import { IInterface } from "../../interfaces/interface.interface";
 import { selectIInterface } from "../../store/selectors/interface.selectors";
 
 export const mapIParamsInterfaces: ((store: Store) => ((obs: Observable<IParam[]>) => Observable<IParam[]>)) = (store: Store) => {

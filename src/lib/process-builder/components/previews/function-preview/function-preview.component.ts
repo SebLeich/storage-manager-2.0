@@ -1,7 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { Store } from '@ngrx/store';
-import { IFunction } from '../../../globals/i-function';
-import { IInputParam } from '../../../globals/i-input-param';
+import { IFunction } from '../../../interfaces/function.interface';
+import { IInputParam } from '../../../interfaces/input-param.interface';
 import { updateIFunction } from '../../../store/actions/function.actions';
 
 @Component({

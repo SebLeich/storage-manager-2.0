@@ -2,13 +2,13 @@ import { Component, ElementRef, Input, OnDestroy, OnInit, QueryList, ViewChild, 
 import { ReplaySubject, filter, Subscription } from 'rxjs';
 import { ParamCodes } from 'src/config/param-codes';
 import { EmbeddedView } from 'src/lib/process-builder/classes/embedded-view';
-import { IFunction } from 'src/lib/process-builder/globals/i-function';
+import { IFunction } from 'src/lib/process-builder/interfaces/function.interface';
 import { showAnimation } from 'src/lib/shared/animations/show';
 import { Store } from '@ngrx/store';
 import { selectIFunctions } from 'src/lib/process-builder/store/selectors/function.selector';
 import { FunctionPreviewComponent } from '../../previews/function-preview/function-preview.component';
 import { ControlContainer, FormControl, FormGroup } from '@angular/forms';
-import { IInputParam } from 'src/lib/process-builder/globals/i-input-param';
+import { IInputParam } from 'src/lib/process-builder/interfaces/input-param.interface';
 import { delay, map, startWith } from 'rxjs/operators';
 
 import * as fromIFunctionState from 'src/lib/process-builder/store/reducers/function.reducer';

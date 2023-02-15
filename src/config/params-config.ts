@@ -1,4 +1,4 @@
-import { IParam } from "src/lib/process-builder/globals/i-param";
+import { IParam } from "src/lib/process-builder/interfaces/param.interface";
 import { InterfaceCodes } from "./interface-codes";
 import { ParamCodes } from "./param-codes";
 

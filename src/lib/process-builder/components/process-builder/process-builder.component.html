@@ -1,14 +1,4 @@
-<div class="PB_diagram-body" [ngClass]="{
-       'not-editable': (processBuilderService.editable$|async) === true? false: true,
-       'hide-events': (processBuilderService.hideEvents$|async) === true? true: false,
-       'hide-tasks': (processBuilderService.hideTasks$|async) === true? true: false,
-       'hide-gateways': (processBuilderService.hideGateways$|async) === true? true: false,
-       'hide-sub-processes': (processBuilderService.hideSubProcesses$|async) === true? true: false,
-       'hide-data-object-references': (processBuilderService.hideDataObjectReferences$|async) === true? true: false,
-       'hide-databases': (processBuilderService.hideDatabases$|async) === true? true: false,
-       'hide-pools': (processBuilderService.hidePools$|async) === true? true: false,
-       'hide-groups': (processBuilderService.hideGroups$|async) === true? true: false
-     }" [@show]="(animationStatus$|async) ?? 'hidden'">
+<div class="PB_diagram-body" [@show]="(animationStatus$|async) ?? 'hidden'">
 
   <div #diagramWrapper class="diagram-wrapper"></div>
 

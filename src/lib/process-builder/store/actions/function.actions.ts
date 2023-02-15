@@ -1,5 +1,5 @@
 import { createAction } from '@ngrx/store';
-import { IFunction } from '../../globals/i-function';
+import { IFunction } from '../../interfaces/function.interface';
 
 export const loadIFunctions = createAction(
   '[IFunction] Load IFunctions'

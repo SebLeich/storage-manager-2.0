@@ -1,1 +1,1 @@
-export type ContextPadEntryGroup = 'model' | 'edit';
+export type ContextPadEntryGroup = 'model' | 'edit' | 'tools';

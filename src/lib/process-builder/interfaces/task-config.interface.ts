@@ -1,4 +1,4 @@
-import { IParam } from "../globals/i-param";
+import { IParam } from "./param.interface";
 
 export interface ITaskConfig {
     'title': string;

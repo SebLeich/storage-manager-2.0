@@ -1,5 +1,5 @@
 import { isEqual } from 'lodash';
-import { IParam } from '../process-builder/globals/i-param';
+import { IParam } from '../process-builder/interfaces/param.interface';
 import { ProcessBuilderRepository } from './process-builder-repository';
 
 import solutionTypeDef from './test/solution-type-def.test-data.json';

@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import defaultImportsConstant from 'src/app/default-imports.constant';
-import { IParam } from 'src/lib/process-builder/globals/i-param';
+import { IParam } from 'src/lib/process-builder/interfaces/param.interface';
 import { v4 as generateGuid } from 'uuid';
 
 import { ParamPreviewComponent } from './param-preview.component';

@@ -17,10 +17,10 @@ import customBPMNJSModule from '../extensions/bpmn-js';
 
 import { v4 as generateGuid } from 'uuid';
 
-import { Subject, firstValueFrom } from 'rxjs';
+import { Subject } from 'rxjs';
 
 import sebleichProcessBuilderExtension from '../globals/sebleich-process-builder-extension';
-import { IBpmnJS } from '../interfaces/i-bpmn-js.interface';
+import { IBpmnJS } from '../interfaces/bpmn-js.interface';
 import { getCanvasModule, getDirectEditingModule, getElementRegistryModule, getEventBusModule, getGraphicsFactory, getModelingModule, getTooltipModule, getZoomScrollModule, IElementRegistryModule, ITooltipModule } from 'src/lib/bpmn-io/bpmn-modules';
 import { BehaviorSubject, buffer, combineLatest, debounceTime, delay, filter, from, map, merge, Observable, scan, shareReplay, startWith, switchMap, throttleTime, timer } from 'rxjs';
 import { IConnectionCreatePostExecutedEvent } from 'src/lib/bpmn-io/interfaces/connection-create-post-executed-event.interface';
@@ -41,7 +41,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { selectSnapshot } from '../globals/select-snapshot';
 import defaultBpmnXmlConstant from '../globals/default-bpmn-xml.constant';
 import moment from 'moment';
-import { IProcessBuilderConfig, PROCESS_BUILDER_CONFIG_TOKEN } from '../globals/i-process-builder-config';
+import { IProcessBuilderConfig, PROCESS_BUILDER_CONFIG_TOKEN } from '../interfaces/process-builder-config.interface';
 import { TaskCreationStep } from '../globals/task-creation-step';
 import { IProcedure } from 'src/app/interfaces/i-procedure.interface';
 import { TaskEditingStatus } from '../types/task-editing-status.type';

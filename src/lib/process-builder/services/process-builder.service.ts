@@ -1,14 +1,14 @@
 import { Inject, Injectable, Optional } from '@angular/core';
 import { ReplaySubject } from 'rxjs';
 import { map, take } from 'rxjs/operators';
-import { IProcessBuilderConfig, PROCESS_BUILDER_CONFIG_TOKEN } from '../globals/i-process-builder-config';
+import { IProcessBuilderConfig, PROCESS_BUILDER_CONFIG_TOKEN } from '../interfaces/process-builder-config.interface';
 import { Store } from '@ngrx/store';
 import { selectIFunctions } from '../store/selectors/function.selector';
 import { selectCurrentIBpmnJSModelGuid, selectIBpmnJSModels } from '../store/selectors/bpmn-js-model.selectors';
 import { createIBpmnJsModel, setCurrentIBpmnJSModel } from '../store/actions/bpmn-js-model.actions';
 import { selectSnapshot } from '../globals/select-snapshot';
 import { selectCurrentParamOutput, selectIParams } from '../store/selectors/param.selectors';
-import { IParam } from '../globals/i-param';
+import { IParam } from '../interfaces/param.interface';
 import { selectIInterface } from '../store/selectors/interface.selectors';
 import { BpmnJsService } from './bpmn-js.service';
 
@@ -97,38 +97,8 @@ export class ProcessBuilderService {
     this._store.dispatch(setCurrentIBpmnJSModel(bpmnJsModels[nextIndex]));
   }
 
-  public toggleEvents = () => this._config.pipe(take(1)).subscribe((value) => {
-    value.hideEvents = value.hideEvents ? false : true;
-    this.setConfig(value);
-  });
-
-  public toggleGateways = () => this._config.pipe(take(1)).subscribe((value) => {
-    value.hideGateways = value.hideGateways ? false : true;
-    this.setConfig(value);
-  });
-
-  public editable$ = this._config.pipe(map(x => x.editable));
-  public hideEvents$ = this._config.pipe(map(x => x.hideEvents));
-  public hideTasks$ = this._config.pipe(map(x => x.hideTasks));
-  public hideGateways$ = this._config.pipe(map(x => x.hideGateways));
-  public hideSubProcesses$ = this._config.pipe(map(x => x.hideSubProcesses));
-  public hideDataObjectReferences$ = this._config.pipe(map(x => x.hideDataObjectReferences));
-  public hideDatabases$ = this._config.pipe(map(x => x.hideDatabases));
-  public hidePools$ = this._config.pipe(map(x => x.hidePools));
-  public hideGroups$ = this._config.pipe(map(x => x.hideGroups));
-
   public get defaultConfig(): IProcessBuilderConfig {
-    return {
-      'editable': true,
-      'hideDataObjectReferences': false,
-      'hideDatabases': false,
-      'hideEvents': false,
-      'hideGateways': false,
-      'hideGroups': false,
-      'hidePools': false,
-      'hideSubProcesses': false,
-      'hideTasks': false
-    } as IProcessBuilderConfig;
+    return { } as IProcessBuilderConfig;
   }
 
   private _reloadLocation() {

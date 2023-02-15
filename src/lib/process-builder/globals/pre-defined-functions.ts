@@ -3,7 +3,7 @@ import { MatDialog } from "@angular/material/dialog";
 import { firstValueFrom } from "rxjs/internal/firstValueFrom";
 import { timer } from "rxjs/internal/observable/timer";
 import { UserInputComponent } from "../components/helpers/user-input/user-input.component";
-import { IFunction } from "./i-function";
+import { IFunction } from "../interfaces/function.interface";
 
 export class PredefinedFunctions {
 

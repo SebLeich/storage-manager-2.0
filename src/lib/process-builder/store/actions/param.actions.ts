@@ -1,5 +1,5 @@
 import { createAction } from '@ngrx/store';
-import { IParam } from '../../globals/i-param';
+import { IParam } from '../../interfaces/param.interface';
 
 export const addIParam = createAction(
   '[IParam] Add IParam',

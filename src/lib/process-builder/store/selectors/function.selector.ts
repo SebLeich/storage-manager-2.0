@@ -1,6 +1,6 @@
 import { createFeatureSelector, createSelector } from '@ngrx/store';
-import { IFunction } from '../../globals/i-function';
-import { IParam } from '../../globals/i-param';
+import { IFunction } from '../../interfaces/function.interface';
+import { IParam } from '../../interfaces/param.interface';
 import * as fromIFunction from '../reducers/function.reducer';
 
 export const selectIFunctionState = createFeatureSelector<fromIFunction.State>(

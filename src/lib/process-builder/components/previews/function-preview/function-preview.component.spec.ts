@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import defaultImportsConstant from 'src/app/default-imports.constant';
-import { IFunction } from 'src/lib/process-builder/globals/i-function';
+import { IFunction } from 'src/lib/process-builder/interfaces/function.interface';
 import { v4 as generateGuid } from 'uuid';
 
 import { FunctionPreviewComponent } from './function-preview.component';

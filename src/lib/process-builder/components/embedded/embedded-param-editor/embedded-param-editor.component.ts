@@ -5,7 +5,7 @@ import { combineLatest, ReplaySubject, Subject, Subscription } from 'rxjs';
 import { debounceTime, startWith } from 'rxjs/operators';
 import { ProcessBuilderRepository } from 'src/lib/core/process-builder-repository';
 import { EmbeddedView } from 'src/lib/process-builder/classes/embedded-view';
-import { IProcessBuilderConfig, PROCESS_BUILDER_CONFIG_TOKEN } from 'src/lib/process-builder/globals/i-process-builder-config';
+import { IProcessBuilderConfig, PROCESS_BUILDER_CONFIG_TOKEN } from 'src/lib/process-builder/interfaces/process-builder-config.interface';
 import { ITaskCreationFormGroup } from 'src/lib/process-builder/interfaces/task-creation.interface';
 
 @Component({
