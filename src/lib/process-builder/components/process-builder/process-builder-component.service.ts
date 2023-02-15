@@ -14,7 +14,7 @@ import { Store } from '@ngrx/store';
 import * as paramSelectors from '../../store/selectors/param.selectors';
 import * as functionSelectors from '../../store/selectors/function.selector';
 import defaultImplementation from '../../globals/default-implementation';
-import { IMethodEvaluationResult } from '../../interfaces/i-method-evaluation-result.interface';
+import { IMethodEvaluationResult } from '../../interfaces/method-evaluation-result.interface';
 import { MethodEvaluationStatus } from '../../globals/method-evaluation-status';
 import { IFunction } from '../../interfaces/function.interface';
 import { IParam } from '../../interfaces/param.interface';

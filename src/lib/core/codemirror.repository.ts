@@ -3,7 +3,7 @@ import { syntaxTree } from "@codemirror/language";
 import { EditorState } from "@codemirror/state";
 import { MethodEvaluationStatus } from "../process-builder/globals/method-evaluation-status";
 import { Tree, SyntaxNode } from 'node_modules/@lezer/common/dist/tree';
-import { IMethodEvaluationResult } from "../process-builder/interfaces/i-method-evaluation-result.interface";
+import { IMethodEvaluationResult } from "../process-builder/interfaces/method-evaluation-result.interface";
 import { ISyntaxNodeResponse } from "./interfaces/syntax-node-response.interface";
 
 export class CodemirrorRepository {

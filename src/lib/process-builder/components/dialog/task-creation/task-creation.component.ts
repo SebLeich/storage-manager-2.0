@@ -4,7 +4,7 @@ import { Store } from '@ngrx/store';
 import { BehaviorSubject, combineLatest, NEVER, Observable, Subscription } from 'rxjs';
 import { ITaskCreationConfig } from 'src/lib/process-builder/interfaces/task-creation-config.interface';
 import { TaskCreationStep } from 'src/lib/process-builder/globals/task-creation-step';
-import { ITaskCreationComponentInput } from '../../../interfaces/i-task-creation-component-input.interface';
+import { ITaskCreationComponentInput } from '../../../interfaces/task-creation-component-input.interface';
 import { selectIFunction } from 'src/lib/process-builder/store/selectors/function.selector';
 import { IFunction } from 'src/lib/process-builder/interfaces/function.interface';
 import { selectIParam, selectIParamByNormalizedName } from 'src/lib/process-builder/store/selectors/param.selectors';

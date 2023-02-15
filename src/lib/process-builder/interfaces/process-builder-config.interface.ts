@@ -1,7 +1,7 @@
 import { InjectionToken } from "@angular/core";
 import { ITaskConfig } from "./task-config.interface";
 import { IErrorGatewayConfig } from "./error-gateway-config.interface";
-import { IProcessStatusConfig } from "../globals/i-process-status-config";
+import { IProcessStatusConfig } from "./process-status-config.interface";
 
 export interface IProcessBuilderConfig {
     dynamicParamDefaultNaming: string;
