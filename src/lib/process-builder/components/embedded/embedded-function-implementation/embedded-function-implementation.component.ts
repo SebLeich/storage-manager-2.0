@@ -17,8 +17,6 @@ import defaultImplementation from 'src/lib/process-builder/globals/default-imple
 import { debounceTime, map, shareReplay, tap } from 'rxjs/operators';
 import { ControlContainer, FormControl, FormGroup, UntypedFormControl } from '@angular/forms';
 import { Store } from '@ngrx/store';
-import { injectValues } from 'src/lib/process-builder/store/selectors/injection-context.selectors';
-import { combineLatest } from 'rxjs';
 import { selectIParams } from 'src/lib/process-builder/store/selectors/param.selectors';
 import { mapIParamsInterfaces } from 'src/lib/process-builder/extensions/rxjs/map-i-params-interfaces.rxjs';
 import { ITaskCreationFormGroup } from 'src/lib/process-builder/interfaces/task-creation.interface';
@@ -85,11 +83,9 @@ export class EmbeddedFunctionImplementationComponent implements EmbeddedView, Af
       this.returnValueStatus$.subscribe((status) => {
         this.formGroup.controls.outputParamName![status === MethodEvaluationStatus.ReturnValueFound ? 'enable' : 'disable']();
       }),
-      combineLatest([this._store.select(injectValues), this.inputParams$.pipe(
-        mapIParamsInterfaces(this._store)
-      )])
-        .subscribe(([injector, inputParams]) => {
-          let injectorObject = { injector: { ...injector } };
+      this.inputParams$.pipe(mapIParamsInterfaces(this._store))
+        .subscribe((inputParams) => {
+          let injectorObject = { injector: {} as { [key: string]: any } };
           inputParams.forEach(param => {
             if (param.defaultValue) {
               injectorObject.injector[param.normalizedName] = param.defaultValue;
