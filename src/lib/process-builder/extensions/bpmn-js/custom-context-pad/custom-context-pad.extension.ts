@@ -19,29 +19,26 @@ export default class CustomContextPad {
 
   public getContextPadEntries(element: IElement): (entries: any) => { [key in ContextPadEntryTypes]?: IContextPadEntry } {
     let contextPad: { [key in ContextPadEntryTypes]?: IContextPadEntry } = {};
+    this._addDeleteAction(contextPad, element);
+
     switch (element.type) {
       case shapeTypes.Task:
         this._addAddEndEventAction(contextPad, element);
         this._addAppendTaskAction(contextPad, element, this.elementFactory, this.create, this.autoPlace);
         this._addConnectAction(contextPad, element, this.connect);
-        this._addDeleteAction(contextPad, element);
         this._addAddExclusiveGatewayAction(contextPad, element, this.elementFactory, this.create, this.autoPlace);
         break;
 
-      case shapeTypes.EndEvent:
-        this._addDeleteAction(contextPad, element);
-        break;
-
       case shapeTypes.ExclusiveGateway:
+        this._addConnectAction(contextPad, element, this.connect);
         this._addAppendTaskAction(contextPad, element, this.elementFactory, this.create, this.autoPlace);
-        this._addDeleteAction(contextPad, element);
         break;
 
       case shapeTypes.StartEvent:
+        this._addConnectAction(contextPad, element, this.connect);
         this._addAppendTaskAction(contextPad, element, this.elementFactory, this.create, this.autoPlace);
-        this._addDeleteAction(contextPad, element);
         break;
-        
+
     }
     return (entries: any) => contextPad;
   }
