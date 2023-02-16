@@ -23,18 +23,22 @@
     border: 2px solid transparent
     user-select: none
 
+    &.active
+        background-color: #fdffc4
+        border: 2px solid gold
+
+    &.disabled
+        pointer-events: none
+        opacity: .5
+
 .option .header
     margin-bottom: .5rem
 
 .option .value
     font-size: 1.5rem
 
-.option.on-success:hover 
+.option.on-success:hover
     background-color: #ebffe5
 
 .option.on-error:hover
     background-color: #ffefe5
-
-.option.active
-    background-color: #fdffc4
-    border: 2px solid gold

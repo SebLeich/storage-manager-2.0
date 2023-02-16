@@ -75,20 +75,24 @@ export class ProcessBuilderComponentService {
       referencedFunction = await selectSnapshot(this._store.select(functionSelectors.selectIFunction(taskCreationData.functionIdentifier)));
     }
 
-    if (!referencedFunction) {
+    const connector = taskCreationPayload.configureIncomingErrorGatewaySequenceFlow;
+    if (!!connector) {
+      if (taskCreationData?.entranceGatewayType) {
+        if (taskCreationData.entranceGatewayType) {
+          BPMNJsRepository.updateBpmnElementSLPBExtension(this._bpmnJsService.bpmnJs, connector.businessObject, 'SequenceFlowExtension', (ext) => ext.sequenceFlowType = taskCreationData.entranceGatewayType === 'Success' ? 'success' : 'error');
+          this._applyConnectorDefaultLabels(connector, taskCreationData);
+        }
+      } else {
+        this._bpmnJsService.modelingModule.removeElements([connector]);
+      }
+    }
+
+    if (!referencedFunction && taskCreationPayload.configureActivity) {
       this._handleNoFunctionSelected(taskCreationPayload);
     }
 
     if (!referencedFunction || !taskCreationData) {
       return;
-    }
-
-    if (taskCreationData.entranceGatewayType) {
-      const connector = taskCreationPayload.configureIncomingErrorGatewaySequenceFlow;
-      if (!!connector) {
-        BPMNJsRepository.updateBpmnElementSLPBExtension(this._bpmnJsService.bpmnJs, connector.businessObject, 'SequenceFlowExtension', (ext) => ext.sequenceFlowType = taskCreationData.entranceGatewayType === 'Success'? 'success': 'error');
-        this._applyConnectorDefaultLabels(connector, taskCreationData);
-      }
     }
 
     const nextParamId = await selectSnapshot(this._store.select(paramSelectors.selectNextId()));

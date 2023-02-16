@@ -4,6 +4,7 @@ import { BpmnJsService } from 'src/lib/process-builder/services/bpmn-js.service'
 import { ContextPadEntryTypes } from './context-pad-entry.type';
 import { IContextPadEntry } from './context-pad-entry.interface';
 import { IAutoPlace } from '../interfaces/auto-place.interface';
+import { BPMNJsRepository } from 'src/lib/core/bpmn-js.repository';
 
 export default class CustomContextPad {
   public static $inject = [
@@ -23,15 +24,21 @@ export default class CustomContextPad {
 
     switch (element.type) {
       case shapeTypes.Task:
-        this._addAddEndEventAction(contextPad, element);
-        this._addAppendTaskAction(contextPad, element, this.elementFactory, this.create, this.autoPlace);
-        this._addConnectAction(contextPad, element, this.connect);
-        this._addAddExclusiveGatewayAction(contextPad, element, this.elementFactory, this.create, this.autoPlace);
+        const outgoingCount = element.outgoing.length;
+        if(outgoingCount === 0){
+          this._addAddEndEventAction(contextPad, element);
+          this._addAppendTaskAction(contextPad, element, this.elementFactory, this.create, this.autoPlace);
+          this._addConnectAction(contextPad, element, this.connect);
+          this._addAddExclusiveGatewayAction(contextPad, element, this.elementFactory, this.create, this.autoPlace);
+        }
         break;
 
       case shapeTypes.ExclusiveGateway:
+        const existingOutgoingErrorGatewayEvents = element.outgoing.map(connector => BPMNJsRepository.getSLPBExtension(connector.businessObject, 'SequenceFlowExtension', (ext) => ext.sequenceFlowType));
+        if(['success', 'error'].some(action => existingOutgoingErrorGatewayEvents.indexOf(action) === -1)){
+          this._addAppendTaskAction(contextPad, element, this.elementFactory, this.create, this.autoPlace);
+        }
         this._addConnectAction(contextPad, element, this.connect);
-        this._addAppendTaskAction(contextPad, element, this.elementFactory, this.create, this.autoPlace);
         break;
 
       case shapeTypes.StartEvent:
@@ -89,10 +96,7 @@ export default class CustomContextPad {
       className: "bpmn-icon-trash",
       title: "Remove",
       action: {
-        click: () => {
-          console.log(element);
-          BpmnJsService.elementDeletionRequested$.next(element);
-        },
+        click: () => BpmnJsService.elementDeletionRequested$.next(element)
       },
     }
   }

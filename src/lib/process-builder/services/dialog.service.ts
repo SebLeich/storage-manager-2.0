@@ -22,14 +22,11 @@ export class DialogService {
     private _injector: Injector
   ) { }
 
-  public configTaskCreation(data: ITaskCreationDataWrapper, bpmnJS?: IBpmnJS): Observable<ITaskCreationData> {
+  public configTaskCreation(data: ITaskCreationDataWrapper): Observable<ITaskCreationData> {
     const ref = this._dialog.open(TaskCreationComponent, {
       injector: this._injector,
       panelClass: 'no-padding-dialog',
-      data: {
-        data: data,
-        bpmnJS: bpmnJS
-      } as ITaskCreationComponentInput,
+      data: data,
       disableClose: true
     });
     document.getElementsByClassName('cdk-overlay-container')[0]?.classList.add('z-index-1002');

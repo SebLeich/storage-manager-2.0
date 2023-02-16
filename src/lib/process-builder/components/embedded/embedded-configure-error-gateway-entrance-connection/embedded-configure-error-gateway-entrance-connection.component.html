@@ -1,13 +1,16 @@
 <div class="body">
 
     <div class="hint">
-        That function is connected to an error gateway. 
+        That function is connected to an error gateway.
         Decide, whether the function should be activated on success or error.
     </div>
 
     <div class="option-wrapper">
 
-        <div class="option on-success" [ngClass]="{ 'active': formGroup.controls.entranceGatewayType!.value === 'Success' }" (click)="setValue('Success')">
+        <div class="option on-success" [ngClass]="{ 
+            'active': formGroup.controls.entranceGatewayType!.value === 'Success',
+            'disabled': successActionDefined
+        }" (click)="setValue('Success')">
 
             <div class="header">
                 that method should be activated
@@ -16,8 +19,11 @@
 
         </div>
 
-        <div class="option on-error" [ngClass]="{ 'active': formGroup.controls.entranceGatewayType!.value === 'Error' }" (click)="setValue('Error')">
-            
+        <div class="option on-error" [ngClass]="{ 
+            'active': formGroup.controls.entranceGatewayType!.value === 'Error',
+            'disabled': errorActionDefined
+        }" (click)="setValue('Error')">
+
             <div class="header">
                 that method should be activated
             </div>

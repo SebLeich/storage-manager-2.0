@@ -1,4 +1,5 @@
 import { Type } from '@angular/core';
+import { IConnector } from 'src/lib/bpmn-io/interfaces/connector.interface';
 import { IElement } from "src/lib/bpmn-io/interfaces/element.interface";
 import { BPMNJsRepository } from "src/lib/core/bpmn-js.repository";
 import { EmbeddedView } from "src/lib/process-builder/classes/embedded-view";
@@ -12,9 +13,15 @@ import { EmbeddedParamEditorComponent } from "../../../embedded/embedded-param-e
 
 export default new Map<TaskCreationStep, {
     type: Type<EmbeddedView>;
-    provideInputParams?: (component: EmbeddedView, element: IElement) => void;
+    provideInputParams?: (component: EmbeddedView, element: any) => void;
 }>([
-    [TaskCreationStep.ConfigureErrorGatewayEntranceConnection, { type: EmbeddedConfigureErrorGatewayEntranceConnectionComponent }],
+    [TaskCreationStep.ConfigureErrorGatewayEntranceConnection, {
+        type: EmbeddedConfigureErrorGatewayEntranceConnectionComponent,
+        provideInputParams: (arg: EmbeddedView, element: IConnector) => {
+            const component = arg as EmbeddedConfigureErrorGatewayEntranceConnectionComponent;
+            component.gateway = element.source;
+        },
+    }],
     [TaskCreationStep.ConfigureFunctionImplementation, {
         type: EmbeddedFunctionImplementationComponent,
         provideInputParams: (arg: EmbeddedView, element: IElement) => {

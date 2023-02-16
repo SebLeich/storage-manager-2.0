@@ -1,5 +1,17 @@
 @import "src/lib/sass/stretched-element";
 
+::ng-deep .djs-palette-entries {
+    .group[data-group="create"] {
+        display: none;
+    }
+}
+
+::ng-deep .djs-context-pad {
+    .entry[data-action="append"] {
+        display: none;
+    }
+}
+
 .PB_diagram-body {
     @include stretched-element;
     display: flex;

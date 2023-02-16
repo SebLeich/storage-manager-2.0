@@ -4,14 +4,13 @@ import { Store } from '@ngrx/store';
 import { BehaviorSubject, combineLatest, NEVER, Observable, Subscription } from 'rxjs';
 import { ITaskCreationConfig } from 'src/lib/process-builder/interfaces/task-creation-config.interface';
 import { TaskCreationStep } from 'src/lib/process-builder/globals/task-creation-step';
-import { ITaskCreationComponentInput } from '../../../interfaces/task-creation-component-input.interface';
 import { selectIFunction } from 'src/lib/process-builder/store/selectors/function.selector';
 import { IFunction } from 'src/lib/process-builder/interfaces/function.interface';
 import { selectIParam, selectIParamByNormalizedName } from 'src/lib/process-builder/store/selectors/param.selectors';
 import { IParam } from 'src/lib/process-builder/interfaces/param.interface';
 import { CodemirrorRepository } from 'src/lib/core/codemirror.repository';
 import { MethodEvaluationStatus } from 'src/lib/process-builder/globals/method-evaluation-status';
-import { AbstractControl, FormControl, FormGroup, Validators } from '@angular/forms';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { IProcessBuilderConfig, PROCESS_BUILDER_CONFIG_TOKEN } from 'src/lib/process-builder/interfaces/process-builder-config.interface';
 import { debounceTime, distinctUntilChanged, filter, map, startWith, switchMap } from 'rxjs/operators';
 import { firstValueFrom } from 'rxjs';
@@ -22,6 +21,9 @@ import { IParamDefinition } from 'src/lib/process-builder/interfaces/param-defin
 import { GatewayType } from 'src/lib/process-builder/types/gateway.type';
 import { ParamCodes } from 'src/config/param-codes';
 import STEP_REGISTRY from './constants/step-registry.constant';
+import { functionSelectedsWhenRequiredValidator } from './validators/function-exists-when-required.validator';
+import { implementationExistsWhenRequiredValidator } from './validators/implementation-exists-when-required.validator';
+import { ITaskCreationDataWrapper } from 'src/lib/process-builder/interfaces/task-creation-data-wrapper.interface';
 
 @Component({
   selector: 'app-task-creation',
@@ -34,7 +36,7 @@ export class TaskCreationComponent implements OnDestroy, OnInit {
   public formGroup = new FormGroup({
     canFail: new FormControl<boolean>(false),
     entranceGatewayType: new FormControl<GatewayType | null>(null),
-    functionIdentifier: new FormControl<number | null>(null, Validators.required),
+    functionIdentifier: new FormControl<number | null>(null),
     implementation: new FormControl<string[] | null>(null),
     inputParam: new FormControl<ParamCodes[] | number | null>(null),
     interface: new FormControl<number | null>(null),
@@ -45,7 +47,10 @@ export class TaskCreationComponent implements OnDestroy, OnInit {
     outputParamName: new FormControl<string>(''),
     outputParamValue: new FormControl<IParam | IParamDefinition[] | null>(null),
     requireCustomImplementation: new FormControl<boolean>(false),
-  }, this.implementationExistsWhenRequiredValidator) as FormGroup<ITaskCreationFormGroup>;
+  }, Validators.compose([
+    functionSelectedsWhenRequiredValidator(this.data?.taskCreationPayload?.configureActivity ? true : false),
+    implementationExistsWhenRequiredValidator
+  ])) as FormGroup<ITaskCreationFormGroup>;
 
   public customEvaluationResult$ = this.formGroup.controls
     .implementation
@@ -114,18 +119,14 @@ export class TaskCreationComponent implements OnDestroy, OnInit {
 
   public currentStep$ = combineLatest([this.steps$, this.currentStepIndex$]).pipe(
     map(([steps, index]) => steps[index]),
+    filter(step => step ? true : false),
     distinctUntilChanged((prev, curr) => prev.taskCreationStep === curr.taskCreationStep)
   );
   public hasPreviousStep$ = this.currentStepIndex$.pipe(map(index => index > 0));
   public hasNextStep$ = combineLatest([this.steps$, this.currentStepIndex$]).pipe(map(([steps, index]) => index < steps.length - 1));
   public canAnalyzeCustomImplementation$ = this.currentStep$.pipe(
     filter((x) => (x ? true : false)),
-    map(
-      (x) =>
-        x.taskCreationStep ===
-        TaskCreationStep.ConfigureFunctionImplementation ||
-        x.taskCreationStep === TaskCreationStep.ConfigureFunctionOutput
-    )
+    map((x) => x.taskCreationStep === TaskCreationStep.ConfigureFunctionImplementation || x.taskCreationStep === TaskCreationStep.ConfigureFunctionOutput)
   );
 
   public stepToNextStep$: Observable<number> = this.currentStep$.pipe(switchMap(step => step?.autoProceed$ ?? NEVER)) as Observable<number>;
@@ -136,14 +137,13 @@ export class TaskCreationComponent implements OnDestroy, OnInit {
 
   constructor(
     @Inject(PROCESS_BUILDER_CONFIG_TOKEN) public config: IProcessBuilderConfig,
-    @Inject(MAT_DIALOG_DATA) public data: ITaskCreationComponentInput,
+    @Inject(MAT_DIALOG_DATA) public data: ITaskCreationDataWrapper,
     private _ref: MatDialogRef<TaskCreationComponent>,
     private _store: Store
   ) {
-    this.formGroup.patchValue(this.data.data.taskCreationData as any, { emitEvent: true });
+    this.formGroup.patchValue(this.data.taskCreationData as any, { emitEvent: true });
   }
 
-  public abort = () => this._ref.close();
   public finish = () => this._ref.close(this.formGroup.value);
 
   public async nextStep() {
@@ -165,6 +165,7 @@ export class TaskCreationComponent implements OnDestroy, OnInit {
 
     this._subscription.add(
       ...[
+        this.formGroup.statusChanges.subscribe(status => console.log(status, this.formGroup.errors)),
         this.formGroup.controls.functionIdentifier.valueChanges.subscribe(
           (functionIdentifier: number | null) => {
             if (typeof functionIdentifier !== 'number') {
@@ -231,16 +232,23 @@ export class TaskCreationComponent implements OnDestroy, OnInit {
   private getSteps([hasDynamicInputParam, hasCustomImplementation, hasDataMapping]: boolean[]) {
     let availableSteps: ITaskCreationConfig[] = [];
     if (this.data) {
-      const gateway = this.data.data?.taskCreationPayload?.configureIncomingErrorGatewaySequenceFlow;
+      const gateway = this.data?.taskCreationPayload?.configureIncomingErrorGatewaySequenceFlow;
       if (gateway) {
         availableSteps.push({
           taskCreationStep: TaskCreationStep.ConfigureErrorGatewayEntranceConnection,
           element: gateway,
-          autoProceed$: this.formGroup.controls.entranceGatewayType.valueChanges.pipe(map(() => 0))
+          autoProceed$: this.formGroup.controls.entranceGatewayType.valueChanges.pipe(
+            switchMap(() => this.steps$),
+            filter(steps => steps.length > 1),
+            map((steps) => {
+              const index = steps.findIndex(step => step.taskCreationStep === TaskCreationStep.ConfigureErrorGatewayEntranceConnection);
+              return index;
+            })
+          )
         } as ITaskCreationConfig);
       }
 
-      const activity = this.data.data?.taskCreationPayload?.configureActivity;
+      const activity = this.data?.taskCreationPayload?.configureActivity;
       if (activity) {
         availableSteps.push({ taskCreationStep: TaskCreationStep.ConfigureFunctionSelection, element: activity } as ITaskCreationConfig);
 
@@ -265,12 +273,5 @@ export class TaskCreationComponent implements OnDestroy, OnInit {
   public get implementationControl(): FormControl<string[] | null> {
     return this.formGroup.controls['implementation'];
   }
-
-  private implementationExistsWhenRequiredValidator(control: AbstractControl) {
-    const formGroup = control as FormGroup<ITaskCreationFormGroup>;
-    if (formGroup.controls.implementation.value || !formGroup.controls.requireCustomImplementation.value) {
-      return null;
-    }
-    return { noImplementation: true };
-  };
 }
+

@@ -421,8 +421,6 @@ export class BpmnJsService {
     ).subscribe((isChanged) => {
       this._containsChanges.next(isChanged);
     });
-
-    BpmnJsService.elementDeletionRequested$.subscribe(element => console.log(element));
   }
 
   public get canvasModule(): ICanvasModule {
