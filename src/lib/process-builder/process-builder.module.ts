@@ -64,6 +64,8 @@ import { ConfirmationService } from '../confirmation/services/confirmation.servi
 import { PipeRunnerModule } from '../pipe-runner/pipe-runner.module';
 import { PipelineStoreModule } from '../pipeline-store/pipeline-store.module';
 import { UserInputComponent } from './components/helpers/user-input/user-input.component';
+import { EmbeddedOutputParamConfigurationComponent } from './components/embedded/embedded-output-param-configuration/embedded-output-param-configuration.component';
+import { MatSelectModule } from '@angular/material/select';
 
 
 @NgModule({
@@ -89,7 +91,8 @@ import { UserInputComponent } from './components/helpers/user-input/user-input.c
     InterfacePipe,
     ParamMemberPreviewComponent,
     ParamMemberPathPreviewComponent,
-    UserInputComponent
+    UserInputComponent,
+    EmbeddedOutputParamConfigurationComponent
   ],
   imports: [
     CodemirrorModule,
@@ -105,6 +108,7 @@ import { UserInputComponent } from './components/helpers/user-input/user-input.c
     MatProgressSpinnerModule,
     MatSnackBarModule,
     MatSlideToggleModule,
+    MatSelectModule,
     MatTabsModule,
     MatSlideToggleModule,
     ReactiveFormsModule,

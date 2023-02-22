@@ -9,13 +9,12 @@ import { ISyntaxNodeResponse } from "./interfaces/syntax-node-response.interface
 export class CodemirrorRepository {
 
     static evaluateCustomMethod(state?: EditorState, text?: string[] | string, injector?: any): IMethodEvaluationResult {
-
         const convertedText = Array.isArray(text) ? text.join('\n') : text;
         if (!state) {
             if (!text) {
                 throw ('no state and no text passed');
             }
-
+            
             state = EditorState.create({
                 doc: convertedText,
                 extensions: [
@@ -81,6 +80,13 @@ export class CodemirrorRepository {
             return { status: MethodEvaluationStatus.ReturnValueFound, injectorNavigationPath: representation, type: 'variable', valueIsDefinite: true, detectedValue: injector };
         }
 
+        const unaryExpression = parent.getChild('UnaryExpression');
+        if(unaryExpression){
+            // method call
+            const representation = state.sliceDoc(unaryExpression?.from, unaryExpression?.to);
+            return { status: MethodEvaluationStatus.ReturnValueFound, valueIsDefinite: false, unaryExpression: representation };
+        }
+
         const stringExpression = parent.getChild('String');
         if (stringExpression) {
             const representation = state.sliceDoc(stringExpression?.from, stringExpression?.to);
@@ -96,7 +102,12 @@ export class CodemirrorRepository {
         const objectExpression = parent.getChild('ObjectExpression');
         if (objectExpression) {
             const representation = state.sliceDoc(objectExpression?.from, objectExpression?.to);
-            return { status: MethodEvaluationStatus.ReturnValueFound, detectedValue: JSON.parse(representation), type: 'object', valueIsDefinite: false };
+            try {
+                const parsedValue = JSON.parse(representation);
+                return { status: MethodEvaluationStatus.ReturnValueFound, detectedValue: parsedValue, valueIsDefinite: true };
+            } catch(e){
+                return { status: MethodEvaluationStatus.ReturnValueFound, valueIsDefinite: false };
+            }
         }
 
         const booleanLiteral = parent.getChild('BooleanLiteral');

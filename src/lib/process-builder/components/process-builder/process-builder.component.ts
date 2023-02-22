@@ -53,7 +53,7 @@ export class ProcessBuilderComponent implements OnDestroy, OnInit {
       this._processBuilderComponentService
         .taskEditingDialogResultReceived$
         .subscribe((args) => {
-          this._processBuilderComponentService.applyTaskCreationConfig(args.taskCreationPayload, args.taskCreationData);
+          this._processBuilderComponentService.applyTaskCreationConfig(args.taskCreationPayload, args.taskCreationFormGroupValue);
         })
     );
 

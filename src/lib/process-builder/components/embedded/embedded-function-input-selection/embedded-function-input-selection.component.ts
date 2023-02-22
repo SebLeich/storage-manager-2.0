@@ -4,9 +4,9 @@ import { Store } from '@ngrx/store';
 import { combineLatest, ReplaySubject } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { ParamCodes } from 'src/config/param-codes';
-import { EmbeddedView } from 'src/lib/process-builder/classes/embedded-view';
+import { IEmbeddedView } from 'src/lib/process-builder/classes/embedded-view';
 import { IParam } from 'src/lib/process-builder/interfaces/param.interface';
-import { ITaskCreationFormGroup } from 'src/lib/process-builder/interfaces/task-creation.interface';
+import { TaskCreationFormGroup } from 'src/lib/process-builder/interfaces/task-creation-form-group-value.interface';
 import * as fromIParam from 'src/lib/process-builder/store/reducers/param.reducer';
 import { selectIParams } from 'src/lib/process-builder/store/selectors/param.selectors';
 
@@ -15,7 +15,7 @@ import { selectIParams } from 'src/lib/process-builder/store/selectors/param.sel
   templateUrl: './embedded-function-input-selection.component.html',
   styleUrls: ['./embedded-function-input-selection.component.scss']
 })
-export class EmbeddedFunctionInputSelectionComponent implements EmbeddedView {
+export class EmbeddedFunctionInputSelectionComponent implements IEmbeddedView {
 
   private _inputParams = new ReplaySubject<ParamCodes[]>(1);
 
@@ -27,7 +27,7 @@ export class EmbeddedFunctionInputSelectionComponent implements EmbeddedView {
 
   public formGroup = new FormGroup({
     'inputParam': new FormControl([] as ParamCodes[])
-  }) as FormGroup<Partial<ITaskCreationFormGroup>>;
+  }) as TaskCreationFormGroup;
 
   constructor(private _paramStore: Store<fromIParam.State>) { }
 

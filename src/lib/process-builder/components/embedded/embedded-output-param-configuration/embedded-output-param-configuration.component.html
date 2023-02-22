@@ -1,0 +1,33 @@
+<div class="body" [formGroup]="formGroup">
+    <div class="hint">
+        We aren't able to recognize the functions output structure. Select an existing template or use the data sampling
+        tool to detect the structure.
+    </div>
+    <div class="content">
+        <div class="section select-existing-interface">
+            <mat-form-field appearance="outline" class="mat-form-field-outline-white-bg">
+                <mat-label class="label">Template</mat-label>
+                <mat-select formControlName="interface">
+                    <mat-option *ngFor="let interface of (interfaces$|async)" [value]="interface.identifier">
+                        {{interface.name}}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
+            <div class="interface-preview">
+                <div class="headline">exemplary data</div>
+                <pre>{{(interfaceDummyObject$|async) | json}}</pre>
+            </div>
+        </div>
+        <div class="section further-options">
+            <div class="option">
+                <div class="headline">Data sampling</div>
+                <div class="subtitle">Use the data sampling tool to run yout code and automatically create an data
+                    template</div>
+            </div>
+            <div class="option">
+                <div class="headline">Manually design interface</div>
+                <div class="subtitle">Use the data structure designer to create a template</div>
+            </div>
+        </div>
+    </div>
+</div>

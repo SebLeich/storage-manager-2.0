@@ -10,7 +10,6 @@ import { selectSnapshot } from '../globals/select-snapshot';
 import { selectCurrentParamOutput, selectIParams } from '../store/selectors/param.selectors';
 import { IParam } from '../interfaces/param.interface';
 import { selectIInterface } from '../store/selectors/interface.selectors';
-import { BpmnJsService } from './bpmn-js.service';
 
 @Injectable()
 export class ProcessBuilderService {

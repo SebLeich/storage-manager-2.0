@@ -73,9 +73,9 @@ export default [
         name: 'group template',
         normalizedName: 'group',
         typeDef: [
-            { name: 'id', 'type': 'number', 'defaultValue': 1 },
-            { name: 'color', 'type': 'string', 'defaultValue': '#b71a1a' },
-            { name: 'desc', 'type': 'string', 'defaultValue': 'Test AG' },
+            { name: 'id', type: 'number', 'defaultValue': 1 },
+            { name: 'color', type: 'string', 'defaultValue': '#b71a1a' },
+            { name: 'desc', type: 'string', 'defaultValue': 'Test AG' },
         ]
     } as IInterface,
     {
@@ -83,7 +83,31 @@ export default [
         name: 'step template',
         normalizedName: 'step',
         typeDef: [
-            { 'name': 'sequenceNumber', 'type': 'number', 'defaultValue': 0 },
+            { name: 'sequenceNumber', type: 'number', defaultValue: 0 },
+            { name: 'messages', type: 'array', defaultValue: ['hello world'] },
+            { name: 'usedPosition', type: 'object', interface: InterfaceCodes.Position },
+            { name: 'placedAtPosition', type: 'object', interface: InterfaceCodes.Position },
+            {
+                name: 'createdPositions', type: 'array', typeDef: [
+                    {
+                        name: null,
+                        type: 'object',
+                        interface: InterfaceCodes.Position
+                    }
+                ]
+            } as any
+        ]
+    } as IInterface,
+    {
+        identifier: InterfaceCodes.Position,
+        name: 'position template',
+        normalizedName: 'position',
+        typeDef: [
+            { name: 'id', type: 'string', defaultValue: '7ba6aedb-eceb-4e8a-885f-08aa2293f65a' },
+            { name: 'index', type: 'number', defaultValue: 1 },
+            { name: 'height', type: 'number', defaultValue: 1700 },
+            { name: 'width', type: 'number', defaultValue: 1000 },
+            { name: 'length', type: 'number', defaultValue: 600 },
         ]
     } as IInterface
 ];

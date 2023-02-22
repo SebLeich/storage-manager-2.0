@@ -1,6 +1,4 @@
 import { v4 as generateGuid } from 'uuid';
-import { Store } from "@ngrx/store";
-import { selectSnapshot } from "src/lib/process-builder/globals/select-snapshot";
 import { ISolver } from "../interfaces";
 import { ISolution } from "../../lib/storage-manager-store/interfaces/solution.interface";
 import { Solver } from "./solver";
@@ -13,30 +11,14 @@ import { IPossibilities } from '../interfaces/i-possibilities.interface';
 import { IStep } from '../interfaces/i-step.interface';
 import { IGood } from '../../lib/storage-manager-store/interfaces/good.interface';
 import { Algorithm } from '../globals';
-import { selectCalculationAttributesValid, selectContainerHeight, selectContainerWidth } from 'src/lib/storage-manager-store/store/selectors/i-calculation-attribute.selectors';
-import { selectGroups } from 'src/lib/storage-manager-store/store/selectors/group.selectors';
-import { selectOrders } from 'src/lib/storage-manager-store/store/selectors/i-order.selectors';
 
 export class SuperFloSolver extends Solver implements ISolver {
 
-    constructor(
-        private _description: string = 'SuperFlo',
-        private _store: Store,
-    ) {
+    constructor(private _description: string = 'SuperFlo') {
         super();
     }
 
-    async solve(): Promise<ISolution | undefined> {
-
-        const calculationAttributesValid = await selectSnapshot(this._store.select(selectCalculationAttributesValid));
-        if (!calculationAttributesValid) {
-            return;
-        }
-
-        const containerHeight = await selectSnapshot(this._store.select(selectContainerHeight));
-        const containerWidth = await selectSnapshot(this._store.select(selectContainerWidth));
-        const groups = (await selectSnapshot(this._store.select(selectGroups)));
-        const orders = await selectSnapshot(this._store.select(selectOrders));
+    public solve(containerHeight: number, containerWidth: number, groups: IGroup[], orders: IOrder[]): ISolution {
 
         let solution = {
             id: generateGuid(),

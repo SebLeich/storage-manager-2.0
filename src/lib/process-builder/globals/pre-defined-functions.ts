@@ -2,6 +2,11 @@ import { inject } from "@angular/core";
 import { MatDialog } from "@angular/material/dialog";
 import { firstValueFrom } from "rxjs/internal/firstValueFrom";
 import { timer } from "rxjs/internal/observable/timer";
+import { AllInOneRowSolver } from "src/app/solvers/all-in-one-row";
+import { InterfaceCodes } from "src/config/interface-codes";
+import { ParamCodes } from "src/config/param-codes";
+import { IGroup } from "src/lib/storage-manager-store/interfaces/group.interface";
+import { IOrder } from "src/lib/storage-manager-store/interfaces/order.interface";
 import { UserInputComponent } from "../components/helpers/user-input/user-input.component";
 import { IFunction } from "../interfaces/function.interface";
 
@@ -85,6 +90,30 @@ export class PredefinedFunctions {
             },
             'payload': undefined,
             'output': { 'param': 'dynamic' }
+        } as IFunction;
+    }
+
+    public allInOneRowMethod(identifier: number, name: string = 'all in one row'): IFunction {
+        return {
+            'identifier': identifier,
+            'canFail': false,
+            'description': 'the method delays the further pipe execution',
+            inputParams: [
+                { type: 'number', optional: false, name: 'containerHeight' },
+                { type: 'number', optional: false, name: 'containerWidth' },
+                { type: 'array', interface: InterfaceCodes.Group, optional: false, name: 'groups' },
+                { type: 'array', interface: InterfaceCodes.Order, optional: false, name: 'orders' },
+            ],
+            'name': name,
+            'useDynamicInputParams': false,
+            'implementation': async () => {
+                let containerHeight!: number, containerWidth!: number, groups!: IGroup[], orders: IOrder[];
+                const algorithm = new AllInOneRowSolver();
+                return algorithm.solve(containerHeight!, containerWidth!, groups!, orders!);
+            },
+            'payload': undefined,
+            'output': null,
+            'requireCustomImplementation': false
         } as IFunction;
     }
 

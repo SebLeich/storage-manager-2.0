@@ -7,4 +7,5 @@ export interface IMethodEvaluationResult {
     type?: MethodEvaluationResultType;
     detectedValue?: string | number | object | [] | boolean | null;
     valueIsDefinite: boolean;
+    unaryExpression?: string;
 }

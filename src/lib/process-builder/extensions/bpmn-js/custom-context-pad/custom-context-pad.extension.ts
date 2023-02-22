@@ -24,8 +24,8 @@ export default class CustomContextPad {
 
     switch (element.type) {
       case shapeTypes.Task:
-        const outgoingCount = element.outgoing.length;
-        if(outgoingCount === 0){
+        const outgoingSequenceFlowsCount = element.outgoing.filter(connector => connector.type === shapeTypes.SequenceFlow).length;
+        if(outgoingSequenceFlowsCount === 0){
           this._addAddEndEventAction(contextPad, element);
           this._addAppendTaskAction(contextPad, element, this.elementFactory, this.create, this.autoPlace);
           this._addConnectAction(contextPad, element, this.connect);
@@ -37,6 +37,7 @@ export default class CustomContextPad {
         const existingOutgoingErrorGatewayEvents = element.outgoing.map(connector => BPMNJsRepository.getSLPBExtension(connector.businessObject, 'SequenceFlowExtension', (ext) => ext.sequenceFlowType));
         if(['success', 'error'].some(action => existingOutgoingErrorGatewayEvents.indexOf(action) === -1)){
           this._addAppendTaskAction(contextPad, element, this.elementFactory, this.create, this.autoPlace);
+          this._addAddEndEventAction(contextPad, element);
         }
         this._addConnectAction(contextPad, element, this.connect);
         break;

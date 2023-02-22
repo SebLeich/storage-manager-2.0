@@ -2,9 +2,9 @@ import { Component, Inject } from '@angular/core';
 import { ControlContainer, FormGroup } from '@angular/forms';
 import { IElement } from 'src/lib/bpmn-io/interfaces/element.interface';
 import { BPMNJsRepository } from 'src/lib/core/bpmn-js.repository';
-import { EmbeddedView } from 'src/lib/process-builder/classes/embedded-view';
+import { IEmbeddedView } from 'src/lib/process-builder/classes/embedded-view';
 import { IProcessBuilderConfig, PROCESS_BUILDER_CONFIG_TOKEN } from 'src/lib/process-builder/interfaces/process-builder-config.interface';
-import { ITaskCreationFormGroup } from 'src/lib/process-builder/interfaces/task-creation.interface';
+import { TaskCreationFormGroup } from 'src/lib/process-builder/interfaces/task-creation-form-group-value.interface';
 import { GatewayType } from 'src/lib/process-builder/types/gateway.type';
 
 @Component({
@@ -12,7 +12,7 @@ import { GatewayType } from 'src/lib/process-builder/types/gateway.type';
   templateUrl: './embedded-configure-error-gateway-entrance-connection.component.html',
   styleUrls: ['./embedded-configure-error-gateway-entrance-connection.component.sass']
 })
-export class EmbeddedConfigureErrorGatewayEntranceConnectionComponent implements EmbeddedView {
+export class EmbeddedConfigureErrorGatewayEntranceConnectionComponent implements IEmbeddedView {
 
   public successActionDefined = false;
   public errorActionDefined = false;
@@ -26,8 +26,8 @@ export class EmbeddedConfigureErrorGatewayEntranceConnectionComponent implements
       this.errorActionDefined = outgoingConnectorTypes.indexOf('error') > -1;
   }
 
-  public get formGroup() {
-    return this._controlContainer.control as FormGroup<Partial<ITaskCreationFormGroup>>;
+  public get formGroup(): TaskCreationFormGroup {
+    return this._controlContainer.control as TaskCreationFormGroup;
   }
 
   constructor(@Inject(PROCESS_BUILDER_CONFIG_TOKEN) public config: IProcessBuilderConfig, private _controlContainer: ControlContainer) { }

@@ -8,7 +8,7 @@ export interface IFunction {
     name: string;
     normalizedName?: string;
     description?: string | null;
-    inputParams: IInputParam | IInputParam[] | null;
+    inputParams: IInputParam[] | null;
     useDynamicInputParams?: undefined | boolean | IDynamicInputParamsConfig;
     output: IOutputParam | null;
     implementation?: (args?: any) => Promise<any>;

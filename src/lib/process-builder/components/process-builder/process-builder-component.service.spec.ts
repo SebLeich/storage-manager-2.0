@@ -9,7 +9,6 @@ import shapeTypes from 'src/lib/bpmn-io/shape-types';
 import { FUNCTIONS_CONFIG_TOKEN, IFunction } from '../../interfaces/function.interface';
 import { IProcessBuilderConfig, PROCESS_BUILDER_CONFIG_TOKEN } from '../../interfaces/process-builder-config.interface';
 import { sebleichProcessBuilderExtension } from '../../globals/sebleich-process-builder-extension';
-import { ITaskCreationData } from '../../interfaces/task-creation-data.interface';
 import { ITaskCreationPayload } from '../../interfaces/task-creation-payload.interface';
 import { ProcessBuilderModule } from '../../process-builder.module';
 import { BpmnJsService } from '../../services/bpmn-js.service';
@@ -25,6 +24,7 @@ import { BPMNJsRepository } from 'src/lib/core/bpmn-js.repository';
 import { upsertIParam } from '../../store/actions/param.actions';
 import { IParam } from '../../interfaces/param.interface';
 import { deepObjectLookup } from 'src/lib/shared/globals/deep-object-lookup.function';
+import { ITaskCreationFormGroupValue } from '../../interfaces/task-creation-form-group-value.interface';
 
 describe('ProcessBuilderComponentService', () => {
   const processBuilderConfig = {
@@ -153,7 +153,7 @@ describe('ProcessBuilderComponentService', () => {
           configureActivity: activity
         } as any, {
           functionIdentifier: activityIdentifierConfiguration.value
-        } as ITaskCreationData);
+        } as ITaskCreationFormGroupValue);
 
         if (activityIdentifierConfiguration.valid) {
           expect(modelingModuleRemoveElementsSpy).not.toHaveBeenCalled();
@@ -190,7 +190,7 @@ describe('ProcessBuilderComponentService', () => {
         normalizedName: updatedNormalizedName,
         name: updatedName,
         implementation: [`return ${updatedNormalizedName};`]
-      } as ITaskCreationData);
+      } as ITaskCreationFormGroupValue);
 
       expect(storeSpy).not.toHaveBeenCalled();
     });
@@ -235,7 +235,7 @@ describe('ProcessBuilderComponentService', () => {
           configureActivity: activity
         } as any, {
           functionIdentifier: activityIdentifierConfiguration.value
-        } as ITaskCreationData);
+        } as ITaskCreationFormGroupValue);
 
         if (activityIdentifierConfiguration.valid) {
           expect(modelingModuleRemoveElementsSpy).not.toHaveBeenCalled();
@@ -272,7 +272,7 @@ describe('ProcessBuilderComponentService', () => {
         } as ITaskCreationPayload, {
           entranceGatewayType: gatewayType,
           functionIdentifier: mockFunction.identifier
-        } as ITaskCreationData);
+        } as ITaskCreationFormGroupValue);
 
         expect(updateLabelSpy).toHaveBeenCalled();
         expect(updateLabelSpy).toHaveBeenCalledWith(connectorMock as any, incomingGatewayConnectorLabel);
@@ -310,7 +310,7 @@ describe('ProcessBuilderComponentService', () => {
         normalizedName: updatedNormalizedName,
         name: updatedName,
         implementation: implementation
-      } as ITaskCreationData);
+      } as ITaskCreationFormGroupValue);
 
       const calls = storeSpy.calls.all();
       expect(storeSpy).toHaveBeenCalled();
@@ -356,7 +356,7 @@ describe('ProcessBuilderComponentService', () => {
             name: updatedName,
             implementation: implementation,
             isProcessOutput: finalizesFlow
-          } as ITaskCreationData);
+          } as ITaskCreationFormGroupValue);
 
           const calls = modelingModuleAppendShapeSpy.calls.all();
           if (finalizesFlow) {
@@ -406,7 +406,7 @@ describe('ProcessBuilderComponentService', () => {
             name: updatedName,
             implementation: implementation,
             isProcessOutput: finalizesFlow
-          } as ITaskCreationData);
+          } as ITaskCreationFormGroupValue);
 
           const calls = modelingModuleRemoveShapeSpy.calls.all();
           const deletedElements = calls.flatMap(call => call.args.flatMap(arg => arg));
@@ -451,7 +451,7 @@ describe('ProcessBuilderComponentService', () => {
         normalizedName: updatedNormalizedName,
         name: updatedName,
         implementation: implementation
-      } as ITaskCreationData);
+      } as ITaskCreationFormGroupValue);
 
       const settedActivityIdentifier = BPMNJsRepository.getSLPBExtension(activityMock.businessObject, 'ActivityExtension', (e: any) => e.activityFunctionId);
       expect(settedActivityIdentifier).toBe(mockFunction.identifier);
@@ -486,7 +486,7 @@ describe('ProcessBuilderComponentService', () => {
         normalizedName: updatedNormalizedName,
         name: updatedName,
         implementation: implementation
-      } as ITaskCreationData);
+      } as ITaskCreationFormGroupValue);
 
       const calls = modelingModuleAppendShapeSpy.calls.all();
       expect(modelingModuleAppendShapeSpy).toHaveBeenCalled();
@@ -554,7 +554,7 @@ describe('ProcessBuilderComponentService', () => {
             implementation: implementation,
             outputParamName: outputParamName,
             normalizedOutputParamName: normalizedOutputParamName
-          } as ITaskCreationData);
+          } as ITaskCreationFormGroupValue);
 
           expect(storeSpy).toHaveBeenCalled();
 
@@ -609,7 +609,7 @@ describe('ProcessBuilderComponentService', () => {
             implementation: implementation,
             outputParamName: outputParamName,
             normalizedOutputParamName: normalizedOutputParamName
-          } as ITaskCreationData);
+          } as ITaskCreationFormGroupValue);
 
           expect(appendOutputParamSpy).toHaveBeenCalledTimes(1);
           expect(appendOutputParamSpy).toHaveBeenCalledWith(bpmnJsService.bpmnJs, activityMock, result?.outputParam, true, result?.outputParam?.interface ?? undefined);
@@ -701,7 +701,7 @@ describe('ProcessBuilderComponentService', () => {
           name: updatedName,
           outputParamName: outputParamName,
           normalizedOutputParamName: normalizedOutputParamName
-        } as ITaskCreationData);
+        } as ITaskCreationFormGroupValue);
 
         if (shouldAppend) {
           expect(appendShapeSpy).toHaveBeenCalledWith(activityMock, { type: shapeTypes.ExclusiveGateway }, { x: 200, y: 40 });

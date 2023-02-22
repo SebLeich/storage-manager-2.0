@@ -3,34 +3,18 @@ import { ISolver } from "../interfaces";
 import { Solver } from "./solver";
 import { ISolution } from "../../lib/storage-manager-store/interfaces/solution.interface";
 import * as moment from 'moment';
-import { Store } from "@ngrx/store";
-import { selectSnapshot } from "src/lib/process-builder/globals/select-snapshot";
 import { IGood } from "../../lib/storage-manager-store/interfaces/good.interface";
 import { Algorithm } from '../globals';
-import { selectCalculationAttributesValid, selectContainerHeight, selectContainerWidth } from 'src/lib/storage-manager-store/store/selectors/i-calculation-attribute.selectors';
-import { selectGroups } from 'src/lib/storage-manager-store/store/selectors/group.selectors';
-import { selectOrders } from 'src/lib/storage-manager-store/store/selectors/i-order.selectors';
+import { IOrder } from 'src/lib/storage-manager-store/interfaces/order.interface';
+import { IGroup } from 'src/lib/storage-manager-store/interfaces/group.interface';
 
 export class AllInOneRowSolver extends Solver implements ISolver {
 
-    constructor(
-        private _description: string = 'All In One Row',
-        private _store: Store
-    ) {
+    constructor(private _description: string = 'All In One Row') {
         super();
     }
 
-    async solve(): Promise<ISolution | undefined> {
-
-        const calculationAttributesValid = await selectSnapshot(this._store.select(selectCalculationAttributesValid));
-        if (!calculationAttributesValid) {
-            return;
-        }
-
-        const containerHeight = await selectSnapshot(this._store.select(selectContainerHeight));
-        const containerWidth = await selectSnapshot(this._store.select(selectContainerWidth));
-        const groups = await selectSnapshot(this._store.select(selectGroups));
-        const orders = await selectSnapshot(this._store.select(selectOrders));
+    public solve(containerHeight: number, containerWidth: number, groups: IGroup[], orders: IOrder[]): ISolution {
 
         const solution = {
             id: generateGuid(),

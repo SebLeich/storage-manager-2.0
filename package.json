@@ -44,7 +44,6 @@
     "chart.js": "^4.2.1",
     "codemirror": "^6.0.1",
     "diagram-js": "^11.9.0",
-    "eslint4b-prebuilt": "^6.7.2",
     "jsoneditor": "^9.9.2",
     "lodash": "^4.17.21",
     "moment": "^2.29.4",

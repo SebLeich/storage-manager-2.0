@@ -2,27 +2,27 @@ import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { Store } from '@ngrx/store';
 import { BehaviorSubject, of, ReplaySubject, Subscription } from 'rxjs';
-import { EmbeddedView } from 'src/lib/process-builder/classes/embedded-view';
+import { IEmbeddedView } from 'src/lib/process-builder/classes/embedded-view';
 import { IParamDefinition } from 'src/lib/process-builder/interfaces/param-definition.interface';
 import { selectIFunction } from 'src/lib/process-builder/store/selectors/function.selector';
 import { filter, map, switchMap } from 'rxjs/operators';
 import { selectIInterface } from 'src/lib/process-builder/store/selectors/interface.selectors';
 import { IParamMember } from 'src/lib/process-builder/interfaces/param-member.interface';
-import { ITaskCreationFormGroup } from 'src/lib/process-builder/interfaces/task-creation.interface';
+import { TaskCreationFormGroup } from 'src/lib/process-builder/interfaces/task-creation-form-group-value.interface';
 
 @Component({
   selector: '[app-embedded-input-output-mapping]',
   templateUrl: './embedded-input-output-mapping.component.html',
   styleUrls: ['./embedded-input-output-mapping.component.scss']
 })
-export class EmbeddedInputOutputMappingComponent implements EmbeddedView, OnDestroy, OnInit {
+export class EmbeddedInputOutputMappingComponent implements IEmbeddedView, OnDestroy, OnInit {
 
   @Input() public inputParams!: number | number[] | null;
 
   public formGroup = new FormGroup({
     'functionIdentifier': new FormControl(null),
     'outputParamValue': new FormControl(null)
-  }) as FormGroup<Partial<ITaskCreationFormGroup>>;
+  }) as TaskCreationFormGroup;
 
   public outputParamName$ = this._store
     .select(selectIFunction(() => this.formGroup.controls['functionIdentifier']!.value))

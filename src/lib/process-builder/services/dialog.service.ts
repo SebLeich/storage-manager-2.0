@@ -4,12 +4,10 @@ import { finalize, Observable } from 'rxjs';
 import { ParamCodes } from 'src/config/param-codes';
 import { IElement } from 'src/lib/bpmn-io/interfaces/element.interface';
 import { ParamEditorComponent } from '../components/dialog/param-editor/param-editor.component';
-import { ITaskCreationComponentInput } from '../interfaces/task-creation-component-input.interface';
 import { TaskCreationComponent } from '../components/dialog/task-creation/task-creation.component';
 import { FUNCTIONS_CONFIG_TOKEN, IFunction } from '../interfaces/function.interface';
-import { IBpmnJS } from '../interfaces/bpmn-js.interface';
 import { ITaskCreationDataWrapper } from '../interfaces/task-creation-data-wrapper.interface';
-import { ITaskCreationData } from '../interfaces/task-creation-data.interface';
+import { ITaskCreationFormGroupValue } from '../interfaces/task-creation-form-group-value.interface';
 
 @Injectable({
   providedIn: 'root'
@@ -22,7 +20,7 @@ export class DialogService {
     private _injector: Injector
   ) { }
 
-  public configTaskCreation(data: ITaskCreationDataWrapper): Observable<ITaskCreationData> {
+  public configTaskCreation(data: ITaskCreationDataWrapper): Observable<ITaskCreationFormGroupValue> {
     const ref = this._dialog.open(TaskCreationComponent, {
       injector: this._injector,
       panelClass: 'no-padding-dialog',

@@ -144,7 +144,7 @@ export class ProcessBuilderRepository {
 
         if (!arg) return {};
 
-        let index = 0;
+        let dummyObject = { };
 
         try {
 
@@ -162,19 +162,14 @@ export class ProcessBuilderRepository {
 
                 for (let def of typeDefArray) {
 
-                    this.createPseudoObjectFromIParamDefinition(def, defaultValue);
+                    this.createPseudoObjectFromIParamDefinition(def, dummyObject);
 
                 }
             }
-
-            index++;
-
-            return parent ?? defaultValue;
-
         } catch (e) {
             debugger;
         } finally {
-            return {};
+            return dummyObject;
         }
 
     }

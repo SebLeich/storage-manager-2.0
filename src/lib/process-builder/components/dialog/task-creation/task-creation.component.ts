@@ -12,11 +12,10 @@ import { CodemirrorRepository } from 'src/lib/core/codemirror.repository';
 import { MethodEvaluationStatus } from 'src/lib/process-builder/globals/method-evaluation-status';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { IProcessBuilderConfig, PROCESS_BUILDER_CONFIG_TOKEN } from 'src/lib/process-builder/interfaces/process-builder-config.interface';
-import { debounceTime, distinctUntilChanged, filter, map, startWith, switchMap } from 'rxjs/operators';
+import { debounceTime, distinctUntilChanged, filter, map, startWith, switchMap, throttleTime } from 'rxjs/operators';
 import { firstValueFrom } from 'rxjs';
 import { selectIInterface } from 'src/lib/process-builder/store/selectors/interface.selectors';
 import { selectSnapshot } from 'src/lib/process-builder/globals/select-snapshot';
-import { ITaskCreationFormGroup } from 'src/lib/process-builder/interfaces/task-creation.interface';
 import { IParamDefinition } from 'src/lib/process-builder/interfaces/param-definition.interface';
 import { GatewayType } from 'src/lib/process-builder/types/gateway.type';
 import { ParamCodes } from 'src/config/param-codes';
@@ -24,6 +23,7 @@ import STEP_REGISTRY from './constants/step-registry.constant';
 import { functionSelectedsWhenRequiredValidator } from './validators/function-exists-when-required.validator';
 import { implementationExistsWhenRequiredValidator } from './validators/implementation-exists-when-required.validator';
 import { ITaskCreationDataWrapper } from 'src/lib/process-builder/interfaces/task-creation-data-wrapper.interface';
+import { TaskCreationFormGroup } from 'src/lib/process-builder/interfaces/task-creation-form-group-value.interface';
 
 @Component({
   selector: 'app-task-creation',
@@ -46,20 +46,26 @@ export class TaskCreationComponent implements OnDestroy, OnInit {
     normalizedName: new FormControl<string>(''),
     outputParamName: new FormControl<string>(''),
     outputParamValue: new FormControl<IParam | IParamDefinition[] | null>(null),
-    requireCustomImplementation: new FormControl<boolean>(false),
+    requireCustomImplementation: new FormControl<boolean>(false)
   }, Validators.compose([
     functionSelectedsWhenRequiredValidator(this.data?.taskCreationPayload?.configureActivity ? true : false),
     implementationExistsWhenRequiredValidator
-  ])) as FormGroup<ITaskCreationFormGroup>;
+  ])) as TaskCreationFormGroup;
 
-  public customEvaluationResult$ = this.formGroup.controls
-    .implementation
-    .valueChanges
-    .pipe(debounceTime(2000), map(implementation => CodemirrorRepository.evaluateCustomMethod(undefined, implementation ?? undefined)));
+  public customEvaluationResult$ = this.formGroup.controls.implementation!.valueChanges
+    .pipe(throttleTime(2000), map(implementation => CodemirrorRepository.evaluateCustomMethod(undefined, implementation ?? [])));
 
-  public usedInputParams$ = this.formGroup.controls
-    .implementation
-    .valueChanges
+  public unableToDetermineOutputParam$ = this.customEvaluationResult$.pipe(
+    map(evaluationResult => {
+      if (evaluationResult && evaluationResult.status === MethodEvaluationStatus.ReturnValueFound && !evaluationResult.type) {
+        return true;
+      }
+      return false;
+    }),
+    startWith(false)
+  );
+
+  public usedInputParams$ = this.formGroup.controls.implementation!.valueChanges
     .pipe(debounceTime(2000), map(implementation => {
       if (!implementation) {
         return null;
@@ -92,7 +98,7 @@ export class TaskCreationComponent implements OnDestroy, OnInit {
       distinctUntilChanged()
     );
 
-  public selectedFunction$: Observable<IFunction | null | undefined> = this._store.select(selectIFunction(() => this.formGroup.controls.functionIdentifier.value));
+  public selectedFunction$: Observable<IFunction | null | undefined> = this._store.select(selectIFunction(() => this.formGroup.controls.functionIdentifier?.value));
 
   public hasDynamicInputParameters$ = this.selectedFunction$
     .pipe(
@@ -112,9 +118,9 @@ export class TaskCreationComponent implements OnDestroy, OnInit {
       distinctUntilChanged()
     );
 
-  public steps$ = combineLatest([this.hasCustomImplementation$, this.hasDynamicInputParameters$, this.hasDataMapping$])
+  public steps$ = combineLatest([this.hasCustomImplementation$, this.hasDynamicInputParameters$, this.hasDataMapping$, this.unableToDetermineOutputParam$])
     .pipe(
-      map(([hasCustomImplementation, hasDynamicInputParameters, hasDataMapping]) => this.getSteps([hasDynamicInputParameters, hasCustomImplementation, hasDataMapping]))
+      map(([hasCustomImplementation, hasDynamicInputParameters, hasDataMapping, unableToDetermineOutputParam]) => this.getSteps([hasDynamicInputParameters, hasCustomImplementation, hasDataMapping, unableToDetermineOutputParam]))
     );
 
   public currentStep$ = combineLatest([this.steps$, this.currentStepIndex$]).pipe(
@@ -141,7 +147,7 @@ export class TaskCreationComponent implements OnDestroy, OnInit {
     private _ref: MatDialogRef<TaskCreationComponent>,
     private _store: Store
   ) {
-    this.formGroup.patchValue(this.data.taskCreationData as any, { emitEvent: true });
+    this.formGroup.patchValue(this.data.taskCreationFormGroupValue as any, { emitEvent: true });
   }
 
   public finish = () => this._ref.close(this.formGroup.value);
@@ -165,8 +171,7 @@ export class TaskCreationComponent implements OnDestroy, OnInit {
 
     this._subscription.add(
       ...[
-        this.formGroup.statusChanges.subscribe(status => console.log(status, this.formGroup.errors)),
-        this.formGroup.controls.functionIdentifier.valueChanges.subscribe(
+        this.formGroup.controls.functionIdentifier?.valueChanges.subscribe(
           (functionIdentifier: number | null) => {
             if (typeof functionIdentifier !== 'number') {
               return;
@@ -185,7 +190,7 @@ export class TaskCreationComponent implements OnDestroy, OnInit {
   }
 
   public async validateFunctionSelection() {
-    const currentFunction = await selectSnapshot(this._store.select(selectIFunction(this.formGroup.controls.functionIdentifier.value)));
+    const currentFunction = await selectSnapshot(this._store.select(selectIFunction(this.formGroup.controls.functionIdentifier?.value)));
     if (currentFunction) {
       const outputParam = await selectSnapshot(this._store.select(selectIParam(currentFunction?.output?.param))),
         outputParamInterface = await selectSnapshot(this._store.select(selectIInterface(currentFunction?.output?.interface)));
@@ -209,9 +214,10 @@ export class TaskCreationComponent implements OnDestroy, OnInit {
         name: currentFunction.name,
         normalizedName: currentFunction.normalizedName,
         normalizedOutputParamName: outputParam?.normalizedName,
+        interface: outputParam?.interface,
         outputParamName: outputParam?.name,
         outputParamValue: objectTypeDefinition,
-        inputParam: inputParams.length === 1 ? inputParams[0].param : null,
+        inputParam: inputParams.length === 1 ? inputParams[0].interface : null,
       });
     }
   }
@@ -229,7 +235,7 @@ export class TaskCreationComponent implements OnDestroy, OnInit {
     }
   }
 
-  private getSteps([hasDynamicInputParam, hasCustomImplementation, hasDataMapping]: boolean[]) {
+  private getSteps([hasDynamicInputParam, hasCustomImplementation, hasDataMapping, unableToDetermineOutputParam]: boolean[]) {
     let availableSteps: ITaskCreationConfig[] = [];
     if (this.data) {
       const gateway = this.data?.taskCreationPayload?.configureIncomingErrorGatewaySequenceFlow;
@@ -237,7 +243,7 @@ export class TaskCreationComponent implements OnDestroy, OnInit {
         availableSteps.push({
           taskCreationStep: TaskCreationStep.ConfigureErrorGatewayEntranceConnection,
           element: gateway,
-          autoProceed$: this.formGroup.controls.entranceGatewayType.valueChanges.pipe(
+          autoProceed$: this.formGroup.controls.entranceGatewayType?.valueChanges.pipe(
             switchMap(() => this.steps$),
             filter(steps => steps.length > 1),
             map((steps) => {
@@ -264,14 +270,14 @@ export class TaskCreationComponent implements OnDestroy, OnInit {
           availableSteps.push({ taskCreationStep: TaskCreationStep.ConfigureInputOutputMapping, element: activity } as ITaskCreationConfig);
         }
       }
+
+      if (unableToDetermineOutputParam) {
+        availableSteps.push({ taskCreationStep: TaskCreationStep.ConfigureFunctionOutput } as ITaskCreationConfig);
+      }
     }
     return availableSteps;
   }
 
   public TaskCreationStep = TaskCreationStep;
-
-  public get implementationControl(): FormControl<string[] | null> {
-    return this.formGroup.controls['implementation'];
-  }
 }
 

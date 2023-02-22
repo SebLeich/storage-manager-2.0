@@ -1,7 +1,7 @@
 import { Component, ElementRef, Input, OnDestroy, OnInit, QueryList, ViewChild, ViewChildren, ViewContainerRef } from '@angular/core';
 import { ReplaySubject, filter, Subscription } from 'rxjs';
 import { ParamCodes } from 'src/config/param-codes';
-import { EmbeddedView } from 'src/lib/process-builder/classes/embedded-view';
+import { IEmbeddedView } from 'src/lib/process-builder/classes/embedded-view';
 import { IFunction } from 'src/lib/process-builder/interfaces/function.interface';
 import { showAnimation } from 'src/lib/shared/animations/show';
 import { Store } from '@ngrx/store';
@@ -10,12 +10,11 @@ import { FunctionPreviewComponent } from '../../previews/function-preview/functi
 import { ControlContainer, FormControl, FormGroup } from '@angular/forms';
 import { IInputParam } from 'src/lib/process-builder/interfaces/input-param.interface';
 import { delay, map, startWith } from 'rxjs/operators';
-
 import * as fromIFunctionState from 'src/lib/process-builder/store/reducers/function.reducer';
 import { removeIFunction } from 'src/lib/process-builder/store/actions/function.actions';
 import { showListAnimation } from 'src/lib/shared/animations/show-list';
-import { ITaskCreationFormGroup } from 'src/lib/process-builder/interfaces/task-creation.interface';
 import { combineLatest } from 'rxjs/internal/observable/combineLatest';
+import { TaskCreationFormGroup } from 'src/lib/process-builder/interfaces/task-creation-form-group-value.interface';
 
 @Component({
   selector: 'app-embedded-function-selection',
@@ -23,7 +22,7 @@ import { combineLatest } from 'rxjs/internal/observable/combineLatest';
   styleUrls: ['./embedded-function-selection.component.scss'],
   animations: [showAnimation, showListAnimation]
 })
-export class EmbeddedFunctionSelectionComponent implements EmbeddedView, OnDestroy, OnInit {
+export class EmbeddedFunctionSelectionComponent implements IEmbeddedView, OnDestroy, OnInit {
 
   @Input() public inputParams!: ParamCodes | ParamCodes[] | null;
 
@@ -36,8 +35,8 @@ export class EmbeddedFunctionSelectionComponent implements EmbeddedView, OnDestr
     return transformed;
   }));
 
-  public get formGroup(): FormGroup<Partial<ITaskCreationFormGroup>> {
-    return this._controlContainer.control as FormGroup<Partial<ITaskCreationFormGroup>>;
+  public get formGroup(): TaskCreationFormGroup {
+    return this._controlContainer.control as TaskCreationFormGroup;
   }
 
   public searchinputExpanded = false;
@@ -47,22 +46,26 @@ export class EmbeddedFunctionSelectionComponent implements EmbeddedView, OnDestr
 
   public functions$ = combineLatest([this._store.select(selectIFunctions()), this._filter$]).pipe(map(([functions, filter]) => {
     return functions.filter(func => {
+      console.log(func);
       if (!func) {
         return false;
       }
 
-      if(filter.length > 0){
+      if (filter.length > 0) {
         const functionNameSegments = func.name.trim().toLowerCase().split(' ')
         const isNotMatchingFilter = filter.some(segment => functionNameSegments.every(functionSegment => functionSegment.indexOf(segment) === -1));
-        if(isNotMatchingFilter) return false;
+        if (isNotMatchingFilter) {
+          return false;
+        }
       }
 
-      const requiredInputs: ParamCodes[] = (Array.isArray(func.inputParams) ? func.inputParams : [func.inputParams]).filter(y => y && typeof y === 'object' && !y.optional).map((x) => (x as IInputParam).param) as ParamCodes[];
+      const requiredInputs: ParamCodes[] = (func.inputParams ?? []).filter(param => param && typeof param === 'object' && !param.optional).map((x) => (x as IInputParam).interface) as ParamCodes[];
       if (requiredInputs.length === 0) {
         return true;
       }
 
       let availableInputParams: ParamCodes[] = Array.isArray(this.inputParams) ? this.inputParams : this.inputParams ? [this.inputParams] : [];
+      console.log(requiredInputs, availableInputParams, 'REQUIRED/EXISTING');
       return true;
     });
   }));

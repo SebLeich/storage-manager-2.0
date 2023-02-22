@@ -9,7 +9,7 @@ export default [
     new PredefinedFunctions().customJSMethod(0),
     {
         'identifier': 1,
-        'inputParams': [],
+        'inputParams': null,
         'name': 'Provide exemplary solution',
         'normalizedName': 'provideExemplarySolution',
         'description': 'method provides an exemplary solution',
@@ -41,15 +41,15 @@ export default [
         'requireCustomImplementation': false
     } as IFunction,
     {
-        'identifier': 3,
+        identifier: 3,
         'inputParams': null,
-        'name': 'Upload JSON',
-        'normalizedName': 'uploadJSON',
-        'description': 'method enables to upload json objects',
-        'output': {
+        name: 'Upload JSON',
+        normalizedName: 'uploadJSON',
+        description: 'method enables to upload json objects',
+        output: {
             'param': 'dynamic'
         },
-        'implementation': () => {
+        implementation: () => {
             let promise = new Promise((resolve, reject) => {
                 let input: HTMLInputElement = document.createElement('input');
                 input.setAttribute('type', 'file');
@@ -85,9 +85,9 @@ export default [
             });
             return promise;
         },
-        'pseudoImplementationComputationName': 'Import',
-        'canFail': false,
-        'requireCustomImplementation': false
+        pseudoImplementationComputationName: 'Import',
+        canFail: false,
+        requireCustomImplementation: false
     } as IFunction,
     {
         identifier: 4,
@@ -109,7 +109,7 @@ export default [
     new PredefinedFunctions().requestUserInput(7),
     {
         'identifier': 8,
-        'inputParams': [],
+        'inputParams': null,
         'name': 'Provide another exemplary solution',
         'normalizedName': 'provideExemplarySolution',
         'description': 'method provides an exemplary solution',
@@ -118,4 +118,5 @@ export default [
         'canFail': false,
         'requireCustomImplementation': false
     } as IFunction,
+    new PredefinedFunctions().allInOneRowMethod(9)
 ];

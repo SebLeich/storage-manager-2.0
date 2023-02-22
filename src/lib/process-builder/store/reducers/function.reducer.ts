@@ -58,7 +58,7 @@ export const reducer = createReducer(
       changes: {
         canFail: func.canFail,
         description: func.description,
-        inputParams: func.inputParams,
+        //inputParams: func.inputParams,
         name: func.name,
         normalizedName: func.normalizedName,
         output: func.output,

@@ -4,5 +4,7 @@ export enum InterfaceCodes {
     Good,
     Container,
     Group,
-    Step
+    Step,
+    Position,
+    Order
 }

@@ -22,6 +22,7 @@ import { ISolution } from 'src/lib/storage-manager-store/interfaces/solution.int
 import { fadeInAnimation } from 'src/lib/shared/animations/fade-in.animation';
 import { highlightSolutionNavItem } from 'src/app/store/actions/application.actions';
 import { setIPipelineActionSolution } from 'src/lib/pipeline-store/store/actions/pipeline-action.actions';
+import { HttpClient } from '@angular/common/http';
 
 @Component({
   selector: 'app-pipe-runner',
@@ -100,7 +101,7 @@ export class PipeRunnerComponent implements OnDestroy, OnInit {
 
   private _subscriptions = new Subscription();
 
-  constructor(private _store: Store, private _route: ActivatedRoute, private _router: Router, private _visualizationService: VisualizationService, private _environmentInjector: EnvironmentInjector) { }
+  constructor(private _store: Store, private _route: ActivatedRoute, private _router: Router, private _visualizationService: VisualizationService, private _environmentInjector: EnvironmentInjector, public httpClient: HttpClient) { }
 
   public designPipeline(): void {
     this._router.navigate(['/data-pipeline-designer']);
@@ -111,10 +112,12 @@ export class PipeRunnerComponent implements OnDestroy, OnInit {
   }
 
   public ngOnInit(): void {
-    this._subscriptions.add(this.status$.subscribe(status => this._consoleOutputSections$$.next({
-      message: `${moment().format('HH:mm:ss')}: status changed to ${status}`,
-      class: status === 'Succeeded' ? 'success' : status === 'Errors occurred' ? 'error' : status === 'Running' ? 'primary' : 'default'
-    })));
+    this._subscriptions.add(
+      this.status$.subscribe(status => this._consoleOutputSections$$.next({
+        message: `${moment().format('HH:mm:ss')}: status changed to ${status}`,
+        class: status === 'Succeeded' ? 'success' : status === 'Errors occurred' ? 'error' : status === 'Running' ? 'primary' : 'default'
+      }))
+    );
     this._subscriptions.add(
       this.tabGroup.selectedTabChange.pipe(
         map(event => event.tab.textLabel === 'visualization'),
@@ -131,6 +134,7 @@ export class PipeRunnerComponent implements OnDestroy, OnInit {
   public openVisualization = () => this._router.navigate(['/visualizer']);
 
   public async run() {
+    this._consoleOutputSections$$.next({ message: `--------------- new run ---------------`, class: 'default'});
     const actions = await selectSnapshot(this.actions$);
     let solutionWrapper: ISolutionWrapper | null = null, injector: { [key: string]: any } = {};
     let currentAction = actions.find(action => action!.isPipelineStart);
@@ -138,7 +142,7 @@ export class PipeRunnerComponent implements OnDestroy, OnInit {
       this._store.dispatch(updateIPipelineActionStatus(currentAction!.identifier, 'RUNNING'));
       try {
         await this._environmentInjector.runInContext(async () => {
-          const result = await currentAction!.executableCode(injector);
+          const result = await currentAction!.executableCode(injector, this.httpClient);
           if (currentAction?.ouputParamName) {
             injector[currentAction.ouputParamName] = result;
           }
@@ -147,7 +151,7 @@ export class PipeRunnerComponent implements OnDestroy, OnInit {
             this._store.dispatch(setIPipelineActionSolution(currentAction!.identifier, solutionWrapper!));
             this._store.dispatch(addSolution({ solution: (solutionWrapper as ISolutionWrapper)!.solution }));
           }
-          const representation = typeof solutionWrapper! === 'object' ? JSON.stringify(solutionWrapper) : solutionWrapper!;
+          const representation = typeof solutionWrapper === 'object' ? JSON.stringify(result) : result!;
           this._consoleOutputSections$$.next({
             message: `${moment().format('HH:mm:ss')}: ${representation}`,
             class: 'default'

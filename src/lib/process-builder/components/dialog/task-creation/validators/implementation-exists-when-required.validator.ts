@@ -1,10 +1,10 @@
-import { AbstractControl, FormGroup } from "@angular/forms";
-import { ITaskCreationFormGroup } from "src/lib/process-builder/interfaces/task-creation.interface";
+import { AbstractControl } from "@angular/forms";
+import { TaskCreationFormGroup } from "src/lib/process-builder/interfaces/task-creation-form-group-value.interface";
 
 export const implementationExistsWhenRequiredValidator = (control: AbstractControl) => {
-    const formGroup = control as FormGroup<ITaskCreationFormGroup>;
-    if (formGroup.controls.implementation.value || !formGroup.controls.requireCustomImplementation.value) {
+    const formGroup = control as TaskCreationFormGroup;
+    if (formGroup.controls.implementation?.value || !formGroup.controls.requireCustomImplementation?.value) {
         return null;
     }
-    return { noImplementation: true };
+    return { implementationExistsWhenRequiredValidator: true };
 }

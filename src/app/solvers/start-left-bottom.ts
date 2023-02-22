@@ -1,39 +1,21 @@
 import { v4 as generateGuid } from 'uuid';
-import { selectSnapshot } from "src/lib/process-builder/globals/select-snapshot";
 import { Algorithm, compare } from "../globals";
 import { ISolver } from "../interfaces";
 import { ISolution } from "../../lib/storage-manager-store/interfaces/solution.interface";
 import { Solver } from "./solver";
-import { Store } from "@ngrx/store";
 import { IGood } from '../../lib/storage-manager-store/interfaces/good.interface';
 import { IContainer } from '../../lib/storage-manager-store/interfaces/container.interface';
 import { IOrder } from '../../lib/storage-manager-store/interfaces/order.interface';
 import moment from 'moment';
-import { selectCalculationAttributesValid, selectContainerHeight, selectContainerWidth } from 'src/lib/storage-manager-store/store/selectors/i-calculation-attribute.selectors';
-import { selectGroups } from 'src/lib/storage-manager-store/store/selectors/group.selectors';
-import { selectOrders } from 'src/lib/storage-manager-store/store/selectors/i-order.selectors';
+import { IGroup } from 'src/lib/storage-manager-store/interfaces/group.interface';
 
 export class StartLeftBottomSolver extends Solver implements ISolver {
 
-    constructor(
-        private _description: string = 'Start Left Bottom',
-        private _store: Store
-    ) {
+    constructor(private _description: string = 'Start Left Bottom') {
         super();
     }
 
-    async solve(): Promise<ISolution | undefined> {
-
-        const calculationAttributesValid = await selectSnapshot(this._store.select(selectCalculationAttributesValid));
-        if (!calculationAttributesValid) {
-            return;
-        }
-
-        const containerHeight = await selectSnapshot(this._store.select(selectContainerHeight));
-        const containerWidth = await selectSnapshot(this._store.select(selectContainerWidth));
-        const groups = await selectSnapshot(this._store.select(selectGroups));
-        const orders = await selectSnapshot(this._store.select(selectOrders));
-
+    public solve(containerHeight: number, containerWidth: number, groups: IGroup[], orders: IOrder[]): ISolution {
         const solution = {
             id: generateGuid(),
             description: this._description,

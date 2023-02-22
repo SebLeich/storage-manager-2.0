@@ -1,25 +1,22 @@
 import { AfterViewInit, ChangeDetectorRef, Component, ElementRef, Inject, Input, OnDestroy, ViewChild } from '@angular/core';
 import { BehaviorSubject, ReplaySubject, Subscription } from 'rxjs';
 import { ProcessBuilderRepository } from 'src/lib/core/process-builder-repository';
-import { EmbeddedView } from 'src/lib/process-builder/classes/embedded-view';
+import { IEmbeddedView } from 'src/lib/process-builder/classes/embedded-view';
 import { syntaxTree } from "@codemirror/language";
 import { autocompletion, CompletionContext } from "@codemirror/autocomplete";
 import { EditorState, Text } from '@codemirror/state';
 import { basicSetup, EditorView } from '@codemirror/basic-setup';
-import { esLint, javascript } from '@codemirror/lang-javascript';
+import { javascript } from '@codemirror/lang-javascript';
 import { CodemirrorRepository } from 'src/lib/core/codemirror.repository';
 import { MethodEvaluationStatus } from 'src/lib/process-builder/globals/method-evaluation-status';
 import { IProcessBuilderConfig, PROCESS_BUILDER_CONFIG_TOKEN } from 'src/lib/process-builder/interfaces/process-builder-config.interface';
-import { linter, lintGutter } from '@codemirror/lint';
-// @ts-ignore
-import Linter from "eslint4b-prebuilt";
+import { lintGutter } from '@codemirror/lint';
 import defaultImplementation from 'src/lib/process-builder/globals/default-implementation';
 import { debounceTime, map, shareReplay, tap } from 'rxjs/operators';
-import { ControlContainer, FormControl, FormGroup, UntypedFormControl } from '@angular/forms';
+import { ControlContainer, FormControl, UntypedFormControl } from '@angular/forms';
 import { Store } from '@ngrx/store';
 import { selectIParams } from 'src/lib/process-builder/store/selectors/param.selectors';
 import { mapIParamsInterfaces } from 'src/lib/process-builder/extensions/rxjs/map-i-params-interfaces.rxjs';
-import { ITaskCreationFormGroup } from 'src/lib/process-builder/interfaces/task-creation.interface';
 import completePropertyAfter from './constants/complete-property-after.contant';
 import doNotCompleteAfter from './constants/do-not-complete-after.constant';
 import completeProperties from './methods/complete-properties.method';
@@ -28,16 +25,15 @@ import { ProcessBuilderService } from 'src/lib/process-builder/services/process-
 import globalsInjector from './constants/globals-injector.constant';
 import { selectSnapshot } from 'src/lib/process-builder/globals/select-snapshot';
 import { IInterface } from 'src/lib/process-builder/interfaces/interface.interface';
+import { TaskCreationFormGroup } from 'src/lib/process-builder/interfaces/task-creation-form-group-value.interface';
 
 @Component({
   selector: 'app-embedded-function-implementation',
   templateUrl: './embedded-function-implementation.component.html',
   styleUrls: ['./embedded-function-implementation.component.scss'],
-  providers: [
-    ProcessBuilderService
-  ]
+  providers: [ ProcessBuilderService ]
 })
-export class EmbeddedFunctionImplementationComponent implements EmbeddedView, AfterViewInit, OnDestroy {
+export class EmbeddedFunctionImplementationComponent implements IEmbeddedView, AfterViewInit, OnDestroy {
 
   @Input() public inputParams!: number[];
 
@@ -85,7 +81,17 @@ export class EmbeddedFunctionImplementationComponent implements EmbeddedView, Af
       }),
       this.inputParams$.pipe(mapIParamsInterfaces(this._store))
         .subscribe((inputParams) => {
-          let injectorObject = { injector: {} as { [key: string]: any } };
+          let injectorObject = {
+            injector: {} as { [key: string]: any },
+            'httpClient.get': {
+              type: 'function',
+              apply: 'await httpClient.get(/** url **/).toPromise()'
+            },
+            'httpClient.post': {
+              type: 'function',
+              apply: 'await httpClient.post(/** url **/, /** json body **/).toPromise()'
+            }
+          };
           inputParams.forEach(param => {
             if (param.defaultValue) {
               injectorObject.injector[param.normalizedName] = param.defaultValue;
@@ -141,8 +147,7 @@ export class EmbeddedFunctionImplementationComponent implements EmbeddedView, Af
             this._implementationChanged.next(this.codeMirror.state.doc);
           }
         }),
-        linter(esLint(new Linter())),
-        lintGutter()
+        lintGutter(),
       ]
     });
   };
@@ -150,7 +155,7 @@ export class EmbeddedFunctionImplementationComponent implements EmbeddedView, Af
   public MethodEvaluationStatus = MethodEvaluationStatus;
 
   public get formGroup() {
-    return this._controlContainer.control as FormGroup<Partial<ITaskCreationFormGroup>>;
+    return this._controlContainer.control as TaskCreationFormGroup;
   }
 
   public get canFailControl(): UntypedFormControl {

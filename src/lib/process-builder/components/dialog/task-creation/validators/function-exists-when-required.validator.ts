@@ -1,12 +1,12 @@
-import { AbstractControl, FormGroup } from "@angular/forms";
-import { ITaskCreationFormGroup } from "src/lib/process-builder/interfaces/task-creation.interface";
+import { AbstractControl } from "@angular/forms";
+import { TaskCreationFormGroup } from "src/lib/process-builder/interfaces/task-creation-form-group-value.interface";
 
 export const functionSelectedsWhenRequiredValidator = (isRequired: boolean) => {
     return (control: AbstractControl) => {
-        const formGroup = control as FormGroup<ITaskCreationFormGroup>;
-        if (formGroup.controls.functionIdentifier.value || !isRequired) {
+        const formGroup = control as TaskCreationFormGroup;
+        if (typeof formGroup.controls.functionIdentifier?.value === 'number' || !isRequired) {
             return null;
         }
-        return { required: true };
+        return { functionSelectedsWhenRequiredValidator: true };
     };
 }

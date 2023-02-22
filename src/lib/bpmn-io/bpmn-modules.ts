@@ -7,6 +7,7 @@ import { ICanvasModule } from "./interfaces/canvas-module.interface";
 import { IEventBusModule } from "./interfaces/event-bus-module.interface";
 import { IDirectEditingModule } from "./interfaces/direct-editing-module.interface";
 import { IGraphicsFactory } from "./interfaces/graphics-factory.interface";
+import { IConnector } from "./interfaces/connector.interface";
 
 export const getCanvasModule = (bpmnJS: IBpmnJS) => bpmnJS.get(bpmnJsModules.Canvas) as ICanvasModule;
 export const getDirectEditingModule = (bpmnJS: IBpmnJS) => bpmnJS.get(bpmnJsModules.DirectEditing) as IDirectEditingModule;
@@ -30,7 +31,7 @@ export interface IElementRegistryModule {
     filter: (cond: (e: IElement) => boolean) => IElement[];
     find: (cond: (e: IElement) => boolean) => IElement | undefined;
     forEach: (arg: (e: IElement) => void) => void;
-    get: (id: string) => IElement | undefined;
+    get: (id: string) => IElement | IConnector | undefined;
     getAll: () => IElement[];
     remove: (element: IElement) => void;
     updateId: (element: IElement, id: string) => void;

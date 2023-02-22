@@ -5,7 +5,6 @@ import { combineLatest, tap, map, of, switchMap } from 'rxjs';
 import { BPMNJsRepository } from 'src/lib/core/bpmn-js.repository';
 import { TaskCreationStep } from '../../globals/task-creation-step';
 import { ITaskCreationPayload } from '../../interfaces/task-creation-payload.interface';
-import { ITaskCreationData } from '../../interfaces/task-creation-data.interface';
 import { IProcessBuilderConfig, PROCESS_BUILDER_CONFIG_TOKEN } from '../../interfaces/process-builder-config.interface';
 import { IConnector } from 'src/lib/bpmn-io/interfaces/connector.interface';
 import { CodemirrorRepository } from 'src/lib/core/codemirror.repository';
@@ -26,6 +25,8 @@ import { IElement } from 'src/lib/bpmn-io/interfaces/element.interface';
 import { deepObjectLookup } from 'src/lib/shared/globals/deep-object-lookup.function';
 import { injectInterfaces, injectValues } from '../../store/selectors/injection-context.selectors';
 import { ConfirmationService } from 'src/lib/confirmation/services/confirmation.service';
+import { ITaskCreationFormGroupValue } from '../../interfaces/task-creation-form-group-value.interface';
+import { IInputParam } from '../../interfaces/input-param.interface';
 
 @Injectable()
 export class ProcessBuilderComponentService {
@@ -39,18 +40,18 @@ export class ProcessBuilderComponentService {
         const taskCreationPayload = {
           configureActivity: events.find(event => event.taskCreationStep === TaskCreationStep.ConfigureFunctionSelection)?.element,
           configureIncomingErrorGatewaySequenceFlow: events.find(event => event.taskCreationStep === TaskCreationStep.ConfigureErrorGatewayEntranceConnection)?.element
-        } as ITaskCreationPayload, taskCreationData = {
+        } as ITaskCreationPayload, taskCreationFormGroupValue = {
           functionIdentifier: functionIdentifier
-        } as ITaskCreationData;
+        } as ITaskCreationFormGroupValue;
 
         return combineLatest([
           of(taskCreationPayload),
           this._dialogService.configTaskCreation({
-            taskCreationData: taskCreationData,
+            taskCreationFormGroupValue: taskCreationFormGroupValue,
             taskCreationPayload: taskCreationPayload
           })
         ]).pipe(
-          map(([taskCreationPayload, taskCreationData]: [ITaskCreationPayload, ITaskCreationData]) => ({ taskCreationPayload, taskCreationData }))
+          map(([taskCreationPayload, taskCreationFormGroupValue]: [ITaskCreationPayload, ITaskCreationFormGroupValue]) => ({ taskCreationPayload, taskCreationFormGroupValue }))
         );
       })
     );
@@ -69,13 +70,13 @@ export class ProcessBuilderComponentService {
     private _confirmationService: ConfirmationService
   ) { }
 
-  public async applyTaskCreationConfig(taskCreationPayload: ITaskCreationPayload, taskCreationData?: ITaskCreationData) {
+  public async applyTaskCreationConfig(taskCreationPayload: ITaskCreationPayload, taskCreationData?: ITaskCreationFormGroupValue) {
     let referencedFunction: IFunction | undefined | null, outputParam: IParam | undefined, gatewayShape: IElement | undefined;
     if (taskCreationData) {
       referencedFunction = await selectSnapshot(this._store.select(functionSelectors.selectIFunction(taskCreationData.functionIdentifier)));
     }
 
-    const connector = taskCreationPayload.configureIncomingErrorGatewaySequenceFlow;
+    const connector = this._bpmnJsService.elementRegistryModule.get(taskCreationPayload.configureIncomingErrorGatewaySequenceFlow?.id ?? '') as IConnector;
     if (!!connector) {
       if (taskCreationData?.entranceGatewayType) {
         if (taskCreationData.entranceGatewayType) {
@@ -114,7 +115,7 @@ export class ProcessBuilderComponentService {
       this._bpmnJsService.modelingModule.updateLabel(taskCreationPayload.configureActivity, referencedFunction.name);
 
       if (typeof referencedFunction.output?.param === 'number') {
-        outputParam = (typeof referencedFunction.output?.param === 'number' ? await selectSnapshot(this._store.select(paramSelectors.selectIParam(referencedFunction.output.param))) : { identifier: nextParamId }) as IParam;
+        outputParam = (await selectSnapshot(this._store.select(paramSelectors.selectIParam(referencedFunction.output.param)))) ?? { identifier: nextParamId } as IParam;
         outputParam = (await this._handleFunctionOutputParam(taskCreationData, taskCreationPayload, outputParam, methodEvaluation))?.outputParam;
       }
 
@@ -166,7 +167,7 @@ export class ProcessBuilderComponentService {
     }
   }
 
-  private _handleDataInputConfiguration(taskCreationData: ITaskCreationData, taskCreationPayload: ITaskCreationPayload, resultingFunction: IFunction) {
+  private _handleDataInputConfiguration(taskCreationData: ITaskCreationFormGroupValue, taskCreationPayload: ITaskCreationPayload, resultingFunction: IFunction) {
     const configureActivity = taskCreationPayload.configureActivity;
     if (configureActivity) {
       const dataInputAssociations = configureActivity.incoming.filter(incoming => incoming.type === shapeTypes.DataInputAssociation);
@@ -178,13 +179,14 @@ export class ProcessBuilderComponentService {
     if (resultingFunction.inputParams || resultingFunction.useDynamicInputParams) {
       const inputParams = resultingFunction.inputParams ? Array.isArray(resultingFunction.inputParams) ? [...resultingFunction.inputParams] : [resultingFunction.inputParams] : [];
       if (typeof taskCreationData.inputParam === 'number') {
-        inputParams.push({ optional: false, param: taskCreationData.inputParam });
+        debugger;
+        inputParams.push({ optional: false, interface: taskCreationData.inputParam, name: 'my input' } as IInputParam);
       }
 
       if (configureActivity) {
         const availableInputParamsIElements = BPMNJsRepository.getAvailableInputParamsIElements(configureActivity);
-        for (let param of inputParams.filter(inputParam => !(taskCreationPayload.configureActivity as IElement).incoming.some(y => BPMNJsRepository.sLPBExtensionSetted(y.source.businessObject, 'DataObjectExtension', (ext) => ext.outputParam === inputParam.param)))) {
-          const element = availableInputParamsIElements.find(x => BPMNJsRepository.sLPBExtensionSetted(x.businessObject, 'DataObjectExtension', (ext) => ext.outputParam === param.param));
+        for (let param of inputParams.filter(inputParam => !(taskCreationPayload.configureActivity as IElement).incoming.some(y => BPMNJsRepository.sLPBExtensionSetted(y.source.businessObject, 'DataObjectExtension', (ext) => ext.outputParam === inputParam.interface)))) {
+          const element = availableInputParamsIElements.find(x => BPMNJsRepository.sLPBExtensionSetted(x.businessObject, 'DataObjectExtension', (ext) => ext.outputParam === param.interface));
           if (!!element) {
             this._bpmnJsService.modelingModule.connect(element, configureActivity);
           }
@@ -234,15 +236,15 @@ export class ProcessBuilderComponentService {
     this._bpmnJsService.modelingModule.removeElements(elements);
   }
 
-  private _applyConnectorDefaultLabels(connector: IConnector, taskCreationData: ITaskCreationData) {
+  private _applyConnectorDefaultLabels(connector: IConnector, taskCreationData: ITaskCreationFormGroupValue) {
     const connectorLabel = taskCreationData.entranceGatewayType === 'Success'
       ? this._config.errorGatewayConfig.successConnectionName
       : this._config.errorGatewayConfig.errorConnectionName;
 
-    this._bpmnJsService.modelingModule.updateLabel(connector, connectorLabel);
+    this._bpmnJsService.modelingModule.updateLabel(connector, connectorLabel)
   }
 
-  private async _applyFunctionConfiguration(taskCreationData: ITaskCreationData, referencedFunction: IFunction, methodEvaluation: IMethodEvaluationResult, outputParamId: number) {
+  private async _applyFunctionConfiguration(taskCreationData: ITaskCreationFormGroupValue, referencedFunction: IFunction, methodEvaluation: IMethodEvaluationResult, outputParamId: number) {
     const inputParams = await this._extractInputParams(taskCreationData, referencedFunction);
     const functionIdentifier = referencedFunction.requireCustomImplementation ? await selectSnapshot(this._store.select(functionSelectors.selectNextId())) : referencedFunction.identifier;
     const resultingFunction = {
@@ -270,10 +272,10 @@ export class ProcessBuilderComponentService {
     });
   }
 
-  private async _extractInputParams(taskCreationData: ITaskCreationData, referencedFunction: IFunction) {
-    let inputParams: { optional: boolean, param: number }[] = [];
-    if (referencedFunction.useDynamicInputParams && typeof taskCreationData.inputParam === 'number') {
-      inputParams.push({ optional: false, param: taskCreationData.inputParam });
+  private async _extractInputParams(taskCreationData: ITaskCreationFormGroupValue, referencedFunction: IFunction): Promise<IInputParam[]> {
+    let inputParams: IInputParam[] = [];
+    if (referencedFunction.useDynamicInputParams && typeof taskCreationData.interface === 'number') {
+      inputParams.push({ optional: false, interface: taskCreationData.interface, name: taskCreationData.normalizedName, type: 'object' });
     }
     else if (referencedFunction.requireCustomImplementation || referencedFunction.customImplementation) {
       const usedInputParams: { varName: string, propertyName: string | null }[] = taskCreationData.implementation
@@ -291,14 +293,19 @@ export class ProcessBuilderComponentService {
         )
       );
 
-      inputParams.push(...usedInputParamEntities.map(usedInputParamEntity => {
-        return { optional: false, param: usedInputParamEntity.identifier }
+      inputParams.push(...usedInputParamEntities.map((usedInputParamEntity) => {
+        return {
+          optional: false,
+          interface: typeof usedInputParamEntity.interface === 'number' ? usedInputParamEntity.interface : undefined,
+          name: usedInputParamEntity.normalizedName,
+          type: 'object'
+        } as IInputParam
       }));
     }
     return inputParams;
   }
 
-  private async _handleFunctionOutputParam(taskCreationData: ITaskCreationData, taskCreationPayload: ITaskCreationPayload, outputParam: IParam, methodEvaluation?: IMethodEvaluationResult) {
+  private async _handleFunctionOutputParam(taskCreationData: ITaskCreationFormGroupValue, taskCreationPayload: ITaskCreationPayload, outputParam: IParam, methodEvaluation?: IMethodEvaluationResult) {
     if (!methodEvaluation) {
       methodEvaluation = CodemirrorRepository.evaluateCustomMethod(undefined, taskCreationData.implementation ?? defaultImplementation);
     }
@@ -308,6 +315,7 @@ export class ProcessBuilderComponentService {
         name: taskCreationData.outputParamName ?? this._config.dynamicParamDefaultNaming,
         normalizedName: taskCreationData.normalizedOutputParamName ?? ProcessBuilderRepository.normalizeName(taskCreationData.outputParamName ?? this._config.dynamicParamDefaultNaming),
         defaultValue: await this._outputParamValue(methodEvaluation, taskCreationData.outputParamValue),
+        interface: taskCreationData.outputParamInterface
       } as IParam;
       if (typeof taskCreationData.interface === 'number') {
         outputParam.interface = taskCreationData.interface;
