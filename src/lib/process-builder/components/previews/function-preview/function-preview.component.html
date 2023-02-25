@@ -27,8 +27,10 @@
 </div>
 
 <ng-template #inputParamsList>
-    <div *ngFor="let param of inputParams">
-        {{param.interface|interface|async}}
+    <div class="input-param-list">
+        <div class="input-param" *ngFor="let param of inputParams">
+            {{param|inputParam|async}}
+        </div>
     </div>
 </ng-template>
 

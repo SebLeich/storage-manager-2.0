@@ -6,5 +6,7 @@ export enum InterfaceCodes {
     Group,
     Step,
     Position,
-    Order
+    Order,
+    Space,
+    PositionedElement
 }

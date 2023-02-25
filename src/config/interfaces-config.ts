@@ -103,11 +103,52 @@ export default [
         name: 'position template',
         normalizedName: 'position',
         typeDef: [
-            { name: 'id', type: 'string', defaultValue: '7ba6aedb-eceb-4e8a-885f-08aa2293f65a' },
+            { name: 'id', type: 'string', defaultValue: '00000000-0000-0000-0000-000000000000' },
+            { name: 'rotated', type: 'boolean', defaultValue: false },
             { name: 'index', type: 'number', defaultValue: 1 },
-            { name: 'height', type: 'number', defaultValue: 1700 },
-            { name: 'width', type: 'number', defaultValue: 1000 },
-            { name: 'length', type: 'number', defaultValue: 600 },
+            { name: 'height', type: 'number', defaultValue: 100 },
+            { name: 'width', type: 'number', defaultValue: 100 },
+            { name: 'length', type: 'number', defaultValue: 100 },
+            { name: 'xCoord', type: 'number', defaultValue: 0 },
+            { name: 'yCoord', type: 'number', defaultValue: 0 },
+            { name: 'zCoord', type: 'number', defaultValue: 0 },
+        ]
+    } as IInterface,
+    {
+        identifier: InterfaceCodes.Space,
+        name: 'space template',
+        normalizedName: 'space',
+        typeDef: [
+            { name: 'height', type: 'number', defaultValue: 100 },
+            { name: 'width', type: 'number', defaultValue: 100 },
+            { name: 'length', type: 'number', defaultValue: 100 },
+        ]
+    } as IInterface,
+    {
+        identifier: InterfaceCodes.PositionedElement,
+        name: 'positioned element template',
+        normalizedName: 'positionedElement',
+        typeDef: [
+            { name: 'xCoord', type: 'number', defaultValue: 0 },
+            { name: 'yCoord', type: 'number', defaultValue: 0 },
+            { name: 'zCoord', type: 'number', defaultValue: 0 },
+        ]
+    } as IInterface,
+    {
+        identifier: InterfaceCodes.Order,
+        name: 'order template',
+        normalizedName: 'order',
+        typeDef: [
+            { name: 'id', type: 'string', defaultValue: '00000000-0000-0000-0000-000000000000' },
+            { name: 'index', type: 'number', defaultValue: 1 },
+            { name: 'description', type: 'string', defaultValue: 'Exemplary order' },
+            { name: 'quantity', type: 'number', defaultValue: 1 },
+            { name: 'width', type: 'number', defaultValue: 100 },
+            { name: 'length', type: 'number', defaultValue: 100 },
+            { name: 'height', type: 'number', defaultValue: 100 },
+            { name: 'turningAllowed', type: 'boolean', defaultValue: false },
+            { name: 'stackingAllowed', type: 'boolean', defaultValue: false },
+            { name: 'group', type: 'string', defaultValue: 'groupIdentifier' },
         ]
     } as IInterface
 ];

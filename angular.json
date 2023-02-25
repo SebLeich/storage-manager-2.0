@@ -35,7 +35,6 @@
             ],
             "styles": [
               "src/custom-theme.scss",
-              "src/custom-theme.sass",
               "src/styles.css",
               "./node_modules/bpmn-js/dist/assets/diagram-js.css",
               "./node_modules/bpmn-js/dist/assets/bpmn-font/css/bpmn.css",
@@ -123,7 +122,6 @@
             ],
             "styles": [
               "src/custom-theme.scss",
-              "src/custom-theme.sass",
               "src/styles.css",
               "./node_modules/bpmn-js/dist/assets/diagram-js.css",
               "./node_modules/bpmn-js/dist/assets/bpmn-font/css/bpmn.css",

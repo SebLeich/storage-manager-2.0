@@ -17,26 +17,26 @@ import { injectValues } from 'src/lib/process-builder/store/selectors/injection-
 @Component({
   selector: 'app-param-editor',
   templateUrl: './param-editor.component.html',
-  styleUrls: ['./param-editor.component.sass'],
+  styleUrls: ['./param-editor.component.scss'],
   providers: [ParamEditorComponentService],
 })
 export class ParamEditorComponent implements OnInit, OnDestroy {
   @ViewChild('parameterBody', { static: true, read: ElementRef })
   private set parameterBody(body: ElementRef<HTMLDivElement>) {
-    this._paramBody.next(body);
-    this._editor.next(
+    this._paramBody$$.next(body);
+    this._editor$$.next(
       new JSONEditor(body.nativeElement, {
         onChangeJSON: (value: object) => {
-          return this._jsonChanged.next(value);
+          return this._jsonChanged$$.next(value);
         },
       })
     );
   }
-  private _paramBody = new ReplaySubject<ElementRef<HTMLDivElement>>(1);
-  private _editor = new ReplaySubject<JSONEditor>(1);
-  private _jsonChanged = new Subject<object>();
+  private _paramBody$$ = new ReplaySubject<ElementRef<HTMLDivElement>>(1);
+  private _editor$$ = new ReplaySubject<JSONEditor>(1);
+  private _jsonChanged$$ = new Subject<object>();
 
-  public jsonChanged$ = this._jsonChanged.pipe(debounceTime(500));
+  public jsonChanged$ = this._jsonChanged$$.pipe(debounceTime(500));
   public selectedIndex: number = 0;
 
   private _subscriptions: Subscription = new Subscription();
@@ -74,7 +74,7 @@ export class ParamEditorComponent implements OnInit, OnDestroy {
   public async close() {
     const formGroup = await selectSnapshot(this.paramEditorComponentService.formGroup$);
     if (formGroup.dirty) {
-      const editor = await selectSnapshot(this._editor);
+      const editor = await selectSnapshot(this._editor$$);
       const parsedValue = ProcessBuilderRepository.extractObjectTypeDefinition(
         editor.get()
       );
@@ -98,7 +98,7 @@ export class ParamEditorComponent implements OnInit, OnDestroy {
     this._subscriptions.add(this.paramEditorComponentService.availableInputParams$.subscribe((iParams) => this.paramEditorComponentService.updateInjector(iParams)));
     this._subscriptions.add(
       combineLatest([
-        this._editor,
+        this._editor$$,
         this.paramEditorComponentService.paramObjectPseudoObject$,
       ]).subscribe(([editor, pseudoObject]: [JSONEditor, object]) => {
         editor.set(pseudoObject);

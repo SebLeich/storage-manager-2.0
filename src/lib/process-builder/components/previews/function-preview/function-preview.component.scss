@@ -1,3 +1,5 @@
+@import "src/lib/scss/gradients";
+
 .headline {
     font-size: 1.2rem;
     white-space: nowrap;
@@ -24,29 +26,47 @@
 
 .io-wrapper {
     display: flex;
-}
 
-.io-wrapper > * {
-    margin-right: 0.5rem;
-    flex: 1;
-    display: flex;
-    font-size: 0.7rem;
-    font-weight: 100;
-    align-items: center;
-}
+    > * {
+        margin-right: 0.5rem;
+        display: flex;
+        font-size: 0.7rem;
+        font-weight: 100;
+        align-items: center;
 
-.io-wrapper > * > :nth-child(1) {
-    margin-right: 5px;
-}
+        :nth-child(1) {
+            margin-right: 5px;
+        }
+    }
 
-.io-wrapper > .input > :nth-child(1) {
-    color: green;
-}
+    .input {
+        flex: 2;
 
-.io-wrapper > .output > :nth-child(1) {
-    color: rgb(69, 69, 186);
+        mat-icon {
+            color: green;
+        }
+    }
+
+    .output {
+        flex: 1;
+
+        mat-icon {
+            color: rgb(69, 69, 186);
+        }
+    }
 }
 
 .io-wrapper > * > :nth-child(2) {
     flex: 1;
+}
+
+.input-param-list {
+    .input-param {
+        @include gradient-darkblue;
+        padding: 2px 4px;
+        color: white;
+        margin: 2px;
+        display: inline-block;
+        border-radius: 3px;
+    }
 }

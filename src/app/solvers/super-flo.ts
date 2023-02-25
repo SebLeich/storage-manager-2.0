@@ -6,7 +6,7 @@ import getContainerPosition from '../methods/get-container-position.shared-metho
 import moment from 'moment';
 import { IOrder } from '../../lib/storage-manager-store/interfaces/order.interface';
 import { IGroup } from '../../lib/storage-manager-store/interfaces/group.interface';
-import { IPosition } from '../interfaces/i-position.interface';
+import { IPosition } from '../interfaces/position.interface';
 import { IPossibilities } from '../interfaces/i-possibilities.interface';
 import { IStep } from '../interfaces/i-step.interface';
 import { IGood } from '../../lib/storage-manager-store/interfaces/good.interface';

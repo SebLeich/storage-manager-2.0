@@ -8,9 +8,7 @@ export interface IFunction {
     name: string;
     normalizedName?: string;
     description?: string | null;
-    inputParams: IInputParam[] | null;
     useDynamicInputParams?: undefined | boolean | IDynamicInputParamsConfig;
-    output: IOutputParam | null;
     implementation?: (args?: any) => Promise<any>;
     pseudoImplementationComputationName?: string;
     canFail: boolean;
@@ -19,6 +17,8 @@ export interface IFunction {
     requireDynamicInput?: boolean;
     requireDataMapping?: boolean;
     finalizesFlow?: boolean;
+    inputParams: IInputParam[] | null;
+    output: IOutputParam | null;
 }
 
 export const FUNCTIONS_CONFIG_TOKEN: InjectionToken<IFunction[]> = new InjectionToken<IFunction[]>("FUNCTION_CONFIG");

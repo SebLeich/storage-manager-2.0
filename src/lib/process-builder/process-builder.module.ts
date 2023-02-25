@@ -66,6 +66,7 @@ import { PipelineStoreModule } from '../pipeline-store/pipeline-store.module';
 import { UserInputComponent } from './components/helpers/user-input/user-input.component';
 import { EmbeddedOutputParamConfigurationComponent } from './components/embedded/embedded-output-param-configuration/embedded-output-param-configuration.component';
 import { MatSelectModule } from '@angular/material/select';
+import { InputParamPipe } from './pipes/input-param.pipe';
 
 
 @NgModule({
@@ -92,7 +93,8 @@ import { MatSelectModule } from '@angular/material/select';
     ParamMemberPreviewComponent,
     ParamMemberPathPreviewComponent,
     UserInputComponent,
-    EmbeddedOutputParamConfigurationComponent
+    EmbeddedOutputParamConfigurationComponent,
+    InputParamPipe
   ],
   imports: [
     CodemirrorModule,

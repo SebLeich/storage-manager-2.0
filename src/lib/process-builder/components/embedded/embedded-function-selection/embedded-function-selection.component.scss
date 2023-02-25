@@ -20,7 +20,7 @@
 
 .grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(380px, 1fr));
     gap: 0.6rem;
 }
 
@@ -72,7 +72,6 @@
     transition: 0.1s ease-in;
     min-height: 10rem;
     border: 3px solid white;
-    max-width: 300px;
 }
 
 .function-wrapper.active {

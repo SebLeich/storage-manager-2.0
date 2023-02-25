@@ -6,7 +6,7 @@ import { IDynamicInputParamsConfig } from '../interfaces/dynamic-input-params-co
 })
 export class DynamicInputParamsPipe implements PipeTransform {
 
-  transform(config: IDynamicInputParamsConfig | boolean | null | undefined): string {
+  public transform(config: IDynamicInputParamsConfig | boolean | null | undefined): string {
     if (config === null || typeof config !== 'object') {
       return config ? 'dynamic input params used' : 'no dynamic input params used';
     }

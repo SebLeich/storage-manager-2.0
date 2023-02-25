@@ -1,4 +1,4 @@
-import { IPosition } from "./i-position.interface";
+import { IPosition } from "./position.interface";
 
 export interface IStep {
     sequenceNumber?: number;

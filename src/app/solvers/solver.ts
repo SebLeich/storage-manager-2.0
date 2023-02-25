@@ -1,5 +1,5 @@
 import { IOrder } from "../../lib/storage-manager-store/interfaces/order.interface";
-import { ISpace } from "../interfaces/i-space.interface";
+import { ISpace } from "../interfaces/space.interface";
 import { IVirtualDimension } from "../interfaces/i-virtual-dimension.interface";
 import calculateDimensionSharedMethod from "../methods/calculate-dimension.shared-method";
 import { v4 as generateGuid } from 'uuid';

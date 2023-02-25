@@ -1,5 +1,5 @@
-import { IPositionedElement } from "./i-positioned.interface";
-import { ISpace } from "./i-space.interface";
+import { IPositionedElement } from "./positioned.interface";
+import { ISpace } from "./space.interface";
 
 export interface IPosition extends ISpace, IPositionedElement {
     id: string;
