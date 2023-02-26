@@ -1,6 +1,6 @@
-import { Component, DoCheck, Input, OnChanges, OnInit } from '@angular/core';
+import { Component, Input, OnChanges, OnInit } from '@angular/core';
 import { Store } from '@ngrx/store';
-import { ISolution } from 'src/lib/storage-manager-store/interfaces/solution.interface';
+import { ISolution } from '@smgr/interfaces';
 import getContainerPositionSharedMethods from 'src/app/methods/get-container-position.shared-methods';
 import { selectSnapshot } from 'src/lib/process-builder/globals/select-snapshot';
 import * as ThreeJS from 'three';
@@ -9,9 +9,7 @@ import { filter, map, switchMap, take } from 'rxjs';
 import { DomSanitizer } from '@angular/platform-browser';
 import { showAnimation } from 'src/lib/shared/animations/show';
 import { VisualizationService } from 'src/lib/visualization/services/visualization.service';
-import { selectSolutionPreview } from 'src/lib/storage-manager-store/store/selectors/i-solution-preview.selectors';
-import { announceSolutionPreview, upsertSolutionPreview } from 'src/lib/storage-manager-store/store/actions/solution-preview.actions';
-import { selectGroups } from 'src/lib/storage-manager-store/store/selectors/group.selectors';
+import { announceSolutionPreview, selectGroups, selectSolutionPreview, upsertSolutionPreview } from '@smgr/store';
 
 @Component({
   selector: 'app-solution-preview-rendering',
@@ -50,10 +48,7 @@ export class SolutionPreviewRenderingComponent implements OnChanges, OnInit {
 
   public scene = new ThreeJS.Scene();
 
-  constructor(
-    private _store: Store,
-    private _domSanitizer: DomSanitizer
-  ) { }
+  constructor(private _store: Store, private _domSanitizer: DomSanitizer) { }
 
   public ngOnChanges(): void {
     this._updateScene();
@@ -83,7 +78,7 @@ export class SolutionPreviewRenderingComponent implements OnChanges, OnInit {
     this.scene.add(containerResult.edges);
     const groups = await selectSnapshot(this._store.select(selectGroups));
     for (let good of this.solution.container!.goods) {
-      const group = groups.find(group => group.id === good.group);
+      const group = groups.find((group) => group.id === good.group);
       const goodResult = VisualizationService.generateFilledBoxMesh(getContainerPositionSharedMethods(good), group?.color ?? '#ffffff', 'good', containerPosition);
       this.scene.add(goodResult.edges, goodResult.mesh);
     }

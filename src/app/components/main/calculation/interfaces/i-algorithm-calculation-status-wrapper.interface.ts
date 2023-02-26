@@ -1,5 +1,5 @@
 import { Algorithm } from "src/app/globals";
-import { ISolution } from "src/lib/storage-manager-store/interfaces/solution.interface";
+import { ISolution } from "@smgr/interfaces";
 import { CalculationError } from "../enumerations/calculation-error";
 
 export interface IAlgorithmStatusWrapper {

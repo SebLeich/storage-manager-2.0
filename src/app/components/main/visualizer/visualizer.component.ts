@@ -8,13 +8,12 @@ import { NoSolutionDialogComponent } from '../../dialog/no-solution-dialog/no-so
 import { fadeInAnimation } from 'src/lib/shared/animations/fade-in.animation';
 import { selectSnapshot } from 'src/lib/process-builder/globals/select-snapshot';
 import * as ThreeJS from 'three';
-import { ISolution } from 'src/lib/storage-manager-store/interfaces/solution.interface';
+import { ISolution } from '@smgr/interfaces';
 import { VisualizerComponentService } from './visualizer-component.service';
 import { IVisualizerContextService, VISUALIZER_CONTEXT } from 'src/app/interfaces/i-visualizer-context.service';
 import { VisualizationService } from 'src/lib/visualization/services/visualization.service';
 import { SceneVisualizationComponent } from 'src/lib/visualization/components/scene-visualization/scene-visualization.component';
-import { selectCurrentSolution, selectSolutions } from 'src/lib/storage-manager-store/store/selectors/i-solution.selectors';
-import { setCurrentSolution } from 'src/lib/storage-manager-store/store/actions/solution.actions';
+import { selectCurrentSolution, setCurrentSolution, selectSolutions } from '@smgr/store';
 
 @Component({
   selector: 'app-visualizer',

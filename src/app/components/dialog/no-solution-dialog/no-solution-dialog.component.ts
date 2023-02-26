@@ -3,11 +3,8 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
 import { Store } from '@ngrx/store';
-import { ISolution } from 'src/lib/storage-manager-store/interfaces/solution.interface';
-import { setExemplaryInputData } from 'src/lib/storage-manager-store/store/actions/calculation-attribute.actions';
-import { setCurrentSolution, setExemplarySolution } from 'src/lib/storage-manager-store/store/actions/solution.actions';
-import * as fromICalculationAttributesState from 'src/lib/storage-manager-store/store/reducers/calculation-attribute.reducers';
-import * as fromISolutionState from 'src/lib/storage-manager-store/store/reducers/solution.reducers';
+import { ISolution } from '@smgr/interfaces';
+import { calculationAttributeState, setCurrentSolution, setExemplarySolution, setExemplaryInputData, solutionState } from '@smgr/store';
 
 @Component({
   selector: 'app-no-solution-dialog',
@@ -25,8 +22,8 @@ export class NoSolutionDialogComponent implements OnInit {
     private _ref: MatDialogRef<NoSolutionDialogComponent>,
     private _router: Router,
     private _snackBar: MatSnackBar,
-    private _calculationAttributesStore: Store<fromICalculationAttributesState.State>,
-    private _solutionStore: Store<fromISolutionState.State>,
+    private _calculationAttributesStore: Store<calculationAttributeState.State>,
+    private _solutionStore: Store<solutionState.State>,
   ) { }
 
   public close = () => this._ref.close();

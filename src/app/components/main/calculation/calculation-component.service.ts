@@ -2,19 +2,14 @@ import { Injectable } from "@angular/core";
 import { Router } from "@angular/router";
 import { Store } from "@ngrx/store";
 import { Algorithm, algorithms } from "src/app/globals";
-import { ISolution } from "src/lib/storage-manager-store/interfaces/solution.interface";
+import { ISolution } from "@smgr/interfaces";
 import { AllInOneRowSolver } from "src/lib/storage-manager/solvers/all-in-one-row.solver";
-import { StartLeftBottomSolver } from "src/app/solvers/start-left-bottom";
-import { SuperFloSolver } from "src/app/solvers/super-flo";
+import { StartLeftBottomSolver, SuperFloSolver } from "@smgr/solvers";
 import { AlgorithmCalculationStatus } from "./enumerations/algorithm-calculation-status.enum";
 import { CalculationError } from "./enumerations/calculation-error";
 import { IAlgorithmStatusWrapper } from "./interfaces/i-algorithm-calculation-status-wrapper.interface";
 import { selectSnapshot } from "src/lib/process-builder/globals/select-snapshot";
-import { setCurrentSolution, updateAlgorithmSolution } from "src/lib/storage-manager-store/store/actions/solution.actions";
-import { selectSolutions } from "src/lib/storage-manager-store/store/selectors/i-solution.selectors";
-import { selectCalculationAttributesValid, selectContainerHeight, selectContainerWidth } from "src/lib/storage-manager-store/store/selectors/i-calculation-attribute.selectors";
-import { selectGroups } from "src/lib/storage-manager-store/store/selectors/group.selectors";
-import { selectOrders } from "src/lib/storage-manager-store/store/selectors/i-order.selectors";
+import { setCurrentSolution, selectCalculationAttributesValid, selectGroups, selectContainerHeight, selectContainerWidth, selectSolutions, selectOrders, updateAlgorithmSolution } from "@smgr/store";
 
 @Injectable()
 export class CalculationComponentService {

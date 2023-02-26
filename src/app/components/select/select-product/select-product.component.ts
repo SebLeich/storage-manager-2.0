@@ -2,10 +2,8 @@ import { AfterViewChecked, Component, EventEmitter, forwardRef, OnDestroy, Outpu
 import { ControlValueAccessor, UntypedFormControl, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { Store } from '@ngrx/store';
 import { Subscription } from 'rxjs';
-import { IProduct } from 'src/lib/storage-manager-store/interfaces/product.interface';
-import { selectProducts } from 'src/lib/storage-manager-store/store/selectors/i-product.selectors';
-import * as fromIProductState from 'src/lib/storage-manager-store/store/reducers/product.reducers';
-import { addProduct } from 'src/lib/storage-manager-store/store/actions/product.actions';
+import { IProduct } from '@smgr/interfaces';
+import { addProduct, selectProducts } from '@smgr/store';
 
 @Component({
   selector: 'app-select-product',
@@ -23,18 +21,16 @@ export class SelectProductComponent implements AfterViewChecked, ControlValueAcc
 
   @Output() public productChanged = new EventEmitter<string>();
 
-  public products$ = this._productStore.select(selectProducts);
+  public products$ = this._store.select(selectProducts);
   public valueControl: UntypedFormControl = new UntypedFormControl();
 
-  private _subscriptions: Subscription = new Subscription();
+  private _subscription: Subscription = new Subscription();
 
-  constructor(
-    private _productStore: Store<fromIProductState.State>
-  ) { }
+  constructor(private _store: Store) { }
 
   public addProduct(event: KeyboardEvent) {
     event.stopPropagation();
-    this._productStore.dispatch(addProduct({
+    this._store.dispatch(addProduct({
       product: {
         'description': (event.target as HTMLInputElement).value,
         'height': 0,
@@ -46,23 +42,23 @@ export class SelectProductComponent implements AfterViewChecked, ControlValueAcc
   }
 
   public ngAfterViewChecked(): void {
-    this._subscriptions.add(
+    this._subscription.add(
       this.valueControl.valueChanges
         .subscribe((productDescription: string) => {
           this.productChanged.next(productDescription);
         })
     );
   }
-  public ngOnDestroy = () => this._subscriptions.unsubscribe();
+  public ngOnDestroy = () => this._subscription.unsubscribe();
 
   public onChange: (arg: any) => void = () => { };
   public onTouched: () => void = () => { };
-  registerOnTouched = (fn: any) => this.onTouched = fn;
-  registerOnChange = (fn: any) => this.onChange = fn;
+  public registerOnTouched = (fn: any) => this.onTouched = fn;
+  public registerOnChange = (fn: any) => this.onChange = fn;
 
-  setDisabledState?(isDisabled: boolean): void {
+  public setDisabledState?(isDisabled: boolean): void {
     isDisabled ? this.valueControl.disable() : this.valueControl.enable();
   }
 
-  writeValue = (val: any) => this.valueControl.patchValue(val);
+  public writeValue = (val: any) => this.valueControl.patchValue(val);
 }

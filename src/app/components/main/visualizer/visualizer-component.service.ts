@@ -1,10 +1,10 @@
 import { Injectable } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { BehaviorSubject, Observable, Subject } from 'rxjs';
-import { IGood } from 'src/lib/storage-manager-store/interfaces/good.interface';
+import { IGood } from '@smgr/interfaces';
 import { IVisualizerContextService } from 'src/app/interfaces/i-visualizer-context.service';
 import { selectSnapshot } from 'src/lib/process-builder/globals/select-snapshot';
-import { selectCurrentSolutionGoods } from 'src/lib/storage-manager-store/store/selectors/i-solution.selectors';
+import { selectCurrentSolutionGoods } from '@smgr/store';
 
 @Injectable()
 export class VisualizerComponentService implements IVisualizerContextService {

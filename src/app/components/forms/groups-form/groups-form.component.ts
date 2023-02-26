@@ -2,8 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { ControlContainer, FormArray, FormControl } from '@angular/forms';
 import { SortDirection } from '@angular/material/sort';
 import { Store } from '@ngrx/store';
-import { IGroup } from 'src/lib/storage-manager-store/interfaces/group.interface';
-import { removeGroup } from 'src/lib/storage-manager-store/store/actions/group.actions';
+import { IGroup } from '@smgr/interfaces';
+import { removeGroup } from '@smgr/store';
 
 @Component({
   selector: 'app-groups-form',

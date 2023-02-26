@@ -2,8 +2,8 @@ import { Component, Inject, OnInit } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { Store } from '@ngrx/store';
-import { ISolution } from 'src/lib/storage-manager-store/interfaces/solution.interface';
-import { setCurrentSolution } from 'src/lib/storage-manager-store/store/actions/solution.actions';
+import { ISolution } from '@smgr/interfaces';
+import { setCurrentSolution } from '@smgr/store';
 import { VisualizationService } from 'src/lib/visualization/services/visualization.service';
 
 import * as ThreeJS from 'three';

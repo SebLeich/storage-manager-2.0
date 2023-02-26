@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { IGood } from 'src/lib/storage-manager-store/interfaces/good.interface';
+import { IGood } from '@smgr/interfaces';
 
 @Component({
   selector: 'app-goods-panel',

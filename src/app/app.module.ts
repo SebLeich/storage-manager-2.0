@@ -71,11 +71,11 @@ import { ComputedStylePipe } from './pipes/computed-style.pipe';
 import { AboutComponent } from './components/main/about/about.component';
 import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 import { VisualizationModule } from 'src/lib/visualization/visualization.module';
-import { StorageManagerModule } from 'src/lib/storage-manager-store/storage-manager.module';
 import { ActionReducer, StoreModule } from '@ngrx/store';
 import { EffectsModule } from '@ngrx/effects';
 import { ApplicationEffects } from './store/effects/application.effects';
 import * as fromApplication from './store/reducers/application.reducer';
+import { StorageManagerModule } from 'src/lib/storage-manager/storage-manager.module';
 
 let rootReducers: { [key: string]: ActionReducer<any, any> } = { };
 rootReducers[fromApplication.featureKey] = fromApplication.reducer;

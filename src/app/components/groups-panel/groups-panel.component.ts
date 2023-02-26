@@ -1,5 +1,5 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
-import { IGroup } from 'src/lib/storage-manager-store/interfaces/group.interface';
+import { IGroup } from '@smgr/interfaces';
 
 @Component({
   selector: 'app-groups-panel',

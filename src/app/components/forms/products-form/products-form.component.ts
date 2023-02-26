@@ -1,10 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { ControlContainer, FormArray, FormControl } from '@angular/forms';
 import { SortDirection } from '@angular/material/sort';
-import { IProduct } from 'src/lib/storage-manager-store/interfaces/product.interface';
+import { IProduct } from '@smgr/interfaces';
 import { Subscription } from 'rxjs';
 import { Store } from '@ngrx/store';
-import { removeProduct } from 'src/lib/storage-manager-store/store/actions/product.actions';
+import { removeProduct } from '@smgr/store';
 
 @Component({
   selector: 'app-products-form',

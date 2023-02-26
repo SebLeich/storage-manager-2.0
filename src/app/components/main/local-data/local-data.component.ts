@@ -2,10 +2,7 @@ import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { FormArray, FormBuilder, FormGroup } from '@angular/forms';
 import { Store } from '@ngrx/store';
 import { combineLatest, map, Observable, pairwise, startWith, Subscription } from 'rxjs';
-import { IIdentifiable } from 'src/lib/storage-manager-store/interfaces/identifiable.interface';
-import { IGroup } from 'src/lib/storage-manager-store/interfaces/group.interface';
-import { IOrder } from 'src/lib/storage-manager-store/interfaces/order.interface';
-import { IProduct } from 'src/lib/storage-manager-store/interfaces/product.interface';
+import { IIdentifiable, IGroup, IOrder, IProduct } from '@smgr/interfaces';
 import calculateRandomColorSharedMethod from 'src/app/methods/calculate-random-color.shared-method';
 import { showAnimation } from 'src/lib/shared/animations/show';
 import { v4 as generateGuid } from 'uuid';
@@ -14,15 +11,7 @@ import { ControlsOf } from 'src/lib/shared/globals/controls-of.type';
 import { selectSnapshot } from 'src/lib/process-builder/globals/select-snapshot';
 import { widgetFadeInAnimation } from 'src/lib/shared/animations/bottom-up-fade.animation';
 import { Unit } from 'src/app/types/unit.type';
-import { selectGroups } from 'src/lib/storage-manager-store/store/selectors/group.selectors';
-import { selectOrders } from 'src/lib/storage-manager-store/store/selectors/i-order.selectors';
-import { selectNextProductDescription, selectProductByDescription, selectProducts } from 'src/lib/storage-manager-store/store/selectors/i-product.selectors';
-import { selectCalculationContextValid } from 'src/lib/storage-manager-store/store/selectors/i-calculation-context.selectors';
-import { addGroup, updateGroup } from 'src/lib/storage-manager-store/store/actions/group.actions';
-import { addOrder, clearOrders, updateOrder, updateOrdersByDescription } from 'src/lib/storage-manager-store/store/actions/order.actions';
-import { addProduct, updateProduct, updateProductByDescription } from 'src/lib/storage-manager-store/store/actions/product.actions';
-import { selectContainerHeight, selectContainerWidth } from 'src/lib/storage-manager-store/store/selectors/i-calculation-attribute.selectors';
-import { setContainerHeight, setContainerWidth } from 'src/lib/storage-manager-store/store/actions/calculation-attribute.actions';
+import { addGroup, addOrder, addProduct, clearOrders, selectGroups, selectCalculationContextValid, selectContainerHeight, selectContainerWidth, selectNextProductDescription, selectOrders, selectProductByDescription, selectProducts, setContainerHeight, setContainerWidth, updateGroup, updateOrder, updateProduct, updateProductByDescription, updateOrdersByDescription } from '@smgr/store';
 
 @Component({
   selector: 'app-local-data',

@@ -3,9 +3,9 @@ import { ControlContainer, FormArray, FormControl, FormGroup } from '@angular/fo
 import { SortDirection } from '@angular/material/sort';
 import { Store } from '@ngrx/store';
 import { Subscription } from 'rxjs';
-import { IOrder } from 'src/lib/storage-manager-store/interfaces/order.interface';
+import { IOrder } from '@smgr/interfaces';
 import { fadeInAnimation } from 'src/lib/shared/animations/fade-in.animation';
-import { removeOrder } from 'src/lib/storage-manager-store/store/actions/order.actions';
+import { removeOrder } from '@smgr/store';
 
 @Component({
   selector: 'app-orders-form',
