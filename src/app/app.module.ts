@@ -76,7 +76,6 @@ import { EffectsModule } from '@ngrx/effects';
 import { ApplicationEffects } from './store/effects/application.effects';
 import * as fromApplication from './store/reducers/application.reducer';
 import { StorageManagerModule } from 'src/lib/storage-manager/storage-manager.module';
-import { ProcedureStoreModule } from 'src/lib/procedure-store/procedure-store.module';
 
 let rootReducers: { [key: string]: ActionReducer<any, any> } = {};
 rootReducers[fromApplication.featureKey] = fromApplication.reducer;
@@ -148,8 +147,6 @@ rootReducers[fromApplication.featureKey] = fromApplication.reducer;
     StoreModule.forRoot(rootReducers),
     EffectsModule.forRoot([ApplicationEffects]),
 
-    ProcedureStoreModule,
-
     StorageManagerModule,
 
     StoreDevtoolsModule.instrument({
@@ -168,10 +165,7 @@ rootReducers[fromApplication.featureKey] = fromApplication.reducer;
     { provide: FUNCTIONS_CONFIG_TOKEN, useValue: FUNCTIONS_CONFIG },
     { provide: INTERFACES_CONFIG_TOKEN, useValue: INTERFACES_CONFIG },
   ],
-  bootstrap: [AppComponent],
-  exports: [
-    ProcedureStoreModule
-  ]
+  bootstrap: [AppComponent]
 })
 
 export class AppModule { }

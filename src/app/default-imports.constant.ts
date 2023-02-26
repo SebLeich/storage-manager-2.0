@@ -18,7 +18,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatDialogModule } from '@angular/material/dialog';
 import { calculationAttributeState, groupState, orderState, productState, solutionState, solutionPreviewState, ICalculationAttributesEffects, IGroupEffects, IOrderEffects, IPendingProcedureEffects, IProductEffects, ISolutionEffects, ISolutionPreviewEffects } from '@smgr/store';
 
-import * as fromIProcedureState from 'src/app/store/reducers/application.reducer';
+import { pendingProcedureState } from '@procedure';
 import { bpmnJsModelState, functionState, IBpmnJSModelEffects, IFunctionEffects, IInterfaceEffects, injectionContextState, interfaceState, IParamEffects, paramState } from '@process-builder/store';
 
 let rootStoreFeatures: any = {};
@@ -35,7 +35,7 @@ rootStoreFeatures[bpmnJsModelState.featureKey] = bpmnJsModelState.reducer;
 rootStoreFeatures[interfaceState.featureKey] = interfaceState.reducer;
 rootStoreFeatures[injectionContextState.featureKey] = injectionContextState.reducer;
 
-rootStoreFeatures[fromIProcedureState.pendingProcedureFeatureKey] = productState.reducer;
+rootStoreFeatures[pendingProcedureState.featureKey] = pendingProcedureState.reducer;
 
 export default [
     BrowserModule,

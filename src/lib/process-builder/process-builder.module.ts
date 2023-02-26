@@ -67,6 +67,7 @@ import { UserInputComponent } from './components/helpers/user-input/user-input.c
 import { EmbeddedOutputParamConfigurationComponent } from './components/embedded/embedded-output-param-configuration/embedded-output-param-configuration.component';
 import { MatSelectModule } from '@angular/material/select';
 import { InputParamPipe } from './pipes/input-param.pipe';
+import { ProcedureStoreModule } from '../procedure-store/procedure-store.module';
 
 
 @NgModule({
@@ -130,9 +131,11 @@ import { InputParamPipe } from './pipes/input-param.pipe';
 
     StoreModule.forFeature(fromInjectionContext.featureKey, fromInjectionContext.reducer),
 
+    ProcedureStoreModule
   ],
   exports: [
     ProcessBuilderComponent,
+    ProcedureStoreModule,
     ValidationErrorPipe,
     ValidationWarningPipe
   ],
