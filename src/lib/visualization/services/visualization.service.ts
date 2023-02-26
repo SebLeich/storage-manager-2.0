@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { defaultGoodEdgeColor, infinityReplacement } from 'src/app/globals';
-import { IPosition } from 'src/app/interfaces/position.interface';
-import { IPositionedElement } from 'src/app/interfaces/positioned.interface';
+import { IPosition } from 'src/lib/storage-manager-store/interfaces/position.interface';
+import { IPositionedElement } from 'src/lib/storage-manager-store/interfaces/positioned.interface';
 import { ISolution } from 'src/lib/storage-manager-store/interfaces/solution.interface';
 import getContainerPositionSharedMethods from 'src/app/methods/get-container-position.shared-methods';
 import { selectSnapshot } from 'src/lib/process-builder/globals/select-snapshot';

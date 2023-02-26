@@ -2,7 +2,7 @@ import { AfterViewChecked, Component, EventEmitter, forwardRef, OnDestroy, Outpu
 import { ControlValueAccessor, UntypedFormControl, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { Store } from '@ngrx/store';
 import { Subscription } from 'rxjs';
-import { IProduct } from 'src/app/interfaces/i-product.interface';
+import { IProduct } from 'src/lib/storage-manager-store/interfaces/product.interface';
 import { selectProducts } from 'src/lib/storage-manager-store/store/selectors/i-product.selectors';
 import * as fromIProductState from 'src/lib/storage-manager-store/store/reducers/product.reducers';
 import { addProduct } from 'src/lib/storage-manager-store/store/actions/product.actions';

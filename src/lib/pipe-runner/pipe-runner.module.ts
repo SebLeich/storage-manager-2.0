@@ -11,7 +11,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatTabsModule } from '@angular/material/tabs';
 import { VisualizationModule } from '../visualization/visualization.module';
-import { StorageManagerStoreModule } from '../storage-manager-store/storage-manager-store.module';
+import { StorageManagerModule } from '../storage-manager-store/storage-manager.module';
 
 
 @NgModule({
@@ -28,7 +28,7 @@ import { StorageManagerStoreModule } from '../storage-manager-store/storage-mana
     MatTabsModule,
     MatProgressSpinnerModule,
     PipelineStoreModule,
-    StorageManagerStoreModule,
+    StorageManagerModule,
     VisualizationModule,
 
     RouterModule.forChild([

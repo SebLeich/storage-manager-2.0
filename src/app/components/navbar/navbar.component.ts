@@ -1,11 +1,11 @@
-import { Component, HostListener, OnInit } from '@angular/core';
+import { Component, HostListener } from '@angular/core';
 import { Router } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { BehaviorSubject, map } from 'rxjs';
 import { environment } from 'src/environments/environment';
-import { selectSolutions } from 'src/lib/storage-manager-store/store/selectors/i-solution.selectors';
 import { selectSolutionNavItemHighlighted } from 'src/app/store/selectors/application.selectors';
 import { resetSolutionNavItem } from 'src/app/store/actions/application.actions';
+import { selectSolutions } from '@smgr/store';
 
 @Component({
   selector: 'app-navbar',
@@ -23,7 +23,7 @@ export class NavbarComponent {
   constructor(public router: Router, private _store: Store) { }
 
   @HostListener('window:resize', ['$event'])
-  onResize(event: Event) {
+  private _onResize(event: Event) {
     this.validateClient();
   }
 

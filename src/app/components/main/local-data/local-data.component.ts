@@ -2,10 +2,10 @@ import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { FormArray, FormBuilder, FormGroup } from '@angular/forms';
 import { Store } from '@ngrx/store';
 import { combineLatest, map, Observable, pairwise, startWith, Subscription } from 'rxjs';
-import { IEntity } from 'src/app/interfaces/i-entity.interface';
+import { IIdentifiable } from 'src/lib/storage-manager-store/interfaces/identifiable.interface';
 import { IGroup } from 'src/lib/storage-manager-store/interfaces/group.interface';
 import { IOrder } from 'src/lib/storage-manager-store/interfaces/order.interface';
-import { IProduct } from 'src/app/interfaces/i-product.interface';
+import { IProduct } from 'src/lib/storage-manager-store/interfaces/product.interface';
 import calculateRandomColorSharedMethod from 'src/app/methods/calculate-random-color.shared-method';
 import { showAnimation } from 'src/lib/shared/animations/show';
 import { v4 as generateGuid } from 'uuid';
@@ -145,7 +145,7 @@ export class LocalDataComponent implements OnDestroy, OnInit {
     }
   }
 
-  private async patchFormArray(formArray: FormArray<FormGroup>, values: IEntity[], type: 'group' | 'order' | 'product') {
+  private async patchFormArray(formArray: FormArray<FormGroup>, values: IIdentifiable[], type: 'group' | 'order' | 'product') {
 
     const actionMap = {
       group: async ([previousValue, currentValue]: IGroup[]) => {

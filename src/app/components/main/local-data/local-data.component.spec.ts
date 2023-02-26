@@ -6,7 +6,7 @@ import { AppModule } from 'src/app/app.module';
 import defaultImportsConstant from 'src/app/default-imports.constant';
 import { IGroup } from 'src/lib/storage-manager-store/interfaces/group.interface';
 import { IOrder } from 'src/lib/storage-manager-store/interfaces/order.interface';
-import { IProduct } from 'src/app/interfaces/i-product.interface';
+import { IProduct } from 'src/lib/storage-manager-store/interfaces/product.interface';
 import calculateRandomColorSharedMethod from 'src/app/methods/calculate-random-color.shared-method';
 import { addGroup, addGroups } from 'src/app/store/actions/i-group.actions';
 import { addOrder, addOrders } from 'src/app/store/actions/i-order.actions';

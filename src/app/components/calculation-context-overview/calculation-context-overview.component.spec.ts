@@ -3,14 +3,12 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ControlContainer, FormControl, FormGroup } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { Store } from '@ngrx/store';
+import { IContainer, IGood, ISolution } from '@smgr/interfaces';
 import { isEqual } from 'lodash';
 import { AppRoutingModule } from 'src/app/app-routing.module';
 import { AppModule } from 'src/app/app.module';
 import defaultImportsConstant from 'src/app/default-imports.constant';
-import { IContainer } from 'src/lib/storage-manager-store/interfaces/container.interface';
-import { IGood } from 'src/lib/storage-manager-store/interfaces/good.interface';
-import { ISolution } from 'src/lib/storage-manager-store/interfaces/solution.interface';
-import { addSolutions } from 'src/app/store/actions/i-solution.actions';
+import { addSolutions } from 'src/lib/storage-manager/store/actions/solution.actions';
 
 import { CalculationContextOverviewComponent } from './calculation-context-overview.component';
 

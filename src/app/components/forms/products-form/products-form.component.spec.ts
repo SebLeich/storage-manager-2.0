@@ -5,7 +5,7 @@ import { By } from '@angular/platform-browser';
 import { AppRoutingModule } from 'src/app/app-routing.module';
 import { AppModule } from 'src/app/app.module';
 import defaultImportsConstant from 'src/app/default-imports.constant';
-import { IProduct } from 'src/app/interfaces/i-product.interface';
+import { IProduct } from 'src/lib/storage-manager-store/interfaces/product.interface';
 import { ControlsOf } from 'src/lib/shared/globals/controls-of.type';
 
 import { ProductFormComponent } from './products-form.component';

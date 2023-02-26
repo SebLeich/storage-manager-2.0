@@ -10,7 +10,7 @@ import { CalculationComponentService } from './calculation-component.service';
 import { AlgorithmCalculationStatus } from './enumerations/algorithm-calculation-status.enum';
 import { MatDialog } from '@angular/material/dialog';
 import { widgetFadeInAnimation } from 'src/lib/shared/animations/bottom-up-fade.animation';
-import { selectCalculationContextValid } from 'src/lib/storage-manager-store/store/selectors/i-calculation-context.selectors';
+import { selectCalculationContextValid } from '@smgr/store';
 
 @Component({
   selector: 'app-calculation',

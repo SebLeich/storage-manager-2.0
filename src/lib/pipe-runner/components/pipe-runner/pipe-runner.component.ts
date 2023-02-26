@@ -12,17 +12,14 @@ import moment from 'moment';
 import * as ThreeJS from 'three';
 import { VisualizationService } from 'src/lib/visualization/services/visualization.service';
 import { MatTabGroup } from '@angular/material/tabs';
-import { ISolutionWrapper } from 'src/lib/storage-manager-store/interfaces/solution-wrapper.interface';
-import { addGroups } from 'src/lib/storage-manager-store/store/actions/group.actions';
 import { showAnimation } from 'src/lib/shared/animations/show';
-import { addSolution, setCurrentSolution } from 'src/lib/storage-manager-store/store/actions/solution.actions';
 import { setIPipelineSolutionReference } from 'src/lib/pipeline-store/store/actions/pipeline.actions';
-import { selectSolutionById } from 'src/lib/storage-manager-store/store/selectors/i-solution.selectors';
-import { ISolution } from 'src/lib/storage-manager-store/interfaces/solution.interface';
 import { fadeInAnimation } from 'src/lib/shared/animations/fade-in.animation';
 import { highlightSolutionNavItem } from 'src/app/store/actions/application.actions';
 import { setIPipelineActionSolution } from 'src/lib/pipeline-store/store/actions/pipeline-action.actions';
 import { HttpClient } from '@angular/common/http';
+import { ISolution, ISolutionWrapper } from '@smgr/interfaces';
+import { addGroups, addSolution, selectSolutionById, setCurrentSolution } from '@smgr/store';
 
 @Component({
   selector: 'app-pipe-runner',

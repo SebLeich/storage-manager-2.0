@@ -4,7 +4,7 @@ import { v4 as generateGuid } from 'uuid';
 import { IOrder } from '../../lib/storage-manager-store/interfaces/order.interface';
 import { Store } from '@ngrx/store';
 import { IGroup } from '../../lib/storage-manager-store/interfaces/group.interface';
-import { IProduct } from '../interfaces/i-product.interface';
+import { IProduct } from '../../lib/storage-manager-store/interfaces/product.interface';
 import { selectSnapshot } from 'src/lib/process-builder/globals/select-snapshot';
 import { ICalculationAttributesVariables } from '../interfaces/i-calculation-context-variables.interface';
 import calculateRandomColorSharedMethod from '../methods/calculate-random-color.shared-method';
