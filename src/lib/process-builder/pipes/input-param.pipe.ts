@@ -1,6 +1,5 @@
 import { Pipe, PipeTransform } from '@angular/core';
 import { Store } from '@ngrx/store';
-import { Observable } from 'rxjs';
 import { selectSnapshot } from '../globals/select-snapshot';
 import { IInputParam } from '../interfaces/input-param.interface';
 import { selectIInterface } from '../store/selectors/interface.selectors';

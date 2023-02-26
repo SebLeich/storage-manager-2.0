@@ -8,7 +8,7 @@ import defaultImportsConstant from 'src/app/default-imports.constant';
 import { IProcedure } from 'src/lib/procedure-store/interfaces/procedure.interface';
 import { selectSnapshot } from 'src/lib/process-builder/globals/select-snapshot';
 import { announceProcedure, announceProcedures } from './pending-procedure.actions';
-import { selectAllProcedures, selectPendingProcedures } from '@smgr/store';
+import { selectAllProcedures, selectPendingProcedures } from '@procedure';
 
 describe('IPendingProcedures Reducers', () => {
 

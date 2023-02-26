@@ -36,23 +36,4 @@ describe('FunctionPreviewComponent', () => {
 
     expect((fixture.debugElement.nativeElement as HTMLElement).innerHTML).toContain(func.name);
   });
-
-  [true, false].forEach((finalizesFlow) => {
-
-    it(`should display correct finalizing state: ${finalizesFlow}`, () => {
-      const func: IFunction = {
-        'name': generateGuid(),
-        'finalizesFlow': finalizesFlow
-      } as IFunction;
-      component.func = func;
-      fixture.detectChanges();
-  
-      if(finalizesFlow){
-        expect((fixture.debugElement.nativeElement as HTMLElement).innerHTML).toContain(component.finalizesFlowMessage);
-      } else {
-        expect((fixture.debugElement.nativeElement as HTMLElement).innerHTML).not.toContain(component.finalizesFlowMessage);
-      }
-    });
-
-  })
 });

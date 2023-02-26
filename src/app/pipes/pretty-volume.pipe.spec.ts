@@ -4,7 +4,7 @@ import defaultImportsConstant from 'src/app/default-imports.constant';
 import { Store } from '@ngrx/store';
 import { By } from '@angular/platform-browser';
 import { PrettyVolumePipe } from './pretty-volume.pipe';
-import { setUnit } from '../store/actions/i-calculation-attribute.actions';
+import { setUnit } from '@smgr/store';
 
 @Component({
   selector: 'test-component',

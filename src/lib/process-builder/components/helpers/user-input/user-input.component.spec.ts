@@ -1,4 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 
 import { UserInputComponent } from './user-input.component';
 
@@ -8,9 +9,18 @@ describe('UserInputComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ UserInputComponent ]
+      declarations: [UserInputComponent],
+      providers: [{
+        provide: MAT_DIALOG_DATA,
+        useValue: [
+          {
+            name: 'some input',
+            type: 'string'
+          }
+        ]
+      }]
     })
-    .compileComponents();
+      .compileComponents();
 
     fixture = TestBed.createComponent(UserInputComponent);
     component = fixture.componentInstance;

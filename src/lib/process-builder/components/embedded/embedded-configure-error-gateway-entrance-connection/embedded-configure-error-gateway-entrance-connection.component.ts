@@ -10,7 +10,7 @@ import { GatewayType } from 'src/lib/process-builder/types/gateway.type';
 @Component({
   selector: 'app-embedded-configure-error-gateway-entrance-connection',
   templateUrl: './embedded-configure-error-gateway-entrance-connection.component.html',
-  styleUrls: ['./embedded-configure-error-gateway-entrance-connection.component.sass']
+  styleUrls: ['./embedded-configure-error-gateway-entrance-connection.component.scss']
 })
 export class EmbeddedConfigureErrorGatewayEntranceConnectionComponent implements IEmbeddedView {
 

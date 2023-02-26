@@ -1,15 +1,12 @@
 import { TestBed } from '@angular/core/testing';
 import { provideMockStore, MockStore } from '@ngrx/store/testing';
-
-import defaultImportsConstant from '../../default-imports.constant';
-import { selectSnapshot } from "../../../lib/process-builder/globals/select-snapshot";
-
 import { isEqual } from 'lodash';
-import { IOrder } from 'src/lib/storage-manager-store/interfaces/order.interface';
 import { GroupDataGenerator } from './test/group.data-generator';
-import { IGroup } from 'src/lib/storage-manager-store/interfaces/group.interface';
 import { State } from '../reducers/group.reducers';
 import { selectGroupById, selectGroups } from './group.selectors';
+import { IGroup, IOrder } from '@smgr/interfaces';
+import defaultImportsConstant from 'src/app/default-imports.constant';
+import { selectSnapshot } from 'src/lib/process-builder/globals/select-snapshot';
 
 describe('IGroup Selectors', () => {
 

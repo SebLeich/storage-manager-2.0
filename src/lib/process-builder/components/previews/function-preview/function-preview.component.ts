@@ -27,7 +27,6 @@ export class FunctionPreviewComponent implements OnInit {
   }
 
   public inputParams: IInputParam[] = [];
-  public finalizesFlowMessage = 'final function';
 
   constructor(private _store: Store) { }
 
