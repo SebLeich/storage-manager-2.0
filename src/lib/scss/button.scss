@@ -1,0 +1,41 @@
+@mixin button() {
+    padding: 0.3rem 0.5rem;
+    cursor: pointer;
+    color: white;
+    border-radius: 2px;
+    transition: all 0.3s;
+    animation: leaves 0.15s ease-out;
+    width: 5rem;
+    text-align: center;
+    font-weight: 200 !important;
+
+    &:hover {
+        opacity: 0.8;
+    }
+}
+
+@mixin default-button() {
+    @include button;
+    background: linear-gradient(135deg, #0078d4, #0078d4bd, #0078d4);
+}
+
+@mixin secondary-button() {
+    @include button;
+    background: linear-gradient(135deg, #47968a, #47968ad2, #47968a);
+}
+
+@mixin secondary-button-2() {
+    @include button;
+    background: linear-gradient(135deg, #444444, #444444c7, #444444);
+}
+
+@keyframes leaves {
+    0% {
+        transform: scale(0.8);
+        -webkit-transform: scale(0.8);
+    }
+    100% {
+        transform: scale(1);
+        -webkit-transform: scale(1);
+    }
+}

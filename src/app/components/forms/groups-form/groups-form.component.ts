@@ -8,7 +8,7 @@ import { removeGroup } from '@smgr/store';
 @Component({
   selector: 'app-groups-form',
   templateUrl: './groups-form.component.html',
-  styleUrls: ['./groups-form.component.css']
+  styleUrls: ['./groups-form.component.scss']
 })
 export class GroupsFormComponent implements OnInit {
 

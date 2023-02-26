@@ -1,0 +1,22 @@
+@import 'src/lib/scss/stretched-element';
+
+.body {
+    height: 120px;
+    width: 120px;
+    box-sizing: border-box;
+    background-color: gray;
+
+    .rendering-overlay {
+        @include stretched-element;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background-color: rgba(255, 255, 255, 0.9);
+    }
+}
+
+.visualization {
+    height: 120px;
+    width: 120px;
+    visibility: hidden;
+}

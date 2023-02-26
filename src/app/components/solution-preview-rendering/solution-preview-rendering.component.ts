@@ -14,7 +14,7 @@ import { announceSolutionPreview, selectGroups, selectSolutionPreview, upsertSol
 @Component({
   selector: 'app-solution-preview-rendering',
   templateUrl: './solution-preview-rendering.component.html',
-  styleUrls: ['./solution-preview-rendering.component.css'],
+  styleUrls: ['./solution-preview-rendering.component.scss'],
   animations: [showAnimation]
 })
 export class SolutionPreviewRenderingComponent implements OnChanges, OnInit {
