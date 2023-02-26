@@ -1,4 +1,4 @@
-import { IPosition } from "../../lib/storage-manager-store/interfaces/position.interface";
+import { IPosition } from "./position.interface";
 
 export interface IPossibilities {
     rotated: IPosition[];

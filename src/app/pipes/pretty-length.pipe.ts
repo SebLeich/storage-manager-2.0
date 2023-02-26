@@ -2,7 +2,7 @@ import { Pipe, PipeTransform } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { nextUnitSize } from '../globals';
 import { selectSnapshot } from 'src/lib/process-builder/globals/select-snapshot';
-import { selectUnit } from 'src/lib/storage-manager-store/store/selectors/i-calculation-attribute.selectors';
+import { selectUnit } from '@smgr/store';
 
 @Pipe({
   name: 'prettyLength'

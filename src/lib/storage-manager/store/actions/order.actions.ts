@@ -1,5 +1,5 @@
 import { createAction, props } from '@ngrx/store';
-import { IOrder } from 'src/lib/storage-manager-store/interfaces/order.interface';
+import { IOrder } from '../../interfaces/order.interface';
 
 export const orderActions = {
   AddOrder: '[Order] Add Order',
@@ -18,7 +18,7 @@ export const orderActions = {
 
 export const addOrder = createAction(
   orderActions.AddOrder,
-  props<{ order: IOrder }>()
+  props<{ order: IOrder}>()
 );
 
 export const addOrders = createAction(

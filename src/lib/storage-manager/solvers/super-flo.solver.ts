@@ -1,16 +1,10 @@
 import { v4 as generateGuid } from 'uuid';
-import { ISolver } from "../interfaces";
-import { ISolution } from "../../lib/storage-manager-store/interfaces/solution.interface";
-import { Solver } from "./solver";
-import getContainerPosition from '../methods/get-container-position.shared-methods';
+import { Solver } from './solver';
+import { IGood, IGroup, IOrder, IPosition, IPossibilities, ISolution, IStep } from '@smgr/interfaces';
 import moment from 'moment';
-import { IOrder } from '../../lib/storage-manager-store/interfaces/order.interface';
-import { IGroup } from '../../lib/storage-manager-store/interfaces/group.interface';
-import { IPosition } from '../../lib/storage-manager-store/interfaces/position.interface';
-import { IPossibilities } from '../interfaces/i-possibilities.interface';
-import { IStep } from '../../lib/storage-manager-store/interfaces/step.interface';
-import { IGood } from '../../lib/storage-manager-store/interfaces/good.interface';
-import { Algorithm } from '../globals';
+import { ISolver } from 'src/lib/storage-manager/interfaces/solver.interface';
+import { Algorithm } from 'src/app/globals';
+import getContainerPosition from 'src/app/methods/get-container-position.shared-methods';
 
 export class SuperFloSolver extends Solver implements ISolver {
 

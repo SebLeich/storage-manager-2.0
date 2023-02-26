@@ -1,13 +1,9 @@
-import { v4 as generateGuid } from 'uuid';
-import { Algorithm, compare } from "../globals";
-import { ISolver } from "../interfaces";
-import { ISolution } from "../../lib/storage-manager-store/interfaces/solution.interface";
-import { Solver } from "./solver";
-import { IGood } from '../../lib/storage-manager-store/interfaces/good.interface';
-import { IContainer } from '../../lib/storage-manager-store/interfaces/container.interface';
-import { IOrder } from '../../lib/storage-manager-store/interfaces/order.interface';
+import { IContainer, IGood, IGroup, IOrder, ISolution } from '@smgr/interfaces';
 import moment from 'moment';
-import { IGroup } from 'src/lib/storage-manager-store/interfaces/group.interface';
+import { Algorithm, compare } from 'src/app/globals';
+import { v4 as generateGuid } from 'uuid';
+import { ISolver } from '../interfaces/solver.interface';
+import { Solver } from './solver';
 
 export class StartLeftBottomSolver extends Solver implements ISolver {
 
@@ -85,7 +81,7 @@ export class StartLeftBottomSolver extends Solver implements ISolver {
                 }
             }
             else {
-                let underneath = container.goods.find(x => x.id === lastGood.stackedOnGood);
+                let underneath = container.goods.find((good) => good.id === lastGood.stackedOnGood);
                 while (underneath) {
                     let space = {
                         width: underneath.width - lastGood.xCoord - lastGood.width,
@@ -96,7 +92,7 @@ export class StartLeftBottomSolver extends Solver implements ISolver {
                         return { xCoord: lastGood.xCoord + lastGood.width, yCoord: lastGood.yCoord, zCoord: lastGood.zCoord, stackedOn: underneath.id };
                     }
                     if (typeof underneath.stackedOnGood !== 'number') break;
-                    underneath = container.goods.find(x => x.id === underneath!.stackedOnGood);
+                    underneath = container.goods.find((good) => good.id === underneath!.stackedOnGood);
                 }
                 if (underneath) {
                     let space = {

@@ -1,23 +1,9 @@
 import { createReducer, MetaReducer, on } from '@ngrx/store';
-
 import { environment } from 'src/environments/environment';
 import { EntityState, EntityAdapter, createEntityAdapter, Update } from '@ngrx/entity';
-import {
-  addOrder,
-  addOrders,
-  clearOrders,
-  duplicateOrder,
-  updateOrder,
-  removeOrder,
-  setCurrentOrder,
-  setOrders,
-  updateOrdersByDescription,
-} from '../actions/order.actions';
+import { addOrder, addOrders, updateCalculationAttributes, clearOrders, duplicateOrder, updateOrder, removeOrder, removeGroup, setExemplarySolution, setCurrentOrder, setOrders, updateOrdersByDescription, } from '@smgr/store';
 import { v4 as generateGuid } from 'uuid';
-import { IOrder } from 'src/lib/storage-manager-store/interfaces/order.interface';
-import { updateCalculationAttributes } from '../actions/calculation-attribute.actions';
-import { removeGroup } from '../actions/group.actions';
-import { setExemplarySolution } from '../actions/solution.actions';
+import { IOrder } from '@smgr/interfaces';
 import exemplarySolution from 'src/assets/exemplary-solution.json';
 
 export const orderFeatureKey = 'order';
@@ -26,7 +12,7 @@ export interface State extends EntityState<IOrder> {
   ids: string[];
 }
 
-export const adapter: EntityAdapter<IOrder> = createEntityAdapter<IOrder>(
+const adapter: EntityAdapter<IOrder> = createEntityAdapter<IOrder>(
   {
     selectId: (order) => order.id,
     sortComparer: (order1, order2) =>
@@ -34,7 +20,7 @@ export const adapter: EntityAdapter<IOrder> = createEntityAdapter<IOrder>(
   }
 );
 
-export const initialState: State = adapter.getInitialState({
+const initialState: State = adapter.getInitialState({
   selectedOrderId: null,
   entities: {},
   ids: [],
@@ -140,6 +126,4 @@ export const reducer = createReducer(
   })
 );
 
-export const metaReducers: MetaReducer<State>[] = !environment.production
-  ? []
-  : [];
+export const metaReducers: MetaReducer<State>[] = !environment.production ? [] : [];

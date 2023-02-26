@@ -1,8 +1,6 @@
 import { Injectable } from '@angular/core';
+import { IGood, IPosition, ISolution } from '@smgr/interfaces';
 import { SolutionError } from '../globals';
-import { IGood } from '../../lib/storage-manager-store/interfaces/good.interface';
-import { IPosition } from '../../lib/storage-manager-store/interfaces/position.interface';
-import { ISolution } from '../../lib/storage-manager-store/interfaces/solution.interface';
 import getContainerPositionSharedMethods from '../methods/get-container-position.shared-methods';
 
 @Injectable()
@@ -24,9 +22,9 @@ export class SolutionValidationService {
     if (goodsYError2.length > 0) output.push({ error: SolutionError.GoodOutOfContainerYCoord, effectedGoods: goodsYError2 });
     let goodsZError1 = solution.container.goods.filter(x => x.zCoord < 0);
     if (goodsZError1.length > 0) output.push({ error: SolutionError.GoodBeforeContainerZCoord, effectedGoods: goodsZError1 });
-    let goodsZError2 = solution.container.goods.filter(x => (x.zCoord + x.length) > solution.container!.length);
+    let goodsZError2 = solution.container.goods.filter((good) => (good.zCoord + good.length) > solution.container!.length);
     if (goodsZError2.length > 0) output.push({ error: SolutionError.GoodOutOfContainerZCoord, effectedGoods: goodsZError2 });
-    let dimensions = solution.container.goods.map(good => {
+    let dimensions = solution.container.goods.map((good) => {
       return { good: good, dimension: getContainerPositionSharedMethods(good) };
     });
     for (let wrapper of dimensions) {

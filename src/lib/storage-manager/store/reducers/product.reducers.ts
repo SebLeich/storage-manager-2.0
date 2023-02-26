@@ -1,7 +1,6 @@
 import { createReducer, MetaReducer, on } from '@ngrx/store';
-
 import { environment } from 'src/environments/environment';
-import { EntityState, EntityAdapter, createEntityAdapter, Update } from '@ngrx/entity';
+import { EntityState, EntityAdapter, createEntityAdapter } from '@ngrx/entity';
 import {
   addProduct,
   addProducts,
@@ -13,11 +12,10 @@ import {
 } from '../actions/product.actions';
 import { v4 as generateGuid } from 'uuid';
 import * as moment from 'moment';
-import { IProduct } from 'src/lib/storage-manager-store/interfaces/product.interface';
 import { updateCalculationAttributes } from '../actions/calculation-attribute.actions';
-
 import exemplarySolution from 'src/assets/exemplary-solution.json';
 import { setExemplarySolution } from '../actions/solution.actions';
+import { IProduct } from '../../interfaces/product.interface';
 
 export const featureKey = 'product';
 
@@ -34,7 +32,7 @@ export const adapter: EntityAdapter<IProduct> = createEntityAdapter<IProduct>(
   }
 );
 
-export const productState: State = adapter.getInitialState({
+const productState: State = adapter.getInitialState({
   selectedProductId: null,
   entities: {},
   ids: [],

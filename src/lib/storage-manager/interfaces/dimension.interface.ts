@@ -1,5 +1,5 @@
-import { IIdentifiable } from "../../lib/storage-manager-store/interfaces/identifiable.interface";
-import { IPositionedElement } from "../../lib/storage-manager-store/interfaces/positioned.interface";
+import { IIdentifiable } from "./identifiable.interface";
+import { IPositionedElement } from "./positioned.interface";
 import { ISpace } from "./space.interface";
 
 export interface IDimension extends IIdentifiable, IPositionedElement, ISpace {

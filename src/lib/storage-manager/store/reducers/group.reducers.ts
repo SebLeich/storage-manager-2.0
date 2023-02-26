@@ -4,20 +4,10 @@ import exemplarySolution from 'src/assets/exemplary-solution.json';
 
 import { environment } from 'src/environments/environment';
 import { EntityState, EntityAdapter, createEntityAdapter } from '@ngrx/entity';
-import {
-  addGroup,
-  addGroups,
-  duplicateGroup,
-  removeGroup,
-  setCurrentGroup,
-  updateGroup,
-  updateGroups,
-} from '../actions/group.actions';
+import { addGroup, addGroups, duplicateGroup, removeGroup, setCurrentGroup, setExemplarySolution, updateCalculationAttributes, updateGroup, updateGroups, } from '@smgr/store';
 import { v4 as generateGuid } from 'uuid';
 import * as moment from 'moment';
-import { IGroup } from 'src/lib/storage-manager-store/interfaces/group.interface';
-import { updateCalculationAttributes } from '../actions/calculation-attribute.actions';
-import { setExemplarySolution } from '../actions/solution.actions';
+import { IGroup } from '@smgr/interfaces';
 
 export const groupFeatureKey = 'group';
 
@@ -26,7 +16,7 @@ export interface State extends EntityState<IGroup> {
   ids: string[];
 }
 
-export const adapter: EntityAdapter<IGroup> = createEntityAdapter<IGroup>(
+const adapter: EntityAdapter<IGroup> = createEntityAdapter<IGroup>(
   {
     selectId: (group) => group.id,
     sortComparer: (group1, group2) => {
@@ -35,7 +25,7 @@ export const adapter: EntityAdapter<IGroup> = createEntityAdapter<IGroup>(
   }
 );
 
-export const initialState: State = adapter.getInitialState({
+const initialState: State = adapter.getInitialState({
   selectedGroupId: null,
   entities: {},
   ids: [],

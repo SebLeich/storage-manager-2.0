@@ -1,7 +1,6 @@
 import { createReducer, on } from '@ngrx/store';
-
 import { EntityState, createEntityAdapter } from '@ngrx/entity';
-import { ISolutionPreview } from 'src/lib/storage-manager-store/interfaces/solution-preview.interface';
+import { ISolutionPreview } from '@smgr/interfaces';
 import { announceSolutionPreview, upsertSolutionPreview } from '../actions/solution-preview.actions';
 import { SolutionPreviewStatus } from 'src/app/enumerations/solution-preview-status.enumeration';
 

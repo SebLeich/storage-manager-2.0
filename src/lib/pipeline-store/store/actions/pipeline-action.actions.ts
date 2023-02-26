@@ -1,6 +1,6 @@
 import { createAction } from "@ngrx/store";
+import { ISolutionWrapper } from "@smgr/interfaces";
 import { IPipelineAction } from "src/lib/pipeline-store/interfaces/pipeline-action.interface";
-import { ISolutionWrapper } from "src/lib/storage-manager-store/interfaces/solution-wrapper.interface";
 
 export const addIPipelineAction = createAction(
     '[IPipeline] Add IPipelineAction',

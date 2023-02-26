@@ -11,7 +11,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatTabsModule } from '@angular/material/tabs';
 import { VisualizationModule } from '../visualization/visualization.module';
-import { StorageManagerModule } from '../storage-manager-store/storage-manager.module';
+import { StorageManagerModule } from '../storage-manager/storage-manager.module';
 
 
 @NgModule({

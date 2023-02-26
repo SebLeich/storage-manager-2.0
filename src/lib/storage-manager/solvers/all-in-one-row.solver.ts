@@ -1,12 +1,9 @@
+import { IGood, IGroup, IOrder, ISolution } from '@smgr/interfaces';
+import moment from 'moment';
 import { v4 as generateGuid } from 'uuid';
-import { ISolver } from "../interfaces";
+import { Algorithm } from '../../../app/globals';
+import { ISolver } from '../interfaces/solver.interface';
 import { Solver } from "./solver";
-import { ISolution } from "../../lib/storage-manager-store/interfaces/solution.interface";
-import * as moment from 'moment';
-import { IGood } from "../../lib/storage-manager-store/interfaces/good.interface";
-import { Algorithm } from '../globals';
-import { IOrder } from 'src/lib/storage-manager-store/interfaces/order.interface';
-import { IGroup } from 'src/lib/storage-manager-store/interfaces/group.interface';
 
 export class AllInOneRowSolver extends Solver implements ISolver {
 

@@ -1,4 +1,4 @@
-import { ISolutionWrapper } from "src/lib/storage-manager-store/interfaces/solution-wrapper.interface";
+import { ISolutionWrapper } from "@smgr/interfaces";
 
 export interface IPipelineAction {
     identifier: string;

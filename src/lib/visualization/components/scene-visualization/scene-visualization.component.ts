@@ -1,16 +1,13 @@
 import { Component, ElementRef, EventEmitter, HostListener, Inject, Input, OnChanges, OnDestroy, OnInit, Optional, Output, SimpleChanges, ViewChild } from '@angular/core';
 import { BehaviorSubject, debounceTime, map, ReplaySubject, Subscription, switchMap } from 'rxjs';
-import { IGood } from 'src/lib/storage-manager-store/interfaces/good.interface';
 import { Scene } from 'three';
 import { SceneVisualizationComponentService } from './scene-visualization-component.service';
-
 import * as ThreeJS from 'three';
-
 import { Store } from '@ngrx/store';
 import { selectSnapshot } from 'src/lib/process-builder/globals/select-snapshot';
 import { IVisualizerContextService, VISUALIZER_CONTEXT } from 'src/app/interfaces/i-visualizer-context.service';
-import { selectCurrentSolutionGoods } from 'src/lib/storage-manager-store/store/selectors/i-solution.selectors';
-import { selectGroups } from 'src/lib/storage-manager-store/store/selectors/group.selectors';
+import { selectCurrentSolutionGoods, selectGroups } from '@smgr/store';
+import { IGood } from '@smgr/interfaces';
 
 @Component({
   selector: 'app-scene-visualization',

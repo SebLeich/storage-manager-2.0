@@ -1,12 +1,10 @@
 import { Injectable } from '@angular/core';
 import { Store } from '@ngrx/store';
+import { IPosition, IPositionedElement, ISolution } from '@smgr/interfaces';
 import { defaultGoodEdgeColor, infinityReplacement } from 'src/app/globals';
-import { IPosition } from 'src/lib/storage-manager-store/interfaces/position.interface';
-import { IPositionedElement } from 'src/lib/storage-manager-store/interfaces/positioned.interface';
-import { ISolution } from 'src/lib/storage-manager-store/interfaces/solution.interface';
 import getContainerPositionSharedMethods from 'src/app/methods/get-container-position.shared-methods';
 import { selectSnapshot } from 'src/lib/process-builder/globals/select-snapshot';
-import { selectGroups } from 'src/lib/storage-manager-store/store/selectors/group.selectors';
+import { selectGroups } from '@smgr/store';
 
 import * as ThreeJS from 'three';
 
@@ -27,7 +25,7 @@ export class VisualizationService {
       scene.add(containerResult.edges);
       const groups = await selectSnapshot(this._store.select(selectGroups));
       for (let good of solution.container!.goods) {
-        const group = groups.find(group => group.id === good.group);
+        const group = groups.find((group) => group.id === good.group);
         const goodResult = VisualizationService.generateFilledBoxMesh(getContainerPositionSharedMethods(good), group?.color ?? '#ffffff', 'good', containerPosition);
         goodResult.mesh.userData['goodId'] = good.id;
         goodResult.mesh.userData['groupId'] = good.group;

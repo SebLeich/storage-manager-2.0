@@ -3,12 +3,8 @@ import { filter, map } from 'rxjs/operators';
 import { showAnimation } from 'src/lib/shared/animations/show';
 import { Store } from '@ngrx/store';
 import { SolutionValidationService } from 'src/app/services/solution-validation.service';
-import { IGroup } from 'src/lib/storage-manager-store/interfaces/group.interface';
-import { selectCurrentSolution, selectCurrentSolutionGoods, selectHasMultipleSolutions, selectSolutions } from 'src/lib/storage-manager-store/store/selectors/i-solution.selectors';
-import { downloadCurrentSolution } from 'src/lib/storage-manager-store/store/actions/solution.actions';
-import { selectGroups } from 'src/lib/storage-manager-store/store/selectors/group.selectors';
-import { updateGroup } from 'src/lib/storage-manager-store/store/actions/group.actions';
-import { setNextSolution } from 'src/lib/storage-manager-store/store/actions/solution.actions';
+import { IGroup } from '@smgr/interfaces';
+import { downloadCurrentSolution, selectCurrentSolution, selectCurrentSolutionGoods, selectGroups, selectHasMultipleSolutions, selectSolutions, setNextSolution, updateGroup } from '@smgr/store';
 
 @Component({
   selector: 'app-solution-preview',

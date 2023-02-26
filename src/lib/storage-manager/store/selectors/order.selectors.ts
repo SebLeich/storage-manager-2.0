@@ -1,5 +1,5 @@
-import { IOrder } from 'src/lib/storage-manager-store/interfaces/order.interface';
 import { createSelector } from '@ngrx/store';
+import { IOrder } from '@smgr/interfaces';
 import { orderFeatureKey, State } from '../reducers/order.reducers';
 
 export const ordersState = (state: any) => state[orderFeatureKey] as State;

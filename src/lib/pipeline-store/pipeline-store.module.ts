@@ -5,7 +5,7 @@ import { StoreModule } from '@ngrx/store';
 import * as fromIPipeline from './store/reducers/pipeline.reducer';
 import * as fromIPipelineAction from './store/reducers/pipeline-action.reducer';
 import * as fromIPipelineActionStatus from './store/reducers/pipeline-action-status.reducer';
-import { StorageManagerModule } from '../storage-manager-store/storage-manager.module';
+import { StorageManagerModule } from '../storage-manager/storage-manager.module';
 
 
 @NgModule({

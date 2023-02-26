@@ -1,6 +1,6 @@
 import { IIdentifiable } from "./identifiable.interface";
 import { IPositionedElement } from "./positioned.interface";
-import { ISpace } from "../../../app/interfaces/space.interface";
+import { ISpace } from "./space.interface";
 
 export interface IGood extends IPositionedElement, ISpace, IIdentifiable {
     desc: string | null;

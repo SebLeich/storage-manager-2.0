@@ -1,12 +1,6 @@
 import { createReducer, on } from '@ngrx/store';
-import {
-  setContainerHeight,
-  setContainerWidth,
-  setUnit,
-  updateCalculationAttributes,
-} from '../actions/calculation-attribute.actions';
+import { setContainerHeight, setContainerWidth, setExemplarySolution, setUnit, updateCalculationAttributes } from '@smgr/store';
 import exampleSolution from 'src/config/example-solution';
-import { setExemplarySolution } from '../actions/solution.actions';
 import { Unit } from 'src/app/types/unit.type';
 
 export const calculationAttributesFeatureKey = 'calculationAttributes';
@@ -17,7 +11,7 @@ export interface State {
   unit: Unit;
 }
 
-export const initialState: State = {
+const initialState: State = {
   containerHeight: 1000,
   containerWidth: 1000,
   unit: 'mm' as Unit

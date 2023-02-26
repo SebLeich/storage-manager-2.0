@@ -1,4 +1,4 @@
-import { IIdentifiable } from "src/lib/storage-manager-store/interfaces/identifiable.interface";
+import { IIdentifiable } from "./identifiable.interface";
 
 export interface IGroup extends IIdentifiable {
     color: string | null;

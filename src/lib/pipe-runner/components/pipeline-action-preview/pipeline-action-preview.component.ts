@@ -6,9 +6,8 @@ import { selectPipelineActionStatus } from '../../../pipeline-store/store/select
 import { map } from 'rxjs/internal/operators/map';
 import { selectPipelineByName } from 'src/lib/pipeline-store/store/selectors/pipeline.selectors';
 import { combineLatest } from 'rxjs/internal/observable/combineLatest';
-import { ISolution } from 'src/lib/storage-manager-store/interfaces/solution.interface';
 import { selectSnapshot } from 'src/lib/process-builder/globals/select-snapshot';
-import { ISolutionWrapper } from 'src/lib/storage-manager-store/interfaces/solution-wrapper.interface';
+import { ISolutionWrapper } from '@smgr/interfaces';
 
 @Component({
   selector: 'app-pipeline-action-preview',

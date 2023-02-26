@@ -2,11 +2,9 @@ import { inject } from "@angular/core";
 import { MatDialog } from "@angular/material/dialog";
 import { firstValueFrom } from "rxjs/internal/firstValueFrom";
 import { timer } from "rxjs/internal/observable/timer";
-import { AllInOneRowSolver } from "src/app/solvers/all-in-one-row";
+import { AllInOneRowSolver } from "src/lib/storage-manager/solvers/all-in-one-row.solver";
 import { InterfaceCodes } from "src/config/interface-codes";
-import { ParamCodes } from "src/config/param-codes";
-import { IGroup } from "src/lib/storage-manager-store/interfaces/group.interface";
-import { IOrder } from "src/lib/storage-manager-store/interfaces/order.interface";
+import { IGroup, IOrder } from "@smgr/interfaces";
 import { UserInputComponent } from "../components/helpers/user-input/user-input.component";
 import { IFunction } from "../interfaces/function.interface";
 

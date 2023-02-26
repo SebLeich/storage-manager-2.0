@@ -3,7 +3,7 @@ import { Router } from "@angular/router";
 import { Store } from "@ngrx/store";
 import { Algorithm, algorithms } from "src/app/globals";
 import { ISolution } from "src/lib/storage-manager-store/interfaces/solution.interface";
-import { AllInOneRowSolver } from "src/app/solvers/all-in-one-row";
+import { AllInOneRowSolver } from "src/lib/storage-manager/solvers/all-in-one-row.solver";
 import { StartLeftBottomSolver } from "src/app/solvers/start-left-bottom";
 import { SuperFloSolver } from "src/app/solvers/super-flo";
 import { AlgorithmCalculationStatus } from "./enumerations/algorithm-calculation-status.enum";

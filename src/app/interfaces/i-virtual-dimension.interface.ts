@@ -1,4 +1,4 @@
-import { IDimension } from "./i-dimension.interface";
+import { IDimension } from "../../lib/storage-manager/interfaces/dimension.interface";
 
 export interface IVirtualDimension extends IDimension {
     stackedOn?: number;
