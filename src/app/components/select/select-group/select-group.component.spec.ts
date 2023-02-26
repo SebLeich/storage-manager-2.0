@@ -3,7 +3,7 @@ import { Store } from '@ngrx/store';
 import { AppRoutingModule } from 'src/app/app-routing.module';
 import { AppModule } from 'src/app/app.module';
 import defaultImportsConstant from 'src/app/default-imports.constant';
-import { IGroup } from 'src/lib/storage-manager-store/interfaces/group.interface';
+import { IGroup } from '@smgr/interfaces';
 import { SelectGroupComponent } from './select-group.component';
 import { v4 as generateGuid } from 'uuid';
 import { By } from '@angular/platform-browser';
@@ -11,8 +11,7 @@ import { DebugElement } from '@angular/core';
 import { selectSnapshot } from 'src/lib/process-builder/globals/select-snapshot';
 import { isEqual } from 'lodash';
 import { MatSelect } from '@angular/material/select';
-import { selectGroups } from 'src/lib/storage-manager-store/store/selectors/group.selectors';
-import { addGroups } from 'src/lib/storage-manager-store/store/actions/group.actions';
+import { addGroups, selectGroups } from '@smgr/store';
 
 describe('SelectGroupComponent', () => {
   let component: SelectGroupComponent;

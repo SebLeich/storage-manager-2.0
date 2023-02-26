@@ -7,9 +7,7 @@ import defaultImportsConstant from 'src/app/default-imports.constant';
 import { SolutionPreviewStatus } from 'src/app/enumerations/solution-preview-status.enumeration';
 import exemplarySolution from 'src/assets/exemplary-solution.json';
 import { selectSnapshot } from 'src/lib/process-builder/globals/select-snapshot';
-import { upsertSolutionPreview } from 'src/lib/storage-manager-store/store/actions/solution-preview.actions';
-import { selectSolutionPreview } from 'src/lib/storage-manager-store/store/selectors/i-solution-preview.selectors';
-
+import { selectSolutionPreview, upsertSolutionPreview } from '@smgr/store';
 import { SolutionPreviewRenderingComponent } from './solution-preview-rendering.component';
 
 describe('SolutionPreviewRenderingComponent', () => {

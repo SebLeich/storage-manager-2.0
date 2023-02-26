@@ -3,10 +3,9 @@ import { DebugElement } from '@angular/core';
 import { AppRoutingModule } from 'src/app/app-routing.module';
 import { AppModule } from 'src/app/app.module';
 import defaultImportsConstant from 'src/app/default-imports.constant';
-
 import { GoodsPanelComponent } from './goods-panel.component';
 import { By } from '@angular/platform-browser';
-import { IGood } from 'src/lib/storage-manager-store/interfaces/good.interface';
+import { IGood } from '@smgr/interfaces';
 
 describe('GoodsPanelComponent', () => {
   let component: GoodsPanelComponent;

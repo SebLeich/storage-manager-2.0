@@ -4,16 +4,9 @@ import { Store } from '@ngrx/store';
 import { AppRoutingModule } from 'src/app/app-routing.module';
 import { AppModule } from 'src/app/app.module';
 import defaultImportsConstant from 'src/app/default-imports.constant';
-import { IGroup } from 'src/lib/storage-manager-store/interfaces/group.interface';
-import { IOrder } from 'src/lib/storage-manager-store/interfaces/order.interface';
-import { IProduct } from 'src/lib/storage-manager-store/interfaces/product.interface';
+import { IGroup, IOrder, IProduct } from '@smgr/interfaces';
 import calculateRandomColorSharedMethod from 'src/app/methods/calculate-random-color.shared-method';
-import { addGroup, addGroups } from 'src/app/store/actions/i-group.actions';
-import { addOrder, addOrders } from 'src/app/store/actions/i-order.actions';
-import { addProduct, addProducts } from 'src/app/store/actions/i-product.actions';
-import { selectGroups } from 'src/app/store/selectors/i-group.selectors';
-import { selectOrders } from 'src/app/store/selectors/i-order.selectors';
-import { selectProducts } from 'src/app/store/selectors/i-product.selectors';
+import { addGroup, addGroups, addOrder, addOrders, addProduct, addProducts, selectGroups, selectOrders, selectProducts } from '@smgr/store';
 import { selectSnapshot } from 'src/lib/process-builder/globals/select-snapshot';
 import { v4 as generateGuid } from 'uuid';
 
@@ -54,7 +47,7 @@ describe('LocalDataComponent', () => {
     { groups: [exemplaryGroup], products: [exemplaryProduct] }
   ].forEach(entry => {
 
-    it(`should show disabled add order menu trigger when ${entry.products.length === 0? 'no products': 'some products'} and  ${entry.groups.length === 0? 'no groups': 'some groups'} setted`, () => {
+    it(`should show disabled add order menu trigger when ${entry.products.length === 0 ? 'no products' : 'some products'} and  ${entry.groups.length === 0 ? 'no groups' : 'some groups'} setted`, () => {
       const addOrderMenuTrigger = fixture.debugElement.query(By.css('#add-order-menu-trigger'));
       expect(addOrderMenuTrigger).toBeTruthy();
 

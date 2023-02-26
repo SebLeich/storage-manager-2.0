@@ -1,14 +1,12 @@
 import { DebugElement } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import defaultImportsConstant from 'src/app/default-imports.constant';
-
 import { OrdersFormComponent } from './orders-form.component';
-
 import { AppRoutingModule } from 'src/app/app-routing.module';
 import { AppModule } from 'src/app/app.module';
 import { ControlContainer, FormArray, FormControl, FormGroup } from '@angular/forms';
 import { ControlsOf } from 'src/lib/shared/globals/controls-of.type';
-import { IOrder } from 'src/lib/storage-manager-store/interfaces/order.interface';
+import { IOrder } from '@smgr/interfaces';
 import { By } from '@angular/platform-browser';
 
 describe('OrdersFormComponent', () => {

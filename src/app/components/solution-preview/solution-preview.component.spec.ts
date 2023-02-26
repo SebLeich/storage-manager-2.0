@@ -4,13 +4,11 @@ import { Store } from '@ngrx/store';
 import { AppRoutingModule } from 'src/app/app-routing.module';
 import { AppModule } from 'src/app/app.module';
 import defaultImports from 'src/app/default-imports.constant';
-import { ISolution } from 'src/lib/storage-manager-store/interfaces/solution.interface';
-import { addSolution, setCurrentSolution } from 'src/app/store/actions/i-solution.actions';
+import { IGood, ISolution } from '@smgr/interfaces';
+import { addSolution, setCurrentSolution } from '@smgr/store';
 import { v4 as generateGuid } from 'uuid';
-
 import { SolutionPreviewComponent } from './solution-preview.component';
 import moment from 'moment';
-import { IGood } from 'src/lib/storage-manager-store/interfaces/good.interface';
 import { VISUALIZER_CONTEXT } from 'src/app/interfaces/i-visualizer-context.service';
 
 describe('SolutionPreviewComponent', () => {
