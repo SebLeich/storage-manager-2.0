@@ -59,10 +59,7 @@ export class ProcessBuilderComponent implements OnDestroy, OnInit {
 
     this._subscription.add(
       this.bpmnJsService.taskEditingProcedure$
-        .subscribe((procedure) => {
-          debugger;
-          this._store.dispatch(upsertProcedure({ procedure }));
-        })
+        .subscribe((procedure) => this._store.dispatch(upsertProcedure({ procedure })))
     );
 
     this._subscription.add(
