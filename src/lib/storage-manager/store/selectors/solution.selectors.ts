@@ -1,10 +1,10 @@
 import { createSelector } from '@ngrx/store';
-import { solutionFeatureKey, State } from '../reducers/solution.reducers';
+import { featureKey, State } from '../reducers/solution.reducers';
 import { SolutionValidationService } from 'src/app/services/solution-validation.service';
 import { ISolution } from '../../interfaces/solution.interface';
 import { IGood } from '../../interfaces/good.interface';
 
-const solutionsState = (state: any) => state[solutionFeatureKey] as State;
+const solutionsState = (state: any) => state[featureKey] as State;
 
 export const selectCurrentSolution = createSelector(
   solutionsState,

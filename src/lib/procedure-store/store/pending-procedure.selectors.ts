@@ -1,5 +1,5 @@
 import { createSelector } from "@ngrx/store";
-import { featureKey, State } from "../reducers/pending-procedure.reducers";
+import { featureKey, State } from "./pending-procedure.reducers";
 
 export const pendingProcedureState = (state: any) => state[featureKey] as State;
 

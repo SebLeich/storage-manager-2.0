@@ -33,9 +33,11 @@
     ],
     "useDefineForClassFields": false,
     "paths": {
+      "@process-builder/store": ["./src/lib/process-builder/store"],
+      "@procedure": ["./src/lib/procedure-store"],
       "@smgr/interfaces": ["./src/lib/storage-manager/interfaces"],
       "@smgr/solvers": ["./src/lib/storage-manager/solvers"],
-      "@smgr/store": ["./src/lib/storage-manager/store/"]
+      "@smgr/store": ["./src/lib/storage-manager/store"]
     }
   }
 }

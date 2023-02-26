@@ -76,8 +76,9 @@ import { EffectsModule } from '@ngrx/effects';
 import { ApplicationEffects } from './store/effects/application.effects';
 import * as fromApplication from './store/reducers/application.reducer';
 import { StorageManagerModule } from 'src/lib/storage-manager/storage-manager.module';
+import { ProcedureStoreModule } from 'src/lib/procedure-store/procedure-store.module';
 
-let rootReducers: { [key: string]: ActionReducer<any, any> } = { };
+let rootReducers: { [key: string]: ActionReducer<any, any> } = {};
 rootReducers[fromApplication.featureKey] = fromApplication.reducer;
 
 @NgModule({
@@ -145,7 +146,9 @@ rootReducers[fromApplication.featureKey] = fromApplication.reducer;
     VisualizationModule,
 
     StoreModule.forRoot(rootReducers),
-    EffectsModule.forRoot([ ApplicationEffects ]),
+    EffectsModule.forRoot([ApplicationEffects]),
+
+    ProcedureStoreModule,
 
     StorageManagerModule,
 
@@ -165,7 +168,10 @@ rootReducers[fromApplication.featureKey] = fromApplication.reducer;
     { provide: FUNCTIONS_CONFIG_TOKEN, useValue: FUNCTIONS_CONFIG },
     { provide: INTERFACES_CONFIG_TOKEN, useValue: INTERFACES_CONFIG },
   ],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
+  exports: [
+    ProcedureStoreModule
+  ]
 })
 
 export class AppModule { }

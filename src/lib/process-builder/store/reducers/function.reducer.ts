@@ -4,7 +4,7 @@ import { IFunction } from '../../interfaces/function.interface';
 import { addIFunction, addIFunctions, removeIFunction, setIFunctionsCanFailFlag, updateIFunction, updateIFunctionOutputParam, upsertIFunction, upsertIFunctions } from '../actions/function.actions';
 
 
-export const featureKey = 'Func';
+export const featureKey = 'function';
 
 function sort(a: IFunction, b: IFunction) {
   return a.identifier > b.identifier ? 1 : -1;

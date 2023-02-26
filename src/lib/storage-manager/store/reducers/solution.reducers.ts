@@ -20,7 +20,7 @@ import * as moment from 'moment';
 import { Unit } from 'src/app/types/unit.type';
 import { ISolution } from '../../interfaces/solution.interface';
 
-export const solutionFeatureKey = 'solution';
+export const featureKey = 'solution';
 
 export interface State extends EntityState<ISolution> {
   selectedSolutionId: string | null;

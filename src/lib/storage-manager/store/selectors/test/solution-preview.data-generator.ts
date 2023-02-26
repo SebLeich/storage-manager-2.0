@@ -1,6 +1,5 @@
-import moment from "moment";
+import { ISolutionPreview } from "@smgr/interfaces";
 import { SolutionPreviewStatus } from "src/app/enumerations/solution-preview-status.enumeration";
-import { ISolutionPreview } from "src/lib/storage-manager-store/interfaces/solution-preview.interface";
 import { v4 as generateGuid } from "uuid";
 
 export class SolutionPreviewDataGenerator {

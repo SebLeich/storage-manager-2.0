@@ -1,4 +1,4 @@
-import { IOrder } from "src/lib/storage-manager-store/interfaces/order.interface";
+import { IOrder } from "@smgr/interfaces";
 import { v4 as generateGuid } from "uuid";
 
 export class OrderDataGenerator {

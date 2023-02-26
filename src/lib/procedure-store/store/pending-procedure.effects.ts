@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { map } from 'rxjs';
-import { announceProcedure, announceProcedures, updateGlobalProcedureProgress, updateProcedure, upsertProcedure } from '../actions/pending-procedure.actions';
+import { announceProcedure, announceProcedures, updateGlobalProcedureProgress, updateProcedure, upsertProcedure } from './pending-procedure.actions';
 
 
 

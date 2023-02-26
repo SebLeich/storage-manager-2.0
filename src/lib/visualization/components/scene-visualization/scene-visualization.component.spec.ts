@@ -1,6 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import defaultImportsConstant from 'src/app/default-imports.constant';
-
 import { SceneVisualizationComponent } from './scene-visualization.component';
 
 describe('SceneVisualizationComponent', () => {

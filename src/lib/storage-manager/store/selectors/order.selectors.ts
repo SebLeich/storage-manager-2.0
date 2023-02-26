@@ -1,8 +1,8 @@
 import { createSelector } from '@ngrx/store';
 import { IOrder } from '@smgr/interfaces';
-import { orderFeatureKey, State } from '../reducers/order.reducers';
+import { featureKey, State } from '../reducers/order.reducers';
 
-export const ordersState = (state: any) => state[orderFeatureKey] as State;
+export const ordersState = (state: any) => state[featureKey] as State;
 
 export const selectOrderById = (orderGuid: string | null) => createSelector(
   ordersState,

@@ -1,5 +1,5 @@
 import { createAction, props } from '@ngrx/store';
-import { IProcedure } from 'src/app/interfaces/i-procedure.interface';
+import { IProcedure } from 'src/lib/procedure-store/interfaces/procedure.interface';
 
 export const procedureActions = {
   AnnounceProcedure: '[Procedure] Announce Procedure',

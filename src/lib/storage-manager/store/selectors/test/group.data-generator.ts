@@ -1,4 +1,4 @@
-import { IGroup } from "src/lib/storage-manager-store/interfaces/group.interface";
+import { IGroup } from "@smgr/interfaces";
 import { v4 as generateGuid } from "uuid";
 
 export class GroupDataGenerator {

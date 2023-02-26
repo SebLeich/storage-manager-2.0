@@ -1,38 +1,3 @@
-import * as fromCalculationAttributesState from './store/reducers/i-calculation-attribute.reducers';
-import { ICalculationAttributesEffects } from './store/effects/i-calculation-attribute.effects';
-
-import * as fromGroupState from './store/reducers/i-group.reducers';
-import { IGroupEffects } from './store/effects/i-group.effects';
-
-import * as fromOrderState from './store/reducers/i-order.reducers';
-import { IOrderEffects } from './store/effects/i-order.effects';
-
-import * as fromProductState from './store/reducers/i-product.reducers';
-import { IProductEffects } from './store/effects/i-product.effects';
-
-import * as fromProcedureState from './store/reducers/i-pending-procedure.reducers';
-import { IPendingProcedureEffects } from './store/effects/i-pending-procedure.effects';
-
-import * as fromSolutionState from './store/reducers/i-solution.reducers';
-import { ISolutionEffects } from './store/effects/i-solution.effects';
-
-import * as fromSolutionPreviewState from './store/reducers/i-solution-preview.reducers';
-import { ISolutionPreviewEffects } from './store/effects/i-solution-preview.effects';
-
-import * as fromParamState from 'src/lib/process-builder/store/reducers/param.reducer';
-import { IParamEffects } from 'src/lib/process-builder/store/effects/param.effects';
-
-import * as fromFunctionState from 'src/lib/process-builder/store/reducers/function.reducer';
-import { IFunctionEffects } from 'src/lib/process-builder/store/effects/i-function.effects';
-
-import * as fromBpmnJSModelState from 'src/lib/process-builder/store/reducers/bpmn-js-model.reducer';
-import { IBpmnJSModelEffects } from 'src/lib/process-builder/store/effects/bpmn-js-model.effects';
-
-import * as fromInterfaceState from 'src/lib/process-builder/store/reducers/interface.reducer';
-import { IInterfaceEffects } from 'src/lib/process-builder/store/effects/interface.effects';
-
-import * as fromInjectionContext from 'src/lib/process-builder/store/reducers/injection-context.reducer';
-
 import { StoreModule } from '@ngrx/store';
 import { EffectsModule } from '@ngrx/effects';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
@@ -51,21 +16,26 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatDialogModule } from '@angular/material/dialog';
+import { calculationAttributeState, groupState, orderState, productState, solutionState, solutionPreviewState, ICalculationAttributesEffects, IGroupEffects, IOrderEffects, IPendingProcedureEffects, IProductEffects, ISolutionEffects, ISolutionPreviewEffects } from '@smgr/store';
+
+import * as fromIProcedureState from 'src/app/store/reducers/application.reducer';
+import { bpmnJsModelState, functionState, IBpmnJSModelEffects, IFunctionEffects, IInterfaceEffects, injectionContextState, interfaceState, IParamEffects, paramState } from '@process-builder/store';
 
 let rootStoreFeatures: any = {};
-rootStoreFeatures[fromCalculationAttributesState.calculationAttributesFeatureKey] = fromCalculationAttributesState.calculationAttributesReducer;
-rootStoreFeatures[fromGroupState.groupFeatureKey] = fromGroupState.groupReducer;
-rootStoreFeatures[fromOrderState.orderFeatureKey] = fromOrderState.orderReducer;
-rootStoreFeatures[fromProcedureState.pendingProcedureFeatureKey] = fromProcedureState.pendingProcedureReducer;
-rootStoreFeatures[fromProductState.productFeatureKey] = fromProductState.productReducer;
-rootStoreFeatures[fromSolutionState.solutionFeatureKey] = fromSolutionState.solutionReducer;
-rootStoreFeatures[fromSolutionPreviewState.solutionPreviewFeatureKey] = fromSolutionPreviewState.reducer;
+rootStoreFeatures[calculationAttributeState.calculationAttributesFeatureKey] = calculationAttributeState.reducer;
+rootStoreFeatures[groupState.groupFeatureKey] = groupState.reducer;
+rootStoreFeatures[orderState.featureKey] = orderState.reducer;
+rootStoreFeatures[productState.featureKey] = productState.reducer;
+rootStoreFeatures[solutionState.featureKey] = solutionState.reducer;
+rootStoreFeatures[solutionPreviewState.solutionPreviewFeatureKey] = solutionPreviewState.reducer;
 
-rootStoreFeatures[fromParamState.featureKey] = fromParamState.reducer;
-rootStoreFeatures[fromFunctionState.featureKey] = fromFunctionState.reducer;
-rootStoreFeatures[fromBpmnJSModelState.featureKey] = fromBpmnJSModelState.reducer;
-rootStoreFeatures[fromInterfaceState.featureKey] = fromInterfaceState.reducer;
-rootStoreFeatures[fromInjectionContext.featureKey] = fromInjectionContext.reducer;
+rootStoreFeatures[paramState.featureKey] = paramState.reducer;
+rootStoreFeatures[functionState.featureKey] = functionState.reducer;
+rootStoreFeatures[bpmnJsModelState.featureKey] = bpmnJsModelState.reducer;
+rootStoreFeatures[interfaceState.featureKey] = interfaceState.reducer;
+rootStoreFeatures[injectionContextState.featureKey] = injectionContextState.reducer;
+
+rootStoreFeatures[fromIProcedureState.pendingProcedureFeatureKey] = productState.reducer;
 
 export default [
     BrowserModule,
@@ -94,7 +64,6 @@ export default [
         IProductEffects,
         ISolutionEffects,
         ISolutionPreviewEffects,
-
         IParamEffects,
         IFunctionEffects,
         IBpmnJSModelEffects,

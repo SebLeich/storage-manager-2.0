@@ -1,14 +1,12 @@
 import { TestBed } from '@angular/core/testing';
-import { announceProcedures } from '../actions/pending-procedure.actions';
 import { selectAllProcedures, selectGlobalProcedureProgress, selectHasDeterminingProcedures, selectHasPendingProcedures, selectMostRecentlyFinishedProcedure, selectPendingProcedures } from './pending-procedure.selectors';
-
 import { Store } from '@ngrx/store';
-
 import * as moment from 'moment';
 import { isEqual } from 'lodash';
-import { IProcedure } from 'src/app/interfaces/i-procedure.interface';
+import { IProcedure } from 'src/lib/procedure-store/interfaces/procedure.interface';
 import defaultImportsConstant from 'src/app/default-imports.constant';
 import { selectSnapshot } from 'src/lib/process-builder/globals/select-snapshot';
+import { announceProcedures } from './pending-procedure.actions';
 
 describe('IPendingProcedures Selectors', () => {
 

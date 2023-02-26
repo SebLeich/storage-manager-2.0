@@ -10,9 +10,6 @@ import { IGroupEffects } from './store/effects/group.effects';
 import * as fromIOrderState from './store/reducers/order.reducers';
 import { IOrderEffects } from './store/effects/order.effects';
 
-import * as fromIPendingProceduresState from './store/reducers/pending-procedure.reducers';
-import { IPendingProcedureEffects } from './store/effects/pending-procedure.effects';
-
 import * as fromIProductState from './store/reducers/product.reducers';
 import { IProductEffects } from './store/effects/product.effects';
 
@@ -24,21 +21,26 @@ import { ISolutionPreviewEffects } from './store/effects/solution-preview.effect
 
 import { StoreModule } from '@ngrx/store';
 import { EffectsModule } from '@ngrx/effects';
+import { ProcedureStoreModule } from '../procedure-store/procedure-store.module';
 
 @NgModule({
   declarations: [],
   imports: [
     CommonModule,
-    
+
     StoreModule.forFeature(fromICalculationAttributesState.calculationAttributesFeatureKey, fromICalculationAttributesState.reducer),
     StoreModule.forFeature(fromIGroupState.groupFeatureKey, fromIGroupState.reducer),
-    StoreModule.forFeature(fromIOrderState.orderFeatureKey, fromIOrderState.reducer),
-    StoreModule.forFeature(fromIPendingProceduresState.featureKey, fromIPendingProceduresState.reducer),
+    StoreModule.forFeature(fromIOrderState.featureKey, fromIOrderState.reducer),
     StoreModule.forFeature(fromIProductState.featureKey, fromIProductState.reducer),
-    StoreModule.forFeature(fromISolutionState.solutionFeatureKey, fromISolutionState.reducer),
+    StoreModule.forFeature(fromISolutionState.featureKey, fromISolutionState.reducer),
     StoreModule.forFeature(fromISolutionPreviewState.solutionPreviewFeatureKey, fromISolutionPreviewState.reducer),
 
-    EffectsModule.forFeature([ICalculationAttributesEffects, IGroupEffects, IOrderEffects, IPendingProcedureEffects, IProductEffects, ISolutionEffects, ISolutionPreviewEffects]),
+    EffectsModule.forFeature([ICalculationAttributesEffects, IGroupEffects, IOrderEffects, IProductEffects, ISolutionEffects, ISolutionPreviewEffects]),
+
+    ProcedureStoreModule
+  ],
+  exports: [
+    ProcedureStoreModule
   ]
 })
 export class StorageManagerModule { }

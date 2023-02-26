@@ -3,7 +3,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { NavigationEnd, NavigationStart, Router } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { BehaviorSubject } from 'rxjs';
-import { selectGlobalProcedureProgress, selectHasDeterminingProcedures, selectHasPendingProcedures } from '@smgr/store';
+import { selectGlobalProcedureProgress, selectHasDeterminingProcedures, selectHasPendingProcedures } from '@procedure';
 
 @Component({
   selector: 'app-root',

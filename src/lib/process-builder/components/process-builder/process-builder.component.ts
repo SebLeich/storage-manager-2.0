@@ -8,7 +8,7 @@ import { selectCurrentIBpmnJSModel } from '../../store/selectors/bpmn-js-model.s
 import { ProcessBuilderComponentService } from './process-builder-component.service';
 import shapeTypes from 'src/lib/bpmn-io/shape-types';
 import { BPMNJsRepository } from 'src/lib/core/bpmn-js.repository';
-import { upsertProcedure } from '@smgr/store';
+import { upsertProcedure } from '@procedure';
 import { IElement } from 'src/lib/bpmn-io/interfaces/element.interface';
 
 @Component({

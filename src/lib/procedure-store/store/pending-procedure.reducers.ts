@@ -2,8 +2,8 @@ import { createReducer, on } from '@ngrx/store';
 import { EntityState, createEntityAdapter } from '@ngrx/entity';
 import * as moment from 'moment';
 import { v4 as generateGuid } from 'uuid';
-import { IProcedure } from 'src/app/interfaces/i-procedure.interface';
-import { announceProcedure, announceProcedures, clearFinishedProcedures, updateGlobalProcedureProgress, updateProcedure, upsertProcedure } from '../actions/pending-procedure.actions';
+import { IProcedure } from 'src/lib/procedure-store/interfaces/procedure.interface';
+import { announceProcedure, announceProcedures, clearFinishedProcedures, updateGlobalProcedureProgress, updateProcedure, upsertProcedure } from './pending-procedure.actions';
 
 export const featureKey = 'pendingProcedures';
 

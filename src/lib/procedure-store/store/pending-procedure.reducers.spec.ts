@@ -1,14 +1,14 @@
 import { TestBed } from '@angular/core/testing';
-import { announceProcedure, announceProcedures } from '../actions/pending-procedure.actions';
-import { selectAllProcedures, selectPendingProcedures } from '../selectors/pending-procedure.selectors';
 
 import { Store } from '@ngrx/store';
 
 import * as moment from 'moment';
 import { v4 as generateGuid } from 'uuid';
 import defaultImportsConstant from 'src/app/default-imports.constant';
-import { IProcedure } from 'src/app/interfaces/i-procedure.interface';
+import { IProcedure } from 'src/lib/procedure-store/interfaces/procedure.interface';
 import { selectSnapshot } from 'src/lib/process-builder/globals/select-snapshot';
+import { announceProcedure, announceProcedures } from './pending-procedure.actions';
+import { selectAllProcedures, selectPendingProcedures } from '@smgr/store';
 
 describe('IPendingProcedures Reducers', () => {
 

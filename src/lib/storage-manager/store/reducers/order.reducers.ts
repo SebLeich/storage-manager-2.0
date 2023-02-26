@@ -6,7 +6,7 @@ import { v4 as generateGuid } from 'uuid';
 import { IOrder } from '@smgr/interfaces';
 import exemplarySolution from 'src/assets/exemplary-solution.json';
 
-export const orderFeatureKey = 'order';
+export const featureKey = 'order';
 
 export interface State extends EntityState<IOrder> {
   ids: string[];

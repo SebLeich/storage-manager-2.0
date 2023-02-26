@@ -8,7 +8,7 @@ import defaultBpmnXmlConstant from '../../globals/default-bpmn-xml.constant';
 
 import * as moment from 'moment';
 
-export const featureKey = 'BpmnJSModel';
+export const featureKey = 'bpmnJSModel';
 
 function sortByIdentifier(a: IBpmnJSModel, b: IBpmnJSModel) {
   return a.guid > b.guid ? 1 : -1;

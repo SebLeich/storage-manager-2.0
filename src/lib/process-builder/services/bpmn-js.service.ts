@@ -43,7 +43,7 @@ import defaultBpmnXmlConstant from '../globals/default-bpmn-xml.constant';
 import moment from 'moment';
 import { IProcessBuilderConfig, PROCESS_BUILDER_CONFIG_TOKEN } from '../interfaces/process-builder-config.interface';
 import { TaskCreationStep } from '../globals/task-creation-step';
-import { IProcedure } from 'src/app/interfaces/i-procedure.interface';
+import { IProcedure } from 'src/lib/procedure-store/interfaces/procedure.interface';
 import { TaskEditingStatus } from '../types/task-editing-status.type';
 import shapeTypes from 'src/lib/bpmn-io/shape-types';
 import { ICanvasModule } from 'src/lib/bpmn-io/interfaces/canvas-module.interface';
