@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input, OnInit } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { IFunction } from '../../../interfaces/function.interface';
 import { IInputParam } from '../../../interfaces/input-param.interface';
@@ -7,7 +7,8 @@ import { updateIFunction } from '../../../store/actions/function.actions';
 @Component({
   selector: 'app-function-preview',
   templateUrl: './function-preview.component.html',
-  styleUrls: ['./function-preview.component.scss']
+  styleUrls: ['./function-preview.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class FunctionPreviewComponent implements OnInit {
 

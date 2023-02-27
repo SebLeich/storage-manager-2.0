@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, ElementRef, Inject, OnDestroy, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, EventEmitter, Inject, OnDestroy, Output, ViewChild } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import JSONEditor from 'jsoneditor';
 import { combineLatest, ReplaySubject, Subject, Subscription } from 'rxjs';
@@ -15,7 +15,9 @@ import { TaskCreationFormGroup } from 'src/lib/process-builder/interfaces/task-c
 })
 export class EmbeddedParamEditorComponent implements IEmbeddedView, AfterViewInit, OnDestroy {
 
-  @ViewChild('parameterBody', { static: true, read: ElementRef }) parameterBody!: ElementRef<HTMLDivElement>;
+  @ViewChild('parameterBody', { static: true, read: ElementRef }) private parameterBody!: ElementRef<HTMLDivElement>;
+  @Output() public editorBlurred = new EventEmitter<void>();
+  @Output() public jsonChanged = new EventEmitter<object>();
 
   public formGroup = new FormGroup({
     isProcessOutput: new FormControl<boolean>(false),
@@ -24,23 +26,18 @@ export class EmbeddedParamEditorComponent implements IEmbeddedView, AfterViewIni
   }) as TaskCreationFormGroup;
 
   private _instance: JSONEditor | undefined;
-  private _editor = new ReplaySubject<JSONEditor>(1);
-  public editor$ = this._editor.asObservable();
-
-  private _editorBlurred = new Subject<void>();
-  private _jsonChanged = new ReplaySubject<object>(1);
-  public jsonChanged$ = this._jsonChanged.pipe(debounceTime(500));
+  private _editor$$ = new ReplaySubject<JSONEditor>(1);
+  public editor$ = this._editor$$.asObservable();
 
   private _subscriptions: Subscription = new Subscription();
 
   constructor(@Inject(PROCESS_BUILDER_CONFIG_TOKEN) public config: IProcessBuilderConfig) { }
 
-  public editorBlurred = () => this._editorBlurred.next();
+  public blurEditor = () => this.editorBlurred.emit();
 
   public ngAfterViewInit(): void {
     this._subscriptions.add(...[
-      this.jsonChanged$
-        .pipe(debounceTime(500))
+      this.jsonChanged.pipe(debounceTime(500))
         .subscribe((json) => {
           const extracted: any = ProcessBuilderRepository.extractObjectTypeDefinition(json);
           this.formGroup.controls.outputParamName!.setValue(extracted);
@@ -54,9 +51,9 @@ export class EmbeddedParamEditorComponent implements IEmbeddedView, AfterViewIni
         })
     ]);
     this._instance = new JSONEditor(this.parameterBody.nativeElement, {
-      'onChangeJSON': (value: object) => this._jsonChanged.next(value),
+      'onChangeJSON': (value: object) => this.jsonChanged.emit(value),
     });
-    this._editor.next(this._instance);
+    this._editor$$.next(this._instance);
   }
 
   public ngOnDestroy() {

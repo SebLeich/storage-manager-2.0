@@ -46,7 +46,6 @@ export class EmbeddedFunctionSelectionComponent implements IEmbeddedView, OnDest
 
   public functions$ = combineLatest([this._store.select(selectIFunctions()), this._filter$]).pipe(map(([functions, filter]) => {
     return functions.filter(func => {
-      console.log(func);
       if (!func) {
         return false;
       }
