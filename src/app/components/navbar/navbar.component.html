@@ -2,7 +2,7 @@
 
    <div class="option-wrapper disabled">
 
-      <div class="option" routerLink="route-planning" [class.active]="router.url === '/route-planning'">
+      <div class="option" routerLink="route-planning" [class.active]="location.pathname === '/route-planning'">
 
          <mat-icon class="icon">map</mat-icon>
          <div class="text">routing</div>
@@ -11,16 +11,25 @@
    </div>
 
    <div class="option-wrapper">
-      <div class="option" routerLink="data-pipeline-designer" [class.active]="router.url === '/data-pipeline-designer'">
+      <div class="option" routerLink="data-pipeline-designer" [class.active]="location.pathname === '/data-pipeline-designer'">
 
          <mat-icon class="icon">hub</mat-icon>
          <div class="text">pipeline</div>
    
       </div>
    </div>
+
+   <div class="option-wrapper">
+      <div class="option" routerLink="pipe-runner" [class.active]="location.pathname === '/pipe-runner'">
+
+         <mat-icon class="icon">play_arrow</mat-icon>
+         <div class="text">run pipe</div>
+   
+      </div>
+   </div>
    
    <div class="option-wrapper">
-      <div class="option" routerLink="local-data" [class.active]="router.url === '/local-data'">
+      <div class="option" routerLink="local-data" [class.active]="location.pathname === '/local-data'">
 
          <mat-icon class="icon">web_stories</mat-icon>
          <div class="text">local data</div>
@@ -29,7 +38,7 @@
    </div>
 
    <div class="option-wrapper">
-      <div class="option" routerLink="calculation" [class.active]="router.url === '/calculation'">
+      <div class="option" routerLink="calculation" [class.active]="location.pathname === '/calculation'">
 
          <mat-icon class="icon">rocket_launch</mat-icon>
          <div class="text">calculation</div>
@@ -39,7 +48,7 @@
 
    <div id="visualization-option-wrapper" class="option-wrapper" [class.disabled]="(solutionCount$|async) === 0">
       <div class="option" (click)="gotoVisualizer()" [ngClass]="{
-         'active': router.url === '/visualizer',
+         'active': location.pathname === '/visualizer',
          'highlighted': solutionNavItemHighlighted$|async
       }">
 
@@ -52,7 +61,7 @@
    <div class="spacer"></div>
 
    <div class="option-wrapper">
-      <div class="option" routerLink="about" [class.active]="router.url === '/about'">
+      <div class="option" routerLink="about" [class.active]="location.pathname === '/about'">
 
          <mat-icon class="icon">help</mat-icon>
          <div class="text">about</div>

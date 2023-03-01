@@ -73,11 +73,11 @@ export class PipeRunnerComponent implements OnDestroy, OnInit {
         sortedActions.push(...successors);
         currentActions = successors;
       }
-      return sortedActions;
+      return sortedActions.filter(action => action);
     })
   );
   public status$ = this.actions$.pipe(
-    switchMap(actions => this._store.select(selectPipelineActionStates(actions.map(action => action!.identifier)))),
+    switchMap((actions) => this._store.select(selectPipelineActionStates(actions.map(action => action?.identifier).filter(action => action? true: false) as string[]))),
     map(states => {
       if (states.every(status => status!.status === 'INITIALIZED')) {
         return 'Ready for run';

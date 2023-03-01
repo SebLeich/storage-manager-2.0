@@ -8,6 +8,7 @@ import { selectPipelineByName } from 'src/lib/pipeline-store/store/selectors/pip
 import { combineLatest } from 'rxjs/internal/observable/combineLatest';
 import { selectSnapshot } from 'src/lib/process-builder/globals/select-snapshot';
 import { ISolutionWrapper } from '@smgr/interfaces';
+import { NEVER } from 'rxjs/internal/observable/never';
 
 @Component({
   selector: 'app-pipeline-action-preview',
@@ -22,8 +23,8 @@ export class PipelineActionPreviewComponent {
   }
   @Output() public setOutput = new EventEmitter<ISolutionWrapper>();
   public pipelineAction$ = this._action$$.asObservable();
-  public pipeline$ = this.pipelineAction$.pipe(switchMap(action => this._store.select(selectPipelineByName(action!.pipeline))));
-  public actionStatus$ = this.pipelineAction$.pipe(switchMap((action => this._store.select(selectPipelineActionStatus(action!.identifier)))))
+  public pipeline$ = this.pipelineAction$.pipe(switchMap(action => action? this._store.select(selectPipelineByName(action.pipeline)): NEVER));
+  public actionStatus$ = this.pipelineAction$.pipe(switchMap((action => this._store.select(selectPipelineActionStatus(action?.identifier)))))
   public isProvidingOutput$ = this.pipelineAction$.pipe(map(action => action?.isProvidingPipelineOutput ? true : false));
   public actionOutput$ = this.pipelineAction$.pipe(map(action => action?.solutionReference?.solution?.id));
   public isSelectedOutput$ = combineLatest([this.pipelineAction$, this.pipeline$]).pipe(map(([action, pipeline]) => action?.solutionReference?.solution?.id === pipeline?.solutionReference));

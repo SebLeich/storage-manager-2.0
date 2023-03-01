@@ -19,8 +19,9 @@ export class NavbarComponent {
 
   private _limitedHeight = new BehaviorSubject<boolean>(false);
   public limitedHeight$ = this._limitedHeight.asObservable();
+  public location = location;
 
-  constructor(public router: Router, private _store: Store) { }
+  constructor(private _router: Router, private _store: Store) { }
 
   @HostListener('window:resize', ['$event'])
   private _onResize(event: Event) {
@@ -29,7 +30,7 @@ export class NavbarComponent {
 
   public gotoVisualizer(){
     this._store.dispatch(resetSolutionNavItem());
-    this.router.navigate(['/visualizer']);
+    this._router.navigate(['/visualizer']);
   }
 
   public validateClient() {

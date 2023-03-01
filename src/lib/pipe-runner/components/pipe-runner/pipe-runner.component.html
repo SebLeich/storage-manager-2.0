@@ -18,7 +18,7 @@
                     matTooltip="design pipeline" matTooltipPosition="right">
                     <mat-icon>hub</mat-icon>
                 </button>
-                <button mat-icon-button [disabled]="!(pipeline$|async)" (click)="run()" matTooltip="run pipeline"
+                <button mat-icon-button [disabled]="!(pipeline$|async) || ((actions$|async)?.length? false: true)" (click)="run()" matTooltip="run pipeline"
                     matTooltipPosition="right">
                     <mat-icon>play_arrow</mat-icon>
                 </button>
@@ -36,9 +36,11 @@
                     <mat-icon>view_in_ar</mat-icon>
                 </button>
             </div>
-            <div *ngFor="let pipelineAction of (actions$|async)" class="action-wrapper">
-                <app-pipeline-action-preview [pipelineAction]="pipelineAction!" (setOutput)="setOutput($event)"></app-pipeline-action-preview>
-            </div>
+            <ng-container *ngIf="(actions$|async)?.length; else noActions">
+                <div *ngFor="let pipelineAction of (actions$|async)" class="action-wrapper">
+                    <app-pipeline-action-preview [pipelineAction]="pipelineAction!" (setOutput)="setOutput($event)"></app-pipeline-action-preview>
+                </div>
+            </ng-container>
         </div>
         <mat-tab-group class="auto-size-tab-group" #tabGroup>
             <mat-tab label="console output">
@@ -59,3 +61,9 @@
     </div>
 
 </div>
+
+<ng-template #noActions>
+    <div class="no-actions-hint">
+        no actions found
+    </div>
+</ng-template>

@@ -53,6 +53,16 @@
         }
     }
 
+    .no-actions-hint {
+        height: 200px;
+        width: 100%;
+        box-sizing: border-box;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 100;
+    }
+
     .visualization {
         height: 100%;
         display: flex;
@@ -109,7 +119,7 @@
     box-shadow: 0 0 4px #9d9d9d;
     margin: 3px;
     box-sizing: border-box;
-    
+
     ::ng-deep .mat-mdc-tab-body-wrapper {
         flex: 1;
     }
