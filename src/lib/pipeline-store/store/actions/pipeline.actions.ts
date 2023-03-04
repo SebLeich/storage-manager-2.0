@@ -15,3 +15,8 @@ export const setIPipelineSolutionReference = createAction(
     '[IPipeline] Set IPipeline Solution Reference',
     (pipelineName: string, solutionIdentifier: string) => ({ pipelineName, solutionIdentifier })
 );
+
+export const renameIPipeline = createAction(
+    '[IPipeline] Rename IPipeline',
+    (pipelineName: string, updatedName: string) => ({ pipelineName, updatedName })
+);

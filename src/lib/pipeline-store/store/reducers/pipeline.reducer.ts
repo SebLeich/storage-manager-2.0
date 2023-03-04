@@ -1,9 +1,6 @@
 import { createEntityAdapter, EntityAdapter, EntityState } from "@ngrx/entity";
 import { createReducer, on } from "@ngrx/store";
-import { addIPipeline, removeIPipeline, setIPipelineSolutionReference } from "../actions/pipeline.actions";
-import exemplarySolution from 'src/assets/exemplary-solution.json';
-import { timer } from 'rxjs';
-import { selectSnapshot } from "src/lib/process-builder/globals/select-snapshot";
+import { addIPipeline, removeIPipeline, renameIPipeline, setIPipelineSolutionReference } from "../actions/pipeline.actions";
 import { IPipeline } from "src/lib/pipeline-store/interfaces/pipeline.interface";
 
 export const featureKey = 'pipeline';
@@ -22,21 +19,7 @@ export const adapter: EntityAdapter<IPipeline> = createEntityAdapter<IPipeline>(
 );
 
 export const initialState: State = adapter.getInitialState({
-    entities: {
-        myPipe: {
-            name: 'myPipe',
-            actions: [
-                {
-                    name: 'delay', executableCode: async () => {
-                        return await selectSnapshot(timer(1000));
-                    }
-                },
-                {
-                    name: 'provideExemplarySolution', executableCode: () => new Promise((resolve) => resolve(exemplarySolution))
-                }
-            ]
-        }
-    },
+    entities: {},
     ids: [],
 });
 
@@ -47,6 +30,14 @@ export const reducer = createReducer(
             { ...pipeline },
             state
         );
+    }),
+    on(renameIPipeline, (state, { pipelineName, updatedName }) => {
+        return adapter.updateOne({
+            id: pipelineName,
+            changes: {
+                name: updatedName
+            }
+        }, state)
     }),
     on(removeIPipeline, (state, { pipeline }) => adapter.removeOne(pipeline.name, state)),
     on(setIPipelineSolutionReference, (state, { pipelineName, solutionIdentifier }) => {

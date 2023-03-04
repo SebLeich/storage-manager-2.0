@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { NavigationEnd, NavigationStart, Router } from '@angular/router';
+import { NavigationEnd, NavigationSkipped, NavigationStart, Router } from '@angular/router';
 import { Store } from '@ngrx/store';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, filter, map, shareReplay } from 'rxjs';
 import { selectGlobalProcedureProgress, selectHasDeterminingProcedures, selectHasPendingProcedures } from '@procedure';
 
 @Component({
@@ -11,11 +11,11 @@ import { selectGlobalProcedureProgress, selectHasDeterminingProcedures, selectHa
   styleUrls: ['./app.component.css'],
 })
 export class AppComponent implements OnInit {
-
-  title = 'storage-manager';
-
-  private _loadingRoute: BehaviorSubject<boolean> = new BehaviorSubject(false);
-  loadingRoute$ = this._loadingRoute.asObservable();
+  public loadingRoute$ = this._router.events.pipe(
+    filter(event => event instanceof NavigationStart || event instanceof NavigationEnd || event instanceof NavigationSkipped),
+    map(event => event instanceof NavigationStart),
+    shareReplay(1)
+  );
 
   public canProvideDeterminateProgress$ = this._store.select(selectHasDeterminingProcedures);
   public globalProcedureProgress$ = this._store.select(selectGlobalProcedureProgress);
@@ -34,14 +34,6 @@ export class AppComponent implements OnInit {
         .afterDismissed()
         .subscribe(() => localStorage.setItem('cookie_consent', 'true'));
     }
-    this._router
-      .events
-      .subscribe(event => {
-
-        if (event instanceof NavigationStart) this._loadingRoute.next(true);
-        else if (event instanceof NavigationEnd) this._loadingRoute.next(false);
-
-      });
   }
 
 }

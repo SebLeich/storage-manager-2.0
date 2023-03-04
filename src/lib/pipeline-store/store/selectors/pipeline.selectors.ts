@@ -1,7 +1,13 @@
 import { createSelector } from "@ngrx/store";
+import { IPipeline } from "../../interfaces/pipeline.interface";
 import { featureKey, State } from "../reducers/pipeline.reducer";
 
 export const pipelinesState = (state: any) => state[featureKey] as State;
+
+export const selectPipelines = createSelector(
+  pipelinesState,
+  (state: State) => Object.values(state.entities).filter(pipeline => !!pipeline) as IPipeline[]
+);
 
 export const selectPipelineByBpmnJsModel = (bpmnJsModel: string | null | undefined) => createSelector(
   pipelinesState,

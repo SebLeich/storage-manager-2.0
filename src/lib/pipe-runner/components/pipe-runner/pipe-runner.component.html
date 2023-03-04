@@ -4,8 +4,25 @@
         <div class="actions">
             <div class="header">
                 <div class="pipeline-name">
-                    <ng-container *ngIf="(pipeline$|async); else noPipeline">
-                        <span class="prefix">Run pipeline</span> {{ (pipeline$|async)?.name }}
+                    <ng-container *ngIf="(pipelines$|async)?.length; else noPipeline">
+                        <span class="prefix">Run pipeline</span>
+                        <mat-form-field class="width">
+                            <mat-label class="label">current pipeline</mat-label>
+                            <mat-select [formControl]="pipelineControl">
+                                <mat-select-trigger>
+                                    <div #element class="editable-select-trigger" contenteditable
+                                        (click)="$event.stopPropagation()"
+                                        (keydown.enter)="blurElement(element, $event)"
+                                        (keydown)="$event.stopPropagation()"
+                                        (focusout)="pipeRunnerService.renameCurrentPipeline(element.innerText)">
+                                        {{(pipeRunnerService.pipelineName$|async) ?? 'no name'}}
+                                    </div>
+                                </mat-select-trigger>
+                                <mat-option *ngFor="let pipeline of (pipelines$|async)" [value]="pipeline.name">
+                                    {{pipeline.name}}
+                                </mat-option>
+                            </mat-select>
+                        </mat-form-field>
                     </ng-container>
                     <ng-template #noPipeline>
                         No pipeline to run
@@ -14,12 +31,12 @@
             </div>
 
             <div class="control-wrapper">
-                <button mat-icon-button [disabled]="!(pipeline$|async)" (click)="designPipeline()"
+                <button mat-icon-button [disabled]="!(pipeRunnerService.pipeline$|async)" (click)="designPipeline()"
                     matTooltip="design pipeline" matTooltipPosition="right">
                     <mat-icon>hub</mat-icon>
                 </button>
-                <button mat-icon-button [disabled]="!(pipeline$|async) || ((actions$|async)?.length? false: true)" (click)="run()" matTooltip="run pipeline"
-                    matTooltipPosition="right">
+                <button mat-icon-button [disabled]="!(pipeRunnerService.pipeline$|async) || ((pipeRunnerService.actions$|async)?.length? false: true)"
+                    (click)="pipeRunnerService.run()" matTooltip="run pipeline" matTooltipPosition="right">
                     <mat-icon>play_arrow</mat-icon>
                 </button>
                 <button mat-icon-button [disabled]="true" matTooltip="pause pipeline" matTooltipPosition="right">
@@ -31,14 +48,15 @@
                 <button mat-icon-button [disabled]="true" matTooltip="clear all data" matTooltipPosition="right">
                     <mat-icon>refresh</mat-icon>
                 </button>
-                <button mat-icon-button [disabled]="!(solution$|async)" (click)="openVisualization()"
+                <button mat-icon-button [disabled]="!(pipeRunnerService.solution$|async)" (click)="openVisualization()"
                     matTooltip="open visualization" matTooltipPosition="right">
                     <mat-icon>view_in_ar</mat-icon>
                 </button>
             </div>
-            <ng-container *ngIf="(actions$|async)?.length; else noActions">
-                <div *ngFor="let pipelineAction of (actions$|async)" class="action-wrapper">
-                    <app-pipeline-action-preview [pipelineAction]="pipelineAction!" (setOutput)="setOutput($event)"></app-pipeline-action-preview>
+            <ng-container *ngIf="(pipeRunnerService.actions$|async)?.length; else noActions">
+                <div *ngFor="let pipelineAction of (pipeRunnerService.actions$|async)" class="action-wrapper">
+                    <app-pipeline-action-preview [pipelineAction]="pipelineAction!"
+                        (setOutput)="pipeRunnerService.setOutput($event)"></app-pipeline-action-preview>
                 </div>
             </ng-container>
         </div>

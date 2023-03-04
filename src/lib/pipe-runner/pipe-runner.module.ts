@@ -12,6 +12,8 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatTabsModule } from '@angular/material/tabs';
 import { VisualizationModule } from '../visualization/visualization.module';
 import { StorageManagerModule } from '../storage-manager/storage-manager.module';
+import { MatSelectModule } from '@angular/material/select';
+import { ReactiveFormsModule } from '@angular/forms';
 
 
 @NgModule({
@@ -26,8 +28,11 @@ import { StorageManagerModule } from '../storage-manager/storage-manager.module'
     MatSnackBarModule,
     MatTooltipModule,
     MatTabsModule,
+    MatSelectModule,
+    MatSnackBarModule,
     MatProgressSpinnerModule,
     PipelineStoreModule,
+    ReactiveFormsModule,
     StorageManagerModule,
     VisualizationModule,
 

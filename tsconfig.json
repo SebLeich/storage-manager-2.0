@@ -33,6 +33,7 @@
     ],
     "useDefineForClassFields": false,
     "paths": {
+      "@animations": ["./src/lib/shared/animations"],
       "@process-builder/store": ["./src/lib/process-builder/store"],
       "@procedure": ["./src/lib/procedure-store"],
       "@smgr/interfaces": ["./src/lib/storage-manager/interfaces"],
