@@ -10,11 +10,11 @@
         <div class="io-wrapper">
             <div class="input">
                 <mat-icon>login</mat-icon>
-                <ng-container *ngIf="inputParams.length === 0; else inputParamsList">
-                    <ng-container *ngIf="!func?.useDynamicInputParams; else dynamicInputParams">
-                        no input arguments
-                    </ng-container>
-                </ng-container>
+                <div class="input-param-list">
+                    <div class="input-param" *ngFor="let param of inputParams">
+                        {{param|inputParam|async}}
+                    </div>
+                </div>
             </div>
             <div class="output">
                 <mat-icon>logout</mat-icon>
@@ -25,20 +25,6 @@
         </div>
     </div>
 </div>
-
-<ng-template #inputParamsList>
-    <div class="input-param-list">
-        <div class="input-param" *ngFor="let param of inputParams">
-            {{param|inputParam|async}}
-        </div>
-    </div>
-</ng-template>
-
-<ng-template #dynamicInputParams>
-    <div>
-        {{func?.useDynamicInputParams!|dynamicInputParams}}
-    </div>
-</ng-template>
 
 <ng-template #outputParamPreview>
     <div>

@@ -1,0 +1,1610 @@
+<!doctype html>
+<html class="no-js" lang="">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="x-ua-compatible" content="ie=edge">
+        <title>storage-manager documentation</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <link rel="icon" type="image/x-icon" href="../images/favicon.ico">
+	   <link rel="stylesheet" href="../styles/style.css">
+        <link rel="stylesheet" href="../styles/dark.css">
+    </head>
+    <body>
+
+        <div class="navbar navbar-default navbar-fixed-top visible-xs">
+            <a href="../" class="navbar-brand">storage-manager documentation</a>
+            <button type="button" class="btn btn-default btn-menu ion-ios-menu" id="btn-menu"></button>
+        </div>
+
+        <div class="xs-menu menu" id="mobile-menu">
+                <div id="book-search-input" role="search"><input type="text" placeholder="Type to search"></div>            <compodoc-menu></compodoc-menu>
+        </div>
+
+        <div class="container-fluid main">
+           <div class="row main">
+               <div class="hidden-xs menu">
+                   <compodoc-menu mode="normal"></compodoc-menu>
+               </div>
+               <!-- START CONTENT -->
+               <div class="content component">
+                   <div class="content-data">
+
+
+
+
+<ol class="breadcrumb">
+  <li>Components</li>
+  <li
+  >
+  EmbeddedFunctionImplementationComponent</li>
+</ol>
+
+<ul class="nav nav-tabs" role="tablist">
+        <li class="active">
+            <a href="#info" role="tab" id="info-tab" data-toggle="tab" data-link="info">Info</a>
+        </li>
+        <li >
+            <a href="#source" role="tab" id="source-tab" data-toggle="tab" data-link="source">Source</a>
+        </li>
+        <li >
+            <a href="#templateData" role="tab" id="templateData-tab" data-toggle="tab" data-link="template">Template</a>
+        </li>
+        <li >
+            <a href="#styleData" role="tab" id="styleData-tab" data-toggle="tab" data-link="style">Styles</a>
+        </li>
+        <li >
+            <a href="#tree" role="tab" id="tree-tab" data-toggle="tab" data-link="dom-tree">DOM Tree</a>
+        </li>
+</ul>
+
+<div class="tab-content">
+    <div class="tab-pane fade active in" id="c-info"><p class="comment">
+    <h3>File</h3>
+</p>
+<p class="comment">
+    <code>src/lib/process-builder/components/embedded/embedded-function-implementation/embedded-function-implementation.component.ts</code>
+</p>
+
+
+
+
+    <p class="comment">
+        <h3>Implements</h3>
+    </p>
+    <p class="comment">
+                    <code><a href="../interfaces/IEmbeddedView.html" target="_self" >IEmbeddedView</a></code>
+                    <code><a href="https://angular.io/api/core/AfterViewInit" target="_blank" >AfterViewInit</a></code>
+                    <code><a href="https://angular.io/api/core/OnDestroy" target="_blank" >OnDestroy</a></code>
+    </p>
+
+
+<section>
+    <h3>Metadata</h3>
+    <table class="table table-sm table-hover metadata">
+        <tbody>
+
+
+
+
+
+
+
+
+
+            <tr>
+                <td class="col-md-3">providers</td>
+                <td class="col-md-9">
+                                <code><a href="../injectables/ProcessBuilderService.html" target="_self" >ProcessBuilderService</a></code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-3">selector</td>
+                <td class="col-md-9"><code>app-embedded-function-implementation</code></td>
+            </tr>
+
+            <tr>
+                <td class="col-md-3">styleUrls</td>
+                <td class="col-md-9"><code>./embedded-function-implementation.component.scss</code></td>
+            </tr>
+
+
+
+            <tr>
+                <td class="col-md-3">templateUrl</td>
+                <td class="col-md-9"><code>./embedded-function-implementation.component.html</code></td>
+            </tr>
+
+
+
+
+
+
+
+
+        </tbody>
+    </table>
+</section>
+
+    <section>
+    <h3 id="index">Index</h3>
+    <table class="table table-sm table-bordered index-table">
+        <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <h6><b>Properties</b></h6>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <ul class="index-list">
+                            <li>
+                                    <span class="modifier">Private</span>
+                                <a href="#_implementationChanged" >_implementationChanged</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                <a href="#_injector" >_injector</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                <a href="#_returnValueStatus" >_returnValueStatus</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                <a href="#_subscriptions" >_subscriptions</a>
+                            </li>
+                            <li>
+                                <a href="#codeBody" >codeBody</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Public</span>
+                                <a href="#codeMirror" >codeMirror</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Public</span>
+                                <a href="#complete" >complete</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Public</span>
+                                <a href="#config" >config</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Public</span>
+                                <a href="#implementationChanged$" >implementationChanged$</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Public</span>
+                                <a href="#inputParams$" >inputParams$</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Public</span>
+                                <a href="#MethodEvaluationStatus" >MethodEvaluationStatus</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Public</span>
+                                <a href="#ngOnDestroy" >ngOnDestroy</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Public</span>
+                                <a href="#returnValueStatus$" >returnValueStatus$</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Public</span>
+                                <a href="#state" >state</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Public</span>
+                                <a href="#varNameInjector" >varNameInjector</a>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="col-md-4">
+                        <h6><b>Methods</b></h6>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <ul class="index-list">
+                            <li>
+                                    <span class="modifier">Private</span>
+                                <a href="#_autoNormalizeNames" >_autoNormalizeNames</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                    <span class="modifier">Async</span>
+                                <a href="#_evaluateImplementation" >_evaluateImplementation</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                <a href="#_handleImplementationChanges" >_handleImplementationChanges</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Public</span>
+                                <a href="#blockTabPressEvent" >blockTabPressEvent</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Public</span>
+                                <a href="#ngAfterViewInit" >ngAfterViewInit</a>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="col-md-4">
+                        <h6><b>Inputs</b></h6>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <ul class="index-list">
+                            <li>
+                                <a href="#inputParams" >inputParams</a>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+
+
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <h6><b>Accessors</b></h6>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="col-md-4">
+                            <ul class="index-list">
+                                <li>
+                                    <a href="#formGroup" >formGroup</a>
+                                </li>
+                                <li>
+                                    <a href="#canFailControl" >canFailControl</a>
+                                </li>
+                                <li>
+                                    <a href="#normalizedNameControl" >normalizedNameControl</a>
+                                </li>
+                            </ul>
+                        </td>
+                    </tr>
+        </tbody>
+    </table>
+</section>
+
+    <section>
+    <h3 id="constructor">Constructor</h3>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+<code>constructor(config: <a href="../interfaces/IProcessBuilderConfig.html" target="_self">IProcessBuilderConfig</a>, _processBuilderService: <a href="../injectables/ProcessBuilderService.html" target="_self">ProcessBuilderService</a>, _store: Store, _changeDetectorRef: <a href="https://angular.io/api/core/ChangeDetectorRef" target="_blank">ChangeDetectorRef</a>, _controlContainer: <a href="https://angular.io/api/forms/ControlContainer" target="_blank">ControlContainer</a>)</code>
+                    </td>
+                </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="57" class="link-to-prism">src/lib/process-builder/components/embedded/embedded-function-implementation/embedded-function-implementation.component.ts:57</a></div>
+                            </td>
+                        </tr>
+
+                <tr>
+                    <td class="col-md-4">
+                            <div>
+                                    <b>Parameters :</b>
+                                    <table class="params">
+                                        <thead>
+                                            <tr>
+                                                <td>Name</td>
+                                                    <td>Type</td>
+                                                <td>Optional</td>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                                <tr>
+                                                        <td>config</td>
+                                                  
+                                                        <td>
+                                                                        <code><a href="../interfaces/IProcessBuilderConfig.html" target="_self" >IProcessBuilderConfig</a></code>
+                                                        </td>
+                                                  
+                                                    <td>
+                                                            No
+                                                    </td>
+                                                    
+                                                </tr>
+                                                <tr>
+                                                        <td>_processBuilderService</td>
+                                                  
+                                                        <td>
+                                                                        <code><a href="../injectables/ProcessBuilderService.html" target="_self" >ProcessBuilderService</a></code>
+                                                        </td>
+                                                  
+                                                    <td>
+                                                            No
+                                                    </td>
+                                                    
+                                                </tr>
+                                                <tr>
+                                                        <td>_store</td>
+                                                  
+                                                        <td>
+                                                                    <code>Store</code>
+                                                        </td>
+                                                  
+                                                    <td>
+                                                            No
+                                                    </td>
+                                                    
+                                                </tr>
+                                                <tr>
+                                                        <td>_changeDetectorRef</td>
+                                                  
+                                                        <td>
+                                                                        <code><a href="https://angular.io/api/core/ChangeDetectorRef" target="_blank" >ChangeDetectorRef</a></code>
+                                                        </td>
+                                                  
+                                                    <td>
+                                                            No
+                                                    </td>
+                                                    
+                                                </tr>
+                                                <tr>
+                                                        <td>_controlContainer</td>
+                                                  
+                                                        <td>
+                                                                        <code><a href="https://angular.io/api/forms/ControlContainer" target="_blank" >ControlContainer</a></code>
+                                                        </td>
+                                                  
+                                                    <td>
+                                                            No
+                                                    </td>
+                                                    
+                                                </tr>
+                                        </tbody>
+                                    </table>
+                            </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+</section>
+
+    <section>
+    <h3 id="inputs">Inputs</h3>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="inputParams"></a>
+                        <b>inputParams</b>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>number[]</code>
+
+                    </td>
+                </tr>
+                        <tr>
+                            <td class="col-md-2" colspan="2">
+                                    <div class="io-line">Defined in <a href="" data-line="38" class="link-to-prism">src/lib/process-builder/components/embedded/embedded-function-implementation/embedded-function-implementation.component.ts:38</a></div>
+                            </td>
+                        </tr>
+            </tbody>
+        </table>
+</section>
+
+
+
+    <section>
+    
+    <h3 id="methods">
+        Methods
+    </h3>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="_autoNormalizeNames"></a>
+                    <span class="name">
+                        <span class="modifier">Private</span>
+                        <span ><b>_autoNormalizeNames</b></span>
+                        <a href="#_autoNormalizeNames"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>_autoNormalizeNames()</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="169"
+                            class="link-to-prism">src/lib/process-builder/components/embedded/embedded-function-implementation/embedded-function-implementation.component.ts:169</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="_evaluateImplementation"></a>
+                    <span class="name">
+                        <span class="modifier">Private</span>
+                        <span class="modifier">Async</span>
+                        <span ><b>_evaluateImplementation</b></span>
+                        <a href="#_evaluateImplementation"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>_evaluateImplementation(implementation: string[] | null)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="183"
+                            class="link-to-prism">src/lib/process-builder/components/embedded/embedded-function-implementation/embedded-function-implementation.component.ts:183</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>implementation</td>
+                                    <td>
+                                            <code>string[] | null</code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="_handleImplementationChanges"></a>
+                    <span class="name">
+                        <span class="modifier">Private</span>
+                        <span ><b>_handleImplementationChanges</b></span>
+                        <a href="#_handleImplementationChanges"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>_handleImplementationChanges()</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="206"
+                            class="link-to-prism">src/lib/process-builder/components/embedded/embedded-function-implementation/embedded-function-implementation.component.ts:206</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="blockTabPressEvent"></a>
+                    <span class="name">
+                        <span class="modifier">Public</span>
+                        <span ><b>blockTabPressEvent</b></span>
+                        <a href="#blockTabPressEvent"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>blockTabPressEvent(event: KeyboardEvent)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="67"
+                            class="link-to-prism">src/lib/process-builder/components/embedded/embedded-function-implementation/embedded-function-implementation.component.ts:67</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>event</td>
+                                    <td>
+                                            <code>KeyboardEvent</code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="ngAfterViewInit"></a>
+                    <span class="name">
+                        <span class="modifier">Public</span>
+                        <span ><b>ngAfterViewInit</b></span>
+                        <a href="#ngAfterViewInit"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>ngAfterViewInit()</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="74"
+                            class="link-to-prism">src/lib/process-builder/components/embedded/embedded-function-implementation/embedded-function-implementation.component.ts:74</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</section>
+    <section>
+    
+    <h3 id="inputs">
+        Properties
+    </h3>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="_implementationChanged"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                        <span ><b>_implementationChanged</b></span>
+                        <a href="#_implementationChanged"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>new ReplaySubject&lt;Text&gt;(1)</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="50" class="link-to-prism">src/lib/process-builder/components/embedded/embedded-function-implementation/embedded-function-implementation.component.ts:50</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="_injector"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                        <span ><b>_injector</b></span>
+                        <a href="#_injector"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>{ injector: {} }</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="56" class="link-to-prism">src/lib/process-builder/components/embedded/embedded-function-implementation/embedded-function-implementation.component.ts:56</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="_returnValueStatus"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                        <span ><b>_returnValueStatus</b></span>
+                        <a href="#_returnValueStatus"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="../miscellaneous/enumerations.html#MethodEvaluationStatus" target="_self" >BehaviorSubject&lt;MethodEvaluationStatus&gt;</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>new BehaviorSubject&lt;MethodEvaluationStatus&gt;(MethodEvaluationStatus.Initial)</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="53" class="link-to-prism">src/lib/process-builder/components/embedded/embedded-function-implementation/embedded-function-implementation.component.ts:53</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="_subscriptions"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                        <span ><b>_subscriptions</b></span>
+                        <a href="#_subscriptions"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>new Subscription()</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="57" class="link-to-prism">src/lib/process-builder/components/embedded/embedded-function-implementation/embedded-function-implementation.component.ts:57</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="codeBody"></a>
+                    <span class="name">
+                        <span ><b>codeBody</b></span>
+                        <a href="#codeBody"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>ElementRef&lt;HTMLDivElement&gt;</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <b>Decorators : </b>
+                        <br />
+                        <code>
+                            @ViewChild(&#x27;codeBody&#x27;, {static: true, read: ElementRef})<br />
+                        </code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="40" class="link-to-prism">src/lib/process-builder/components/embedded/embedded-function-implementation/embedded-function-implementation.component.ts:40</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="codeMirror"></a>
+                    <span class="name">
+                            <span class="modifier">Public</span>
+                        <span ><b>codeMirror</b></span>
+                        <a href="#codeMirror"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>EditorView</code>
+
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="41" class="link-to-prism">src/lib/process-builder/components/embedded/embedded-function-implementation/embedded-function-implementation.component.ts:41</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="complete"></a>
+                    <span class="name">
+                            <span class="modifier">Public</span>
+                        <span ><b>complete</b></span>
+                        <a href="#complete"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>() &#x3D;&gt; {...}</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="118" class="link-to-prism">src/lib/process-builder/components/embedded/embedded-function-implementation/embedded-function-implementation.component.ts:118</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="config"></a>
+                    <span class="name">
+                            <span class="modifier">Public</span>
+                        <span ><b>config</b></span>
+                        <a href="#config"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="../interfaces/IProcessBuilderConfig.html" target="_self" >IProcessBuilderConfig</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <b>Decorators : </b>
+                        <br />
+                        <code>
+                            @Inject(PROCESS_BUILDER_CONFIG_TOKEN)<br />
+                        </code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="60" class="link-to-prism">src/lib/process-builder/components/embedded/embedded-function-implementation/embedded-function-implementation.component.ts:60</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="implementationChanged$"></a>
+                    <span class="name">
+                            <span class="modifier">Public</span>
+                        <span ><b>implementationChanged$</b></span>
+                        <a href="#implementationChanged$"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>this._implementationChanged.asObservable()</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="51" class="link-to-prism">src/lib/process-builder/components/embedded/embedded-function-implementation/embedded-function-implementation.component.ts:51</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="inputParams$"></a>
+                    <span class="name">
+                            <span class="modifier">Public</span>
+                        <span ><b>inputParams$</b></span>
+                        <a href="#inputParams$"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>this._store.select(selectIParams(this.inputParams)).pipe(shareReplay())</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="43" class="link-to-prism">src/lib/process-builder/components/embedded/embedded-function-implementation/embedded-function-implementation.component.ts:43</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="MethodEvaluationStatus"></a>
+                    <span class="name">
+                            <span class="modifier">Public</span>
+                        <span ><b>MethodEvaluationStatus</b></span>
+                        <a href="#MethodEvaluationStatus"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>MethodEvaluationStatus</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="155" class="link-to-prism">src/lib/process-builder/components/embedded/embedded-function-implementation/embedded-function-implementation.component.ts:155</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="ngOnDestroy"></a>
+                    <span class="name">
+                            <span class="modifier">Public</span>
+                        <span ><b>ngOnDestroy</b></span>
+                        <a href="#ngOnDestroy"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>() &#x3D;&gt; {...}</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="116" class="link-to-prism">src/lib/process-builder/components/embedded/embedded-function-implementation/embedded-function-implementation.component.ts:116</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="returnValueStatus$"></a>
+                    <span class="name">
+                            <span class="modifier">Public</span>
+                        <span ><b>returnValueStatus$</b></span>
+                        <a href="#returnValueStatus$"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>this._returnValueStatus.asObservable()</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="54" class="link-to-prism">src/lib/process-builder/components/embedded/embedded-function-implementation/embedded-function-implementation.component.ts:54</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="state"></a>
+                    <span class="name">
+                            <span class="modifier">Public</span>
+                        <span ><b>state</b></span>
+                        <a href="#state"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>() &#x3D;&gt; {...}</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="137" class="link-to-prism">src/lib/process-builder/components/embedded/embedded-function-implementation/embedded-function-implementation.component.ts:137</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="varNameInjector"></a>
+                    <span class="name">
+                            <span class="modifier">Public</span>
+                        <span ><b>varNameInjector</b></span>
+                        <a href="#varNameInjector"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>{
+    &#x27;var1&#x27;: { type: &#x27;variable&#x27; },
+    &#x27;var2&#x27;: { type: &#x27;variable&#x27; }
+  }</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="45" class="link-to-prism">src/lib/process-builder/components/embedded/embedded-function-implementation/embedded-function-implementation.component.ts:45</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+</section>
+
+    <section>
+    <h3 id="accessors">
+        Accessors
+    </h3>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="formGroup"></a>
+                        <span class="name"><b>formGroup</b><a href="#formGroup"><span class="icon ion-ios-link"></span></a></span>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="col-md-4">
+                        <span class="accessor"><b>get</b><code>formGroup()</code></span>
+                    </td>
+                </tr>
+                            <tr>
+                                <td class="col-md-4">
+                                    <div class="io-line">Defined in <a href="" data-line="157" class="link-to-prism">src/lib/process-builder/components/embedded/embedded-function-implementation/embedded-function-implementation.component.ts:157</a></div>
+                                </td>
+                            </tr>
+
+            </tbody>
+        </table>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="canFailControl"></a>
+                        <span class="name"><b>canFailControl</b><a href="#canFailControl"><span class="icon ion-ios-link"></span></a></span>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="col-md-4">
+                        <span class="accessor"><b>get</b><code>canFailControl()</code></span>
+                    </td>
+                </tr>
+                            <tr>
+                                <td class="col-md-4">
+                                    <div class="io-line">Defined in <a href="" data-line="161" class="link-to-prism">src/lib/process-builder/components/embedded/embedded-function-implementation/embedded-function-implementation.component.ts:161</a></div>
+                                </td>
+                            </tr>
+
+            </tbody>
+        </table>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="normalizedNameControl"></a>
+                        <span class="name"><b>normalizedNameControl</b><a href="#normalizedNameControl"><span class="icon ion-ios-link"></span></a></span>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="col-md-4">
+                        <span class="accessor"><b>get</b><code>normalizedNameControl()</code></span>
+                    </td>
+                </tr>
+                            <tr>
+                                <td class="col-md-4">
+                                    <div class="io-line">Defined in <a href="" data-line="165" class="link-to-prism">src/lib/process-builder/components/embedded/embedded-function-implementation/embedded-function-implementation.component.ts:165</a></div>
+                                </td>
+                            </tr>
+
+            </tbody>
+        </table>
+</section>
+</div>
+
+
+    <div class="tab-pane fade  tab-source-code" id="c-source">
+        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { AfterViewInit, ChangeDetectorRef, Component, ElementRef, Inject, Input, OnDestroy, ViewChild } from &#x27;@angular/core&#x27;;
+import { BehaviorSubject, ReplaySubject, Subscription } from &#x27;rxjs&#x27;;
+import { ProcessBuilderRepository } from &#x27;src/lib/core/process-builder-repository&#x27;;
+import { IEmbeddedView } from &#x27;src/lib/process-builder/classes/embedded-view&#x27;;
+import { syntaxTree } from &quot;@codemirror/language&quot;;
+import { autocompletion, CompletionContext } from &quot;@codemirror/autocomplete&quot;;
+import { EditorState, Text } from &#x27;@codemirror/state&#x27;;
+import { basicSetup, EditorView } from &#x27;@codemirror/basic-setup&#x27;;
+import { javascript } from &#x27;@codemirror/lang-javascript&#x27;;
+import { CodemirrorRepository } from &#x27;src/lib/core/codemirror.repository&#x27;;
+import { MethodEvaluationStatus } from &#x27;src/lib/process-builder/globals/method-evaluation-status&#x27;;
+import { IProcessBuilderConfig, PROCESS_BUILDER_CONFIG_TOKEN } from &#x27;src/lib/process-builder/interfaces/process-builder-config.interface&#x27;;
+import { lintGutter } from &#x27;@codemirror/lint&#x27;;
+import defaultImplementation from &#x27;src/lib/process-builder/globals/default-implementation&#x27;;
+import { debounceTime, map, shareReplay, tap } from &#x27;rxjs/operators&#x27;;
+import { ControlContainer, FormControl, UntypedFormControl } from &#x27;@angular/forms&#x27;;
+import { Store } from &#x27;@ngrx/store&#x27;;
+import { selectIParams } from &#x27;src/lib/process-builder/store/selectors/param.selectors&#x27;;
+import { mapIParamsInterfaces } from &#x27;src/lib/process-builder/extensions/rxjs/map-i-params-interfaces.rxjs&#x27;;
+import completePropertyAfter from &#x27;./constants/complete-property-after.contant&#x27;;
+import doNotCompleteAfter from &#x27;./constants/do-not-complete-after.constant&#x27;;
+import completeProperties from &#x27;./methods/complete-properties.method&#x27;;
+import byStringMethods from &#x27;./methods/by-string.methods&#x27;;
+import { ProcessBuilderService } from &#x27;src/lib/process-builder/services/process-builder.service&#x27;;
+import globalsInjector from &#x27;./constants/globals-injector.constant&#x27;;
+import { selectSnapshot } from &#x27;src/lib/process-builder/globals/select-snapshot&#x27;;
+import { IInterface } from &#x27;src/lib/process-builder/interfaces/interface.interface&#x27;;
+import { TaskCreationFormGroup } from &#x27;src/lib/process-builder/interfaces/task-creation-form-group-value.interface&#x27;;
+
+@Component({
+  selector: &#x27;app-embedded-function-implementation&#x27;,
+  templateUrl: &#x27;./embedded-function-implementation.component.html&#x27;,
+  styleUrls: [&#x27;./embedded-function-implementation.component.scss&#x27;],
+  providers: [ ProcessBuilderService ]
+})
+export class EmbeddedFunctionImplementationComponent implements IEmbeddedView, AfterViewInit, OnDestroy {
+
+  @Input() public inputParams!: number[];
+
+  @ViewChild(&#x27;codeBody&#x27;, { static: true, read: ElementRef }) codeBody!: ElementRef&lt;HTMLDivElement&gt;;
+  public codeMirror!: EditorView;
+
+  public inputParams$ &#x3D; this._store.select(selectIParams(this.inputParams)).pipe(shareReplay());
+
+  public varNameInjector: any &#x3D; {
+    &#x27;var1&#x27;: { type: &#x27;variable&#x27; },
+    &#x27;var2&#x27;: { type: &#x27;variable&#x27; }
+  };
+
+  private _implementationChanged &#x3D; new ReplaySubject&lt;Text&gt;(1);
+  public implementationChanged$ &#x3D; this._implementationChanged.asObservable();
+
+  private _returnValueStatus: BehaviorSubject&lt;MethodEvaluationStatus&gt; &#x3D; new BehaviorSubject&lt;MethodEvaluationStatus&gt;(MethodEvaluationStatus.Initial);
+  public returnValueStatus$ &#x3D; this._returnValueStatus.asObservable();
+
+  private _injector: any &#x3D; { injector: {} };
+  private _subscriptions &#x3D; new Subscription();
+
+  constructor(
+    @Inject(PROCESS_BUILDER_CONFIG_TOKEN) public config: IProcessBuilderConfig,
+    private _processBuilderService: ProcessBuilderService,
+    private _store: Store,
+    private _changeDetectorRef: ChangeDetectorRef,
+    private _controlContainer: ControlContainer
+  ) { }
+
+  public blockTabPressEvent(event: KeyboardEvent) {
+    if (event.key &#x3D;&#x3D;&#x3D; &#x27;Tab&#x27;) {
+      event.stopPropagation();
+      event.preventDefault();
+    }
+  }
+
+  public ngAfterViewInit(): void {
+    this._autoNormalizeNames();
+    this._handleImplementationChanges();
+
+    this._subscriptions.add(...[
+      this.returnValueStatus$.subscribe((status) &#x3D;&gt; {
+        this.formGroup.controls.outputParamName![status &#x3D;&#x3D;&#x3D; MethodEvaluationStatus.ReturnValueFound ? &#x27;enable&#x27; : &#x27;disable&#x27;]();
+      }),
+      this.inputParams$.pipe(mapIParamsInterfaces(this._store))
+        .subscribe((inputParams) &#x3D;&gt; {
+          let injectorObject &#x3D; {
+            injector: {} as { [key: string]: any },
+            &#x27;httpClient.get&#x27;: {
+              type: &#x27;function&#x27;,
+              apply: &#x27;await httpClient.get(/** url **/).toPromise()&#x27;
+            },
+            &#x27;httpClient.post&#x27;: {
+              type: &#x27;function&#x27;,
+              apply: &#x27;await httpClient.post(/** url **/, /** json body **/).toPromise()&#x27;
+            }
+          };
+          inputParams.forEach(param &#x3D;&gt; {
+            if (param.defaultValue) {
+              injectorObject.injector[param.normalizedName] &#x3D; param.defaultValue;
+            } else {
+              const dummyValue &#x3D; ProcessBuilderRepository.createPseudoObjectFromIParam(param);
+              injectorObject.injector[param.normalizedName] &#x3D; dummyValue;
+            }
+          });
+          this._injector &#x3D; injectorObject;
+        })
+    ]);
+
+    this.codeMirror &#x3D; new EditorView({
+      state: this.state(),
+      parent: this.codeBody.nativeElement
+    });
+    this._implementationChanged.next(this.codeMirror.state.doc);
+
+    this._changeDetectorRef.detectChanges();
+  }
+
+  public ngOnDestroy &#x3D; () &#x3D;&gt; this._subscriptions.unsubscribe();
+
+  public complete &#x3D; (context: CompletionContext) &#x3D;&gt; {
+    const nodeBefore &#x3D; syntaxTree(context.state).resolveInner(context.pos, -1);
+    if (completePropertyAfter.includes(nodeBefore.name) &amp;&amp; nodeBefore.parent?.name &#x3D;&#x3D;&#x3D; &quot;MemberExpression&quot;) {
+      let object &#x3D; nodeBefore.parent.getChild(&quot;Expression&quot;);
+      if (object?.name &#x3D;&#x3D;&#x3D; &#x27;VariableName&#x27; || object?.name &#x3D;&#x3D;&#x3D; &#x27;MemberExpression&#x27;) {
+        const variableName &#x3D; context.state.sliceDoc(object.from, object.to), injectedValue &#x3D; byStringMethods(this._injector, variableName);
+        if (typeof injectedValue &#x3D;&#x3D;&#x3D; &quot;object&quot;) {
+          const from &#x3D; /\./.test(nodeBefore.name) ? nodeBefore.to : nodeBefore.from;
+          return completeProperties(from, injectedValue as any);
+        }
+      }
+    } else if (nodeBefore.name &#x3D;&#x3D; &quot;VariableName&quot;) {
+      return completeProperties(nodeBefore.from, globalsInjector as any);
+    } else if (/*context.explicit &amp;&amp; */!doNotCompleteAfter.includes(nodeBefore.name)) {
+      return completeProperties(context.pos, this._injector as any);
+    }
+    return null
+  }
+
+  public state &#x3D; () &#x3D;&gt; {
+    const implementation &#x3D; this.formGroup.controls.implementation!.value;
+    return EditorState.create({
+      doc: Array.isArray(implementation) ? implementation.join(&#x27;\n&#x27;) : defaultImplementation,
+      extensions: [
+        basicSetup,
+        autocompletion({ override: [this.complete] }),
+        javascript(),
+        EditorView.updateListener.of((evt) &#x3D;&gt; {
+          if (evt.docChanged) {
+            this._implementationChanged.next(this.codeMirror.state.doc);
+          }
+        }),
+        lintGutter(),
+      ]
+    });
+  };
+
+  public MethodEvaluationStatus &#x3D; MethodEvaluationStatus;
+
+  public get formGroup() {
+    return this._controlContainer.control as TaskCreationFormGroup;
+  }
+
+  public get canFailControl(): UntypedFormControl {
+    return this.formGroup.controls[&#x27;canFail&#x27;] as FormControl&lt;boolean&gt;;
+  }
+
+  public get normalizedNameControl() {
+    return this.formGroup.controls[&#x27;normalizedName&#x27;] as FormControl&lt;string&gt;;
+  }
+
+  private _autoNormalizeNames() {
+    this._subscriptions.add(...[
+      this.formGroup.controls.name!
+        .valueChanges
+        .pipe(debounceTime(200), map((name) &#x3D;&gt; ProcessBuilderRepository.normalizeName(name)))
+        .subscribe((normalizedName) &#x3D;&gt; this.normalizedNameControl.setValue(normalizedName)),
+
+      this.formGroup.controls.outputParamName!
+        .valueChanges
+        .pipe(debounceTime(200), map((name) &#x3D;&gt; ProcessBuilderRepository.normalizeName(name)))
+        .subscribe((normalizedName) &#x3D;&gt; this.formGroup.controls.normalizedName!.setValue(normalizedName)),
+    ]);
+  }
+
+  private async _evaluateImplementation(implementation: string[] | null) {
+    const evaluationResult &#x3D; CodemirrorRepository.evaluateCustomMethod(this.codeMirror.state, implementation ?? undefined);
+    this._returnValueStatus.next(evaluationResult.status);
+
+    if (evaluationResult?.injectorNavigationPath) {
+      const inputParams &#x3D; await selectSnapshot(this.inputParams$);
+      const result &#x3D; await this._processBuilderService.mapNavigationPathPropertyMetadata(evaluationResult.injectorNavigationPath, inputParams);
+
+      if ((result as any)?.interface) {
+        let iFace: IInterface &#x3D; (result as any).interface;
+        this.formGroup.controls.interface!.setValue(iFace.identifier);
+
+        if (this.formGroup.controls.outputParamName?.pristine) {
+          this.formGroup.controls.outputParamName!.setValue(iFace.normalizedName);
+        }
+
+        if (this.formGroup.controls.name?.pristine) {
+          this.formGroup.controls.name!.setValue(&#x60;provide ${iFace.normalizedName}&#x60;);
+        }
+      }
+    }
+  }
+
+  private _handleImplementationChanges() {
+    this._subscriptions.add(...[
+      this.implementationChanged$
+        .pipe(
+          tap(() &#x3D;&gt; this._returnValueStatus.next(MethodEvaluationStatus.Calculating)),
+          debounceTime(500)
+        )
+        .subscribe((implementation) &#x3D;&gt; {
+          this.formGroup.controls.implementation!.setValue((implementation as any)?.text);
+        }),
+
+      this.formGroup.controls.implementation!
+        .valueChanges
+        .subscribe(async (implementation) &#x3D;&gt; {
+          await this._evaluateImplementation(implementation);
+        })
+    ]);
+  }
+
+}
+</code></pre>
+    </div>
+
+    <div class="tab-pane fade " id="c-templateData">
+        <pre class="line-numbers"><code class="language-html">&lt;div class&#x3D;&quot;body&quot; [formGroup]&#x3D;&quot;formGroup&quot;&gt;
+
+    &lt;div class&#x3D;&quot;method-name-wrapper&quot;&gt;
+
+        &lt;mat-form-field class&#x3D;&quot;width&quot;&gt;
+            &lt;mat-label&gt;method name&lt;/mat-label&gt;
+            &lt;input matInput type&#x3D;&quot;text&quot; formControlName&#x3D;&quot;name&quot; /&gt;
+        &lt;/mat-form-field&gt;
+
+        &lt;mat-form-field class&#x3D;&quot;width&quot;&gt;
+            &lt;mat-label&gt;{{(returnValueStatus$|async) &#x3D;&#x3D;&#x3D; MethodEvaluationStatus.ReturnValueFound? &#x27;output param name&#x27;: &#x27;no output param&#x27;}}&lt;/mat-label&gt;
+            &lt;input matInput type&#x3D;&quot;text&quot; formControlName&#x3D;&quot;outputParamName&quot; /&gt;
+        &lt;/mat-form-field&gt;
+
+        &lt;mat-slide-toggle formControlName&#x3D;&quot;canFail&quot;&gt;{{canFailControl.value? &#x27;can fail&#x27;: &#x27;can not fail&#x27;}}&lt;/mat-slide-toggle&gt;
+
+        &lt;div class&#x3D;&quot;spacer&quot;&gt;&lt;/div&gt;
+
+        &lt;div class&#x3D;&quot;loading-wrapper&quot;&gt;
+            &lt;mat-spinner *ngIf&#x3D;&quot;(returnValueStatus$|async) &#x3D;&#x3D;&#x3D; MethodEvaluationStatus.Calculating&quot; diameter&#x3D;&quot;20&quot;&gt;&lt;/mat-spinner&gt;
+        &lt;/div&gt;
+        
+    &lt;/div&gt;
+
+    &lt;!--
+    &lt;div #codeBody class&#x3D;&quot;code-body&quot; (keypress)&#x3D;&quot;blockTabPressEvent($event)&quot;  (keydown)&#x3D;&quot;blockTabPressEvent($event)&quot; (keyup)&#x3D;&quot;blockTabPressEvent($event)&quot;&gt;&lt;/div&gt;
+    --&gt;
+    &lt;app-code-editor&gt;&lt;/app-code-editor&gt;
+
+&lt;/div&gt;
+</code></pre>
+    </div>
+
+    <div class="tab-pane fade " id="c-styleData">
+                <p class="comment">
+                    <code>./embedded-function-implementation.component.scss</code>
+                </p>
+                <pre class="line-numbers"><code class="language-scss">.body {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  height: 100%;
+  background-color: white;
+}
+
+.code-body {
+  -webkit-box-flex: 1;
+      -ms-flex: 1;
+          flex: 1;
+}
+
+.method-name-wrapper {
+  padding: 1rem 2rem 0px 2rem;
+  background-color: whitesmoke;
+  border-bottom: 1px solid #e2e2e2;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+}
+
+.method-name-wrapper &gt; * {
+  -webkit-box-flex: 1;
+      -ms-flex: 1;
+          flex: 1;
+}
+
+.method-name-wrapper &gt; .width {
+  max-width: 12rem;
+}
+
+.method-name-wrapper &gt; .loading-wrapper {
+  -webkit-box-flex: 0;
+      -ms-flex: 0;
+          flex: 0;
+  width: 30px;
+}
+
+.method-name-wrapper &gt; *:not(:last-child) {
+  margin-right: .5rem;
+}
+/*# sourceMappingURL&#x3D;embedded-function-implementation.component.css.map */</code></pre>
+    </div>
+
+    <div class="tab-pane fade " id="c-tree">
+        <div id="tree-container"></div>
+        <div class="tree-legend">
+            <div class="title">
+                <b>Legend</b>
+            </div>
+            <div>
+                <div class="color htmlelement"></div><span>Html element</span>
+            </div>
+            <div>
+                <div class="color component"></div><span>Component</span>
+            </div>
+            <div>
+                <div class="color directive"></div><span>Html element with directive</span>
+            </div>
+        </div>
+    </div>
+
+    
+</div>
+
+<script src="../js/libs/vis.min.js"></script>
+<script src="../js/libs/htmlparser.js"></script>
+<script src="../js/libs/deep-iterator.js"></script>
+<script>
+        var COMPONENT_TEMPLATE = '<div><div class="body" [formGroup]="formGroup">    <div class="method-name-wrapper">        <mat-form-field class="width">            <mat-label>method name</mat-label>            <input matInput type="text" formControlName="name" />        </mat-form-field>        <mat-form-field class="width">            <mat-label>{{(returnValueStatus$|async) === MethodEvaluationStatus.ReturnValueFound? \'output param name\': \'no output param\'}}</mat-label>            <input matInput type="text" formControlName="outputParamName" />        </mat-form-field>        <mat-slide-toggle formControlName="canFail">{{canFailControl.value? \'can fail\': \'can not fail\'}}</mat-slide-toggle>        <div class="spacer"></div>        <div class="loading-wrapper">            <mat-spinner *ngIf="(returnValueStatus$|async) === MethodEvaluationStatus.Calculating" diameter="20"></mat-spinner>        </div>            </div>    <!--    <div #codeBody class="code-body" (keypress)="blockTabPressEvent($event)"  (keydown)="blockTabPressEvent($event)" (keyup)="blockTabPressEvent($event)"></div>    -->    <app-code-editor></app-code-editor></div></div>'
+    var COMPONENTS = [{'name': 'AboutComponent', 'selector': 'app-about'},{'name': 'AccessTokenInputComponent', 'selector': 'app-access-token-input'},{'name': 'ApiCallConfiguratorComponent', 'selector': 'app-api-call-configurator'},{'name': 'ApiCallConfiguratorDialogComponent', 'selector': 'app-api-call-configurator-dialog'},{'name': 'ApiConfigurationPreviewComponent', 'selector': 'app-api-configuration-preview'},{'name': 'ApiLoginTestComponent', 'selector': 'app-api-login-test'},{'name': 'AppComponent', 'selector': 'app-root'},{'name': 'CalculationComponent', 'selector': 'app-calculation'},{'name': 'CalculationContextOverviewComponent', 'selector': 'app-calculation-context-overview'},{'name': 'CodeEditorComponent', 'selector': 'app-code-editor'},{'name': 'ConfirmationComponent', 'selector': 'app-confirmation'},{'name': 'ContainerPreviewComponent', 'selector': 'app-container-preview'},{'name': 'EditDataDialogComponent', 'selector': 'app-edit-data-dialog'},{'name': 'EmbeddedConfigureErrorGatewayEntranceConnectionComponent', 'selector': 'app-embedded-configure-error-gateway-entrance-connection'},{'name': 'EmbeddedFunctionImplementationComponent', 'selector': 'app-embedded-function-implementation'},{'name': 'EmbeddedFunctionInputSelectionComponent', 'selector': 'app-embedded-function-input-selection'},{'name': 'EmbeddedFunctionSelectionComponent', 'selector': 'app-embedded-function-selection'},{'name': 'EmbeddedInputOutputMappingComponent', 'selector': '[app-embedded-input-output-mapping]'},{'name': 'EmbeddedInputOutputMappingTableRowComponent', 'selector': 'app-embedded-input-output-mapping-table-row'},{'name': 'EmbeddedOutputParamConfigurationComponent', 'selector': 'app-embedded-output-param-configuration'},{'name': 'EmbeddedParamEditorComponent', 'selector': 'app-embedded-param-editor'},{'name': 'EndpointInputComponent', 'selector': 'app-endpoint-input'},{'name': 'ErrorComponent', 'selector': 'app-error'},{'name': 'FunctionPreviewComponent', 'selector': 'app-function-preview'},{'name': 'GoodPreviewComponent', 'selector': 'app-good-preview'},{'name': 'GoodsPanelComponent', 'selector': 'app-goods-panel'},{'name': 'GroupsFormComponent', 'selector': 'app-groups-form'},{'name': 'GroupsPanelComponent', 'selector': 'app-groups-panel'},{'name': 'LocalDataComponent', 'selector': 'app-local-data'},{'name': 'MethodQuickInteractionComponent', 'selector': 'app-method-quick-interaction'},{'name': 'NavbarComponent', 'selector': 'app-navbar'},{'name': 'NoSolutionDialogComponent', 'selector': 'app-no-solution-dialog'},{'name': 'OrdersFormComponent', 'selector': 'app-orders-form'},{'name': 'ParamEditorComponent', 'selector': 'app-param-editor'},{'name': 'ParamMemberPathPreviewComponent', 'selector': 'app-param-member-path-preview'},{'name': 'ParamMemberPreviewComponent', 'selector': 'app-param-member-preview'},{'name': 'ParamPreviewComponent', 'selector': 'app-param-preview'},{'name': 'PipelineActionPreviewComponent', 'selector': 'app-pipeline-action-preview'},{'name': 'PipeRunnerComponent', 'selector': 'app-pipe-runner'},{'name': 'ProcessBuilderComponent', 'selector': 'app-process-builder'},{'name': 'ProcessBuilderWrapperComponent', 'selector': 'app-process-builder-wrapper'},{'name': 'ProductFormComponent', 'selector': 'app-products-form'},{'name': 'SceneVisualizationComponent', 'selector': 'app-scene-visualization'},{'name': 'SelectApiAuthorizationComponent', 'selector': 'app-select-api-authorization'},{'name': 'SelectGroupComponent', 'selector': 'app-select-group'},{'name': 'SelectProductComponent', 'selector': 'app-select-product'},{'name': 'SelectUnitComponent', 'selector': 'app-select-unit'},{'name': 'SolutionAnimationComponent', 'selector': 'app-solution-animation'},{'name': 'SolutionPreviewComponent', 'selector': 'app-solution-preview'},{'name': 'SolutionPreviewRenderingComponent', 'selector': 'app-solution-preview-rendering'},{'name': 'SolutionValidationComponent', 'selector': 'app-solution-validation'},{'name': 'SolutionVisualizationDialogComponent', 'selector': 'app-solution-visualization-dialog'},{'name': 'TaskCreationComponent', 'selector': 'app-task-creation'},{'name': 'UserInputComponent', 'selector': 'app-user-input'},{'name': 'UsernamePasswordCombinationComponent', 'selector': 'app-username-password-combination'},{'name': 'VisualizerComponent', 'selector': 'app-visualizer'},{'name': 'WidgetComponent', 'selector': 'app-widget'}];
+    var DIRECTIVES = [{'name': 'AnimatedCounterDirective', 'selector': '[appAnimatedCounter]'}];
+    var ACTUAL_COMPONENT = {'name': 'EmbeddedFunctionImplementationComponent'};
+</script>
+<script src="../js/tree.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                   </div><div class="search-results">
+    <div class="has-results">
+        <h1 class="search-results-title"><span class='search-results-count'></span> results matching "<span class='search-query'></span>"</h1>
+        <ul class="search-results-list"></ul>
+    </div>
+    <div class="no-results">
+        <h1 class="search-results-title">No results matching "<span class='search-query'></span>"</h1>
+    </div>
+</div>
+</div>
+               <!-- END CONTENT -->
+           </div>
+       </div>
+
+          <label class="dark-mode-switch">
+               <input type="checkbox">
+               <span class="slider">
+                    <svg class="slider-icon" viewBox="0 0 24 24" fill="none" height="20" stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" width="20" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"></path>
+                    </svg>
+               </span>
+          </label>
+
+       <script>
+            var COMPODOC_CURRENT_PAGE_DEPTH = 1;
+            var COMPODOC_CURRENT_PAGE_CONTEXT = 'component';
+            var COMPODOC_CURRENT_PAGE_URL = 'EmbeddedFunctionImplementationComponent.html';
+            var MAX_SEARCH_RESULTS = 15;
+       </script>
+
+       <script src="../js/libs/custom-elements.min.js"></script>
+       <script src="../js/libs/lit-html.js"></script>
+
+       <script src="../js/menu-wc.js" defer></script>
+       <script nomodule src="../js/menu-wc_es5.js" defer></script>
+
+       <script src="../js/libs/bootstrap-native.js"></script>
+
+       <script src="../js/libs/es6-shim.min.js"></script>
+       <script src="../js/libs/EventDispatcher.js"></script>
+       <script src="../js/libs/promise.min.js"></script>
+       <script src="../js/libs/zepto.min.js"></script>
+
+       <script src="../js/compodoc.js"></script>
+
+       <script src="../js/tabs.js"></script>
+       <script src="../js/menu.js"></script>
+       <script src="../js/libs/clipboard.min.js"></script>
+       <script src="../js/libs/prism.js"></script>
+       <script src="../js/sourceCode.js"></script>
+          <script src="../js/search/search.js"></script>
+          <script src="../js/search/lunr.min.js"></script>
+          <script src="../js/search/search-lunr.js"></script>
+          <script src="../js/search/search_index.js"></script>
+       <script src="../js/lazy-load-graphs.js"></script>
+
+
+    </body>
+</html>

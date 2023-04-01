@@ -33,7 +33,7 @@ export const selectIFunctionsByOutputParam = (arg: IParam | number) => createSel
     selectIFunctionState,
     (state: fromIFunction.State) => {
         if (!state || !state.entities) return [];
-        return Object.values(state.entities).filter(x => x && x.output && x.output.param === (typeof arg === 'number' ? arg : arg.identifier)) as IFunction[];
+        return Object.values(state.entities).filter(x => x && x.output === (typeof arg === 'number' ? arg : arg.identifier)) as IFunction[];
     }
 );
 

@@ -1,0 +1,1002 @@
+<!doctype html>
+<html class="no-js" lang="">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="x-ua-compatible" content="ie=edge">
+        <title>storage-manager documentation</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <link rel="icon" type="image/x-icon" href="../images/favicon.ico">
+	   <link rel="stylesheet" href="../styles/style.css">
+        <link rel="stylesheet" href="../styles/dark.css">
+    </head>
+    <body>
+
+        <div class="navbar navbar-default navbar-fixed-top visible-xs">
+            <a href="../" class="navbar-brand">storage-manager documentation</a>
+            <button type="button" class="btn btn-default btn-menu ion-ios-menu" id="btn-menu"></button>
+        </div>
+
+        <div class="xs-menu menu" id="mobile-menu">
+                <div id="book-search-input" role="search"><input type="text" placeholder="Type to search"></div>            <compodoc-menu></compodoc-menu>
+        </div>
+
+        <div class="container-fluid main">
+           <div class="row main">
+               <div class="hidden-xs menu">
+                   <compodoc-menu mode="normal"></compodoc-menu>
+               </div>
+               <!-- START CONTENT -->
+               <div class="content component">
+                   <div class="content-data">
+
+
+
+
+<ol class="breadcrumb">
+  <li>Components</li>
+  <li
+  >
+  NavbarComponent</li>
+</ol>
+
+<ul class="nav nav-tabs" role="tablist">
+        <li class="active">
+            <a href="#info" role="tab" id="info-tab" data-toggle="tab" data-link="info">Info</a>
+        </li>
+        <li >
+            <a href="#source" role="tab" id="source-tab" data-toggle="tab" data-link="source">Source</a>
+        </li>
+        <li >
+            <a href="#templateData" role="tab" id="templateData-tab" data-toggle="tab" data-link="template">Template</a>
+        </li>
+        <li >
+            <a href="#styleData" role="tab" id="styleData-tab" data-toggle="tab" data-link="style">Styles</a>
+        </li>
+        <li >
+            <a href="#tree" role="tab" id="tree-tab" data-toggle="tab" data-link="dom-tree">DOM Tree</a>
+        </li>
+</ul>
+
+<div class="tab-content">
+    <div class="tab-pane fade active in" id="c-info"><p class="comment">
+    <h3>File</h3>
+</p>
+<p class="comment">
+    <code>src/app/components/navbar/navbar.component.ts</code>
+</p>
+
+
+
+
+
+
+<section>
+    <h3>Metadata</h3>
+    <table class="table table-sm table-hover metadata">
+        <tbody>
+
+
+
+
+
+
+
+
+
+
+
+            <tr>
+                <td class="col-md-3">selector</td>
+                <td class="col-md-9"><code>app-navbar</code></td>
+            </tr>
+
+            <tr>
+                <td class="col-md-3">styleUrls</td>
+                <td class="col-md-9"><code>./navbar.component.scss</code></td>
+            </tr>
+
+
+
+            <tr>
+                <td class="col-md-3">templateUrl</td>
+                <td class="col-md-9"><code>./navbar.component.html</code></td>
+            </tr>
+
+
+
+
+
+
+
+
+        </tbody>
+    </table>
+</section>
+
+    <section>
+    <h3 id="index">Index</h3>
+    <table class="table table-sm table-bordered index-table">
+        <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <h6><b>Properties</b></h6>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <ul class="index-list">
+                            <li>
+                                    <span class="modifier">Private</span>
+                                <a href="#_limitedHeight" >_limitedHeight</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Public</span>
+                                <a href="#currentApplicationVersion" >currentApplicationVersion</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Public</span>
+                                <a href="#limitedHeight$" >limitedHeight$</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Public</span>
+                                <a href="#location" >location</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Public</span>
+                                <a href="#solutionCount$" >solutionCount$</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Public</span>
+                                <a href="#solutionNavItemHighlighted$" >solutionNavItemHighlighted$</a>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="col-md-4">
+                        <h6><b>Methods</b></h6>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <ul class="index-list">
+                            <li>
+                                    <span class="modifier">Private</span>
+                                <a href="#_onResize" >_onResize</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Public</span>
+                                <a href="#gotoVisualizer" >gotoVisualizer</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Public</span>
+                                <a href="#validateClient" >validateClient</a>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+
+
+
+
+                <tr>
+                    <td class="col-md-4">
+                        <h6><b>HostListeners</b></h6>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <ul class="index-list">
+                            <li>
+                                <a href="#window:resize" >window:resize</a>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+
+        </tbody>
+    </table>
+</section>
+
+    <section>
+    <h3 id="constructor">Constructor</h3>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+<code>constructor(_router: <a href="https://angular.io/api/router/Router" target="_blank">Router</a>, _store: Store)</code>
+                    </td>
+                </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="22" class="link-to-prism">src/app/components/navbar/navbar.component.ts:22</a></div>
+                            </td>
+                        </tr>
+
+                <tr>
+                    <td class="col-md-4">
+                            <div>
+                                    <b>Parameters :</b>
+                                    <table class="params">
+                                        <thead>
+                                            <tr>
+                                                <td>Name</td>
+                                                    <td>Type</td>
+                                                <td>Optional</td>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                                <tr>
+                                                        <td>_router</td>
+                                                  
+                                                        <td>
+                                                                        <code><a href="https://angular.io/api/router/Router" target="_blank" >Router</a></code>
+                                                        </td>
+                                                  
+                                                    <td>
+                                                            No
+                                                    </td>
+                                                    
+                                                </tr>
+                                                <tr>
+                                                        <td>_store</td>
+                                                  
+                                                        <td>
+                                                                    <code>Store</code>
+                                                        </td>
+                                                  
+                                                    <td>
+                                                            No
+                                                    </td>
+                                                    
+                                                </tr>
+                                        </tbody>
+                                    </table>
+                            </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+</section>
+
+
+
+
+    <section>
+    <h3>HostListeners</h3>    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="window:resize"></a>
+                    <span class="name">
+                        <span ><b>window:resize</b></span>
+                        <a href="#window:resize"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <i>Arguments : </i><code>'$event' </code>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>window:resize(event: <a href="https://angular.io/api/router/Event" target="_blank">Event</a>)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="27"
+                            class="link-to-prism">src/app/components/navbar/navbar.component.ts:27</a></div>
+                </td>
+            </tr>
+
+
+        </tbody>
+    </table>
+</section>
+    <section>
+    
+    <h3 id="methods">
+        Methods
+    </h3>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="_onResize"></a>
+                    <span class="name">
+                        <span class="modifier">Private</span>
+                        <span ><b>_onResize</b></span>
+                        <a href="#_onResize"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>_onResize(event: <a href="https://angular.io/api/router/Event" target="_blank">Event</a>)</code>
+                </td>
+            </tr>
+
+            <tr>
+                <td class="col-md-4">
+                    <b>Decorators : </b>
+                    <br />
+                    <code>@HostListener(&#x27;window:resize&#x27;, [&#x27;$event&#x27;])<br /></code>
+                </td>
+            </tr>
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="27"
+                            class="link-to-prism">src/app/components/navbar/navbar.component.ts:27</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>event</td>
+                                    <td>
+                                                <code><a href="https://angular.io/api/router/Event" target="_blank" >Event</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="gotoVisualizer"></a>
+                    <span class="name">
+                        <span class="modifier">Public</span>
+                        <span ><b>gotoVisualizer</b></span>
+                        <a href="#gotoVisualizer"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>gotoVisualizer()</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="31"
+                            class="link-to-prism">src/app/components/navbar/navbar.component.ts:31</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="validateClient"></a>
+                    <span class="name">
+                        <span class="modifier">Public</span>
+                        <span ><b>validateClient</b></span>
+                        <a href="#validateClient"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>validateClient()</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="36"
+                            class="link-to-prism">src/app/components/navbar/navbar.component.ts:36</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</section>
+    <section>
+    
+    <h3 id="inputs">
+        Properties
+    </h3>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="_limitedHeight"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                        <span ><b>_limitedHeight</b></span>
+                        <a href="#_limitedHeight"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>new BehaviorSubject&lt;boolean&gt;(false)</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="20" class="link-to-prism">src/app/components/navbar/navbar.component.ts:20</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="currentApplicationVersion"></a>
+                    <span class="name">
+                            <span class="modifier">Public</span>
+                        <span ><b>currentApplicationVersion</b></span>
+                        <a href="#currentApplicationVersion"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>(environment as any).appVersion</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="16" class="link-to-prism">src/app/components/navbar/navbar.component.ts:16</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="limitedHeight$"></a>
+                    <span class="name">
+                            <span class="modifier">Public</span>
+                        <span ><b>limitedHeight$</b></span>
+                        <a href="#limitedHeight$"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>this._limitedHeight.asObservable()</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="21" class="link-to-prism">src/app/components/navbar/navbar.component.ts:21</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="location"></a>
+                    <span class="name">
+                            <span class="modifier">Public</span>
+                        <span ><b>location</b></span>
+                        <a href="#location"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>location</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="22" class="link-to-prism">src/app/components/navbar/navbar.component.ts:22</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="solutionCount$"></a>
+                    <span class="name">
+                            <span class="modifier">Public</span>
+                        <span ><b>solutionCount$</b></span>
+                        <a href="#solutionCount$"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>this._store.select(selectSolutions).pipe(map((solutions) &#x3D;&gt; solutions?.length ?? 0))</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="17" class="link-to-prism">src/app/components/navbar/navbar.component.ts:17</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="solutionNavItemHighlighted$"></a>
+                    <span class="name">
+                            <span class="modifier">Public</span>
+                        <span ><b>solutionNavItemHighlighted$</b></span>
+                        <a href="#solutionNavItemHighlighted$"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>this._store.select(selectSolutionNavItemHighlighted)</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="18" class="link-to-prism">src/app/components/navbar/navbar.component.ts:18</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+</section>
+
+</div>
+
+
+    <div class="tab-pane fade  tab-source-code" id="c-source">
+        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { Component, HostListener } from &#x27;@angular/core&#x27;;
+import { Router } from &#x27;@angular/router&#x27;;
+import { Store } from &#x27;@ngrx/store&#x27;;
+import { BehaviorSubject, map } from &#x27;rxjs&#x27;;
+import { environment } from &#x27;src/environments/environment&#x27;;
+import { selectSolutionNavItemHighlighted } from &#x27;src/app/store/selectors/application.selectors&#x27;;
+import { resetSolutionNavItem } from &#x27;src/app/store/actions/application.actions&#x27;;
+import { selectSolutions } from &#x27;@smgr/store&#x27;;
+
+@Component({
+  selector: &#x27;app-navbar&#x27;,
+  templateUrl: &#x27;./navbar.component.html&#x27;,
+  styleUrls: [&#x27;./navbar.component.scss&#x27;],
+})
+export class NavbarComponent {
+  public currentApplicationVersion &#x3D; (environment as any).appVersion;
+  public solutionCount$ &#x3D; this._store.select(selectSolutions).pipe(map((solutions) &#x3D;&gt; solutions?.length ?? 0));
+  public solutionNavItemHighlighted$ &#x3D; this._store.select(selectSolutionNavItemHighlighted);
+
+  private _limitedHeight &#x3D; new BehaviorSubject&lt;boolean&gt;(false);
+  public limitedHeight$ &#x3D; this._limitedHeight.asObservable();
+  public location &#x3D; location;
+
+  constructor(private _router: Router, private _store: Store) { }
+
+  @HostListener(&#x27;window:resize&#x27;, [&#x27;$event&#x27;])
+  private _onResize(event: Event) {
+    this.validateClient();
+  }
+
+  public gotoVisualizer(){
+    this._store.dispatch(resetSolutionNavItem());
+    this._router.navigate([&#x27;/visualizer&#x27;]);
+  }
+
+  public validateClient() {
+    this._limitedHeight.next(window.innerHeight &lt;&#x3D; 500);
+  }
+}
+</code></pre>
+    </div>
+
+    <div class="tab-pane fade " id="c-templateData">
+        <pre class="line-numbers"><code class="language-html">&lt;div class&#x3D;&quot;body&quot; [class.limited-height]&#x3D;&quot;(limitedHeight$|async)&quot;&gt;
+
+   &lt;div class&#x3D;&quot;option-wrapper disabled&quot;&gt;
+
+      &lt;div class&#x3D;&quot;option&quot; routerLink&#x3D;&quot;route-planning&quot; [class.active]&#x3D;&quot;location.pathname &#x3D;&#x3D;&#x3D; &#x27;/route-planning&#x27;&quot;&gt;
+
+         &lt;mat-icon class&#x3D;&quot;icon&quot;&gt;map&lt;/mat-icon&gt;
+         &lt;div class&#x3D;&quot;text&quot;&gt;routing&lt;/div&gt;
+   
+      &lt;/div&gt;
+   &lt;/div&gt;
+
+   &lt;div class&#x3D;&quot;option-wrapper&quot;&gt;
+      &lt;div class&#x3D;&quot;option&quot; routerLink&#x3D;&quot;data-pipeline-designer&quot; [class.active]&#x3D;&quot;location.pathname &#x3D;&#x3D;&#x3D; &#x27;/data-pipeline-designer&#x27;&quot;&gt;
+
+         &lt;mat-icon class&#x3D;&quot;icon&quot;&gt;hub&lt;/mat-icon&gt;
+         &lt;div class&#x3D;&quot;text&quot;&gt;pipeline&lt;/div&gt;
+   
+      &lt;/div&gt;
+   &lt;/div&gt;
+
+   &lt;div class&#x3D;&quot;option-wrapper&quot;&gt;
+      &lt;div class&#x3D;&quot;option&quot; routerLink&#x3D;&quot;pipe-runner&quot; [class.active]&#x3D;&quot;location.pathname &#x3D;&#x3D;&#x3D; &#x27;/pipe-runner&#x27;&quot;&gt;
+
+         &lt;mat-icon class&#x3D;&quot;icon&quot;&gt;play_arrow&lt;/mat-icon&gt;
+         &lt;div class&#x3D;&quot;text&quot;&gt;run pipe&lt;/div&gt;
+   
+      &lt;/div&gt;
+   &lt;/div&gt;
+   
+   &lt;div class&#x3D;&quot;option-wrapper&quot;&gt;
+      &lt;div class&#x3D;&quot;option&quot; routerLink&#x3D;&quot;local-data&quot; [class.active]&#x3D;&quot;location.pathname &#x3D;&#x3D;&#x3D; &#x27;/local-data&#x27;&quot;&gt;
+
+         &lt;mat-icon class&#x3D;&quot;icon&quot;&gt;web_stories&lt;/mat-icon&gt;
+         &lt;div class&#x3D;&quot;text&quot;&gt;local data&lt;/div&gt;
+   
+      &lt;/div&gt;
+   &lt;/div&gt;
+
+   &lt;div class&#x3D;&quot;option-wrapper&quot;&gt;
+      &lt;div class&#x3D;&quot;option&quot; routerLink&#x3D;&quot;calculation&quot; [class.active]&#x3D;&quot;location.pathname &#x3D;&#x3D;&#x3D; &#x27;/calculation&#x27;&quot;&gt;
+
+         &lt;mat-icon class&#x3D;&quot;icon&quot;&gt;rocket_launch&lt;/mat-icon&gt;
+         &lt;div class&#x3D;&quot;text&quot;&gt;calculation&lt;/div&gt;
+   
+      &lt;/div&gt;
+   &lt;/div&gt;
+
+   &lt;div id&#x3D;&quot;visualization-option-wrapper&quot; class&#x3D;&quot;option-wrapper&quot; [class.disabled]&#x3D;&quot;(solutionCount$|async) &#x3D;&#x3D;&#x3D; 0&quot;&gt;
+      &lt;div class&#x3D;&quot;option&quot; (click)&#x3D;&quot;gotoVisualizer()&quot; [ngClass]&#x3D;&quot;{
+         &#x27;active&#x27;: location.pathname &#x3D;&#x3D;&#x3D; &#x27;/visualizer&#x27;,
+         &#x27;highlighted&#x27;: solutionNavItemHighlighted$|async
+      }&quot;&gt;
+
+         &lt;mat-icon class&#x3D;&quot;icon&quot;&gt;view_in_ar&lt;/mat-icon&gt;
+         &lt;div class&#x3D;&quot;text&quot;&gt;visualization&lt;/div&gt;
+   
+      &lt;/div&gt;
+   &lt;/div&gt;
+
+   &lt;div class&#x3D;&quot;spacer&quot;&gt;&lt;/div&gt;
+
+   &lt;div class&#x3D;&quot;option-wrapper&quot;&gt;
+      &lt;div class&#x3D;&quot;option&quot; routerLink&#x3D;&quot;about&quot; [class.active]&#x3D;&quot;location.pathname &#x3D;&#x3D;&#x3D; &#x27;/about&#x27;&quot;&gt;
+
+         &lt;mat-icon class&#x3D;&quot;icon&quot;&gt;help&lt;/mat-icon&gt;
+         &lt;div class&#x3D;&quot;text&quot;&gt;about&lt;/div&gt;
+   
+      &lt;/div&gt;
+   &lt;/div&gt;
+
+   &lt;div class&#x3D;&quot;version&quot;&gt;
+      version {{currentApplicationVersion ?? &#x27;local dev&#x27;}}
+   &lt;/div&gt;
+
+&lt;/div&gt;
+</code></pre>
+    </div>
+
+    <div class="tab-pane fade " id="c-styleData">
+                <p class="comment">
+                    <code>./navbar.component.scss</code>
+                </p>
+                <pre class="line-numbers"><code class="language-scss">:host {
+  z-index: 1001;
+}
+
+.body {
+  box-shadow: 0 0 4px #848484;
+  z-index: 2;
+  position: relative;
+  height: 100%;
+  overflow: hidden;
+  background-color: #3a3a3a;
+  color: white;
+  display: flex;
+  flex-direction: column;
+}
+
+.option-wrapper {
+  overflow: hidden;
+}
+
+.option-wrapper.disabled {
+  opacity: 0.2;
+  pointer-events: none;
+}
+
+.option {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 80px;
+  width: 80px;
+  cursor: pointer;
+  transition: all 0.2s;
+  overflow: hidden;
+  -webkit-user-select: none;
+  user-select: none;
+  border-left: 3px solid transparent;
+  box-sizing: border-box;
+  padding-right: 5px;
+
+  &amp;.highlighted {
+    animation: blinking 1s infinite;
+  }
+}
+
+.option.active {
+  background: linear-gradient(135deg, #0078d4, #0078d4bd, #0078d4);
+  border-color: #ffffff75;
+}
+
+.option:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+  transform: scale(1.05);
+}
+
+.option.active:hover {
+  background-color: #00a791;
+}
+
+.option .icon {
+  font-size: 1.5rem;
+  height: auto;
+  width: auto;
+  color: #f6f6f6;
+}
+
+.option .text {
+  font-size: 0.6rem;
+  font-weight: 100;
+  margin-top: 0.25rem;
+}
+
+.version {
+  font-size: 0.6rem;
+  line-height: 0.6rem;
+  margin: 0.5rem 0px;
+  color: #c6c6c6;
+  text-align: center;
+}
+
+@media screen and (max-height: 500px) {
+  .option {
+    width: 40px;
+    height: 40px;
+  }
+
+  .version {
+    width: 40px;
+  }
+
+  .option .icon {
+    font-size: 1rem;
+  }
+
+  .option .text {
+    display: none;
+  }
+}
+
+@media screen and (max-width: 500px) {
+  .body {
+    flex-direction: row;
+  }
+
+  .option {
+    width: 40px;
+    height: 40px;
+    border-left: 0px solid transparent;
+    border-bottom: 3px solid transparent;
+    padding-right: 0px;
+  }
+
+  .version {
+    width: 40px;
+  }
+
+  .option .icon {
+    font-size: 1rem;
+  }
+
+  .option .text {
+    display: none;
+  }
+
+  .version {
+    display: none;
+  }
+}
+
+@keyframes blinking {
+  50% {
+    background-color: rgba(255, 217, 0, 0.638);
+  }
+}
+</code></pre>
+    </div>
+
+    <div class="tab-pane fade " id="c-tree">
+        <div id="tree-container"></div>
+        <div class="tree-legend">
+            <div class="title">
+                <b>Legend</b>
+            </div>
+            <div>
+                <div class="color htmlelement"></div><span>Html element</span>
+            </div>
+            <div>
+                <div class="color component"></div><span>Component</span>
+            </div>
+            <div>
+                <div class="color directive"></div><span>Html element with directive</span>
+            </div>
+        </div>
+    </div>
+
+    
+</div>
+
+<script src="../js/libs/vis.min.js"></script>
+<script src="../js/libs/htmlparser.js"></script>
+<script src="../js/libs/deep-iterator.js"></script>
+<script>
+        var COMPONENT_TEMPLATE = '<div><div class="body" [class.limited-height]="(limitedHeight$|async)">   <div class="option-wrapper disabled">      <div class="option" routerLink="route-planning" [class.active]="location.pathname === \'/route-planning\'">         <mat-icon class="icon">map</mat-icon>         <div class="text">routing</div>         </div>   </div>   <div class="option-wrapper">      <div class="option" routerLink="data-pipeline-designer" [class.active]="location.pathname === \'/data-pipeline-designer\'">         <mat-icon class="icon">hub</mat-icon>         <div class="text">pipeline</div>         </div>   </div>   <div class="option-wrapper">      <div class="option" routerLink="pipe-runner" [class.active]="location.pathname === \'/pipe-runner\'">         <mat-icon class="icon">play_arrow</mat-icon>         <div class="text">run pipe</div>         </div>   </div>      <div class="option-wrapper">      <div class="option" routerLink="local-data" [class.active]="location.pathname === \'/local-data\'">         <mat-icon class="icon">web_stories</mat-icon>         <div class="text">local data</div>         </div>   </div>   <div class="option-wrapper">      <div class="option" routerLink="calculation" [class.active]="location.pathname === \'/calculation\'">         <mat-icon class="icon">rocket_launch</mat-icon>         <div class="text">calculation</div>         </div>   </div>   <div id="visualization-option-wrapper" class="option-wrapper" [class.disabled]="(solutionCount$|async) === 0">      <div class="option" (click)="gotoVisualizer()" [ngClass]="{         \'active\': location.pathname === \'/visualizer\',         \'highlighted\': solutionNavItemHighlighted$|async      }">         <mat-icon class="icon">view_in_ar</mat-icon>         <div class="text">visualization</div>         </div>   </div>   <div class="spacer"></div>   <div class="option-wrapper">      <div class="option" routerLink="about" [class.active]="location.pathname === \'/about\'">         <mat-icon class="icon">help</mat-icon>         <div class="text">about</div>         </div>   </div>   <div class="version">      version {{currentApplicationVersion ?? \'local dev\'}}   </div></div></div>'
+    var COMPONENTS = [{'name': 'AboutComponent', 'selector': 'app-about'},{'name': 'AccessTokenInputComponent', 'selector': 'app-access-token-input'},{'name': 'ApiCallConfiguratorComponent', 'selector': 'app-api-call-configurator'},{'name': 'ApiCallConfiguratorDialogComponent', 'selector': 'app-api-call-configurator-dialog'},{'name': 'ApiConfigurationPreviewComponent', 'selector': 'app-api-configuration-preview'},{'name': 'ApiLoginTestComponent', 'selector': 'app-api-login-test'},{'name': 'AppComponent', 'selector': 'app-root'},{'name': 'CalculationComponent', 'selector': 'app-calculation'},{'name': 'CalculationContextOverviewComponent', 'selector': 'app-calculation-context-overview'},{'name': 'CodeEditorComponent', 'selector': 'app-code-editor'},{'name': 'ConfirmationComponent', 'selector': 'app-confirmation'},{'name': 'ContainerPreviewComponent', 'selector': 'app-container-preview'},{'name': 'EditDataDialogComponent', 'selector': 'app-edit-data-dialog'},{'name': 'EmbeddedConfigureErrorGatewayEntranceConnectionComponent', 'selector': 'app-embedded-configure-error-gateway-entrance-connection'},{'name': 'EmbeddedFunctionImplementationComponent', 'selector': 'app-embedded-function-implementation'},{'name': 'EmbeddedFunctionInputSelectionComponent', 'selector': 'app-embedded-function-input-selection'},{'name': 'EmbeddedFunctionSelectionComponent', 'selector': 'app-embedded-function-selection'},{'name': 'EmbeddedInputOutputMappingComponent', 'selector': '[app-embedded-input-output-mapping]'},{'name': 'EmbeddedInputOutputMappingTableRowComponent', 'selector': 'app-embedded-input-output-mapping-table-row'},{'name': 'EmbeddedOutputParamConfigurationComponent', 'selector': 'app-embedded-output-param-configuration'},{'name': 'EmbeddedParamEditorComponent', 'selector': 'app-embedded-param-editor'},{'name': 'EndpointInputComponent', 'selector': 'app-endpoint-input'},{'name': 'ErrorComponent', 'selector': 'app-error'},{'name': 'FunctionPreviewComponent', 'selector': 'app-function-preview'},{'name': 'GoodPreviewComponent', 'selector': 'app-good-preview'},{'name': 'GoodsPanelComponent', 'selector': 'app-goods-panel'},{'name': 'GroupsFormComponent', 'selector': 'app-groups-form'},{'name': 'GroupsPanelComponent', 'selector': 'app-groups-panel'},{'name': 'LocalDataComponent', 'selector': 'app-local-data'},{'name': 'MethodQuickInteractionComponent', 'selector': 'app-method-quick-interaction'},{'name': 'NavbarComponent', 'selector': 'app-navbar'},{'name': 'NoSolutionDialogComponent', 'selector': 'app-no-solution-dialog'},{'name': 'OrdersFormComponent', 'selector': 'app-orders-form'},{'name': 'ParamEditorComponent', 'selector': 'app-param-editor'},{'name': 'ParamMemberPathPreviewComponent', 'selector': 'app-param-member-path-preview'},{'name': 'ParamMemberPreviewComponent', 'selector': 'app-param-member-preview'},{'name': 'ParamPreviewComponent', 'selector': 'app-param-preview'},{'name': 'PipelineActionPreviewComponent', 'selector': 'app-pipeline-action-preview'},{'name': 'PipeRunnerComponent', 'selector': 'app-pipe-runner'},{'name': 'ProcessBuilderComponent', 'selector': 'app-process-builder'},{'name': 'ProcessBuilderWrapperComponent', 'selector': 'app-process-builder-wrapper'},{'name': 'ProductFormComponent', 'selector': 'app-products-form'},{'name': 'SceneVisualizationComponent', 'selector': 'app-scene-visualization'},{'name': 'SelectApiAuthorizationComponent', 'selector': 'app-select-api-authorization'},{'name': 'SelectGroupComponent', 'selector': 'app-select-group'},{'name': 'SelectProductComponent', 'selector': 'app-select-product'},{'name': 'SelectUnitComponent', 'selector': 'app-select-unit'},{'name': 'SolutionAnimationComponent', 'selector': 'app-solution-animation'},{'name': 'SolutionPreviewComponent', 'selector': 'app-solution-preview'},{'name': 'SolutionPreviewRenderingComponent', 'selector': 'app-solution-preview-rendering'},{'name': 'SolutionValidationComponent', 'selector': 'app-solution-validation'},{'name': 'SolutionVisualizationDialogComponent', 'selector': 'app-solution-visualization-dialog'},{'name': 'TaskCreationComponent', 'selector': 'app-task-creation'},{'name': 'UserInputComponent', 'selector': 'app-user-input'},{'name': 'UsernamePasswordCombinationComponent', 'selector': 'app-username-password-combination'},{'name': 'VisualizerComponent', 'selector': 'app-visualizer'},{'name': 'WidgetComponent', 'selector': 'app-widget'}];
+    var DIRECTIVES = [{'name': 'AnimatedCounterDirective', 'selector': '[appAnimatedCounter]'}];
+    var ACTUAL_COMPONENT = {'name': 'NavbarComponent'};
+</script>
+<script src="../js/tree.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                   </div><div class="search-results">
+    <div class="has-results">
+        <h1 class="search-results-title"><span class='search-results-count'></span> results matching "<span class='search-query'></span>"</h1>
+        <ul class="search-results-list"></ul>
+    </div>
+    <div class="no-results">
+        <h1 class="search-results-title">No results matching "<span class='search-query'></span>"</h1>
+    </div>
+</div>
+</div>
+               <!-- END CONTENT -->
+           </div>
+       </div>
+
+          <label class="dark-mode-switch">
+               <input type="checkbox">
+               <span class="slider">
+                    <svg class="slider-icon" viewBox="0 0 24 24" fill="none" height="20" stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" width="20" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"></path>
+                    </svg>
+               </span>
+          </label>
+
+       <script>
+            var COMPODOC_CURRENT_PAGE_DEPTH = 1;
+            var COMPODOC_CURRENT_PAGE_CONTEXT = 'component';
+            var COMPODOC_CURRENT_PAGE_URL = 'NavbarComponent.html';
+            var MAX_SEARCH_RESULTS = 15;
+       </script>
+
+       <script src="../js/libs/custom-elements.min.js"></script>
+       <script src="../js/libs/lit-html.js"></script>
+
+       <script src="../js/menu-wc.js" defer></script>
+       <script nomodule src="../js/menu-wc_es5.js" defer></script>
+
+       <script src="../js/libs/bootstrap-native.js"></script>
+
+       <script src="../js/libs/es6-shim.min.js"></script>
+       <script src="../js/libs/EventDispatcher.js"></script>
+       <script src="../js/libs/promise.min.js"></script>
+       <script src="../js/libs/zepto.min.js"></script>
+
+       <script src="../js/compodoc.js"></script>
+
+       <script src="../js/tabs.js"></script>
+       <script src="../js/menu.js"></script>
+       <script src="../js/libs/clipboard.min.js"></script>
+       <script src="../js/libs/prism.js"></script>
+       <script src="../js/sourceCode.js"></script>
+          <script src="../js/search/search.js"></script>
+          <script src="../js/search/lunr.min.js"></script>
+          <script src="../js/search/search-lunr.js"></script>
+          <script src="../js/search/search_index.js"></script>
+       <script src="../js/lazy-load-graphs.js"></script>
+
+
+    </body>
+</html>

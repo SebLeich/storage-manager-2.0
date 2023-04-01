@@ -1,0 +1,1993 @@
+<!doctype html>
+<html class="no-js" lang="">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="x-ua-compatible" content="ie=edge">
+        <title>storage-manager documentation</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <link rel="icon" type="image/x-icon" href="../images/favicon.ico">
+	   <link rel="stylesheet" href="../styles/style.css">
+        <link rel="stylesheet" href="../styles/dark.css">
+    </head>
+    <body>
+
+        <div class="navbar navbar-default navbar-fixed-top visible-xs">
+            <a href="../" class="navbar-brand">storage-manager documentation</a>
+            <button type="button" class="btn btn-default btn-menu ion-ios-menu" id="btn-menu"></button>
+        </div>
+
+        <div class="xs-menu menu" id="mobile-menu">
+                <div id="book-search-input" role="search"><input type="text" placeholder="Type to search"></div>            <compodoc-menu></compodoc-menu>
+        </div>
+
+        <div class="container-fluid main">
+           <div class="row main">
+               <div class="hidden-xs menu">
+                   <compodoc-menu mode="normal"></compodoc-menu>
+               </div>
+               <!-- START CONTENT -->
+               <div class="content class">
+                   <div class="content-data">
+
+
+
+
+
+
+
+
+
+
+
+
+<ol class="breadcrumb">
+  <li>Classes</li>
+  <li >SuperFloSolver</li>
+</ol>
+
+<ul class="nav nav-tabs" role="tablist">
+        <li class="active">
+            <a href="#info" role="tab" id="info-tab" data-toggle="tab" data-link="info">Info</a>
+        </li>
+        <li >
+            <a href="#source" role="tab" id="source-tab" data-toggle="tab" data-link="source">Source</a>
+        </li>
+</ul>
+
+<div class="tab-content">
+    <div class="tab-pane fade active in" id="c-info">
+        <p class="comment">
+            <h3>File</h3>
+        </p>
+        <p class="comment">
+            <code>src/lib/storage-manager/solvers/super-flo.solver.ts</code>
+        </p>
+
+
+
+            <p class="comment">
+                <h3>Extends</h3>
+            </p>
+            <p class="comment">
+                        <code><a href="../classes/Solver.html" target="_self" >Solver</a></code>
+            </p>
+
+            <p class="comment">
+                <h3>Implements</h3>
+            </p>
+            <p class="comment">
+                            <code><a href="../interfaces/ISolver.html" target="_self" >ISolver</a></code>
+            </p>
+
+
+            <section>
+    <h3 id="index">Index</h3>
+    <table class="table table-sm table-bordered index-table">
+        <tbody>
+
+                <tr>
+                    <td class="col-md-4">
+                        <h6><b>Methods</b></h6>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <ul class="index-list">
+                            <li>
+                                    <span class="modifier">Private</span>
+                                <a href="#addOrder" >addOrder</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                <a href="#getOptimalPosition" >getOptimalPosition</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                <a href="#mergeIfPossible" >mergeIfPossible</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                <a href="#mergePositions" >mergePositions</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                <a href="#minimizationFunction1" >minimizationFunction1</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                <a href="#minimizationFunction2" >minimizationFunction2</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                <a href="#positionIsBehindOrInfrontFirstPosition" >positionIsBehindOrInfrontFirstPosition</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                <a href="#putOrderIntoPosition" >putOrderIntoPosition</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Public</span>
+                                <a href="#solve" >solve</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                <a href="#_unusedDimensionsShare4Points" >_unusedDimensionsShare4Points</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Protected</span>
+                                <a href="#canPlaceOrderIntoSpace" >canPlaceOrderIntoSpace</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Protected</span>
+                                <a href="#combineSpaces" >combineSpaces</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Protected</span>
+                                <a href="#getCombinableSpacePairs" >getCombinableSpacePairs</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Protected</span>
+                                <a href="#putOrderAndCreateIVirtualDimensions" >putOrderAndCreateIVirtualDimensions</a>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+
+
+
+
+
+        </tbody>
+    </table>
+</section>
+
+            <section>
+    <h3 id="constructor">Constructor</h3>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+<code>constructor(_description: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
+                    </td>
+                </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="9" class="link-to-prism">src/lib/storage-manager/solvers/super-flo.solver.ts:9</a></div>
+                            </td>
+                        </tr>
+
+                <tr>
+                    <td class="col-md-4">
+                            <div>
+                                    <b>Parameters :</b>
+                                    <table class="params">
+                                        <thead>
+                                            <tr>
+                                                <td>Name</td>
+                                                    <td>Type</td>
+                                                <td>Optional</td>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                                <tr>
+                                                        <td>_description</td>
+                                                  
+                                                        <td>
+                                                                        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                                        </td>
+                                                  
+                                                    <td>
+                                                            No
+                                                    </td>
+                                                    
+                                                </tr>
+                                        </tbody>
+                                    </table>
+                            </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+</section>
+
+
+            <section>
+    
+    <h3 id="methods">
+        Methods
+    </h3>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="addOrder"></a>
+                    <span class="name">
+                        <span class="modifier">Private</span>
+                        <span ><b>addOrder</b></span>
+                        <a href="#addOrder"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>addOrder(order: <a href="../interfaces/IOrder.html" target="_self">IOrder</a>, orderGroup: <a href="../interfaces/IGroup.html" target="_self">IGroup</a>, availablePositions: <a href="../interfaces/IPosition.html" target="_self">IPosition[]</a>, index: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank">number</a>, positionBacklog: <a href="../interfaces/IPosition.html" target="_self">IPosition[]</a>)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="93"
+                            class="link-to-prism">src/lib/storage-manager/solvers/super-flo.solver.ts:93</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>order</td>
+                                    <td>
+                                                <code><a href="../interfaces/IOrder.html" target="_self" >IOrder</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                                <tr>
+                                    <td>orderGroup</td>
+                                    <td>
+                                                <code><a href="../interfaces/IGroup.html" target="_self" >IGroup</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                                <tr>
+                                    <td>availablePositions</td>
+                                    <td>
+                                                <code><a href="../interfaces/IPosition.html" target="_self" >IPosition[]</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                                <tr>
+                                    <td>index</td>
+                                    <td>
+                                                <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                                <tr>
+                                    <td>positionBacklog</td>
+                                    <td>
+                                                <code><a href="../interfaces/IPosition.html" target="_self" >IPosition[]</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="../interfaces/IStep.html" target="_self" > | IStep</a></code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="getOptimalPosition"></a>
+                    <span class="name">
+                        <span class="modifier">Private</span>
+                        <span ><b>getOptimalPosition</b></span>
+                        <a href="#getOptimalPosition"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>getOptimalPosition(possibilities: <a href="../interfaces/IPossibilities.html" target="_self">IPossibilities</a>)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="148"
+                            class="link-to-prism">src/lib/storage-manager/solvers/super-flo.solver.ts:148</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>possibilities</td>
+                                    <td>
+                                                <code><a href="../interfaces/IPossibilities.html" target="_self" >IPossibilities</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="mergeIfPossible"></a>
+                    <span class="name">
+                        <span class="modifier">Private</span>
+                        <span ><b>mergeIfPossible</b></span>
+                        <a href="#mergeIfPossible"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>mergeIfPossible(source: <a href="../interfaces/IPosition.html" target="_self">IPosition</a>, candidate: <a href="../interfaces/IPosition.html" target="_self">IPosition</a>)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="297"
+                            class="link-to-prism">src/lib/storage-manager/solvers/super-flo.solver.ts:297</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>source</td>
+                                    <td>
+                                                <code><a href="../interfaces/IPosition.html" target="_self" >IPosition</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                                <tr>
+                                    <td>candidate</td>
+                                    <td>
+                                                <code><a href="../interfaces/IPosition.html" target="_self" >IPosition</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="../interfaces/IPosition.html" target="_self" > | IPosition</a></code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="mergePositions"></a>
+                    <span class="name">
+                        <span class="modifier">Private</span>
+                        <span ><b>mergePositions</b></span>
+                        <a href="#mergePositions"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>mergePositions(availablePositions: <a href="../interfaces/IPosition.html" target="_self">IPosition[]</a>, startingSequenceNumber: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank">number</a>)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="155"
+                            class="link-to-prism">src/lib/storage-manager/solvers/super-flo.solver.ts:155</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>availablePositions</td>
+                                    <td>
+                                                <code><a href="../interfaces/IPosition.html" target="_self" >IPosition[]</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                                <tr>
+                                    <td>startingSequenceNumber</td>
+                                    <td>
+                                                <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>    <code>{ positions: {}; steps: {}; sequenceNumber: number; }</code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="minimizationFunction1"></a>
+                    <span class="name">
+                        <span class="modifier">Private</span>
+                        <span ><b>minimizationFunction1</b></span>
+                        <a href="#minimizationFunction1"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>minimizationFunction1(position1: <a href="../interfaces/IPosition.html" target="_self">IPosition</a>, position2: <a href="../interfaces/IPosition.html" target="_self">IPosition</a>)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="199"
+                            class="link-to-prism">src/lib/storage-manager/solvers/super-flo.solver.ts:199</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>position1</td>
+                                    <td>
+                                                <code><a href="../interfaces/IPosition.html" target="_self" >IPosition</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                                <tr>
+                                    <td>position2</td>
+                                    <td>
+                                                <code><a href="../interfaces/IPosition.html" target="_self" >IPosition</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>    <code>1 | -1</code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="minimizationFunction2"></a>
+                    <span class="name">
+                        <span class="modifier">Private</span>
+                        <span ><b>minimizationFunction2</b></span>
+                        <a href="#minimizationFunction2"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>minimizationFunction2(position1: <a href="../interfaces/IPosition.html" target="_self">IPosition</a>, position2: <a href="../interfaces/IPosition.html" target="_self">IPosition</a>, orderWidth: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank">number</a>, orderLength: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank">number</a>)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="206"
+                            class="link-to-prism">src/lib/storage-manager/solvers/super-flo.solver.ts:206</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>position1</td>
+                                    <td>
+                                                <code><a href="../interfaces/IPosition.html" target="_self" >IPosition</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                                <tr>
+                                    <td>position2</td>
+                                    <td>
+                                                <code><a href="../interfaces/IPosition.html" target="_self" >IPosition</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                                <tr>
+                                    <td>orderWidth</td>
+                                    <td>
+                                                <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                                <tr>
+                                    <td>orderLength</td>
+                                    <td>
+                                                <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>    <code>boolean | 1 | -1</code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="positionIsBehindOrInfrontFirstPosition"></a>
+                    <span class="name">
+                        <span class="modifier">Private</span>
+                        <span ><b>positionIsBehindOrInfrontFirstPosition</b></span>
+                        <a href="#positionIsBehindOrInfrontFirstPosition"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>positionIsBehindOrInfrontFirstPosition(firstPosition: <a href="../interfaces/IPosition.html" target="_self">IPosition</a>, position: <a href="../interfaces/IPosition.html" target="_self">IPosition</a>)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="291"
+                            class="link-to-prism">src/lib/storage-manager/solvers/super-flo.solver.ts:291</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>firstPosition</td>
+                                    <td>
+                                                <code><a href="../interfaces/IPosition.html" target="_self" >IPosition</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                                <tr>
+                                    <td>position</td>
+                                    <td>
+                                                <code><a href="../interfaces/IPosition.html" target="_self" >IPosition</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/boolean" target="_blank" >boolean</a></code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="putOrderIntoPosition"></a>
+                    <span class="name">
+                        <span class="modifier">Private</span>
+                        <span ><b>putOrderIntoPosition</b></span>
+                        <a href="#putOrderIntoPosition"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>putOrderIntoPosition(order: <a href="../interfaces/IOrder.html" target="_self">IOrder</a>, orderGroup: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank">number</a>, position: <a href="../interfaces/IPosition.html" target="_self">IPosition</a>, start: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank">number</a>, positionBacklog: <a href="../interfaces/IPosition.html" target="_self">IPosition[]</a>)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="215"
+                            class="link-to-prism">src/lib/storage-manager/solvers/super-flo.solver.ts:215</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>order</td>
+                                    <td>
+                                                <code><a href="../interfaces/IOrder.html" target="_self" >IOrder</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                                <tr>
+                                    <td>orderGroup</td>
+                                    <td>
+                                                <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                                <tr>
+                                    <td>position</td>
+                                    <td>
+                                                <code><a href="../interfaces/IPosition.html" target="_self" >IPosition</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                                <tr>
+                                    <td>start</td>
+                                    <td>
+                                                <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                                <tr>
+                                    <td>positionBacklog</td>
+                                    <td>
+                                                <code><a href="../interfaces/IPosition.html" target="_self" >IPosition[]</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="../interfaces/IPosition.html" target="_self" >{ createdPositions: {}; messages: {}; goodPosition: IPosition; }</a></code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="solve"></a>
+                    <span class="name">
+                        <span class="modifier">Public</span>
+                        <span ><b>solve</b></span>
+                        <a href="#solve"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>solve(containerHeight: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank">number</a>, containerWidth: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank">number</a>, groups: <a href="../interfaces/IGroup.html" target="_self">IGroup[]</a>, orders: <a href="../interfaces/IOrder.html" target="_self">IOrder[]</a>)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="15"
+                            class="link-to-prism">src/lib/storage-manager/solvers/super-flo.solver.ts:15</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>containerHeight</td>
+                                    <td>
+                                                <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                                <tr>
+                                    <td>containerWidth</td>
+                                    <td>
+                                                <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                                <tr>
+                                    <td>groups</td>
+                                    <td>
+                                                <code><a href="../interfaces/IGroup.html" target="_self" >IGroup[]</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                                <tr>
+                                    <td>orders</td>
+                                    <td>
+                                                <code><a href="../interfaces/IOrder.html" target="_self" >IOrder[]</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="../interfaces/ISolution.html" target="_self" >ISolution</a></code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="_unusedDimensionsShare4Points"></a>
+                    <span class="name">
+                        <span class="modifier">Private</span>
+                        <span ><b>_unusedDimensionsShare4Points</b></span>
+                        <a href="#_unusedDimensionsShare4Points"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>_unusedDimensionsShare4Points(dim1: <a href="../interfaces/IVirtualDimension.html" target="_self">IVirtualDimension</a>, dim2: <a href="../interfaces/IVirtualDimension.html" target="_self">IVirtualDimension</a>)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Inherited from         <code><a href="../classes/Solver.html" target="_self" >Solver</a></code>
+</div>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-line">Defined in         <code><a href="../classes/Solver.html#source" target="_self" >Solver:55</a></code>
+</div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>dim1</td>
+                                    <td>
+                                                <code><a href="../interfaces/IVirtualDimension.html" target="_self" >IVirtualDimension</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                                <tr>
+                                    <td>dim2</td>
+                                    <td>
+                                                <code><a href="../interfaces/IVirtualDimension.html" target="_self" >IVirtualDimension</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/boolean" target="_blank" >boolean</a></code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="canPlaceOrderIntoSpace"></a>
+                    <span class="name">
+                        <span class="modifier">Protected</span>
+                        <span ><b>canPlaceOrderIntoSpace</b></span>
+                        <a href="#canPlaceOrderIntoSpace"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>canPlaceOrderIntoSpace(order: <a href="../interfaces/IOrder.html" target="_self">IOrder</a>, space: <a href="../interfaces/ISpace.html" target="_self">ISpace</a>)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Inherited from         <code><a href="../classes/Solver.html" target="_self" >Solver</a></code>
+</div>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-line">Defined in         <code><a href="../classes/Solver.html#source" target="_self" >Solver:8</a></code>
+</div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>order</td>
+                                    <td>
+                                                <code><a href="../interfaces/IOrder.html" target="_self" >IOrder</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                                <tr>
+                                    <td>space</td>
+                                    <td>
+                                                <code><a href="../interfaces/ISpace.html" target="_self" >ISpace</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>    <code>literal type</code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="combineSpaces"></a>
+                    <span class="name">
+                        <span class="modifier">Protected</span>
+                        <span ><b>combineSpaces</b></span>
+                        <a href="#combineSpaces"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>combineSpaces(virtualDimensions: <a href="../interfaces/IVirtualDimension.html" target="_self">IVirtualDimension[]</a>)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Inherited from         <code><a href="../classes/Solver.html" target="_self" >Solver</a></code>
+</div>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-line">Defined in         <code><a href="../classes/Solver.html#source" target="_self" >Solver:15</a></code>
+</div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>virtualDimensions</td>
+                                    <td>
+                                                <code><a href="../interfaces/IVirtualDimension.html" target="_self" >IVirtualDimension[]</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="../interfaces/IVirtualDimension.html" target="_self" >IVirtualDimension</a></code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="getCombinableSpacePairs"></a>
+                    <span class="name">
+                        <span class="modifier">Protected</span>
+                        <span ><b>getCombinableSpacePairs</b></span>
+                        <a href="#getCombinableSpacePairs"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>getCombinableSpacePairs(unusedDimensions: <a href="../interfaces/IVirtualDimension.html" target="_self">IVirtualDimension[]</a>, returnFirstOnly: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/boolean" target="_blank">boolean</a>)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Inherited from         <code><a href="../classes/Solver.html" target="_self" >Solver</a></code>
+</div>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-line">Defined in         <code><a href="../classes/Solver.html#source" target="_self" >Solver:26</a></code>
+</div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                    <td>Default value</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>unusedDimensions</td>
+                                    <td>
+                                                <code><a href="../interfaces/IVirtualDimension.html" target="_self" >IVirtualDimension[]</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+                                    <td>
+                                    </td>
+
+                                </tr>
+                                <tr>
+                                    <td>returnFirstOnly</td>
+                                    <td>
+                                                <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/boolean" target="_blank" >boolean</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+                                    <td>
+                                        <code>false</code>
+                                    </td>
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>    <code>[][]</code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="putOrderAndCreateIVirtualDimensions"></a>
+                    <span class="name">
+                        <span class="modifier">Protected</span>
+                        <span ><b>putOrderAndCreateIVirtualDimensions</b></span>
+                        <a href="#putOrderAndCreateIVirtualDimensions"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>putOrderAndCreateIVirtualDimensions(order: <a href="../interfaces/IOrder.html" target="_self">IOrder</a>, virtualDimension: <a href="../interfaces/IVirtualDimension.html" target="_self">IVirtualDimension</a>)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Inherited from         <code><a href="../classes/Solver.html" target="_self" >Solver</a></code>
+</div>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-line">Defined in         <code><a href="../classes/Solver.html#source" target="_self" >Solver:38</a></code>
+</div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>order</td>
+                                    <td>
+                                                <code><a href="../interfaces/IOrder.html" target="_self" >IOrder</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                                <tr>
+                                    <td>virtualDimension</td>
+                                    <td>
+                                                <code><a href="../interfaces/IVirtualDimension.html" target="_self" >IVirtualDimension</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="../interfaces/IVirtualDimension.html" target="_self" >IVirtualDimension[]</a></code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</section>
+
+
+
+
+
+    </div>
+
+
+    <div class="tab-pane fade  tab-source-code" id="c-source">
+        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { v4 as generateGuid } from &#x27;uuid&#x27;;
+import { Solver } from &#x27;./solver&#x27;;
+import { IGood, IGroup, IOrder, IPosition, IPossibilities, ISolution, IStep } from &#x27;@smgr/interfaces&#x27;;
+import moment from &#x27;moment&#x27;;
+import { ISolver } from &#x27;src/lib/storage-manager/interfaces/solver.interface&#x27;;
+import { Algorithm } from &#x27;src/app/globals&#x27;;
+import getContainerPosition from &#x27;src/app/methods/get-container-position.shared-methods&#x27;;
+
+export class SuperFloSolver extends Solver implements ISolver {
+
+    constructor(private _description: string &#x3D; &#x27;SuperFlo&#x27;) {
+        super();
+    }
+
+    public solve(containerHeight: number, containerWidth: number, groups: IGroup[], orders: IOrder[]): ISolution {
+
+        let solution &#x3D; {
+            id: generateGuid(),
+            description: this._description,
+            container: {
+                id: generateGuid(),
+                xCoord: 0,
+                yCoord: 0,
+                zCoord: 0,
+                height: containerHeight,
+                width: containerWidth,
+                length: Infinity,
+                goods: [],
+                unit: &#x27;mm&#x27;
+            },
+            steps: [],
+            calculated: moment().format(),
+            calculationSource: {
+                title: this._description,
+                staticAlgorithm: Algorithm.SuperFlo
+            }
+        } as ISolution;
+
+        const containerPosition &#x3D; getContainerPosition(solution.container!);
+        let positions: IPosition[] &#x3D; [containerPosition];
+        let positionBacklog: IPosition[] &#x3D; [containerPosition];
+        let sequenceNumber &#x3D; 1;
+
+        for (let group of groups) {
+
+            const groupOrders &#x3D; orders
+                .filter(order &#x3D;&gt; order.group &#x3D;&#x3D;&#x3D; group.id)
+                .sort((order1, order2) &#x3D;&gt; {
+                    const a1 &#x3D; order1.length * order1.width;
+                    const a2 &#x3D; order2.length * order2.width;
+                    return a1 &lt; a2 ? 1 : -1;
+                });
+
+            for (let order of groupOrders) {
+
+                for (let i &#x3D; 0; i &lt; (order.quantity ?? 0); i++) {
+
+                    const index &#x3D; Math.max(...positions.map(virtualDimension &#x3D;&gt; virtualDimension.index ?? 0));
+                    const addOrderResult &#x3D; this.addOrder(order, group, positions, index, positionBacklog);
+                    if (addOrderResult &#x3D;&#x3D;&#x3D; false) {
+                        continue;
+                    }
+
+                    positions &#x3D; [...positions.filter(position &#x3D;&gt; position.id !&#x3D;&#x3D; addOrderResult.usedPosition!.id), ...addOrderResult.createdPositions!];
+                    positionBacklog &#x3D; [...positionBacklog, ...addOrderResult.createdPositions];
+                    solution.container!.goods.push({
+                        ...addOrderResult.placedAtPosition,
+                        desc: order.description,
+                        group: order.group,
+                        stackedOnGood: null,
+                        sequenceNr: sequenceNumber,
+                        id: generateGuid(),
+                        stackingAllowed: order.stackingAllowed,
+                        turningAllowed: order.turningAllowed,
+                        turned: addOrderResult.placedAtPosition?.rotated,
+                        orderGuid: order.id
+                    } as IGood);
+                    solution.steps!.push({ ...addOrderResult, sequenceNumber: sequenceNumber });
+                    sequenceNumber++;
+
+                    const mergingResult &#x3D; this.mergePositions(positions, sequenceNumber);
+                    positions &#x3D; mergingResult.positions;
+                    sequenceNumber &#x3D; mergingResult.sequenceNumber;
+                    solution.steps! &#x3D; [...solution.steps!, ...mergingResult.steps];
+                }
+            }
+        }
+
+        solution.container!.length &#x3D; Math.max(...solution.container!.goods.map(good &#x3D;&gt; good.zCoord + good.length), 0);
+        return solution;
+    }
+
+    private addOrder(order: IOrder, orderGroup: IGroup, availablePositions: IPosition[], index: number, positionBacklog: IPosition[]): false | IStep {
+        let possibilities: IPossibilities &#x3D; {
+            notRotated: availablePositions
+                .filter(availablePosition &#x3D;&gt; {
+                    return availablePosition.height &gt;&#x3D; order.height
+                        &amp;&amp; availablePosition.width &gt;&#x3D; order.width
+                        &amp;&amp; availablePosition.length &gt;&#x3D; order.length
+                        &amp;&amp; (order.stackingAllowed || availablePosition.yCoord &#x3D;&#x3D;&#x3D; 0)
+                        &amp;&amp; (availablePosition.groupRestrictedBy &#x3D;&#x3D; null || orderGroup.sequenceNumber &#x3D;&#x3D; null || availablePosition.groupRestrictedBy &lt;&#x3D; orderGroup.sequenceNumber)
+                }),
+            rotated: [] as IPosition[]
+        }
+
+        if (order.turningAllowed) {
+            possibilities.rotated &#x3D; availablePositions
+                .filter(availablePosition &#x3D;&gt; {
+                    return availablePosition.height &gt; order.height
+                        &amp;&amp; availablePosition.width &gt; order.length
+                        &amp;&amp; availablePosition.length &gt; order.width
+                        &amp;&amp; (order.stackingAllowed || availablePosition.yCoord &#x3D;&#x3D;&#x3D; 0)
+                        &amp;&amp; (availablePosition.groupRestrictedBy &#x3D;&#x3D; null || orderGroup.sequenceNumber &#x3D;&#x3D; null || availablePosition.groupRestrictedBy &lt;&#x3D; orderGroup.sequenceNumber)
+                })
+                .map(virtualDimension &#x3D;&gt; {
+                    return {
+                        ...virtualDimension,
+                        rotated: true
+                    };
+                })
+        }
+
+        if (possibilities.notRotated.length &#x3D;&#x3D;&#x3D; 0 &amp;&amp; possibilities.rotated.length &#x3D;&#x3D;&#x3D; 0) {
+            return false;
+        }
+
+        const bestPosition &#x3D; this.getOptimalPosition(possibilities);
+        const putted &#x3D; this.putOrderIntoPosition(order, orderGroup.sequenceNumber!, bestPosition, index, positionBacklog);
+
+        const recursiveGroupRestricted: IPosition[] &#x3D; [];
+        for (let position of availablePositions.filter(availablePosition &#x3D;&gt; availablePosition.zCoord &lt; bestPosition.zCoord &amp;&amp; (availablePosition.groupRestrictedBy &#x3D;&#x3D; null || availablePosition.groupRestrictedBy &lt; orderGroup.sequenceNumber!))) {
+
+            const overlapping &#x3D; this.positionIsBehindOrInfrontFirstPosition(bestPosition, position);
+            if (overlapping) {
+                position.groupRestrictedBy &#x3D; bestPosition.groupRestrictedBy;
+                recursiveGroupRestricted.push(position);
+            }
+        }
+
+        return {
+            messages: putted.messages,
+            usedPosition: bestPosition,
+            placedAtPosition: putted.goodPosition,
+            createdPositions: putted.createdPositions,
+        };
+    }
+
+    private getOptimalPosition(possibilities: IPossibilities) {
+        const minResult1 &#x3D; [...possibilities.notRotated].sort((p1, p2) &#x3D;&gt; this.minimizationFunction1(p1, p2))[0];
+        //const minResult2 &#x3D; [...possibilities.notRotated, ...possibilities.rotated].sort((p1, p2) &#x3D;&gt; this.minimizationFunction2(p1, p2));
+        //return minResult1.zCoord &gt; minResult2.zCoord ? minResult2 : minResult1;
+        return minResult1;
+    }
+
+    private mergePositions(availablePositions: IPosition[], startingSequenceNumber: number) {
+        var positions &#x3D; [...availablePositions];
+        var steps: IStep[] &#x3D; [];
+        var found &#x3D; true;
+        var sequenceNumber &#x3D; startingSequenceNumber;
+
+        while (found) {
+
+            found &#x3D; false;
+            let mergedPosition: IPosition | false &#x3D; false;
+
+            for (let position of positions) {
+
+                if (mergedPosition) {
+                    break;
+                }
+                for (let candidate of positions) {
+
+                    if (candidate &#x3D;&#x3D;&#x3D; position) continue;
+
+                    mergedPosition &#x3D; this.mergeIfPossible(position, candidate);
+                    if (mergedPosition) {
+                        steps.push({
+                            createdPositions: [mergedPosition],
+                            messages: [&#x60;merged positions to new position&#x60;],
+                            sequenceNumber: sequenceNumber
+                        });
+                        sequenceNumber++;
+
+                        const filteredPositions &#x3D; positions.filter(currentPosition &#x3D;&gt; currentPosition !&#x3D;&#x3D; position &amp;&amp; currentPosition !&#x3D;&#x3D; candidate);
+                        positions &#x3D; [...filteredPositions, mergedPosition];
+                        break;
+                    }
+                }
+            }
+
+            if (mergedPosition) {
+                found &#x3D; true;
+            }
+        }
+
+        return { positions, steps, sequenceNumber };
+    }
+
+    private minimizationFunction1(position1: IPosition, position2: IPosition) {
+        if (position1.zCoord &#x3D;&#x3D;&#x3D; position2.zCoord) {
+            return position1.xCoord &gt; position2.xCoord ? 1 : -1;
+        }
+        return position1.zCoord &gt; position2.zCoord ? 1 : -1;
+    }
+
+    private minimizationFunction2(position1: IPosition, position2: IPosition, orderWidth: number, orderLength: number) {
+        const position1Rest &#x3D; position1.width % orderWidth;
+        const position2Rest &#x3D; position2.width % orderWidth;
+        if (position1Rest &#x3D;&#x3D;&#x3D; position2Rest) {
+            return position1.fCoord &gt; position2.fCoord;
+        }
+        return position1Rest &gt; position2Rest ? 1 : -1;
+    }
+
+    private putOrderIntoPosition(order: IOrder, orderGroup: number, position: IPosition, start: number, positionBacklog: IPosition[]) {
+        let index &#x3D; start;
+        let groupRestrictedBy &#x3D; orderGroup;
+        if (position.groupRestrictedBy &amp;&amp; position.groupRestrictedBy &lt; groupRestrictedBy) {
+            groupRestrictedBy &#x3D; position.groupRestrictedBy;
+        }
+
+        let messages: string[] &#x3D; [];
+
+        const diff &#x3D; {
+            x: position.rotated ? position.width - order.length : position.width - order.width,
+            y: position.height - order.height,
+            z: position.rotated ? position.length - order.width : position.length - order.length
+        };
+
+        let createdPositions: IPosition[] &#x3D; [];
+
+        if (diff.y &gt; 0 &amp;&amp; order.stackingAllowed) {
+            index++;
+            const addPosition &#x3D; {
+                ...position,
+                fCoord: position.zCoord + order.length,
+                yCoord: position.yCoord + order.height,
+                height: diff.y,
+                length: order.length,
+                index: index,
+                groupRestrictedBy: orderGroup,
+                stackedOnPosition: position.id,
+                width: order.width,
+                rCoord: position.xCoord + order.width
+            } as IPosition;
+            createdPositions.push(addPosition);
+            messages.push(&#x60;added space at (${addPosition.xCoord}, ${addPosition.yCoord}, ${addPosition.zCoord}) | w: ${addPosition.width}, h: ${addPosition.height}, l: ${addPosition.length}&#x60;);
+        }
+        if (diff.x &gt; 0) {
+            index++;
+            const addPosition &#x3D; {
+                ...position,
+                id: generateGuid(),
+                width: diff.x,
+                length: order.length,
+                xCoord: position.xCoord + order.width,
+                fCoord: order.length + position.zCoord,
+                index: index,
+                groupRestrictedBy: groupRestrictedBy,
+            };
+            createdPositions.push(addPosition);
+            messages.push(&#x60;added space at (${addPosition.xCoord}, ${addPosition.yCoord}, ${addPosition.zCoord}) | w: ${addPosition.width}, h: ${addPosition.height}, l: ${addPosition.length}&#x60;);
+        }
+        if (diff.z &gt; 0) {
+            index++;
+            const addPosition &#x3D; {
+                ...position,
+                id: generateGuid(),
+                zCoord: position.zCoord + order.length,
+                index: index,
+                groupRestrictedBy: groupRestrictedBy,
+                length: diff.z
+            };
+            createdPositions.push(addPosition);
+            messages.push(&#x60;added space at (${addPosition.xCoord}, ${addPosition.yCoord}, ${addPosition.zCoord}) | w: ${addPosition.width}, h: ${addPosition.height}, l: ${addPosition.length}&#x60;);
+        }
+
+        const goodPosition: IPosition &#x3D; {
+            ...position,
+            fCoord: position.fCoord &#x3D;&#x3D;&#x3D; Infinity || diff.z &#x3D;&#x3D;&#x3D; Infinity ? Infinity : position.fCoord - diff.z,
+            rCoord: position.rCoord - diff.x,
+            tCoord: position.tCoord - diff.y,
+            height: order.height,
+            width: order.width,
+            length: order.length
+        }
+
+        return { createdPositions, messages, goodPosition };
+    }
+
+    private positionIsBehindOrInfrontFirstPosition(firstPosition: IPosition, position: IPosition): boolean {
+        if ((firstPosition.tCoord &lt;&#x3D; position.yCoord) || (firstPosition.yCoord &gt;&#x3D; position.tCoord)) return false;
+        if ((firstPosition.rCoord &lt;&#x3D; position.xCoord) || (firstPosition.xCoord &gt;&#x3D; position.rCoord)) return false;
+        return true;
+    }
+
+    private mergeIfPossible(source: IPosition, candidate: IPosition): false | IPosition {
+        if (
+            source.yCoord &#x3D;&#x3D;&#x3D; candidate.yCoord &amp;&amp;
+            source.xCoord &#x3D;&#x3D;&#x3D; candidate.xCoord &amp;&amp;
+            source.rCoord &#x3D;&#x3D;&#x3D; candidate.rCoord &amp;&amp;
+            source.tCoord &#x3D;&#x3D;&#x3D; candidate.tCoord
+        ) {
+            // positions in line
+            if (source.zCoord &#x3D;&#x3D;&#x3D; candidate.fCoord) {
+
+                // candidate right behind position
+                return {
+                    ...source,
+                    id: generateGuid(),
+                    groupRestrictedBy: source.groupRestrictedBy,
+                    length: source.length + candidate.length,
+                    rotated: false,
+                    zCoord: candidate.zCoord,
+                    fCoord: candidate.zCoord + source.length + candidate.length
+                };
+            }
+            if (source.fCoord &#x3D;&#x3D;&#x3D; candidate.zCoord) {
+
+                // candidate right infornt position
+                return {
+                    ...source,
+                    id: generateGuid(),
+                    groupRestrictedBy: candidate.groupRestrictedBy,
+                    length: source.length + candidate.length,
+                    rotated: false,
+                    fCoord: candidate.fCoord
+                }
+            }
+        }
+
+        if (
+            source.yCoord &#x3D;&#x3D;&#x3D; candidate.yCoord &amp;&amp;
+            source.zCoord &#x3D;&#x3D;&#x3D; candidate.zCoord &amp;&amp;
+            source.fCoord &#x3D;&#x3D;&#x3D; candidate.fCoord &amp;&amp;
+            source.tCoord &#x3D;&#x3D;&#x3D; candidate.tCoord
+        ) {
+            // positions in row
+            // more restricter group restriction
+            if (source.rCoord &#x3D;&#x3D;&#x3D; candidate.xCoord) {
+
+                // candidate right to position
+                return {
+                    ...source,
+                    id: generateGuid(),
+                    width: source.width + candidate.width,
+                    rotated: false,
+                    rCoord: candidate.rCoord
+                };
+            }
+            if (source.xCoord &#x3D;&#x3D;&#x3D; candidate.rCoord) {
+
+                // candidate left to position
+                return {
+                    ...source,
+                    id: generateGuid(),
+                    width: source.width + candidate.width,
+                    rotated: false,
+                    xCoord: candidate.xCoord
+                }
+            }
+        }
+
+        if (
+            source.xCoord &#x3D;&#x3D;&#x3D; candidate.xCoord &amp;&amp;
+            source.zCoord &#x3D;&#x3D;&#x3D; candidate.zCoord &amp;&amp;
+            source.fCoord &#x3D;&#x3D;&#x3D; candidate.fCoord &amp;&amp;
+            source.rCoord &#x3D;&#x3D;&#x3D; candidate.rCoord
+        ) {
+            // positions stacked
+            if (source.tCoord &#x3D;&#x3D;&#x3D; candidate.yCoord) {
+
+                // candidate right above position
+                // more restricter group restriction
+                return {
+                    ...source,
+                    id: generateGuid(),
+                    height: source.height + candidate.height,
+                    rotated: false,
+                    tCoord: candidate.tCoord
+                };
+            }
+            if (source.yCoord &#x3D;&#x3D;&#x3D; candidate.tCoord) {
+
+                // candidate right below position
+                return {
+                    ...source,
+                    id: generateGuid(),
+                    height: source.height + candidate.height,
+                    rotated: false,
+                    yCoord: candidate.yCoord
+                }
+            }
+        }
+
+        return false;
+    }
+
+}</code></pre>
+    </div>
+</div>
+
+
+
+
+
+
+
+
+
+                   </div><div class="search-results">
+    <div class="has-results">
+        <h1 class="search-results-title"><span class='search-results-count'></span> results matching "<span class='search-query'></span>"</h1>
+        <ul class="search-results-list"></ul>
+    </div>
+    <div class="no-results">
+        <h1 class="search-results-title">No results matching "<span class='search-query'></span>"</h1>
+    </div>
+</div>
+</div>
+               <!-- END CONTENT -->
+           </div>
+       </div>
+
+          <label class="dark-mode-switch">
+               <input type="checkbox">
+               <span class="slider">
+                    <svg class="slider-icon" viewBox="0 0 24 24" fill="none" height="20" stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" width="20" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"></path>
+                    </svg>
+               </span>
+          </label>
+
+       <script>
+            var COMPODOC_CURRENT_PAGE_DEPTH = 1;
+            var COMPODOC_CURRENT_PAGE_CONTEXT = 'class';
+            var COMPODOC_CURRENT_PAGE_URL = 'SuperFloSolver.html';
+            var MAX_SEARCH_RESULTS = 15;
+       </script>
+
+       <script src="../js/libs/custom-elements.min.js"></script>
+       <script src="../js/libs/lit-html.js"></script>
+
+       <script src="../js/menu-wc.js" defer></script>
+       <script nomodule src="../js/menu-wc_es5.js" defer></script>
+
+       <script src="../js/libs/bootstrap-native.js"></script>
+
+       <script src="../js/libs/es6-shim.min.js"></script>
+       <script src="../js/libs/EventDispatcher.js"></script>
+       <script src="../js/libs/promise.min.js"></script>
+       <script src="../js/libs/zepto.min.js"></script>
+
+       <script src="../js/compodoc.js"></script>
+
+       <script src="../js/tabs.js"></script>
+       <script src="../js/menu.js"></script>
+       <script src="../js/libs/clipboard.min.js"></script>
+       <script src="../js/libs/prism.js"></script>
+       <script src="../js/sourceCode.js"></script>
+          <script src="../js/search/search.js"></script>
+          <script src="../js/search/lunr.min.js"></script>
+          <script src="../js/search/search-lunr.js"></script>
+          <script src="../js/search/search_index.js"></script>
+       <script src="../js/lazy-load-graphs.js"></script>
+
+
+    </body>
+</html>

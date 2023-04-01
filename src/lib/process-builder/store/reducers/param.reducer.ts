@@ -119,7 +119,7 @@ export const reducer = createReducer(
   }),
 
   on(removeIFunction, (state: State, { func }) => {
-    const referencedOutputParam = func.output?.param;
+    const referencedOutputParam = func.output;
     if (typeof referencedOutputParam === 'number') {
       return adapter.removeOne(referencedOutputParam, state);
     }

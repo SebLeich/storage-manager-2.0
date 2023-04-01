@@ -334,7 +334,7 @@ export class BpmnJsService {
     const identifier = generateGuid(),
       activityIdentifier: number = BPMNJsRepository.getSLPBExtension(cursor.businessObject, 'ActivityExtension', (ext => ext.activityFunctionId)),
       func = await selectSnapshot(this._store.select(selectIFunction(activityIdentifier))),
-      outputParam = typeof func?.output?.param === 'number' ? await selectSnapshot(this._store.select(selectIParam(func.output.param))) : undefined,
+      outputParam = typeof func?.output === 'number' ? await selectSnapshot(this._store.select(selectIParam(func.output))) : undefined,
       executableCode = func?.customImplementation ? eval(func!.customImplementation.join('\n')!) : func?.implementation;
 
     const outgoingDataObjectReference = cursor.outgoing.find(connector => connector.type === shapeTypes.DataOutputAssociation)?.target;

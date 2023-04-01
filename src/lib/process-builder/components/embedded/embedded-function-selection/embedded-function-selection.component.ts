@@ -1,5 +1,5 @@
 import { Component, ElementRef, Input, OnDestroy, OnInit, QueryList, ViewChild, ViewChildren, ViewContainerRef } from '@angular/core';
-import { ReplaySubject, filter, Subscription } from 'rxjs';
+import { Observable, ReplaySubject, Subscription } from 'rxjs';
 import { ParamCodes } from 'src/config/param-codes';
 import { IEmbeddedView } from 'src/lib/process-builder/classes/embedded-view';
 import { IFunction } from 'src/lib/process-builder/interfaces/function.interface';
@@ -7,7 +7,7 @@ import { showAnimation } from 'src/lib/shared/animations/show';
 import { Store } from '@ngrx/store';
 import { selectIFunctions } from 'src/lib/process-builder/store/selectors/function.selector';
 import { FunctionPreviewComponent } from '../../previews/function-preview/function-preview.component';
-import { ControlContainer, FormControl, FormGroup } from '@angular/forms';
+import { ControlContainer, FormControl } from '@angular/forms';
 import { IInputParam } from 'src/lib/process-builder/interfaces/input-param.interface';
 import { delay, map, startWith } from 'rxjs/operators';
 import * as fromIFunctionState from 'src/lib/process-builder/store/reducers/function.reducer';
@@ -44,7 +44,8 @@ export class EmbeddedFunctionSelectionComponent implements IEmbeddedView, OnDest
   private _availableFunctions = new ReplaySubject<IFunction[]>(1);
   public availableFunctions$ = this._availableFunctions.asObservable();
 
-  public functions$ = combineLatest([this._store.select(selectIFunctions()), this._filter$]).pipe(map(([functions, filter]) => {
+  private _allFunctions$ = this._store.select(selectIFunctions());
+  public functions$ = combineLatest([this._allFunctions$, this._filter$]).pipe(map(([functions, filter]) => {
     return functions.filter(func => {
       if (!func) {
         return false;
@@ -58,7 +59,8 @@ export class EmbeddedFunctionSelectionComponent implements IEmbeddedView, OnDest
         }
       }
 
-      const requiredInputs: ParamCodes[] = (func.inputParams ?? []).filter(param => param && typeof param === 'object' && !param.optional).map((x) => (x as IInputParam).interface) as ParamCodes[];
+      const inputTemplates = Array.isArray(func.inputTemplates) ? func.inputTemplates.filter(input => input !== 'dynamic') : [];
+      const requiredInputs: ParamCodes[] = inputTemplates.filter(param => param && typeof param === 'object' && !param.optional).map((x) => (x as IInputParam).interface) as ParamCodes[];
       if (requiredInputs.length === 0) {
         return true;
       }

@@ -2,7 +2,6 @@ import { DebugElement } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { By } from '@angular/platform-browser';
-import { AppRoutingModule } from 'src/app/app-routing.module';
 import { AppModule } from 'src/app/app.module';
 import defaultImportsConstant from 'src/app/default-imports.constant';
 import { NoSolutionDialogComponent } from './no-solution-dialog.component';
@@ -26,8 +25,7 @@ describe('NoSolutionDialogComponent', () => {
       imports: [
         ...defaultImportsConstant,
 
-        AppModule,
-        AppRoutingModule
+        AppModule
       ],
       providers: [
         {

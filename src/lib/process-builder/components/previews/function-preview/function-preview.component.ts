@@ -19,22 +19,22 @@ export class FunctionPreviewComponent implements OnInit {
   private _func: IFunction | undefined;
   @Input() public set func(func: IFunction | undefined) {
     this._func = func;
-    this.useInterface = typeof func?.output?.interface === 'number' && func?.output.param === 'dynamic';
-    this.interface = this.useInterface ? func?.output?.interface : undefined;
-    this.param = this.useInterface ? undefined : func?.output?.param;
+    this.useInterface = typeof func?.outputTemplate === 'number';
+    this.interface = this.useInterface ? func?.outputTemplate as number : undefined;
+    this.param = this.useInterface ? undefined : func?.output as number;
   }
   public get func() {
     return this._func;
   }
 
-  public inputParams: IInputParam[] = [];
+  public inputParams: (IInputParam | 'dynamic')[] = [];
 
   constructor(private _store: Store) { }
 
   public isNumber = (arg: any) => typeof arg === 'number';
 
   public ngOnInit(): void {
-    this.inputParams = this.func ? Array.isArray(this.func.inputParams) ? this.func.inputParams : typeof this.func.inputParams === 'number' ? [this.func.inputParams] : [] : [];
+    this.inputParams = this.func ? Array.isArray(this.func.inputTemplates) ? this.func.inputTemplates : typeof this.func.inputTemplates === 'number' ? [this.func.inputTemplates] : [] : [];
   }
 
   public updateFunctionDescription(description: string) {

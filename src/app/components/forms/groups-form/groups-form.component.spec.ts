@@ -2,7 +2,6 @@ import { DebugElement } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ControlContainer, FormArray, FormControl, FormGroup } from '@angular/forms';
 import { By } from '@angular/platform-browser';
-import { AppRoutingModule } from 'src/app/app-routing.module';
 import { AppModule } from 'src/app/app.module';
 import defaultImportsConstant from 'src/app/default-imports.constant';
 import { IGroup } from '@smgr/interfaces';
@@ -26,8 +25,7 @@ describe('GroupsFormComponent', () => {
       imports: [
         ...defaultImportsConstant,
 
-        AppModule,
-        AppRoutingModule
+        AppModule
       ],
       providers: [
         {

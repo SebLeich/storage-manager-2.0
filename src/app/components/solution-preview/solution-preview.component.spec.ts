@@ -1,7 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { Store } from '@ngrx/store';
-import { AppRoutingModule } from 'src/app/app-routing.module';
 import { AppModule } from 'src/app/app.module';
 import defaultImports from 'src/app/default-imports.constant';
 import { IGood, ISolution } from '@smgr/interfaces';
@@ -30,8 +29,7 @@ describe('SolutionPreviewComponent', () => {
       imports: [
         ...defaultImports,
 
-        AppModule,
-        AppRoutingModule
+        AppModule
       ],
       providers: [
         { provide: VISUALIZER_CONTEXT, useValue: {} }

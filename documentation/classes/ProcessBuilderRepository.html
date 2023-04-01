@@ -1,0 +1,1465 @@
+<!doctype html>
+<html class="no-js" lang="">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="x-ua-compatible" content="ie=edge">
+        <title>storage-manager documentation</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <link rel="icon" type="image/x-icon" href="../images/favicon.ico">
+	   <link rel="stylesheet" href="../styles/style.css">
+        <link rel="stylesheet" href="../styles/dark.css">
+    </head>
+    <body>
+
+        <div class="navbar navbar-default navbar-fixed-top visible-xs">
+            <a href="../" class="navbar-brand">storage-manager documentation</a>
+            <button type="button" class="btn btn-default btn-menu ion-ios-menu" id="btn-menu"></button>
+        </div>
+
+        <div class="xs-menu menu" id="mobile-menu">
+                <div id="book-search-input" role="search"><input type="text" placeholder="Type to search"></div>            <compodoc-menu></compodoc-menu>
+        </div>
+
+        <div class="container-fluid main">
+           <div class="row main">
+               <div class="hidden-xs menu">
+                   <compodoc-menu mode="normal"></compodoc-menu>
+               </div>
+               <!-- START CONTENT -->
+               <div class="content class">
+                   <div class="content-data">
+
+
+
+
+
+
+
+
+
+
+
+
+<ol class="breadcrumb">
+  <li>Classes</li>
+  <li >ProcessBuilderRepository</li>
+</ol>
+
+<ul class="nav nav-tabs" role="tablist">
+        <li class="active">
+            <a href="#info" role="tab" id="info-tab" data-toggle="tab" data-link="info">Info</a>
+        </li>
+        <li >
+            <a href="#source" role="tab" id="source-tab" data-toggle="tab" data-link="source">Source</a>
+        </li>
+</ul>
+
+<div class="tab-content">
+    <div class="tab-pane fade active in" id="c-info">
+        <p class="comment">
+            <h3>File</h3>
+        </p>
+        <p class="comment">
+            <code>src/lib/core/process-builder-repository.ts</code>
+        </p>
+
+
+
+
+
+
+            <section>
+    <h3 id="index">Index</h3>
+    <table class="table table-sm table-bordered index-table">
+        <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <h6><b>Properties</b></h6>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <ul class="index-list">
+                            <li>
+                                    <span class="modifier">Private</span>
+                                    <span class="modifier">Static</span>
+                                <a href="#_isPromise" >_isPromise</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                    <span class="modifier">Static</span>
+                                <a href="#_randomValueGenerator" >_randomValueGenerator</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                    <span class="modifier">Static</span>
+                                <a href="#_returnsPromise" >_returnsPromise</a>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="col-md-4">
+                        <h6><b>Methods</b></h6>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <ul class="index-list">
+                            <li>
+                                    <span class="modifier">Private</span>
+                                    <span class="modifier">Static</span>
+                                <a href="#_getDefinitionForMember" >_getDefinitionForMember</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Static</span>
+                                    <span class="modifier">Async</span>
+                                <a href="#calculateCustomImplementationOutput" >calculateCustomImplementationOutput</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Static</span>
+                                <a href="#createPseudoObjectFromIInterface" >createPseudoObjectFromIInterface</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Static</span>
+                                <a href="#createPseudoObjectFromIParam" >createPseudoObjectFromIParam</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Static</span>
+                                <a href="#createPseudoObjectFromIParamDefinition" >createPseudoObjectFromIParamDefinition</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Static</span>
+                                <a href="#executeUserMethodAndReturnResponse" >executeUserMethodAndReturnResponse</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Static</span>
+                                <a href="#extractObjectTypeDefinition" >extractObjectTypeDefinition</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Static</span>
+                                <a href="#normalizeName" >normalizeName</a>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+
+
+
+
+
+        </tbody>
+    </table>
+</section>
+
+
+            <section>
+    
+    <h3 id="inputs">
+        Properties
+    </h3>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="_isPromise"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                            <span class="modifier">Static</span>
+                        <span ><b>_isPromise</b></span>
+                        <a href="#_isPromise"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>() &#x3D;&gt; {...}</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="313" class="link-to-prism">src/lib/core/process-builder-repository.ts:313</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="_randomValueGenerator"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                            <span class="modifier">Static</span>
+                        <span ><b>_randomValueGenerator</b></span>
+                        <a href="#_randomValueGenerator"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/object" target="_blank" >object</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>{
+        &#x27;array&#x27;: () &#x3D;&gt; { return [] },
+        &#x27;object&#x27;: () &#x3D;&gt; { return {} },
+        &#x27;string&#x27;: () &#x3D;&gt; btoa(Math.random().toString()).slice(0, 5),
+        &#x27;number&#x27;: () &#x3D;&gt; Math.floor(Math.random() * 11),
+        &#x27;boolean&#x27;: () &#x3D;&gt; Math.floor(Math.random() * 11) % 2 &#x3D;&#x3D;&#x3D; 1,
+        &#x27;bigint&#x27;: () &#x3D;&gt; BigInt(Math.floor(Math.random() * 11)),
+        &#x27;symbol&#x27;: () &#x3D;&gt; Symbol(&#x27;foo&#x27;),
+        &#x27;undefined&#x27;: () &#x3D;&gt; undefined,
+        &#x27;function&#x27;: () &#x3D;&gt; () &#x3D;&gt; { }
+    }</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="301" class="link-to-prism">src/lib/core/process-builder-repository.ts:301</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="_returnsPromise"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                            <span class="modifier">Static</span>
+                        <span ><b>_returnsPromise</b></span>
+                        <a href="#_returnsPromise"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>() &#x3D;&gt; {...}</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="314" class="link-to-prism">src/lib/core/process-builder-repository.ts:314</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+</section>
+
+            <section>
+    
+    <h3 id="methods">
+        Methods
+    </h3>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="_getDefinitionForMember"></a>
+                    <span class="name">
+                        <span class="modifier">Private</span>
+                        <span class="modifier">Static</span>
+                        <span ><b>_getDefinitionForMember</b></span>
+                        <a href="#_getDefinitionForMember"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>_getDefinitionForMember(entry: [, ])</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="286"
+                            class="link-to-prism">src/lib/core/process-builder-repository.ts:286</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>entry</td>
+                                    <td>
+                                            <code>[, ]</code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="../interfaces/IParamDefinition.html" target="_self" >IParamDefinition</a></code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="calculateCustomImplementationOutput"></a>
+                    <span class="name">
+                        <span class="modifier">Static</span>
+                        <span class="modifier">Async</span>
+                        <span ><b>calculateCustomImplementationOutput</b></span>
+                        <a href="#calculateCustomImplementationOutput"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>calculateCustomImplementationOutput(arg: string[] | string | null | undefined | , injector: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/object" target="_blank">object</a>)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="271"
+                            class="link-to-prism">src/lib/core/process-builder-repository.ts:271</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>arg</td>
+                                    <td>
+                                            <code>string[] | string | null | undefined | </code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                                <tr>
+                                    <td>injector</td>
+                                    <td>
+                                                <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/object" target="_blank" >object</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>    <code>unknown</code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="createPseudoObjectFromIInterface"></a>
+                    <span class="name">
+                        <span class="modifier">Static</span>
+                        <span ><b>createPseudoObjectFromIInterface</b></span>
+                        <a href="#createPseudoObjectFromIInterface"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>createPseudoObjectFromIInterface(arg: <a href="../interfaces/IInterface.html" target="_self">IInterface | undefined</a>, parent: <a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank">any</a>, config: literal type)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="123"
+                            class="link-to-prism">src/lib/core/process-builder-repository.ts:123</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                    <td>Default value</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>arg</td>
+                                    <td>
+                                                <code><a href="../interfaces/IInterface.html" target="_self" >IInterface | undefined</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+                                    <td>
+                                    </td>
+
+                                </tr>
+                                <tr>
+                                    <td>parent</td>
+                                    <td>
+                                                <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+                                    <td>
+                                        <code>null</code>
+                                    </td>
+
+                                </tr>
+                                <tr>
+                                    <td>config</td>
+                                    <td>
+                                            <code>literal type</code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+                                    <td>
+                                        <code>{
+            string: () &#x3D;&gt; undefined,
+            boolean: () &#x3D;&gt; undefined,
+            number: () &#x3D;&gt; undefined,
+            object: () &#x3D;&gt; { return {} },
+            array: () &#x3D;&gt; [],
+            function: () &#x3D;&gt; undefined,
+            symbol: () &#x3D;&gt; undefined,
+            bigint: () &#x3D;&gt; undefined,
+            undefined: () &#x3D;&gt; undefined
+        }</code>
+                                    </td>
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/object" target="_blank" >object</a></code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="createPseudoObjectFromIParam"></a>
+                    <span class="name">
+                        <span class="modifier">Static</span>
+                        <span ><b>createPseudoObjectFromIParam</b></span>
+                        <a href="#createPseudoObjectFromIParam"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>createPseudoObjectFromIParam(arg: <a href="../interfaces/IParam.html" target="_self">IParam | null | undefined</a>, parent: <a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank">any</a>, config: literal type)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="8"
+                            class="link-to-prism">src/lib/core/process-builder-repository.ts:8</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                    <td>Default value</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>arg</td>
+                                    <td>
+                                                <code><a href="../interfaces/IParam.html" target="_self" >IParam | null | undefined</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+                                    <td>
+                                    </td>
+
+                                </tr>
+                                <tr>
+                                    <td>parent</td>
+                                    <td>
+                                                <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+                                    <td>
+                                        <code>null</code>
+                                    </td>
+
+                                </tr>
+                                <tr>
+                                    <td>config</td>
+                                    <td>
+                                            <code>literal type</code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+                                    <td>
+                                        <code>{
+            string: () &#x3D;&gt; undefined,
+            boolean: () &#x3D;&gt; undefined,
+            number: () &#x3D;&gt; undefined,
+            object: () &#x3D;&gt; { return {} },
+            array: () &#x3D;&gt; [],
+            function: () &#x3D;&gt; undefined,
+            symbol: () &#x3D;&gt; undefined,
+            bigint: () &#x3D;&gt; undefined,
+            undefined: () &#x3D;&gt; undefined
+        }</code>
+                                    </td>
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/object" target="_blank" >object</a></code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="createPseudoObjectFromIParamDefinition"></a>
+                    <span class="name">
+                        <span class="modifier">Static</span>
+                        <span ><b>createPseudoObjectFromIParamDefinition</b></span>
+                        <a href="#createPseudoObjectFromIParamDefinition"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>createPseudoObjectFromIParamDefinition(arg: IParam | IParamDefinition | null | undefined, parent: <a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank">any</a>, config: literal type)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="64"
+                            class="link-to-prism">src/lib/core/process-builder-repository.ts:64</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                    <td>Default value</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>arg</td>
+                                    <td>
+                                            <code>IParam | IParamDefinition | null | undefined</code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+                                    <td>
+                                    </td>
+
+                                </tr>
+                                <tr>
+                                    <td>parent</td>
+                                    <td>
+                                                <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+                                    <td>
+                                        <code>null</code>
+                                    </td>
+
+                                </tr>
+                                <tr>
+                                    <td>config</td>
+                                    <td>
+                                            <code>literal type</code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+                                    <td>
+                                        <code>{
+            string: () &#x3D;&gt; undefined,
+            boolean: () &#x3D;&gt; undefined,
+            number: () &#x3D;&gt; undefined,
+            object: () &#x3D;&gt; { return {} },
+            array: () &#x3D;&gt; [],
+            function: () &#x3D;&gt; undefined,
+            symbol: () &#x3D;&gt; undefined,
+            bigint: () &#x3D;&gt; undefined,
+            undefined: () &#x3D;&gt; undefined
+        }</code>
+                                    </td>
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/object" target="_blank" >object</a></code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="executeUserMethodAndReturnResponse"></a>
+                    <span class="name">
+                        <span class="modifier">Static</span>
+                        <span ><b>executeUserMethodAndReturnResponse</b></span>
+                        <a href="#executeUserMethodAndReturnResponse"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>executeUserMethodAndReturnResponse(doc: string[], injector: <a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank">any</a>)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="248"
+                            class="link-to-prism">src/lib/core/process-builder-repository.ts:248</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>doc</td>
+                                    <td>
+                                            <code>string[]</code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                                <tr>
+                                    <td>injector</td>
+                                    <td>
+                                                <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>    <code>Observable&lt;any&gt;</code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="extractObjectTypeDefinition"></a>
+                    <span class="name">
+                        <span class="modifier">Static</span>
+                        <span ><b>extractObjectTypeDefinition</b></span>
+                        <a href="#extractObjectTypeDefinition"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>extractObjectTypeDefinition(arg: object | string | number | null | undefined, isRoot: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/boolean" target="_blank">boolean</a>, defaultParamName: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, isNullable: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/boolean" target="_blank">boolean</a>, isOptional: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/boolean" target="_blank">boolean</a>, isConstant: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/boolean" target="_blank">boolean</a>)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="177"
+                            class="link-to-prism">src/lib/core/process-builder-repository.ts:177</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                    <td>Default value</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>arg</td>
+                                    <td>
+                                            <code>object | string | number | null | undefined</code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+                                    <td>
+                                    </td>
+
+                                </tr>
+                                <tr>
+                                    <td>isRoot</td>
+                                    <td>
+                                                <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/boolean" target="_blank" >boolean</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+                                    <td>
+                                        <code>true</code>
+                                    </td>
+
+                                </tr>
+                                <tr>
+                                    <td>defaultParamName</td>
+                                    <td>
+                                                <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+                                    <td>
+                                        <code>&#x27;unnamed param&#x27;</code>
+                                    </td>
+
+                                </tr>
+                                <tr>
+                                    <td>isNullable</td>
+                                    <td>
+                                                <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/boolean" target="_blank" >boolean</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+                                    <td>
+                                        <code>false</code>
+                                    </td>
+
+                                </tr>
+                                <tr>
+                                    <td>isOptional</td>
+                                    <td>
+                                                <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/boolean" target="_blank" >boolean</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+                                    <td>
+                                        <code>false</code>
+                                    </td>
+
+                                </tr>
+                                <tr>
+                                    <td>isConstant</td>
+                                    <td>
+                                                <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/boolean" target="_blank" >boolean</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+                                    <td>
+                                        <code>false</code>
+                                    </td>
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>    <code>IParamDefinition | []</code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="normalizeName"></a>
+                    <span class="name">
+                        <span class="modifier">Static</span>
+                        <span ><b>normalizeName</b></span>
+                        <a href="#normalizeName"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>normalizeName(text?: string | null)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="240"
+                            class="link-to-prism">src/lib/core/process-builder-repository.ts:240</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>text</td>
+                                    <td>
+                                            <code>string | null</code>
+                                    </td>
+
+                                    <td>
+                                        Yes
+                                    </td>
+
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</section>
+
+
+
+
+
+    </div>
+
+
+    <div class="tab-pane fade  tab-source-code" id="c-source">
+        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { Observable, ReplaySubject } from &quot;rxjs&quot;;
+import { IInterface } from &quot;../process-builder/interfaces/interface.interface&quot;;
+import { IParam } from &quot;../process-builder/interfaces/param.interface&quot;;
+import { IParamDefinition } from &quot;../process-builder/interfaces/param-definition.interface&quot;;
+
+export class ProcessBuilderRepository {
+
+    static createPseudoObjectFromIParam(arg: IParam | null | undefined, parent: any &#x3D; null, config: {
+        string: () &#x3D;&gt; string | undefined,
+        boolean: () &#x3D;&gt; boolean | undefined,
+        number: () &#x3D;&gt; number | undefined,
+        object: () &#x3D;&gt; object,
+        array: () &#x3D;&gt; any[],
+        bigint: () &#x3D;&gt; bigint | undefined,
+        function: () &#x3D;&gt; Function | undefined,
+        symbol: () &#x3D;&gt; symbol | undefined,
+        undefined: () &#x3D;&gt; undefined
+    } &#x3D; {
+            string: () &#x3D;&gt; undefined,
+            boolean: () &#x3D;&gt; undefined,
+            number: () &#x3D;&gt; undefined,
+            object: () &#x3D;&gt; { return {} },
+            array: () &#x3D;&gt; [],
+            function: () &#x3D;&gt; undefined,
+            symbol: () &#x3D;&gt; undefined,
+            bigint: () &#x3D;&gt; undefined,
+            undefined: () &#x3D;&gt; undefined
+        }): object {
+
+        if (!arg) return {};
+
+        let index &#x3D; 0;
+
+        try {
+
+            let defaultValue &#x3D; arg.type &#x3D;&#x3D;&#x3D; &#x27;array&#x27; ? [] : arg.type &#x3D;&#x3D;&#x3D; &#x27;object&#x27; ? {} : arg.defaultValue;
+            if (!defaultValue) defaultValue &#x3D; config[arg.type]();
+            if (!defaultValue) defaultValue &#x3D; this._randomValueGenerator[arg.type]();
+
+            if (Array.isArray(parent)) parent.push(defaultValue);
+            else if (parent &amp;&amp; typeof parent &#x3D;&#x3D;&#x3D; &#x27;object&#x27;) parent[arg.name] &#x3D; defaultValue;
+
+            if (arg.typeDef) {
+                let typeDefArray &#x3D; Array.isArray(arg.typeDef) ? arg.typeDef : [arg.typeDef];
+
+                for (let def of typeDefArray) {
+
+                    this.createPseudoObjectFromIParamDefinition(def, defaultValue);
+
+                }
+            }
+
+            index++;
+
+            return defaultValue;
+
+        } catch (e) {
+            debugger;
+            return {};
+        }
+
+    }
+
+    static createPseudoObjectFromIParamDefinition(arg: IParam | IParamDefinition | null | undefined, parent: any &#x3D; null, config: {
+        string: () &#x3D;&gt; string | undefined,
+        boolean: () &#x3D;&gt; boolean | undefined,
+        number: () &#x3D;&gt; number | undefined,
+        object: () &#x3D;&gt; object,
+        array: () &#x3D;&gt; any[],
+        bigint: () &#x3D;&gt; bigint | undefined,
+        function: () &#x3D;&gt; Function | undefined,
+        symbol: () &#x3D;&gt; symbol | undefined,
+        undefined: () &#x3D;&gt; undefined
+    } &#x3D; {
+            string: () &#x3D;&gt; undefined,
+            boolean: () &#x3D;&gt; undefined,
+            number: () &#x3D;&gt; undefined,
+            object: () &#x3D;&gt; { return {} },
+            array: () &#x3D;&gt; [],
+            function: () &#x3D;&gt; undefined,
+            symbol: () &#x3D;&gt; undefined,
+            bigint: () &#x3D;&gt; undefined,
+            undefined: () &#x3D;&gt; undefined
+        }): object {
+
+        if (!arg) return {};
+
+        let index &#x3D; 0;
+        let defaultValue &#x3D; arg.type &#x3D;&#x3D;&#x3D; &#x27;array&#x27; ? [] : arg.type &#x3D;&#x3D;&#x3D; &#x27;object&#x27; ? {} : arg.defaultValue;
+
+        try {
+
+            if (!defaultValue) {
+                defaultValue &#x3D; config[arg.type]();
+            }
+            if (!defaultValue) {
+                defaultValue &#x3D; this._randomValueGenerator[arg.type]();
+            }
+
+            if (Array.isArray(parent)) parent.push(defaultValue);
+            else if (parent &amp;&amp; typeof parent &#x3D;&#x3D;&#x3D; &#x27;object&#x27;) parent[arg.name] &#x3D; defaultValue;
+
+            if (arg.typeDef) {
+                let typeDefArray &#x3D; Array.isArray(arg.typeDef) ? arg.typeDef : [arg.typeDef];
+
+                for (let def of typeDefArray) {
+
+                    this.createPseudoObjectFromIParamDefinition(def, defaultValue);
+
+                }
+            }
+
+            index++;
+
+        } catch (e) {
+            debugger;
+        } finally {
+            return parent ?? defaultValue;
+        }
+
+    }
+
+    static createPseudoObjectFromIInterface(arg: IInterface | undefined, parent: any &#x3D; null, config: {
+        string: () &#x3D;&gt; string | undefined,
+        boolean: () &#x3D;&gt; boolean | undefined,
+        number: () &#x3D;&gt; number | undefined,
+        object: () &#x3D;&gt; object,
+        array: () &#x3D;&gt; any[],
+        bigint: () &#x3D;&gt; bigint | undefined,
+        function: () &#x3D;&gt; Function | undefined,
+        symbol: () &#x3D;&gt; symbol | undefined,
+        undefined: () &#x3D;&gt; undefined
+    } &#x3D; {
+            string: () &#x3D;&gt; undefined,
+            boolean: () &#x3D;&gt; undefined,
+            number: () &#x3D;&gt; undefined,
+            object: () &#x3D;&gt; { return {} },
+            array: () &#x3D;&gt; [],
+            function: () &#x3D;&gt; undefined,
+            symbol: () &#x3D;&gt; undefined,
+            bigint: () &#x3D;&gt; undefined,
+            undefined: () &#x3D;&gt; undefined
+        }): object {
+
+        if (!arg) return {};
+
+        let dummyObject &#x3D; { };
+
+        try {
+
+            let defaultValue &#x3D; {};
+
+            if (Array.isArray(parent)) {
+                parent.push(defaultValue);
+            }
+            else if (parent &amp;&amp; typeof parent &#x3D;&#x3D;&#x3D; &#x27;object&#x27;) {
+                parent[arg.name] &#x3D; defaultValue;
+            }
+
+            if (arg.typeDef) {
+                let typeDefArray &#x3D; Array.isArray(arg.typeDef) ? arg.typeDef : [arg.typeDef];
+
+                for (let def of typeDefArray) {
+
+                    this.createPseudoObjectFromIParamDefinition(def, dummyObject);
+
+                }
+            }
+        } catch (e) {
+            debugger;
+        } finally {
+            return dummyObject;
+        }
+
+    }
+
+    static extractObjectTypeDefinition(arg: object | string | number | null | undefined, isRoot: boolean &#x3D; true, defaultParamName: string &#x3D; &#x27;unnamed param&#x27;, isNullable: boolean &#x3D; false, isOptional: boolean &#x3D; false, isConstant: boolean &#x3D; false): IParamDefinition | IParamDefinition[] {
+
+        let rootDef: IParamDefinition &#x3D; {
+            &#x27;name&#x27;: defaultParamName,
+            &#x27;normalizedName&#x27;: this.normalizeName(defaultParamName),
+            &#x27;nullable&#x27;: isNullable,
+            &#x27;optional&#x27;: isOptional,
+            &#x27;constant&#x27;: isConstant,
+            &#x27;defaultValue&#x27;: typeof arg &#x3D;&#x3D;&#x3D; &#x27;object&#x27; ? null : arg,
+            &#x27;type&#x27;: typeof arg,
+            &#x27;interface&#x27;: null,
+            &#x27;typeDef&#x27;: []
+        };
+        if (typeof arg !&#x3D;&#x3D; &#x27;object&#x27;) return rootDef;
+
+        let typeDef: IParamDefinition[] | IParamDefinition &#x3D; [];
+
+        if (typeof arg &#x3D;&#x3D;&#x3D; &#x27;object&#x27;) {
+
+            try {
+
+                for (let entry of Object.entries(arg as object)) {
+
+                    let def &#x3D; this._getDefinitionForMember(entry);
+                    if (def.type &#x3D;&#x3D;&#x3D; &#x27;object&#x27;) {
+                        if (entry[1]) {
+                            def.typeDef &#x3D; this.extractObjectTypeDefinition(entry[1], false);
+                        }
+                    } else if (def.type &#x3D;&#x3D;&#x3D; &#x27;array&#x27;) {
+                        let pseudoObject: any &#x3D; {};
+                        def.defaultValue &#x3D; def.defaultValue.slice(0, 10);
+                        (entry[1] as object[]).forEach(obj &#x3D;&gt; {
+
+                            for (let subEntry of Object.entries(obj)) {
+                                if (pseudoObject[subEntry[0]]) continue;
+
+                                pseudoObject[subEntry[0]] &#x3D; subEntry[1];
+                            }
+
+                        });
+                        def.typeDef &#x3D; this.extractObjectTypeDefinition(pseudoObject);
+                    }
+
+                    typeDef.push(def);
+                }
+
+            } catch (e) {
+                debugger;
+            }
+
+        } else {
+            typeDef &#x3D; this._getDefinitionForMember([&#x27;0&#x27;, arg]);
+        }
+
+        if (isRoot) {
+            rootDef.typeDef &#x3D; typeDef;
+            return rootDef;
+        }
+
+        return typeDef;
+
+    }
+
+    static normalizeName(text?: string | null): string {
+        if (typeof text !&#x3D;&#x3D; &#x27;string&#x27;) {
+            return &#x27;&#x27;;
+        }
+        text &#x3D; text.toLowerCase().replace(/[\(\)-_?:*%!;¿\s.]+(.)?/g, (_, c) &#x3D;&gt; c ? c.toUpperCase() : &#x27;&#x27;);
+        return text.substr(0, 1).toLowerCase() + text.substr(1);
+    }
+
+    static executeUserMethodAndReturnResponse(doc: string[], injector: any): Observable&lt;any&gt; {
+
+        let subject &#x3D; new ReplaySubject&lt;any&gt;(1);
+        let jsText &#x3D; doc.join(&#x27;\n&#x27;);
+
+        let mainMethod: (injector: any) &#x3D;&gt; any | Promise&lt;any&gt; &#x3D; eval(jsText);
+        if (this._returnsPromise(mainMethod)) (mainMethod(injector) as Promise&lt;any&gt;)
+            .then((result: any) &#x3D;&gt; subject.next(result))
+            .catch((error: any) &#x3D;&gt; subject.error(error))
+            .finally(() &#x3D;&gt; subject.complete());
+        else {
+            try {
+                subject.next(mainMethod(injector));
+            } catch (e) {
+                subject.error(e);
+            } finally {
+                subject.complete();
+            }
+        }
+
+        return subject.asObservable();
+    }
+
+    static async calculateCustomImplementationOutput(arg: string[] | string | null | undefined | (() &#x3D;&gt; string[] | string | null | undefined), injector: object) {
+        let customImplementation &#x3D; typeof arg &#x3D;&#x3D;&#x3D; &#x27;function&#x27; ? arg() : arg;
+        if (Array.isArray(customImplementation)) {
+            customImplementation &#x3D; customImplementation.join(&#x27;\n&#x27;);
+        }
+        if (!customImplementation) {
+            return;
+        }
+
+        return eval.call(
+            window,
+            &#x60;(${customImplementation})&#x60;
+        )(injector);
+    }
+
+    private static _getDefinitionForMember(entry: [key: string, value: any]): IParamDefinition {
+        let type &#x3D; typeof entry[1];
+        return {
+            defaultValue: entry[1],
+            name: entry[0],
+            interface: null,
+            constant: null,
+            nullable: null,
+            optional: null,
+            type: type &#x3D;&#x3D;&#x3D; &#x27;object&#x27; &amp;&amp; Array.isArray(entry[1]) ? &#x27;array&#x27; : type,
+            typeDef: null,
+            normalizedName: ProcessBuilderRepository.normalizeName(entry[0])!
+        };
+    }
+
+    private static _randomValueGenerator &#x3D; {
+        &#x27;array&#x27;: () &#x3D;&gt; { return [] },
+        &#x27;object&#x27;: () &#x3D;&gt; { return {} },
+        &#x27;string&#x27;: () &#x3D;&gt; btoa(Math.random().toString()).slice(0, 5),
+        &#x27;number&#x27;: () &#x3D;&gt; Math.floor(Math.random() * 11),
+        &#x27;boolean&#x27;: () &#x3D;&gt; Math.floor(Math.random() * 11) % 2 &#x3D;&#x3D;&#x3D; 1,
+        &#x27;bigint&#x27;: () &#x3D;&gt; BigInt(Math.floor(Math.random() * 11)),
+        &#x27;symbol&#x27;: () &#x3D;&gt; Symbol(&#x27;foo&#x27;),
+        &#x27;undefined&#x27;: () &#x3D;&gt; undefined,
+        &#x27;function&#x27;: () &#x3D;&gt; () &#x3D;&gt; { }
+    };
+
+    private static _isPromise &#x3D; (p: any) &#x3D;&gt; typeof p &#x3D;&#x3D;&#x3D; &#x27;object&#x27; &amp;&amp; typeof p.then &#x3D;&#x3D;&#x3D; &#x27;function&#x27;;
+    private static _returnsPromise &#x3D; (f: any) &#x3D;&gt; f.constructor.name &#x3D;&#x3D;&#x3D; &#x27;AsyncFunction&#x27; || (typeof f &#x3D;&#x3D;&#x3D; &#x27;function&#x27; &amp;&amp; this._isPromise(f()));
+
+}
+</code></pre>
+    </div>
+</div>
+
+
+
+
+
+
+
+
+
+                   </div><div class="search-results">
+    <div class="has-results">
+        <h1 class="search-results-title"><span class='search-results-count'></span> results matching "<span class='search-query'></span>"</h1>
+        <ul class="search-results-list"></ul>
+    </div>
+    <div class="no-results">
+        <h1 class="search-results-title">No results matching "<span class='search-query'></span>"</h1>
+    </div>
+</div>
+</div>
+               <!-- END CONTENT -->
+           </div>
+       </div>
+
+          <label class="dark-mode-switch">
+               <input type="checkbox">
+               <span class="slider">
+                    <svg class="slider-icon" viewBox="0 0 24 24" fill="none" height="20" stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" width="20" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"></path>
+                    </svg>
+               </span>
+          </label>
+
+       <script>
+            var COMPODOC_CURRENT_PAGE_DEPTH = 1;
+            var COMPODOC_CURRENT_PAGE_CONTEXT = 'class';
+            var COMPODOC_CURRENT_PAGE_URL = 'ProcessBuilderRepository.html';
+            var MAX_SEARCH_RESULTS = 15;
+       </script>
+
+       <script src="../js/libs/custom-elements.min.js"></script>
+       <script src="../js/libs/lit-html.js"></script>
+
+       <script src="../js/menu-wc.js" defer></script>
+       <script nomodule src="../js/menu-wc_es5.js" defer></script>
+
+       <script src="../js/libs/bootstrap-native.js"></script>
+
+       <script src="../js/libs/es6-shim.min.js"></script>
+       <script src="../js/libs/EventDispatcher.js"></script>
+       <script src="../js/libs/promise.min.js"></script>
+       <script src="../js/libs/zepto.min.js"></script>
+
+       <script src="../js/compodoc.js"></script>
+
+       <script src="../js/tabs.js"></script>
+       <script src="../js/menu.js"></script>
+       <script src="../js/libs/clipboard.min.js"></script>
+       <script src="../js/libs/prism.js"></script>
+       <script src="../js/sourceCode.js"></script>
+          <script src="../js/search/search.js"></script>
+          <script src="../js/search/lunr.min.js"></script>
+          <script src="../js/search/search-lunr.js"></script>
+          <script src="../js/search/search_index.js"></script>
+       <script src="../js/lazy-load-graphs.js"></script>
+
+
+    </body>
+</html>

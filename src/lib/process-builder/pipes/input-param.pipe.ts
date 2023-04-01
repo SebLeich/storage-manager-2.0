@@ -11,7 +11,10 @@ export class InputParamPipe implements PipeTransform {
 
   constructor(private _store: Store) { }
 
-  public async transform(param: IInputParam | undefined | null): Promise<string | undefined> {
+  public async transform(param: IInputParam | undefined | null | 'dynamic'): Promise<string | undefined> {
+    if (param === 'dynamic') {
+      return 'dynamic type';
+    }
     if (param) {
       if (param.type === 'object' || param.type === 'array') {
         if (typeof param.interface === 'number') {

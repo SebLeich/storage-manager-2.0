@@ -34,8 +34,11 @@
     "useDefineForClassFields": false,
     "paths": {
       "@animations": ["./src/lib/shared/animations"],
+      "@main-components": ["./src/app/components/main"],
       "@process-builder/store": ["./src/lib/process-builder/store"],
       "@procedure": ["./src/lib/procedure-store"],
+      "@smgr/components": ["./src/app/components"],
+      "@smgr/components/select": ["./src/lib/storage-manager/components/select"],
       "@smgr/interfaces": ["./src/lib/storage-manager/interfaces"],
       "@smgr/solvers": ["./src/lib/storage-manager/solvers"],
       "@smgr/store": ["./src/lib/storage-manager/store"]

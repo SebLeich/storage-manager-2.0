@@ -61,9 +61,12 @@ describe('ProcessBuilderComponentService', () => {
     customImplementation: ['return 1;'],
     name: mockName,
     normalizedName: ProcessBuilderRepository.normalizeName(mockName),
-    inputParams: [],
+    inputTemplates: [],
     output: null,
-    canFail: false
+    canFail: false,
+    inputs: [],
+    requireCustomImplementation: false,
+    outputTemplate: null
   } as IFunction;
 
   let service: ProcessBuilderComponentService;

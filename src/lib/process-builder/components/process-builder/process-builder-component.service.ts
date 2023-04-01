@@ -100,7 +100,7 @@ export class ProcessBuilderComponentService {
     const methodEvaluation = CodemirrorRepository.evaluateCustomMethod(undefined, taskCreationData.implementation ?? defaultImplementation);
 
     if (referencedFunction.requireCustomImplementation || referencedFunction.customImplementation || taskCreationData.implementation) {
-      referencedFunction = await this._applyFunctionConfiguration(taskCreationData, referencedFunction, methodEvaluation, typeof referencedFunction.output?.param === 'number' ? referencedFunction.output?.param : nextParamId) as IFunction;
+      referencedFunction = await this._applyFunctionConfiguration(taskCreationData, referencedFunction, methodEvaluation, typeof referencedFunction.output === 'number' ? referencedFunction.output : nextParamId) as IFunction;
     }
 
     const resultingEndEvent = taskCreationPayload.configureActivity?.outgoing?.find(outgoing => outgoing.target.type === 'bpmn:EndEvent')?.target;
@@ -114,8 +114,8 @@ export class ProcessBuilderComponentService {
       this._updateBpmnModelElementActivityIdentifier(taskCreationPayload, referencedFunction);
       this._bpmnJsService.modelingModule.updateLabel(taskCreationPayload.configureActivity, referencedFunction.name);
 
-      if (typeof referencedFunction.output?.param === 'number') {
-        outputParam = (await selectSnapshot(this._store.select(paramSelectors.selectIParam(referencedFunction.output.param)))) ?? { identifier: nextParamId } as IParam;
+      if (typeof referencedFunction.output === 'number') {
+        outputParam = (await selectSnapshot(this._store.select(paramSelectors.selectIParam(referencedFunction.output)))) ?? { identifier: nextParamId } as IParam;
         outputParam = (await this._handleFunctionOutputParam(taskCreationData, taskCreationPayload, outputParam, methodEvaluation))?.outputParam;
       }
 
@@ -176,17 +176,17 @@ export class ProcessBuilderComponentService {
       }
     }
 
-    if (resultingFunction.inputParams || resultingFunction.useDynamicInputParams) {
-      const inputParams = resultingFunction.inputParams ? Array.isArray(resultingFunction.inputParams) ? [...resultingFunction.inputParams] : [resultingFunction.inputParams] : [];
+    if (resultingFunction.inputTemplates || resultingFunction.inputTemplates === 'dynamic') {
+      const inputParams = Array.isArray(resultingFunction.inputTemplates) ? [...resultingFunction.inputTemplates] : [];
       if (typeof taskCreationData.inputParam === 'number') {
-        debugger;
         inputParams.push({ optional: false, interface: taskCreationData.inputParam, name: 'my input' } as IInputParam);
       }
 
       if (configureActivity) {
         const availableInputParamsIElements = BPMNJsRepository.getAvailableInputParamsIElements(configureActivity);
-        for (let param of inputParams.filter(inputParam => !(taskCreationPayload.configureActivity as IElement).incoming.some(y => BPMNJsRepository.sLPBExtensionSetted(y.source.businessObject, 'DataObjectExtension', (ext) => ext.outputParam === inputParam.interface)))) {
-          const element = availableInputParamsIElements.find(x => BPMNJsRepository.sLPBExtensionSetted(x.businessObject, 'DataObjectExtension', (ext) => ext.outputParam === param.interface));
+        for (let param of inputParams.filter(inputParam => !(taskCreationPayload.configureActivity as IElement).incoming.some(y => BPMNJsRepository.sLPBExtensionSetted(y.source.businessObject, 'DataObjectExtension', (ext) => ext.outputParam === inputParam)))) {
+          // HEREEE
+          const element = availableInputParamsIElements.find(x => BPMNJsRepository.sLPBExtensionSetted(x.businessObject, 'DataObjectExtension', (ext) => ext.outputParam === param as IInputParam));
           if (!!element) {
             this._bpmnJsService.modelingModule.connect(element, configureActivity);
           }
@@ -253,12 +253,11 @@ export class ProcessBuilderComponentService {
       name: taskCreationData.name ?? this._config.defaultFunctionName,
       identifier: functionIdentifier,
       normalizedName: taskCreationData.normalizedName ?? ProcessBuilderRepository.normalizeName(taskCreationData.name ?? undefined),
-      output: methodEvaluation.status === MethodEvaluationStatus.ReturnValueFound || referencedFunction.output?.param === 'dynamic' ? { param: outputParamId } : null,
+      output: methodEvaluation.status === MethodEvaluationStatus.ReturnValueFound || referencedFunction.outputTemplate === 'dynamic' ? { param: outputParamId } : null,
       implementation: referencedFunction.implementation,
-      inputParams: inputParams,
+      inputTemplates: inputParams,
       requireCustomImplementation: false,
       requireDynamicInput: false,
-      useDynamicInputParams: referencedFunction.useDynamicInputParams,
       finalizesFlow: taskCreationData.isProcessOutput ?? false
     } as IFunction;
     this._store.dispatch(upsertIFunction(resultingFunction));
@@ -274,7 +273,7 @@ export class ProcessBuilderComponentService {
 
   private async _extractInputParams(taskCreationData: ITaskCreationFormGroupValue, referencedFunction: IFunction): Promise<IInputParam[]> {
     let inputParams: IInputParam[] = [];
-    if (referencedFunction.useDynamicInputParams && typeof taskCreationData.interface === 'number') {
+    if (referencedFunction.inputTemplates === 'dynamic' && typeof taskCreationData.interface === 'number') {
       inputParams.push({ optional: false, interface: taskCreationData.interface, name: taskCreationData.normalizedName, type: 'object' });
     }
     else if (referencedFunction.requireCustomImplementation || referencedFunction.customImplementation) {

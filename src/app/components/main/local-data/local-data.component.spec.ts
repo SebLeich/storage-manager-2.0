@@ -1,7 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { Store } from '@ngrx/store';
-import { AppRoutingModule } from 'src/app/app-routing.module';
 import { AppModule } from 'src/app/app.module';
 import defaultImportsConstant from 'src/app/default-imports.constant';
 import { IGroup, IOrder, IProduct } from '@smgr/interfaces';
@@ -26,8 +25,7 @@ describe('LocalDataComponent', () => {
       imports: [
         ...defaultImportsConstant,
 
-        AppModule,
-        AppRoutingModule
+        AppModule
       ]
     })
       .compileComponents();

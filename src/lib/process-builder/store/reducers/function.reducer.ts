@@ -66,7 +66,7 @@ export const reducer = createReducer(
         implementation: func.implementation,
         requireCustomImplementation: func.requireCustomImplementation,
         requireDynamicInput: func.requireDynamicInput,
-        useDynamicInputParams: func.useDynamicInputParams
+        //useDynamicInputParams: func.useDynamicInputParams
       }
     }
     return adapter.updateOne(update, state);
@@ -75,7 +75,7 @@ export const reducer = createReducer(
   on(updateIFunctionOutputParam, (state: State, { identifier, outputParam }) => {
     let update: Update<IFunction> = {
       id: identifier,
-      changes: { output: { 'param': outputParam } }
+      changes: { output: outputParam }
     }
     return adapter.updateOne(update, state);
   }),

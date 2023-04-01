@@ -2,7 +2,6 @@ import { TestBed } from '@angular/core/testing';
 import { selectAllProcedures, selectGlobalProcedureProgress, selectHasDeterminingProcedures, selectHasPendingProcedures, selectMostRecentlyFinishedProcedure, selectPendingProcedures } from './pending-procedure.selectors';
 import { Store } from '@ngrx/store';
 import * as moment from 'moment';
-import { isEqual } from 'lodash';
 import { IProcedure } from 'src/lib/procedure-store/interfaces/procedure.interface';
 import defaultImportsConstant from 'src/app/default-imports.constant';
 import { selectSnapshot } from 'src/lib/process-builder/globals/select-snapshot';
@@ -35,7 +34,7 @@ describe('IPendingProcedures Selectors', () => {
         const sortedProcedureGuids = Object.values(pendingProcedures).map(procedure => procedure.guid).sort();
         const allProcedures = await selectSnapshot(store.select(selectAllProcedures));
 
-        expect(isEqual(allProcedures.map(procedure => procedure!.guid).sort(), sortedProcedureGuids)).toBeTrue();
+        expect(allProcedures.map(procedure => procedure!.guid).sort()).toEqual(sortedProcedureGuids);
     });
 
     it('should detect correct determination state', async () => {
@@ -70,7 +69,7 @@ describe('IPendingProcedures Selectors', () => {
 
         const receviedPendingProcedures = await selectSnapshot(store.select(selectPendingProcedures));
 
-        expect(isEqual(receviedPendingProcedures.map(procedure => procedure?.guid).sort(), expectedPendingProcedureGuids)).toBeTrue();
+        expect(receviedPendingProcedures.map(procedure => procedure?.guid).sort()).toEqual(expectedPendingProcedureGuids);
     });
 
     it('should detect pending tasks correctly', async () => {

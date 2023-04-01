@@ -3,4 +3,5 @@ export interface IInputParam {
     interface?: number;
     optional: boolean;
     name: string;
+    default?: unknown;
 }

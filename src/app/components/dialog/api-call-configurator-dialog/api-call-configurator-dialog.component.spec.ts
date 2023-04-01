@@ -1,6 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { MatDialogRef } from '@angular/material/dialog';
-import { AppRoutingModule } from 'src/app/app-routing.module';
 import { AppModule } from 'src/app/app.module';
 import defaultImportsConstant from 'src/app/default-imports.constant';
 import { ApiCallConfiguratorDialogComponent } from './api-call-configurator-dialog.component';
@@ -15,8 +14,7 @@ describe('ApiCallConfiguratorDialogComponent', () => {
       imports: [
         ...defaultImportsConstant,
 
-        AppModule,
-        AppRoutingModule
+        AppModule
       ],
       providers: [
         {

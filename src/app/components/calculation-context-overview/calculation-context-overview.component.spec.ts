@@ -4,8 +4,6 @@ import { ControlContainer, FormControl, FormGroup } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { Store } from '@ngrx/store';
 import { IContainer, IGood, ISolution } from '@smgr/interfaces';
-import { isEqual } from 'lodash';
-import { AppRoutingModule } from 'src/app/app-routing.module';
 import { AppModule } from 'src/app/app.module';
 import defaultImportsConstant from 'src/app/default-imports.constant';
 import { addSolutions } from 'src/lib/storage-manager/store/actions/solution.actions';
@@ -23,8 +21,7 @@ describe('CalculationContextOverviewComponent', () => {
       imports: [
         ...defaultImportsConstant,
 
-        AppModule,
-        AppRoutingModule
+        AppModule
       ],
       providers: [
         {
@@ -103,11 +100,11 @@ describe('CalculationContextOverviewComponent', () => {
 
       const inputElements: HTMLInputElement[] = headlineInputs.map(element => (element.nativeElement as HTMLInputElement));
       const inputTexts = inputElements.map(element => element.value).sort();
-      const solutionDescriptions = solutions.map(solution => solution.description).sort();
+      const solutionDescriptions = solutions.map(solution => solution.description).sort() as string[];
 
       expect(inputElements.some(element => element.readOnly)).toBeFalsy();
       expect(inputElements.some(element => element.disabled)).toBeFalsy();
-      expect(isEqual(inputTexts, solutionDescriptions)).toBeTruthy();
+      expect(inputTexts).toEqual(solutionDescriptions);
     });
 
     it('should display calculation source title for all solutions within sub title', () => {

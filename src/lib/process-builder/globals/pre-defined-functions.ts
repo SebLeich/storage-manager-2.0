@@ -1,118 +1,115 @@
-import { inject } from "@angular/core";
-import { MatDialog } from "@angular/material/dialog";
 import { firstValueFrom } from "rxjs/internal/firstValueFrom";
 import { timer } from "rxjs/internal/observable/timer";
-import { AllInOneRowSolver } from "src/lib/storage-manager/solvers/all-in-one-row.solver";
-import { InterfaceCodes } from "src/config/interface-codes";
-import { IGroup, IOrder } from "@smgr/interfaces";
-import { UserInputComponent } from "../components/helpers/user-input/user-input.component";
-import { IFunction } from "../interfaces/function.interface";
+import { IFunctionTemplate } from "../interfaces/function-template.interface";
 
-export class PredefinedFunctions {
+export class PredefinedFunctionTemplates {
 
-    public customJSMethod(identifier: number, name: string = 'custom JS function'): IFunction {
+    public customJSMethod(identifier: number, name: string = 'custom JS function'): IFunctionTemplate {
         return {
-            'identifier': identifier,
-            'canFail': false,
-            'description': 'a self-written, custom javascript code snippet',
-            'inputParams': null,
-            'name': name,
-            'useDynamicInputParams': true,
-            'implementation': (...args: any) => args,
-            'payload': undefined,
-            'output': { 'param': 'dynamic' },
-            'requireCustomImplementation': true
-        } as IFunction;
+            identifier: identifier,
+            description: 'a self-written, custom javascript code snippet',
+            inputTemplates: null,
+            name: name,
+            useDynamicInputParams: true,
+            payload: undefined,
+            outputTemplate: 'dynamic',
+            requireCustomImplementation: true
+        } as IFunctionTemplate;
     }
 
-    public delayMethod(identifier: number, name: string = 'delay'): IFunction {
+    public delayMethod(identifier: number, name: string = 'delay'): IFunctionTemplate {
         return {
-            'identifier': identifier,
-            'canFail': false,
-            'description': 'the method delays the further pipe execution',
-            'inputParams': null,
-            'name': name,
-            'useDynamicInputParams': false,
-            'implementation': () => {
-                return firstValueFrom(timer(1000));
+            identifier: identifier,
+            canFail: false,
+            description: 'the method delays the further pipe execution',
+            inputTemplates: [
+                {
+                    type: 'number',
+                    name: 'delay',
+                    default: 1000
+                }
+            ],
+            name: name,
+            implementation: () => {
+                let delay!: number;
+                return firstValueFrom(timer(delay));
             },
-            'payload': undefined,
-            'output': null,
-            'requireCustomImplementation': false
-        } as IFunction;
+            outputTemplate: null,
+            requireCustomImplementation: false
+        } as IFunctionTemplate;
     }
 
-    public failMethod(identifier: number, name: string = 'fail'): IFunction {
+    public downloadAsJson(identifier: number, name: string = 'download as json'): IFunctionTemplate {
         return {
-            'identifier': identifier,
-            'canFail': true,
-            'description': 'the method throws an error',
-            'inputParams': null,
-            'name': name,
-            'useDynamicInputParams': false,
-            'implementation': () => {
+            identifier: identifier,
+            canFail: true,
+            description: 'the method tries to parse the input and downloads it as json',
+            inputTemplates: [
+                {
+                    type: 'object',
+                    name: 'contentToDownload',
+                    default: {}
+                },
+                {
+                    type: 'string',
+                    name: 'fileName',
+                    default: "unnamedFile"
+                }
+            ],
+            name: name,
+            implementation: () => {
+                let contentToDownload!: object, fileName!: string;
+                const content = JSON.stringify(contentToDownload);
+                var element = document.createElement('a');
+                element.setAttribute('href', `data:text/json;charset=UTF-8,${encodeURIComponent(content)}`);
+                element.setAttribute('download', `${fileName}.json`);
+                element.style.display = 'none';
+                document.body.appendChild(element);
+                element.click();
+                document.body.removeChild(element);
+                return new Promise<void>((resolve => resolve()));
+            },
+            outputTemplate: null,
+            requireCustomImplementation: false
+        } as IFunctionTemplate;
+    }
+
+    public simulateFailMethod(identifier: number, name: string = 'fail'): IFunctionTemplate {
+        return {
+            identifier: identifier,
+            canFail: true,
+            description: 'the method throws an error',
+            inputTemplates: null,
+            name: name,
+            implementation: () => {
                 throw 'mock error';
             },
-            'payload': undefined,
-            'output': null,
-            'requireCustomImplementation': false
-        } as IFunction;
+            outputTemplate: null,
+            requireCustomImplementation: false
+        } as IFunctionTemplate;
     }
 
-    public objectToObjectMappingMethod(identifier: number, name: string = 'object mapping'): IFunction {
+    public uploadFromJson(identifier: number, name: string = 'upload from json'): IFunctionTemplate {
         return {
-            'identifier': identifier,
-            'canFail': false,
-            'description': 'a method for object-to-object mapping',
-            'inputParams': null,
-            'name': name,
-            'useDynamicInputParams': { typeLimits: ['object'] },
-            'implementation': (...args: any) => args,
-            'payload': undefined,
-            'output': { 'param': 'dynamic' }
-        } as IFunction;
-    }
-
-    public requestUserInput(identifier: number, name: string = 'request input'): IFunction {
-        return {
-            'identifier': identifier,
-            'canFail': true,
-            'description': 'request a set of custom inputs during runtime',
-            'inputParams': null,
-            'name': name,
-            'useDynamicInputParams': { typeLimits: ['object'] },
-            'implementation': async () => {
-                const dialog = inject(MatDialog);
-                const result = await firstValueFrom(dialog.open(UserInputComponent, { data: [] }).afterClosed());
-                return result;
-            },
-            'payload': undefined,
-            'output': { 'param': 'dynamic' }
-        } as IFunction;
-    }
-
-    public allInOneRowMethod(identifier: number, name: string = 'all in one row'): IFunction {
-        return {
-            'identifier': identifier,
-            'canFail': false,
-            'description': 'the method delays the further pipe execution',
-            inputParams: [
-                { type: 'number', optional: false, name: 'containerHeight' },
-                { type: 'number', optional: false, name: 'containerWidth' },
-                { type: 'array', interface: InterfaceCodes.Group, optional: false, name: 'groups' },
-                { type: 'array', interface: InterfaceCodes.Order, optional: false, name: 'orders' },
+            identifier: identifier,
+            canFail: true,
+            description: 'the method uploads a json and imports the data as param',
+            inputTemplates: [
+                {
+                    type: 'string',
+                    name: 'inputName',
+                    default: 'uploaded input'
+                }
             ],
-            'name': name,
-            'useDynamicInputParams': false,
-            'implementation': async () => {
-                let containerHeight!: number, containerWidth!: number, groups!: IGroup[], orders: IOrder[];
-                const algorithm = new AllInOneRowSolver();
-                return algorithm.solve(containerHeight!, containerWidth!, groups!, orders!);
+            name: name,
+            implementation: () => {
+                let inputName!: string;
+                
             },
-            'payload': undefined,
-            'output': null,
-            'requireCustomImplementation': false
-        } as IFunction;
+            outputTemplate: "dynamic",
+            requireCustomImplementation: false
+        } as IFunctionTemplate;
     }
+
 
 }

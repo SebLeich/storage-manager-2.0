@@ -7,11 +7,5 @@ import { IGood } from '@smgr/interfaces';
   styleUrls: ['./good-preview.component.css']
 })
 export class GoodPreviewComponent {
-
-  @Input() good!: IGood;
-
-  columns: string[] = [];
-
-  constructor() { }
-
+  @Input() public good!: IGood;
 }

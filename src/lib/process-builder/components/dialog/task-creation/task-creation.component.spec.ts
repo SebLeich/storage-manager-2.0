@@ -2,7 +2,6 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { DebugElement } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { Store } from '@ngrx/store';
-import { AppRoutingModule } from 'src/app/app-routing.module';
 import { AppModule } from 'src/app/app.module';
 import defaultImportsConstant from 'src/app/default-imports.constant';
 import processBuilderConfig from 'src/config/process-builder-config';
@@ -35,7 +34,7 @@ describe('TaskCreationComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       declarations: [TaskCreationComponent, TaskCreationStepPipe],
-      imports: [...defaultImportsConstant, AppModule, AppRoutingModule],
+      imports: [...defaultImportsConstant, AppModule],
       providers: [
         BpmnJsService,
         {

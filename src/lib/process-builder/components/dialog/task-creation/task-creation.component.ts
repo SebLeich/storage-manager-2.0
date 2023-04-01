@@ -102,13 +102,13 @@ export class TaskCreationComponent implements OnDestroy, OnInit {
 
   public hasDynamicInputParameters$ = this.selectedFunction$
     .pipe(
-      map(selectedFunction => selectedFunction?.useDynamicInputParams && !(selectedFunction.requireCustomImplementation || selectedFunction.customImplementation) ? true : false),
+      map(selectedFunction => selectedFunction?.inputTemplates === 'dynamic' && !(selectedFunction.requireCustomImplementation || selectedFunction.customImplementation) ? true : false),
       distinctUntilChanged()
     );
 
   public hasDynamicOutputParameters$ = this.selectedFunction$
     .pipe(
-      map(selectedFunction => selectedFunction?.output?.param === 'dynamic' ? true : false),
+      map(selectedFunction => selectedFunction?.outputTemplate === 'dynamic' ? true : false),
       distinctUntilChanged()
     );
 
@@ -192,11 +192,11 @@ export class TaskCreationComponent implements OnDestroy, OnInit {
   public async validateFunctionSelection() {
     const currentFunction = await selectSnapshot(this._store.select(selectIFunction(this.formGroup.controls.functionIdentifier?.value)));
     if (currentFunction) {
-      const outputParam = await selectSnapshot(this._store.select(selectIParam(currentFunction?.output?.param))),
-        outputParamInterface = await selectSnapshot(this._store.select(selectIInterface(currentFunction?.output?.interface)));
+      const outputParam = await selectSnapshot(this._store.select(selectIParam(currentFunction?.output))),
+        outputParamInterface = await selectSnapshot(this._store.select(selectIInterface(currentFunction?.outputTemplate as number)));
 
-      const inputParams = currentFunction.useDynamicInputParams && currentFunction.inputParams ? Array.isArray(currentFunction.inputParams) ? [...currentFunction.inputParams] : [currentFunction.inputParams] : [];
-      let outputParamValue = currentFunction.output?.param === 'dynamic' && outputParamInterface ? outputParamInterface.typeDef : outputParam?.typeDef, objectTypeDefinition: IParam | IParamDefinition[] | null;
+      const inputParams = currentFunction?.inputTemplates === 'dynamic' && currentFunction.inputTemplates ? Array.isArray(currentFunction.inputTemplates) ? [...currentFunction.inputTemplates] : [currentFunction.inputTemplates] : [];
+      let outputParamValue = currentFunction?.outputTemplate === 'dynamic' && outputParamInterface ? outputParamInterface.typeDef : outputParam?.typeDef, objectTypeDefinition: IParam | IParamDefinition[] | null;
       if (outputParamValue) {
         if (Array.isArray(outputParamValue)) {
           objectTypeDefinition = outputParamValue;

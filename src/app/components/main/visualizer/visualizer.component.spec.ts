@@ -1,6 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { Store } from '@ngrx/store';
-import { AppRoutingModule } from 'src/app/app-routing.module';
 import { AppModule } from 'src/app/app.module';
 import defaultImportsConstant from 'src/app/default-imports.constant';
 import { VISUALIZER_CONTEXT } from 'src/app/interfaces/i-visualizer-context.service';
@@ -21,8 +20,7 @@ describe('VisualizerComponent', () => {
       imports: [
         ...defaultImportsConstant,
 
-        AppModule,
-        AppRoutingModule
+        AppModule
       ],
       providers: [
         { provide: VISUALIZER_CONTEXT, useClass: VisualizerComponentService }

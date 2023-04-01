@@ -1,0 +1,1442 @@
+<!doctype html>
+<html class="no-js" lang="">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="x-ua-compatible" content="ie=edge">
+        <title>storage-manager documentation</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <link rel="icon" type="image/x-icon" href="../images/favicon.ico">
+	   <link rel="stylesheet" href="../styles/style.css">
+        <link rel="stylesheet" href="../styles/dark.css">
+    </head>
+    <body>
+
+        <div class="navbar navbar-default navbar-fixed-top visible-xs">
+            <a href="../" class="navbar-brand">storage-manager documentation</a>
+            <button type="button" class="btn btn-default btn-menu ion-ios-menu" id="btn-menu"></button>
+        </div>
+
+        <div class="xs-menu menu" id="mobile-menu">
+                <div id="book-search-input" role="search"><input type="text" placeholder="Type to search"></div>            <compodoc-menu></compodoc-menu>
+        </div>
+
+        <div class="container-fluid main">
+           <div class="row main">
+               <div class="hidden-xs menu">
+                   <compodoc-menu mode="normal"></compodoc-menu>
+               </div>
+               <!-- START CONTENT -->
+               <div class="content component">
+                   <div class="content-data">
+
+
+
+
+<ol class="breadcrumb">
+  <li>Components</li>
+  <li
+  >
+  EmbeddedFunctionSelectionComponent</li>
+</ol>
+
+<ul class="nav nav-tabs" role="tablist">
+        <li class="active">
+            <a href="#info" role="tab" id="info-tab" data-toggle="tab" data-link="info">Info</a>
+        </li>
+        <li >
+            <a href="#source" role="tab" id="source-tab" data-toggle="tab" data-link="source">Source</a>
+        </li>
+        <li >
+            <a href="#templateData" role="tab" id="templateData-tab" data-toggle="tab" data-link="template">Template</a>
+        </li>
+        <li >
+            <a href="#styleData" role="tab" id="styleData-tab" data-toggle="tab" data-link="style">Styles</a>
+        </li>
+        <li >
+            <a href="#tree" role="tab" id="tree-tab" data-toggle="tab" data-link="dom-tree">DOM Tree</a>
+        </li>
+</ul>
+
+<div class="tab-content">
+    <div class="tab-pane fade active in" id="c-info"><p class="comment">
+    <h3>File</h3>
+</p>
+<p class="comment">
+    <code>src/lib/process-builder/components/embedded/embedded-function-selection/embedded-function-selection.component.ts</code>
+</p>
+
+
+
+
+    <p class="comment">
+        <h3>Implements</h3>
+    </p>
+    <p class="comment">
+                    <code><a href="../interfaces/IEmbeddedView.html" target="_self" >IEmbeddedView</a></code>
+                    <code><a href="https://angular.io/api/core/OnDestroy" target="_blank" >OnDestroy</a></code>
+                    <code><a href="https://angular.io/api/core/OnInit" target="_blank" >OnInit</a></code>
+    </p>
+
+
+<section>
+    <h3>Metadata</h3>
+    <table class="table table-sm table-hover metadata">
+        <tbody>
+
+
+
+
+
+
+
+
+
+
+
+            <tr>
+                <td class="col-md-3">selector</td>
+                <td class="col-md-9"><code>app-embedded-function-selection</code></td>
+            </tr>
+
+            <tr>
+                <td class="col-md-3">styleUrls</td>
+                <td class="col-md-9"><code>./embedded-function-selection.component.scss</code></td>
+            </tr>
+
+
+
+            <tr>
+                <td class="col-md-3">templateUrl</td>
+                <td class="col-md-9"><code>./embedded-function-selection.component.html</code></td>
+            </tr>
+
+
+
+
+
+
+
+
+        </tbody>
+    </table>
+</section>
+
+    <section>
+    <h3 id="index">Index</h3>
+    <table class="table table-sm table-bordered index-table">
+        <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <h6><b>Properties</b></h6>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <ul class="index-list">
+                            <li>
+                                    <span class="modifier">Private</span>
+                                <a href="#_availableFunctions" >_availableFunctions</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                <a href="#_filter$" >_filter$</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                <a href="#_searchInput" >_searchInput</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                <a href="#_subscription" >_subscription</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                <a href="#activeFunctionWrappers" >activeFunctionWrappers</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Public</span>
+                                <a href="#availableFunctions$" >availableFunctions$</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Public</span>
+                                <a href="#customFunctions$" >customFunctions$</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Public</span>
+                                <a href="#filterControl" >filterControl</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Public</span>
+                                <a href="#functions$" >functions$</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Public</span>
+                                <a href="#functionTemplates$" >functionTemplates$</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Public</span>
+                                <a href="#ngOnDestroy" >ngOnDestroy</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Public</span>
+                                <a href="#searchinputExpanded" >searchinputExpanded</a>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="col-md-4">
+                        <h6><b>Methods</b></h6>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <ul class="index-list">
+                            <li>
+                                    <span class="modifier">Public</span>
+                                <a href="#ngOnInit" >ngOnInit</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Public</span>
+                                <a href="#removeFunction" >removeFunction</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Public</span>
+                                <a href="#selectFunction" >selectFunction</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Public</span>
+                                <a href="#toggleSearchInput" >toggleSearchInput</a>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="col-md-4">
+                        <h6><b>Inputs</b></h6>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <ul class="index-list">
+                            <li>
+                                <a href="#inputParams" >inputParams</a>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+
+
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <h6><b>Accessors</b></h6>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="col-md-4">
+                            <ul class="index-list">
+                                <li>
+                                    <a href="#formGroup" >formGroup</a>
+                                </li>
+                            </ul>
+                        </td>
+                    </tr>
+        </tbody>
+    </table>
+</section>
+
+    <section>
+    <h3 id="constructor">Constructor</h3>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+<code>constructor(_store: Store<fromIFunctionState.State>, _controlContainer: <a href="https://angular.io/api/forms/ControlContainer" target="_blank">ControlContainer</a>)</code>
+                    </td>
+                </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="75" class="link-to-prism">src/lib/process-builder/components/embedded/embedded-function-selection/embedded-function-selection.component.ts:75</a></div>
+                            </td>
+                        </tr>
+
+                <tr>
+                    <td class="col-md-4">
+                            <div>
+                                    <b>Parameters :</b>
+                                    <table class="params">
+                                        <thead>
+                                            <tr>
+                                                <td>Name</td>
+                                                    <td>Type</td>
+                                                <td>Optional</td>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                                <tr>
+                                                        <td>_store</td>
+                                                  
+                                                        <td>
+                                                                    <code>Store&lt;fromIFunctionState.State&gt;</code>
+                                                        </td>
+                                                  
+                                                    <td>
+                                                            No
+                                                    </td>
+                                                    
+                                                </tr>
+                                                <tr>
+                                                        <td>_controlContainer</td>
+                                                  
+                                                        <td>
+                                                                        <code><a href="https://angular.io/api/forms/ControlContainer" target="_blank" >ControlContainer</a></code>
+                                                        </td>
+                                                  
+                                                    <td>
+                                                            No
+                                                    </td>
+                                                    
+                                                </tr>
+                                        </tbody>
+                                    </table>
+                            </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+</section>
+
+    <section>
+    <h3 id="inputs">Inputs</h3>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="inputParams"></a>
+                        <b>inputParams</b>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="../miscellaneous/enumerations.html#ParamCodes" target="_self" >ParamCodes | ParamCodes[] | null</a></code>
+
+                    </td>
+                </tr>
+                        <tr>
+                            <td class="col-md-2" colspan="2">
+                                    <div class="io-line">Defined in <a href="" data-line="27" class="link-to-prism">src/lib/process-builder/components/embedded/embedded-function-selection/embedded-function-selection.component.ts:27</a></div>
+                            </td>
+                        </tr>
+            </tbody>
+        </table>
+</section>
+
+
+
+    <section>
+    
+    <h3 id="methods">
+        Methods
+    </h3>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="ngOnInit"></a>
+                    <span class="name">
+                        <span class="modifier">Public</span>
+                        <span ><b>ngOnInit</b></span>
+                        <a href="#ngOnInit"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>ngOnInit()</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="81"
+                            class="link-to-prism">src/lib/process-builder/components/embedded/embedded-function-selection/embedded-function-selection.component.ts:81</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="removeFunction"></a>
+                    <span class="name">
+                        <span class="modifier">Public</span>
+                        <span ><b>removeFunction</b></span>
+                        <a href="#removeFunction"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>removeFunction(func: <a href="../interfaces/IFunction.html" target="_self">IFunction</a>, evt?: <a href="https://angular.io/api/router/Event" target="_blank">Event</a>)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="92"
+                            class="link-to-prism">src/lib/process-builder/components/embedded/embedded-function-selection/embedded-function-selection.component.ts:92</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>func</td>
+                                    <td>
+                                                <code><a href="../interfaces/IFunction.html" target="_self" >IFunction</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                                <tr>
+                                    <td>evt</td>
+                                    <td>
+                                                <code><a href="https://angular.io/api/router/Event" target="_blank" >Event</a></code>
+                                    </td>
+
+                                    <td>
+                                        Yes
+                                    </td>
+
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="selectFunction"></a>
+                    <span class="name">
+                        <span class="modifier">Public</span>
+                        <span ><b>selectFunction</b></span>
+                        <a href="#selectFunction"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>selectFunction(func: <a href="../interfaces/IFunction.html" target="_self">IFunction</a>)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="101"
+                            class="link-to-prism">src/lib/process-builder/components/embedded/embedded-function-selection/embedded-function-selection.component.ts:101</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>func</td>
+                                    <td>
+                                                <code><a href="../interfaces/IFunction.html" target="_self" >IFunction</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="toggleSearchInput"></a>
+                    <span class="name">
+                        <span class="modifier">Public</span>
+                        <span ><b>toggleSearchInput</b></span>
+                        <a href="#toggleSearchInput"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>toggleSearchInput(expand?: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/boolean" target="_blank">boolean</a>)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="106"
+                            class="link-to-prism">src/lib/process-builder/components/embedded/embedded-function-selection/embedded-function-selection.component.ts:106</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>expand</td>
+                                    <td>
+                                                <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/boolean" target="_blank" >boolean</a></code>
+                                    </td>
+
+                                    <td>
+                                        Yes
+                                    </td>
+
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</section>
+    <section>
+    
+    <h3 id="inputs">
+        Properties
+    </h3>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="_availableFunctions"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                        <span ><b>_availableFunctions</b></span>
+                        <a href="#_availableFunctions"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>new ReplaySubject&lt;IFunction[]&gt;(1)</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="44" class="link-to-prism">src/lib/process-builder/components/embedded/embedded-function-selection/embedded-function-selection.component.ts:44</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="_filter$"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                        <span ><b>_filter$</b></span>
+                        <a href="#_filter$"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>this.filterControl.valueChanges.pipe(startWith(&#x27;&#x27;), map(filter &#x3D;&gt; {
+    const transformed &#x3D; (filter ?? &#x27;&#x27;).trim().toLowerCase().split(&#x27; &#x27;).filter(segment &#x3D;&gt; segment);
+    return transformed;
+  }))</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="33" class="link-to-prism">src/lib/process-builder/components/embedded/embedded-function-selection/embedded-function-selection.component.ts:33</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="_searchInput"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                        <span ><b>_searchInput</b></span>
+                        <a href="#_searchInput"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>ElementRef&lt;HTMLInputElement&gt;</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <b>Decorators : </b>
+                        <br />
+                        <code>
+                            @ViewChild(&#x27;searchInput&#x27;, {static: true, read: ElementRef})<br />
+                        </code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="30" class="link-to-prism">src/lib/process-builder/components/embedded/embedded-function-selection/embedded-function-selection.component.ts:30</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="_subscription"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                        <span ><b>_subscription</b></span>
+                        <a href="#_subscription"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>Subscription</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>new Subscription()</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="75" class="link-to-prism">src/lib/process-builder/components/embedded/embedded-function-selection/embedded-function-selection.component.ts:75</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="activeFunctionWrappers"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                        <span ><b>activeFunctionWrappers</b></span>
+                        <a href="#activeFunctionWrappers"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>QueryList&lt;ViewContainerRef&gt;</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <b>Decorators : </b>
+                        <br />
+                        <code>
+                            @ViewChildren(FunctionPreviewComponent, {read: ViewContainerRef})<br />
+                        </code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="29" class="link-to-prism">src/lib/process-builder/components/embedded/embedded-function-selection/embedded-function-selection.component.ts:29</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="availableFunctions$"></a>
+                    <span class="name">
+                            <span class="modifier">Public</span>
+                        <span ><b>availableFunctions$</b></span>
+                        <a href="#availableFunctions$"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>this._availableFunctions.asObservable()</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="45" class="link-to-prism">src/lib/process-builder/components/embedded/embedded-function-selection/embedded-function-selection.component.ts:45</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="customFunctions$"></a>
+                    <span class="name">
+                            <span class="modifier">Public</span>
+                        <span ><b>customFunctions$</b></span>
+                        <a href="#customFunctions$"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>this.functions$.pipe(map(funcs &#x3D;&gt; funcs.filter(func &#x3D;&gt; func.customImplementation)))</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="73" class="link-to-prism">src/lib/process-builder/components/embedded/embedded-function-selection/embedded-function-selection.component.ts:73</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="filterControl"></a>
+                    <span class="name">
+                            <span class="modifier">Public</span>
+                        <span ><b>filterControl</b></span>
+                        <a href="#filterControl"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>new FormControl&lt;string&gt;(&#x27;&#x27;)</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="32" class="link-to-prism">src/lib/process-builder/components/embedded/embedded-function-selection/embedded-function-selection.component.ts:32</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="functions$"></a>
+                    <span class="name">
+                            <span class="modifier">Public</span>
+                        <span ><b>functions$</b></span>
+                        <a href="#functions$"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>combineLatest([this._store.select(selectIFunctions()), this._filter$]).pipe(map(([functions, filter]) &#x3D;&gt; {
+    return functions.filter(func &#x3D;&gt; {
+      if (!func) {
+        return false;
+      }
+
+      if (filter.length &gt; 0) {
+        const functionNameSegments &#x3D; func.name.trim().toLowerCase().split(&#x27; &#x27;)
+        const isNotMatchingFilter &#x3D; filter.some(segment &#x3D;&gt; functionNameSegments.every(functionSegment &#x3D;&gt; functionSegment.indexOf(segment) &#x3D;&#x3D;&#x3D; -1));
+        if (isNotMatchingFilter) {
+          return false;
+        }
+      }
+
+      const requiredInputs: ParamCodes[] &#x3D; (func.inputParams ?? []).filter(param &#x3D;&gt; param &amp;&amp; typeof param &#x3D;&#x3D;&#x3D; &#x27;object&#x27; &amp;&amp; !param.optional).map((x) &#x3D;&gt; (x as IInputParam).interface) as ParamCodes[];
+      if (requiredInputs.length &#x3D;&#x3D;&#x3D; 0) {
+        return true;
+      }
+
+      let availableInputParams: ParamCodes[] &#x3D; Array.isArray(this.inputParams) ? this.inputParams : this.inputParams ? [this.inputParams] : [];
+      console.log(requiredInputs, availableInputParams, &#x27;REQUIRED/EXISTING&#x27;);
+      return true;
+    });
+  }))</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="47" class="link-to-prism">src/lib/process-builder/components/embedded/embedded-function-selection/embedded-function-selection.component.ts:47</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="functionTemplates$"></a>
+                    <span class="name">
+                            <span class="modifier">Public</span>
+                        <span ><b>functionTemplates$</b></span>
+                        <a href="#functionTemplates$"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>this.functions$.pipe(map(funcs &#x3D;&gt; funcs.filter(func &#x3D;&gt; func.requireCustomImplementation)))</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="72" class="link-to-prism">src/lib/process-builder/components/embedded/embedded-function-selection/embedded-function-selection.component.ts:72</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="ngOnDestroy"></a>
+                    <span class="name">
+                            <span class="modifier">Public</span>
+                        <span ><b>ngOnDestroy</b></span>
+                        <a href="#ngOnDestroy"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>() &#x3D;&gt; {...}</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="79" class="link-to-prism">src/lib/process-builder/components/embedded/embedded-function-selection/embedded-function-selection.component.ts:79</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="searchinputExpanded"></a>
+                    <span class="name">
+                            <span class="modifier">Public</span>
+                        <span ><b>searchinputExpanded</b></span>
+                        <a href="#searchinputExpanded"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>false</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="42" class="link-to-prism">src/lib/process-builder/components/embedded/embedded-function-selection/embedded-function-selection.component.ts:42</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+</section>
+
+    <section>
+    <h3 id="accessors">
+        Accessors
+    </h3>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="formGroup"></a>
+                        <span class="name"><b>formGroup</b><a href="#formGroup"><span class="icon ion-ios-link"></span></a></span>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="col-md-4">
+                        <span class="accessor"><b>get</b><code>formGroup()</code></span>
+                    </td>
+                </tr>
+                            <tr>
+                                <td class="col-md-4">
+                                    <div class="io-line">Defined in <a href="" data-line="38" class="link-to-prism">src/lib/process-builder/components/embedded/embedded-function-selection/embedded-function-selection.component.ts:38</a></div>
+                                </td>
+                            </tr>
+
+            </tbody>
+        </table>
+</section>
+</div>
+
+
+    <div class="tab-pane fade  tab-source-code" id="c-source">
+        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { Component, ElementRef, Input, OnDestroy, OnInit, QueryList, ViewChild, ViewChildren, ViewContainerRef } from &#x27;@angular/core&#x27;;
+import { ReplaySubject, filter, Subscription } from &#x27;rxjs&#x27;;
+import { ParamCodes } from &#x27;src/config/param-codes&#x27;;
+import { IEmbeddedView } from &#x27;src/lib/process-builder/classes/embedded-view&#x27;;
+import { IFunction } from &#x27;src/lib/process-builder/interfaces/function.interface&#x27;;
+import { showAnimation } from &#x27;src/lib/shared/animations/show&#x27;;
+import { Store } from &#x27;@ngrx/store&#x27;;
+import { selectIFunctions } from &#x27;src/lib/process-builder/store/selectors/function.selector&#x27;;
+import { FunctionPreviewComponent } from &#x27;../../previews/function-preview/function-preview.component&#x27;;
+import { ControlContainer, FormControl, FormGroup } from &#x27;@angular/forms&#x27;;
+import { IInputParam } from &#x27;src/lib/process-builder/interfaces/input-param.interface&#x27;;
+import { delay, map, startWith } from &#x27;rxjs/operators&#x27;;
+import * as fromIFunctionState from &#x27;src/lib/process-builder/store/reducers/function.reducer&#x27;;
+import { removeIFunction } from &#x27;src/lib/process-builder/store/actions/function.actions&#x27;;
+import { showListAnimation } from &#x27;src/lib/shared/animations/show-list&#x27;;
+import { combineLatest } from &#x27;rxjs/internal/observable/combineLatest&#x27;;
+import { TaskCreationFormGroup } from &#x27;src/lib/process-builder/interfaces/task-creation-form-group-value.interface&#x27;;
+
+@Component({
+  selector: &#x27;app-embedded-function-selection&#x27;,
+  templateUrl: &#x27;./embedded-function-selection.component.html&#x27;,
+  styleUrls: [&#x27;./embedded-function-selection.component.scss&#x27;],
+  animations: [showAnimation, showListAnimation]
+})
+export class EmbeddedFunctionSelectionComponent implements IEmbeddedView, OnDestroy, OnInit {
+
+  @Input() public inputParams!: ParamCodes | ParamCodes[] | null;
+
+  @ViewChildren(FunctionPreviewComponent, { read: ViewContainerRef }) private activeFunctionWrappers!: QueryList&lt;ViewContainerRef&gt;;
+  @ViewChild(&#x27;searchInput&#x27;, { static: true, read: ElementRef }) private _searchInput!: ElementRef&lt;HTMLInputElement&gt;;
+
+  public filterControl &#x3D; new FormControl&lt;string&gt;(&#x27;&#x27;);
+  private _filter$ &#x3D; this.filterControl.valueChanges.pipe(startWith(&#x27;&#x27;), map(filter &#x3D;&gt; {
+    const transformed &#x3D; (filter ?? &#x27;&#x27;).trim().toLowerCase().split(&#x27; &#x27;).filter(segment &#x3D;&gt; segment);
+    return transformed;
+  }));
+
+  public get formGroup(): TaskCreationFormGroup {
+    return this._controlContainer.control as TaskCreationFormGroup;
+  }
+
+  public searchinputExpanded &#x3D; false;
+
+  private _availableFunctions &#x3D; new ReplaySubject&lt;IFunction[]&gt;(1);
+  public availableFunctions$ &#x3D; this._availableFunctions.asObservable();
+
+  public functions$ &#x3D; combineLatest([this._store.select(selectIFunctions()), this._filter$]).pipe(map(([functions, filter]) &#x3D;&gt; {
+    return functions.filter(func &#x3D;&gt; {
+      if (!func) {
+        return false;
+      }
+
+      if (filter.length &gt; 0) {
+        const functionNameSegments &#x3D; func.name.trim().toLowerCase().split(&#x27; &#x27;)
+        const isNotMatchingFilter &#x3D; filter.some(segment &#x3D;&gt; functionNameSegments.every(functionSegment &#x3D;&gt; functionSegment.indexOf(segment) &#x3D;&#x3D;&#x3D; -1));
+        if (isNotMatchingFilter) {
+          return false;
+        }
+      }
+
+      const requiredInputs: ParamCodes[] &#x3D; (func.inputParams ?? []).filter(param &#x3D;&gt; param &amp;&amp; typeof param &#x3D;&#x3D;&#x3D; &#x27;object&#x27; &amp;&amp; !param.optional).map((x) &#x3D;&gt; (x as IInputParam).interface) as ParamCodes[];
+      if (requiredInputs.length &#x3D;&#x3D;&#x3D; 0) {
+        return true;
+      }
+
+      let availableInputParams: ParamCodes[] &#x3D; Array.isArray(this.inputParams) ? this.inputParams : this.inputParams ? [this.inputParams] : [];
+      console.log(requiredInputs, availableInputParams, &#x27;REQUIRED/EXISTING&#x27;);
+      return true;
+    });
+  }));
+
+  public functionTemplates$ &#x3D; this.functions$.pipe(map(funcs &#x3D;&gt; funcs.filter(func &#x3D;&gt; func.requireCustomImplementation)));
+  public customFunctions$ &#x3D; this.functions$.pipe(map(funcs &#x3D;&gt; funcs.filter(func &#x3D;&gt; func.customImplementation)));
+
+  private _subscription: Subscription &#x3D; new Subscription();
+
+  constructor(private _store: Store&lt;fromIFunctionState.State&gt;, private _controlContainer: ControlContainer) { }
+
+  public ngOnDestroy &#x3D; () &#x3D;&gt; this._subscription.unsubscribe();
+
+  public ngOnInit(): void {
+    this._subscription.add(...[
+      this.availableFunctions$.pipe(delay(800)).subscribe(() &#x3D;&gt; {
+        let ref &#x3D; this.activeFunctionWrappers.find(x &#x3D;&gt; (x.element.nativeElement as HTMLDivElement).hasAttribute(&#x27;active&#x27;));
+        if (ref) {
+          ref.element.nativeElement.scrollIntoView({ behavior: &#x27;smooth&#x27; });
+        }
+      })
+    ])
+  }
+
+  public removeFunction(func: IFunction, evt?: Event) {
+    if (evt) {
+      evt.stopPropagation();
+      evt.preventDefault();
+    }
+
+    this._store.dispatch(removeIFunction(func));
+  }
+
+  public selectFunction(func: IFunction) {
+    const functionIdentifier &#x3D; this.formGroup.controls.functionIdentifier!.value &#x3D;&#x3D;&#x3D; func.identifier ? null : func.identifier;
+    this.formGroup.controls.functionIdentifier!.setValue(functionIdentifier);
+  }
+
+  public toggleSearchInput(expand?: boolean) {
+    this.searchinputExpanded &#x3D; typeof expand &#x3D;&#x3D;&#x3D; &#x27;boolean&#x27; ? expand : !this.searchinputExpanded;
+    this._searchInput.nativeElement[this.searchinputExpanded ? &#x27;focus&#x27; : &#x27;blur&#x27;]();
+  }
+
+}
+</code></pre>
+    </div>
+
+    <div class="tab-pane fade " id="c-templateData">
+        <pre class="line-numbers"><code class="language-html">&lt;div class&#x3D;&quot;body&quot;&gt;
+
+    &lt;div class&#x3D;&quot;search-wrapper&quot; [class.expanded]&#x3D;&quot;searchinputExpanded&quot;&gt;
+        &lt;input #searchInput [formControl]&#x3D;&quot;filterControl&quot; class&#x3D;&quot;search-input&quot; type&#x3D;&quot;text&quot;
+            (blur)&#x3D;&quot;toggleSearchInput(false)&quot; /&gt;
+        &lt;mat-icon (click)&#x3D;&quot;toggleSearchInput()&quot;&gt;search&lt;/mat-icon&gt;
+    &lt;/div&gt;
+
+    &lt;div class&#x3D;&quot;content&quot;&gt;
+
+        &lt;div class&#x3D;&quot;section-headline&quot;&gt;Your implementations&lt;/div&gt;
+        &lt;div class&#x3D;&quot;grid&quot; *ngIf&#x3D;&quot;(customFunctions$|async)?.length; else noFunctions&quot;&gt;
+
+            &lt;div class&#x3D;&quot;function-wrapper&quot; [@showList]&#x3D;&quot;(customFunctions$|async)?.length&quot; *ngFor&#x3D;&quot;let func of (customFunctions$|async)&quot; (click)&#x3D;&quot;selectFunction(func)&quot; [ngClass]&#x3D;&quot;{ &#x27;active&#x27;: func.identifier &#x3D;&#x3D;&#x3D; formGroup.controls.functionIdentifier!.value }&quot;&gt;
+
+                &lt;div class&#x3D;&quot;preview&quot;&gt;
+                    &lt;app-function-preview [func]&#x3D;&quot;func&quot;&gt;&lt;/app-function-preview&gt;
+                &lt;/div&gt;
+
+                &lt;div class&#x3D;&quot;control-wrapper&quot;&gt;
+
+                    &lt;div class&#x3D;&quot;control accent-2&quot;&gt;
+                        {{ func.identifier &#x3D;&#x3D;&#x3D; formGroup.controls.functionIdentifier!.value? &#x27;unselect&#x27;: &#x27;select&#x27; }}
+                    &lt;/div&gt;
+
+                    &lt;div *ngIf&#x3D;&quot;func.customImplementation&quot; class&#x3D;&quot;control danger&quot;
+                        (click)&#x3D;&quot;removeFunction(func, $event)&quot;&gt;
+                        remove
+                    &lt;/div&gt;
+
+                &lt;/div&gt;
+
+            &lt;/div&gt;
+
+        &lt;/div&gt;
+
+        &lt;div class&#x3D;&quot;section-headline&quot;&gt;Templates&lt;/div&gt;
+        &lt;div class&#x3D;&quot;grid&quot; *ngIf&#x3D;&quot;(functionTemplates$|async)?.length; else noFunctions&quot;&gt;
+
+            &lt;div class&#x3D;&quot;function-wrapper&quot; [@showList]&#x3D;&quot;(functionTemplates$|async)?.length&quot; *ngFor&#x3D;&quot;let func of (functionTemplates$|async)&quot; (click)&#x3D;&quot;selectFunction(func)&quot; [ngClass]&#x3D;&quot;{ &#x27;active&#x27;: func.identifier &#x3D;&#x3D;&#x3D; formGroup.controls.functionIdentifier!.value }&quot;&gt;
+
+                &lt;div class&#x3D;&quot;preview&quot;&gt;
+                    &lt;app-function-preview [func]&#x3D;&quot;func&quot;&gt;&lt;/app-function-preview&gt;
+                &lt;/div&gt;
+
+                &lt;div class&#x3D;&quot;control-wrapper&quot;&gt;
+
+                    &lt;div class&#x3D;&quot;control accent-2&quot;&gt;
+                        {{ func.identifier &#x3D;&#x3D;&#x3D; formGroup.controls.functionIdentifier!.value? &#x27;unselect&#x27;: &#x27;select&#x27; }}
+                    &lt;/div&gt;
+
+                    &lt;div *ngIf&#x3D;&quot;func.customImplementation&quot; class&#x3D;&quot;control danger&quot;
+                        (click)&#x3D;&quot;removeFunction(func, $event)&quot;&gt;
+                        remove
+                    &lt;/div&gt;
+
+                &lt;/div&gt;
+
+            &lt;/div&gt;
+
+        &lt;/div&gt;
+
+        &lt;div class&#x3D;&quot;section-headline&quot;&gt;All functions&lt;/div&gt;
+        &lt;div class&#x3D;&quot;grid&quot; *ngIf&#x3D;&quot;(functions$|async)?.length; else noFunctions&quot;&gt;
+
+            &lt;div class&#x3D;&quot;function-wrapper&quot; [@showList]&#x3D;&quot;(functions$|async)?.length&quot; *ngFor&#x3D;&quot;let func of (functions$|async)&quot; (click)&#x3D;&quot;selectFunction(func)&quot; [ngClass]&#x3D;&quot;{ &#x27;active&#x27;: func.identifier &#x3D;&#x3D;&#x3D; formGroup.controls.functionIdentifier!.value }&quot;&gt;
+
+                &lt;div class&#x3D;&quot;preview&quot;&gt;
+                    &lt;app-function-preview [func]&#x3D;&quot;func&quot;&gt;&lt;/app-function-preview&gt;
+                &lt;/div&gt;
+
+                &lt;div class&#x3D;&quot;control-wrapper&quot;&gt;
+
+                    &lt;div class&#x3D;&quot;control accent-2&quot;&gt;
+                        {{ func.identifier &#x3D;&#x3D;&#x3D; formGroup.controls.functionIdentifier!.value? &#x27;unselect&#x27;: &#x27;select&#x27; }}
+                    &lt;/div&gt;
+
+                    &lt;div *ngIf&#x3D;&quot;func.customImplementation&quot; class&#x3D;&quot;control danger&quot;
+                        (click)&#x3D;&quot;removeFunction(func, $event)&quot;&gt;
+                        remove
+                    &lt;/div&gt;
+
+                &lt;/div&gt;
+
+            &lt;/div&gt;
+
+        &lt;/div&gt;
+
+    &lt;/div&gt;
+
+&lt;/div&gt;
+
+&lt;ng-template #noFunctions&gt;
+
+    &lt;div class&#x3D;&quot;no-function-found-hint&quot;&gt;
+        no functions found
+    &lt;/div&gt;
+
+&lt;/ng-template&gt;
+</code></pre>
+    </div>
+
+    <div class="tab-pane fade " id="c-styleData">
+                <p class="comment">
+                    <code>./embedded-function-selection.component.scss</code>
+                </p>
+                <pre class="line-numbers"><code class="language-scss">.body {
+    position: relative;
+    height: 100%;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+}
+
+.content {
+    padding: 1rem;
+    overflow-y: scroll;
+    flex: 1;
+}
+
+.section-headline {
+    margin: 1rem 0.5rem 0.5rem 0.5rem;
+    font-weight: 100;
+    font-size: 1.2rem;
+}
+
+.grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(380px, 1fr));
+    gap: 0.6rem;
+}
+
+.search-wrapper {
+    background-color: white;
+    padding: 0.5rem;
+    position: absolute;
+    top: 2px;
+    right: 10px;
+    cursor: pointer;
+    display: flex;
+    z-index: 1;
+    border-radius: 10px;
+    opacity: 0.5;
+
+    .search-input {
+        width: 0px;
+        padding: 0px;
+        margin: 0px;
+        border: none;
+        margin-right: 2px;
+    }
+}
+
+.search-wrapper.expanded {
+    opacity: 1;
+
+    .search-input {
+        width: 200px;
+        padding: 5px;
+        margin: 0px;
+        border: none;
+    }
+}
+
+.search-input {
+    flex: 1;
+    width: auto;
+    transition: width 0.5s;
+}
+
+.function-wrapper {
+    padding: 1rem;
+    border-radius: 3px;
+    background-color: white;
+    box-shadow: 0 0 4px #8484844d;
+    display: flex;
+    flex-direction: column;
+    transition: 0.1s ease-in;
+    min-height: 10rem;
+    border: 3px solid white;
+}
+
+.function-wrapper.active {
+    transform: scale(1.03);
+    border-color: gold;
+}
+
+.preview {
+    padding-bottom: 0.2rem;
+    margin-bottom: 0.5rem;
+    flex: 1;
+}
+
+.no-function-found-hint {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 100;
+}
+
+.control-wrapper &gt; * {
+    display: inline-block;
+    margin-right: .5rem;
+}
+</code></pre>
+    </div>
+
+    <div class="tab-pane fade " id="c-tree">
+        <div id="tree-container"></div>
+        <div class="tree-legend">
+            <div class="title">
+                <b>Legend</b>
+            </div>
+            <div>
+                <div class="color htmlelement"></div><span>Html element</span>
+            </div>
+            <div>
+                <div class="color component"></div><span>Component</span>
+            </div>
+            <div>
+                <div class="color directive"></div><span>Html element with directive</span>
+            </div>
+        </div>
+    </div>
+
+    
+</div>
+
+<script src="../js/libs/vis.min.js"></script>
+<script src="../js/libs/htmlparser.js"></script>
+<script src="../js/libs/deep-iterator.js"></script>
+<script>
+        var COMPONENT_TEMPLATE = '<div><div class="body">    <div class="search-wrapper" [class.expanded]="searchinputExpanded">        <input #searchInput [formControl]="filterControl" class="search-input" type="text"            (blur)="toggleSearchInput(false)" />        <mat-icon (click)="toggleSearchInput()">search</mat-icon>    </div>    <div class="content">        <div class="section-headline">Your implementations</div>        <div class="grid" *ngIf="(customFunctions$|async)?.length; else noFunctions">            <div class="function-wrapper" [@showList]="(customFunctions$|async)?.length" *ngFor="let func of (customFunctions$|async)" (click)="selectFunction(func)" [ngClass]="{ \'active\': func.identifier === formGroup.controls.functionIdentifier!.value }">                <div class="preview">                    <app-function-preview [func]="func"></app-function-preview>                </div>                <div class="control-wrapper">                    <div class="control accent-2">                        {{ func.identifier === formGroup.controls.functionIdentifier!.value? \'unselect\': \'select\' }}                    </div>                    <div *ngIf="func.customImplementation" class="control danger"                        (click)="removeFunction(func, $event)">                        remove                    </div>                </div>            </div>        </div>        <div class="section-headline">Templates</div>        <div class="grid" *ngIf="(functionTemplates$|async)?.length; else noFunctions">            <div class="function-wrapper" [@showList]="(functionTemplates$|async)?.length" *ngFor="let func of (functionTemplates$|async)" (click)="selectFunction(func)" [ngClass]="{ \'active\': func.identifier === formGroup.controls.functionIdentifier!.value }">                <div class="preview">                    <app-function-preview [func]="func"></app-function-preview>                </div>                <div class="control-wrapper">                    <div class="control accent-2">                        {{ func.identifier === formGroup.controls.functionIdentifier!.value? \'unselect\': \'select\' }}                    </div>                    <div *ngIf="func.customImplementation" class="control danger"                        (click)="removeFunction(func, $event)">                        remove                    </div>                </div>            </div>        </div>        <div class="section-headline">All functions</div>        <div class="grid" *ngIf="(functions$|async)?.length; else noFunctions">            <div class="function-wrapper" [@showList]="(functions$|async)?.length" *ngFor="let func of (functions$|async)" (click)="selectFunction(func)" [ngClass]="{ \'active\': func.identifier === formGroup.controls.functionIdentifier!.value }">                <div class="preview">                    <app-function-preview [func]="func"></app-function-preview>                </div>                <div class="control-wrapper">                    <div class="control accent-2">                        {{ func.identifier === formGroup.controls.functionIdentifier!.value? \'unselect\': \'select\' }}                    </div>                    <div *ngIf="func.customImplementation" class="control danger"                        (click)="removeFunction(func, $event)">                        remove                    </div>                </div>            </div>        </div>    </div></div><ng-template #noFunctions>    <div class="no-function-found-hint">        no functions found    </div></ng-template></div>'
+    var COMPONENTS = [{'name': 'AboutComponent', 'selector': 'app-about'},{'name': 'AccessTokenInputComponent', 'selector': 'app-access-token-input'},{'name': 'ApiCallConfiguratorComponent', 'selector': 'app-api-call-configurator'},{'name': 'ApiCallConfiguratorDialogComponent', 'selector': 'app-api-call-configurator-dialog'},{'name': 'ApiConfigurationPreviewComponent', 'selector': 'app-api-configuration-preview'},{'name': 'ApiLoginTestComponent', 'selector': 'app-api-login-test'},{'name': 'AppComponent', 'selector': 'app-root'},{'name': 'CalculationComponent', 'selector': 'app-calculation'},{'name': 'CalculationContextOverviewComponent', 'selector': 'app-calculation-context-overview'},{'name': 'CodeEditorComponent', 'selector': 'app-code-editor'},{'name': 'ConfirmationComponent', 'selector': 'app-confirmation'},{'name': 'ContainerPreviewComponent', 'selector': 'app-container-preview'},{'name': 'EditDataDialogComponent', 'selector': 'app-edit-data-dialog'},{'name': 'EmbeddedConfigureErrorGatewayEntranceConnectionComponent', 'selector': 'app-embedded-configure-error-gateway-entrance-connection'},{'name': 'EmbeddedFunctionImplementationComponent', 'selector': 'app-embedded-function-implementation'},{'name': 'EmbeddedFunctionInputSelectionComponent', 'selector': 'app-embedded-function-input-selection'},{'name': 'EmbeddedFunctionSelectionComponent', 'selector': 'app-embedded-function-selection'},{'name': 'EmbeddedInputOutputMappingComponent', 'selector': '[app-embedded-input-output-mapping]'},{'name': 'EmbeddedInputOutputMappingTableRowComponent', 'selector': 'app-embedded-input-output-mapping-table-row'},{'name': 'EmbeddedOutputParamConfigurationComponent', 'selector': 'app-embedded-output-param-configuration'},{'name': 'EmbeddedParamEditorComponent', 'selector': 'app-embedded-param-editor'},{'name': 'EndpointInputComponent', 'selector': 'app-endpoint-input'},{'name': 'ErrorComponent', 'selector': 'app-error'},{'name': 'FunctionPreviewComponent', 'selector': 'app-function-preview'},{'name': 'GoodPreviewComponent', 'selector': 'app-good-preview'},{'name': 'GoodsPanelComponent', 'selector': 'app-goods-panel'},{'name': 'GroupsFormComponent', 'selector': 'app-groups-form'},{'name': 'GroupsPanelComponent', 'selector': 'app-groups-panel'},{'name': 'LocalDataComponent', 'selector': 'app-local-data'},{'name': 'MethodQuickInteractionComponent', 'selector': 'app-method-quick-interaction'},{'name': 'NavbarComponent', 'selector': 'app-navbar'},{'name': 'NoSolutionDialogComponent', 'selector': 'app-no-solution-dialog'},{'name': 'OrdersFormComponent', 'selector': 'app-orders-form'},{'name': 'ParamEditorComponent', 'selector': 'app-param-editor'},{'name': 'ParamMemberPathPreviewComponent', 'selector': 'app-param-member-path-preview'},{'name': 'ParamMemberPreviewComponent', 'selector': 'app-param-member-preview'},{'name': 'ParamPreviewComponent', 'selector': 'app-param-preview'},{'name': 'PipelineActionPreviewComponent', 'selector': 'app-pipeline-action-preview'},{'name': 'PipeRunnerComponent', 'selector': 'app-pipe-runner'},{'name': 'ProcessBuilderComponent', 'selector': 'app-process-builder'},{'name': 'ProcessBuilderWrapperComponent', 'selector': 'app-process-builder-wrapper'},{'name': 'ProductFormComponent', 'selector': 'app-products-form'},{'name': 'SceneVisualizationComponent', 'selector': 'app-scene-visualization'},{'name': 'SelectApiAuthorizationComponent', 'selector': 'app-select-api-authorization'},{'name': 'SelectGroupComponent', 'selector': 'app-select-group'},{'name': 'SelectProductComponent', 'selector': 'app-select-product'},{'name': 'SelectUnitComponent', 'selector': 'app-select-unit'},{'name': 'SolutionAnimationComponent', 'selector': 'app-solution-animation'},{'name': 'SolutionPreviewComponent', 'selector': 'app-solution-preview'},{'name': 'SolutionPreviewRenderingComponent', 'selector': 'app-solution-preview-rendering'},{'name': 'SolutionValidationComponent', 'selector': 'app-solution-validation'},{'name': 'SolutionVisualizationDialogComponent', 'selector': 'app-solution-visualization-dialog'},{'name': 'TaskCreationComponent', 'selector': 'app-task-creation'},{'name': 'UserInputComponent', 'selector': 'app-user-input'},{'name': 'UsernamePasswordCombinationComponent', 'selector': 'app-username-password-combination'},{'name': 'VisualizerComponent', 'selector': 'app-visualizer'},{'name': 'WidgetComponent', 'selector': 'app-widget'}];
+    var DIRECTIVES = [{'name': 'AnimatedCounterDirective', 'selector': '[appAnimatedCounter]'}];
+    var ACTUAL_COMPONENT = {'name': 'EmbeddedFunctionSelectionComponent'};
+</script>
+<script src="../js/tree.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                   </div><div class="search-results">
+    <div class="has-results">
+        <h1 class="search-results-title"><span class='search-results-count'></span> results matching "<span class='search-query'></span>"</h1>
+        <ul class="search-results-list"></ul>
+    </div>
+    <div class="no-results">
+        <h1 class="search-results-title">No results matching "<span class='search-query'></span>"</h1>
+    </div>
+</div>
+</div>
+               <!-- END CONTENT -->
+           </div>
+       </div>
+
+          <label class="dark-mode-switch">
+               <input type="checkbox">
+               <span class="slider">
+                    <svg class="slider-icon" viewBox="0 0 24 24" fill="none" height="20" stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" width="20" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"></path>
+                    </svg>
+               </span>
+          </label>
+
+       <script>
+            var COMPODOC_CURRENT_PAGE_DEPTH = 1;
+            var COMPODOC_CURRENT_PAGE_CONTEXT = 'component';
+            var COMPODOC_CURRENT_PAGE_URL = 'EmbeddedFunctionSelectionComponent.html';
+            var MAX_SEARCH_RESULTS = 15;
+       </script>
+
+       <script src="../js/libs/custom-elements.min.js"></script>
+       <script src="../js/libs/lit-html.js"></script>
+
+       <script src="../js/menu-wc.js" defer></script>
+       <script nomodule src="../js/menu-wc_es5.js" defer></script>
+
+       <script src="../js/libs/bootstrap-native.js"></script>
+
+       <script src="../js/libs/es6-shim.min.js"></script>
+       <script src="../js/libs/EventDispatcher.js"></script>
+       <script src="../js/libs/promise.min.js"></script>
+       <script src="../js/libs/zepto.min.js"></script>
+
+       <script src="../js/compodoc.js"></script>
+
+       <script src="../js/tabs.js"></script>
+       <script src="../js/menu.js"></script>
+       <script src="../js/libs/clipboard.min.js"></script>
+       <script src="../js/libs/prism.js"></script>
+       <script src="../js/sourceCode.js"></script>
+          <script src="../js/search/search.js"></script>
+          <script src="../js/search/lunr.min.js"></script>
+          <script src="../js/search/search-lunr.js"></script>
+          <script src="../js/search/search_index.js"></script>
+       <script src="../js/lazy-load-graphs.js"></script>
+
+
+    </body>
+</html>

@@ -29,12 +29,12 @@ export class EmbeddedInputOutputMappingComponent implements IEmbeddedView, OnDes
     .pipe(
       filter(func => !!func),
       switchMap((func) => {
-        if (typeof func!.output?.interface === 'number') {
+        if (typeof func!.outputTemplate === 'number') {
           return this._store
-            .select(selectIInterface(func!.output!.interface))
+            .select(selectIInterface(func!.outputTemplate))
             .pipe(map(iface => iface?.name));
         }
-        return of(`param ${func!.output!.param}`);
+        return of(`param ${func!.output}`);
       })
     );
 

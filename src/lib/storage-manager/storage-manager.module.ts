@@ -22,11 +22,27 @@ import { ISolutionPreviewEffects } from './store/effects/solution-preview.effect
 import { StoreModule } from '@ngrx/store';
 import { EffectsModule } from '@ngrx/effects';
 import { ProcedureStoreModule } from '../procedure-store/procedure-store.module';
+import { SelectGroupComponent } from './components/select/select-group/select-group.component';
+import { SelectProductComponent } from './components/select/select-product/select-product.component';
+import { SelectUnitComponent } from './components/select/select-unit/select-unit.component';
+import { MatSelectModule } from '@angular/material/select';
+import { MatInputModule } from '@angular/material/input';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { ReactiveFormsModule } from '@angular/forms';
 
 @NgModule({
-  declarations: [],
+  declarations: [
+    SelectGroupComponent,
+    SelectProductComponent,
+    SelectUnitComponent,
+  ],
   imports: [
     CommonModule,
+
+    MatFormFieldModule,
+    MatInputModule,
+    MatSelectModule,
+    ReactiveFormsModule,
 
     StoreModule.forFeature(fromICalculationAttributesState.calculationAttributesFeatureKey, fromICalculationAttributesState.reducer),
     StoreModule.forFeature(fromIGroupState.groupFeatureKey, fromIGroupState.reducer),
@@ -40,7 +56,10 @@ import { ProcedureStoreModule } from '../procedure-store/procedure-store.module'
     ProcedureStoreModule
   ],
   exports: [
-    ProcedureStoreModule
+    ProcedureStoreModule,
+    SelectGroupComponent,
+    SelectProductComponent,
+    SelectUnitComponent,
   ]
 })
 export class StorageManagerModule { }
