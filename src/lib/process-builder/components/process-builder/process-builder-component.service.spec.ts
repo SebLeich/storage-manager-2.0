@@ -26,6 +26,7 @@ import { upsertIParam } from '../../store/actions/param.actions';
 import { IParam } from '../../interfaces/param.interface';
 import { deepObjectLookup } from 'src/lib/shared/globals/deep-object-lookup.function';
 import { ITaskCreationFormGroupValue } from '../../interfaces/task-creation-form-group-value.interface';
+import { IElementRegistryModule } from 'src/lib/bpmn-io/bpmn-modules';
 
 describe('ProcessBuilderComponentService', () => {
   const processBuilderConfig = {
@@ -73,6 +74,7 @@ describe('ProcessBuilderComponentService', () => {
   let service: ProcessBuilderComponentService;
   let bpmnJsService: BpmnJsService;
   let modelingModule: IModelingModule;
+  let elementRegistryModule: IElementRegistryModule;
 
   const initialState = {
     [fromIFunction.featureKey]: {
@@ -111,6 +113,7 @@ describe('ProcessBuilderComponentService', () => {
     service = TestBed.inject(ProcessBuilderComponentService);
     bpmnJsService = TestBed.inject(BpmnJsService);
     modelingModule = bpmnJsService.modelingModule;
+    elementRegistryModule = bpmnJsService.elementRegistryModule;
   });
 
   it('should create', () => {
@@ -261,18 +264,29 @@ describe('ProcessBuilderComponentService', () => {
       it(`should set correct label ${incomingGatewayConnectorLabel} to incoming connector if connector is coming from an error gateway`, async () => {
         modelingModule.updateLabel = (...args) => { }
         spyOn(modelingModule, 'appendShape').and.returnValue({
-          businessObject: {},
+          businessObject: {
+            extensionElements: {}
+          },
           children: []
         } as IElement);
         const updateLabelSpy = spyOn(modelingModule, 'updateLabel').and.callThrough();
+
+        const connectorMock = {
+          businessObject: {
+            extensionElements: {
+              get: () => ({
+                push: () => {}
+              })
+            }
+          }
+        } as any;
+        spyOn(elementRegistryModule, 'get').and.returnValue(connectorMock);
 
         const activityMock = {
           businessObject: {},
           incoming: [] as IConnector[],
           outgoing: [] as IConnector[],
         } as IElement;
-
-        const connectorMock = {};
 
         await service.applyTaskCreationConfig({
           configureActivity: activityMock,
@@ -651,7 +665,6 @@ describe('ProcessBuilderComponentService', () => {
           children: []
         } as IElement);
         const removeShapeSpy = spyOn(modelingModule, 'removeElements');
-        const connectShapeSpy = spyOn(modelingModule, 'connect');
 
 
         let outgoing: IConnector[] = [], incoming: IConnector[] = [];
@@ -693,7 +706,18 @@ describe('ProcessBuilderComponentService', () => {
           } as IConnector);
         }
 
-        const connectorMock = {};
+        const connectorMock = {
+          businessObject: {
+            extensionElements: {
+              get: () => ({
+                push: () => {}
+              })
+            }
+          }
+        } as any;
+        const connectShapeSpy = spyOn(modelingModule, 'connect').and.returnValue(connectorMock);
+        spyOn(elementRegistryModule, 'get').and.returnValue(connectorMock);
+
         const updatedName = 'some new value';
         const updatedNormalizedName = ProcessBuilderRepository.normalizeName(updatedName);
         const outputParamName = 'My Object';
@@ -703,6 +727,7 @@ describe('ProcessBuilderComponentService', () => {
           configureActivity: activityMock,
           configureIncomingErrorGatewaySequenceFlow: connectorMock
         } as ITaskCreationPayload, {
+          entranceGatewayType: null,
           functionIdentifier: mockFunction.identifier,
           canFail: configuration.canFail,
           normalizedName: updatedNormalizedName,
@@ -717,7 +742,7 @@ describe('ProcessBuilderComponentService', () => {
 
         if (shouldDelete) {
           const removedElements = removeShapeSpy.calls.all().flatMap(call => call.args.flatMap(arg => arg));
-          const shouldRemove = [configuration.existingGateway, ...configuration.existingGateway.outgoing];
+          const shouldRemove = [connectorMock];
           expect(shouldRemove.every(toRemove => removedElements.indexOf(toRemove) > -1)).toBeTruthy();
         }
 

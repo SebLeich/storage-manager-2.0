@@ -1,6 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { PipelineActionPreviewComponent } from './pipeline-action-preview.component';
+import defaultImportsConstant from 'src/app/default-imports.constant';
 
 describe('PipelineActionPreviewComponent', () => {
   let component: PipelineActionPreviewComponent;
@@ -8,7 +9,8 @@ describe('PipelineActionPreviewComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ PipelineActionPreviewComponent ]
+      declarations: [ PipelineActionPreviewComponent ],
+      imports: [...defaultImportsConstant]
     })
     .compileComponents();
 

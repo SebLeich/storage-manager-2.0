@@ -104,7 +104,7 @@ export class CodemirrorRepository {
             const representation = state.sliceDoc(objectExpression?.from, objectExpression?.to);
             try {
                 const parsedValue = JSON.parse(representation);
-                return { status: MethodEvaluationStatus.ReturnValueFound, detectedValue: parsedValue, valueIsDefinite: true };
+                return { status: MethodEvaluationStatus.ReturnValueFound, detectedValue: parsedValue, valueIsDefinite: true, type: 'object' };
             } catch(e){
                 return { status: MethodEvaluationStatus.ReturnValueFound, valueIsDefinite: false };
             }

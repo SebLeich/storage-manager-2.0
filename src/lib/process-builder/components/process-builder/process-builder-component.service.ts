@@ -171,7 +171,7 @@ export class ProcessBuilderComponentService {
     const configureActivity = taskCreationPayload.configureActivity;
     if (configureActivity) {
       const dataInputAssociations = configureActivity.incoming.filter(incoming => incoming.type === shapeTypes.DataInputAssociation);
-      if (dataInputAssociations) {
+      if (dataInputAssociations.length > 0) {
         this._bpmnJsService.modelingModule.removeElements(dataInputAssociations);
       }
     }
@@ -253,7 +253,7 @@ export class ProcessBuilderComponentService {
       name: taskCreationData.name ?? this._config.defaultFunctionName,
       identifier: functionIdentifier,
       normalizedName: taskCreationData.normalizedName ?? ProcessBuilderRepository.normalizeName(taskCreationData.name ?? undefined),
-      output: methodEvaluation.status === MethodEvaluationStatus.ReturnValueFound || referencedFunction.outputTemplate === 'dynamic' ? { param: outputParamId } : null,
+      output: methodEvaluation.status === MethodEvaluationStatus.ReturnValueFound || referencedFunction.outputTemplate === 'dynamic' ? outputParamId : null,
       implementation: referencedFunction.implementation,
       inputTemplates: inputParams,
       requireCustomImplementation: false,
