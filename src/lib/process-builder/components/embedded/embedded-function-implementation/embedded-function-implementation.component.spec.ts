@@ -3,6 +3,8 @@ import defaultImportsConstant from 'src/app/default-imports.constant';
 import { PROCESS_BUILDER_CONFIG_TOKEN } from 'src/lib/process-builder/interfaces/process-builder-config.interface';
 
 import { EmbeddedFunctionImplementationComponent } from './embedded-function-implementation.component';
+import { ControlContainer, FormControl, FormGroup, FormGroupDirective } from '@angular/forms';
+import { TaskCreationFormGroup } from 'src/lib/process-builder/interfaces/task-creation-form-group-value.interface';
 
 describe('EmbeddedFunctionImplementationComponent', () => {
   let component: EmbeddedFunctionImplementationComponent;
@@ -16,6 +18,19 @@ describe('EmbeddedFunctionImplementationComponent', () => {
       ],
       providers: [
         { provide: PROCESS_BUILDER_CONFIG_TOKEN, useValue: {} },
+        {
+          provide: ControlContainer, useFactory: () => {
+            const directive = {
+              control: new FormGroup({
+                canFail: new FormControl(),
+                implementation: new FormControl(),
+                name: new FormControl(''),
+                outputParamName: new FormControl('')
+              }) as TaskCreationFormGroup
+            } as FormGroupDirective;
+            return directive;
+          }
+        }
       ]
     })
       .compileComponents();

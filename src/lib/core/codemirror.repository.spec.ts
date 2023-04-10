@@ -3,7 +3,19 @@ import { CodemirrorRepository } from "./codemirror.repository";
 
 describe('CodemirrorRepository', () => {
 
-    const values = [1, '"testValue"', true, false, 5, 5.012, null, undefined, { key: 'value' }, ['test'], [{ key: 'value' }]];
+    const values = [
+        { value: 1, definite: true },
+        { value: '"testValue"', definite: true },
+        { value: true, definite: true },
+        { value: false, definite: true },
+        { value: 5, definite: true },
+        { value: 5.012, definite: true },
+        { value: null, definite: true },
+        { value: undefined, definite: true },
+        { value: { key: 'value' }, definite: true },
+        { value: ['test'], definite: false },
+        { value: [{ key: 'value' }], definite: false }
+    ];
 
     it(`should detect missing main method`, () => {
         const evaluationResult = CodemirrorRepository.evaluateCustomMethod(undefined, ['return 1;']);
@@ -11,7 +23,7 @@ describe('CodemirrorRepository', () => {
         expect(evaluationResult.status).toBe(MethodEvaluationStatus.NoMainMethodFound);
     });
 
-    values.forEach(value => {
+    values.forEach(({ value, definite }) => {
 
         const preview = typeof value === 'object' ? JSON.stringify(value) : value;
 
@@ -23,9 +35,7 @@ describe('CodemirrorRepository', () => {
             ]);
             expect(evaluationResult.detectedValue).toEqual(value);
             expect(evaluationResult.status).toBe(MethodEvaluationStatus.ReturnValueFound);
-
-            const valueShouldBeDefinite = ['number', 'string', 'boolean', 'null', 'undefined'].indexOf(value === null ? 'null' : typeof value) > -1;
-            expect(evaluationResult.valueIsDefinite).toBe(valueShouldBeDefinite);
+            expect(evaluationResult.valueIsDefinite).toBe(definite);
         });
 
         it(`should correctly evaulate already declared variable with value ${preview}`, () => {

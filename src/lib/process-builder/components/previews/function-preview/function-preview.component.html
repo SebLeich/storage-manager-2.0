@@ -1,10 +1,9 @@
 <div class="body">
     <div class="preview">
-        <div class="headline">{{func?.name}}</div>
-        <div class="description">{{func?.description}}</div>
+        <div class="headline">{{ func?.name }}</div>
+        <div class="description">{{ func?.description }}</div>
         <ng-container *ngIf="func?.requireCustomImplementation; else canFailHint">
-            <div class="require-custom-implementation">
-                You must provide an custom js implementation
+            <div class="require-custom-implementation">{{ customImplementationRequiredText }}
             </div>
         </ng-container>
         <div class="io-wrapper">

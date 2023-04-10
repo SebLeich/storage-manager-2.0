@@ -5,7 +5,6 @@ import { Store } from '@ngrx/store';
 import { IEmbeddedView } from 'src/lib/process-builder/classes/embedded-view';
 import { TaskCreationFormGroup } from 'src/lib/process-builder/interfaces/task-creation-form-group-value.interface';
 import { selectIInterface, selectIInterfaces } from 'src/lib/process-builder/store/selectors/interface.selectors';
-import { mapIParamsInterfaces } from 'src/lib/process-builder/extensions/rxjs/map-i-params-interfaces.rxjs';
 import { ProcessBuilderRepository } from 'src/lib/core/process-builder-repository';
 
 @Component({

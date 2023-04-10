@@ -20,7 +20,6 @@ describe('ParamPreviewComponent', () => {
 
     fixture = TestBed.createComponent(ParamPreviewComponent);
     component = fixture.componentInstance;
-    fixture.detectChanges();
   });
 
   it('should create', () => {
@@ -28,12 +27,11 @@ describe('ParamPreviewComponent', () => {
   });
 
   it('should display param name', () => {
-    const param: IParam = {
-      'name': generateGuid()
-    } as IParam;
+    const param: IParam = { name: generateGuid() } as IParam;
     component.param = param;
     fixture.detectChanges();
 
-    expect((fixture.debugElement.nativeElement as HTMLElement).innerHTML).toContain(param.name);
+    const componentText = (fixture.debugElement.nativeElement as HTMLElement).innerText;
+    expect(componentText).toContain(param.name);
   });
 });

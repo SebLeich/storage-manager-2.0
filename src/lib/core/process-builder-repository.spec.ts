@@ -28,7 +28,7 @@ describe('Test Process Builder Repository', () => {
                 expect(extractedTypeDef).toEqual(solutionTypeDef as any);
 
                 pseudoObject = ProcessBuilderRepository.createPseudoObjectFromIParamDefinition(extractedTypeDef as IParam) as object;
-                expect(extractedTypeDef).toEqual(solutionObject as any);
+                expect(pseudoObject).toEqual(solutionObject as any);
 
             });
 

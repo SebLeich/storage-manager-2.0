@@ -20,6 +20,7 @@ import { ProcessBuilderRepository } from 'src/lib/core/process-builder-repositor
 import { provideMockStore } from '@ngrx/store/testing';
 import * as fromIFunction from '../../store/reducers/function.reducer';
 import * as fromInjectionContext from '../../store/reducers/injection-context.reducer';
+import * as fromIParam from '../../store/reducers/param.reducer';
 import { BPMNJsRepository } from 'src/lib/core/bpmn-js.repository';
 import { upsertIParam } from '../../store/actions/param.actions';
 import { IParam } from '../../interfaces/param.interface';
@@ -74,16 +75,20 @@ describe('ProcessBuilderComponentService', () => {
   let modelingModule: IModelingModule;
 
   const initialState = {
-    'Func': {
+    [fromIFunction.featureKey]: {
       entities: {
         1: mockFunction
       },
       ids: [mockFunction.identifier]
     } as fromIFunction.State,
-    'injectionContext': {
+    [fromInjectionContext.featureKey]: {
       values: injector,
       interfaces: injectorInterface
     } as fromInjectionContext.State,
+    [fromIParam.featureKey]: {
+      entities: {},
+      ids: []
+    } as fromIParam.State
   };
 
   beforeEach(() => {

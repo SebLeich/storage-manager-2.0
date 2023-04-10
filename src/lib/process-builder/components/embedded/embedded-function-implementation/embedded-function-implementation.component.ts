@@ -1,18 +1,13 @@
-import { AfterViewInit, ChangeDetectorRef, Component, ElementRef, Inject, Input, OnDestroy, ViewChild } from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, Component, Inject, Input, OnDestroy } from '@angular/core';
 import { BehaviorSubject, ReplaySubject, Subscription } from 'rxjs';
 import { ProcessBuilderRepository } from 'src/lib/core/process-builder-repository';
 import { IEmbeddedView } from 'src/lib/process-builder/classes/embedded-view';
 import { syntaxTree } from "@codemirror/language";
-import { autocompletion, CompletionContext } from "@codemirror/autocomplete";
-import { EditorState, Text } from '@codemirror/state';
-import { basicSetup, EditorView } from '@codemirror/basic-setup';
-import { javascript } from '@codemirror/lang-javascript';
-import { CodemirrorRepository } from 'src/lib/core/codemirror.repository';
+import { CompletionContext } from "@codemirror/autocomplete";
+import { Text } from '@codemirror/state';
 import { MethodEvaluationStatus } from 'src/lib/process-builder/globals/method-evaluation-status';
 import { IProcessBuilderConfig, PROCESS_BUILDER_CONFIG_TOKEN } from 'src/lib/process-builder/interfaces/process-builder-config.interface';
-import { lintGutter } from '@codemirror/lint';
-import defaultImplementation from 'src/lib/process-builder/globals/default-implementation';
-import { debounceTime, map, shareReplay, tap } from 'rxjs/operators';
+import { debounceTime, map, shareReplay } from 'rxjs/operators';
 import { ControlContainer, FormControl, UntypedFormControl } from '@angular/forms';
 import { Store } from '@ngrx/store';
 import { selectIParams } from 'src/lib/process-builder/store/selectors/param.selectors';
@@ -23,8 +18,6 @@ import completeProperties from './methods/complete-properties.method';
 import byStringMethods from './methods/by-string.methods';
 import { ProcessBuilderService } from 'src/lib/process-builder/services/process-builder.service';
 import globalsInjector from './constants/globals-injector.constant';
-import { selectSnapshot } from 'src/lib/process-builder/globals/select-snapshot';
-import { IInterface } from 'src/lib/process-builder/interfaces/interface.interface';
 import { TaskCreationFormGroup } from 'src/lib/process-builder/interfaces/task-creation-form-group-value.interface';
 
 @Component({
@@ -36,9 +29,6 @@ import { TaskCreationFormGroup } from 'src/lib/process-builder/interfaces/task-c
 export class EmbeddedFunctionImplementationComponent implements IEmbeddedView, AfterViewInit, OnDestroy {
 
   @Input() public inputParams!: number[];
-
-  @ViewChild('codeBody', { static: true, read: ElementRef }) codeBody!: ElementRef<HTMLDivElement>;
-  public codeMirror!: EditorView;
 
   public inputParams$ = this._store.select(selectIParams(this.inputParams)).pipe(shareReplay());
 
@@ -73,7 +63,6 @@ export class EmbeddedFunctionImplementationComponent implements IEmbeddedView, A
 
   public ngAfterViewInit(): void {
     this._autoNormalizeNames();
-    this._handleImplementationChanges();
 
     this._subscriptions.add(...[
       this.returnValueStatus$.subscribe((status) => {
@@ -104,12 +93,6 @@ export class EmbeddedFunctionImplementationComponent implements IEmbeddedView, A
         })
     ]);
 
-    this.codeMirror = new EditorView({
-      state: this.state(),
-      parent: this.codeBody.nativeElement
-    });
-    this._implementationChanged.next(this.codeMirror.state.doc);
-
     this._changeDetectorRef.detectChanges();
   }
 
@@ -133,24 +116,6 @@ export class EmbeddedFunctionImplementationComponent implements IEmbeddedView, A
     }
     return null
   }
-
-  public state = () => {
-    const implementation = this.formGroup.controls.implementation!.value;
-    return EditorState.create({
-      doc: Array.isArray(implementation) ? implementation.join('\n') : defaultImplementation,
-      extensions: [
-        basicSetup,
-        autocompletion({ override: [this.complete] }),
-        javascript(),
-        EditorView.updateListener.of((evt) => {
-          if (evt.docChanged) {
-            this._implementationChanged.next(this.codeMirror.state.doc);
-          }
-        }),
-        lintGutter(),
-      ]
-    });
-  };
 
   public MethodEvaluationStatus = MethodEvaluationStatus;
 
@@ -177,48 +142,6 @@ export class EmbeddedFunctionImplementationComponent implements IEmbeddedView, A
         .valueChanges
         .pipe(debounceTime(200), map((name) => ProcessBuilderRepository.normalizeName(name)))
         .subscribe((normalizedName) => this.formGroup.controls.normalizedName!.setValue(normalizedName)),
-    ]);
-  }
-
-  private async _evaluateImplementation(implementation: string[] | null) {
-    const evaluationResult = CodemirrorRepository.evaluateCustomMethod(this.codeMirror.state, implementation ?? undefined);
-    this._returnValueStatus.next(evaluationResult.status);
-
-    if (evaluationResult?.injectorNavigationPath) {
-      const inputParams = await selectSnapshot(this.inputParams$);
-      const result = await this._processBuilderService.mapNavigationPathPropertyMetadata(evaluationResult.injectorNavigationPath, inputParams);
-
-      if ((result as any)?.interface) {
-        let iFace: IInterface = (result as any).interface;
-        this.formGroup.controls.interface!.setValue(iFace.identifier);
-
-        if (this.formGroup.controls.outputParamName?.pristine) {
-          this.formGroup.controls.outputParamName!.setValue(iFace.normalizedName);
-        }
-
-        if (this.formGroup.controls.name?.pristine) {
-          this.formGroup.controls.name!.setValue(`provide ${iFace.normalizedName}`);
-        }
-      }
-    }
-  }
-
-  private _handleImplementationChanges() {
-    this._subscriptions.add(...[
-      this.implementationChanged$
-        .pipe(
-          tap(() => this._returnValueStatus.next(MethodEvaluationStatus.Calculating)),
-          debounceTime(500)
-        )
-        .subscribe((implementation) => {
-          this.formGroup.controls.implementation!.setValue((implementation as any)?.text);
-        }),
-
-      this.formGroup.controls.implementation!
-        .valueChanges
-        .subscribe(async (implementation) => {
-          await this._evaluateImplementation(implementation);
-        })
     ]);
   }
 

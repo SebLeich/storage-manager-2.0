@@ -1,5 +1,5 @@
 import { Component, Inject } from '@angular/core';
-import { ControlContainer, FormGroup } from '@angular/forms';
+import { ControlContainer } from '@angular/forms';
 import { IElement } from 'src/lib/bpmn-io/interfaces/element.interface';
 import { BPMNJsRepository } from 'src/lib/core/bpmn-js.repository';
 import { IEmbeddedView } from 'src/lib/process-builder/classes/embedded-view';
@@ -16,9 +16,7 @@ export class EmbeddedConfigureErrorGatewayEntranceConnectionComponent implements
 
   public successActionDefined = false;
   public errorActionDefined = false;
-  private _gateway: IElement | null = null;
   public set gateway(gateway: IElement){
-    	this._gateway = gateway;
       const outgoingConnectorTypes = gateway.outgoing.map(connector => {
         return BPMNJsRepository.getSLPBExtension(connector.businessObject, 'SequenceFlowExtension', (ext) => ext.sequenceFlowType) as 'success' | 'error';
       });

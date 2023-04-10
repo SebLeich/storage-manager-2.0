@@ -1,8 +1,6 @@
-import { ChangeDetectionStrategy, Component, Input, OnInit } from '@angular/core';
-import { Store } from '@ngrx/store';
+import { ChangeDetectionStrategy, Component, Input, OnChanges, SimpleChanges } from '@angular/core';
 import { IFunction } from '../../../interfaces/function.interface';
 import { IInputParam } from '../../../interfaces/input-param.interface';
-import { updateIFunction } from '../../../store/actions/function.actions';
 
 @Component({
   selector: 'app-function-preview',
@@ -10,40 +8,25 @@ import { updateIFunction } from '../../../store/actions/function.actions';
   styleUrls: ['./function-preview.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class FunctionPreviewComponent implements OnInit {
+export class FunctionPreviewComponent implements OnChanges {
 
   public useInterface = false;
   public interface: number | undefined;
   public param: number | 'dynamic' | undefined;
 
-  private _func: IFunction | undefined;
-  @Input() public set func(func: IFunction | undefined) {
-    this._func = func;
-    this.useInterface = typeof func?.outputTemplate === 'number';
-    this.interface = this.useInterface ? func?.outputTemplate as number : undefined;
-    this.param = this.useInterface ? undefined : func?.output as number;
-  }
-  public get func() {
-    return this._func;
-  }
+  @Input() public func: IFunction | undefined;
 
   public inputParams: (IInputParam | 'dynamic')[] = [];
 
-  constructor(private _store: Store) { }
-
-  public isNumber = (arg: any) => typeof arg === 'number';
-
-  public ngOnInit(): void {
-    this.inputParams = this.func ? Array.isArray(this.func.inputTemplates) ? this.func.inputTemplates : typeof this.func.inputTemplates === 'number' ? [this.func.inputTemplates] : [] : [];
-  }
-
-  public updateFunctionDescription(description: string) {
-    if (!this.func) {
-      return;
+  public ngOnChanges(simpleChanges: SimpleChanges): void {
+    if (simpleChanges['func']) {
+      this.useInterface = typeof simpleChanges['func'].currentValue.outputTemplate === 'number';
+      this.interface = this.useInterface ? simpleChanges['func'].currentValue.outputTemplate as number : undefined;
+      this.param = this.useInterface ? undefined : simpleChanges['func'].currentValue.output as number;
+      this.inputParams = simpleChanges['func'].currentValue ? Array.isArray(simpleChanges['func'].currentValue.inputTemplates) ? simpleChanges['func'].currentValue.inputTemplates : typeof simpleChanges['func'].currentValue.inputTemplates === 'number' ? [simpleChanges['func'].currentValue.inputTemplates] : [] : [];
     }
-    let updatedFun = Object.assign({}, this.func);
-    updatedFun.description = description;
-    this._store.dispatch(updateIFunction(updatedFun));
   }
+
+  public customImplementationRequiredText = 'Custom implementation required';
 
 }

@@ -17,7 +17,7 @@ export const adapter: EntityAdapter<IParam> = createEntityAdapter<IParam>({
 });
 
 export interface State extends EntityState<IParam> {
-  ids: string[];
+  ids: number[];
 }
 
 export const initialState: State = {
