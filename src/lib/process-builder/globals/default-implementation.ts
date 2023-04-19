@@ -1,1 +1,10 @@
-export default `/**\n * write your custom code in the method\n * use javascript notation\n */\n\nasync (injector, httpClient) => {\n  // your code\n}\n`;
+export default [
+    '/**',
+    ' * write your custom code in the method',
+    ' * use javascript notation',
+    ' */',
+    '',
+    'async (injector, httpClient) => {',
+    '  // your code',
+    '}'
+];

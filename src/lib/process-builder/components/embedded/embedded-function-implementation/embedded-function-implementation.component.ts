@@ -1,30 +1,23 @@
 import { AfterViewInit, ChangeDetectorRef, Component, Inject, Input, OnDestroy } from '@angular/core';
-import { BehaviorSubject, ReplaySubject, Subscription } from 'rxjs';
+import { defer, startWith, Subscription } from 'rxjs';
 import { ProcessBuilderRepository } from 'src/lib/core/process-builder-repository';
 import { IEmbeddedView } from 'src/lib/process-builder/classes/embedded-view';
-import { syntaxTree } from "@codemirror/language";
-import { CompletionContext } from "@codemirror/autocomplete";
-import { Text } from '@codemirror/state';
 import { MethodEvaluationStatus } from 'src/lib/process-builder/globals/method-evaluation-status';
-import { IProcessBuilderConfig, PROCESS_BUILDER_CONFIG_TOKEN } from 'src/lib/process-builder/interfaces/process-builder-config.interface';
 import { debounceTime, map, shareReplay } from 'rxjs/operators';
 import { ControlContainer, FormControl, UntypedFormControl } from '@angular/forms';
 import { Store } from '@ngrx/store';
 import { selectIParams } from 'src/lib/process-builder/store/selectors/param.selectors';
 import { mapIParamsInterfaces } from 'src/lib/process-builder/extensions/rxjs/map-i-params-interfaces.rxjs';
-import completePropertyAfter from './constants/complete-property-after.contant';
-import doNotCompleteAfter from './constants/do-not-complete-after.constant';
-import completeProperties from './methods/complete-properties.method';
-import byStringMethods from './methods/by-string.methods';
 import { ProcessBuilderService } from 'src/lib/process-builder/services/process-builder.service';
-import globalsInjector from './constants/globals-injector.constant';
 import { TaskCreationFormGroup } from 'src/lib/process-builder/interfaces/task-creation-form-group-value.interface';
+import { IProcessBuilderConfig, PROCESS_BUILDER_CONFIG_TOKEN } from 'src/lib/process-builder/interfaces/process-builder-config.interface';
+import { CodemirrorRepository } from 'src/lib/core/codemirror.repository';
 
 @Component({
   selector: 'app-embedded-function-implementation',
   templateUrl: './embedded-function-implementation.component.html',
   styleUrls: ['./embedded-function-implementation.component.scss'],
-  providers: [ ProcessBuilderService ]
+  providers: [ProcessBuilderService]
 })
 export class EmbeddedFunctionImplementationComponent implements IEmbeddedView, AfterViewInit, OnDestroy {
 
@@ -37,18 +30,13 @@ export class EmbeddedFunctionImplementationComponent implements IEmbeddedView, A
     'var2': { type: 'variable' }
   };
 
-  private _implementationChanged = new ReplaySubject<Text>(1);
-  public implementationChanged$ = this._implementationChanged.asObservable();
+  public implementationChanged$ = defer(() => this.formGroup.controls.implementation!.valueChanges);
+  public returnValueStatus$ = defer(() => this.implementationChanged$.pipe(map((implementation) => CodemirrorRepository.evaluateCustomMethod(undefined, implementation ?? undefined)?.status), startWith(MethodEvaluationStatus.Initial)));
 
-  private _returnValueStatus: BehaviorSubject<MethodEvaluationStatus> = new BehaviorSubject<MethodEvaluationStatus>(MethodEvaluationStatus.Initial);
-  public returnValueStatus$ = this._returnValueStatus.asObservable();
-
-  private _injector: any = { injector: {} };
   private _subscriptions = new Subscription();
 
   constructor(
     @Inject(PROCESS_BUILDER_CONFIG_TOKEN) public config: IProcessBuilderConfig,
-    private _processBuilderService: ProcessBuilderService,
     private _store: Store,
     private _changeDetectorRef: ChangeDetectorRef,
     private _controlContainer: ControlContainer
@@ -89,7 +77,6 @@ export class EmbeddedFunctionImplementationComponent implements IEmbeddedView, A
               injectorObject.injector[param.normalizedName] = dummyValue;
             }
           });
-          this._injector = injectorObject;
         })
     ]);
 
@@ -97,25 +84,6 @@ export class EmbeddedFunctionImplementationComponent implements IEmbeddedView, A
   }
 
   public ngOnDestroy = () => this._subscriptions.unsubscribe();
-
-  public complete = (context: CompletionContext) => {
-    const nodeBefore = syntaxTree(context.state).resolveInner(context.pos, -1);
-    if (completePropertyAfter.includes(nodeBefore.name) && nodeBefore.parent?.name === "MemberExpression") {
-      let object = nodeBefore.parent.getChild("Expression");
-      if (object?.name === 'VariableName' || object?.name === 'MemberExpression') {
-        const variableName = context.state.sliceDoc(object.from, object.to), injectedValue = byStringMethods(this._injector, variableName);
-        if (typeof injectedValue === "object") {
-          const from = /\./.test(nodeBefore.name) ? nodeBefore.to : nodeBefore.from;
-          return completeProperties(from, injectedValue as any);
-        }
-      }
-    } else if (nodeBefore.name == "VariableName") {
-      return completeProperties(nodeBefore.from, globalsInjector as any);
-    } else if (/*context.explicit && */!doNotCompleteAfter.includes(nodeBefore.name)) {
-      return completeProperties(context.pos, this._injector as any);
-    }
-    return null
-  }
 
   public MethodEvaluationStatus = MethodEvaluationStatus;
 

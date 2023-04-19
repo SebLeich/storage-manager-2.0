@@ -5,22 +5,31 @@
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+    text-transform: uppercase;
+    font-weight: 500;
+    color: #6c6c6c;
 }
 
 .description {
     font-weight: 100;
-    font-size: 0.8rem;
-    line-height: 0.8rem;
     margin: 0.5rem 0px;
 }
 
-.can-fail-hint {
+.tag {
     margin-bottom: 0.5rem;
     font-size: 0.7rem;
-    color: green;
+    border: 1px solid;
+    padding: 3px 4px 2px 4px;
+    display: inline-block;
+    border-radius: 3px;
+    line-height: 0.7rem;
 
-    &.can-fail {
-        color: red;
+    &.custom-implementation-hint {
+        color: rgb(150 53 161);
+    }
+
+    &.can-fail-hint {
+        color: rgb(200, 89, 89);
     }
 }
 
@@ -30,9 +39,9 @@
     > * {
         margin-right: 0.5rem;
         display: flex;
-        font-size: 0.7rem;
-        font-weight: 100;
+        font-size: 0.8rem;
         align-items: center;
+        color: #494949;
 
         :nth-child(1) {
             margin-right: 5px;

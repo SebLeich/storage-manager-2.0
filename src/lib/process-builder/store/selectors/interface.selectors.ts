@@ -9,10 +9,17 @@ export const selectIInterfaceState = createFeatureSelector<fromIInterface.State>
 export const selectIInterface = (arg: undefined | null | number | (() => number)) => createSelector(
     selectIInterfaceState,
     (state: fromIInterface.State) => {
-        if (arg == null || !state || !state.entities) return null;
+        if (arg == null || !state || !state.entities) {
+            return null;
+        }
+
         const code = typeof arg === 'function' ? arg() : arg;
-        if (typeof code !== 'number') return null;
-        const iFace = state.entities[code];
+        if (typeof code !== 'number') {
+            return null;
+        }
+
+        const iFaces = Object.values(state.entities);
+        const iFace = iFaces.find(iFace => iFace?.identifier === code);
         return iFace ?? null;
     }
 );

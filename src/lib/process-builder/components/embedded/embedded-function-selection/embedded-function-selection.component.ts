@@ -66,7 +66,6 @@ export class EmbeddedFunctionSelectionComponent implements IEmbeddedView, OnDest
       }
 
       let availableInputParams: ParamCodes[] = Array.isArray(this.inputParams) ? this.inputParams : this.inputParams ? [this.inputParams] : [];
-      console.log(requiredInputs, availableInputParams, 'REQUIRED/EXISTING');
       return true;
     });
   }));

@@ -1,17 +1,14 @@
 import { ChangeDetectionStrategy, Component, ElementRef, forwardRef, OnInit, Renderer2, ViewChild } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
-import { autocompletion, CompletionContext } from '@codemirror/autocomplete';
+import { autocompletion, CompletionContext, CompletionResult } from '@codemirror/autocomplete';
 import { basicSetup, EditorView } from '@codemirror/basic-setup';
 import { javascript } from '@codemirror/lang-javascript';
 import { lintGutter } from '@codemirror/lint';
 import { EditorState, Text } from '@codemirror/state';
 import defaultImplementation from 'src/lib/process-builder/globals/default-implementation';
 import { syntaxTree } from "@codemirror/language";
-import completePropertyAfterContant from 'src/lib/process-builder/components/embedded/embedded-function-implementation/constants/complete-property-after.contant';
-import completePropertiesMethod from 'src/lib/process-builder/components/embedded/embedded-function-implementation/methods/complete-properties.method';
-import byStringMethods from 'src/lib/process-builder/components/embedded/embedded-function-implementation/methods/by-string.methods';
-import globalsInjectorConstant from 'src/lib/process-builder/components/embedded/embedded-function-implementation/constants/globals-injector.constant';
-import doNotCompleteAfterConstant from 'src/lib/process-builder/components/embedded/embedded-function-implementation/constants/do-not-complete-after.constant';
+import { RxjsPipeCompletionProvider } from '../../completion-providers/rxjs-pipe.completion-provider';
+import { HttpClientCompletionProvider } from '../../completion-providers/http-client.completion-provider';
 
 @Component({
   selector: 'app-code-editor',
@@ -25,12 +22,13 @@ import doNotCompleteAfterConstant from 'src/lib/process-builder/components/embed
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class CodeEditorComponent implements ControlValueAccessor, OnInit {
-  public implementation: Text = Text.of(defaultImplementation.split('\n'));
-  private _onTouched?: (value: Text) => void;
-  private _onChange?: (value: Text) => void;
-  private _codeMirror!: EditorView;
   @ViewChild('codeBody', { static: true, read: ElementRef }) public codeBody!: ElementRef<HTMLDivElement>;
   @ViewChild('.cm-content', { static: false, read: ElementRef }) public codeMirrorContent!: ElementRef<HTMLDivElement>;
+
+  public implementation: Text = Text.of(defaultImplementation);
+  private _onTouched?: (value: Text) => void;
+  private _onChange?: (value: Text) => void;
+  private _codeMirror?: EditorView;
 
   constructor(private _renderer: Renderer2) { }
 
@@ -50,7 +48,9 @@ export class CodeEditorComponent implements ControlValueAccessor, OnInit {
   }
 
   public setDisabledState(isDisabled: boolean): void {
-    this._renderer.setAttribute(this.codeMirrorContent.nativeElement, 'contenteditable', (!isDisabled).toString());
+    if(this.codeMirrorContent){
+      this._renderer.setAttribute(this.codeMirrorContent.nativeElement, 'contenteditable', (!isDisabled).toString());
+    }
   }
 
   public writeValue(text: Text | string | string[] | undefined | null): void {
@@ -62,6 +62,9 @@ export class CodeEditorComponent implements ControlValueAccessor, OnInit {
         lines = Array.isArray(text) ? text : text.split('\n');
       }
       this.implementation = Text.of(lines);
+    }
+    if(this._codeMirror){
+      this._codeMirror.setState(this._state);
     }
   }
 
@@ -90,22 +93,16 @@ export class CodeEditorComponent implements ControlValueAccessor, OnInit {
     });
   }
 
-  private _complete = (context: CompletionContext) => {
+  private _complete = async (context: CompletionContext) => {
     const nodeBefore = syntaxTree(context.state).resolveInner(context.pos, -1);
-    if (completePropertyAfterContant.includes(nodeBefore.name) && nodeBefore.parent?.name === "MemberExpression") {
-      let object = nodeBefore.parent.getChild("Expression");
-      if (object?.name === 'VariableName' || object?.name === 'MemberExpression') {
-        const variableName = context.state.sliceDoc(object.from, object.to), injectedValue = byStringMethods({} as any, variableName);
-        if (typeof injectedValue === "object") {
-          const from = /\./.test(nodeBefore.name) ? nodeBefore.to : nodeBefore.from;
-          return completePropertiesMethod(from, injectedValue as any);
-        }
-      }
-    } else if (nodeBefore.name == "VariableName") {
-      return completePropertiesMethod(nodeBefore.from, globalsInjectorConstant as any);
-    } else if (/*context.explicit && */!doNotCompleteAfterConstant.includes(nodeBefore.name)) {
-      return completePropertiesMethod(context.pos, {} as any);
-    }
-    return null
+    const completions = [
+      ...await new RxjsPipeCompletionProvider().provideCompletions(context),
+      ...await new HttpClientCompletionProvider().provideCompletions(context)
+    ];
+
+    return {
+      from: nodeBefore.from,
+      options: completions,
+    } as CompletionResult;
   }
 }

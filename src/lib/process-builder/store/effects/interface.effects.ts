@@ -10,7 +10,7 @@ import { addIInterfaces, loadIInterfaces } from '../actions/interface.actions';
 @Injectable()
 export class IInterfaceEffects {
 
-  loadParams$ = createEffect(() =>
+  public loadParams$ = createEffect(() =>
     this.actions$.pipe(
       ofType(loadIInterfaces),
       mergeMap(

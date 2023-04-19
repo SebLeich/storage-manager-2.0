@@ -20,7 +20,7 @@ export class InterfacePipe implements PipeTransform {
       return of(this._emptyResult);
     }
 
-    return this._store.select(selectIInterface(value)).pipe(map(x => x ? x.name : this._notFoundResult));
+    return this._store.select(selectIInterface(value)).pipe(map(x => x ? `${x.name} (${x.identifier})` : this._notFoundResult));
   }
 
 }

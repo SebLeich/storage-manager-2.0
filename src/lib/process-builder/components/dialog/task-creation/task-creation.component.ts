@@ -24,6 +24,7 @@ import { functionSelectedsWhenRequiredValidator } from './validators/function-ex
 import { implementationExistsWhenRequiredValidator } from './validators/implementation-exists-when-required.validator';
 import { ITaskCreationDataWrapper } from 'src/lib/process-builder/interfaces/task-creation-data-wrapper.interface';
 import { TaskCreationFormGroup } from 'src/lib/process-builder/interfaces/task-creation-form-group-value.interface';
+import defaultImplementation from 'src/lib/process-builder/globals/default-implementation';
 
 @Component({
   selector: 'app-task-creation',
@@ -209,7 +210,7 @@ export class TaskCreationComponent implements OnDestroy, OnInit {
 
       this.formGroup.patchValue({
         canFail: currentFunction.canFail,
-        implementation: currentFunction.customImplementation,
+        implementation: currentFunction.customImplementation ?? defaultImplementation,
         requireCustomImplementation: currentFunction.requireCustomImplementation,
         name: currentFunction.name,
         normalizedName: currentFunction.normalizedName,

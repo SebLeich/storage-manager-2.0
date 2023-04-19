@@ -20,13 +20,14 @@ export class FunctionPreviewComponent implements OnChanges {
 
   public ngOnChanges(simpleChanges: SimpleChanges): void {
     if (simpleChanges['func']) {
-      this.useInterface = typeof simpleChanges['func'].currentValue.outputTemplate === 'number';
+      const outputTemplate = simpleChanges['func'].currentValue.outputTemplate;
+      this.useInterface = typeof outputTemplate === 'number';
       this.interface = this.useInterface ? simpleChanges['func'].currentValue.outputTemplate as number : undefined;
-      this.param = this.useInterface ? undefined : simpleChanges['func'].currentValue.output as number;
+      this.param = this.useInterface ? undefined : outputTemplate === 'dynamic'? outputTemplate: simpleChanges['func'].currentValue.output as number;
       this.inputParams = simpleChanges['func'].currentValue ? Array.isArray(simpleChanges['func'].currentValue.inputTemplates) ? simpleChanges['func'].currentValue.inputTemplates : typeof simpleChanges['func'].currentValue.inputTemplates === 'number' ? [simpleChanges['func'].currentValue.inputTemplates] : [] : [];
     }
   }
 
-  public customImplementationRequiredText = 'Custom implementation required';
+  public customImplementationRequiredText = 'JS code required';
 
 }

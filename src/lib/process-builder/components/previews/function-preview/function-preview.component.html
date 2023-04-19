@@ -3,36 +3,36 @@
         <div class="headline">{{ func?.name }}</div>
         <div class="description">{{ func?.description }}</div>
         <ng-container *ngIf="func?.requireCustomImplementation; else canFailHint">
-            <div class="require-custom-implementation">{{ customImplementationRequiredText }}
+            <div class="tag custom-implementation-hint">{{ customImplementationRequiredText }}
             </div>
         </ng-container>
+        <div class="tag custom-implementation-hint">{{ useInterface? 'Template': 'Constant' }}
+        </div>
         <div class="io-wrapper">
             <div class="input">
                 <mat-icon>login</mat-icon>
-                <div class="input-param-list">
-                    <div class="input-param" *ngFor="let param of inputParams">
-                        {{param|inputParam|async}}
-                    </div>
-                </div>
+                <ng-container *ngIf="!inputParams.length; else inputParamPreview">
+                    requires no inputs
+                </ng-container>
             </div>
             <div class="output">
                 <mat-icon>logout</mat-icon>
-                <ng-container *ngIf="!func?.output; else outputParamPreview">
-                    provides no output
-                </ng-container>
+                {{ (useInterface? (interface|interface|async): (param|param|async)) ?? 'provides no output' }}
             </div>
         </div>
     </div>
 </div>
 
-<ng-template #outputParamPreview>
-    <div>
-        {{useInterface? (interface|interface|async): (param|param|async)}}
+<ng-template #inputParamPreview>
+    <div class="input-param-list">
+        <div class="input-param" *ngFor="let param of inputParams">
+            {{param|inputParam|async}}
+        </div>
     </div>
 </ng-template>
 
 <ng-template #canFailHint>
-    <div class="can-fail-hint" [class.can-fail]="func?.canFail">
-        {{ func?.canFail? 'This method may fail!': 'This method can not fail.' }}
+    <div *ngIf="func?.canFail" class="tag can-fail-hint">
+        May fail
     </div>
 </ng-template>
