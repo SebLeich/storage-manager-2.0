@@ -71,7 +71,7 @@ import { ErrorComponent } from 'src/lib/shared/components/error/error.component'
 import { GoodPreviewComponent, GoodsPanelComponent, GroupsPanelComponent } from '@smgr/components';
 import { AboutComponent, CalculationComponent, LocalDataComponent, VisualizerComponent } from '@main-components';
 
-let rootReducers: { [key: string]: ActionReducer<any, any> } = {};
+const rootReducers: { [key: string]: ActionReducer<any, any> } = {};
 rootReducers[fromApplication.featureKey] = fromApplication.reducer;
 
 const routes: Routes = [

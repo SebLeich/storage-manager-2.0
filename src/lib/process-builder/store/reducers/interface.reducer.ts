@@ -2,7 +2,7 @@ import { createEntityAdapter, EntityAdapter, EntityState, Update } from '@ngrx/e
 import { createReducer, on } from '@ngrx/store';
 import { IInterface } from '../../interfaces/interface.interface';
 import { addIInterface, addIInterfaces, removeIInterface, updateIInterface, upsertIInterface, upsertIInterfaces } from '../actions/interface.actions';
-
+import { v4 as generateGuid } from 'uuid';
 
 export const featureKey = 'Interface';
 
@@ -16,7 +16,7 @@ export const adapter: EntityAdapter<IInterface> = createEntityAdapter<IInterface
 });
 
 export interface State extends EntityState<IInterface> {
-  ids: number[];
+  ids: string[];
 }
 
 export const initialState: State = {
@@ -30,7 +30,7 @@ export const reducer = createReducer(
 
   on(addIInterface, (state: State, { iface }) => {
     return adapter.addOne({
-      identifier: typeof iface.identifier === 'number'? iface.identifier: nextId(state),
+      identifier: iface.identifier ?? generateGuid(),
       name: iface.name,
       normalizedName: iface.normalizedName,
       typeDef: iface.typeDef
@@ -38,22 +38,19 @@ export const reducer = createReducer(
   }),
 
   on(addIInterfaces, (state: State, { ifaces }) => {
-    let output: IInterface[] = [];
-    for (let iface of ifaces) {
-      output.push({
-        identifier: typeof iface.identifier === 'number'? iface.identifier: nextId(state),
-        name: iface.name,
-        normalizedName: iface.normalizedName,
-        typeDef: iface.typeDef
-      });
-    }
-    return adapter.addMany(output, state);
+    const mappedInterfaces = ifaces.map(iface => ({
+      identifier: iface.identifier ?? generateGuid(),
+      name: iface.name,
+      normalizedName: iface.normalizedName,
+      typeDef: iface.typeDef
+    }));
+    return adapter.addMany(mappedInterfaces, state);
   }),
 
   on(updateIInterface, (state: State, { iface }) => {
-    let update: Update<IInterface> = {
-      'id': iface.identifier,
-      'changes': {
+    const update: Update<IInterface> = {
+      id: iface.identifier,
+      changes: {
         name: iface.name,
         normalizedName: iface.normalizedName,
         typeDef: iface.typeDef
@@ -71,13 +68,13 @@ export const reducer = createReducer(
   }),
 
   on(removeIInterface, (state: State, { iface }) => {
-    let key = typeof iface === 'number'? iface: iface.identifier;
+    const key = typeof iface === 'string' ? iface : iface.identifier;
     return adapter.removeOne(key, state);
   }),
 
 );
 
 export const nextId = (state: State) => {
-  let ids = state && state.entities ? (Object.values(state.entities) as IInterface[]).map(x => x.identifier) : [];
+  const ids = state && state.entities ? (Object.values(state.entities) as IInterface[]).map(x => x.identifier) : [];
   return ids.length === 0 ? 0 : Math.max(...(ids.map(x => typeof x === 'number' ? x : 0))) + 1;
 }

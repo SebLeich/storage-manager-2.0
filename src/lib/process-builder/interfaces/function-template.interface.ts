@@ -10,5 +10,5 @@ export interface IFunctionTemplate {
     requireCustomImplementation: boolean;
     finalizesFlow?: boolean;
     inputTemplates: (IInputParam | 'dynamic')[] | null | 'dynamic';
-    outputTemplate: number | null | 'dynamic';
+    outputTemplate: string | null | 'dynamic';
 }

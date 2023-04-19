@@ -32,5 +32,5 @@ export const upsertIInterfaces = createAction(
 
 export const removeIInterface = createAction(
   '[IInterface] Remove IInterfaces',
-  (iface: IInterface|number) => ({ iface })
+  (iface: IInterface | string) => ({ iface })
 );

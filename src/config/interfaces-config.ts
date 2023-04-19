@@ -4,14 +4,16 @@ import { InterfaceCodes } from "./interface-codes";
 export default [
     {
         identifier: InterfaceCodes.Solution,
+        name: 'solution template',
+        normalizedName: 'solution',
         typeDef: [
             { name: 'id', type: 'string', defaultValue: 'ab34762f-ccd1-4258-b3e1-69558728e6b4', typeDef: null },
             { name: 'container', type: 'object', interface: InterfaceCodes.Container, typeDef: null },
             { name: 'alogorithm', type: 'string', defaultValue: 'all in one row', typeDef: null },
             {
-                'name': 'groups',
-                'type': 'array',
-                'defaultValue': null,
+                name: 'groups',
+                type: 'array',
+                defaultValue: null,
                 typeDef: [
                     {
                         interface: InterfaceCodes.Group,
@@ -34,9 +36,27 @@ export default [
                     }
                 ]
             },
-        ],
-        name: 'solution template',
-        normalizedName: 'solution'
+        ]
+    } as IInterface,
+    {
+        identifier: InterfaceCodes.SolutionWrapper,
+        name: 'solution wrapper',
+        normalizedName: 'solutionWrapper',
+        typeDef: [
+            { name: 'solution', type: 'object', interface: InterfaceCodes.Solution, typeDef: null },
+            {
+                name: 'groups',
+                type: 'array',
+                defaultValue: null,
+                typeDef: [
+                    {
+                        interface: InterfaceCodes.Group,
+                        type: 'object',
+                        typeDef: null
+                    }
+                ]
+            },
+        ]
     } as IInterface,
     {
         identifier: InterfaceCodes.Container,

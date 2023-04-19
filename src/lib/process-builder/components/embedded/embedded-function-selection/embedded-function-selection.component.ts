@@ -60,12 +60,12 @@ export class EmbeddedFunctionSelectionComponent implements IEmbeddedView, OnDest
       }
 
       const inputTemplates = Array.isArray(func.inputTemplates) ? func.inputTemplates.filter(input => input !== 'dynamic') : [];
-      const requiredInputs: ParamCodes[] = inputTemplates.filter(param => param && typeof param === 'object' && !param.optional).map((x) => (x as IInputParam).interface) as ParamCodes[];
-      if (requiredInputs.length === 0) {
+      const requiredInputTemplates = inputTemplates.filter(param => param && typeof param === 'object' && !param.optional).map((x) => (x as IInputParam).interface) as string[];
+      if (requiredInputTemplates.length === 0) {
         return true;
       }
 
-      let availableInputParams: ParamCodes[] = Array.isArray(this.inputParams) ? this.inputParams : this.inputParams ? [this.inputParams] : [];
+      const availableInputParams: ParamCodes[] = Array.isArray(this.inputParams) ? this.inputParams : this.inputParams ? [this.inputParams] : [];
       return true;
     });
   }));
@@ -82,7 +82,7 @@ export class EmbeddedFunctionSelectionComponent implements IEmbeddedView, OnDest
   public ngOnInit(): void {
     this._subscription.add(...[
       this.availableFunctions$.pipe(delay(800)).subscribe(() => {
-        let ref = this.activeFunctionWrappers.find(x => (x.element.nativeElement as HTMLDivElement).hasAttribute('active'));
+        const ref = this.activeFunctionWrappers.find(x => (x.element.nativeElement as HTMLDivElement).hasAttribute('active'));
         if (ref) {
           ref.element.nativeElement.scrollIntoView({ behavior: 'smooth' });
         }

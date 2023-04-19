@@ -4,7 +4,7 @@ import { IFunctionTemplate } from "../interfaces/function-template.interface";
 
 export class PredefinedFunctionTemplates {
 
-    public customJSMethod(identifier: number, name: string = 'custom JS function'): IFunctionTemplate {
+    public customJSMethod(identifier: number, name = 'custom JS function'): IFunctionTemplate {
         return {
             identifier: identifier,
             description: 'a self-written, custom javascript code snippet',
@@ -17,7 +17,7 @@ export class PredefinedFunctionTemplates {
         } as IFunctionTemplate;
     }
 
-    public delayMethod(identifier: number, name: string = 'delay'): IFunctionTemplate {
+    public delayMethod(identifier: number, name = 'delay'): IFunctionTemplate {
         return {
             identifier: identifier,
             canFail: false,
@@ -39,7 +39,7 @@ export class PredefinedFunctionTemplates {
         } as IFunctionTemplate;
     }
 
-    public downloadAsJson(identifier: number, name: string = 'download as json'): IFunctionTemplate {
+    public downloadAsJson(identifier: number, name = 'download as json'): IFunctionTemplate {
         return {
             identifier: identifier,
             canFail: true,
@@ -60,7 +60,7 @@ export class PredefinedFunctionTemplates {
             implementation: () => {
                 let contentToDownload!: object, fileName!: string;
                 const content = JSON.stringify(contentToDownload);
-                var element = document.createElement('a');
+                const element = document.createElement('a');
                 element.setAttribute('href', `data:text/json;charset=UTF-8,${encodeURIComponent(content)}`);
                 element.setAttribute('download', `${fileName}.json`);
                 element.style.display = 'none';
@@ -74,7 +74,7 @@ export class PredefinedFunctionTemplates {
         } as IFunctionTemplate;
     }
 
-    public simulateFailMethod(identifier: number, name: string = 'fail'): IFunctionTemplate {
+    public simulateFailMethod(identifier: number, name = 'fail'): IFunctionTemplate {
         return {
             identifier: identifier,
             canFail: true,
@@ -89,7 +89,7 @@ export class PredefinedFunctionTemplates {
         } as IFunctionTemplate;
     }
 
-    public uploadFromJson(identifier: number, name: string = 'upload from json'): IFunctionTemplate {
+    public uploadFromJson(identifier: number, name = 'upload from json'): IFunctionTemplate {
         return {
             identifier: identifier,
             canFail: true,
@@ -104,7 +104,7 @@ export class PredefinedFunctionTemplates {
             name: name,
             implementation: () => {
                 let inputName!: string;
-                
+
             },
             outputTemplate: "dynamic",
             requireCustomImplementation: false

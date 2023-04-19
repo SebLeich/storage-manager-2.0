@@ -11,7 +11,7 @@ import { IParamMember } from 'src/lib/process-builder/interfaces/param-member.in
 import { TaskCreationFormGroup } from 'src/lib/process-builder/interfaces/task-creation-form-group-value.interface';
 
 @Component({
-  selector: '[app-embedded-input-output-mapping]',
+  selector: 'app-embedded-input-output-mapping',
   templateUrl: './embedded-input-output-mapping.component.html',
   styleUrls: ['./embedded-input-output-mapping.component.scss']
 })

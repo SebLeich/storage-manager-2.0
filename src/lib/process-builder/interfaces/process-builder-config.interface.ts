@@ -10,7 +10,7 @@ export interface IProcessBuilderConfig {
     taskConfig: ITaskConfig[];
     errorGatewayConfig: IErrorGatewayConfig;
     defaultBpmnModelName: string;
-    expectInterface?: number;
+    expectInterface?: string;
 }
 
 export const PROCESS_BUILDER_CONFIG_TOKEN: InjectionToken<IProcessBuilderConfig> = new InjectionToken<IProcessBuilderConfig>("PROCESS_BUILDER_CONFIG");

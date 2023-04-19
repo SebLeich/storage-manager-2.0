@@ -21,7 +21,7 @@ export class InputParamPipe implements PipeTransform {
           const iFace = await selectSnapshot(this._store.select(selectIInterface(param.interface)));
           if (iFace) {
             const prefix = param.type === 'array' ? 'array of ' : '', suffix = param.type === 'array' ? 's' : '';
-            return prefix + iFace.name + suffix;;
+            return prefix + iFace.name + suffix;
           }
         }
       }

@@ -50,6 +50,7 @@ import { MatSelectModule } from '@angular/material/select';
 import { InputParamPipe } from './pipes/input-param.pipe';
 import { ProcedureStoreModule } from '../procedure-store/procedure-store.module';
 import { CodeEditorModule } from '../code-editor/code-editor.module';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 
 @NgModule({
@@ -94,6 +95,7 @@ import { CodeEditorModule } from '../code-editor/code-editor.module';
     MatSlideToggleModule,
     MatSelectModule,
     MatTabsModule,
+    MatTooltipModule,
     MatSlideToggleModule,
     ReactiveFormsModule,
     PipelineStoreModule,

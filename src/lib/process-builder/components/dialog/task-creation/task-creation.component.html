@@ -6,7 +6,7 @@
         <div class="text">
             Modify task
         </div>
-        <button mat-icon-button color="warn" (click)="finish()">
+        <button mat-icon-button color="warn" (click)="abort()">
             <mat-icon>clear</mat-icon>
         </button>
 
@@ -14,9 +14,11 @@
 
     <div class="dialog-body">
 
-        <mat-tab-group mat-align-tabs="start" (selectedIndexChange)="setStep($event)" [selectedIndex]="currentStepIndex$|async">
+        <mat-tab-group mat-align-tabs="start" (selectedIndexChange)="setStep($event)"
+            [selectedIndex]="currentStepIndex$|async">
 
-            <mat-tab [label]=(tab.taskCreationStep|taskCreationStep) *ngFor="let tab of (steps$|async)" [disabled]="(tab.disabled$|async) ?? false"></mat-tab>
+            <mat-tab [label]=(tab.taskCreationStep|taskCreationStep) *ngFor="let tab of (steps$|async)"
+                [disabled]="(tab.disabled$|async) ?? false"></mat-tab>
 
         </mat-tab-group>
 

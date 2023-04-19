@@ -2,22 +2,25 @@
     <div class="preview">
         <div class="headline">{{ func?.name }}</div>
         <div class="description">{{ func?.description }}</div>
-        <ng-container *ngIf="func?.requireCustomImplementation; else canFailHint">
-            <div class="tag custom-implementation-hint">{{ customImplementationRequiredText }}
-            </div>
-        </ng-container>
-        <div class="tag custom-implementation-hint">{{ useInterface? 'Template': 'Constant' }}
+        <div class="tag-wrapper">
+            <ng-container *ngIf="func?.requireCustomImplementation; else canFailHint">
+                <div class="tag custom-implementation-hint">
+                    {{ customImplementationRequiredText }}
+                </div>
+            </ng-container>
         </div>
         <div class="io-wrapper">
-            <div class="input">
+            <div class="input" [class.no-value]="!(inputs$|async)?.length" matTooltip="function inputs"
+                matTooltipPosition="before">
                 <mat-icon>login</mat-icon>
-                <ng-container *ngIf="!inputParams.length; else inputParamPreview">
+                <ng-container *ngIf="!(inputs$|async)?.length; else inputParamPreview">
                     requires no inputs
                 </ng-container>
             </div>
-            <div class="output">
+            <div class="output" [class.no-value]="(output$ | async) ? false : true" matTooltip="function output"
+                matTooltipPosition="before">
                 <mat-icon>logout</mat-icon>
-                {{ (useInterface? (interface|interface|async): (param|param|async)) ?? 'provides no output' }}
+                {{ (output$ | async) ?? "no output" }}
             </div>
         </div>
     </div>
@@ -25,14 +28,12 @@
 
 <ng-template #inputParamPreview>
     <div class="input-param-list">
-        <div class="input-param" *ngFor="let param of inputParams">
-            {{param|inputParam|async}}
+        <div class="input-param" *ngFor="let param of inputs$|async">
+            {{ param }}
         </div>
     </div>
 </ng-template>
 
 <ng-template #canFailHint>
-    <div *ngIf="func?.canFail" class="tag can-fail-hint">
-        May fail
-    </div>
+    <div *ngIf="func?.canFail" class="tag can-fail-hint">May fail</div>
 </ng-template>
