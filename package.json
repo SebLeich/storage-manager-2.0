@@ -9,8 +9,11 @@
     "build": "ng build",
     "publish-ghp": "ng test --watch=false && ng e2e && npm --no-git-tag-version version patch && ng build --configuration=production --base-href='https://sebleich.github.io/storage-manager-2.0/' && npx angular-cli-ghpages --dir=dist/storage-manager",
     "watch": "ng build --watch --configuration development",
-    "test": "ng test --watch=false && ng e2e --no-webdriver-update",
-    "lint": "ng lint"
+    "test": "ng test --watch=false",
+    "lint": "ng lint",
+    "e2e": "ng e2e",
+    "cypress:open": "cypress open",
+    "cypress:run": "cypress run"
   },
   "private": true,
   "dependencies": {
@@ -66,6 +69,7 @@
     "@angular/cli": "^15.1.6",
     "@angular/compiler-cli": "^15.1.5",
     "@compodoc/compodoc": "^1.1.19",
+    "@cypress/schematic": "^2.5.0",
     "@ngrx/store-devtools": "^15.3.0",
     "@types/jasmine": "^4.3.1",
     "@types/jsoneditor": "^9.9.0",
@@ -83,9 +87,9 @@
     "karma-coverage": "^2.2.0",
     "karma-jasmine": "^5.1.0",
     "karma-jasmine-html-reporter": "^2.0.0",
-    "protractor": "^7.0.0",
     "ts-node": "^10.9.1",
     "tslib": "^2.5.0",
-    "typescript": "4.9.5"
+    "typescript": "4.9.5",
+    "cypress": "latest"
   }
 }
