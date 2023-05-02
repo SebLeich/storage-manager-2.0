@@ -10,7 +10,7 @@ export interface ITaskCreationFormGroupValue {
     functionIdentifier: number | null;
     implementation: string[] | null;
     inputParam: ParamCodes[] | number | null;
-    interface: number | null;
+    interface: string | null;
     isProcessOutput: boolean;
     name: string;
     normalizedOutputParamName: string;

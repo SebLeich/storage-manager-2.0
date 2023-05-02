@@ -3,7 +3,7 @@ export interface IParamDefinition {
     name: string;
     normalizedName: string;
     typeDef: null | IParamDefinition | IParamDefinition[];
-    interface: number | null;
+    interface: string | null;
     defaultValue: any | null;
     constant: boolean | null;
     nullable: boolean | null;

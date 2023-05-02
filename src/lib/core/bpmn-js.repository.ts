@@ -20,7 +20,7 @@ export class BPMNJsRepository {
 
     constructor(@Inject(PROCESS_BUILDER_CONFIG_TOKEN) private _config: IProcessBuilderConfig) { }
 
-    public static appendOutputParam(bpmnJS: any, element: IElement, param: IParam | null | undefined, preventDublet: boolean = true, expectedInterface?: number): null | IElement {
+    public static appendOutputParam(bpmnJS: any, element: IElement, param: IParam | null | undefined, preventDublet = true, expectedInterface?: string): null | IElement {
         if (!param) {
             return null;
         }
@@ -48,13 +48,13 @@ export class BPMNJsRepository {
             BPMNJsRepository.updateBpmnElementSLPBExtension(bpmnJS, e.businessObject, 'DataObjectExtension', (ext) => {
                 ext.isProcessOutput = param.isProcessOutput;
             });
-        };
+        }
         getModelingModule(bpmnJS).updateLabel(e, param.name);
         return e;
     }
 
     public static clearAllTooltips(bpmnJS: IBpmnJS) {
-        var tooltipModule = getTooltipModule(bpmnJS);
+        const tooltipModule = getTooltipModule(bpmnJS);
         Object.values(tooltipModule._tooltips).forEach(x => tooltipModule.remove(x));
     }
 
@@ -64,9 +64,9 @@ export class BPMNJsRepository {
             return;
         }
 
-        let notPassed = element.incoming.map(x => x.source).filter(x => anchestors.indexOf(x) === -1);
+        const notPassed = element.incoming.map(x => x.source).filter(x => anchestors.indexOf(x) === -1);
         while (index < notPassed.length) {
-            let el = notPassed[index];
+            const el = notPassed[index];
             anchestors.push(el);
             this.fillAnchestors(el, anchestors);
             index++;
@@ -78,7 +78,7 @@ export class BPMNJsRepository {
     }
 
     public static getAvailableInputParamsIElements(element: IElement) {
-        let anchestors: IElement[] = [];
+        const anchestors: IElement[] = [];
         this.fillAnchestors(element, anchestors);
 
         const tasks = anchestors.filter(x => x.type === shapeTypes.Task);
@@ -140,8 +140,8 @@ export class BPMNJsRepository {
     }
 
     public validateErrorGateway(bpmnJS: IBpmnJS, element: IElement, func: IFunction, gatewayName: string = this._config.errorGatewayConfig.gatewayName) {
-        let gatewayShape: IElement | undefined = element.outgoing.find(sequenceFlow => sequenceFlow.type === shapeTypes.SequenceFlow && sequenceFlow.target?.type === shapeTypes.ExclusiveGateway)?.target,
-            modelingModule = getModelingModule(bpmnJS);
+        let gatewayShape: IElement | undefined = element.outgoing.find(sequenceFlow => sequenceFlow.type === shapeTypes.SequenceFlow && sequenceFlow.target?.type === shapeTypes.ExclusiveGateway)?.target;
+        const modelingModule = getModelingModule(bpmnJS);
         if (func.canFail && !gatewayShape) {
             gatewayShape = modelingModule.appendShape(element, {
                 type: shapeTypes.ExclusiveGateway
@@ -153,10 +153,10 @@ export class BPMNJsRepository {
     }
 
     public static validateProcess(bpmnJS: IBpmnJS): IProcessValidationResult {
-        let errors: { error: ValidationError, element?: IElement }[] = [], warnings: { warning: ValidationWarning, element?: IElement }[] = [];
-        let elementRegistry = getElementRegistryModule(bpmnJS);
+        const errors: { error: ValidationError, element?: IElement }[] = [], warnings: { warning: ValidationWarning, element?: IElement }[] = [];
+        const elementRegistry = getElementRegistryModule(bpmnJS);
 
-        let startEvents = this.getStartEvents(elementRegistry), endEvents = this.getEndEvents(elementRegistry);
+        const startEvents = this.getStartEvents(elementRegistry), endEvents = this.getEndEvents(elementRegistry);
         if (startEvents.length === 0) {
             errors.push({ error: ValidationError.NoStartEvent });
         }
@@ -164,22 +164,22 @@ export class BPMNJsRepository {
             startEvents.forEach(x => errors.push({ error: ValidationError.MultipleStartEvents, element: x }));
         }
 
-        let fullPath: IElement[] = [];
-
-        for (let startEvent of startEvents) {
+        const fullPath: IElement[] = [];
+        for (const startEvent of startEvents) {
 
             if (startEvent.incoming.filter(x => x.type === shapeTypes.SequenceFlow).length > 0) {
                 errors.push({ element: startEvent, error: ValidationError.StartEventWithIncomingSequenceFlow });
             }
 
-            let cursor: IElement | null = startEvent, stack: IElement[] = [], path: IElement[] = [];
+            let cursor: IElement | null = startEvent, stack: IElement[] = [];
+            const path: IElement[] = [];
             while (cursor) {
 
-                let outputParams = cursor.outgoing.filter(x => x.type === shapeTypes.DataOutputAssociation).map(x => x.target);
-                let unusedOutputParams = outputParams.filter(x => x.outgoing.filter(x => x.type === shapeTypes.DataInputAssociation).length === 0);
+                const outputParams = cursor.outgoing.filter(x => x.type === shapeTypes.DataOutputAssociation).map(x => x.target);
+                const unusedOutputParams = outputParams.filter(x => x.outgoing.filter(x => x.type === shapeTypes.DataInputAssociation).length === 0);
                 unusedOutputParams.forEach(x => warnings.push({ 'element': x, 'warning': ValidationWarning.UnusedOutputParam }));
 
-                let response: IElement[] = this.getNextNodes(cursor);
+                const response: IElement[] = this.getNextNodes(cursor);
                 path.push(cursor);
 
                 if ((cursor.type !== shapeTypes.ExclusiveGateway || cursor.type !== shapeTypes.ExclusiveGateway) && response.length > 1) {
@@ -209,10 +209,12 @@ export class BPMNJsRepository {
 
         }
 
-        let unreachableElements = elementRegistry.getAll().filter(x => (x.type === shapeTypes.ExclusiveGateway || x.type === shapeTypes.ParallelGateway || x.type === shapeTypes.Task) && fullPath.indexOf(x) === -1);
+        const unreachableElements = elementRegistry.getAll().filter(x => (x.type === shapeTypes.ExclusiveGateway || x.type === shapeTypes.ParallelGateway || x.type === shapeTypes.Task) && fullPath.indexOf(x) === -1);
         unreachableElements.forEach(x => warnings.push({ element: x, warning: ValidationWarning.UnreachableElement }));
 
-        if (endEvents.length === 0) warnings.push({ warning: ValidationWarning.NoEndEvent });
+        if (endEvents.length === 0) {
+            warnings.push({ warning: ValidationWarning.NoEndEvent });
+        }
 
         return { warnings: warnings, errors: errors };
     }

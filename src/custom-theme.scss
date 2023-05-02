@@ -1,6 +1,6 @@
 @import "@angular/material/theming";
-@import 'src/lib/scss/button';
-@import 'src/lib/scss/gradients';
+@import "src/lib/scss/button";
+@import "src/lib/scss/gradients";
 
 // Include the common styles for Angular Material. We include this here so that you only
 // have to load a single css file for Angular Material in your app.
@@ -122,4 +122,10 @@ body {
 .control.disabled {
   pointer-events: none;
   opacity: 0.5;
+}
+
+.mdc-tooltip__surface {
+  font-weight: 100 !important;
+  font-size: 0.8rem !important;
+  line-height: 1rem !important;
 }

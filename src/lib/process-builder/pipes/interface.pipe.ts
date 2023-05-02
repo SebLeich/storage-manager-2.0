@@ -15,12 +15,12 @@ export class InterfacePipe implements PipeTransform {
 
   constructor(private _store: Store<State>) { }
 
-  public transform(value: number | null | undefined): Observable<string> {
-    if (typeof value !== 'number') {
+  public transform(value: string | null | undefined): Observable<string> {
+    if (typeof value !== 'string') {
       return of(this._emptyResult);
     }
 
-    return this._store.select(selectIInterface(value)).pipe(map(x => x ? `${x.name} (${x.identifier})` : this._notFoundResult));
+    return this._store.select(selectIInterface(value)).pipe(map(iFace => iFace ? iFace.name : this._notFoundResult));
   }
 
 }

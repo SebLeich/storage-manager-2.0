@@ -9,21 +9,18 @@ import { selectIParam } from '../store/selectors/param.selectors';
 })
 export class ParamPipe implements PipeTransform {
 
+  private _emptyResult = 'no value';
   private _notFoundResult = 'not found';
 
-  constructor(private _store: Store){ }
+  constructor(private _store: Store) { }
 
   public transform(value: number | null | undefined | 'dynamic'): Observable<string> {
-    if(typeof value !== 'number'){
-      return of(value === 'dynamic'? 'dynamic': this._notFoundResult);
+    if (typeof value !== 'number') {
+      return of(value === 'dynamic' ? 'dynamic' : this._emptyResult);
     }
+
     const selector = this._store.select(selectIParam(value));
-    return selector.pipe(map(param => {
-      if(param){
-        return param.name;
-      }
-      return this._notFoundResult;
-    }));
+    return selector.pipe(map(param => param?.name ?? this._notFoundResult));
   }
 
 }

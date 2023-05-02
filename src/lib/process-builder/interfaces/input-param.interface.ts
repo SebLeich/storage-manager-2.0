@@ -1,6 +1,6 @@
 export interface IInputParam {
     type: 'number' | 'string' | 'boolean' | 'array' | 'object';
-    interface?: number;
+    interface?: string;
     optional: boolean;
     name: string;
     default?: unknown;

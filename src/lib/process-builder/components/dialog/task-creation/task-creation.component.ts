@@ -19,7 +19,6 @@ import STEP_REGISTRY from './constants/step-registry.constant';
 import { functionSelectedsWhenRequiredValidator } from './validators/function-exists-when-required.validator';
 import { implementationExistsWhenRequiredValidator } from './validators/implementation-exists-when-required.validator';
 import { ITaskCreationDataWrapper } from 'src/lib/process-builder/interfaces/task-creation-data-wrapper.interface';
-import { TaskCreationFormGroup } from 'src/lib/process-builder/interfaces/task-creation-form-group-value.interface';
 import defaultImplementation from 'src/lib/process-builder/globals/default-implementation';
 
 @Component({
@@ -36,7 +35,7 @@ export class TaskCreationComponent implements OnDestroy, OnInit {
     functionIdentifier: new FormControl<number | null>(null),
     implementation: new FormControl<string[] | null>(null),
     inputParam: new FormControl<ParamCodes[] | number | null>(null),
-    interface: new FormControl<number | null>(null),
+    interface: new FormControl<string | null>(null),
     isProcessOutput: new FormControl<boolean>(false),
     name: new FormControl<string>(''),
     normalizedOutputParamName: new FormControl<string>(''),
@@ -47,9 +46,9 @@ export class TaskCreationComponent implements OnDestroy, OnInit {
   }, Validators.compose([
     functionSelectedsWhenRequiredValidator(this.data?.taskCreationPayload?.configureActivity ? true : false),
     implementationExistsWhenRequiredValidator
-  ])) as TaskCreationFormGroup;
+  ]));
 
-  public customEvaluationResult$ = this.formGroup.controls.implementation!.valueChanges
+  public customEvaluationResult$ = this.formGroup.controls.implementation.valueChanges
     .pipe(throttleTime(2000), map(implementation => CodemirrorRepository.evaluateCustomMethod(undefined, implementation ?? [])));
 
   public unableToDetermineOutputParam$ = this.customEvaluationResult$.pipe(
@@ -62,7 +61,7 @@ export class TaskCreationComponent implements OnDestroy, OnInit {
     startWith(false)
   );
 
-  public usedInputParams$ = this.formGroup.controls.implementation!.valueChanges
+  public usedInputParams$ = this.formGroup.controls.implementation.valueChanges
     .pipe(debounceTime(2000), map(implementation => {
       if (!implementation) {
         return null;
@@ -89,8 +88,8 @@ export class TaskCreationComponent implements OnDestroy, OnInit {
   public hasCustomImplementation$ = this._formValue$
     .pipe(
       map((formValue) => {
-        let val = formValue.requireCustomImplementation || formValue.implementation ? true : false;
-        return val;
+        const hasCustomImplementation = formValue.requireCustomImplementation || formValue.implementation ? true : false;
+        return hasCustomImplementation;
       }),
       distinctUntilChanged()
     );
@@ -144,8 +143,10 @@ export class TaskCreationComponent implements OnDestroy, OnInit {
     private _ref: MatDialogRef<TaskCreationComponent>,
     private _store: Store
   ) {
-    this.formGroup.patchValue(this.data.taskCreationFormGroupValue as any, { emitEvent: true });
+    this.formGroup.patchValue(this.data.taskCreationFormGroupValue, { emitEvent: true });
   }
+
+  public abort = () => this._ref.close();
 
   public finish = () => this._ref.close(this.formGroup.value);
 
@@ -190,10 +191,11 @@ export class TaskCreationComponent implements OnDestroy, OnInit {
     const currentFunction = await selectSnapshot(this._store.select(selectIFunction(this.formGroup.controls.functionIdentifier?.value)));
     if (currentFunction) {
       const outputParam = await selectSnapshot(this._store.select(selectIParam(currentFunction?.output))),
-        outputParamInterface = await selectSnapshot(this._store.select(selectIInterface(currentFunction?.outputTemplate as number)));
+        outputParamInterface = await selectSnapshot(this._store.select(selectIInterface(currentFunction?.outputTemplate as string)));
 
       const inputParams = currentFunction?.inputTemplates === 'dynamic' && currentFunction.inputTemplates ? Array.isArray(currentFunction.inputTemplates) ? [...currentFunction.inputTemplates] : [currentFunction.inputTemplates] : [];
-      let outputParamValue = currentFunction?.outputTemplate === 'dynamic' && outputParamInterface ? outputParamInterface.typeDef : outputParam?.typeDef, objectTypeDefinition: IParam | IParamDefinition[] | null;
+      const outputParamValue = currentFunction?.outputTemplate === 'dynamic' && outputParamInterface ? outputParamInterface.typeDef : outputParam?.typeDef;
+      let objectTypeDefinition: IParam | IParamDefinition[] | null;
       if (outputParamValue) {
         if (Array.isArray(outputParamValue)) {
           objectTypeDefinition = outputParamValue;
@@ -233,7 +235,7 @@ export class TaskCreationComponent implements OnDestroy, OnInit {
   }
 
   private getSteps([hasDynamicInputParam, hasCustomImplementation, hasDataMapping, unableToDetermineOutputParam]: boolean[]) {
-    let availableSteps: ITaskCreationConfig[] = [];
+    const availableSteps: ITaskCreationConfig[] = [];
     if (this.data) {
       const gateway = this.data?.taskCreationPayload?.configureIncomingErrorGatewaySequenceFlow;
       if (gateway) {

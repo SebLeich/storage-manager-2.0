@@ -6,7 +6,7 @@ export const selectIInterfaceState = createFeatureSelector<fromIInterface.State>
     fromIInterface.featureKey,
 );
 
-export const selectIInterface = (arg: undefined | null | number | (() => number)) => createSelector(
+export const selectIInterface = (arg: undefined | null | string | (() => string)) => createSelector(
     selectIInterfaceState,
     (state: fromIInterface.State) => {
         if (arg == null || !state || !state.entities) {
@@ -14,7 +14,7 @@ export const selectIInterface = (arg: undefined | null | number | (() => number)
         }
 
         const code = typeof arg === 'function' ? arg() : arg;
-        if (typeof code !== 'number') {
+        if (code === 'dynamic' || typeof code !== 'string') {
             return null;
         }
 
@@ -24,12 +24,18 @@ export const selectIInterface = (arg: undefined | null | number | (() => number)
     }
 );
 
-export const selectIInterfaces = (codes?: number[]) => createSelector(
+export const selectIInterfaces = (codes?: string[]) => createSelector(
     selectIInterfaceState,
     (state: fromIInterface.State) => {
-        if (!state || !state.entities) return [];
+        if (!state || !state.entities) {
+            return [];
+        }
+
         let ifaces = Object.values(state.entities);
-        if (Array.isArray(codes)) ifaces = ifaces.filter(x => codes.findIndex(y => x?.identifier === y) > -1);
+        if (Array.isArray(codes)) {
+            ifaces = ifaces.filter(x => codes.findIndex(y => x?.identifier === y) > -1);
+        }
+
         return ifaces as IInterface[];
     }
 );
@@ -40,9 +46,4 @@ export const selectIInterfacesByNormalizedName = (names: string[] | null | undef
         if (!names || !state || !state.entities) return [];
         return Object.values(state.entities).filter(x => x && names.indexOf(x.normalizedName) > -1) as IInterface[];
     }
-);
-
-export const selectNextInterfaceIdentifier = () => createSelector(
-    selectIInterfaceState,
-    (state: fromIInterface.State) => (state && state.entities ? Math.max(...Object.values(state.entities).filter(x => x ? true : false).map(x => (x as IInterface).identifier), -1) : -1) + 1
 );

@@ -71,13 +71,18 @@ export class ProcessBuilderComponentService {
   ) { }
 
   public async applyTaskCreationConfig(taskCreationPayload: ITaskCreationPayload, taskCreationData?: ITaskCreationFormGroupValue) {
+    if (!taskCreationData) {
+      this._removeActivityWhenNoFunctionIsReferenced(taskCreationPayload.configureActivity);
+      return;
+    }
+
     let referencedFunction: IFunction | undefined | null, outputParam: IParam | undefined, gatewayShape: IElement | undefined;
     if (taskCreationData) {
       referencedFunction = await selectSnapshot(this._store.select(functionSelectors.selectIFunction(taskCreationData.functionIdentifier)));
     }
 
     const connector = this._bpmnJsService.elementRegistryModule.get(taskCreationPayload.configureIncomingErrorGatewaySequenceFlow?.id ?? '') as IConnector;
-    if (!!connector) {
+    if (connector) {
       if (taskCreationData?.entranceGatewayType) {
         if (taskCreationData.entranceGatewayType) {
           BPMNJsRepository.updateBpmnElementSLPBExtension(this._bpmnJsService.bpmnJs, connector.businessObject, 'SequenceFlowExtension', (ext) => ext.sequenceFlowType = taskCreationData.entranceGatewayType === 'Success' ? 'success' : 'error');
@@ -92,7 +97,7 @@ export class ProcessBuilderComponentService {
       this._handleNoFunctionSelected(taskCreationPayload);
     }
 
-    if (!referencedFunction || !taskCreationData) {
+    if (!referencedFunction) {
       return;
     }
 
@@ -154,15 +159,15 @@ export class ProcessBuilderComponentService {
     const func = await selectSnapshot(this._store.select(functionSelectors.selectIFunction(referencedFunctionIdentifier)));
 
     const result = func?.customImplementation ? await this._confirmationService.requestConfirmation(
-      `${func!.normalizedName} will be deleted`,
-      `By deleting that activity, you will remove the method '${func!.normalizedName}', all resulting parameters and all following gateways. That may break your pipeline!</br><b>Do you want to proceed?</b>`
+      `${func.normalizedName} will be deleted`,
+      `By deleting that activity, you will remove the method '${func.normalizedName}', all resulting parameters and all following gateways. That may break your pipeline!</br><b>Do you want to proceed?</b>`
     ) : true;
 
     if (result) {
       this._bpmnJsService.removeOutgoingDataObjectReferences(element);
       this._bpmnJsService.removeOutgoingGateways(element);
       this._bpmnJsService.modelingModule.removeElements([element]);
-      if (func?.customImplementation) this._store.dispatch(removeIFunction(func!));
+      if (func?.customImplementation) this._store.dispatch(removeIFunction(func));
       this._bpmnJsService.saveCurrentBpmnModel();
     }
   }
@@ -179,15 +184,15 @@ export class ProcessBuilderComponentService {
     if (resultingFunction.inputTemplates || resultingFunction.inputTemplates === 'dynamic') {
       const inputParams = Array.isArray(resultingFunction.inputTemplates) ? [...resultingFunction.inputTemplates] : [];
       if (typeof taskCreationData.inputParam === 'number') {
-        inputParams.push({ optional: false, interface: taskCreationData.inputParam, name: 'my input' } as IInputParam);
+        inputParams.push({ optional: false, interface: taskCreationData.interface ?? undefined, name: 'my input', type: 'string' });
       }
 
       if (configureActivity) {
         const availableInputParamsIElements = BPMNJsRepository.getAvailableInputParamsIElements(configureActivity);
-        for (let param of inputParams.filter(inputParam => !(taskCreationPayload.configureActivity as IElement).incoming.some(y => BPMNJsRepository.sLPBExtensionSetted(y.source.businessObject, 'DataObjectExtension', (ext) => ext.outputParam === inputParam)))) {
+        for (const param of inputParams.filter(inputParam => !(taskCreationPayload.configureActivity as IElement).incoming.some(y => BPMNJsRepository.sLPBExtensionSetted(y.source.businessObject, 'DataObjectExtension', (ext) => ext.outputParam === inputParam)))) {
           // HEREEE
           const element = availableInputParamsIElements.find(x => BPMNJsRepository.sLPBExtensionSetted(x.businessObject, 'DataObjectExtension', (ext) => ext.outputParam === param as IInputParam));
-          if (!!element) {
+          if (element) {
             this._bpmnJsService.modelingModule.connect(element, configureActivity);
           }
         }
@@ -196,7 +201,7 @@ export class ProcessBuilderComponentService {
   }
 
   private _handleErrorGatewayConfiguration(taskCreationPayload: ITaskCreationPayload, resultingFunction: IFunction) {
-    let outgoingErrorGatewaySequenceFlow = taskCreationPayload
+    const outgoingErrorGatewaySequenceFlow = taskCreationPayload
       .configureActivity!
       .outgoing
       .find(sequenceFlow => sequenceFlow.type === shapeTypes.SequenceFlow && sequenceFlow.target?.type === shapeTypes.ExclusiveGateway);
@@ -244,6 +249,16 @@ export class ProcessBuilderComponentService {
     this._bpmnJsService.modelingModule.updateLabel(connector, connectorLabel)
   }
 
+  private _removeActivityWhenNoFunctionIsReferenced(configureActivity: IElement | undefined) {
+    if (!configureActivity) {
+      return;
+    }
+    const activityFunctionId = BPMNJsRepository.getSLPBExtension(configureActivity?.businessObject, 'ActivityExtension', (ext) => ext.activityFunctionId);
+    if (!activityFunctionId) {
+      this._bpmnJsService.modelingModule.removeElements([configureActivity]);
+    }
+  }
+
   private async _applyFunctionConfiguration(taskCreationData: ITaskCreationFormGroupValue, referencedFunction: IFunction, methodEvaluation: IMethodEvaluationResult, outputParamId: number) {
     const inputParams = await this._extractInputParams(taskCreationData, referencedFunction);
     const functionIdentifier = referencedFunction.requireCustomImplementation ? await selectSnapshot(this._store.select(functionSelectors.selectNextId())) : referencedFunction.identifier;
@@ -265,14 +280,17 @@ export class ProcessBuilderComponentService {
   }
 
   private async _appendSequenceFlowEndEvent(taskCreationPayload: ITaskCreationPayload) {
-    this._bpmnJsService.modelingModule.appendShape(taskCreationPayload.configureActivity!, { type: shapeTypes.EndEvent }, {
-      x: taskCreationPayload.configureActivity!.x + 200,
-      y: taskCreationPayload.configureActivity!.y + 40
+    if (!taskCreationPayload.configureActivity) {
+      return;
+    }
+    this._bpmnJsService.modelingModule.appendShape(taskCreationPayload.configureActivity, { type: shapeTypes.EndEvent }, {
+      x: taskCreationPayload.configureActivity.x + 200,
+      y: taskCreationPayload.configureActivity.y + 40
     });
   }
 
   private async _extractInputParams(taskCreationData: ITaskCreationFormGroupValue, referencedFunction: IFunction): Promise<IInputParam[]> {
-    let inputParams: IInputParam[] = [];
+    const inputParams: IInputParam[] = [];
     if (referencedFunction.inputTemplates === 'dynamic' && typeof taskCreationData.interface === 'number') {
       inputParams.push({ optional: false, interface: taskCreationData.interface, name: taskCreationData.normalizedName, type: 'object' });
     }

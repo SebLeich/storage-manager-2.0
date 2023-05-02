@@ -2,7 +2,7 @@ import { InjectionToken } from "@angular/core";
 import { IParamDefinition } from "./param-definition.interface";
 
 export interface IInterface {
-    identifier: number;
+    identifier: string;
     name: string;
     normalizedName: string;
     typeDef: IParamDefinition[];
