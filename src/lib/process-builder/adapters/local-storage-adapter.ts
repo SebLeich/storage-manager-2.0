@@ -1,15 +1,11 @@
 import { ApplicationRef, Injector } from "@angular/core";
-import { selectIParams } from "../store/selectors/param.selectors";
-import { IParam } from "../interfaces/param.interface";
-import { selectIFunctions } from "../store/selectors/function.selector";
-import { IFunction } from "../interfaces/function.interface";
 import { upsertIFunctions } from "../store/actions/function.actions";
 import { upsertIParams } from "../store/actions/param.actions";
 import { selectCurrentIBpmnJSModelGuid, selectIBpmnJSModels } from "../store/selectors/bpmn-js-model.selectors";
 import { IBpmnJSModel } from "../interfaces/bpmn-js-model.interface";
 import { setCurrentIBpmnJSModel, upsertIBpmnJSModels } from "../store/actions/bpmn-js-model.actions";
-import { selectIInterfaces } from "../store/selectors/interface.selectors";
-import { IInterface } from "../interfaces/interface.interface";
+import { selectIInterfaces, selectIFunctions, selectIParams } from "@process-builder/selectors";
+import { IFunction, IInterface, IParam } from "@process-builder/interfaces";
 import { upsertIInterfaces } from "../store/actions/interface.actions";
 import { Store } from "@ngrx/store";
 

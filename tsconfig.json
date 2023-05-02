@@ -36,6 +36,8 @@
       "@animations": ["./src/lib/shared/animations"],
       "@main-components": ["./src/app/components/main"],
       "@process-builder/store": ["./src/lib/process-builder/store"],
+      "@process-builder/selectors": ["./src/lib/process-builder/store/selectors"],
+      "@process-builder/interfaces": ["./src/lib/process-builder/interfaces"],
       "@procedure": ["./src/lib/procedure-store"],
       "@smgr/components": ["./src/app/components"],
       "@smgr/components/select": ["./src/lib/storage-manager/components/select"],

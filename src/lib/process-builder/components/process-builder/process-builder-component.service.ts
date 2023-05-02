@@ -96,7 +96,7 @@ export class ProcessBuilderComponentService {
       return;
     }
 
-    const nextParamId = await selectSnapshot(this._store.select(paramSelectors.selectNextId()));
+    const nextParamId = await selectSnapshot(this._store.select(paramSelectors.selectNextParameterIdentifier()));
     const methodEvaluation = CodemirrorRepository.evaluateCustomMethod(undefined, taskCreationData.implementation ?? defaultImplementation);
 
     if (referencedFunction.requireCustomImplementation || referencedFunction.customImplementation || taskCreationData.implementation) {

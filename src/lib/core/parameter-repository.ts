@@ -1,5 +1,4 @@
-import { IParam } from "../process-builder/interfaces/param.interface";
-import { IParamDefinition } from "../process-builder/interfaces/param-definition.interface";
+import { IParam, IParamDefinition } from '@process-builder/interfaces';
 
 export class ParameterRepository {
 
@@ -7,7 +6,7 @@ export class ParameterRepository {
         return allParams.filter(x => x.type === type);
     }
 
-    static objectsMatch(a: IParamDefinition | null | undefined, b: IParamDefinition | null | undefined) {
+    static objectsMatch(a: IParamDefinition | null | undefined, b: IParamDefinition | null | undefined): any {
         if (!a || !b) {
             console.warn('passed at least one undefined param; ', a, b);
             console.trace();
@@ -22,7 +21,7 @@ export class ParameterRepository {
             }
             return true;
         } else if (a.type === 'array') {
-            return this.objectsMatch(a.typeDef[0], b.typeDef[0]);
+            return this.objectsMatch((a.typeDef as any)[0], (b.typeDef as any)[0]);
         }
     }
 

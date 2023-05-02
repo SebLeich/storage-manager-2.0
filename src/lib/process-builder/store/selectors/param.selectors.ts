@@ -47,7 +47,7 @@ export const selectIParamsByNormalizedName = (
     ) as IParam[];
   });
 
-export const selectNextId = () =>
+export const selectNextParameterIdentifier = () =>
   createSelector(
     selectIParamState,
     (state: fromIParam.State) => Math.max(...state.ids, 1) + 1

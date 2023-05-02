@@ -2,7 +2,7 @@ import { TestBed } from '@angular/core/testing';
 
 import { Store } from '@ngrx/store';
 import { selectSnapshot } from '../../globals/select-snapshot';
-import { selectIInterface, selectIInterfaces, selectIInterfacesByNormalizedName, selectNextId } from './interface.selectors';
+import { selectIInterface, selectIInterfaces, selectIInterfacesByNormalizedName, selectNextInterfaceIdentifier } from './interface.selectors';
 import { isEqual } from 'lodash';
 import defaultImportsConstant from 'src/app/default-imports.constant';
 import { addIInterfaces } from '../actions/interface.actions';
@@ -77,7 +77,7 @@ describe('IInterface Selectors', () => {
 
   const correctNextId = Math.max(...Object.values(interfaces).map(iFace => iFace.identifier)) + 1;
   it(`should select the next correct id: ${correctNextId}`, async () => {
-    const selectionResult = await selectSnapshot(store.select(selectNextId()));
+    const selectionResult = await selectSnapshot(store.select(selectNextInterfaceIdentifier()));
     expect(selectionResult).toBeTruthy();
     expect(selectionResult).toBe(correctNextId);
   });

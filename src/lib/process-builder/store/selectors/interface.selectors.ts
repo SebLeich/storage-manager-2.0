@@ -42,7 +42,7 @@ export const selectIInterfacesByNormalizedName = (names: string[] | null | undef
     }
 );
 
-export const selectNextId = () => createSelector(
+export const selectNextInterfaceIdentifier = () => createSelector(
     selectIInterfaceState,
     (state: fromIInterface.State) => (state && state.entities ? Math.max(...Object.values(state.entities).filter(x => x ? true : false).map(x => (x as IInterface).identifier), -1) : -1) + 1
 );

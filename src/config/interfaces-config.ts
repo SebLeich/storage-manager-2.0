@@ -1,4 +1,4 @@
-import { IInterface } from "src/lib/process-builder/interfaces/interface.interface";
+import { IInterface } from "@process-builder/interfaces";
 import { InterfaceCodes } from "./interface-codes";
 
 export default [
