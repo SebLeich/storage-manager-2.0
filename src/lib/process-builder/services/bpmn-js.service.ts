@@ -16,25 +16,19 @@ import * as tooltips from "diagram-js/lib/features/tooltips";
 import customBPMNJSModule from '../extensions/bpmn-js';
 
 import { v4 as generateGuid } from 'uuid';
-
 import { Subject } from 'rxjs';
-
 import sebleichProcessBuilderExtension from '../globals/sebleich-process-builder-extension';
 import { IBpmnJS } from '../interfaces/bpmn-js.interface';
-import { getCanvasModule, getDirectEditingModule, getElementRegistryModule, getEventBusModule, getGraphicsFactory, getModelingModule, getTooltipModule, getZoomScrollModule, IElementRegistryModule, ITooltipModule } from 'src/lib/bpmn-io/bpmn-modules';
+import { getCanvasModule, getDirectEditingModule, getElementRegistryModule, getEventBusModule, getGraphicsFactory, getModelingModule, getTooltipModule, getZoomScrollModule } from 'src/lib/bpmn-io/bpmn-modules';
 import { BehaviorSubject, buffer, combineLatest, debounceTime, delay, filter, from, map, merge, Observable, scan, shareReplay, startWith, switchMap, throttleTime, timer } from 'rxjs';
 import { IConnectionCreatePostExecutedEvent } from 'src/lib/bpmn-io/interfaces/connection-create-post-executed-event.interface';
-import { IModelingModule } from 'src/lib/bpmn-io/interfaces/modeling-module.interface';
+import { ICanvasModule, IDirectEditingModule, IElementRegistryModule, IModelingModule, ITooltipModule, IZoomScrollModule } from '@bpmn-io/modules';
 import { IProcessValidationResult } from '../interfaces/validation-result.interface';
 import { BPMNJsRepository } from 'src/lib/core/bpmn-js.repository';
-import { IZoomScrollModule } from 'src/lib/bpmn-io/interfaces/zoom-scroll-module.interface';
 import { Store } from '@ngrx/store';
 import { selectCurrentIBpmnJSModel, selectRecentlyUsedIBpmnJSModel } from '../store/selectors/bpmn-js-model.selectors';
 import { IEvent } from 'src/lib/bpmn-io/interfaces/event.interface';
-import { IDirectEditingEvent } from 'src/lib/bpmn-io/interfaces/direct-editing-event.interface';
-import { IShapeDeleteExecutedEvent } from 'src/lib/bpmn-io/interfaces/shape-delete-executed-event.interface';
-import { IShapeAddedEvent } from 'src/lib/bpmn-io/interfaces/shape-added-event.interface';
-import { IViewboxChangedEvent } from '../interfaces/viewbox-changed-event.interface';
+import { IDirectEditingEvent, IShapeAddedEvent, IShapeCreateEvent, IShapeDeleteExecutedEvent, IViewboxChangedEvent } from '@bpmn-io/events';
 import { isEqual } from 'lodash';
 import { addIBpmnJSModel, setCurrentIBpmnJSModel, updateCurrentIBpmnJSModel } from '../store/actions/bpmn-js-model.actions';
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -46,8 +40,6 @@ import { TaskCreationStep } from '../globals/task-creation-step';
 import { IProcedure } from 'src/lib/procedure-store/interfaces/procedure.interface';
 import { TaskEditingStatus } from '../types/task-editing-status.type';
 import shapeTypes from 'src/lib/bpmn-io/shape-types';
-import { ICanvasModule } from 'src/lib/bpmn-io/interfaces/canvas-module.interface';
-import { IDirectEditingModule } from 'src/lib/bpmn-io/interfaces/direct-editing-module.interface';
 import { IElement } from 'src/lib/bpmn-io/interfaces/element.interface';
 import { IPipeline } from 'src/lib/pipeline-store/interfaces/pipeline.interface';
 import { selectIFunction } from '../store/selectors/function.selector';
@@ -58,7 +50,6 @@ import { Router } from '@angular/router';
 import { addIPipeline, removeIPipeline } from 'src/lib/pipeline-store/store/actions/pipeline.actions';
 import { addIPipelineActions } from 'src/lib/pipeline-store/store/actions/pipeline-action.actions';
 import { selectPipelineByBpmnJsModel } from 'src/lib/pipeline-store/store/selectors/pipeline.selectors';
-import { IShapeCreateEvent } from 'src/lib/bpmn-io/interfaces/shape-create-event.interface';
 import { selectIParam } from '../store/selectors/param.selectors';
 import { GatewayType } from '../types/gateway.type';
 
@@ -335,7 +326,7 @@ export class BpmnJsService {
       activityIdentifier: number = BPMNJsRepository.getSLPBExtension(cursor.businessObject, 'ActivityExtension', (ext => ext.activityFunctionId)),
       func = await selectSnapshot(this._store.select(selectIFunction(activityIdentifier))),
       outputParam = typeof func?.output === 'number' ? await selectSnapshot(this._store.select(selectIParam(func.output))) : undefined,
-      executableCode = func?.customImplementation ? eval(func!.customImplementation.join('\n')!) : func?.implementation;
+      executableCode = func?.customImplementation ? func!.customImplementation.join('\n')! : func?.implementation?.toString();
 
     const outgoingDataObjectReference = cursor.outgoing.find(connector => connector.type === shapeTypes.DataOutputAssociation)?.target;
     let isProvidingSolutionWrapper = false, isMatchingProcessOutput = false;

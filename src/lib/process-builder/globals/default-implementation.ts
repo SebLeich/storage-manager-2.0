@@ -4,7 +4,7 @@ export default [
     ' * use javascript notation',
     ' */',
     '',
-    'async (injector, httpClient) => {',
+    'async () => {',
     '  // your code',
     '}'
 ];

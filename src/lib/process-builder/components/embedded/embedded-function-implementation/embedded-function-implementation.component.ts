@@ -6,7 +6,7 @@ import { MethodEvaluationStatus } from 'src/lib/process-builder/globals/method-e
 import { debounceTime, map, shareReplay } from 'rxjs/operators';
 import { ControlContainer, FormControl, UntypedFormControl } from '@angular/forms';
 import { Store } from '@ngrx/store';
-import { selectIParams } from 'src/lib/process-builder/store/selectors/param.selectors';
+import { selectIParams } from '@process-builder/selectors';
 import { mapIParamsInterfaces } from 'src/lib/process-builder/extensions/rxjs/map-i-params-interfaces.rxjs';
 import { ProcessBuilderService } from 'src/lib/process-builder/services/process-builder.service';
 import { TaskCreationFormGroup } from 'src/lib/process-builder/interfaces/task-creation-form-group-value.interface';
@@ -24,14 +24,16 @@ export class EmbeddedFunctionImplementationComponent implements IEmbeddedView, A
   @Input() public inputParams!: number[];
 
   public inputParams$ = this._store.select(selectIParams(this.inputParams)).pipe(shareReplay());
-
-  public varNameInjector: any = {
-    'var1': { type: 'variable' },
-    'var2': { type: 'variable' }
-  };
-
   public implementationChanged$ = defer(() => this.formGroup.controls.implementation!.valueChanges);
-  public returnValueStatus$ = defer(() => this.implementationChanged$.pipe(map((implementation) => CodemirrorRepository.evaluateCustomMethod(undefined, implementation ?? undefined)?.status), startWith(MethodEvaluationStatus.Initial)));
+  public returnValueStatus$ = defer(
+    () => this.implementationChanged$.pipe(
+      map((implementation) => {
+        const code = implementation?.text;
+        return CodemirrorRepository.evaluateCustomMethod(undefined, code)?.status;
+      }),
+      startWith(CodemirrorRepository.evaluateCustomMethod(undefined, this.formGroup.controls.implementation!.value?.text)?.status)
+    )
+  );
 
   private _subscriptions = new Subscription();
 

@@ -4,7 +4,7 @@ import defaultImportsConstant from 'src/app/default-imports.constant';
 import { IExtensionElement } from 'src/lib/bpmn-io/interfaces/extension-element.interface';
 import { IConnector } from 'src/lib/bpmn-io/interfaces/connector.interface';
 import { IElement } from 'src/lib/bpmn-io/interfaces/element.interface';
-import { IModelingModule } from 'src/lib/bpmn-io/interfaces/modeling-module.interface';
+import { IElementRegistryModule, IModelingModule } from '@bpmn-io/modules';
 import shapeTypes from 'src/lib/bpmn-io/shape-types';
 import { FUNCTIONS_CONFIG_TOKEN, IFunction } from '../../interfaces/function.interface';
 import { IProcessBuilderConfig, PROCESS_BUILDER_CONFIG_TOKEN } from '../../interfaces/process-builder-config.interface';
@@ -26,7 +26,7 @@ import { upsertIParam } from '../../store/actions/param.actions';
 import { IParam } from '../../interfaces/param.interface';
 import { deepObjectLookup } from 'src/lib/shared/globals/deep-object-lookup.function';
 import { ITaskCreationFormGroupValue } from '../../interfaces/task-creation-form-group-value.interface';
-import { IElementRegistryModule } from 'src/lib/bpmn-io/bpmn-modules';
+import { CodemirrorRepository } from 'src/lib/core/codemirror.repository';
 
 describe('ProcessBuilderComponentService', () => {
   const processBuilderConfig = {
@@ -200,7 +200,7 @@ describe('ProcessBuilderComponentService', () => {
         canFail: updatedCanFail,
         normalizedName: updatedNormalizedName,
         name: updatedName,
-        implementation: [`return ${updatedNormalizedName};`]
+        implementation: CodemirrorRepository.stringToTextLeaf(`return ${updatedNormalizedName};`)
       } as ITaskCreationFormGroupValue);
 
       expect(storeSpy).not.toHaveBeenCalled();
@@ -321,7 +321,7 @@ describe('ProcessBuilderComponentService', () => {
       const updatedCanFail = true;
       const updatedName = 'some new value';
       const updatedNormalizedName = ProcessBuilderRepository.normalizeName(updatedName);
-      const implementation = [`return ${updatedNormalizedName};`];
+      const implementation = CodemirrorRepository.stringToTextLeaf(`return ${updatedNormalizedName};`);
 
       await service.applyTaskCreationConfig({
         configureActivity: activityMock,
@@ -366,7 +366,7 @@ describe('ProcessBuilderComponentService', () => {
           const updatedCanFail = true;
           const updatedName = 'some new value';
           const updatedNormalizedName = ProcessBuilderRepository.normalizeName(updatedName);
-          const implementation = [`return ${updatedNormalizedName};`];
+          const implementation = CodemirrorRepository.stringToTextLeaf(`return ${updatedNormalizedName};`);
 
           await service.applyTaskCreationConfig({
             configureActivity: activityMock,

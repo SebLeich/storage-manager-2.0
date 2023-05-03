@@ -1,5 +1,5 @@
-import { IConnector } from "./connector.interface";
-import { IElement } from "./element.interface";
+import { IConnector } from "../connector.interface";
+import { IElement } from "../element.interface";
 
 export interface IModelingModule {
     appendShape: (origin: IElement, type: { type: string }, position?: null | { x: number, y: number }) => IElement;

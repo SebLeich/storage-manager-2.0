@@ -15,8 +15,6 @@ import * as functionSelectors from '../../store/selectors/function.selector';
 import defaultImplementation from '../../globals/default-implementation';
 import { IMethodEvaluationResult } from '../../interfaces/method-evaluation-result.interface';
 import { MethodEvaluationStatus } from '../../globals/method-evaluation-status';
-import { IFunction } from '../../interfaces/function.interface';
-import { IParam } from '../../interfaces/param.interface';
 import { ProcessBuilderRepository } from 'src/lib/core/process-builder-repository';
 import { upsertIParam } from '../../store/actions/param.actions';
 import shapeTypes from 'src/lib/bpmn-io/shape-types';
@@ -26,7 +24,7 @@ import { deepObjectLookup } from 'src/lib/shared/globals/deep-object-lookup.func
 import { injectInterfaces, injectValues } from '../../store/selectors/injection-context.selectors';
 import { ConfirmationService } from 'src/lib/confirmation/services/confirmation.service';
 import { ITaskCreationFormGroupValue } from '../../interfaces/task-creation-form-group-value.interface';
-import { IInputParam } from '../../interfaces/input-param.interface';
+import { IFunction, IInputParam, IParam } from '@process-builder/interfaces';
 
 @Injectable()
 export class ProcessBuilderComponentService {
@@ -102,7 +100,8 @@ export class ProcessBuilderComponentService {
     }
 
     const nextParamId = await selectSnapshot(this._store.select(paramSelectors.selectNextParameterIdentifier()));
-    const methodEvaluation = CodemirrorRepository.evaluateCustomMethod(undefined, taskCreationData.implementation ?? defaultImplementation);
+    const code = taskCreationData.implementation ? taskCreationData.implementation.text : defaultImplementation;
+    const methodEvaluation = CodemirrorRepository.evaluateCustomMethod(undefined, code);
 
     if (referencedFunction.requireCustomImplementation || referencedFunction.customImplementation || taskCreationData.implementation) {
       referencedFunction = await this._applyFunctionConfiguration(taskCreationData, referencedFunction, methodEvaluation, typeof referencedFunction.output === 'number' ? referencedFunction.output : nextParamId) as IFunction;
@@ -296,7 +295,7 @@ export class ProcessBuilderComponentService {
     }
     else if (referencedFunction.requireCustomImplementation || referencedFunction.customImplementation) {
       const usedInputParams: { varName: string, propertyName: string | null }[] = taskCreationData.implementation
-        ? CodemirrorRepository.getUsedInputParams(undefined, taskCreationData.implementation)
+        ? CodemirrorRepository.getUsedInputParams(undefined, taskCreationData.implementation.text)
         : [];
 
       const usedInputParamEntities = await selectSnapshot(
@@ -324,8 +323,10 @@ export class ProcessBuilderComponentService {
 
   private async _handleFunctionOutputParam(taskCreationData: ITaskCreationFormGroupValue, taskCreationPayload: ITaskCreationPayload, outputParam: IParam, methodEvaluation?: IMethodEvaluationResult) {
     if (!methodEvaluation) {
-      methodEvaluation = CodemirrorRepository.evaluateCustomMethod(undefined, taskCreationData.implementation ?? defaultImplementation);
+      const code = taskCreationData.implementation ? taskCreationData.implementation.text : defaultImplementation;
+      methodEvaluation = CodemirrorRepository.evaluateCustomMethod(undefined, code);
     }
+
     if (methodEvaluation.status === MethodEvaluationStatus.ReturnValueFound || outputParam) {
       outputParam = {
         ...outputParam,
@@ -334,6 +335,7 @@ export class ProcessBuilderComponentService {
         defaultValue: await this._outputParamValue(methodEvaluation, taskCreationData.outputParamValue),
         interface: taskCreationData.outputParamInterface
       } as IParam;
+
       if (typeof taskCreationData.interface === 'number') {
         outputParam.interface = taskCreationData.interface;
         outputParam.type = 'object';
@@ -341,6 +343,7 @@ export class ProcessBuilderComponentService {
         const outputType = await this._methodEvaluationTypeToOutputType(methodEvaluation);
         outputParam.type = outputType;
       }
+      
       this._store.dispatch(upsertIParam(outputParam));
 
       BPMNJsRepository.appendOutputParam(

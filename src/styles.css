@@ -158,6 +158,15 @@ body {
     border-radius: 5px;
 }
 
+.mat-form-field-outline-no-padding-bottom .mat-mdc-form-field-subscript-wrapper {
+    display: none;
+}
+
+.mat-form-field-outline-no-padding-bottom .mat-mdc-form-field-infix  {
+    padding-top: 18px !important;
+    padding-bottom: 14px !important;
+}
+
 .mat-form-field-no-padding .mat-form-field-wrapper {
     padding: 0px;
 }

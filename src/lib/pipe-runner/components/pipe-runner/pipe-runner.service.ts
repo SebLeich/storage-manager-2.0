@@ -100,12 +100,12 @@ export class PipeRunnerService {
       this._store.dispatch(updateIPipelineActionStatus(currentAction!.identifier, 'RUNNING'));
       try {
         await this._environmentInjector.runInContext(async () => {
-          const result = await currentAction!.executableCode(injector, this.httpClient);
+          const result = await (new Function('a')(currentAction?.executableCode)(100));
           if (currentAction?.ouputParamName) {
             injector[currentAction.ouputParamName] = result;
           }
           if (currentAction!.outputMatchesPipelineOutput) {
-            solutionWrapper = result;
+            solutionWrapper = result as ISolutionWrapper;
             this._store.dispatch(setIPipelineActionSolution(currentAction!.identifier, solutionWrapper!));
             this._store.dispatch(addSolution({ solution: (solutionWrapper as ISolutionWrapper)!.solution }));
           }

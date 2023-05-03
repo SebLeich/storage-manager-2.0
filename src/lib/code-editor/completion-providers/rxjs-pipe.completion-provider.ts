@@ -40,6 +40,8 @@ export class RxjsPipeCompletionProvider implements ICodeCompletionProvider {
     private rxjsStandaloneMethods(): Completion[] {
         return [
             { type: 'function', label: 'defer', detail: 'defer observable creation' },
+            { type: 'function', label: 'firstValueFrom', detail: 'promise from observable' },
+            { type: 'function', label: 'lastValueFrom', detail: 'promise from observable' },
             { type: 'function', label: 'Observable', apply: 'new Observable((subscriber) =>\n  {\n\n  });', detail: 'create observable' },
         ];
     }

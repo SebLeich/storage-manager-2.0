@@ -20,6 +20,7 @@ import { functionSelectedsWhenRequiredValidator } from './validators/function-ex
 import { implementationExistsWhenRequiredValidator } from './validators/implementation-exists-when-required.validator';
 import { ITaskCreationDataWrapper } from 'src/lib/process-builder/interfaces/task-creation-data-wrapper.interface';
 import defaultImplementation from 'src/lib/process-builder/globals/default-implementation';
+import { ITextLeaf } from 'src/lib/process-builder/interfaces/text-leaf.interface';
 
 @Component({
   selector: 'app-task-creation',
@@ -33,7 +34,7 @@ export class TaskCreationComponent implements OnDestroy, OnInit {
     canFail: new FormControl<boolean>(false),
     entranceGatewayType: new FormControl<GatewayType | null>(null),
     functionIdentifier: new FormControl<number | null>(null),
-    implementation: new FormControl<string[] | null>(null),
+    implementation: new FormControl<ITextLeaf | null>(null),
     inputParam: new FormControl<ParamCodes[] | number | null>(null),
     interface: new FormControl<string | null>(null),
     isProcessOutput: new FormControl<boolean>(false),
@@ -49,7 +50,7 @@ export class TaskCreationComponent implements OnDestroy, OnInit {
   ]));
 
   public customEvaluationResult$ = this.formGroup.controls.implementation.valueChanges
-    .pipe(throttleTime(2000), map(implementation => CodemirrorRepository.evaluateCustomMethod(undefined, implementation ?? [])));
+    .pipe(throttleTime(2000), map(implementation => CodemirrorRepository.evaluateCustomMethod(undefined, implementation?.text ?? [])));
 
   public unableToDetermineOutputParam$ = this.customEvaluationResult$.pipe(
     map(evaluationResult => {
@@ -66,7 +67,7 @@ export class TaskCreationComponent implements OnDestroy, OnInit {
       if (!implementation) {
         return null;
       }
-      return CodemirrorRepository.getUsedInputParams(undefined, implementation ?? undefined)
+      return CodemirrorRepository.getUsedInputParams(undefined, implementation.text ?? undefined)
         .map((x) => x.propertyName)
         .filter((x, index, array) => array.indexOf(x) === index);
     }));
@@ -174,6 +175,7 @@ export class TaskCreationComponent implements OnDestroy, OnInit {
             if (typeof functionIdentifier !== 'number') {
               return;
             }
+
             this.validateFunctionSelection();
           }
         ),
@@ -206,9 +208,10 @@ export class TaskCreationComponent implements OnDestroy, OnInit {
         objectTypeDefinition = null;
       }
 
+      const textLeaf = CodemirrorRepository.stringToTextLeaf(currentFunction.customImplementation ?? defaultImplementation);
       this.formGroup.patchValue({
         canFail: currentFunction.canFail,
-        implementation: currentFunction.customImplementation ?? defaultImplementation,
+        implementation: textLeaf,
         requireCustomImplementation: currentFunction.requireCustomImplementation,
         name: currentFunction.name,
         normalizedName: currentFunction.normalizedName,

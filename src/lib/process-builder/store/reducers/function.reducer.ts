@@ -1,8 +1,7 @@
 import { createEntityAdapter, EntityAdapter, EntityState, Update } from '@ngrx/entity';
 import { createReducer, on } from '@ngrx/store';
-import { IFunction } from '../../interfaces/function.interface';
+import { IFunction } from '@process-builder/interfaces';
 import { addIFunction, addIFunctions, removeIFunction, setIFunctionsCanFailFlag, updateIFunction, updateIFunctionOutputParam, upsertIFunction, upsertIFunctions } from '../actions/function.actions';
-
 
 export const featureKey = 'function';
 
