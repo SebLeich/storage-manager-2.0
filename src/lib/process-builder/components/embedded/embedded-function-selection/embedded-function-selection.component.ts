@@ -1,9 +1,8 @@
 import { Component, ElementRef, Input, OnDestroy, OnInit, QueryList, ViewChild, ViewChildren, ViewContainerRef } from '@angular/core';
-import { Observable, ReplaySubject, Subscription } from 'rxjs';
+import { ReplaySubject, Subscription } from 'rxjs';
 import { ParamCodes } from 'src/config/param-codes';
 import { IEmbeddedView } from 'src/lib/process-builder/classes/embedded-view';
 import { IFunction } from 'src/lib/process-builder/interfaces/function.interface';
-import { showAnimation } from 'src/lib/shared/animations/show';
 import { Store } from '@ngrx/store';
 import { selectIFunctions } from 'src/lib/process-builder/store/selectors/function.selector';
 import { FunctionPreviewComponent } from '../../previews/function-preview/function-preview.component';
@@ -12,7 +11,7 @@ import { IInputParam } from 'src/lib/process-builder/interfaces/input-param.inte
 import { delay, map, startWith } from 'rxjs/operators';
 import * as fromIFunctionState from 'src/lib/process-builder/store/reducers/function.reducer';
 import { removeIFunction } from 'src/lib/process-builder/store/actions/function.actions';
-import { showListAnimation } from 'src/lib/shared/animations/show-list';
+import { showAnimation, showListAnimation } from '@animations';
 import { combineLatest } from 'rxjs/internal/observable/combineLatest';
 import { TaskCreationFormGroup } from 'src/lib/process-builder/interfaces/task-creation-form-group-value.interface';
 

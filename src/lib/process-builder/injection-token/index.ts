@@ -1,0 +1,1 @@
+export * as BPMN_JS from './bpmn-js.injection-token';

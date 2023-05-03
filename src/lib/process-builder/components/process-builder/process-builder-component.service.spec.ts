@@ -416,7 +416,7 @@ describe('ProcessBuilderComponentService', () => {
           const connectorMock = {};
           const updatedName = 'some new value';
           const updatedNormalizedName = ProcessBuilderRepository.normalizeName(updatedName);
-          const implementation = [`return ${updatedNormalizedName};`];
+          const implementation = CodemirrorRepository.stringToTextLeaf(`return ${updatedNormalizedName};`);
 
           await service.applyTaskCreationConfig({
             configureActivity: activityMock,
@@ -462,7 +462,7 @@ describe('ProcessBuilderComponentService', () => {
       const updatedCanFail = true;
       const updatedName = 'some new value';
       const updatedNormalizedName = ProcessBuilderRepository.normalizeName(updatedName);
-      const implementation = [`return ${updatedNormalizedName};`];
+      const implementation = CodemirrorRepository.stringToTextLeaf(`return ${updatedNormalizedName};`);
 
       await service.applyTaskCreationConfig({
         configureActivity: activityMock,
@@ -497,7 +497,7 @@ describe('ProcessBuilderComponentService', () => {
       const updatedCanFail = true;
       const updatedName = 'some new value';
       const updatedNormalizedName = ProcessBuilderRepository.normalizeName(updatedName);
-      const implementation = [`return ${updatedNormalizedName};`];
+      const implementation = CodemirrorRepository.stringToTextLeaf(`return ${updatedNormalizedName};`);
 
       await service.applyTaskCreationConfig({
         configureActivity: activityMock,
@@ -559,11 +559,11 @@ describe('ProcessBuilderComponentService', () => {
           const updatedNormalizedName = ProcessBuilderRepository.normalizeName(updatedName);
           const outputParamName = 'My Object';
           const normalizedOutputParamName = ProcessBuilderRepository.normalizeName(outputParamName);
-          const implementation = [
+          const implementation = CodemirrorRepository.stringToTextLeaf([
             'async (injector) => {',
             `return ${stringifiedValue};`,
             '}',
-          ];
+          ]);
 
           await service.applyTaskCreationConfig({
             configureActivity: activityMock,
@@ -614,11 +614,11 @@ describe('ProcessBuilderComponentService', () => {
           const updatedNormalizedName = ProcessBuilderRepository.normalizeName(updatedName);
           const outputParamName = 'My Object';
           const normalizedOutputParamName = ProcessBuilderRepository.normalizeName(outputParamName);
-          const implementation = [
+          const implementation = CodemirrorRepository.stringToTextLeaf([
             'async (injector) => {',
             `return ${stringifiedValue};`,
             '}',
-          ];
+          ]);
 
           const result = await service.applyTaskCreationConfig({
             configureActivity: activityMock,

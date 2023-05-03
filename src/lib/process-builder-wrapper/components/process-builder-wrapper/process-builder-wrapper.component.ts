@@ -1,5 +1,4 @@
-import { Component } from '@angular/core';
-import { MatSnackBar } from '@angular/material/snack-bar';
+import { Component, Inject } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { BehaviorSubject } from 'rxjs';
 import { firstValueFrom } from 'rxjs/internal/firstValueFrom';
@@ -7,7 +6,7 @@ import { map } from 'rxjs/operators';
 import { BPMNJsRepository } from 'src/lib/core/bpmn-js.repository';
 import { removeIPipeline } from 'src/lib/pipeline-store/store/actions/pipeline.actions';
 import { selectPipelineByBpmnJsModel } from 'src/lib/pipeline-store/store/selectors/pipeline.selectors';
-import { IBpmnJSModel, IFunction } from '@process-builder/interfaces';
+import { IBpmnJS, IBpmnJSModel, IFunction } from '@process-builder/interfaces';
 import { selectSnapshot } from 'src/lib/process-builder/globals/select-snapshot';
 import { BpmnJsService } from 'src/lib/process-builder/services/bpmn-js.service';
 import { ProcessBuilderService } from 'src/lib/process-builder/services/process-builder.service';
@@ -17,6 +16,7 @@ import { selectCurrentIBpmnJSModel, selectCurrentIBpmnJSModelGuid, selectIBpmnJS
 import { selectIFunctions, selectIParams } from '@process-builder/selectors';
 import { fadeInAnimation } from 'src/lib/shared/animations/fade-in.animation';
 import { showListAnimation } from 'src/lib/shared/animations/show-list';
+import { BPMN_JS } from '@process-builder/injection';
 
 @Component({
   selector: 'app-process-builder-wrapper',
@@ -41,11 +41,12 @@ export class ProcessBuilderWrapperComponent {
   public methodsVisible$ = this._methodsVisible.asObservable();
   public paramsVisible$ = this._paramsVisible.asObservable();
 
-  constructor(private _store: Store, public bpmnJsService: BpmnJsService, public processBuilderService: ProcessBuilderService, private _snackBar: MatSnackBar) {
-    this._snackBar.open('under construction ;)', 'Ok', {
-      duration: 3000
-    });
-  }
+  constructor(
+    @Inject(BPMN_JS) private _bpmnJs: IBpmnJS,
+    private _store: Store,
+    public bpmnJsService: BpmnJsService,
+    public processBuilderService: ProcessBuilderService
+  ) { }
 
   public blurElement(element: HTMLElement, event?: Event) {
     if (event) {
@@ -58,12 +59,12 @@ export class ProcessBuilderWrapperComponent {
   public async compile() {
     const model = await firstValueFrom(this.currentBpmnJSModel$);
     const existingPipeline = await selectSnapshot(this._store.select(selectPipelineByBpmnJsModel(model!.guid)));
-    if(existingPipeline) this._store.dispatch(removeIPipeline(existingPipeline));
+    if (existingPipeline) this._store.dispatch(removeIPipeline(existingPipeline));
     this.bpmnJsService.compile(model!.guid, model?.name ?? undefined);
   }
 
   public hideAllHints() {
-    BPMNJsRepository.clearAllTooltips(this.bpmnJsService.bpmnJs);
+    BPMNJsRepository.clearAllTooltips(this._bpmnJs);
   }
 
   public removeFunction(func: IFunction) {

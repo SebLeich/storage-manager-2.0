@@ -100,7 +100,8 @@ export class PipeRunnerService {
       this._store.dispatch(updateIPipelineActionStatus(currentAction!.identifier, 'RUNNING'));
       try {
         await this._environmentInjector.runInContext(async () => {
-          const result = await (new Function('a')(currentAction?.executableCode)(100));
+          const executableFunction = new Function('a', currentAction?.executableCode ?? '');
+          const result = await executableFunction(100);
           if (currentAction?.ouputParamName) {
             injector[currentAction.ouputParamName] = result;
           }

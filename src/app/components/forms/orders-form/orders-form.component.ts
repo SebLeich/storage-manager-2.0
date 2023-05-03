@@ -4,7 +4,7 @@ import { SortDirection } from '@angular/material/sort';
 import { Store } from '@ngrx/store';
 import { Subscription } from 'rxjs';
 import { IOrder } from '@smgr/interfaces';
-import { fadeInAnimation } from 'src/lib/shared/animations/fade-in.animation';
+import { fadeInAnimation } from '@animations';
 import { removeOrder } from '@smgr/store';
 
 @Component({

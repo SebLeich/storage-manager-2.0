@@ -1,20 +1,4 @@
 import { Inject, Injectable } from '@angular/core';
-
-// @ts-ignore
-import * as BpmnJS from 'bpmn-js/dist/bpmn-modeler.production.min.js';
-
-// @ts-ignore
-import gridModule from "diagram-js/lib/features/grid-snapping/visuals";
-
-// @ts-ignore
-import CliModule from 'bpmn-js-cli';
-
-// @ts-ignore
-import * as tooltips from "diagram-js/lib/features/tooltips";
-
-// @ts-ignore
-import customBPMNJSModule from '../extensions/bpmn-js';
-
 import { v4 as generateGuid } from 'uuid';
 import { Subject } from 'rxjs';
 import sebleichProcessBuilderExtension from '../globals/sebleich-process-builder-extension';
@@ -27,8 +11,7 @@ import { IProcessValidationResult } from '../interfaces/validation-result.interf
 import { BPMNJsRepository } from 'src/lib/core/bpmn-js.repository';
 import { Store } from '@ngrx/store';
 import { selectCurrentIBpmnJSModel, selectRecentlyUsedIBpmnJSModel } from '../store/selectors/bpmn-js-model.selectors';
-import { IEvent } from 'src/lib/bpmn-io/interfaces/event.interface';
-import { IDirectEditingEvent, IShapeAddedEvent, IShapeCreateEvent, IShapeDeleteExecutedEvent, IViewboxChangedEvent } from '@bpmn-io/events';
+import { IDirectEditingEvent, IEvent, IShapeAddedEvent, IShapeCreateEvent, IShapeDeleteExecutedEvent, IViewboxChangedEvent } from '@bpmn-io/events';
 import { isEqual } from 'lodash';
 import { addIBpmnJSModel, setCurrentIBpmnJSModel, updateCurrentIBpmnJSModel } from '../store/actions/bpmn-js-model.actions';
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -42,7 +25,7 @@ import { TaskEditingStatus } from '../types/task-editing-status.type';
 import shapeTypes from 'src/lib/bpmn-io/shape-types';
 import { IElement } from 'src/lib/bpmn-io/interfaces/element.interface';
 import { IPipeline } from 'src/lib/pipeline-store/interfaces/pipeline.interface';
-import { selectIFunction } from '../store/selectors/function.selector';
+import { selectIFunction, selectIParam } from '@process-builder/selectors';
 import { IConnector } from 'src/lib/bpmn-io/interfaces/connector.interface';
 import { IPipelineAction } from 'src/lib/pipeline-store/interfaces/pipeline-action.interface';
 import { ConfirmationService } from 'src/lib/confirmation/services/confirmation.service';
@@ -50,26 +33,11 @@ import { Router } from '@angular/router';
 import { addIPipeline, removeIPipeline } from 'src/lib/pipeline-store/store/actions/pipeline.actions';
 import { addIPipelineActions } from 'src/lib/pipeline-store/store/actions/pipeline-action.actions';
 import { selectPipelineByBpmnJsModel } from 'src/lib/pipeline-store/store/selectors/pipeline.selectors';
-import { selectIParam } from '../store/selectors/param.selectors';
 import { GatewayType } from '../types/gateway.type';
+import { BPMN_JS } from '@process-builder/injection';
 
 @Injectable()
 export class BpmnJsService {
-
-  public bpmnJs: IBpmnJS = new BpmnJS({
-    additionalModules: [
-      customBPMNJSModule,
-      gridModule,
-      CliModule,
-      tooltips
-    ],
-    cli: {
-      bindTo: 'cli'
-    },
-    moddleExtensions: {
-      processBuilderExtension: sebleichProcessBuilderExtension
-    }
-  });
 
   public attachEventFired$ = new Observable<IEvent>((subscriber) => this.eventBusModule.on('attach', (evt) => {
     subscriber.next(evt);
@@ -191,9 +159,11 @@ export class BpmnJsService {
     shareReplay(1),
     delay(0)
   );
+
   public validationContainsErrors$ = this.validation$.pipe(
     map(validation => (validation?.errors?.length ?? 0) > 0)
   );
+
   public bpmnJsLoggingEnabled = false;
 
   public status$: Observable<TaskEditingStatus> = merge(
@@ -209,9 +179,7 @@ export class BpmnJsService {
     this.dataObjectReferenceEditingEventFired$.pipe(debounceTime(500)).pipe(map(() => {
       return 'idle' as TaskEditingStatus;
     }))
-  ).pipe(
-    startWith('idle' as TaskEditingStatus)
-  );
+  ).pipe(startWith('idle' as TaskEditingStatus));
 
   public taskEditingProcedure$ = this.status$.pipe(
     scan(
@@ -233,7 +201,21 @@ export class BpmnJsService {
   public static elementDeletionRequested$ = new Subject<IElement>();
   public static elementEndEventCreationRequested = new Subject<IElement>();
 
-  constructor(@Inject(PROCESS_BUILDER_CONFIG_TOKEN) private _config: IProcessBuilderConfig, private _store: Store, private _snackBar: MatSnackBar, private _confirmationService: ConfirmationService, private _router: Router) {
+  /**
+   * @deprecated
+   */
+  public get bpmnJs(){
+    return this._bpmnJs;
+  }
+
+  constructor(
+    @Inject(PROCESS_BUILDER_CONFIG_TOKEN) private _config: IProcessBuilderConfig,
+    @Inject(BPMN_JS) private _bpmnJs: IBpmnJS,
+    private _store: Store,
+    private _snackBar: MatSnackBar,
+    private _confirmationService: ConfirmationService,
+    private _router: Router
+  ) {
     this._setUp();
   }
 
