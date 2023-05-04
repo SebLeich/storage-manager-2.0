@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, ElementRef, forwardRef, OnInit, Renderer2, ViewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, ElementRef, forwardRef, Input, OnInit, Renderer2, ViewChild } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { autocompletion, CompletionContext, CompletionResult } from '@codemirror/autocomplete';
 import { basicSetup, EditorView } from '@codemirror/basic-setup';
@@ -9,6 +9,7 @@ import defaultImplementation from 'src/lib/process-builder/globals/default-imple
 import { syntaxTree } from "@codemirror/language";
 import { RxjsPipeCompletionProvider } from '../../completion-providers/rxjs-pipe.completion-provider';
 import { HttpClientCompletionProvider } from '../../completion-providers/http-client.completion-provider';
+import { InputsCompletionProvider } from '../../completion-providers/inputs.completion-provider';
 
 @Component({
   selector: 'app-code-editor',
@@ -25,6 +26,8 @@ export class CodeEditorComponent implements ControlValueAccessor, OnInit {
   @ViewChild('codeBody', { static: true, read: ElementRef }) public codeBody!: ElementRef<HTMLDivElement>;
   @ViewChild('.cm-content', { static: false, read: ElementRef }) public codeMirrorContent!: ElementRef<HTMLDivElement>;
 
+  @Input() public inputParams: { [param: string]: object | string | number } | null = null;
+
   public implementation: Text = Text.of(defaultImplementation);
   private _onTouched?: (value: Text) => void;
   private _onChange?: (value: Text) => void;
@@ -39,16 +42,16 @@ export class CodeEditorComponent implements ControlValueAccessor, OnInit {
     });
   }
 
-  public registerOnChange(fn: any): void {
+  public registerOnChange(fn: (implementation: Text) => void): void {
     this._onChange = fn;
   }
 
-  public registerOnTouched(fn: any): void {
+  public registerOnTouched(fn: (implementation: Text) => void): void {
     this._onTouched = fn;
   }
 
   public setDisabledState(isDisabled: boolean): void {
-    if(this.codeMirrorContent){
+    if (this.codeMirrorContent) {
       this._renderer.setAttribute(this.codeMirrorContent.nativeElement, 'contenteditable', (!isDisabled).toString());
     }
   }
@@ -63,7 +66,7 @@ export class CodeEditorComponent implements ControlValueAccessor, OnInit {
       }
       this.implementation = Text.of(lines);
     }
-    if(this._codeMirror){
+    if (this._codeMirror) {
       this._codeMirror.setState(this._state);
     }
   }
@@ -97,12 +100,14 @@ export class CodeEditorComponent implements ControlValueAccessor, OnInit {
     const nodeBefore = syntaxTree(context.state).resolveInner(context.pos, -1);
     const completions = [
       ...await new RxjsPipeCompletionProvider().provideCompletions(context),
-      ...await new HttpClientCompletionProvider().provideCompletions(context)
+      ...await new HttpClientCompletionProvider().provideCompletions(context),
+      ...await new InputsCompletionProvider(this.inputParams).provideCompletions(context),
     ];
 
     return {
       from: nodeBefore.from,
       options: completions,
+      filter: false
     } as CompletionResult;
   }
 }

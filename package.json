@@ -46,7 +46,7 @@
     "bpmn-js-cli": "^2.3.0",
     "chart.js": "^4.2.1",
     "codemirror": "^6.0.1",
-    "diagram-js": "^11.9.0",
+    "diagram-js": "^11.9.1",
     "jsoneditor": "^9.9.2",
     "lodash": "^4.17.21",
     "moment": "^2.29.4",
@@ -78,6 +78,7 @@
     "@typescript-eslint/eslint-plugin": "5.52.0",
     "@typescript-eslint/parser": "5.52.0",
     "angular-cli-ghpages": "^1.0.5",
+    "cypress": "latest",
     "eslint": "^8.34.0",
     "jasmine": "^4.5.0",
     "jasmine-core": "^4.5.0",
@@ -89,7 +90,6 @@
     "karma-jasmine-html-reporter": "^2.0.0",
     "ts-node": "^10.9.1",
     "tslib": "^2.5.0",
-    "typescript": "4.9.5",
-    "cypress": "latest"
+    "typescript": "4.9.5"
   }
 }

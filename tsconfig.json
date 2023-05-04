@@ -19,29 +19,24 @@
     "importHelpers": true,
     "target": "ES2022",
     "module": "es2020",
-    "lib": [
-      "es2020",
-      "dom"
-    ],
-    "types": [
-      "node",
-      "jasmine",
-      "rxjs"
-    ],
-    "typeRoots": [
-      "../node_modules/@types"
-    ],
+    "lib": ["es2020", "dom"],
+    "types": ["jasmine", "node", "rxjs"],
+    "typeRoots": ["../node_modules/@types"],
     "useDefineForClassFields": false,
     "paths": {
+      "@/*": ["src/*"],
       "@animations": ["./src/lib/shared/animations"],
       "@main-components": ["./src/app/components/main"],
       "@process-builder/store": ["./src/lib/process-builder/store"],
       "@procedure": ["./src/lib/procedure-store"],
       "@smgr/components": ["./src/app/components"],
-      "@smgr/components/select": ["./src/lib/storage-manager/components/select"],
+      "@smgr/components/select": [
+        "./src/lib/storage-manager/components/select"
+      ],
       "@smgr/interfaces": ["./src/lib/storage-manager/interfaces"],
       "@smgr/solvers": ["./src/lib/storage-manager/solvers"],
       "@smgr/store": ["./src/lib/storage-manager/store"]
     }
-  }
+  },
+  "exclude": ["./cypress.config.ts", "./cypress"],
 }

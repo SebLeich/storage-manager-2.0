@@ -1,5 +1,5 @@
 import { AfterViewInit, ChangeDetectorRef, Component, Inject, Input, OnDestroy } from '@angular/core';
-import { defer, startWith, Subscription } from 'rxjs';
+import { defer, NEVER, startWith, Subscription } from 'rxjs';
 import { ProcessBuilderRepository } from 'src/lib/core/process-builder-repository';
 import { IEmbeddedView } from 'src/lib/process-builder/classes/embedded-view';
 import { MethodEvaluationStatus } from 'src/lib/process-builder/globals/method-evaluation-status';
@@ -23,14 +23,25 @@ export class EmbeddedFunctionImplementationComponent implements IEmbeddedView, A
 
   @Input() public inputParams!: number[];
 
-  public inputParams$ = this._store.select(selectIParams(this.inputParams)).pipe(shareReplay());
+  public inputParams$ = this._store.select(selectIParams(this.inputParams)).pipe(
+    shareReplay(1),
+    map(inputParams => inputParams ?? []),
+    mapIParamsInterfaces(this._store),
+    map(inputs => {
+      return inputs.reduce((prev, curr) => {
+        if (curr.defaultValue) {
+          prev[curr.normalizedName] = curr.defaultValue;
+        } else {
+          const dummyValue = ProcessBuilderRepository.createPseudoObjectFromIParam(curr);
+          prev[curr.normalizedName] = dummyValue;
+        }
 
-  public varNameInjector: any = {
-    'var1': { type: 'variable' },
-    'var2': { type: 'variable' }
-  };
+        return prev;
+      }, {} as { [key: string]: object | string | number })
+    })
+  );
 
-  public implementationChanged$ = defer(() => this.formGroup.controls.implementation!.valueChanges);
+  public implementationChanged$ = defer(() => this.formGroup.controls.implementation?.valueChanges ?? NEVER);
   public returnValueStatus$ = defer(() => this.implementationChanged$.pipe(map((implementation) => CodemirrorRepository.evaluateCustomMethod(undefined, implementation ?? undefined)?.status), startWith(MethodEvaluationStatus.Initial)));
 
   private _subscriptions = new Subscription();
@@ -55,29 +66,7 @@ export class EmbeddedFunctionImplementationComponent implements IEmbeddedView, A
     this._subscriptions.add(...[
       this.returnValueStatus$.subscribe((status) => {
         this.formGroup.controls.outputParamName![status === MethodEvaluationStatus.ReturnValueFound ? 'enable' : 'disable']();
-      }),
-      this.inputParams$.pipe(mapIParamsInterfaces(this._store))
-        .subscribe((inputParams) => {
-          let injectorObject = {
-            injector: {} as { [key: string]: any },
-            'httpClient.get': {
-              type: 'function',
-              apply: 'await httpClient.get(/** url **/).toPromise()'
-            },
-            'httpClient.post': {
-              type: 'function',
-              apply: 'await httpClient.post(/** url **/, /** json body **/).toPromise()'
-            }
-          };
-          inputParams.forEach(param => {
-            if (param.defaultValue) {
-              injectorObject.injector[param.normalizedName] = param.defaultValue;
-            } else {
-              const dummyValue = ProcessBuilderRepository.createPseudoObjectFromIParam(param);
-              injectorObject.injector[param.normalizedName] = dummyValue;
-            }
-          });
-        })
+      })
     ]);
 
     this._changeDetectorRef.detectChanges();

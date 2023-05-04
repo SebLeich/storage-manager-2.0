@@ -22,14 +22,14 @@ export const mapIParamInterfaces = (store: Store) => {
                     map(([param, _]) => param)
                 );
             }
-            else if (typeof param?.interface === 'number') {
+            else if (typeof param?.interface === 'string') {
                 return combineLatest([
                     of(param),
                     store.select(selectIInterface(param.interface))
                 ]).pipe(
                     take(1),
                     map(([param, iFace]) => {
-                        let result = { ...param };
+                        const result = { ...param };
                         result.typeDef = iFace!.typeDef;
                         return result as IParam;
                     }),

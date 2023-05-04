@@ -104,7 +104,7 @@ export default [
         normalizedName: 'step',
         typeDef: [
             { name: 'sequenceNumber', type: 'number', defaultValue: 0 },
-            { name: 'messages', type: 'array', defaultValue: ['hello world'] },
+            { name: 'messages', type: 'array', defaultValue: ['hello world'], typeDef: [] },
             { name: 'usedPosition', type: 'object', interface: InterfaceCodes.Position },
             { name: 'placedAtPosition', type: 'object', interface: InterfaceCodes.Position },
             {

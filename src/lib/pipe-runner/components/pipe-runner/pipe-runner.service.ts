@@ -8,6 +8,7 @@ import { addGroups, addSolution, selectSolutionById, setCurrentSolution } from '
 import moment from 'moment';
 import { distinctUntilChanged, filter, firstValueFrom, map, NEVER, switchMap } from 'rxjs';
 import { highlightSolutionNavItem } from 'src/app/store/actions/application.actions';
+import { IPipelineAction } from 'src/lib/pipeline-store/interfaces/pipeline-action.interface';
 import { updateIPipelineActionStatus, updateIPipelineActionStatuses } from 'src/lib/pipeline-store/store/actions/pipeline-action-status.action';
 import { setIPipelineActionSolution } from 'src/lib/pipeline-store/store/actions/pipeline-action.actions';
 import { renameIPipeline, setIPipelineSolutionReference } from 'src/lib/pipeline-store/store/actions/pipeline.actions';
@@ -39,8 +40,9 @@ export class PipeRunnerService {
       return this._store.select(selectPipelineActionByPipelineName(pipeline.name));
     }),
     map(actions => {
-      let initialAction = actions.find(actions => actions!.isPipelineStart);
-      let sortedActions = [initialAction], currentActions = [initialAction];
+      const initialAction = actions.find(actions => actions?.isPipelineStart), sortedActions = [initialAction];
+      let currentActions = [initialAction];
+      
       while (currentActions.length > 0) {
         const successors = actions.filter(action => currentActions
           .flatMap(action => {
@@ -55,19 +57,20 @@ export class PipeRunnerService {
         sortedActions.push(...successors);
         currentActions = successors;
       }
+
       return sortedActions.filter(action => action);
     })
   );
   public status$ = this.actions$.pipe(
     switchMap((actions) => this._store.select(selectPipelineActionStates(actions.map(action => action?.identifier).filter(action => action ? true : false) as string[]))),
     map(states => {
-      if (states.every(status => status!.status === 'INITIALIZED')) {
+      if (states.every(status => status.status === 'INITIALIZED')) {
         return 'Ready for run';
       }
-      if (states.every(status => status!.status === 'SUCCEEDED' || status!.status === 'SKIPPED')) {
+      if (states.every(status => status.status === 'SUCCEEDED' || status.status === 'SKIPPED')) {
         return 'Succeeded';
       }
-      if (states.some(status => status!.status === 'FAILED')) {
+      if (states.some(status => status.status === 'FAILED')) {
         return 'Errors occurred';
       }
       return 'Running';
@@ -93,54 +96,67 @@ export class PipeRunnerService {
 
   public async run() {
     this.consoleOutput.emit({ message: `--------------- new run ---------------`, class: 'default' });
-    const actions = await selectSnapshot(this.actions$);
-    let solutionWrapper: ISolutionWrapper | null = null, injector: { [key: string]: any } = {};
-    let currentAction = actions.find(action => action!.isPipelineStart);
+    const actions = (await selectSnapshot(this.actions$)).filter(action => action? true: false) as IPipelineAction[];
+    let solutionWrapper: ISolutionWrapper | null = null;
+    const injector: { [key: string]: unknown } = {};
+    let currentAction = actions.find(action => action.isPipelineStart);
     while (currentAction) {
-      this._store.dispatch(updateIPipelineActionStatus(currentAction!.identifier, 'RUNNING'));
+      this._store.dispatch(updateIPipelineActionStatus(currentAction.identifier, 'RUNNING'));
+
       try {
+
         await this._environmentInjector.runInContext(async () => {
-          const result = await currentAction!.executableCode(injector, this.httpClient);
+          if(!currentAction){
+            return;
+          }
+
+          const test = "TEST";
+          const result = await currentAction.executableCode(test);
           if (currentAction?.ouputParamName) {
             injector[currentAction.ouputParamName] = result;
           }
-          if (currentAction!.outputMatchesPipelineOutput) {
-            solutionWrapper = result;
-            this._store.dispatch(setIPipelineActionSolution(currentAction!.identifier, solutionWrapper!));
-            this._store.dispatch(addSolution({ solution: (solutionWrapper as ISolutionWrapper)!.solution }));
+
+          if (currentAction.outputMatchesPipelineOutput) {
+            solutionWrapper = result as ISolutionWrapper;
+            this._store.dispatch(setIPipelineActionSolution(currentAction.identifier, solutionWrapper));
+            this._store.dispatch(addSolution({ solution: (solutionWrapper as ISolutionWrapper).solution }));
           }
-          const representation = typeof solutionWrapper === 'object' ? JSON.stringify(result) : result!;
+
+          const representation = typeof solutionWrapper === 'object' ? JSON.stringify(result) : result;
           this.consoleOutput.emit({
             message: `${moment().format('HH:mm:ss')}: ${representation}`,
             class: 'default'
           });
-          this._store.dispatch(updateIPipelineActionStatus(currentAction!.identifier, 'SUCCEEDED'));
+          this._store.dispatch(updateIPipelineActionStatus(currentAction.identifier, 'SUCCEEDED'));
 
-          const skippedAction = actions.find(action => action?.identifier === currentAction!.onError);
+          const skippedAction = actions.find(action => action.identifier === currentAction?.onError);
           if (skippedAction) {
-            const actionAndSuccessors = await selectSnapshot(this._store.select(selectPipelineActionAndSuccessors(skippedAction!.identifier, 'onSuccess')));
+            const actionAndSuccessors = await selectSnapshot(this._store.select(selectPipelineActionAndSuccessors(skippedAction.identifier, 'onSuccess')));
             this._store.dispatch(updateIPipelineActionStatuses(actionAndSuccessors, 'SKIPPED'));
           }
 
-          currentAction = actions.find(action => action?.identifier === currentAction!.onSuccess);
+          currentAction = actions.find(action => action.identifier === currentAction?.onSuccess);
         });
+
       } catch (error) {
+
         this.consoleOutput.emit({
           message: `${moment().format('HH:mm:ss')}: ${error}`,
           class: 'error'
         });
-        this._store.dispatch(updateIPipelineActionStatus(currentAction!.identifier, 'FAILED'));
-        if (!currentAction.onError) {
+
+        this._store.dispatch(updateIPipelineActionStatus(currentAction.identifier, 'FAILED'));
+        if (currentAction.onError) {
           throw (`the action ${currentAction.name} failed, but no error successor was defined!`);
         }
 
-        const skippedAction = actions.find(action => action?.identifier === currentAction!.onSuccess);
+        const skippedAction = actions.find(action => action?.identifier === currentAction?.onSuccess);
         if (skippedAction) {
-          const actionAndSuccessors = await selectSnapshot(this._store.select(selectPipelineActionAndSuccessors(skippedAction!.identifier, 'onError')));
+          const actionAndSuccessors = await selectSnapshot(this._store.select(selectPipelineActionAndSuccessors(skippedAction.identifier, 'onError')));
           this._store.dispatch(updateIPipelineActionStatuses(actionAndSuccessors, 'SKIPPED'));
         }
 
-        currentAction = actions.find(action => action?.identifier === currentAction!.onError);
+        currentAction = actions.find(action => action?.identifier === currentAction?.onError);
       }
     }
 
@@ -153,9 +169,12 @@ export class PipeRunnerService {
   }
 
   public async setOutput(solutionWrapper: ISolutionWrapper) {
-    const pipeName = await firstValueFrom(this.pipelineName$);
     this._store.dispatch(setCurrentSolution({ solution: solutionWrapper.solution }));
     this._store.dispatch(addGroups({ groups: (solutionWrapper as ISolutionWrapper).groups }));
-    this._store.dispatch(setIPipelineSolutionReference(pipeName!, (solutionWrapper as ISolutionWrapper)!.solution.id));
+
+    const pipeName = await firstValueFrom(this.pipelineName$);
+    if(pipeName){
+      this._store.dispatch(setIPipelineSolutionReference(pipeName, solutionWrapper.solution.id));
+    }
   }
 }

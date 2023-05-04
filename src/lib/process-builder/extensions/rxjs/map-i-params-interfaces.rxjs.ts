@@ -1,5 +1,5 @@
 import { Store } from "@ngrx/store";
-import { combineLatest, forkJoin, Observable, of } from "rxjs";
+import { combineLatest, forkJoin, iif, Observable, of } from "rxjs";
 import { flatMap, map, switchMap, take, tap } from "rxjs/operators";
 import { IParam } from "../../interfaces/param.interface";
 import { IParamDefinition } from "../../interfaces/param-definition.interface";
@@ -16,18 +16,18 @@ export const mapIParamsInterfaces: ((store: Store) => ((obs: Observable<IParam[]
                             flatMap((param: IParam) =>
                                 forkJoin([
                                     of(param),
-                                    of(param.typeDef as IParam[]).pipe(mapIParamsInterfaces(store))
+                                    iif(() => Array.isArray(param.typeDef), of(param.typeDef as IParam[]).pipe(mapIParamsInterfaces(store)), of([] as IParamDefinition[]))
                                 ])
                             ),
                             tap(([param, typeDef]: [IParam, IParamDefinition[]]) => param.typeDef = typeDef),
                             map(([param, _]) => param)
                         );
                     }
-                    else if (typeof param.interface === 'number') {
+                    else if (typeof param.interface === 'string') {
                         return store.select(selectIInterface(param.interface)).pipe(
                             take(1),
                             map((iFace: IInterface | null) => {
-                                let result = { ...param };
+                                const result = { ...param };
                                 result.typeDef = iFace?.typeDef ?? null;
                                 return result as IParam;
                             }),

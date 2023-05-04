@@ -4,13 +4,22 @@ import { syntaxTree } from "@codemirror/language";
 
 export class HttpClientCompletionProvider implements ICodeCompletionProvider {
     public async provideCompletions(context: CompletionContext): Promise<Completion[]> {
-        const completions: Completion[] = this.httpClientMethods();
         const nodeBefore = syntaxTree(context.state).resolveInner(context.pos, -1);
+        if (nodeBefore?.type.name === '.') {
+            return [];
+        }
+
+        let completions: Completion[] = this.httpClientMethods();
+        if(nodeBefore?.type.name === 'VariableName'){
+            const representation = context.state.sliceDoc(nodeBefore.from, nodeBefore.to);
+            completions = completions.filter(completion => completion.label.startsWith(representation));
+        }
+
         const parent = nodeBefore.parent;
         if (parent) {
             const parentName = context.state.sliceDoc(parent.from, parent.to);
-            if(parentName){
-                
+            if (parentName) {
+                // TODO
             }
         }
         // TODO

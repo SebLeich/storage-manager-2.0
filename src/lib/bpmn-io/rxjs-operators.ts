@@ -1,6 +1,6 @@
 import { filter, Observable } from "rxjs";
-import { IEvent } from "./i-event";
 import shapeTypes from "./shape-types";
+import { IEvent } from "./interfaces/event.interface";
 
 export const endEventFilter = (source: Observable<IEvent>) => source.pipe(filter(x => x.element.type === shapeTypes.EndEvent));
 export const exclusiveGatewayFilter = (source: Observable<IEvent>) => source.pipe(filter(x => x.element.type === shapeTypes.ExclusiveGateway));

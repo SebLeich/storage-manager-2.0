@@ -61,6 +61,7 @@ import { selectPipelineByBpmnJsModel } from 'src/lib/pipeline-store/store/select
 import { IShapeCreateEvent } from 'src/lib/bpmn-io/interfaces/shape-create-event.interface';
 import { selectIParam } from '../store/selectors/param.selectors';
 import { GatewayType } from '../types/gateway.type';
+import { IBpmnJSModel } from '../interfaces/bpmn-js-model.interface';
 
 @Injectable()
 export class BpmnJsService {
@@ -335,7 +336,12 @@ export class BpmnJsService {
       activityIdentifier: number = BPMNJsRepository.getSLPBExtension(cursor.businessObject, 'ActivityExtension', (ext => ext.activityFunctionId)),
       func = await selectSnapshot(this._store.select(selectIFunction(activityIdentifier))),
       outputParam = typeof func?.output === 'number' ? await selectSnapshot(this._store.select(selectIParam(func.output))) : undefined,
-      executableCode = func?.customImplementation ? eval(func!.customImplementation.join('\n')!) : func?.implementation;
+      customImplementation = func?.customImplementation?.join('\n');
+
+    const executableCode = customImplementation ? eval(customImplementation) : func?.implementation;
+    if (!func) {
+      throw ('cannot build pipeline');
+    }
 
     const outgoingDataObjectReference = cursor.outgoing.find(connector => connector.type === shapeTypes.DataOutputAssociation)?.target;
     let isProvidingSolutionWrapper = false, isMatchingProcessOutput = false;
@@ -344,11 +350,11 @@ export class BpmnJsService {
       isProvidingSolutionWrapper = BPMNJsRepository.getSLPBExtension(outgoingDataObjectReference.businessObject, 'DataObjectExtension', (ext) => ext.isProcessOutput);
     }
 
-    let action: IPipelineAction = {
+    const action: IPipelineAction = {
       isPipelineStart: index === 0,
       identifier: identifier,
       pipeline: pipeline.name,
-      name: func!.name,
+      name: func.name,
       executableCode: executableCode,
       onSuccess: '',
       isProvidingPipelineOutput: isProvidingSolutionWrapper,
@@ -400,12 +406,12 @@ export class BpmnJsService {
         return !!(bpmnJsModel?.xml);
       }),
       switchMap(bpmnJsModel => {
-        return from(this.bpmnJs.importXML(bpmnJsModel!.xml)).pipe(map(importResult => ({ importResult, bpmnJsModel })));
+        return from(this.bpmnJs.importXML((bpmnJsModel as IBpmnJSModel).xml)).pipe(map(importResult => ({ importResult, bpmnJsModel })));
       }),
       delay(0)
     )
       .subscribe(args => {
-        this.canvasModule.viewbox(args.bpmnJsModel!.viewbox);
+        this.canvasModule.viewbox((args.bpmnJsModel as IBpmnJSModel).viewbox);
       });
     this.eventFired$.subscribe(event => {
       if (this.bpmnJsLoggingEnabled) {

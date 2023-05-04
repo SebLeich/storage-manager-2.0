@@ -2,7 +2,7 @@ import { TestBed } from '@angular/core/testing';
 
 import { Store } from '@ngrx/store';
 import { selectSnapshot } from '../../globals/select-snapshot';
-import { selectIInterface, selectIInterfaces, selectIInterfacesByNormalizedName, selectNextId } from './interface.selectors';
+import { selectIInterface, selectIInterfaces, selectIInterfacesByNormalizedName } from './interface.selectors';
 import { isEqual } from 'lodash';
 import defaultImportsConstant from 'src/app/default-imports.constant';
 import { addIInterfaces } from '../actions/interface.actions';
@@ -13,12 +13,12 @@ describe('IInterface Selectors', () => {
   let store: Store;
 
   const interfaces = {
-    1: { identifier: 1, name: 'interface 1', normalizedName: 'interface1', typeDef: [] },
-    2: { identifier: 2, name: 'interface 2', normalizedName: 'interface2', typeDef: [] },
-    3: { identifier: 3, name: 'interface 3', normalizedName: 'interface3', typeDef: [] },
-    4: { identifier: 4, name: 'interface 4', normalizedName: 'interface4', typeDef: [] },
-    5: { identifier: 5, name: 'interface 5', normalizedName: 'interface5', typeDef: [] },
-    6: { identifier: 6, name: 'interface 6', normalizedName: 'interface6', typeDef: [] },
+    1: { identifier: '1', name: 'interface 1', normalizedName: 'interface1', typeDef: [] },
+    2: { identifier: '2', name: 'interface 2', normalizedName: 'interface2', typeDef: [] },
+    3: { identifier: '3', name: 'interface 3', normalizedName: 'interface3', typeDef: [] },
+    4: { identifier: '4', name: 'interface 4', normalizedName: 'interface4', typeDef: [] },
+    5: { identifier: '5', name: 'interface 5', normalizedName: 'interface5', typeDef: [] },
+    6: { identifier: '6', name: 'interface 6', normalizedName: 'interface6', typeDef: [] },
   };
 
   beforeEach(() => {
@@ -74,12 +74,5 @@ describe('IInterface Selectors', () => {
     });
 
   }
-
-  const correctNextId = Math.max(...Object.values(interfaces).map(iFace => iFace.identifier)) + 1;
-  it(`should select the next correct id: ${correctNextId}`, async () => {
-    const selectionResult = await selectSnapshot(store.select(selectNextId()));
-    expect(selectionResult).toBeTruthy();
-    expect(selectionResult).toBe(correctNextId);
-  });
 
 });

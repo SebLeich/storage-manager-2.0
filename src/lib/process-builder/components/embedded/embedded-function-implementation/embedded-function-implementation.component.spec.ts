@@ -5,6 +5,7 @@ import { PROCESS_BUILDER_CONFIG_TOKEN } from 'src/lib/process-builder/interfaces
 import { EmbeddedFunctionImplementationComponent } from './embedded-function-implementation.component';
 import { ControlContainer, FormControl, FormGroup, FormGroupDirective } from '@angular/forms';
 import { TaskCreationFormGroup } from 'src/lib/process-builder/interfaces/task-creation-form-group-value.interface';
+import { CodeEditorModule } from '@/lib/code-editor/code-editor.module';
 
 describe('EmbeddedFunctionImplementationComponent', () => {
   let component: EmbeddedFunctionImplementationComponent;
@@ -14,7 +15,9 @@ describe('EmbeddedFunctionImplementationComponent', () => {
     await TestBed.configureTestingModule({
       declarations: [EmbeddedFunctionImplementationComponent],
       imports: [
-        ...defaultImportsConstant
+        ...defaultImportsConstant,
+
+        CodeEditorModule
       ],
       providers: [
         { provide: PROCESS_BUILDER_CONFIG_TOKEN, useValue: {} },

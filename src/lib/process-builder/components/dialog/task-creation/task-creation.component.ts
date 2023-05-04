@@ -232,9 +232,9 @@ export class TaskCreationComponent implements OnDestroy, OnInit {
       throw (`no config found for step ${step.taskCreationStep}`);
     }
 
-    const component = this.dynamicInner.createComponent(stepConfiguration!.type);
+    const component = this.dynamicInner.createComponent(stepConfiguration.type);
     if (typeof stepConfiguration.provideInputParams === 'function') {
-      stepConfiguration.provideInputParams!(component.instance, step.element);
+      stepConfiguration.provideInputParams(component.instance, step.element);
     }
   }
 

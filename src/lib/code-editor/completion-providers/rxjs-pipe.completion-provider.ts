@@ -4,7 +4,7 @@ import { syntaxTree } from "@codemirror/language";
 
 export class RxjsPipeCompletionProvider implements ICodeCompletionProvider {
     public async provideCompletions(context: CompletionContext): Promise<Completion[]> {
-        const completions: Completion[] = [];
+        let completions: Completion[] = [];
         const nodeBefore = syntaxTree(context.state).resolveInner(context.pos, -1);
         const parent = nodeBefore.parent;
         if (parent?.type.name === 'ArgList') {
@@ -17,6 +17,11 @@ export class RxjsPipeCompletionProvider implements ICodeCompletionProvider {
             }
         } else if (parent?.parent?.type.name === 'Block') {
             completions.push(...this.rxjsStandaloneMethods());
+        }
+
+        if(nodeBefore?.type.name === 'VariableName'){
+            const representation = context.state.sliceDoc(nodeBefore.from, nodeBefore.to);
+            completions = completions.filter(completion => completion.label.startsWith(representation));
         }
 
         return completions;

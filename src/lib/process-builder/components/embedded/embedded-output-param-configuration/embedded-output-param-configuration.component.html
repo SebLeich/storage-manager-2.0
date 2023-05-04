@@ -7,7 +7,7 @@
         <div class="section select-existing-interface">
             <mat-form-field appearance="outline" class="mat-form-field-outline-white-bg">
                 <mat-label class="label">Template</mat-label>
-                <mat-select formControlName="interface">
+                <mat-select formControlName="outputParamInterface">
                     <mat-option *ngFor="let interface of (interfaces$|async)" [value]="interface.identifier">
                         {{interface.name}}
                     </mat-option>

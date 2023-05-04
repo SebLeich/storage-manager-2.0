@@ -8,7 +8,8 @@
         </mat-form-field>
 
         <mat-form-field class="width">
-            <mat-label>{{(returnValueStatus$|async) === MethodEvaluationStatus.ReturnValueFound? 'output param name': 'no output param'}}</mat-label>
+            <mat-label>{{(returnValueStatus$|async) === MethodEvaluationStatus.ReturnValueFound? 'output param name':
+                'no output param'}}</mat-label>
             <input matInput type="text" formControlName="outputParamName" />
         </mat-form-field>
 
@@ -17,11 +18,12 @@
         <div class="spacer"></div>
 
         <div class="loading-wrapper">
-            <mat-spinner *ngIf="(returnValueStatus$|async) === MethodEvaluationStatus.Calculating" diameter="20"></mat-spinner>
+            <mat-spinner *ngIf="(returnValueStatus$|async) === MethodEvaluationStatus.Calculating"
+                diameter="20"></mat-spinner>
         </div>
-        
+
     </div>
 
-    <app-code-editor formControlName="implementation"></app-code-editor>
+    <app-code-editor formControlName="implementation" [inputParams]="inputParams$|async"></app-code-editor>
 
 </div>
