@@ -23,17 +23,26 @@ export class EmbeddedFunctionImplementationComponent implements IEmbeddedView, A
 
   @Input() public inputParams!: number[];
 
-  public inputParams$ = this._store.select(selectIParams(this.inputParams)).pipe(shareReplay());
-  public implementationChanged$ = defer(() => this.formGroup.controls.implementation!.valueChanges);
-  public returnValueStatus$ = defer(
-    () => this.implementationChanged$.pipe(
-      map((implementation) => {
-        const code = implementation?.text;
-        return CodemirrorRepository.evaluateCustomMethod(undefined, code)?.status;
-      }),
-      startWith(CodemirrorRepository.evaluateCustomMethod(undefined, this.formGroup.controls.implementation!.value?.text)?.status)
-    )
+  public inputParams$ = this._store.select(selectIParams(this.inputParams)).pipe(
+    shareReplay(1),
+    map(inputParams => inputParams ?? []),
+    mapIParamsInterfaces(this._store),
+    map(inputs => {
+      return inputs.reduce((prev, curr) => {
+        if (curr.defaultValue) {
+          prev[curr.normalizedName] = curr.defaultValue;
+        } else {
+          const dummyValue = ProcessBuilderRepository.createPseudoObjectFromIParam(curr);
+          prev[curr.normalizedName] = dummyValue;
+        }
+
+        return prev;
+      }, {} as { [key: string]: object | string | number })
+    })
   );
+
+  public implementationChanged$ = defer(() => this.formGroup.controls.implementation?.valueChanges ?? NEVER);
+  public returnValueStatus$ = defer(() => this.implementationChanged$.pipe(map((implementation) => CodemirrorRepository.evaluateCustomMethod(undefined, implementation?.text)?.status), startWith(MethodEvaluationStatus.Initial)));
 
   private _subscriptions = new Subscription();
 
