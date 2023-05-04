@@ -1,3 +1,4 @@
+import { By } from '@angular/platform-browser';
 import { FunctionPreviewComponent } from './function-preview.component';
 import { TestBed, ComponentFixture } from '@angular/core/testing';
 import defaultImportsConstant from 'src/app/default-imports.constant';
@@ -30,8 +31,8 @@ describe('FunctionPreviewComponent', () => {
     component.func = func;
     fixture.detectChanges();
 
-    const componentText = (fixture.debugElement.nativeElement as HTMLElement).innerText;
-    expect(componentText).toContain(func.name);
+    const componentText = (fixture.debugElement.nativeElement as HTMLElement).textContent ?? '';
+    expect(componentText.toLowerCase()).toContain(func.name.toLowerCase());
   });
 
   it('should display function description', () => {

@@ -6,6 +6,7 @@ import { EmbeddedFunctionImplementationComponent } from './embedded-function-imp
 import { ControlContainer, FormControl, FormGroup, FormGroupDirective } from '@angular/forms';
 import { TaskCreationFormGroup } from 'src/lib/process-builder/interfaces/task-creation-form-group-value.interface';
 import { CodeEditorModule } from '@/lib/code-editor/code-editor.module';
+import { CodemirrorRepository } from '@/lib/core/codemirror.repository';
 
 describe('EmbeddedFunctionImplementationComponent', () => {
   let component: EmbeddedFunctionImplementationComponent;
@@ -50,11 +51,11 @@ describe('EmbeddedFunctionImplementationComponent', () => {
   });
 
   it('should correctly update interface control', () => {
-    component.formGroup.controls.implementation!.setValue([
+    component.formGroup.controls.implementation!.setValue(CodemirrorRepository.stringToTextLeaf([
       'async (injector) => {',
       'return injector.mySolution',
       '}'
-    ]);
+    ]));
 
     expect(component).toBeTruthy();
   });
