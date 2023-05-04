@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-empty-function */
 import { TestBed } from '@angular/core/testing';
 import { Store } from '@ngrx/store';
 import defaultImportsConstant from 'src/app/default-imports.constant';
@@ -122,7 +123,7 @@ describe('ProcessBuilderComponentService', () => {
 
   describe('task creation aborted', () => {
 
-    for (var activityIdentifierConfiguration of [
+    for (const activityIdentifierConfiguration of [
       { value: undefined, valid: false },
       { value: null, valid: false },
       { value: 'some string value', valid: false },
@@ -210,7 +211,7 @@ describe('ProcessBuilderComponentService', () => {
 
   describe('task creation confirmed', () => {
 
-    for (var activityIdentifierConfiguration of [
+    for (const activityIdentifierConfiguration of [
       { value: undefined, valid: false },
       { value: null, valid: false },
       { value: 'some string value', valid: false },
@@ -258,7 +259,7 @@ describe('ProcessBuilderComponentService', () => {
 
     }
 
-    for (let gatewayType of ['Error', 'Success'] as GatewayType[]) {
+    for (const gatewayType of ['Error', 'Success'] as GatewayType[]) {
       const incomingGatewayConnectorLabel = gatewayType === 'Error' ? processBuilderConfig.errorGatewayConfig.errorConnectionName : processBuilderConfig.errorGatewayConfig.successConnectionName;
 
       it(`should set correct label ${incomingGatewayConnectorLabel} to incoming connector if connector is coming from an error gateway`, async () => {
@@ -340,7 +341,7 @@ describe('ProcessBuilderComponentService', () => {
       expect(calls[0].args[0].type).toBe(upsertIFunction.type);
       expect((calls[0].args[0] as any)?.func?.name).toBe(updatedName);
       expect((calls[0].args[0] as any)?.func?.normalizedName).toBe(updatedNormalizedName);
-      expect((calls[0].args[0] as any)?.func?.customImplementation).toEqual(implementation);
+      expect((calls[0].args[0] as any)?.func?.customImplementation).toEqual(implementation.text);
       expect((calls[0].args[0] as any)?.func?.canFail).toBe(updatedCanFail);
       expect((calls[0].args[0] as any)?.func?.identifier).toBe(mockFunction.identifier);
     });
@@ -396,7 +397,7 @@ describe('ProcessBuilderComponentService', () => {
             businessObject: {},
             children: []
           } as IElement);
-          let sequenceFlow = {
+          const sequenceFlow = {
             type: "bpmn:SequenceFlow",
             target: {
               type: 'bpmn:EndEvent',
@@ -667,7 +668,7 @@ describe('ProcessBuilderComponentService', () => {
         const removeShapeSpy = spyOn(modelingModule, 'removeElements');
 
 
-        let outgoing: IConnector[] = [], incoming: IConnector[] = [];
+        const outgoing: IConnector[] = [], incoming: IConnector[] = [];
         const activityMock = {
           businessObject: {},
           children: [],
