@@ -6,7 +6,7 @@ import { MethodEvaluationStatus } from 'src/lib/process-builder/globals/method-e
 import { debounceTime, map, shareReplay } from 'rxjs/operators';
 import { ControlContainer, FormControl, UntypedFormControl } from '@angular/forms';
 import { Store } from '@ngrx/store';
-import { selectIParams } from 'src/lib/process-builder/store/selectors/param.selectors';
+import { selectIParams } from '@process-builder/selectors';
 import { mapIParamsInterfaces } from 'src/lib/process-builder/extensions/rxjs/map-i-params-interfaces.rxjs';
 import { ProcessBuilderService } from 'src/lib/process-builder/services/process-builder.service';
 import { TaskCreationFormGroup } from 'src/lib/process-builder/interfaces/task-creation-form-group-value.interface';
@@ -23,26 +23,17 @@ export class EmbeddedFunctionImplementationComponent implements IEmbeddedView, A
 
   @Input() public inputParams!: number[];
 
-  public inputParams$ = this._store.select(selectIParams(this.inputParams)).pipe(
-    shareReplay(1),
-    map(inputParams => inputParams ?? []),
-    mapIParamsInterfaces(this._store),
-    map(inputs => {
-      return inputs.reduce((prev, curr) => {
-        if (curr.defaultValue) {
-          prev[curr.normalizedName] = curr.defaultValue;
-        } else {
-          const dummyValue = ProcessBuilderRepository.createPseudoObjectFromIParam(curr);
-          prev[curr.normalizedName] = dummyValue;
-        }
-
-        return prev;
-      }, {} as { [key: string]: object | string | number })
-    })
+  public inputParams$ = this._store.select(selectIParams(this.inputParams)).pipe(shareReplay());
+  public implementationChanged$ = defer(() => this.formGroup.controls.implementation!.valueChanges);
+  public returnValueStatus$ = defer(
+    () => this.implementationChanged$.pipe(
+      map((implementation) => {
+        const code = implementation?.text;
+        return CodemirrorRepository.evaluateCustomMethod(undefined, code)?.status;
+      }),
+      startWith(CodemirrorRepository.evaluateCustomMethod(undefined, this.formGroup.controls.implementation!.value?.text)?.status)
+    )
   );
-
-  public implementationChanged$ = defer(() => this.formGroup.controls.implementation?.valueChanges ?? NEVER);
-  public returnValueStatus$ = defer(() => this.implementationChanged$.pipe(map((implementation) => CodemirrorRepository.evaluateCustomMethod(undefined, implementation ?? undefined)?.status), startWith(MethodEvaluationStatus.Initial)));
 
   private _subscriptions = new Subscription();
 

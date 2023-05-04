@@ -1,14 +1,14 @@
 import { Component } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { Store } from '@ngrx/store';
+import { selectIParams } from '@process-builder/selectors';
 import { combineLatest, ReplaySubject } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { ParamCodes } from 'src/config/param-codes';
 import { IEmbeddedView } from 'src/lib/process-builder/classes/embedded-view';
-import { IParam } from 'src/lib/process-builder/interfaces/param.interface';
+import { IParam } from '@process-builder/interfaces';
 import { TaskCreationFormGroup } from 'src/lib/process-builder/interfaces/task-creation-form-group-value.interface';
 import * as fromIParam from 'src/lib/process-builder/store/reducers/param.reducer';
-import { selectIParams } from 'src/lib/process-builder/store/selectors/param.selectors';
 
 @Component({
   selector: 'app-embedded-function-input-selection',

@@ -1,14 +1,14 @@
 import { FormControl, FormGroup } from "@angular/forms";
 import { ParamCodes } from "src/config/param-codes";
-import { IParam } from "./param.interface";
-import { IParamDefinition } from "./param-definition.interface";
+import { IParam, IParamDefinition } from "@process-builder/interfaces";
 import { GatewayType } from "../types/gateway.type";
+import { ITextLeaf } from "./text-leaf.interface";
 
 export interface ITaskCreationFormGroupValue {
     canFail: boolean;
     entranceGatewayType: GatewayType | null;
     functionIdentifier: number | null;
-    implementation: string[] | null;
+    implementation: ITextLeaf | null;
     inputParam: ParamCodes[] | number | null;
     isProcessOutput: boolean;
     name: string;

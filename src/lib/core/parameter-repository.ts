@@ -1,5 +1,4 @@
-import { IParam } from '../process-builder/interfaces/param.interface';
-import { IParamDefinition } from '../process-builder/interfaces/param-definition.interface';
+import { IParam, IParamDefinition } from '@process-builder/interfaces';
 
 export class ParameterRepository {
   public static filterParams(

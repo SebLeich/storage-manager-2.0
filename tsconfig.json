@@ -26,8 +26,13 @@
     "paths": {
       "@/*": ["src/*"],
       "@animations": ["./src/lib/shared/animations"],
+      "@bpmn-io/events": ["./src/lib/bpmn-io/interfaces/events"],
+      "@bpmn-io/modules": ["./src/lib/bpmn-io/interfaces/modules"],
       "@main-components": ["./src/app/components/main"],
+      "@process-builder/injection": ["./src/lib/process-builder/injection-token"],
+      "@process-builder/interfaces": ["./src/lib/process-builder/interfaces"],
       "@process-builder/store": ["./src/lib/process-builder/store"],
+      "@process-builder/selectors": ["./src/lib/process-builder/store/selectors"],
       "@procedure": ["./src/lib/procedure-store"],
       "@smgr/components": ["./src/app/components"],
       "@smgr/components/select": [

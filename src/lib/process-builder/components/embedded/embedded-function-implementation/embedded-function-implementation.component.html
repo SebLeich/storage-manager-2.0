@@ -2,20 +2,19 @@
 
     <div class="method-name-wrapper">
 
-        <mat-form-field class="width">
+        <mat-form-field appearance="outline" class="width mat-form-field-outline-white-bg mat-form-field-outline-no-padding-bottom">
             <mat-label>method name</mat-label>
             <input matInput type="text" formControlName="name" />
         </mat-form-field>
 
-        <mat-form-field class="width">
-            <mat-label>{{(returnValueStatus$|async) === MethodEvaluationStatus.ReturnValueFound? 'output param name':
-                'no output param'}}</mat-label>
+        <mat-form-field appearance="outline" class="width mat-form-field-outline-white-bg mat-form-field-outline-no-padding-bottom">
+            <mat-label>{{(returnValueStatus$|async) === MethodEvaluationStatus.ReturnValueFound? 'output param name': 'no output param'}}</mat-label>
             <input matInput type="text" formControlName="outputParamName" />
         </mat-form-field>
 
-        <mat-slide-toggle formControlName="canFail">{{canFailControl.value? 'can fail': 'can not fail'}}</mat-slide-toggle>
-
         <div class="spacer"></div>
+
+        <mat-slide-toggle formControlName="canFail">{{canFailControl.value? 'can fail': 'can not fail'}}</mat-slide-toggle>
 
         <div class="loading-wrapper">
             <mat-spinner *ngIf="(returnValueStatus$|async) === MethodEvaluationStatus.Calculating"

@@ -4,7 +4,7 @@ export interface IPipelineAction {
     identifier: string;
     pipeline: string;
     name: string;
-    executableCode: any;
+    executableCode?: string;
     onSuccess: string;
     onError?: string;
     isProvidingPipelineOutput: boolean;

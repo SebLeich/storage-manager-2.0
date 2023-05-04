@@ -1,40 +1,16 @@
 import { Inject, Injectable } from '@angular/core';
-
-// @ts-ignore
-import * as BpmnJS from 'bpmn-js/dist/bpmn-modeler.production.min.js';
-
-// @ts-ignore
-import gridModule from "diagram-js/lib/features/grid-snapping/visuals";
-
-// @ts-ignore
-import CliModule from 'bpmn-js-cli';
-
-// @ts-ignore
-import * as tooltips from "diagram-js/lib/features/tooltips";
-
-// @ts-ignore
-import customBPMNJSModule from '../extensions/bpmn-js';
-
 import { v4 as generateGuid } from 'uuid';
-
 import { Subject } from 'rxjs';
-
-import sebleichProcessBuilderExtension from '../globals/sebleich-process-builder-extension';
 import { IBpmnJS } from '../interfaces/bpmn-js.interface';
-import { getCanvasModule, getDirectEditingModule, getElementRegistryModule, getEventBusModule, getGraphicsFactory, getModelingModule, getTooltipModule, getZoomScrollModule, IElementRegistryModule, ITooltipModule } from 'src/lib/bpmn-io/bpmn-modules';
+import { getCanvasModule, getDirectEditingModule, getElementRegistryModule, getEventBusModule, getGraphicsFactory, getModelingModule, getTooltipModule, getZoomScrollModule } from 'src/lib/bpmn-io/bpmn-modules';
 import { BehaviorSubject, buffer, combineLatest, debounceTime, delay, filter, from, map, merge, Observable, scan, shareReplay, startWith, switchMap, throttleTime, timer } from 'rxjs';
 import { IConnectionCreatePostExecutedEvent } from 'src/lib/bpmn-io/interfaces/connection-create-post-executed-event.interface';
-import { IModelingModule } from 'src/lib/bpmn-io/interfaces/modeling-module.interface';
+import { ICanvasModule, IDirectEditingModule, IElementRegistryModule, IModelingModule, ITooltipModule, IZoomScrollModule } from '@bpmn-io/modules';
 import { IProcessValidationResult } from '../interfaces/validation-result.interface';
 import { BPMNJsRepository } from 'src/lib/core/bpmn-js.repository';
-import { IZoomScrollModule } from 'src/lib/bpmn-io/interfaces/zoom-scroll-module.interface';
 import { Store } from '@ngrx/store';
 import { selectCurrentIBpmnJSModel, selectRecentlyUsedIBpmnJSModel } from '../store/selectors/bpmn-js-model.selectors';
-import { IEvent } from 'src/lib/bpmn-io/interfaces/event.interface';
-import { IDirectEditingEvent } from 'src/lib/bpmn-io/interfaces/direct-editing-event.interface';
-import { IShapeDeleteExecutedEvent } from 'src/lib/bpmn-io/interfaces/shape-delete-executed-event.interface';
-import { IShapeAddedEvent } from 'src/lib/bpmn-io/interfaces/shape-added-event.interface';
-import { IViewboxChangedEvent } from '../interfaces/viewbox-changed-event.interface';
+import { IDirectEditingEvent, IEvent, IShapeAddedEvent, IShapeCreateEvent, IShapeDeleteExecutedEvent, IViewboxChangedEvent } from '@bpmn-io/events';
 import { isEqual } from 'lodash';
 import { addIBpmnJSModel, setCurrentIBpmnJSModel, updateCurrentIBpmnJSModel } from '../store/actions/bpmn-js-model.actions';
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -46,11 +22,9 @@ import { TaskCreationStep } from '../globals/task-creation-step';
 import { IProcedure } from 'src/lib/procedure-store/interfaces/procedure.interface';
 import { TaskEditingStatus } from '../types/task-editing-status.type';
 import shapeTypes from 'src/lib/bpmn-io/shape-types';
-import { ICanvasModule } from 'src/lib/bpmn-io/interfaces/canvas-module.interface';
-import { IDirectEditingModule } from 'src/lib/bpmn-io/interfaces/direct-editing-module.interface';
 import { IElement } from 'src/lib/bpmn-io/interfaces/element.interface';
 import { IPipeline } from 'src/lib/pipeline-store/interfaces/pipeline.interface';
-import { selectIFunction } from '../store/selectors/function.selector';
+import { selectIFunction, selectIParam } from '@process-builder/selectors';
 import { IConnector } from 'src/lib/bpmn-io/interfaces/connector.interface';
 import { IPipelineAction } from 'src/lib/pipeline-store/interfaces/pipeline-action.interface';
 import { ConfirmationService } from 'src/lib/confirmation/services/confirmation.service';
@@ -58,28 +32,12 @@ import { Router } from '@angular/router';
 import { addIPipeline, removeIPipeline } from 'src/lib/pipeline-store/store/actions/pipeline.actions';
 import { addIPipelineActions } from 'src/lib/pipeline-store/store/actions/pipeline-action.actions';
 import { selectPipelineByBpmnJsModel } from 'src/lib/pipeline-store/store/selectors/pipeline.selectors';
-import { IShapeCreateEvent } from 'src/lib/bpmn-io/interfaces/shape-create-event.interface';
-import { selectIParam } from '../store/selectors/param.selectors';
 import { GatewayType } from '../types/gateway.type';
-import { IBpmnJSModel } from '../interfaces/bpmn-js-model.interface';
+import { BPMN_JS } from '@process-builder/injection';
+import { IBpmnJSModel } from '../interfaces';
 
 @Injectable()
 export class BpmnJsService {
-
-  public bpmnJs: IBpmnJS = new BpmnJS({
-    additionalModules: [
-      customBPMNJSModule,
-      gridModule,
-      CliModule,
-      tooltips
-    ],
-    cli: {
-      bindTo: 'cli'
-    },
-    moddleExtensions: {
-      processBuilderExtension: sebleichProcessBuilderExtension
-    }
-  });
 
   public attachEventFired$ = new Observable<IEvent>((subscriber) => this.eventBusModule.on('attach', (evt) => {
     subscriber.next(evt);
@@ -197,13 +155,15 @@ export class BpmnJsService {
 
   public validation$: Observable<undefined | null | IProcessValidationResult> = this.potentialModelChangeEventFired$.pipe(
     throttleTime(500),
-    map(() => BPMNJsRepository.validateProcess(this.bpmnJs)),
+    map(() => BPMNJsRepository.validateProcess(this._bpmnJs)),
     shareReplay(1),
     delay(0)
   );
+
   public validationContainsErrors$ = this.validation$.pipe(
     map(validation => (validation?.errors?.length ?? 0) > 0)
   );
+
   public bpmnJsLoggingEnabled = false;
 
   public status$: Observable<TaskEditingStatus> = merge(
@@ -219,9 +179,7 @@ export class BpmnJsService {
     this.dataObjectReferenceEditingEventFired$.pipe(debounceTime(500)).pipe(map(() => {
       return 'idle' as TaskEditingStatus;
     }))
-  ).pipe(
-    startWith('idle' as TaskEditingStatus)
-  );
+  ).pipe(startWith('idle' as TaskEditingStatus));
 
   public taskEditingProcedure$ = this.status$.pipe(
     scan(
@@ -243,12 +201,26 @@ export class BpmnJsService {
   public static elementDeletionRequested$ = new Subject<IElement>();
   public static elementEndEventCreationRequested = new Subject<IElement>();
 
-  constructor(@Inject(PROCESS_BUILDER_CONFIG_TOKEN) private _config: IProcessBuilderConfig, private _store: Store, private _snackBar: MatSnackBar, private _confirmationService: ConfirmationService, private _router: Router) {
+  /**
+   * @deprecated
+   */
+  public get bpmnJs(){
+    return this._bpmnJs;
+  }
+
+  constructor(
+    @Inject(PROCESS_BUILDER_CONFIG_TOKEN) private _config: IProcessBuilderConfig,
+    @Inject(BPMN_JS) private _bpmnJs: IBpmnJS,
+    private _store: Store,
+    private _snackBar: MatSnackBar,
+    private _confirmationService: ConfirmationService,
+    private _router: Router
+  ) {
     this._setUp();
   }
 
   public async attachBpmnModelToDomElement(parent: HTMLDivElement) {
-    this.bpmnJs.attachTo(parent);
+    this._bpmnJs.attachTo(parent);
     let recentlyUsedModel = await selectSnapshot(this._store.select(selectRecentlyUsedIBpmnJSModel()));
     if (!recentlyUsedModel) {
       recentlyUsedModel = {
@@ -272,25 +244,24 @@ export class BpmnJsService {
 
     const startEvent = BPMNJsRepository.getStartEvents(this.elementRegistryModule)[0];
     let cursor: { element: IElement, gatewayType?: GatewayType, successorFor: IElement[] } | null = { element: startEvent.outgoing[0].target, successorFor: [] },
-      pipeline: IPipeline = { bpmnJsModelReference: bpmnJsModelIdentifier, name: name, solutionReference: null },
-      pipelineActions: IPipelineAction[] = [],
       stack: { element: IElement, successorFor: IElement[], gatewayType: GatewayType }[] = [];
+      
+    const pipeline: IPipeline = { bpmnJsModelReference: bpmnJsModelIdentifier, name: name, solutionReference: null },
+      pipelineActions: IPipelineAction[] = [];
 
     let anchestors: IPipelineAction[] = [], index = 0;
     while (cursor) {
-      switch (cursor.element.type) {
-        case shapeTypes.Task:
+      if (cursor) {
+        if(cursor.element.type === shapeTypes.Task){
           const { action } = await this._buildPipelineAction(index, pipeline, cursor.element);
           anchestors.forEach((anchestor: IPipelineAction) => {
             anchestor[cursor?.gatewayType === 'Success' ? 'onSuccess' : 'onError'] = action.identifier;
           });
           pipelineActions.push(action);
           anchestors = [action];
-          break;
-      }
+        }
 
-      if (cursor) {
-        const connectors: IConnector[] = cursor.element!.outgoing.filter(outgoing => outgoing.type === shapeTypes.SequenceFlow);
+        const connectors: IConnector[] = cursor.element.outgoing.filter(outgoing => outgoing.type === shapeTypes.SequenceFlow);
         const mapping = connectors.map(connector => {
           const connectorGatewayType = BPMNJsRepository.getSLPBExtension(connector.businessObject, 'SequenceFlowExtension', (ext) => ext.sequenceFlowType);
           const successorFor = this._getLastActivities(connector);
@@ -336,11 +307,10 @@ export class BpmnJsService {
       activityIdentifier: number = BPMNJsRepository.getSLPBExtension(cursor.businessObject, 'ActivityExtension', (ext => ext.activityFunctionId)),
       func = await selectSnapshot(this._store.select(selectIFunction(activityIdentifier))),
       outputParam = typeof func?.output === 'number' ? await selectSnapshot(this._store.select(selectIParam(func.output))) : undefined,
-      customImplementation = func?.customImplementation?.join('\n');
+      executableCode = func?.customImplementation ? func.customImplementation.join('\n') : func?.implementation?.toString();
 
-    const executableCode = customImplementation ? eval(customImplementation) : func?.implementation;
-    if (!func) {
-      throw ('cannot build pipeline');
+    if(!func){
+      throw('cannot find function');
     }
 
     const outgoingDataObjectReference = cursor.outgoing.find(connector => connector.type === shapeTypes.DataOutputAssociation)?.target;
@@ -354,7 +324,7 @@ export class BpmnJsService {
       isPipelineStart: index === 0,
       identifier: identifier,
       pipeline: pipeline.name,
-      name: func.name,
+      name: func?.name,
       executableCode: executableCode,
       onSuccess: '',
       isProvidingPipelineOutput: isProvidingSolutionWrapper,
@@ -396,17 +366,17 @@ export class BpmnJsService {
 
   public undo = () => (window as any).cli.undo();
   public redo = () => (window as any).cli.redo();
-  public zoomIn = () => this.bpmnJs.get('zoomScroll').stepZoom(1);
-  public zoomOut = () => this.bpmnJs.get('zoomScroll').stepZoom(-1);
+  public zoomIn = () => this._bpmnJs.get('zoomScroll').stepZoom(1);
+  public zoomOut = () => this._bpmnJs.get('zoomScroll').stepZoom(-1);
 
   private _setUp(): void {
     this.currentBpmnJSModel$.pipe(
       filter(bpmnJsModel => {
-        this.bpmnJs.clear();
+        this._bpmnJs.clear();
         return !!(bpmnJsModel?.xml);
       }),
       switchMap(bpmnJsModel => {
-        return from(this.bpmnJs.importXML((bpmnJsModel as IBpmnJSModel).xml)).pipe(map(importResult => ({ importResult, bpmnJsModel })));
+        return from(this._bpmnJs.importXML((bpmnJsModel as IBpmnJSModel).xml)).pipe(map(importResult => ({ importResult, bpmnJsModel })));
       }),
       delay(0)
     )
@@ -420,7 +390,7 @@ export class BpmnJsService {
     });
     this.eventFired$.pipe(
       debounceTime(500),
-      switchMap(() => combineLatest([this.bpmnJs.saveXML(), this._store.select(selectCurrentIBpmnJSModel)])),
+      switchMap(() => combineLatest([this._bpmnJs.saveXML(), this._store.select(selectCurrentIBpmnJSModel)])),
       map(([currentValue, currentBpmnJsModel]) => {
         return currentValue?.xml != currentBpmnJsModel?.xml || !isEqual(this.canvasModule.viewbox(), currentBpmnJsModel.viewbox);
       })
@@ -430,34 +400,34 @@ export class BpmnJsService {
   }
 
   public get canvasModule(): ICanvasModule {
-    return getCanvasModule(this.bpmnJs);
+    return getCanvasModule(this._bpmnJs);
   }
 
   public get directEditingModule(): IDirectEditingModule {
-    return getDirectEditingModule(this.bpmnJs);
+    return getDirectEditingModule(this._bpmnJs);
   }
 
   public get elementRegistryModule(): IElementRegistryModule {
-    return getElementRegistryModule(this.bpmnJs);
+    return getElementRegistryModule(this._bpmnJs);
   }
 
   public get eventBusModule() {
-    return getEventBusModule(this.bpmnJs);
+    return getEventBusModule(this._bpmnJs);
   }
 
   public get graphicsFactory() {
-    return getGraphicsFactory(this.bpmnJs);
+    return getGraphicsFactory(this._bpmnJs);
   }
 
   public get modelingModule(): IModelingModule {
-    return getModelingModule(this.bpmnJs);
+    return getModelingModule(this._bpmnJs);
   }
 
   public get tooltipModule(): ITooltipModule {
-    return getTooltipModule(this.bpmnJs);
+    return getTooltipModule(this._bpmnJs);
   }
 
   public get zoomScrollModule(): IZoomScrollModule {
-    return getZoomScrollModule(this.bpmnJs);
+    return getZoomScrollModule(this._bpmnJs);
   }
 }

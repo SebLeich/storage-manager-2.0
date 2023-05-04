@@ -1,4 +1,4 @@
-import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, Inject, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { showAnimation } from 'src/lib/shared/animations/show-delayed.animation';
 import { BpmnJsService } from '../../services/bpmn-js.service';
 import { ProcessBuilderService } from '../../services/process-builder.service';
@@ -10,6 +10,8 @@ import shapeTypes from 'src/lib/bpmn-io/shape-types';
 import { BPMNJsRepository } from 'src/lib/core/bpmn-js.repository';
 import { upsertProcedure } from '@procedure';
 import { IElement } from 'src/lib/bpmn-io/interfaces/element.interface';
+import { IBpmnJS } from '../../interfaces/bpmn-js.interface';
+import { BPMN_JS } from '@process-builder/injection';
 
 @Component({
   selector: 'app-process-builder',
@@ -32,6 +34,7 @@ export class ProcessBuilderComponent implements OnDestroy, OnInit {
   private _subscription = new Subscription();
 
   constructor(
+    @Inject(BPMN_JS) private _bpmnJs: IBpmnJS,
     public processBuilderService: ProcessBuilderService,
     public bpmnJsService: BpmnJsService,
     private _store: Store,
@@ -76,7 +79,7 @@ export class ProcessBuilderComponent implements OnDestroy, OnInit {
           case shapeTypes.EndEvent:
             const firstOuputProvidingActivity = this._getFirstProvidedOutputWithSLPBExtension(element, 'isProcessOutput');
             if (firstOuputProvidingActivity) {
-              BPMNJsRepository.updateBpmnElementSLPBExtension(this.bpmnJsService.bpmnJs, firstOuputProvidingActivity.businessObject, 'DataObjectExtension', (ext) => ext.isProcessOutput = false);
+              BPMNJsRepository.updateBpmnElementSLPBExtension(this._bpmnJs, firstOuputProvidingActivity.businessObject, 'DataObjectExtension', (ext) => ext.isProcessOutput = false);
             }
             this.bpmnJsService.modelingModule.removeElements([element]);
             this.bpmnJsService.saveCurrentBpmnModel();
@@ -93,7 +96,7 @@ export class ProcessBuilderComponent implements OnDestroy, OnInit {
       BpmnJsService.elementEndEventCreationRequested.subscribe(async element => {
         const firstOutputMatchingActivity = this._getFirstProvidedOutputWithSLPBExtension(element, 'matchesProcessOutputInterface');
         if (firstOutputMatchingActivity) {
-          BPMNJsRepository.updateBpmnElementSLPBExtension(this.bpmnJsService.bpmnJs, firstOutputMatchingActivity.businessObject, 'DataObjectExtension', (ext) => ext.isProcessOutput = true);
+          BPMNJsRepository.updateBpmnElementSLPBExtension(this._bpmnJs, firstOutputMatchingActivity.businessObject, 'DataObjectExtension', (ext) => ext.isProcessOutput = true);
         }
         this.bpmnJsService.modelingModule.appendShape(element, { type: shapeTypes.EndEvent });
         this.bpmnJsService.saveCurrentBpmnModel();

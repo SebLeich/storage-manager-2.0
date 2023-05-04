@@ -106,12 +106,8 @@ export class PipeRunnerService {
       try {
 
         await this._environmentInjector.runInContext(async () => {
-          if(!currentAction){
-            return;
-          }
-
-          const test = "TEST";
-          const result = await currentAction.executableCode(test);
+          const executableFunction = new Function('a', currentAction?.executableCode ?? '');
+          const result = await executableFunction(100);
           if (currentAction?.ouputParamName) {
             injector[currentAction.ouputParamName] = result;
           }

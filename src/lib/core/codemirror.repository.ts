@@ -1,12 +1,24 @@
 import { javascript } from "@codemirror/lang-javascript";
 import { syntaxTree } from "@codemirror/language";
-import { EditorState } from "@codemirror/state";
+import { EditorState, Text } from "@codemirror/state";
 import { MethodEvaluationStatus } from "../process-builder/globals/method-evaluation-status";
 import { Tree, SyntaxNode } from 'node_modules/@lezer/common/dist/tree';
 import { IMethodEvaluationResult } from "../process-builder/interfaces/method-evaluation-result.interface";
 import { ISyntaxNodeResponse } from "./interfaces/syntax-node-response.interface";
+import { ITextLeaf } from "../process-builder/interfaces/text-leaf.interface";
 
 export class CodemirrorRepository {
+
+    static stringToTextLeaf(text: string[] | string): ITextLeaf {
+        const convertedText = Array.isArray(text) ? text.join('\n') : text;
+        const state = EditorState.create({
+            doc: convertedText,
+            extensions: [
+                javascript()
+            ]
+        });
+        return state.doc as any;
+    }
 
     static evaluateCustomMethod(state?: EditorState, text?: string[] | string, injector?: any): IMethodEvaluationResult {
         const convertedText = Array.isArray(text) ? text.join('\n') : text;
@@ -14,7 +26,7 @@ export class CodemirrorRepository {
             if (!text) {
                 throw ('no state and no text passed');
             }
-            
+
             state = EditorState.create({
                 doc: convertedText,
                 extensions: [
@@ -81,7 +93,7 @@ export class CodemirrorRepository {
         }
 
         const unaryExpression = parent.getChild('UnaryExpression');
-        if(unaryExpression){
+        if (unaryExpression) {
             // method call
             const representation = state.sliceDoc(unaryExpression?.from, unaryExpression?.to);
             return { status: MethodEvaluationStatus.ReturnValueFound, valueIsDefinite: false, unaryExpression: representation };
@@ -105,7 +117,7 @@ export class CodemirrorRepository {
             try {
                 const parsedValue = JSON.parse(representation);
                 return { status: MethodEvaluationStatus.ReturnValueFound, detectedValue: parsedValue, valueIsDefinite: true, type: 'object' };
-            } catch(e){
+            } catch (e) {
                 return { status: MethodEvaluationStatus.ReturnValueFound, valueIsDefinite: false };
             }
         }

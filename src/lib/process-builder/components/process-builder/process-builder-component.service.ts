@@ -16,20 +16,18 @@ import * as functionSelectors from '../../store/selectors/function.selector';
 import defaultImplementation from '../../globals/default-implementation';
 import { IMethodEvaluationResult } from '../../interfaces/method-evaluation-result.interface';
 import { MethodEvaluationStatus } from '../../globals/method-evaluation-status';
-import { IFunction } from '../../interfaces/function.interface';
-import { IParam } from '../../interfaces/param.interface';
 import { ProcessBuilderRepository } from 'src/lib/core/process-builder-repository';
 import { upsertIParam } from '../../store/actions/param.actions';
 import shapeTypes from 'src/lib/bpmn-io/shape-types';
 import { removeIFunction, setIFunctionsCanFailFlag, upsertIFunction } from '../../store/actions/function.actions';
 import { IElement } from 'src/lib/bpmn-io/interfaces/element.interface';
 import { deepObjectLookup } from 'src/lib/shared/globals/deep-object-lookup.function';
-import { injectInterfaces, injectValues } from '../../store/selectors/injection-context.selectors';
+import { injectValues } from '../../store/selectors/injection-context.selectors';
 import { ConfirmationService } from 'src/lib/confirmation/services/confirmation.service';
 import { ITaskCreationFormGroupValue } from '../../interfaces/task-creation-form-group-value.interface';
-import { IInputParam } from '../../interfaces/input-param.interface';
+import { IBpmnJS, IFunction, IInputParam, IParam, IParamDefinition } from '@process-builder/interfaces';
+import { BPMN_JS } from '@process-builder/injection';
 import { mapIParamsInterfaces } from '../../extensions/rxjs/map-i-params-interfaces.rxjs';
-import { IParamDefinition } from '../../interfaces/param-definition.interface';
 
 @Injectable()
 export class ProcessBuilderComponentService {
@@ -66,6 +64,7 @@ export class ProcessBuilderComponentService {
     );
 
   constructor(
+    @Inject(BPMN_JS) private _bpmnJs: IBpmnJS,
     @Inject(PROCESS_BUILDER_CONFIG_TOKEN) private _config: IProcessBuilderConfig,
     private _dialogService: DialogService,
     private _bpmnJsService: BpmnJsService,
@@ -88,7 +87,7 @@ export class ProcessBuilderComponentService {
     if (connector) {
       if (taskCreationData?.entranceGatewayType) {
         if (taskCreationData.entranceGatewayType) {
-          BPMNJsRepository.updateBpmnElementSLPBExtension(this._bpmnJsService.bpmnJs, connector.businessObject, 'SequenceFlowExtension', (ext) => ext.sequenceFlowType = taskCreationData.entranceGatewayType === 'Success' ? 'success' : 'error');
+          BPMNJsRepository.updateBpmnElementSLPBExtension(this._bpmnJs, connector.businessObject, 'SequenceFlowExtension', (ext) => ext.sequenceFlowType = taskCreationData.entranceGatewayType === 'Success' ? 'success' : 'error');
           this._applyConnectorDefaultLabels(connector, taskCreationData);
         }
       } else {
@@ -104,8 +103,9 @@ export class ProcessBuilderComponentService {
       return;
     }
 
-    const nextParamId = await selectSnapshot(this._store.select(paramSelectors.selectNextId()));
-    const methodEvaluation = CodemirrorRepository.evaluateCustomMethod(undefined, taskCreationData.implementation ?? defaultImplementation);
+    const nextParamId = await selectSnapshot(this._store.select(paramSelectors.selectNextParameterIdentifier()));
+    const code = taskCreationData.implementation ? taskCreationData.implementation.text : defaultImplementation;
+    const methodEvaluation = CodemirrorRepository.evaluateCustomMethod(undefined, code);
 
     if (referencedFunction.requireCustomImplementation || referencedFunction.customImplementation || taskCreationData.implementation) {
       referencedFunction = await this._applyFunctionConfiguration(taskCreationData, referencedFunction, methodEvaluation, typeof referencedFunction.output === 'number' ? referencedFunction.output : nextParamId) as IFunction;
@@ -120,7 +120,6 @@ export class ProcessBuilderComponentService {
 
     if (taskCreationPayload.configureActivity) {
       this._updateBpmnModelElementActivityIdentifier(taskCreationPayload, referencedFunction);
-      this._bpmnJsService.modelingModule.updateLabel(taskCreationPayload.configureActivity, referencedFunction.name);
 
       if (typeof referencedFunction.output === 'number') {
         outputParam = (await selectSnapshot(this._store.select(paramSelectors.selectIParam(referencedFunction.output)))) ?? { identifier: nextParamId } as IParam;
@@ -136,6 +135,11 @@ export class ProcessBuilderComponentService {
       gatewayShape = this._handleErrorGatewayConfiguration(taskCreationPayload, referencedFunction)?.gatewayShape;
 
       this._handleDataInputConfiguration(taskCreationData, taskCreationPayload, referencedFunction);
+    }
+
+    const effectedActivities = this._bpmnJsService.elementRegistryModule.filter(element => element.type === shapeTypes.Task && BPMNJsRepository.getSLPBExtension(element.businessObject, 'ActivityExtension', (ext => ext.activityFunctionId)) === referencedFunction?.identifier);
+    for(const activity of effectedActivities){
+      this._bpmnJsService.modelingModule.updateLabel(activity, referencedFunction.name);
     }
 
     return { gatewayShape, outputParam };
@@ -240,7 +244,7 @@ export class ProcessBuilderComponentService {
       // reconnect the former connected target as success action
       if (formerConnectedTargets[0]) {
         const connector = this._bpmnJsService.modelingModule.connect(gatewayShape, formerConnectedTargets[0]);
-        BPMNJsRepository.updateBpmnElementSLPBExtension(this._bpmnJsService.bpmnJs, connector.businessObject, 'SequenceFlowExtension', (ext) => ext.sequenceFlowType = 'success');
+        BPMNJsRepository.updateBpmnElementSLPBExtension(this._bpmnJs, connector.businessObject, 'SequenceFlowExtension', (ext) => ext.sequenceFlowType = 'success');
       }
     } else if (!resultingFunction.canFail && gatewayShape) {
       this._bpmnJsService.modelingModule.removeElements([gatewayShape, ...gatewayShape.incoming, ...gatewayShape.outgoing]);
@@ -276,7 +280,7 @@ export class ProcessBuilderComponentService {
     const inputParams = await this._extractInputParams(taskCreationData, referencedFunction);
     const functionIdentifier = referencedFunction.requireCustomImplementation ? await selectSnapshot(this._store.select(functionSelectors.selectNextId())) : referencedFunction.identifier;
     const resultingFunction = {
-      customImplementation: taskCreationData.implementation ?? undefined,
+      customImplementation: taskCreationData.implementation?.text ?? undefined,
       canFail: taskCreationData.canFail ?? false,
       name: taskCreationData.name ?? this._config.defaultFunctionName,
       identifier: functionIdentifier,
@@ -309,7 +313,7 @@ export class ProcessBuilderComponentService {
     }
     else if (referencedFunction.requireCustomImplementation || referencedFunction.customImplementation) {
       const usedInputParams: { varName: string, propertyName: string | null }[] = taskCreationData.implementation
-        ? CodemirrorRepository.getUsedInputParams(undefined, taskCreationData.implementation)
+        ? CodemirrorRepository.getUsedInputParams(undefined, taskCreationData.implementation.text)
         : [];
 
       const usedInputParamEntities = await selectSnapshot(
@@ -341,7 +345,8 @@ export class ProcessBuilderComponentService {
     }
 
     if (!methodEvaluation) {
-      methodEvaluation = CodemirrorRepository.evaluateCustomMethod(undefined, taskCreationData.implementation ?? defaultImplementation);
+      const code = taskCreationData.implementation ? taskCreationData.implementation.text : defaultImplementation;
+      methodEvaluation = CodemirrorRepository.evaluateCustomMethod(undefined, code);
     }
 
     if (methodEvaluation.status === MethodEvaluationStatus.ReturnValueFound || outputParam) {
@@ -358,10 +363,11 @@ export class ProcessBuilderComponentService {
         const outputType = await this._methodEvaluationTypeToOutputType(taskCreationPayload.configureActivity, methodEvaluation);
         outputParam.type = outputType;
       }
+      
       this._store.dispatch(upsertIParam(outputParam));
 
       BPMNJsRepository.appendOutputParam(
-        this._bpmnJsService.bpmnJs,
+        this._bpmnJs,
         taskCreationPayload.configureActivity,
         outputParam,
         true,
@@ -437,7 +443,7 @@ export class ProcessBuilderComponentService {
     }
 
     BPMNJsRepository.updateBpmnElementSLPBExtension(
-      this._bpmnJsService.bpmnJs,
+      this._bpmnJs,
       taskCreationPayload.configureActivity.businessObject,
       'ActivityExtension',
       (e) => e.activityFunctionId = referencedFunction.identifier

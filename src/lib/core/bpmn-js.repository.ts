@@ -1,56 +1,57 @@
 import { Inject, Injectable } from "@angular/core";
 import { ParamCodes } from "src/config/param-codes";
-import { getElementRegistryModule, getModelingModule, getTooltipModule, IElementRegistryModule } from "../bpmn-io/bpmn-modules";
+import { getElementRegistryModule, getModelingModule, getTooltipModule } from "../bpmn-io/bpmn-modules";
+import { IElementRegistryModule } from '@bpmn-io/modules';
 import { IBusinessObject } from "../bpmn-io/interfaces/business-object.interface";
 import { IElement } from "../bpmn-io/interfaces/element.interface";
 import shapeTypes from "../bpmn-io/shape-types";
 import { IProcessValidationResult } from "../process-builder/interfaces/validation-result.interface";
 import { IBpmnJS } from "../process-builder/interfaces/bpmn-js.interface";
-import { IFunction } from "../process-builder/interfaces/function.interface";
-import { IParam } from "../process-builder/interfaces/param.interface";
+import { IFunction, IParam } from "@process-builder/interfaces";
 import { IProcessBuilderConfig, PROCESS_BUILDER_CONFIG_TOKEN } from "../process-builder/interfaces/process-builder-config.interface";
 import { sebleichProcessBuilderExtension } from "../process-builder/globals/sebleich-process-builder-extension";
 import { ValidationError } from "../process-builder/globals/validation-error";
 import { ValidationWarning } from "../process-builder/globals/validation-warning";
 import { IExtensionElement } from "../bpmn-io/interfaces/extension-element.interface";
 import { SebleichProcessBuilderExtensionType } from "../process-builder/globals/sebleich-process-builder-extension.type";
+import { IConnector } from "../bpmn-io/interfaces/connector.interface";
 
 @Injectable()
 export class BPMNJsRepository {
 
     constructor(@Inject(PROCESS_BUILDER_CONFIG_TOKEN) private _config: IProcessBuilderConfig) { }
 
-    public static appendOutputParam(bpmnJS: any, element: IElement, param: IParam | null | undefined, preventDublet = true, expectedInterface?: string): null | IElement {
+    public static appendOutputParam(bpmnJS: IBpmnJS, element: IElement, param: IParam | null | undefined, preventDublet = true, expectedInterface?: string) {
         if (!param) {
             return null;
         }
-        let e = element.outgoing.find(x => x.type === shapeTypes.DataOutputAssociation)?.target;
-        if (!preventDublet || !e) {
-            e = getModelingModule(bpmnJS).appendShape(element, {
+
+        let createdDataOutputElement: IElement | undefined, existingElement = element.outgoing.find(x => x.type === shapeTypes.DataOutputAssociation)?.target;
+
+        if (!preventDublet || !existingElement) {
+            createdDataOutputElement = getModelingModule(bpmnJS).appendShape(element, {
                 type: shapeTypes.DataObjectReference
             }, { x: element.x + 50, y: element.y - 60 });
-            BPMNJsRepository.updateBpmnElementSLPBExtension(bpmnJS, e.businessObject, 'DataObjectExtension', (ext) => {
-                ext.outputParam = param.identifier;
-            });
-            BPMNJsRepository.updateBpmnElementSLPBExtension(bpmnJS, e.businessObject, 'DataObjectExtension', (ext) => {
-                ext.matchesProcessOutputInterface = param.interface === expectedInterface;
-            });
-            BPMNJsRepository.updateBpmnElementSLPBExtension(bpmnJS, e.businessObject, 'DataObjectExtension', (ext) => {
-                ext.isProcessOutput = param.isProcessOutput;
-            });
-        } else if (e) {
-            BPMNJsRepository.updateBpmnElementSLPBExtension(bpmnJS, e.businessObject, 'DataObjectExtension', (ext) => {
-                ext.outputParam = param.identifier;
-            });
-            BPMNJsRepository.updateBpmnElementSLPBExtension(bpmnJS, e.businessObject, 'DataObjectExtension', (ext) => {
-                ext.matchesProcessOutputInterface = param.interface === expectedInterface;
-            });
-            BPMNJsRepository.updateBpmnElementSLPBExtension(bpmnJS, e.businessObject, 'DataObjectExtension', (ext) => {
-                ext.isProcessOutput = param.isProcessOutput;
-            });
         }
-        getModelingModule(bpmnJS).updateLabel(e, param.name);
-        return e;
+
+        const referencingDataRepresentations = getElementRegistryModule(bpmnJS)
+            .filter(element => element.type === shapeTypes.DataOutputAssociation)
+            .map(connector => (connector as IConnector).target);
+
+        for(let referencingDataRepresentation of referencingDataRepresentations){
+            BPMNJsRepository.updateBpmnElementSLPBExtension(bpmnJS, referencingDataRepresentation.businessObject, 'DataObjectExtension', (ext) => {
+                ext.outputParam = param.identifier;
+            });
+            BPMNJsRepository.updateBpmnElementSLPBExtension(bpmnJS, referencingDataRepresentation.businessObject, 'DataObjectExtension', (ext) => {
+                ext.matchesProcessOutputInterface = param.interface === expectedInterface;
+            });
+            BPMNJsRepository.updateBpmnElementSLPBExtension(bpmnJS, referencingDataRepresentation.businessObject, 'DataObjectExtension', (ext) => {
+                ext.isProcessOutput = param.isProcessOutput;
+            });
+            getModelingModule(bpmnJS).updateLabel(referencingDataRepresentation, param.name);
+        }
+
+        return { createdDataOutputElement };
     }
 
     public static clearAllTooltips(bpmnJS: IBpmnJS) {
@@ -224,7 +225,7 @@ export class BPMNJsRepository {
     }
 
     public static getStartEvents(elementRegistry: IElementRegistryModule) {
-        return elementRegistry.filter(x => x.type === shapeTypes.StartEvent);
+        return elementRegistry.filter(x => x.type === shapeTypes.StartEvent) as IElement[];
     }
 
 }
