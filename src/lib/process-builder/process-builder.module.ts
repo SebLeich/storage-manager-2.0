@@ -5,7 +5,7 @@ import * as BpmnJS from 'bpmn-js/dist/bpmn-modeler.production.min.js';
 import customBPMNJSModule from './extensions/bpmn-js';
 
 // @ts-ignore
-import gridModule from "diagram-js/lib/features/grid-snapping/visuals";
+import gridModule from "./extensions/bpmn-js/grid";
 
 // @ts-ignore
 import CliModule from 'bpmn-js-cli';

@@ -1,4 +1,4 @@
-import { Component, Inject } from '@angular/core';
+import { Component, Inject, signal } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { BehaviorSubject } from 'rxjs';
 import { firstValueFrom } from 'rxjs/internal/firstValueFrom';
@@ -33,13 +33,9 @@ export class ProcessBuilderWrapperComponent {
   public hasCurrentBpmnJSModel$ = this.currentBpmnJSModel$.pipe(map(currentBpmnJSModel => !!currentBpmnJSModel));
   public currentBpmnJSModelGuid$ = this._store.select(selectCurrentIBpmnJSModelGuid);
 
-  private _modelsVisible = new BehaviorSubject<boolean>(true);
-  private _methodsVisible = new BehaviorSubject<boolean>(false);
-  private _paramsVisible = new BehaviorSubject<boolean>(false);
-
-  public modelsVisible$ = this._modelsVisible.asObservable();
-  public methodsVisible$ = this._methodsVisible.asObservable();
-  public paramsVisible$ = this._paramsVisible.asObservable();
+  public modelsVisible = signal(false);
+  public methodsVisible = signal(false);
+  public paramsVisible = signal(false);
 
   constructor(
     @Inject(BPMN_JS) private _bpmnJs: IBpmnJS,
@@ -53,6 +49,7 @@ export class ProcessBuilderWrapperComponent {
       event.stopPropagation();
       event.preventDefault();
     }
+
     element.blur();
   }
 
@@ -90,20 +87,9 @@ export class ProcessBuilderWrapperComponent {
     this._store.dispatch(setCurrentIBpmnJSModel(bpmnJSModel));
   }
 
-  public async toggleBpmnJsModels() {
-    const modelsVisible = await selectSnapshot(this._modelsVisible);
-    this._modelsVisible.next(!modelsVisible);
-  }
-
-  public async toggleMethods() {
-    const methodsVisible = await selectSnapshot(this._methodsVisible);
-    this._methodsVisible.next(!methodsVisible);
-  }
-
-  public async toggleParams() {
-    const paramsVisible = await selectSnapshot(this._paramsVisible);
-    this._paramsVisible.next(!paramsVisible);
-  }
+  public toggleBpmnJsModels = () => this.modelsVisible.set(!this.modelsVisible());
+  public toggleMethods = () => this.methodsVisible.set(!this.methodsVisible());
+  public toggleParams = () => this.paramsVisible.set(!this.paramsVisible());
 
   public async logFunctions() {
     const funcs = await selectSnapshot(this._store.select(selectIFunctions()));

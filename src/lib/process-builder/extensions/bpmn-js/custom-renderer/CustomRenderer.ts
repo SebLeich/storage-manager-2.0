@@ -13,7 +13,7 @@ import { BPMNJsRepository } from 'src/lib/core/bpmn-js.repository';
 // @ts-ignore
 import { isAny } from 'bpmn-js/lib/features/modeling/util/ModelingUtil';
 import shapeTypes from 'src/lib/bpmn-io/shape-types';
-import { IElement } from 'src/lib/bpmn-io/interfaces/element.interface';
+import { Shape } from 'diagram-js/lib/model';
 
 const HIGH_PRIORITY = 1500;
 
@@ -34,7 +34,7 @@ export default class CustomRenderer extends BaseRenderer {
         return isAny(element, [shapeTypes.DataObjectReference]) && !element.labelTarget;
     }
 
-    drawShape(parentNode: any, element: IElement) {
+    drawShape(parentNode: SVGElement, element: Shape): SVGElement {
         const shape = this.bpmnRenderer.drawShape(parentNode, element),
             matchesProcessOutputInterface = BPMNJsRepository.getSLPBExtension(element.businessObject, 'DataObjectExtension', (ext) => ext.matchesProcessOutputInterface),
             isProcessOutput = BPMNJsRepository.getSLPBExtension(element.businessObject, 'DataObjectExtension', (ext) => ext.isProcessOutput);

@@ -72,7 +72,7 @@
                 </span>
             </div>
 
-            <div [@showList]="(bpmnJSModels$|async)?.length" *ngIf="modelsVisible$|async">
+            <div [@showList]="(bpmnJSModels$|async)?.length" *ngIf="modelsVisible()">
 
                 <div class="quick-interaction-wrapper">
 
@@ -93,7 +93,7 @@
                 </span>
             </div>
 
-            <div [@showList]="(funcs$|async)?.length" *ngIf="methodsVisible$|async">
+            <div [@showList]="(funcs$|async)?.length" *ngIf="methodsVisible()">
 
                 <div class="option" *ngFor="let func of (funcs$|async)">
 
@@ -116,7 +116,7 @@
                 </span>
             </div>
 
-            <div [@showList]="(params$|async)?.length" *ngIf="paramsVisible$|async">
+            <div [@showList]="(params$|async)?.length" *ngIf="paramsVisible()">
 
                 <div class="option" *ngFor="let param of (params$|async)">
 
