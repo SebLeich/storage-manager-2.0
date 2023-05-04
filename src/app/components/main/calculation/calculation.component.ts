@@ -9,7 +9,7 @@ import { NoSolutionDialogComponent } from '../../dialog/no-solution-dialog/no-so
 import { CalculationComponentService } from './calculation-component.service';
 import { AlgorithmCalculationStatus } from './enumerations/algorithm-calculation-status.enum';
 import { MatDialog } from '@angular/material/dialog';
-import { bottomUpFadeIn } from '@animations';
+import bottomUpFadeIn from 'src/lib/shared/animations/bottom-up-fade.animation';
 import { selectCalculationContextValid } from '@smgr/store';
 
 @Component({

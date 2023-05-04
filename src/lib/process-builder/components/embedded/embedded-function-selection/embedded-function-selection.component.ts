@@ -11,9 +11,10 @@ import { IInputParam } from 'src/lib/process-builder/interfaces/input-param.inte
 import { delay, map, startWith } from 'rxjs/operators';
 import * as fromIFunctionState from 'src/lib/process-builder/store/reducers/function.reducer';
 import { removeIFunction } from 'src/lib/process-builder/store/actions/function.actions';
-import { showAnimation, showListAnimation } from '@animations';
 import { combineLatest } from 'rxjs/internal/observable/combineLatest';
 import { TaskCreationFormGroup } from 'src/lib/process-builder/interfaces/task-creation-form-group-value.interface';
+import { showAnimation } from 'src/lib/shared/animations/show';
+import { showListAnimation } from 'src/lib/shared/animations/show-list';
 
 @Component({
   selector: 'app-embedded-function-selection',

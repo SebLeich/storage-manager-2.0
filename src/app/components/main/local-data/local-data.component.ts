@@ -9,7 +9,7 @@ import { v4 as generateGuid } from 'uuid';
 import * as lodash from 'lodash';
 import { ControlsOf } from 'src/lib/shared/globals/controls-of.type';
 import { selectSnapshot } from 'src/lib/process-builder/globals/select-snapshot';
-import { bottomUpFadeIn } from '@animations';
+import bottomUpFadeIn from 'src/lib/shared/animations/bottom-up-fade.animation';
 import { Unit } from 'src/app/types/unit.type';
 import { addGroup, addOrder, addProduct, clearOrders, selectGroups, selectCalculationContextValid, selectContainerHeight, selectContainerWidth, selectNextProductDescription, selectOrders, selectProductByDescription, selectProducts, setContainerHeight, setContainerWidth, updateGroup, updateOrder, updateProduct, updateProductByDescription, updateOrdersByDescription } from '@smgr/store';
 

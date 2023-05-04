@@ -24,7 +24,6 @@
     "useDefineForClassFields": false,
     "paths": {
       "@/*": ["src/*"],
-      "@animations": ["./src/lib/shared/animations"],
       "@bpmn-io/events": ["./src/lib/bpmn-io/interfaces/events"],
       "@bpmn-io/modules": ["./src/lib/bpmn-io/interfaces/modules"],
       "@main-components": ["./src/app/components/main"],

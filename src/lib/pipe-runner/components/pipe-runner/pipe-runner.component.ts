@@ -7,10 +7,11 @@ import moment from 'moment';
 import * as ThreeJS from 'three';
 import { VisualizationService } from 'src/lib/visualization/services/visualization.service';
 import { MatTabGroup } from '@angular/material/tabs';
-import { fadeInAnimation, showAnimation } from '@animations';
 import { ISolution } from '@smgr/interfaces';
 import { FormControl } from '@angular/forms';
 import { PipeRunnerService } from './pipe-runner.service';
+import { fadeInAnimation } from 'src/lib/shared/animations/fade-in.animation';
+import { showAnimation } from 'src/lib/shared/animations/show';
 
 @Component({
   selector: 'app-pipe-runner',
