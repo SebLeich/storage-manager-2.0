@@ -111,11 +111,10 @@ export class PipeRunnerService {
           if (currentAction?.ouputParamName) {
             injector[currentAction.ouputParamName] = result;
           }
-
-          if (currentAction.outputMatchesPipelineOutput) {
+          if (currentAction!.outputMatchesPipelineOutput) {
             solutionWrapper = result as ISolutionWrapper;
-            this._store.dispatch(setIPipelineActionSolution(currentAction.identifier, solutionWrapper));
-            this._store.dispatch(addSolution({ solution: (solutionWrapper as ISolutionWrapper).solution }));
+            this._store.dispatch(setIPipelineActionSolution(currentAction!.identifier, solutionWrapper!));
+            this._store.dispatch(addSolution({ solution: (solutionWrapper as ISolutionWrapper)!.solution }));
           }
 
           const representation = typeof solutionWrapper === 'object' ? JSON.stringify(result) : result;
@@ -123,7 +122,7 @@ export class PipeRunnerService {
             message: `${moment().format('HH:mm:ss')}: ${representation}`,
             class: 'default'
           });
-          this._store.dispatch(updateIPipelineActionStatus(currentAction.identifier, 'SUCCEEDED'));
+          this._store.dispatch(updateIPipelineActionStatus(currentAction!.identifier, 'SUCCEEDED'));
 
           const skippedAction = actions.find(action => action.identifier === currentAction?.onError);
           if (skippedAction) {

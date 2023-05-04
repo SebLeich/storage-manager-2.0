@@ -42,7 +42,16 @@ export class EmbeddedFunctionImplementationComponent implements IEmbeddedView, A
   );
 
   public implementationChanged$ = defer(() => this.formGroup.controls.implementation?.valueChanges ?? NEVER);
-  public returnValueStatus$ = defer(() => this.implementationChanged$.pipe(map((implementation) => CodemirrorRepository.evaluateCustomMethod(undefined, implementation?.text)?.status), startWith(MethodEvaluationStatus.Initial)));
+  
+  public returnValueStatus$ = defer(
+    () => this.implementationChanged$.pipe(
+      map((implementation) => {
+        const code = implementation?.text;
+        return CodemirrorRepository.evaluateCustomMethod(undefined, code)?.status;
+      }),
+      startWith(CodemirrorRepository.evaluateCustomMethod(undefined, this.formGroup.controls.implementation!.value?.text)?.status)
+    )
+  );
 
   private _subscriptions = new Subscription();
 
