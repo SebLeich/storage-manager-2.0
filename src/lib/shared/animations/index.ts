@@ -1,4 +1,4 @@
-export * from './bottom-up-fade.animation';
+export * as bottomUpFadeIn from './bottom-up-fade.animation';
 export * from './fade-in.animation';
 export * from './show';
 export * as showDelayed from './show-delayed.animation';

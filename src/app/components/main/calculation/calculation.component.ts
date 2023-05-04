@@ -9,21 +9,19 @@ import { NoSolutionDialogComponent } from '../../dialog/no-solution-dialog/no-so
 import { CalculationComponentService } from './calculation-component.service';
 import { AlgorithmCalculationStatus } from './enumerations/algorithm-calculation-status.enum';
 import { MatDialog } from '@angular/material/dialog';
-import { widgetFadeInAnimation } from 'src/lib/shared/animations/bottom-up-fade.animation';
+import { bottomUpFadeIn } from '@animations';
 import { selectCalculationContextValid } from '@smgr/store';
 
 @Component({
   selector: 'app-calculation',
   templateUrl: './calculation.component.html',
   styleUrls: ['./calculation.component.css'],
-  providers: [
-    CalculationComponentService
-  ],
-  animations: [showAnimation, widgetFadeInAnimation]
+  providers: [CalculationComponentService],
+  animations: [showAnimation, bottomUpFadeIn]
 })
 export class CalculationComponent implements OnDestroy, OnInit {
 
-  private calculationContextInvalid$ = this._store.select(selectCalculationContextValid).pipe(debounceTime(10), map(valid => !valid));
+  private _calculationContextInvalid$ = this._store.select(selectCalculationContextValid).pipe(debounceTime(10), map(valid => !valid));
   AlgorithmCalculationStatus = AlgorithmCalculationStatus;
 
   private _subscriptions: Subscription = new Subscription();
@@ -46,7 +44,7 @@ export class CalculationComponent implements OnDestroy, OnInit {
 
   public ngOnInit(): void {
     this._subscriptions.add(
-      this.calculationContextInvalid$
+      this._calculationContextInvalid$
         .pipe(
           debounceTime(500),
           filter(calculationContextInvalid => !!calculationContextInvalid),
