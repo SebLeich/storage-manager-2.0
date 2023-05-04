@@ -48,7 +48,7 @@ describe('CalculationContextOverviewComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  describe('should display available solutions correctly', () => {
+  describe('Solutions Overview', () => {
 
     const solutions: ISolution[] = [
       {
