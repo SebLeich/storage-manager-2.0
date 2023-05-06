@@ -1,7 +1,8 @@
-import { Component, Inject, OnDestroy, OnInit, ViewChild, ViewContainerRef } from '@angular/core';
+import { Component, Inject, OnDestroy, OnInit, ViewChild, ViewContainerRef, signal } from '@angular/core';
+import { toObservable } from '@angular/core/rxjs-interop';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { Store } from '@ngrx/store';
-import { BehaviorSubject, combineLatest, NEVER, Observable, Subscription } from 'rxjs';
+import { combineLatest, NEVER, Observable, Subscription } from 'rxjs';
 import { ITaskCreationConfig } from 'src/lib/process-builder/interfaces/task-creation-config.interface';
 import { TaskCreationStep } from 'src/lib/process-builder/globals/task-creation-step';
 import { selectIFunction, selectIInterface, selectIParam, selectIParamByNormalizedName } from '@process-builder/selectors';
@@ -81,8 +82,7 @@ export class TaskCreationComponent implements OnDestroy, OnInit {
     `input params: ${inputParams.length === 0 ? '-' : inputParams.join(', ')}`;
   }));
 
-  private _currentStepIndex: BehaviorSubject<number> = new BehaviorSubject<number>(0);
-  public currentStepIndex$ = this._currentStepIndex.asObservable();
+  public currentStepIndex = signal(0);
 
   private _formValue$ = this.formGroup.valueChanges.pipe(startWith(this.formGroup.value));
 
@@ -120,13 +120,15 @@ export class TaskCreationComponent implements OnDestroy, OnInit {
       map(([hasCustomImplementation, hasDynamicInputParameters, hasDataMapping, unableToDetermineOutputParam]) => this.getSteps([hasDynamicInputParameters, hasCustomImplementation, hasDataMapping, unableToDetermineOutputParam]))
     );
 
-  public currentStep$ = combineLatest([this.steps$, this.currentStepIndex$]).pipe(
-    map(([steps, index]) => steps[index]),
-    filter(step => step ? true : false),
-    distinctUntilChanged((prev, curr) => prev.taskCreationStep === curr.taskCreationStep)
-  );
-  public hasPreviousStep$ = this.currentStepIndex$.pipe(map(index => index > 0));
-  public hasNextStep$ = combineLatest([this.steps$, this.currentStepIndex$]).pipe(map(([steps, index]) => index < steps.length - 1));
+  public currentStep$ = combineLatest([this.steps$, toObservable(this.currentStepIndex)])
+    .pipe(
+      map(([steps, index]) => steps[index]),
+      filter(step => step ? true : false),
+      distinctUntilChanged((prev, curr) => prev.taskCreationStep === curr.taskCreationStep)
+    );
+
+  public hasPreviousStep$ = toObservable(this.currentStepIndex).pipe(map(index => index > 0));
+  public hasNextStep$ = combineLatest([this.steps$, toObservable(this.currentStepIndex)]).pipe(map(([steps, index]) => index < steps.length - 1));
   public canAnalyzeCustomImplementation$ = this.currentStep$.pipe(
     filter((x) => (x ? true : false)),
     map((x) => x.taskCreationStep === TaskCreationStep.ConfigureFunctionImplementation || x.taskCreationStep === TaskCreationStep.ConfigureFunctionOutput)
@@ -148,23 +150,13 @@ export class TaskCreationComponent implements OnDestroy, OnInit {
   }
 
   public abort = () => this._ref.close();
-
   public finish = () => this._ref.close(this.formGroup.value);
-
-  public async nextStep() {
-    const stepIndex = await firstValueFrom(this.currentStepIndex$);
-    this.setStep(stepIndex + 1);
-  }
-
-  public async previousStep() {
-    const stepIndex = await firstValueFrom(this.currentStepIndex$);
-    this.setStep(stepIndex - 1);
-  }
+  public nextStep = () => this.setStep(this.currentStepIndex() + 1);
+  public previousStep = () => this.setStep(this.currentStepIndex() - 1);
 
   public ngOnDestroy = () => this._subscription.unsubscribe();
 
   public ngOnInit(): void {
-
     this.validateFunctionSelection();
     this.setStep(0);
 
@@ -185,9 +177,7 @@ export class TaskCreationComponent implements OnDestroy, OnInit {
     );
   }
 
-  public setStep(index: number) {
-    this._currentStepIndex.next(index);
-  }
+  public setStep = (index: number) => this.currentStepIndex.set(index);
 
   public async validateFunctionSelection() {
     const currentFunction = await selectSnapshot(this._store.select(selectIFunction(this.formGroup.controls.functionIdentifier?.value)));
@@ -208,7 +198,7 @@ export class TaskCreationComponent implements OnDestroy, OnInit {
         objectTypeDefinition = null;
       }
 
-      const textLeaf = CodemirrorRepository.stringToTextLeaf(currentFunction.customImplementation ?? defaultImplementation);
+      const textLeaf = currentFunction.requireCustomImplementation || Array.isArray(currentFunction.customImplementation) ? CodemirrorRepository.stringToTextLeaf(currentFunction.customImplementation ?? defaultImplementation) : undefined;
       this.formGroup.patchValue({
         canFail: currentFunction.canFail,
         implementation: textLeaf,

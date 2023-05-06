@@ -26,28 +26,24 @@ export class BPMNJsRepository {
             return null;
         }
 
-        let createdDataOutputElement: IElement | undefined, existingElement = element.outgoing.find(x => x.type === shapeTypes.DataOutputAssociation)?.target;
+        let createdDataOutputElement: IElement | undefined,
+            existingElement = element.outgoing.find(x => x.type === shapeTypes.DataOutputAssociation)?.target;
 
         if (!preventDublet || !existingElement) {
             createdDataOutputElement = getModelingModule(bpmnJS).appendShape(element, {
                 type: shapeTypes.DataObjectReference
             }, { x: element.x + 50, y: element.y - 60 });
+
+            BPMNJsRepository.updateBpmnElementSLPBExtension(bpmnJS, createdDataOutputElement.businessObject, 'DataObjectExtension', (ext) => ext.outputParam = param.identifier);
+            BPMNJsRepository.updateBpmnElementSLPBExtension(bpmnJS, createdDataOutputElement.businessObject, 'DataObjectExtension', (ext) => ext.matchesProcessOutputInterface = param.interface === expectedInterface);
+            BPMNJsRepository.updateBpmnElementSLPBExtension(bpmnJS, createdDataOutputElement.businessObject, 'DataObjectExtension', (ext) => ext.isProcessOutput = param.isProcessOutput);
         }
 
         const referencingDataRepresentations = getElementRegistryModule(bpmnJS)
-            .filter(element => element.type === shapeTypes.DataOutputAssociation)
+            .filter(element => element.type === shapeTypes.DataOutputAssociation && BPMNJsRepository.sLPBExtensionSetted((element as IConnector).target.businessObject, 'DataObjectExtension', (ext) => ext.outputParam === param.identifier))
             .map(connector => (connector as IConnector).target);
 
-        for(let referencingDataRepresentation of referencingDataRepresentations){
-            BPMNJsRepository.updateBpmnElementSLPBExtension(bpmnJS, referencingDataRepresentation.businessObject, 'DataObjectExtension', (ext) => {
-                ext.outputParam = param.identifier;
-            });
-            BPMNJsRepository.updateBpmnElementSLPBExtension(bpmnJS, referencingDataRepresentation.businessObject, 'DataObjectExtension', (ext) => {
-                ext.matchesProcessOutputInterface = param.interface === expectedInterface;
-            });
-            BPMNJsRepository.updateBpmnElementSLPBExtension(bpmnJS, referencingDataRepresentation.businessObject, 'DataObjectExtension', (ext) => {
-                ext.isProcessOutput = param.isProcessOutput;
-            });
+        for (let referencingDataRepresentation of referencingDataRepresentations) {
             getModelingModule(bpmnJS).updateLabel(referencingDataRepresentation, param.name);
         }
 

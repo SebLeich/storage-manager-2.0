@@ -15,11 +15,9 @@
     <div class="dialog-body">
 
         <mat-tab-group mat-align-tabs="start" (selectedIndexChange)="setStep($event)"
-            [selectedIndex]="currentStepIndex$|async">
-
-            <mat-tab [label]=(tab.taskCreationStep|taskCreationStep) *ngFor="let tab of (steps$|async)"
+            [selectedIndex]="currentStepIndex()">
+            <mat-tab *ngFor="let tab of (steps$|async)" [label]=(tab.taskCreationStep|taskCreationStep)
                 [disabled]="(tab.disabled$|async) ?? false"></mat-tab>
-
         </mat-tab-group>
 
         <div class="content-wrapper" [formGroup]="formGroup">
