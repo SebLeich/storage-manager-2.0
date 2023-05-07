@@ -307,7 +307,7 @@ export class BpmnJsService {
       activityIdentifier: number = BPMNJsRepository.getSLPBExtension(cursor.businessObject, 'ActivityExtension', (ext => ext.activityFunctionId)),
       func = await selectSnapshot(this._store.select(selectIFunction(activityIdentifier))),
       outputParam = typeof func?.output === 'number' ? await selectSnapshot(this._store.select(selectIParam(func.output))) : undefined,
-      executableCode = func?.customImplementation ? func.customImplementation.join('\n') : func?.implementation?.toString();
+      executableCode = func?.customImplementation ? func.customImplementation.join('\n') : func?.implementation;
 
     if(!func){
       throw('cannot find function');

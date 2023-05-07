@@ -5,7 +5,7 @@ export interface IFunctionTemplate {
     name: string;
     normalizedName?: string;
     description?: string | null;
-    implementation?: (args?: any) => Promise<any>;
+    implementation?: string;
     canFail?: boolean;
     requireCustomImplementation: boolean;
     finalizesFlow?: boolean;

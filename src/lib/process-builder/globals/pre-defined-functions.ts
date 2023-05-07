@@ -1,5 +1,3 @@
-import { firstValueFrom } from "rxjs/internal/firstValueFrom";
-import { timer } from "rxjs/internal/observable/timer";
 import { IFunctionTemplate } from "../interfaces/function-template.interface";
 
 export class PredefinedFunctionTemplates {
@@ -30,10 +28,10 @@ export class PredefinedFunctionTemplates {
                 }
             ],
             name: name,
-            implementation: () => {
+            implementation: `async () => {
                 let delay!: number;
-                return firstValueFrom(timer(delay));
-            },
+                return await firstValueFrom(timer(delay));
+            }`,
             outputTemplate: null,
             requireCustomImplementation: false
         } as IFunctionTemplate;
@@ -57,18 +55,18 @@ export class PredefinedFunctionTemplates {
                 }
             ],
             name: name,
-            implementation: () => {
+            implementation: `async () => {
                 let contentToDownload!: object, fileName!: string;
                 const content = JSON.stringify(contentToDownload);
                 const element = document.createElement('a');
-                element.setAttribute('href', `data:text/json;charset=UTF-8,${encodeURIComponent(content)}`);
-                element.setAttribute('download', `${fileName}.json`);
+                element.setAttribute('href', 'data:text/json;charset=UTF-8,' + encodeURIComponent(content));
+                element.setAttribute('download', fileName + '.json');
                 element.style.display = 'none';
                 document.body.appendChild(element);
                 element.click();
                 document.body.removeChild(element);
                 return new Promise<void>((resolve => resolve()));
-            },
+            }`,
             outputTemplate: null,
             requireCustomImplementation: false
         } as IFunctionTemplate;
@@ -81,9 +79,9 @@ export class PredefinedFunctionTemplates {
             description: 'the method throws an error',
             inputTemplates: null,
             name: name,
-            implementation: () => {
+            implementation: `async () => {
                 throw 'mock error';
-            },
+            }`,
             outputTemplate: null,
             requireCustomImplementation: false
         } as IFunctionTemplate;
@@ -102,10 +100,6 @@ export class PredefinedFunctionTemplates {
                 }
             ],
             name: name,
-            implementation: () => {
-                let inputName!: string;
-
-            },
             outputTemplate: "dynamic",
             requireCustomImplementation: false
         } as IFunctionTemplate;

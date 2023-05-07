@@ -1,11 +1,6 @@
-import { IFunction } from "src/lib/process-builder/interfaces/function.interface";
 import { PredefinedFunctionTemplates } from "src/lib/process-builder/globals/pre-defined-functions";
 import { InterfaceCodes } from "./interface-codes";
-import exemplarySolution from 'src/assets/exemplary-solution.json';
-import exemplarySolution2 from 'src/assets/exemplary-solution-2.json';
 import { IFunctionTemplate } from "src/lib/process-builder/interfaces/function-template.interface";
-import { AllInOneRowSolver, StartLeftBottomSolver, SuperFloSolver } from "@smgr/solvers";
-import { IGroup, IOrder } from "@smgr/interfaces";
 
 export default [
     new PredefinedFunctionTemplates().customJSMethod(0),
@@ -16,11 +11,14 @@ export default [
         normalizedName: 'provideExemplarySolution',
         description: 'method provides an exemplary solution',
         outputTemplate: InterfaceCodes.SolutionWrapper,
-        implementation: () => new Promise((resolve) => resolve(exemplarySolution)),
+        implementation: `async () => {
+            var result = await firstValueFrom(httpClient.get('/assets/exemplary-solution.json'));
+            return result;
+        }`,
         canFail: false
     } as IFunctionTemplate,
     new PredefinedFunctionTemplates().downloadAsJson(2),
-    
+
     new PredefinedFunctionTemplates().delayMethod(6),
     new PredefinedFunctionTemplates().simulateFailMethod(7),
     {
@@ -30,7 +28,11 @@ export default [
         normalizedName: 'provideAnotherExemplarySolution',
         description: 'method provides another exemplary solution',
         outputTemplate: InterfaceCodes.SolutionWrapper,
-        implementation: () => new Promise((resolve) => resolve(exemplarySolution2)),
+        implementation: `async () => {
+            const { firstValueFrom } = await import('rxjs');
+            var result = await firstValueFrom(httpClient.get('/assets/exemplary-solution2.json'));
+            return result;
+        }`,
         canFail: false
     } as IFunctionTemplate,
     {
@@ -44,11 +46,11 @@ export default [
             { type: 'array', interface: InterfaceCodes.Order, optional: false, name: 'orders' },
         ],
         name: 'all in one row',
-        implementation: async () => {
+        implementation: `async () => {
             let containerHeight!: number, containerWidth!: number, groups!: IGroup[], orders: IOrder[];
             const algorithm = new AllInOneRowSolver();
             return algorithm.solve(containerHeight!, containerWidth!, groups!, orders!);
-        },
+        }`,
         outputTemplate: InterfaceCodes.Solution,
         requireCustomImplementation: false
     } as IFunctionTemplate,
@@ -63,11 +65,11 @@ export default [
             { type: 'array', interface: InterfaceCodes.Order, optional: false, name: 'orders' },
         ],
         name: 'start left bottom',
-        implementation: async () => {
+        implementation: `async () => {
             let containerHeight!: number, containerWidth!: number, groups!: IGroup[], orders: IOrder[];
             const algorithm = new StartLeftBottomSolver();
             return algorithm.solve(containerHeight!, containerWidth!, groups!, orders!);
-        },
+        }`,
         outputTemplate: InterfaceCodes.Solution,
         requireCustomImplementation: false
     } as IFunctionTemplate,
@@ -82,11 +84,11 @@ export default [
             { type: 'array', interface: InterfaceCodes.Order, optional: false, name: 'orders' },
         ],
         name: 'super flo',
-        implementation: async () => {
+        implementation: `async () => {
             let containerHeight!: number, containerWidth!: number, groups!: IGroup[], orders: IOrder[];
             const algorithm = new SuperFloSolver();
             return algorithm.solve(containerHeight!, containerWidth!, groups!, orders!);
-        },
+        }`,
         outputTemplate: InterfaceCodes.Solution,
         requireCustomImplementation: false
     } as IFunctionTemplate

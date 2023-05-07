@@ -98,6 +98,14 @@ export class CodeEditorComponent implements ControlValueAccessor, OnInit {
 
   private _complete = async (context: CompletionContext) => {
     const nodeBefore = syntaxTree(context.state).resolveInner(context.pos, -1);
+    if(nodeBefore.type.name === ';'){
+      return {
+        from: nodeBefore.from,
+        options: [],
+        filter: false,
+      } as CompletionResult;
+    }
+
     const completions = [
       ...await new RxjsPipeCompletionProvider().provideCompletions(context),
       ...await new HttpClientCompletionProvider().provideCompletions(context),
@@ -107,7 +115,7 @@ export class CodeEditorComponent implements ControlValueAccessor, OnInit {
     return {
       from: nodeBefore.from,
       options: completions,
-      filter: false
+      filter: false,
     } as CompletionResult;
   }
 }

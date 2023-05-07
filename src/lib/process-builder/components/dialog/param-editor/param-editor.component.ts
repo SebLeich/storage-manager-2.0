@@ -66,6 +66,7 @@ export class ParamEditorComponent implements OnInit, OnDestroy {
       });
       this.selectedIndex = 0;
     } else if (typeof func.implementation === 'function') {
+      // @ts-ignore
       let result = func.implementation();
       console.log(result);
     }

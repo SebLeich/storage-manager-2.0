@@ -5,7 +5,7 @@ import { IParamDefinition } from "../process-builder/interfaces/param-definition
 
 export class ProcessBuilderRepository {
 
-    static createPseudoObjectFromIParam(arg: IParam | null | undefined, parent: any = null, config: {
+    static createPseudoObjectFromIParam(arg: IParamDefinition | null | undefined, parent: any = null, config: {
         string: () => string | undefined,
         boolean: () => boolean | undefined,
         number: () => number | undefined,

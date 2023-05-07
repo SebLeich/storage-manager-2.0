@@ -1,3 +1,6 @@
+import { ProcessBuilderRepository } from '@/lib/core/process-builder-repository';
+import { mapIParamsInterfaces } from '@/lib/process-builder/extensions/rxjs/map-i-params-interfaces.rxjs';
+import { selectIParams } from '@/lib/process-builder/store/selectors';
 import { HttpClient } from '@angular/common/http';
 import { EnvironmentInjector, EventEmitter, Injectable } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -6,7 +9,7 @@ import { Store } from '@ngrx/store';
 import { ISolutionWrapper } from '@smgr/interfaces';
 import { addGroups, addSolution, selectSolutionById, setCurrentSolution } from '@smgr/store';
 import moment from 'moment';
-import { distinctUntilChanged, filter, firstValueFrom, map, NEVER, switchMap } from 'rxjs';
+import * as rxjs from 'rxjs';
 import { highlightSolutionNavItem } from 'src/app/store/actions/application.actions';
 import { IPipelineAction } from 'src/lib/pipeline-store/interfaces/pipeline-action.interface';
 import { updateIPipelineActionStatus, updateIPipelineActionStatuses } from 'src/lib/pipeline-store/store/actions/pipeline-action-status.action';
@@ -22,27 +25,27 @@ export class PipeRunnerService {
 
   public consoleOutput = new EventEmitter<{ message: string, class: string }>();
 
-  public selectedPipeline$ = this._route.queryParams.pipe(map(queryParam => queryParam.pipeline), filter(pipeline => !!pipeline));
-  public pipeline$ = this.selectedPipeline$.pipe(switchMap(pipeline => this._store.select(selectPipelineByName(pipeline))));
-  public pipelineName$ = this.pipeline$.pipe(map(pipeline => pipeline?.name));
+  public selectedPipeline$ = this._route.queryParams.pipe(rxjs.map(queryParam => queryParam.pipeline), rxjs.filter(pipeline => !!pipeline));
+  public pipeline$ = this.selectedPipeline$.pipe(rxjs.switchMap(pipeline => this._store.select(selectPipelineByName(pipeline))));
+  public pipelineName$ = this.pipeline$.pipe(rxjs.map(pipeline => pipeline?.name));
   public solution$ = this.pipeline$.pipe(
-    map(pipeline => {
+    rxjs.map(pipeline => {
       return pipeline?.solutionReference;
     }),
-    filter(solutionReference => !!solutionReference),
-    switchMap(solutionReference => this._store.select(selectSolutionById(solutionReference ?? null)))
+    rxjs.filter(solutionReference => !!solutionReference),
+    rxjs.switchMap(solutionReference => this._store.select(selectSolutionById(solutionReference ?? null)))
   );
   public actions$ = this.pipeline$.pipe(
-    switchMap(pipeline => {
+    rxjs.switchMap(pipeline => {
       if (!pipeline) {
-        return NEVER;
+        return rxjs.NEVER;
       }
       return this._store.select(selectPipelineActionByPipelineName(pipeline.name));
     }),
-    map(actions => {
+    rxjs.map(actions => {
       const initialAction = actions.find(actions => actions?.isPipelineStart), sortedActions = [initialAction];
       let currentActions = [initialAction];
-      
+
       while (currentActions.length > 0) {
         const successors = actions.filter(action => currentActions
           .flatMap(action => {
@@ -62,8 +65,8 @@ export class PipeRunnerService {
     })
   );
   public status$ = this.actions$.pipe(
-    switchMap((actions) => this._store.select(selectPipelineActionStates(actions.map(action => action?.identifier).filter(action => action ? true : false) as string[]))),
-    map(states => {
+    rxjs.switchMap((actions) => this._store.select(selectPipelineActionStates(actions.map(action => action?.identifier).filter(action => action ? true : false) as string[]))),
+    rxjs.map(states => {
       if (states.every(status => status.status === 'INITIALIZED')) {
         return 'Ready for run';
       }
@@ -75,14 +78,31 @@ export class PipeRunnerService {
       }
       return 'Running';
     }),
-    distinctUntilChanged((prev, curr) => prev === curr)
+    rxjs.distinctUntilChanged((prev, curr) => prev === curr)
+  );
+  public inputParams$ = this._store.select(selectIParams()).pipe(
+    rxjs.shareReplay(1),
+    rxjs.map(inputParams => inputParams ?? []),
+    mapIParamsInterfaces(this._store),
+    rxjs.map(inputs => {
+      return inputs.reduce((prev, curr) => {
+        if (curr.defaultValue) {
+          prev[curr.normalizedName] = curr.defaultValue;
+        } else {
+          const dummyValue = ProcessBuilderRepository.createPseudoObjectFromIParam(curr);
+          prev[curr.normalizedName] = dummyValue;
+        }
+
+        return prev;
+      }, {} as { [key: string]: object | string | number })
+    })
   );
 
   constructor(private _router: Router, private _route: ActivatedRoute, private _store: Store, public httpClient: HttpClient, private _environmentInjector: EnvironmentInjector, private _snackBar: MatSnackBar) { }
 
   public async renameCurrentPipeline(updatedName: string) {
     const currentPipelineName = await selectSnapshot(this.pipelineName$);
-    if(typeof currentPipelineName === 'string' && updatedName !== currentPipelineName) {
+    if (typeof currentPipelineName === 'string' && updatedName !== currentPipelineName) {
       this._store.dispatch(renameIPipeline(currentPipelineName, updatedName));
       this._router.navigate(['/pipe-runner'], {
         relativeTo: this._route,
@@ -96,49 +116,59 @@ export class PipeRunnerService {
 
   public async run() {
     this.consoleOutput.emit({ message: `--------------- new run ---------------`, class: 'default' });
-    const actions = (await selectSnapshot(this.actions$)).filter(action => action? true: false) as IPipelineAction[];
-    let solutionWrapper: ISolutionWrapper | null = null;
-    const injector: { [key: string]: unknown } = {};
-    let currentAction = actions.find(action => action.isPipelineStart);
+    const actions = (await selectSnapshot(this.actions$)).filter(action => action ? true : false) as IPipelineAction[],
+      injector: { [key: string]: unknown } = {},
+      params = await rxjs.firstValueFrom(this.inputParams$);
+
+    const paramNames = Object.keys(params);
+
+    let solutionWrapper: ISolutionWrapper | null = null,
+      currentAction = actions.find(action => action.isPipelineStart);
+
     while (currentAction) {
       this._store.dispatch(updateIPipelineActionStatus(currentAction.identifier, 'RUNNING'));
 
       try {
+        const rxjsElements = Object.keys(rxjs) as (keyof typeof rxjs)[];
+        const mainMethodStart = currentAction?.executableCode?.indexOf('async () => {') ?? 0;
+        const executableCode = currentAction?.executableCode?.substring(mainMethodStart) ?? undefined;
+        const executableFunction = new Function('httpClient', ...rxjsElements, ...paramNames, executableCode ? `return ${executableCode};` : 'return undefined;');
+        const result = await executableFunction(this.httpClient, ...rxjsElements.map(element => rxjs[element]), ...paramNames.map(paramName => params[paramName]))();
 
-        await this._environmentInjector.runInContext(async () => {
-          const executableFunction = new Function('a', currentAction?.executableCode ?? '');
-          const result = await executableFunction(100);
-          if (currentAction?.ouputParamName) {
-            injector[currentAction.ouputParamName] = result;
-          }
-          if (currentAction!.outputMatchesPipelineOutput) {
-            solutionWrapper = result as ISolutionWrapper;
-            this._store.dispatch(setIPipelineActionSolution(currentAction!.identifier, solutionWrapper!));
-            this._store.dispatch(addSolution({ solution: (solutionWrapper as ISolutionWrapper)!.solution }));
-          }
+        if (currentAction?.ouputParamName) {
+          injector[currentAction.ouputParamName] = result;
+        }
 
-          const representation = typeof solutionWrapper === 'object' ? JSON.stringify(result) : result;
-          this.consoleOutput.emit({
-            message: `${moment().format('HH:mm:ss')}: ${representation}`,
-            class: 'default'
-          });
-          this._store.dispatch(updateIPipelineActionStatus(currentAction!.identifier, 'SUCCEEDED'));
+        if (currentAction!.outputMatchesPipelineOutput) {
+          solutionWrapper = result as ISolutionWrapper;
+          this._store.dispatch(setIPipelineActionSolution(currentAction!.identifier, solutionWrapper!));
+          this._store.dispatch(addSolution({ solution: (solutionWrapper as ISolutionWrapper)!.solution }));
+        }
 
-          const skippedAction = actions.find(action => action.identifier === currentAction?.onError);
-          if (skippedAction) {
-            const actionAndSuccessors = await selectSnapshot(this._store.select(selectPipelineActionAndSuccessors(skippedAction.identifier, 'onSuccess')));
-            this._store.dispatch(updateIPipelineActionStatuses(actionAndSuccessors, 'SKIPPED'));
-          }
-
-          currentAction = actions.find(action => action.identifier === currentAction?.onSuccess);
+        const representation = typeof solutionWrapper === 'object' ? JSON.stringify(result) : result;
+        this.consoleOutput.emit({
+          message: `${moment().format('HH:mm:ss')}: ${representation}`,
+          class: 'default'
         });
+        this._store.dispatch(updateIPipelineActionStatus(currentAction!.identifier, 'SUCCEEDED'));
 
+        const skippedAction = actions.find(action => action.identifier === currentAction?.onError);
+        if (skippedAction) {
+          const actionAndSuccessors = await selectSnapshot(this._store.select(selectPipelineActionAndSuccessors(skippedAction.identifier, 'onSuccess')));
+          this._store.dispatch(updateIPipelineActionStatuses(actionAndSuccessors, 'SKIPPED'));
+        }
+
+        currentAction = actions.find(action => action.identifier === currentAction?.onSuccess);
       } catch (error) {
 
         this.consoleOutput.emit({
           message: `${moment().format('HH:mm:ss')}: ${error}`,
           class: 'error'
         });
+
+        if (!currentAction) {
+          throw ('action not defined');
+        }
 
         this._store.dispatch(updateIPipelineActionStatus(currentAction.identifier, 'FAILED'));
         if (currentAction.onError) {
@@ -167,8 +197,8 @@ export class PipeRunnerService {
     this._store.dispatch(setCurrentSolution({ solution: solutionWrapper.solution }));
     this._store.dispatch(addGroups({ groups: (solutionWrapper as ISolutionWrapper).groups }));
 
-    const pipeName = await firstValueFrom(this.pipelineName$);
-    if(pipeName){
+    const pipeName = await rxjs.firstValueFrom(this.pipelineName$);
+    if (pipeName) {
       this._store.dispatch(setIPipelineSolutionReference(pipeName, solutionWrapper.solution.id));
     }
   }

@@ -28,6 +28,7 @@ import { ITaskCreationFormGroupValue } from '../../interfaces/task-creation-form
 import { IBpmnJS, IFunction, IInputParam, IParam, IParamDefinition } from '@process-builder/interfaces';
 import { BPMN_JS } from '@process-builder/injection';
 import { mapIParamsInterfaces } from '../../extensions/rxjs/map-i-params-interfaces.rxjs';
+import { mapIParamInterfaces } from '../../extensions/rxjs/map-i-param-interfaces.rxjs';
 
 @Injectable()
 export class ProcessBuilderComponentService {
@@ -350,12 +351,13 @@ export class ProcessBuilderComponentService {
     }
 
     if (methodEvaluation.status === MethodEvaluationStatus.ReturnValueFound || outputParam) {
+      const paramInterface = outputParam.interface ?? taskCreationData.outputParamInterface ?? await this._outputParamInterface(methodEvaluation);
       outputParam = {
         ...outputParam,
         name: taskCreationData.outputParamName ?? outputParam.name ?? this._config.dynamicParamDefaultNaming,
         normalizedName: taskCreationData.normalizedOutputParamName ?? outputParam.normalizedName ?? ProcessBuilderRepository.normalizeName(taskCreationData.outputParamName ?? this._config.dynamicParamDefaultNaming),
         defaultValue: outputParam.defaultValue ?? await this._outputParamValue(methodEvaluation, taskCreationData.outputParamValue),
-        interface: outputParam.interface ?? taskCreationData.outputParamInterface
+        interface: paramInterface
       } as IParam;
       if (typeof outputParam.interface === 'string') {
         outputParam.type = 'object';
@@ -419,10 +421,60 @@ export class ProcessBuilderComponentService {
     return 'object';
   }
 
+  private async _outputParamInterface(methodEvaluation: IMethodEvaluationResult) {
+    if (methodEvaluation.injectorNavigationPath) {
+      const pathArray = methodEvaluation.injectorNavigationPath?.split('.');
+      const inputParam = await firstValueFrom(this._store.select(paramSelectors.selectIParams()).pipe(
+        map(inputParams => {
+          const root = pathArray[0];
+          return (inputParams ?? []).find(inputParam => inputParam.normalizedName === root);
+        }),
+        mapIParamInterfaces(this._store)
+      ));
+
+      if(!inputParam) return;
+
+      let currentIndex = 1;
+      let currentMember = /^(.*).{0,1}\[(.*)\]/.exec(pathArray[currentIndex]);
+      let currentMemberName = currentMember?.[1] ?? null;
+      let currentTypeDef = (inputParam.typeDef as IParamDefinition[]).find(definition => definition.name === currentMemberName);
+      
+      while((currentIndex + 1) < pathArray.length ?? 0){
+        if(/^.+\(.*\)$/.test(pathArray[currentIndex])){
+          break;
+        } else if(currentTypeDef?.type === 'array'){
+          if(typeof currentMember?.[2] === 'number'){
+            // array index
+          } else {
+            // array method/member call
+            const call = /^([a-zA-Z0-9]*).{0,1}\((.*)\)/.exec(pathArray.slice(currentIndex).join('.'));
+            const array: any = ProcessBuilderRepository.createPseudoObjectFromIParam(currentTypeDef);
+            const result = call![2]? `${array[call![1]]}(${call![2]})`: array[call![1]];
+            debugger;
+          }
+        } else {
+          currentIndex++;
+          currentMember = /^(.*).{0,1}\[(.*)\]/.exec(pathArray[currentIndex]);
+          currentMemberName = currentMember?.[1] ?? null;
+          currentTypeDef = (inputParam.typeDef as IParamDefinition[]).find(definition => definition.name === currentMemberName);
+        }
+      }
+
+      return currentTypeDef?.interface;
+    }
+  }
+
   private async _outputParamValue(methodEvaluation: IMethodEvaluationResult, defaultValue: object | null = null) {
     if (methodEvaluation.injectorNavigationPath) {
-      const injector = await selectSnapshot(this._store.select(injectValues));
-      const injectedValue = deepObjectLookup(injector, methodEvaluation.injectorNavigationPath);
+      const inputParam = await firstValueFrom(this._store.select(paramSelectors.selectIParams()).pipe(
+        map(inputParams => {
+          const root = methodEvaluation.injectorNavigationPath?.split('.')[0];
+          return (inputParams ?? []).find(inputParam => inputParam.normalizedName === root);
+        }),
+        mapIParamInterfaces(this._store)
+      ));
+      const object = ProcessBuilderRepository.createPseudoObjectFromIParam(inputParam);
+      const injectedValue = deepObjectLookup(object, methodEvaluation.injectorNavigationPath);
       return injectedValue;
     }
     switch (methodEvaluation.type) {
