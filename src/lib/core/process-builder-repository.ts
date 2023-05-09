@@ -1,11 +1,9 @@
 import { Observable, ReplaySubject } from "rxjs";
-import { IInterface } from "../process-builder/interfaces/interface.interface";
-import { IParam } from "../process-builder/interfaces/param.interface";
-import { IParamDefinition } from "../process-builder/interfaces/param-definition.interface";
+import { IInterface, IParamDefinition, IParam } from "@process-builder/interfaces";
 
 export class ProcessBuilderRepository {
 
-    static createPseudoObjectFromIParam(arg: IParamDefinition | null | undefined, parent: any = null, config: {
+    public static createPseudoObjectFromIParam(arg: IParamDefinition | null | undefined, parent: any = null, config: {
         string: () => string | undefined,
         boolean: () => boolean | undefined,
         number: () => number | undefined,
@@ -61,7 +59,7 @@ export class ProcessBuilderRepository {
 
     }
 
-    static createPseudoObjectFromIParamDefinition(arg: IParam | IParamDefinition | null | undefined, parent: any = null, config: {
+    public static createPseudoObjectFromIParamDefinition(arg: IParam | IParamDefinition | null | undefined, parent: any = null, config: {
         string: () => string | undefined,
         boolean: () => boolean | undefined,
         number: () => number | undefined,
@@ -120,7 +118,7 @@ export class ProcessBuilderRepository {
 
     }
 
-    static createPseudoObjectFromIInterface(arg: IInterface | undefined, parent: any = null, config: {
+    public static createPseudoObjectFromIInterface(arg: IInterface | undefined, parent: any = null, config: {
         string: () => string | undefined,
         boolean: () => boolean | undefined,
         number: () => number | undefined,
@@ -174,7 +172,7 @@ export class ProcessBuilderRepository {
 
     }
 
-    static extractObjectTypeDefinition(arg: object | string | number | null | undefined, isRoot: boolean = true, defaultParamName: string = 'unnamed param', isNullable: boolean = false, isOptional: boolean = false, isConstant: boolean = false): IParamDefinition | IParamDefinition[] {
+    public static extractObjectTypeDefinition(arg: object | string | number | null | undefined, isRoot: boolean = true, defaultParamName: string = 'unnamed param', isNullable: boolean = false, isOptional: boolean = false, isConstant: boolean = false): IParamDefinition | IParamDefinition[] {
 
         let rootDef: IParamDefinition = {
             'name': defaultParamName,
@@ -237,7 +235,7 @@ export class ProcessBuilderRepository {
 
     }
 
-    static normalizeName(text?: string | null): string {
+    public static normalizeName(text?: string | null): string {
         if (typeof text !== 'string') {
             return '';
         }
@@ -245,7 +243,7 @@ export class ProcessBuilderRepository {
         return text.substr(0, 1).toLowerCase() + text.substr(1);
     }
 
-    static executeUserMethodAndReturnResponse(doc: string[], injector: any): Observable<any> {
+    public static executeUserMethodAndReturnResponse(doc: string[], injector: any): Observable<any> {
 
         let subject = new ReplaySubject<any>(1);
         let jsText = doc.join('\n');
@@ -268,7 +266,7 @@ export class ProcessBuilderRepository {
         return subject.asObservable();
     }
 
-    static async calculateCustomImplementationOutput(arg: string[] | string | null | undefined | (() => string[] | string | null | undefined), injector: object) {
+    public static async calculateCustomImplementationOutput(arg: string[] | string | null | undefined | (() => string[] | string | null | undefined), injector: object) {
         let customImplementation = typeof arg === 'function' ? arg() : arg;
         if (Array.isArray(customImplementation)) {
             customImplementation = customImplementation.join('\n');

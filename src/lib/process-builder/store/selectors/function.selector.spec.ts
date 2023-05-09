@@ -6,7 +6,7 @@ import { isEqual } from 'lodash';
 import defaultImportsConstant from 'src/app/default-imports.constant';
 import { IFunction } from '../../interfaces/function.interface';
 import { addIFunctions } from '../actions/function.actions';
-import { selectIFunction, selectIFunctions, selectNextId } from './function.selector';
+import { selectIFunction, selectIFunctions, selectNextFunctionIdentifier } from './function.selector';
 
 describe('IFunction Selectors', () => {
 
@@ -52,7 +52,7 @@ describe('IFunction Selectors', () => {
 
   const correctNextId = Math.max(...Object.values(funcs).map(func => func.identifier)) + 1;
   it(`should select the next correct id: ${correctNextId}`, async () => {
-    const selectionResult = await selectSnapshot(store.select(selectNextId()));
+    const selectionResult = await selectSnapshot(store.select(selectNextFunctionIdentifier()));
     expect(selectionResult).toBeTruthy();
     expect(selectionResult).toBe(correctNextId);
   });

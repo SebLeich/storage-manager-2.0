@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
-import { IParam } from 'src/lib/process-builder/interfaces/param.interface';
+import { IParam } from '@process-builder/interfaces';
 
 @Component({
   selector: 'app-param-preview',

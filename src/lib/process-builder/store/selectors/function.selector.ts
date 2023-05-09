@@ -1,6 +1,5 @@
 import { createFeatureSelector, createSelector } from '@ngrx/store';
-import { IFunction } from '../../interfaces/function.interface';
-import { IParam } from '../../interfaces/param.interface';
+import { IFunction, IParam } from '@process-builder/interfaces';
 import * as fromIFunction from '../reducers/function.reducer';
 
 export const selectIFunctionState = createFeatureSelector<fromIFunction.State>(
@@ -37,7 +36,7 @@ export const selectIFunctionsByOutputParam = (arg: IParam | number) => createSel
     }
 );
 
-export const selectNextId = () => createSelector(
+export const selectNextFunctionIdentifier = () => createSelector(
     selectIFunctionState,
     (state: fromIFunction.State) => (state && state.entities ? Math.max(...Object.values(state.entities).filter(x => x ? true : false).map(x => (x as IFunction).identifier), -1) : -1) + 1
 );

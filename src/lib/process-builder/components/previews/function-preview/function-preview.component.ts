@@ -1,9 +1,8 @@
 import { ChangeDetectionStrategy, Component, Input, OnChanges, OnDestroy, SimpleChanges } from '@angular/core';
-import { IFunction } from '../../../interfaces/function.interface';
+import { IFunction } from '@process-builder/interfaces';
 import { forkJoin, map, of, ReplaySubject, switchMap } from 'rxjs';
 import { Store } from '@ngrx/store';
-import { selectIInterface } from 'src/lib/process-builder/store/selectors/interface.selectors';
-import { selectIParam } from 'src/lib/process-builder/store/selectors/param.selectors';
+import { selectIInterface, selectIParam } from '@process-builder/selectors';
 
 @Component({
   selector: 'app-function-preview',

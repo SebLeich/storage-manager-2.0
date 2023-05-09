@@ -10,25 +10,21 @@ import { IConnector } from 'src/lib/bpmn-io/interfaces/connector.interface';
 import { CodemirrorRepository } from 'src/lib/core/codemirror.repository';
 import { selectSnapshot } from '../../globals/select-snapshot';
 import { Store } from '@ngrx/store';
-import * as interfaceSelectors from '../../store/selectors/interface.selectors';
-import * as paramSelectors from '../../store/selectors/param.selectors';
-import * as functionSelectors from '../../store/selectors/function.selector';
 import defaultImplementation from '../../globals/default-implementation';
 import { IMethodEvaluationResult } from '../../interfaces/method-evaluation-result.interface';
 import { MethodEvaluationStatus } from '../../globals/method-evaluation-status';
 import { ProcessBuilderRepository } from 'src/lib/core/process-builder-repository';
-import { upsertIParam } from '../../store/actions/param.actions';
+import { removeIFunction, setIFunctionsCanFailFlag, upsertIFunction, upsertIParam } from '@process-builder/actions';
 import shapeTypes from 'src/lib/bpmn-io/shape-types';
-import { removeIFunction, setIFunctionsCanFailFlag, upsertIFunction } from '../../store/actions/function.actions';
 import { IElement } from 'src/lib/bpmn-io/interfaces/element.interface';
 import { deepObjectLookup } from 'src/lib/shared/globals/deep-object-lookup.function';
-import { injectValues } from '../../store/selectors/injection-context.selectors';
 import { ConfirmationService } from 'src/lib/confirmation/services/confirmation.service';
 import { ITaskCreationFormGroupValue } from '../../interfaces/task-creation-form-group-value.interface';
 import { IBpmnJS, IFunction, IInputParam, IParam, IParamDefinition } from '@process-builder/interfaces';
 import { BPMN_JS } from '@process-builder/injection';
 import { mapIParamsInterfaces } from '../../extensions/rxjs/map-i-params-interfaces.rxjs';
 import { mapIParamInterfaces } from '../../extensions/rxjs/map-i-param-interfaces.rxjs';
+import { selectIFunction, selectIFunctions, selectIInterface, selectIParam, selectIParams, selectIParamsByNormalizedName, selectNextFunctionIdentifier, selectNextParameterIdentifier } from '@process-builder/selectors';
 
 @Injectable()
 export class ProcessBuilderComponentService {
@@ -81,7 +77,7 @@ export class ProcessBuilderComponentService {
 
     let referencedFunction: IFunction | undefined | null, outputParam: IParam | undefined, gatewayShape: IElement | undefined;
     if (taskCreationData) {
-      referencedFunction = await selectSnapshot(this._store.select(functionSelectors.selectIFunction(taskCreationData.functionIdentifier)));
+      referencedFunction = await selectSnapshot(this._store.select(selectIFunction(taskCreationData.functionIdentifier)));
     }
 
     const connector = this._bpmnJsService.elementRegistryModule.get(taskCreationPayload.configureIncomingErrorGatewaySequenceFlow?.id ?? '') as IConnector;
@@ -104,7 +100,7 @@ export class ProcessBuilderComponentService {
       return;
     }
 
-    const nextParamId = await selectSnapshot(this._store.select(paramSelectors.selectNextParameterIdentifier()));
+    const nextParamId = await selectSnapshot(this._store.select(selectNextParameterIdentifier()));
     const code = taskCreationData.implementation ? taskCreationData.implementation.text : defaultImplementation;
     const methodEvaluation = CodemirrorRepository.evaluateCustomMethod(undefined, code);
 
@@ -123,11 +119,11 @@ export class ProcessBuilderComponentService {
       this._updateBpmnModelElementActivityIdentifier(taskCreationPayload, referencedFunction);
 
       if (typeof referencedFunction.output === 'number') {
-        outputParam = (await selectSnapshot(this._store.select(paramSelectors.selectIParam(referencedFunction.output)))) ?? { identifier: nextParamId } as IParam;
+        outputParam = (await selectSnapshot(this._store.select(selectIParam(referencedFunction.output)))) ?? { identifier: nextParamId } as IParam;
         const outputParamResult = await this._handleFunctionOutputParam(taskCreationData, taskCreationPayload, outputParam, methodEvaluation);
         outputParam = outputParamResult?.outputParam ?? outputParam;
       } else if (typeof referencedFunction.outputTemplate === 'string') {
-        const iFace = await selectSnapshot(this._store.select(interfaceSelectors.selectIInterface(referencedFunction.outputTemplate)));
+        const iFace = await selectSnapshot(this._store.select(selectIInterface(referencedFunction.outputTemplate)));
         outputParam = { identifier: nextParamId, interface: iFace?.identifier, name: iFace?.name, normalizedName: iFace?.normalizedName } as IParam;
         const outputParamResult = await this._handleFunctionOutputParam(taskCreationData, taskCreationPayload, outputParam, methodEvaluation);
         outputParam = outputParamResult?.outputParam ?? outputParam;
@@ -153,7 +149,7 @@ export class ProcessBuilderComponentService {
       .map(incoming => incoming.source);
 
     const referencedFunctionIdentifiers = comingFromActivities.map(activity => BPMNJsRepository.getSLPBExtension(activity.businessObject, 'ActivityExtension', (ext) => ext.activityFunctionId));
-    const referencedFunctions = await selectSnapshot(this._store.select(functionSelectors.selectIFunctions(referencedFunctionIdentifiers)));
+    const referencedFunctions = await selectSnapshot(this._store.select(selectIFunctions(referencedFunctionIdentifiers)));
 
     const result = await this._confirmationService.requestConfirmation(
       `${referencedFunctions.length === 1 ? 'One method' : referencedFunctions.length + ' methods'} will be changed`,
@@ -170,7 +166,7 @@ export class ProcessBuilderComponentService {
 
   public async tryDeleteFunction(element: IElement) {
     const referencedFunctionIdentifier = BPMNJsRepository.getSLPBExtension(element.businessObject, 'ActivityExtension', (ext) => ext.activityFunctionId);
-    const func = await selectSnapshot(this._store.select(functionSelectors.selectIFunction(referencedFunctionIdentifier)));
+    const func = await selectSnapshot(this._store.select(selectIFunction(referencedFunctionIdentifier)));
 
     const result = func?.customImplementation ? await this._confirmationService.requestConfirmation(
       `${func.normalizedName} will be deleted`,
@@ -279,7 +275,7 @@ export class ProcessBuilderComponentService {
 
   private async _applyFunctionConfiguration(taskCreationData: ITaskCreationFormGroupValue, referencedFunction: IFunction, methodEvaluation: IMethodEvaluationResult, outputParamId: number) {
     const inputParams = await this._extractInputParams(taskCreationData, referencedFunction);
-    const functionIdentifier = referencedFunction.requireCustomImplementation ? await selectSnapshot(this._store.select(functionSelectors.selectNextId())) : referencedFunction.identifier;
+    const functionIdentifier = referencedFunction.requireCustomImplementation ? await selectSnapshot(this._store.select(selectNextFunctionIdentifier())) : referencedFunction.identifier;
     const resultingFunction = {
       customImplementation: taskCreationData.implementation?.text ?? undefined,
       canFail: taskCreationData.canFail ?? false,
@@ -319,7 +315,7 @@ export class ProcessBuilderComponentService {
 
       const usedInputParamEntities = await selectSnapshot(
         this._store.select(
-          paramSelectors.selectIParamsByNormalizedName(
+          selectIParamsByNormalizedName(
             usedInputParams.filter(
               usedInputParam => usedInputParam.varName === 'injector'
                 && typeof usedInputParam.propertyName === 'string'
@@ -385,7 +381,7 @@ export class ProcessBuilderComponentService {
 
   private async _methodEvaluationTypeToOutputType(element: IElement, methodEvaluation?: IMethodEvaluationResult) {
     if (methodEvaluation?.injectorNavigationPath) {
-      const inputParams = await firstValueFrom(this._store.select(paramSelectors.selectIParams(BPMNJsRepository.getAvailableInputParams(element))).pipe(
+      const inputParams = await firstValueFrom(this._store.select(selectIParams(BPMNJsRepository.getAvailableInputParams(element))).pipe(
         shareReplay(1),
         map(inputParams => inputParams ?? []),
         mapIParamsInterfaces(this._store)
@@ -424,7 +420,7 @@ export class ProcessBuilderComponentService {
   private async _outputParamInterface(methodEvaluation: IMethodEvaluationResult) {
     if (methodEvaluation.injectorNavigationPath) {
       const pathArray = methodEvaluation.injectorNavigationPath?.split('.');
-      const inputParam = await firstValueFrom(this._store.select(paramSelectors.selectIParams()).pipe(
+      const inputParam = await firstValueFrom(this._store.select(selectIParams()).pipe(
         map(inputParams => {
           const root = pathArray[0];
           return (inputParams ?? []).find(inputParam => inputParam.normalizedName === root);
@@ -438,7 +434,7 @@ export class ProcessBuilderComponentService {
       let currentMember = /^(.*).{0,1}\[(.*)\]/.exec(pathArray[currentIndex]);
       let currentMemberName = currentMember?.[1] ?? null;
       let currentTypeDef = (inputParam.typeDef as IParamDefinition[]).find(definition => definition.name === currentMemberName);
-      
+
       while((currentIndex + 1) < pathArray.length ?? 0){
         if(/^.+\(.*\)$/.test(pathArray[currentIndex])){
           break;
@@ -466,7 +462,7 @@ export class ProcessBuilderComponentService {
 
   private async _outputParamValue(methodEvaluation: IMethodEvaluationResult, defaultValue: object | null = null) {
     if (methodEvaluation.injectorNavigationPath) {
-      const inputParam = await firstValueFrom(this._store.select(paramSelectors.selectIParams()).pipe(
+      const inputParam = await firstValueFrom(this._store.select(selectIParams()).pipe(
         map(inputParams => {
           const root = methodEvaluation.injectorNavigationPath?.split('.')[0];
           return (inputParams ?? []).find(inputParam => inputParam.normalizedName === root);

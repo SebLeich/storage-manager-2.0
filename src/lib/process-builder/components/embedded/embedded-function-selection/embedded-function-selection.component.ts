@@ -1,14 +1,12 @@
-import { Component, ElementRef, Input, OnDestroy, OnInit, QueryList, ViewChild, ViewChildren, ViewContainerRef } from '@angular/core';
-import { ReplaySubject, Subscription } from 'rxjs';
+import { Component, ElementRef, Input, QueryList, ViewChild, ViewChildren, ViewContainerRef } from '@angular/core';
 import { ParamCodes } from 'src/config/param-codes';
 import { IEmbeddedView } from 'src/lib/process-builder/classes/embedded-view';
-import { IFunction } from 'src/lib/process-builder/interfaces/function.interface';
+import { IInputParam, IFunction } from '@process-builder/interfaces';
 import { Store } from '@ngrx/store';
 import { selectIFunctions } from 'src/lib/process-builder/store/selectors/function.selector';
 import { FunctionPreviewComponent } from '../../previews/function-preview/function-preview.component';
 import { ControlContainer, FormControl } from '@angular/forms';
-import { IInputParam } from 'src/lib/process-builder/interfaces/input-param.interface';
-import { delay, map, startWith } from 'rxjs/operators';
+import { map, startWith } from 'rxjs/operators';
 import * as fromIFunctionState from 'src/lib/process-builder/store/reducers/function.reducer';
 import { removeIFunction } from 'src/lib/process-builder/store/actions/function.actions';
 import { combineLatest } from 'rxjs/internal/observable/combineLatest';
@@ -22,7 +20,7 @@ import { showListAnimation } from 'src/lib/shared/animations/show-list';
   styleUrls: ['./embedded-function-selection.component.scss'],
   animations: [showAnimation, showListAnimation]
 })
-export class EmbeddedFunctionSelectionComponent implements IEmbeddedView, OnDestroy, OnInit {
+export class EmbeddedFunctionSelectionComponent implements IEmbeddedView {
 
   @Input() public inputParams!: ParamCodes | ParamCodes[] | null;
 
@@ -40,9 +38,6 @@ export class EmbeddedFunctionSelectionComponent implements IEmbeddedView, OnDest
   }
 
   public searchinputExpanded = false;
-
-  private _availableFunctions = new ReplaySubject<IFunction[]>(1);
-  public availableFunctions$ = this._availableFunctions.asObservable();
 
   private _allFunctions$ = this._store.select(selectIFunctions());
   public functions$ = combineLatest([this._allFunctions$, this._filter$]).pipe(map(([functions, filter]) => {
@@ -73,22 +68,7 @@ export class EmbeddedFunctionSelectionComponent implements IEmbeddedView, OnDest
   public functionTemplates$ = this.functions$.pipe(map(funcs => funcs.filter(func => func.requireCustomImplementation)));
   public customFunctions$ = this.functions$.pipe(map(funcs => funcs.filter(func => func.customImplementation)));
 
-  private _subscription: Subscription = new Subscription();
-
   constructor(private _store: Store<fromIFunctionState.State>, private _controlContainer: ControlContainer) { }
-
-  public ngOnDestroy = () => this._subscription.unsubscribe();
-
-  public ngOnInit(): void {
-    this._subscription.add(...[
-      this.availableFunctions$.pipe(delay(800)).subscribe(() => {
-        const ref = this.activeFunctionWrappers.find(x => (x.element.nativeElement as HTMLDivElement).hasAttribute('active'));
-        if (ref) {
-          ref.element.nativeElement.scrollIntoView({ behavior: 'smooth' });
-        }
-      })
-    ])
-  }
 
   public removeFunction(func: IFunction, evt?: Event) {
     if (evt) {
@@ -107,6 +87,13 @@ export class EmbeddedFunctionSelectionComponent implements IEmbeddedView, OnDest
   public toggleSearchInput(expand?: boolean) {
     this.searchinputExpanded = typeof expand === 'boolean' ? expand : !this.searchinputExpanded;
     this._searchInput.nativeElement[this.searchinputExpanded ? 'focus' : 'blur']();
+  }
+
+  private _scrollToActiveFunction() {
+    const ref = this.activeFunctionWrappers.find(x => (x.element.nativeElement as HTMLDivElement).hasAttribute('active'));
+    if (ref) {
+      ref.element.nativeElement.scrollIntoView({ behavior: 'smooth' });
+    }
   }
 
 }

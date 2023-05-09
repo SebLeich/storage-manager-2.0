@@ -12,7 +12,6 @@ import { MethodEvaluationStatus } from 'src/lib/process-builder/globals/method-e
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { IProcessBuilderConfig, PROCESS_BUILDER_CONFIG_TOKEN } from 'src/lib/process-builder/interfaces/process-builder-config.interface';
 import { debounceTime, distinctUntilChanged, filter, map, startWith, switchMap, throttleTime } from 'rxjs/operators';
-import { firstValueFrom } from 'rxjs';
 import { selectSnapshot } from 'src/lib/process-builder/globals/select-snapshot';
 import { GatewayType } from 'src/lib/process-builder/types/gateway.type';
 import { ParamCodes } from 'src/config/param-codes';
