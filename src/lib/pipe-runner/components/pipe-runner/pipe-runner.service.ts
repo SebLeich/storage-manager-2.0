@@ -133,7 +133,11 @@ export class PipeRunnerService {
         const mainMethodStart = currentAction?.executableCode?.indexOf('async () => {') ?? 0;
         const executableCode = currentAction?.executableCode?.substring(mainMethodStart) ?? undefined;
         const executableFunction = new Function('httpClient', ...rxjsElements, ...paramNames, executableCode ? `return ${executableCode};` : 'return undefined;');
-        const result = await executableFunction(this.httpClient, ...rxjsElements.map(element => rxjs[element]), ...paramNames.map(paramName => params[paramName]))();
+        const result = await executableFunction(
+          this.httpClient,
+          ...rxjsElements.map(element => rxjs[element]),
+          ...paramNames.map(paramName => typeof injector[paramName] === 'undefined' ? params[paramName] : injector[paramName])
+        )();
 
         if (currentAction?.ouputParamName) {
           injector[currentAction.ouputParamName] = result;

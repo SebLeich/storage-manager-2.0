@@ -3,7 +3,7 @@
     <div class="header-wrapper">
         <mat-icon class="icon">support</mat-icon>
         <div class="headline">
-            {{data.headline}}
+            {{ data.headline }}
         </div>
         <ng-container *ngIf="data.closeStatus !== 'HIDDEN'">
             <button [disabled]="data.closeStatus === 'DISABLED'" mat-icon-button class="dialog-close-control" (click)="abort()">

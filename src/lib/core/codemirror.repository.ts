@@ -78,24 +78,48 @@ export class CodemirrorRepository {
                 return { status: MethodEvaluationStatus.ReturnValueFound, detectedValue: undefined, type: 'undefined', valueIsDefinite: true };
             }
 
-            let dependsOnInjector = representation === 'injector';
-            if (!dependsOnInjector) {
-                const variableValue = this.resolveVariableValue(state, block!, representation);
-                if (variableValue) {
-                    let result = this.getEvaluationResult(state, variableValue, block, injector);
-                    result.valueIsDefinite = false;
-                    return result;
-                }
-
-                return { status: MethodEvaluationStatus.ReturnValueFound, valueIsDefinite: false };
+            const variableValue = this.resolveVariableValue(state, block!, representation);
+            if (variableValue) {
+                let result = this.getEvaluationResult(state, variableValue, block, injector);
+                result.valueIsDefinite = false;
+                return result;
             }
-            return { status: MethodEvaluationStatus.ReturnValueFound, injectorNavigationPath: representation, type: 'variable', valueIsDefinite: true, detectedValue: injector };
+
+            return { status: MethodEvaluationStatus.ReturnValueFound, valueIsDefinite: false };    
+        }
+
+        const variableDeclaration = parent.getChild('VariableDeclaration');
+        if (variableDeclaration) {
+            const representation = state.sliceDoc(variableDeclaration?.from, variableDeclaration?.to);
+
+            const equals = variableDeclaration.getChild('Equals');
+            if (!equals) {
+                return { status: MethodEvaluationStatus.ReturnValueFound, valueIsDefinite: false };   
+            }
+
+            let result = this.getEvaluationResult(state, equals.nextSibling as SyntaxNode, block, injector);
+            result.valueIsDefinite = false;
+            return result; 
         }
 
         const unaryExpression = parent.getChild('UnaryExpression');
         if (unaryExpression) {
             // method call
             const representation = state.sliceDoc(unaryExpression?.from, unaryExpression?.to);
+            return { status: MethodEvaluationStatus.ReturnValueFound, valueIsDefinite: false, unaryExpression: representation };
+        }
+
+        const binaryExpression = parent.getChild('BinaryExpression');
+        if (binaryExpression) {
+            // calclation
+            const representation = state.sliceDoc(binaryExpression?.from, binaryExpression?.to);
+            return { status: MethodEvaluationStatus.ReturnValueFound, valueIsDefinite: false, unaryExpression: representation };
+        }
+
+        const callExpression = parent.getChild('CallExpression');
+        if (callExpression) {
+            // calclation
+            const representation = state.sliceDoc(callExpression?.from, callExpression?.to);
             return { status: MethodEvaluationStatus.ReturnValueFound, valueIsDefinite: false, unaryExpression: representation };
         }
 
