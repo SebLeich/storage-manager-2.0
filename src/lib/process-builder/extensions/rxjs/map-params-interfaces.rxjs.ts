@@ -37,7 +37,6 @@ export const mapIParamsInterfaces: ((store: Store) => ((obs: Observable<IParam[]
                             ])
                         ),
                         map(([param, typeDef]: [IParam, IParamDefinition[]]) => {
-                            debugger;
                             return {
                                 ...param,
                                 typeDef: typeDef

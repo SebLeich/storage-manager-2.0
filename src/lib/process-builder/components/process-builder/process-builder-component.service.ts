@@ -22,8 +22,8 @@ import { ConfirmationService } from 'src/lib/confirmation/services/confirmation.
 import { ITaskCreationFormGroupValue } from '../../interfaces/task-creation-form-group-value.interface';
 import { IBpmnJS, IFunction, IInputParam, IParam, IParamDefinition } from '@process-builder/interfaces';
 import { BPMN_JS } from '@process-builder/injection';
-import { mapIParamsInterfaces } from '../../extensions/rxjs/map-i-params-interfaces.rxjs';
-import { mapIParamInterfaces } from '../../extensions/rxjs/map-i-param-interfaces.rxjs';
+import { mapIParamsInterfaces } from '../../extensions/rxjs/map-params-interfaces.rxjs';
+import { mapIParamInterfaces } from '../../extensions/rxjs/map-param-interfaces.rxjs';
 import { selectIFunction, selectIFunctions, selectIInterface, selectIParam, selectIParams, selectIParamsByNormalizedName, selectNextFunctionIdentifier, selectNextParameterIdentifier } from '@process-builder/selectors';
 
 @Injectable()

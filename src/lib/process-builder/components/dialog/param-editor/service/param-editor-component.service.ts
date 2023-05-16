@@ -12,7 +12,7 @@ import { IParam } from 'src/lib/process-builder/interfaces/param.interface';
 import { selectIFunctionsByOutputParam } from 'src/lib/process-builder/store/selectors/function.selector';
 import { BPMNJsRepository } from 'src/lib/core/bpmn-js.repository';
 import { ProcessBuilderRepository } from 'src/lib/core/process-builder-repository';
-import { mapIParamInterfaces } from 'src/lib/process-builder/extensions/rxjs/map-i-param-interfaces.rxjs';
+import { mapIParamInterfaces } from '@/lib/process-builder/extensions/rxjs/map-param-interfaces.rxjs';
 import { upsertProvider } from 'src/lib/process-builder/store/actions/injection-context.actions';
 
 @Injectable({

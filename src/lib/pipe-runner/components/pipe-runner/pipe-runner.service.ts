@@ -1,5 +1,5 @@
 import { ProcessBuilderRepository } from '@/lib/core/process-builder-repository';
-import { mapIParamsInterfaces } from '@/lib/process-builder/extensions/rxjs/map-i-params-interfaces.rxjs';
+import { mapIParamsInterfaces } from '@/lib/process-builder/extensions/rxjs/map-params-interfaces.rxjs';
 import { selectIParams } from '@/lib/process-builder/store/selectors';
 import { HttpClient } from '@angular/common/http';
 import { EnvironmentInjector, EventEmitter, Injectable } from '@angular/core';

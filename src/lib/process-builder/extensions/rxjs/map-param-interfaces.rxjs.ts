@@ -4,7 +4,7 @@ import { flatMap, map, switchMap, take, tap } from "rxjs/operators";
 import { IParam } from "../../interfaces/param.interface";
 import { IParamDefinition } from "../../interfaces/param-definition.interface";
 import { selectIInterface } from "../../store/selectors/interface.selectors";
-import { mapIParamsInterfaces } from "./map-i-params-interfaces.rxjs";
+import { mapIParamsInterfaces } from "./map-params-interfaces.rxjs";
 
 export const mapIParamInterfaces = (store: Store) => {
     return (obs: Observable<IParam | null | undefined>) => obs.pipe(

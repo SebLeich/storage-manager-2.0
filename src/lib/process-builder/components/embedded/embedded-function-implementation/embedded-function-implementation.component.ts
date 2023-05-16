@@ -7,7 +7,7 @@ import { debounceTime, map, shareReplay, tap } from 'rxjs/operators';
 import { ControlContainer, FormControl, UntypedFormControl } from '@angular/forms';
 import { Store } from '@ngrx/store';
 import { selectIParams } from '@process-builder/selectors';
-import { mapIParamsInterfaces } from 'src/lib/process-builder/extensions/rxjs/map-i-params-interfaces.rxjs';
+import { mapIParamsInterfaces } from '@/lib/process-builder/extensions/rxjs/map-params-interfaces.rxjs';
 import { ProcessBuilderService } from 'src/lib/process-builder/services/process-builder.service';
 import { TaskCreationFormGroup } from 'src/lib/process-builder/interfaces/task-creation-form-group-value.interface';
 import { IProcessBuilderConfig, PROCESS_BUILDER_CONFIG_TOKEN } from 'src/lib/process-builder/interfaces/process-builder-config.interface';
