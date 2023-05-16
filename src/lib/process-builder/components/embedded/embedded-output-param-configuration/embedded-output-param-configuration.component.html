@@ -7,22 +7,22 @@
         <div class="section select-existing-interface">
             <mat-form-field appearance="outline" class="mat-form-field-outline-white-bg">
                 <mat-label class="label">Template</mat-label>
-                <mat-select formControlName="outputParamInterface">
+                <mat-select formControlName="interface">
+                    <mat-option [value]="null">Keine Auswahl</mat-option>
                     <mat-option *ngFor="let interface of (interfaces$|async)" [value]="interface.identifier">
                         {{interface.name}}
                     </mat-option>
                 </mat-select>
             </mat-form-field>
             <div class="interface-preview">
-                <div class="headline">exemplary data</div>
+                <div class="headline">exemplary data ({{formGroup.controls.interface?.value}})</div>
                 <pre>{{(interfaceDummyObject$|async) | json}}</pre>
             </div>
         </div>
         <div class="section further-options">
-            <div class="option">
+            <div class="option" (click)="sampleData()">
                 <div class="headline">Data sampling</div>
-                <div class="subtitle">Use the data sampling tool to run yout code and automatically create an data
-                    template</div>
+                <div class="subtitle">Utilize the data sampling tool to execute your code and effortlessly generate a data template automatically</div>
             </div>
             <div class="option">
                 <div class="headline">Manually design interface</div>

@@ -194,7 +194,7 @@ export class ProcessBuilderComponentService {
     if (resultingFunction.inputTemplates || resultingFunction.inputTemplates === 'dynamic') {
       const inputParams = Array.isArray(resultingFunction.inputTemplates) ? [...resultingFunction.inputTemplates] : [];
       if (typeof taskCreationData.inputParam === 'number') {
-        inputParams.push({ optional: false, interface: taskCreationData.outputParamInterface ?? undefined, name: 'my input', type: 'string' });
+        inputParams.push({ optional: false, interface: taskCreationData.interface ?? undefined, name: 'my input', type: 'string' });
       }
 
       if (configureActivity) {
@@ -305,8 +305,8 @@ export class ProcessBuilderComponentService {
 
   private async _extractInputParams(taskCreationData: ITaskCreationFormGroupValue, referencedFunction: IFunction): Promise<IInputParam[]> {
     const inputParams: IInputParam[] = [];
-    if (referencedFunction.inputTemplates === 'dynamic' && typeof taskCreationData.outputParamInterface === 'string') {
-      inputParams.push({ optional: false, interface: taskCreationData.outputParamInterface, name: taskCreationData.normalizedName, type: 'object' });
+    if (referencedFunction.inputTemplates === 'dynamic' && typeof taskCreationData.interface === 'string') {
+      inputParams.push({ optional: false, interface: taskCreationData.interface, name: taskCreationData.normalizedName, type: 'object' });
     }
     else if (referencedFunction.requireCustomImplementation || referencedFunction.customImplementation) {
       const usedInputParams: { varName: string, propertyName: string | null }[] = taskCreationData.implementation
@@ -347,7 +347,7 @@ export class ProcessBuilderComponentService {
     }
 
     if (methodEvaluation.status === MethodEvaluationStatus.ReturnValueFound || outputParam) {
-      const paramInterface = outputParam.interface ?? taskCreationData.outputParamInterface ?? await this._outputParamInterface(methodEvaluation);
+      const paramInterface = outputParam.interface ?? taskCreationData.interface ?? await this._outputParamInterface(methodEvaluation);
       outputParam = {
         ...outputParam,
         name: taskCreationData.outputParamName ?? outputParam.name ?? this._config.dynamicParamDefaultNaming,

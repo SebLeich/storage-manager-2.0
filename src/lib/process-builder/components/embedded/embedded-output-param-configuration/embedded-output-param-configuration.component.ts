@@ -15,15 +15,15 @@ import { ProcessBuilderRepository } from 'src/lib/core/process-builder-repositor
 export class EmbeddedOutputParamConfigurationComponent implements IEmbeddedView {
 
   public interfaces$ = this._store.select(selectIInterfaces());
-  public currentInterface$ = this.formGroup.controls.outputParamInterface?.valueChanges.pipe(
-    startWith(this.formGroup.controls.outputParamInterface.value),
+  public currentInterface$ = this.formGroup.controls.interface?.valueChanges.pipe(
+    startWith(this.formGroup.controls.interface.value),
     switchMap(interfaceIdentifier => this._store.select(selectIInterface(interfaceIdentifier)))
   );
   public interfaceDummyObject$ = this.currentInterface$?.pipe(map((iFace) => {
     if (iFace) {
       return ProcessBuilderRepository.createPseudoObjectFromIInterface(iFace ?? undefined);
     }
-    
+
     return null;
   }));
 
@@ -32,5 +32,9 @@ export class EmbeddedOutputParamConfigurationComponent implements IEmbeddedView 
   }
 
   constructor(private _controlContainer: ControlContainer, private _store: Store) { }
+
+  public sampleData() {
+    this.formGroup.controls.interface?.setValue(null);
+  }
 
 }

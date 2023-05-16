@@ -4,7 +4,7 @@ import { IInterface } from '../../interfaces/interface.interface';
 import { addIInterface, addIInterfaces, removeIInterface, updateIInterface, upsertIInterface, upsertIInterfaces } from '../actions/interface.actions';
 import { v4 as generateGuid } from 'uuid';
 
-export const featureKey = 'Interface';
+export const featureKey = 'ifaces';
 
 function sortByIdentifier(a: IInterface, b: IInterface) {
   return a.identifier > b.identifier ? 1 : -1;
@@ -73,8 +73,3 @@ export const reducer = createReducer(
   }),
 
 );
-
-export const nextId = (state: State) => {
-  const ids = state && state.entities ? (Object.values(state.entities) as IInterface[]).map(x => x.identifier) : [];
-  return ids.length === 0 ? 0 : Math.max(...(ids.map(x => typeof x === 'number' ? x : 0))) + 1;
-}

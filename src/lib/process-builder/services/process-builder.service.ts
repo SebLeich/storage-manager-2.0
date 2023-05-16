@@ -77,6 +77,7 @@ export class ProcessBuilderService {
     localStorage.removeItem('funcs');
     localStorage.removeItem('models');
     localStorage.removeItem('params');
+    localStorage.removeItem('ifaces');
     this._reloadLocation();
   }
 

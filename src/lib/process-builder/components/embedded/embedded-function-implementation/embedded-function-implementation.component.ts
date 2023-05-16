@@ -3,7 +3,7 @@ import { defer, NEVER, startWith, Subscription } from 'rxjs';
 import { ProcessBuilderRepository } from 'src/lib/core/process-builder-repository';
 import { IEmbeddedView } from 'src/lib/process-builder/classes/embedded-view';
 import { MethodEvaluationStatus } from 'src/lib/process-builder/globals/method-evaluation-status';
-import { debounceTime, map, shareReplay } from 'rxjs/operators';
+import { debounceTime, map, shareReplay, tap } from 'rxjs/operators';
 import { ControlContainer, FormControl, UntypedFormControl } from '@angular/forms';
 import { Store } from '@ngrx/store';
 import { selectIParams } from '@process-builder/selectors';
@@ -27,6 +27,9 @@ export class EmbeddedFunctionImplementationComponent implements IEmbeddedView, A
     shareReplay(1),
     map(inputParams => inputParams ?? []),
     mapIParamsInterfaces(this._store),
+    tap(() => {
+      debugger;
+    }),
     map(inputs => {
       return inputs.reduce((prev, curr) => {
         if (curr.defaultValue) {

@@ -10,13 +10,13 @@ export interface ITaskCreationFormGroupValue {
     functionIdentifier: number | null;
     implementation: ITextLeaf | null;
     inputParam: ParamCodes[] | number | null;
+    interface: string | null;
     isProcessOutput: boolean;
     name: string;
     normalizedOutputParamName: string;
     normalizedName: string;
     outputParamName: string;
     outputParamValue: IParam | IParamDefinition[] | null;
-    outputParamInterface: string | null;
     requireCustomImplementation: boolean;
 }
 

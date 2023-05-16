@@ -165,7 +165,7 @@ const routes: Routes = [
     { provide: PROCESS_BUILDER_CONFIG_TOKEN, useValue: PROCESS_BUILDER_CONFIG },
     { provide: PARAMS_CONFIG_TOKEN, useFactory: () => PARAMS_CONFIG },
     { provide: FUNCTIONS_CONFIG_TOKEN, useValue: FUNCTIONS_CONFIG },
-    { provide: INTERFACES_CONFIG_TOKEN, useValue: INTERFACES_CONFIG },
+    { provide: INTERFACES_CONFIG_TOKEN, useFactory: () => INTERFACES_CONFIG },
   ],
   bootstrap: [AppComponent]
 })

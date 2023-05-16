@@ -17,7 +17,7 @@ describe('EmbeddedOutputParamConfigurationComponent', () => {
         {
           provide: ControlContainer,
           useValue: {
-            control: new FormGroup({ 'outputParamInterface': new FormControl(null) }) as TaskCreationFormGroup
+            control: new FormGroup({ 'interface': new FormControl(null) }) as TaskCreationFormGroup
           }
         }
       ]
