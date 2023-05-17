@@ -1,59 +1,73 @@
 @import "src/lib/scss/button";
 
 .body {
-    width: min(80vw, 1200px);
-    max-width: 1200px;
-    height: 80vh;
-    overflow: hidden;
-    box-sizing: border-box;
-    display: flex;
-    flex-direction: column;
-}
+  width: min(80vw, 1200px);
+  height: 80vh;
+  overflow: hidden;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
 
-.dialog-body {
-    overflow: hidden;
-}
-
-.content-wrapper {
+  .content-wrapper {
     height: calc(80vh - 153px);
     width: 100%;
     box-sizing: border-box;
     flex: 1;
     overflow-y: auto;
     background-color: #f8f8f8;
+  }
+}
+
+@media only screen and (max-width: 600px) {
+  .body {
+    width: 100vw;
+    height: 100vh;
+
+    .content-wrapper {
+        height: calc(80vh - 20px);
+      }
+  }
+
+  ::ng-deep .cdk-global-scrollblock {
+    overflow: unset;
+  }
+}
+
+.dialog-body {
+  overflow: hidden;
 }
 
 .footer {
-    height: 40px;
-    background-color: #fafafa;
-    display: flex;
-    align-items: center;
-    padding: 0px 0.5rem;
-    border-top: 1px solid gainsboro;
+  height: 40px;
+  background-color: #fafafa;
+  display: flex;
+  align-items: center;
+  padding: 0px 0.5rem;
+  border-top: 1px solid gainsboro;
 }
 
 .footer .control {
-    margin-left: 0.1rem;
+  margin-left: 0.1rem;
 }
 
 .footer .control.primary {
-    @include default-button;
+  @include default-button;
 }
 
 .footer .control.secondary {
-    @include secondary-button-2;
+  @include secondary-button-2;
 }
 
 .footer .control.disabled {
-    pointer-events: none;
-    opacity: 0.5;
+  pointer-events: none;
+  opacity: 0.5;
 }
 
 .status-message {
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    font-size: 0.8rem;
-    font-family: monospace;
-    max-width: 400px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 0.8rem;
+  font-family: monospace;
+  max-width: 400px;
 }

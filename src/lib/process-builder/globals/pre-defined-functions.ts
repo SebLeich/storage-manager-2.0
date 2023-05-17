@@ -29,7 +29,6 @@ export class PredefinedFunctionTemplates {
             ],
             name: name,
             implementation: `async () => {
-                let delay!: number;
                 return await firstValueFrom(timer(delay));
             }`,
             outputTemplate: null,

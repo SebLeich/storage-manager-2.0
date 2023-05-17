@@ -8,6 +8,7 @@ import { TaskCreationComponent } from '../components/dialog/task-creation/task-c
 import { FUNCTIONS_CONFIG_TOKEN, IFunction } from '../interfaces/function.interface';
 import { ITaskCreationDataWrapper } from '../interfaces/task-creation-data-wrapper.interface';
 import { ITaskCreationFormGroupValue } from '../interfaces/task-creation-form-group-value.interface';
+import { CloseScrollStrategy, ScrollStrategyOptions } from '@angular/cdk/overlay';
 
 @Injectable({
   providedIn: 'root'
@@ -17,7 +18,8 @@ export class DialogService {
   constructor(
     private _dialog: MatDialog,
     @Inject(FUNCTIONS_CONFIG_TOKEN) public funcs: IFunction[],
-    private _injector: Injector
+    private _injector: Injector,
+    private readonly sso: ScrollStrategyOptions
   ) { }
 
   public configTaskCreation(data: ITaskCreationDataWrapper): Observable<ITaskCreationFormGroupValue> {
@@ -25,7 +27,8 @@ export class DialogService {
       injector: this._injector,
       panelClass: 'no-padding-dialog',
       data: data,
-      disableClose: true
+      disableClose: true,
+      maxWidth: 'unset'
     });
     document.getElementsByClassName('cdk-overlay-container')[0]?.classList.add('z-index-1002');
     return ref.afterClosed().pipe(
@@ -35,8 +38,8 @@ export class DialogService {
     );
   }
 
-  public editParam(paramCode: ParamCodes, element: IElement): Observable<Object> {
-    let ref = this._dialog.open(ParamEditorComponent, {
+  public editParam(paramCode: ParamCodes, element: IElement): Observable<object> {
+    const ref = this._dialog.open(ParamEditorComponent, {
       data: { paramCode: paramCode, element: element },
       panelClass: 'no-padding-dialog',
       disableClose: true

@@ -282,7 +282,9 @@ export class ProcessBuilderComponentService {
       name: taskCreationData.name ?? this._config.defaultFunctionName,
       identifier: functionIdentifier,
       normalizedName: taskCreationData.normalizedName ?? ProcessBuilderRepository.normalizeName(taskCreationData.name ?? undefined),
-      output: methodEvaluation.status === MethodEvaluationStatus.ReturnValueFound || referencedFunction.outputTemplate === 'dynamic' ? outputParamId : null,
+      // here, I removed || || referencedFunction.outputTemplate === 'dynamic'
+      // functions can have no outputs
+      output: methodEvaluation.status === MethodEvaluationStatus.ReturnValueFound ? outputParamId : null,
       implementation: referencedFunction.implementation,
       inputTemplates: inputParams,
       requireCustomImplementation: false,

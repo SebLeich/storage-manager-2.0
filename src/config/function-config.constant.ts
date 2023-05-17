@@ -66,9 +66,8 @@ export default [
         ],
         name: 'start left bottom',
         implementation: `async () => {
-            let containerHeight!: number, containerWidth!: number, groups!: IGroup[], orders: IOrder[];
             const algorithm = new StartLeftBottomSolver();
-            return algorithm.solve(containerHeight!, containerWidth!, groups!, orders!);
+            return algorithm.solve(containerHeight, containerWidth, groups, orders);
         }`,
         outputTemplate: InterfaceCodes.Solution,
         requireCustomImplementation: false

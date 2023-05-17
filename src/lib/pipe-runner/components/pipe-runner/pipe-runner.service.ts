@@ -1,6 +1,7 @@
 import { ProcessBuilderRepository } from '@/lib/core/process-builder-repository';
 import { mapIParamsInterfaces } from '@/lib/process-builder/extensions/rxjs/map-params-interfaces.rxjs';
 import { selectIParams } from '@/lib/process-builder/store/selectors';
+import { AllInOneRowSolver, StartLeftBottomSolver, SuperFloSolver } from '@/lib/storage-manager/solvers';
 import { HttpClient } from '@angular/common/http';
 import { EnvironmentInjector, EventEmitter, Injectable } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -129,12 +130,23 @@ export class PipeRunnerService {
       this._store.dispatch(updateIPipelineActionStatus(currentAction.identifier, 'RUNNING'));
 
       try {
+        const console = {
+          log: (...args: any) => {
+            this.consoleOutput.next({
+              message: `${moment().format('HH:mm:ss')}: ${args}`,
+              class: 'default'
+            });
+          }
+        }
+        const solvers = [StartLeftBottomSolver, AllInOneRowSolver, SuperFloSolver];
         const rxjsElements = Object.keys(rxjs) as (keyof typeof rxjs)[];
         const mainMethodStart = currentAction?.executableCode?.indexOf('async () => {') ?? 0;
         const executableCode = currentAction?.executableCode?.substring(mainMethodStart) ?? undefined;
-        const executableFunction = new Function('httpClient', ...rxjsElements, ...paramNames, executableCode ? `return ${executableCode};` : 'return undefined;');
+        const executableFunction = new Function('console', 'httpClient', ...solvers.map(solver => new solver().constructor.name), ...rxjsElements, ...paramNames, executableCode ? `return ${executableCode};` : 'return undefined;');
         const result = await executableFunction(
+          console,
           this.httpClient,
+          ...solvers,
           ...rxjsElements.map(element => rxjs[element]),
           ...paramNames.map(paramName => typeof injector[paramName] === 'undefined' ? params[paramName] : injector[paramName])
         )();

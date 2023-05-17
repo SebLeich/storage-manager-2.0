@@ -2,12 +2,12 @@
 
     <div class="method-name-wrapper">
 
-        <mat-form-field appearance="outline" class="width mat-form-field-outline-white-bg mat-form-field-outline-no-padding-bottom">
+        <mat-form-field appearance="outline" class="mat-form-field-outline-white-bg mat-form-field-outline-no-padding-bottom">
             <mat-label>method name</mat-label>
             <input matInput type="text" formControlName="name" />
         </mat-form-field>
 
-        <mat-form-field appearance="outline" class="width mat-form-field-outline-white-bg mat-form-field-outline-no-padding-bottom">
+        <mat-form-field appearance="outline" class="mat-form-field-outline-white-bg mat-form-field-outline-no-padding-bottom">
             <mat-label>{{(returnValueStatus$|async) === MethodEvaluationStatus.ReturnValueFound? 'output param name': 'no output param'}}</mat-label>
             <input matInput type="text" formControlName="outputParamName" />
         </mat-form-field>

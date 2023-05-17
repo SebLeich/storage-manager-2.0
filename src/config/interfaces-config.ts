@@ -93,9 +93,9 @@ export default [
         name: 'group template',
         normalizedName: 'group',
         typeDef: [
-            { name: 'id', type: 'number', 'defaultValue': 1 },
-            { name: 'color', type: 'string', 'defaultValue': '#b71a1a' },
-            { name: 'desc', type: 'string', 'defaultValue': 'Test AG' },
+            { name: 'id', type: 'number', defaultValue: 1 },
+            { name: 'color', type: 'string', defaultValue: '#b71a1a' },
+            { name: 'desc', type: 'string', defaultValue: 'Test AG' },
         ]
     } as IInterface,
     {

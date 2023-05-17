@@ -27,9 +27,6 @@ export class EmbeddedFunctionImplementationComponent implements IEmbeddedView, A
     shareReplay(1),
     map(inputParams => inputParams ?? []),
     mapIParamsInterfaces(this._store),
-    tap(() => {
-      debugger;
-    }),
     map(inputs => {
       return inputs.reduce((prev, curr) => {
         if (curr.defaultValue) {
