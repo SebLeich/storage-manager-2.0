@@ -24,7 +24,7 @@ export const selectIInterface = (arg: undefined | null | string | (() => string)
     }
 );
 
-export const selectIInterfaces = (codes?: string[]) => createSelector(
+export const selectIInterfaces = (identifiers?: string[]) => createSelector(
     selectIInterfaceState,
     (state: fromIInterface.State) => {
         if (!state || !state.entities) {
@@ -32,8 +32,8 @@ export const selectIInterfaces = (codes?: string[]) => createSelector(
         }
 
         let ifaces = Object.values(state.entities);
-        if (Array.isArray(codes)) {
-            ifaces = ifaces.filter(x => codes.findIndex(y => x?.identifier === y) > -1);
+        if (Array.isArray(identifiers)) {
+            ifaces = ifaces.filter(iFace => identifiers.findIndex(identifier => iFace?.identifier === identifier) > -1);
         }
 
         return ifaces as IInterface[];

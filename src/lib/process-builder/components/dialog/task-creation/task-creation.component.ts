@@ -21,6 +21,7 @@ import { implementationExistsWhenRequiredValidator } from './validators/implemen
 import { ITaskCreationDataWrapper } from 'src/lib/process-builder/interfaces/task-creation-data-wrapper.interface';
 import defaultImplementation from 'src/lib/process-builder/globals/default-implementation';
 import { ITextLeaf } from 'src/lib/process-builder/interfaces/text-leaf.interface';
+import { ProcessBuilderRepository } from '@/lib/core/process-builder-repository';
 
 @Component({
   selector: 'app-task-creation',
@@ -28,22 +29,24 @@ import { ITextLeaf } from 'src/lib/process-builder/interfaces/text-leaf.interfac
   styleUrls: ['./task-creation.component.scss'],
 })
 export class TaskCreationComponent implements OnDestroy, OnInit {
-  @ViewChild('dynamicInner', { static: true, read: ViewContainerRef }) private dynamicInner!: ViewContainerRef;
+  @ViewChild('dynamicInner', { static: true, read: ViewContainerRef })
+  private dynamicInner!: ViewContainerRef;
 
   public formGroup = new FormGroup({
-    canFail: new FormControl<boolean>(false),
-    entranceGatewayType: new FormControl<GatewayType | null>(null),
-    functionIdentifier: new FormControl<number | null>(null),
-    implementation: new FormControl<ITextLeaf | null>(null),
-    inputParam: new FormControl<ParamCodes[] | number | null>(null),
-    interface: new FormControl<string | null>(null),
-    isProcessOutput: new FormControl<boolean>(false),
-    name: new FormControl<string>(''),
-    normalizedOutputParamName: new FormControl<string>(''),
-    normalizedName: new FormControl<string>(''),
-    outputParamName: new FormControl<string>(''),
-    outputParamValue: new FormControl<IParam | IParamDefinition[] | null>(null),
-    requireCustomImplementation: new FormControl<boolean>(false)
+    canFail: new FormControl<boolean>(this.data.taskCreationFormGroupValue.canFail),
+    entranceGatewayType: new FormControl<GatewayType | null>(this.data.taskCreationFormGroupValue.entranceGatewayType),
+    functionIdentifier: new FormControl<number | null>(this.data.taskCreationFormGroupValue.functionIdentifier),
+    implementation: new FormControl<ITextLeaf | null>(this.data.taskCreationFormGroupValue.implementation),
+    inputParam: new FormControl<ParamCodes[] | number | null>(this.data.taskCreationFormGroupValue.inputParam),
+    interface: new FormControl<string | null>(this.data.taskCreationFormGroupValue.interface),
+    isProcessOutput: new FormControl<boolean>(this.data.taskCreationFormGroupValue.isProcessOutput),
+    name: new FormControl<string>(this.data.taskCreationFormGroupValue.name),
+    normalizedOutputParamName: new FormControl<string>(this.data.taskCreationFormGroupValue.normalizedOutputParamName),
+    normalizedName: new FormControl<string>(this.data.taskCreationFormGroupValue.normalizedName),
+    outputParamName: new FormControl<string>(this.data.taskCreationFormGroupValue.outputParamName),
+    outputParamValue: new FormControl<IParam | IParamDefinition[] | null>(this.data.taskCreationFormGroupValue.outputParamValue),
+    outputTemplateName: new FormControl<string>(this.data.taskCreationFormGroupValue.outputTemplateName),
+    requireCustomImplementation: new FormControl<boolean>(this.data.taskCreationFormGroupValue.requireCustomImplementation),
   }, Validators.compose([
     functionSelectedsWhenRequiredValidator(this.data?.taskCreationPayload?.configureActivity ? true : false),
     implementationExistsWhenRequiredValidator
@@ -94,7 +97,11 @@ export class TaskCreationComponent implements OnDestroy, OnInit {
       distinctUntilChanged()
     );
 
-  public selectedFunction$: Observable<IFunction | null | undefined> = this._store.select(selectIFunction(() => this.formGroup.controls.functionIdentifier?.value));
+  public selectedFunction$ = this.formGroup.controls.functionIdentifier.valueChanges
+    .pipe(
+      startWith(this.formGroup.controls.functionIdentifier.value),
+      switchMap(functionIdentifier => this._store.select(selectIFunction(functionIdentifier))),
+    );
 
   public hasDynamicInputParameters$ = this.selectedFunction$
     .pipe(
@@ -102,31 +109,48 @@ export class TaskCreationComponent implements OnDestroy, OnInit {
       distinctUntilChanged()
     );
 
-  public hasDynamicOutputParameters$ = this.selectedFunction$
-    .pipe(
-      map(selectedFunction => selectedFunction?.outputTemplate === 'dynamic' ? true : false),
-      distinctUntilChanged()
-    );
+  public hasDynamicOutputParameters$ = this.selectedFunction$.pipe(
+    map((selectedFunction) =>
+      selectedFunction?.outputTemplate === 'dynamic' ? true : false
+    ),
+    distinctUntilChanged()
+  );
 
-  public hasDataMapping$ = this.selectedFunction$
-    .pipe(
-      map(selectedFunction => selectedFunction?.requireDataMapping ?? false),
-      distinctUntilChanged()
-    );
+  public hasDataMapping$ = this.selectedFunction$.pipe(
+    map((selectedFunction) => selectedFunction?.requireDataMapping ?? false),
+    distinctUntilChanged()
+  );
 
-  public steps$ = combineLatest([this.hasCustomImplementation$, this.hasDynamicInputParameters$, this.hasDataMapping$, this.unableToDetermineOutputParam$])
-    .pipe(
-      map(([hasCustomImplementation, hasDynamicInputParameters, hasDataMapping, unableToDetermineOutputParam]) => this.getSteps([hasDynamicInputParameters, hasCustomImplementation, hasDataMapping, unableToDetermineOutputParam]))
-    );
+  public hasStaticOutputDefinition$ = this.selectedFunction$.pipe(
+    map((selectedFunction) => {
+      const outp = selectedFunction?.requireStaticOutputDefinition ?? false;
+      return outp;
+    }),
+    distinctUntilChanged()
+  );
 
-  public currentStep$ = combineLatest([this.steps$, toObservable(this.currentStepIndex)])
-    .pipe(
-      map(([steps, index]) => steps[index]),
-      filter(step => step ? true : false),
-      distinctUntilChanged((prev, curr) => prev.taskCreationStep === curr.taskCreationStep)
-    );
+  public steps$ = combineLatest([this.hasCustomImplementation$, this.hasDynamicInputParameters$, this.hasDataMapping$, this.unableToDetermineOutputParam$, this.hasStaticOutputDefinition$]).pipe(
+    map(
+      ([hasCustomImplementation, hasDynamicInputParameters, hasDataMapping, unableToDetermineOutputParam, hasStaticOutputDefinition]) =>
+        this.getSteps([
+          hasDynamicInputParameters,
+          hasCustomImplementation,
+          hasDataMapping,
+          unableToDetermineOutputParam,
+          hasStaticOutputDefinition,
+        ])
+    )
+  );
 
-  public hasPreviousStep$ = toObservable(this.currentStepIndex).pipe(map(index => index > 0));
+  public currentStep$ = combineLatest([this.steps$, toObservable(this.currentStepIndex)]).pipe(
+    map(([steps, index]) => steps[index]),
+    filter((step) => (step ? true : false)),
+    distinctUntilChanged(
+      (prev, curr) => prev.taskCreationStep === curr.taskCreationStep
+    )
+  );
+
+  public hasPreviousStep$ = toObservable(this.currentStepIndex).pipe(map((index) => index > 0));
   public hasNextStep$ = combineLatest([this.steps$, toObservable(this.currentStepIndex)]).pipe(map(([steps, index]) => index < steps.length - 1));
   public canAnalyzeCustomImplementation$ = this.currentStep$.pipe(
     filter((x) => (x ? true : false)),
@@ -135,7 +159,7 @@ export class TaskCreationComponent implements OnDestroy, OnInit {
 
   public stepToNextStep$: Observable<number> = this.currentStep$.pipe(switchMap(step => step?.autoProceed$ ?? NEVER)) as Observable<number>;
 
-  public formInvalid$ = this.formGroup.statusChanges.pipe(map(status => status === 'INVALID'), startWith(this.formGroup.status));
+  public formInvalid$ = this.formGroup.statusChanges.pipe(map((status) => status === 'INVALID'), startWith(this.formGroup.status));
 
   private _subscription = new Subscription();
 
@@ -144,9 +168,7 @@ export class TaskCreationComponent implements OnDestroy, OnInit {
     @Inject(MAT_DIALOG_DATA) public data: ITaskCreationDataWrapper,
     private _ref: MatDialogRef<TaskCreationComponent>,
     private _store: Store
-  ) {
-    this.formGroup.patchValue(this.data.taskCreationFormGroupValue, { emitEvent: true });
-  }
+  ) { }
 
   public abort = () => this._ref.close();
   public finish = () => this._ref.close(this.formGroup.value);
@@ -159,6 +181,8 @@ export class TaskCreationComponent implements OnDestroy, OnInit {
     this.validateFunctionSelection();
     this.setStep(0);
 
+    this._autoNormalizeNames();
+
     this._subscription.add(
       ...[
         this.formGroup.controls.functionIdentifier?.valueChanges.subscribe(
@@ -170,8 +194,10 @@ export class TaskCreationComponent implements OnDestroy, OnInit {
             this.validateFunctionSelection();
           }
         ),
-        this.currentStep$.subscribe(step => this.renderStep(step)),
-        this.stepToNextStep$.subscribe((stepIndex: number) => this.setStep(stepIndex + 1))
+        this.currentStep$.subscribe((step) => this.renderStep(step)),
+        this.stepToNextStep$.subscribe((stepIndex: number) =>
+          this.setStep(stepIndex + 1)
+        ),
       ]
     );
   }
@@ -185,7 +211,8 @@ export class TaskCreationComponent implements OnDestroy, OnInit {
         outputParamInterface = await selectSnapshot(this._store.select(selectIInterface(currentFunction?.outputTemplate as string)));
 
       const inputParams = currentFunction?.inputTemplates === 'dynamic' && currentFunction.inputTemplates ? Array.isArray(currentFunction.inputTemplates) ? [...currentFunction.inputTemplates] : [currentFunction.inputTemplates] : [];
-      const outputParamValue = currentFunction?.outputTemplate === 'dynamic' && outputParamInterface ? outputParamInterface.typeDef : outputParam?.typeDef;
+      const outputParamValue = currentFunction?.outputTemplate === 'dynamic' && outputParamInterface ? outputParamInterface.typeDef : outputParam?.type === 'object' ? outputParam?.typeDef : outputParam;
+
       let objectTypeDefinition: IParam | IParamDefinition[] | null;
       if (outputParamValue) {
         if (Array.isArray(outputParamValue)) {
@@ -205,7 +232,7 @@ export class TaskCreationComponent implements OnDestroy, OnInit {
         name: currentFunction.name,
         normalizedName: currentFunction.normalizedName,
         normalizedOutputParamName: outputParam?.normalizedName,
-        interface: outputParam?.interface,
+        interface: outputParam?.type === 'array' ? (outputParam.typeDef as IParamDefinition[])[0].interface : outputParam?.interface,
         outputParamName: outputParam?.name,
         outputParamValue: objectTypeDefinition,
         inputParam: inputParams.length === 1 ? inputParams[0].interface : null,
@@ -217,7 +244,7 @@ export class TaskCreationComponent implements OnDestroy, OnInit {
     this.dynamicInner.clear();
     const stepConfiguration = STEP_REGISTRY.get(step.taskCreationStep);
     if (!stepConfiguration) {
-      throw (`no config found for step ${step.taskCreationStep}`);
+      throw `no config found for step ${step.taskCreationStep}`;
     }
 
     const component = this.dynamicInner.createComponent(stepConfiguration.type);
@@ -226,7 +253,7 @@ export class TaskCreationComponent implements OnDestroy, OnInit {
     }
   }
 
-  private getSteps([hasDynamicInputParam, hasCustomImplementation, hasDataMapping, unableToDetermineOutputParam]: boolean[]) {
+  private getSteps([hasDynamicInputParam, hasCustomImplementation, hasDataMapping, unableToDetermineOutputParam, hasStaticOutputDefinition]: boolean[]) {
     const availableSteps: ITaskCreationConfig[] = [];
     if (this.data) {
       const gateway = this.data?.taskCreationPayload?.configureIncomingErrorGatewaySequenceFlow;
@@ -236,39 +263,79 @@ export class TaskCreationComponent implements OnDestroy, OnInit {
           element: gateway,
           autoProceed$: this.formGroup.controls.entranceGatewayType?.valueChanges.pipe(
             switchMap(() => this.steps$),
-            filter(steps => steps.length > 1),
+            filter((steps) => steps.length > 1),
             map((steps) => {
-              const index = steps.findIndex(step => step.taskCreationStep === TaskCreationStep.ConfigureErrorGatewayEntranceConnection);
+              const index = steps.findIndex(
+                (step) =>
+                  step.taskCreationStep ===
+                  TaskCreationStep.ConfigureErrorGatewayEntranceConnection
+              );
               return index;
             })
-          )
+          ),
         } as ITaskCreationConfig);
       }
 
       const activity = this.data?.taskCreationPayload?.configureActivity;
       if (activity) {
-        availableSteps.push({ taskCreationStep: TaskCreationStep.ConfigureFunctionSelection, element: activity } as ITaskCreationConfig);
+        availableSteps.push({
+          taskCreationStep: TaskCreationStep.ConfigureFunctionSelection,
+          element: activity,
+        });
 
         if (hasDynamicInputParam) {
-          availableSteps.push({ taskCreationStep: TaskCreationStep.ConfigureFunctionInput, element: activity } as ITaskCreationConfig);
+          availableSteps.push({
+            taskCreationStep: TaskCreationStep.ConfigureFunctionInput,
+            element: activity,
+          });
         }
 
         if (hasCustomImplementation) {
-          availableSteps.push({ taskCreationStep: TaskCreationStep.ConfigureFunctionImplementation, element: activity } as ITaskCreationConfig);
+          availableSteps.push({
+            taskCreationStep: TaskCreationStep.ConfigureFunctionImplementation,
+            element: activity,
+          });
         }
 
         if (hasDataMapping) {
-          availableSteps.push({ taskCreationStep: TaskCreationStep.ConfigureInputOutputMapping, element: activity } as ITaskCreationConfig);
+          availableSteps.push({
+            taskCreationStep: TaskCreationStep.ConfigureInputOutputMapping,
+            element: activity,
+          });
         }
-      }
 
-      if (unableToDetermineOutputParam) {
-        availableSteps.push({ taskCreationStep: TaskCreationStep.ConfigureFunctionOutput } as ITaskCreationConfig);
+        if (unableToDetermineOutputParam) {
+          availableSteps.push({
+            taskCreationStep: TaskCreationStep.ConfigureFunctionOutput,
+            element: activity
+          });
+        }
+
+        if (hasStaticOutputDefinition) {
+          const step = {
+            taskCreationStep: TaskCreationStep.ConfigureStaticOutput,
+            element: activity,
+          }
+          availableSteps.push(step);
+        }
       }
     }
     return availableSteps;
   }
 
   public TaskCreationStep = TaskCreationStep;
-}
 
+  private _autoNormalizeNames() {
+    this._subscription.add(...[
+      this.formGroup.controls.name!
+        .valueChanges
+        .pipe(debounceTime(200), map((name) => ProcessBuilderRepository.normalizeName(name)))
+        .subscribe((normalizedName) => this.formGroup.controls.normalizedName?.setValue(normalizedName)),
+
+      this.formGroup.controls.outputParamName!
+        .valueChanges
+        .pipe(debounceTime(200), map((name) => ProcessBuilderRepository.normalizeName(name)))
+        .subscribe((normalizedName) => this.formGroup.controls.normalizedOutputParamName?.setValue(normalizedName)),
+    ]);
+  }
+}

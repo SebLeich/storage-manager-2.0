@@ -142,7 +142,7 @@ export class ProcessBuilderRepository {
 
         if (!arg) return {};
 
-        let dummyObject = { };
+        let dummyObject = {};
 
         try {
 
@@ -172,30 +172,42 @@ export class ProcessBuilderRepository {
 
     }
 
-    public static extractObjectTypeDefinition(arg: object | string | number | null | undefined, isRoot: boolean = true, defaultParamName: string = 'unnamed param', isNullable: boolean = false, isOptional: boolean = false, isConstant: boolean = false): IParamDefinition | IParamDefinition[] {
+    public static extractObjectTypeDefinition(arg: object | string | number | null | undefined, isRoot = true, defaultParamName = 'unnamed param', isNullable = false, isOptional = false, isConstant = false): IParamDefinition | IParamDefinition[] {
 
-        let rootDef: IParamDefinition = {
+        const rootDef: IParamDefinition = {
             'name': defaultParamName,
             'normalizedName': this.normalizeName(defaultParamName),
             'nullable': isNullable,
             'optional': isOptional,
             'constant': isConstant,
-            'defaultValue': typeof arg === 'object' ? null : arg,
-            'type': typeof arg,
+            'defaultValue': !isConstant && typeof arg === 'object' ? null : arg,
+            'type': Array.isArray(arg) ? 'array' : typeof arg,
             'interface': null,
             'typeDef': []
         };
-        if (typeof arg !== 'object') return rootDef;
+
+        if (typeof arg !== 'object') {
+            return rootDef;
+        }
+
+        if (rootDef.type === 'array') {
+            const typeDef = this.extractObjectTypeDefinition((arg as object[])[0], false);
+            return {
+                ...rootDef,
+                typeDef: [{
+                    typeDef: typeDef
+                } as IParamDefinition]
+            }
+        }
 
         let typeDef: IParamDefinition[] | IParamDefinition = [];
-
         if (typeof arg === 'object') {
 
             try {
 
-                for (let entry of Object.entries(arg as object)) {
+                for (const entry of Object.entries(arg as object)) {
 
-                    let def = this._getDefinitionForMember(entry);
+                    const def = this._getDefinitionForMember(entry);
                     if (def.type === 'object') {
                         if (entry[1]) {
                             def.typeDef = this.extractObjectTypeDefinition(entry[1], false);

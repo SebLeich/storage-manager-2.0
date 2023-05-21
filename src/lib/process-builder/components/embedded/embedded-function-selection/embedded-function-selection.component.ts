@@ -3,10 +3,10 @@ import { ParamCodes } from 'src/config/param-codes';
 import { IEmbeddedView } from 'src/lib/process-builder/classes/embedded-view';
 import { IInputParam, IFunction } from '@process-builder/interfaces';
 import { Store } from '@ngrx/store';
-import { selectIFunctions } from 'src/lib/process-builder/store/selectors/function.selector';
+import { selectIFunction, selectIFunctions } from 'src/lib/process-builder/store/selectors/function.selector';
 import { FunctionPreviewComponent } from '../../previews/function-preview/function-preview.component';
 import { ControlContainer, FormControl } from '@angular/forms';
-import { map, startWith } from 'rxjs/operators';
+import { defer, map, startWith, switchMap } from 'rxjs';
 import * as fromIFunctionState from 'src/lib/process-builder/store/reducers/function.reducer';
 import { removeIFunction } from 'src/lib/process-builder/store/actions/function.actions';
 import { combineLatest } from 'rxjs/internal/observable/combineLatest';
@@ -68,6 +68,17 @@ export class EmbeddedFunctionSelectionComponent implements IEmbeddedView {
   public functionTemplates$ = this.functions$.pipe(map(funcs => funcs.filter(func => func.requireCustomImplementation)));
   public customFunctions$ = this.functions$.pipe(map(funcs => funcs.filter(func => func.customImplementation)));
 
+  public selectedFunction$ = defer(() => {
+    const control = this.formGroup.controls.functionIdentifier as FormControl;
+    return control
+      .valueChanges
+      .pipe(
+        startWith(control.value),
+        switchMap((functionIdentifier) => this._store.select(selectIFunction(functionIdentifier as number)))
+      );
+  });
+  public requiresCustomOutputParamName$ = this.selectedFunction$.pipe(map(selectedFunction => !selectedFunction?.requireCustomImplementation && !selectedFunction?.customImplementation && typeof selectedFunction?.outputTemplate === 'string'));
+
   constructor(private _store: Store<fromIFunctionState.State>, private _controlContainer: ControlContainer) { }
 
   public removeFunction(func: IFunction, evt?: Event) {
@@ -80,8 +91,11 @@ export class EmbeddedFunctionSelectionComponent implements IEmbeddedView {
   }
 
   public selectFunction(func: IFunction) {
-    const functionIdentifier = this.formGroup.controls.functionIdentifier!.value === func.identifier ? null : func.identifier;
-    this.formGroup.controls.functionIdentifier!.setValue(functionIdentifier);
+    const functionIdentifier = this.formGroup.controls.functionIdentifier?.value === func.identifier ? null : func.identifier;
+    this.formGroup.controls.functionIdentifier?.setValue(functionIdentifier);
+    this.formGroup.patchValue({
+      functionIdentifier: functionIdentifier
+    });
   }
 
   public toggleSearchInput(expand?: boolean) {

@@ -1,0 +1,26 @@
+<div class="body" [formGroup]="formGroup">
+
+    <div class="header">
+
+        <mat-form-field appearance="outline" class="mat-form-field-outline-white-bg mat-form-field-outline-no-padding-bottom">
+            <mat-label>output param name</mat-label>
+            <input matInput type="text" formControlName="outputParamName" />
+        </mat-form-field>
+
+        <mat-form-field class="mat-form-field-outline-white-bg mat-form-field-no-padding" appearance="outline">
+            <mat-label>current output template</mat-label>
+            <mat-select formControlName="interface">
+                <mat-option class="dropdown-option" *ngFor="let template of ((templates$|async) ?? [])"
+                    [value]="template.identifier">
+                    {{template.name}}
+                </mat-option>
+            </mat-select>
+        </mat-form-field>
+
+        <mat-slide-toggle (toggleChange)="setIsCollection()" [checked]="isCollection()">is collection</mat-slide-toggle>
+    
+    </div>
+
+    <div class="content" #parameterBody></div>
+
+</div>

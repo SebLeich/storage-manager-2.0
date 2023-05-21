@@ -88,6 +88,11 @@
 
     </div>
 
+    <div class="output-name-wrapper" *ngIf="requiresCustomOutputParamName$|async">
+        <div class="label">please enter a custom output parameter name</div>
+        <input [formControl]="formGroup.controls.outputParamName!" type="text" />
+    </div>
+
 </div>
 
 <ng-template #noFunctions>

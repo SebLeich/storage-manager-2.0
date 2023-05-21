@@ -124,7 +124,7 @@ export class ProcessBuilderComponentService {
         outputParam = outputParamResult?.outputParam ?? outputParam;
       } else if (typeof referencedFunction.outputTemplate === 'string') {
         const iFace = await selectSnapshot(this._store.select(selectIInterface(referencedFunction.outputTemplate)));
-        outputParam = { identifier: nextParamId, interface: iFace?.identifier, name: iFace?.name, normalizedName: iFace?.normalizedName } as IParam;
+        outputParam = { identifier: nextParamId, interface: iFace?.identifier, name: taskCreationData.outputParamName ?? iFace?.name, normalizedName: taskCreationData.normalizedOutputParamName ?? iFace?.normalizedName } as IParam;
         const outputParamResult = await this._handleFunctionOutputParam(taskCreationData, taskCreationPayload, outputParam, methodEvaluation);
         outputParam = outputParamResult?.outputParam ?? outputParam;
       }
@@ -135,7 +135,7 @@ export class ProcessBuilderComponentService {
     }
 
     const effectedActivities = this._bpmnJsService.elementRegistryModule.filter(element => element.type === shapeTypes.Task && BPMNJsRepository.getSLPBExtension(element.businessObject, 'ActivityExtension', (ext => ext.activityFunctionId)) === referencedFunction?.identifier);
-    for(const activity of effectedActivities){
+    for (const activity of effectedActivities) {
       this._bpmnJsService.modelingModule.updateLabel(activity, referencedFunction.name);
     }
 
@@ -282,14 +282,15 @@ export class ProcessBuilderComponentService {
       name: taskCreationData.name ?? this._config.defaultFunctionName,
       identifier: functionIdentifier,
       normalizedName: taskCreationData.normalizedName ?? ProcessBuilderRepository.normalizeName(taskCreationData.name ?? undefined),
-      // here, I removed || || referencedFunction.outputTemplate === 'dynamic'
-      // functions can have no outputs
+      // here, I removed || referencedFunction.outputTemplate === 'dynamic'
+      // functions may not provide any outputs
       output: methodEvaluation.status === MethodEvaluationStatus.ReturnValueFound ? outputParamId : null,
       implementation: referencedFunction.implementation,
       inputTemplates: inputParams,
       requireCustomImplementation: false,
       requireDynamicInput: false,
-      finalizesFlow: taskCreationData.isProcessOutput ?? false
+      finalizesFlow: taskCreationData.isProcessOutput ?? false,
+      requireStaticOutputDefinition: referencedFunction.requireStaticOutputDefinition
     } as IFunction;
     this._store.dispatch(upsertIFunction(resultingFunction));
     return resultingFunction;
@@ -350,20 +351,31 @@ export class ProcessBuilderComponentService {
 
     if (methodEvaluation.status === MethodEvaluationStatus.ReturnValueFound || outputParam) {
       const paramInterface = outputParam.interface ?? taskCreationData.interface ?? await this._outputParamInterface(methodEvaluation);
+      const defaultValue = !Array.isArray(taskCreationData.outputParamValue) && taskCreationData.outputParamValue?.constant? taskCreationData.outputParamValue.defaultValue: outputParam.defaultValue ?? await this._outputParamValue(methodEvaluation, taskCreationData.outputParamValue);
       outputParam = {
         ...outputParam,
         name: taskCreationData.outputParamName ?? outputParam.name ?? this._config.dynamicParamDefaultNaming,
         normalizedName: taskCreationData.normalizedOutputParamName ?? outputParam.normalizedName ?? ProcessBuilderRepository.normalizeName(taskCreationData.outputParamName ?? this._config.dynamicParamDefaultNaming),
-        defaultValue: outputParam.defaultValue ?? await this._outputParamValue(methodEvaluation, taskCreationData.outputParamValue),
-        interface: paramInterface
+        defaultValue: defaultValue,
+        interface: paramInterface,
       } as IParam;
+      if (!Array.isArray(taskCreationData.outputParamValue) && taskCreationData.outputParamValue?.type === 'array') {
+        outputParam.interface = null;
+        outputParam.type = 'array';
+        outputParam.typeDef = [
+          {
+            interface: paramInterface ?? null,
+            type: 'object',
+          } as IParamDefinition
+        ]
+      }
       if (typeof outputParam.interface === 'string') {
         outputParam.type = 'object';
       } else {
         const outputType = await this._methodEvaluationTypeToOutputType(taskCreationPayload.configureActivity, methodEvaluation);
         outputParam.type = outputType;
       }
-      
+
       this._store.dispatch(upsertIParam(outputParam));
 
       BPMNJsRepository.appendOutputParam(
@@ -391,16 +403,16 @@ export class ProcessBuilderComponentService {
       const currentPath = methodEvaluation.injectorNavigationPath.split('.');
       let currentIndex = 1;
       let param: IParam | IParamDefinition | undefined = inputParams.find(param => param.normalizedName === currentPath[0]);
-      while(currentIndex < currentPath.length && param && Array.isArray(param.typeDef)){
+      while (currentIndex < currentPath.length && param && Array.isArray(param.typeDef)) {
         param = param.typeDef.find(param => param.name === currentPath[currentIndex]);
         currentIndex++;
       }
 
-      if(param){
+      if (param) {
         return param.type;
       }
 
-      throw('error');
+      throw ('error');
     }
     switch (methodEvaluation?.type) {
       case 'number':
@@ -430,24 +442,24 @@ export class ProcessBuilderComponentService {
         mapIParamInterfaces(this._store)
       ));
 
-      if(!inputParam) return;
+      if (!inputParam) return;
 
       let currentIndex = 1;
       let currentMember = /^(.*).{0,1}\[(.*)\]/.exec(pathArray[currentIndex]);
       let currentMemberName = currentMember?.[1] ?? null;
       let currentTypeDef = (inputParam.typeDef as IParamDefinition[]).find(definition => definition.name === currentMemberName);
 
-      while((currentIndex + 1) < pathArray.length ?? 0){
-        if(/^.+\(.*\)$/.test(pathArray[currentIndex])){
+      while ((currentIndex + 1) < pathArray.length ?? 0) {
+        if (/^.+\(.*\)$/.test(pathArray[currentIndex])) {
           break;
-        } else if(currentTypeDef?.type === 'array'){
-          if(typeof currentMember?.[2] === 'number'){
+        } else if (currentTypeDef?.type === 'array') {
+          if (typeof currentMember?.[2] === 'number') {
             // array index
           } else {
             // array method/member call
             const call = /^([a-zA-Z0-9]*).{0,1}\((.*)\)/.exec(pathArray.slice(currentIndex).join('.'));
             const array: any = ProcessBuilderRepository.createPseudoObjectFromIParam(currentTypeDef);
-            const result = call![2]? `${array[call![1]]}(${call![2]})`: array[call![1]];
+            const result = call![2] ? `${array[call![1]]}(${call![2]})` : array[call![1]];
             debugger;
           }
         } else {

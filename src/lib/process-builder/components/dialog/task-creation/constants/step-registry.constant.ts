@@ -10,6 +10,7 @@ import { EmbeddedFunctionInputSelectionComponent } from "../../../embedded/embed
 import { EmbeddedFunctionSelectionComponent } from "../../../embedded/embedded-function-selection/embedded-function-selection.component";
 import { EmbeddedInputOutputMappingComponent } from "../../../embedded/embedded-input-output-mapping/embedded-input-output-mapping.component";
 import { EmbeddedOutputParamConfigurationComponent } from '../../../embedded/embedded-output-param-configuration/embedded-output-param-configuration.component';
+import { EmbeddedStaticOutputDefinitionComponent } from '../../../embedded/embedded-static-output-definition/embedded-static-output-definition.component';
 
 export default new Map<TaskCreationStep, {
     type: Type<IEmbeddedView>;
@@ -32,8 +33,7 @@ export default new Map<TaskCreationStep, {
     [TaskCreationStep.ConfigureFunctionInput, {
         type: EmbeddedFunctionInputSelectionComponent,
         provideInputParams: (arg: IEmbeddedView, element: IElement) => {
-            let component = arg as EmbeddedFunctionInputSelectionComponent;
-            let availableInputParams = BPMNJsRepository.getAvailableInputParams(element);
+            const component = arg as EmbeddedFunctionInputSelectionComponent, availableInputParams = BPMNJsRepository.getAvailableInputParams(element);
             component.setInputParams(availableInputParams);
         },
     }],
@@ -47,6 +47,13 @@ export default new Map<TaskCreationStep, {
     }],
     [TaskCreationStep.ConfigureInputOutputMapping, {
         type: EmbeddedInputOutputMappingComponent,
+        provideInputParams: (arg: IEmbeddedView, element: IElement) => {
+            const component = arg as EmbeddedInputOutputMappingComponent;
+            component.inputParams = BPMNJsRepository.getAvailableInputParams(element);
+        },
+    }],
+    [TaskCreationStep.ConfigureStaticOutput, {
+        type: EmbeddedStaticOutputDefinitionComponent,
         provideInputParams: (arg: IEmbeddedView, element: IElement) => {
             const component = arg as EmbeddedInputOutputMappingComponent;
             component.inputParams = BPMNJsRepository.getAvailableInputParams(element);

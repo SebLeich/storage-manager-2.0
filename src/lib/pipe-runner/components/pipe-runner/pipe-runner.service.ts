@@ -131,10 +131,13 @@ export class PipeRunnerService {
 
       try {
         const console = {
-          log: (...args: any) => {
-            this.consoleOutput.next({
-              message: `${moment().format('HH:mm:ss')}: ${args}`,
-              class: 'default'
+          log: (...args: (string|number|object)[]) => {
+            args.forEach(arg => {
+              const stringified = typeof arg === 'object'? JSON.stringify(arg): arg.toString();
+              this.consoleOutput.next({
+                message: `${moment().format('HH:mm:ss')}: ${stringified}`,
+                class: 'default'
+              });
             });
           }
         }

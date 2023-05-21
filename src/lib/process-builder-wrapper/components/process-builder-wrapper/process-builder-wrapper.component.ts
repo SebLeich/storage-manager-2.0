@@ -1,6 +1,5 @@
 import { Component, Inject, signal } from '@angular/core';
 import { Store } from '@ngrx/store';
-import { BehaviorSubject } from 'rxjs';
 import { firstValueFrom } from 'rxjs/internal/firstValueFrom';
 import { map } from 'rxjs/operators';
 import { BPMNJsRepository } from 'src/lib/core/bpmn-js.repository';

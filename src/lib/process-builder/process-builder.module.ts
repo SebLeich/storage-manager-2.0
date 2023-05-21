@@ -68,6 +68,7 @@ import { CodeEditorModule } from '../code-editor/code-editor.module';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import sebleichProcessBuilderExtension from './globals/sebleich-process-builder-extension';
 import { BPMN_JS } from '@process-builder/injection';
+import { EmbeddedStaticOutputDefinitionComponent } from './components/embedded/embedded-static-output-definition/embedded-static-output-definition.component';
 
 
 @NgModule({
@@ -95,7 +96,8 @@ import { BPMN_JS } from '@process-builder/injection';
     ParamMemberPathPreviewComponent,
     UserInputComponent,
     EmbeddedOutputParamConfigurationComponent,
-    InputParamPipe
+    InputParamPipe,
+    EmbeddedStaticOutputDefinitionComponent
   ],
   imports: [
     CommonModule,
@@ -112,6 +114,7 @@ import { BPMN_JS } from '@process-builder/injection';
     MatSlideToggleModule,
     MatSelectModule,
     MatTabsModule,
+    MatSlideToggleModule,
     MatTooltipModule,
     MatSlideToggleModule,
     ReactiveFormsModule,

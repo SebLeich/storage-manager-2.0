@@ -8,6 +8,7 @@ export interface IFunctionTemplate {
     implementation?: string;
     canFail?: boolean;
     requireCustomImplementation: boolean;
+    requireStaticOutputDefinition: boolean;
     finalizesFlow?: boolean;
     inputTemplates: (IInputParam | 'dynamic')[] | null | 'dynamic';
     outputTemplate: string | null | 'dynamic';

@@ -18,7 +18,7 @@ export default [
         canFail: false
     } as IFunctionTemplate,
     new PredefinedFunctionTemplates().downloadAsJson(2),
-
+    new PredefinedFunctionTemplates().provideStaticData(3),
     new PredefinedFunctionTemplates().delayMethod(6),
     new PredefinedFunctionTemplates().simulateFailMethod(7),
     {
@@ -47,9 +47,8 @@ export default [
         ],
         name: 'all in one row',
         implementation: `async () => {
-            let containerHeight!: number, containerWidth!: number, groups!: IGroup[], orders: IOrder[];
             const algorithm = new AllInOneRowSolver();
-            return algorithm.solve(containerHeight!, containerWidth!, groups!, orders!);
+            return algorithm.solve(containerHeight, containerWidth, groups, orders);
         }`,
         outputTemplate: InterfaceCodes.Solution,
         requireCustomImplementation: false
@@ -84,9 +83,8 @@ export default [
         ],
         name: 'super flo',
         implementation: `async () => {
-            let containerHeight!: number, containerWidth!: number, groups!: IGroup[], orders: IOrder[];
             const algorithm = new SuperFloSolver();
-            return algorithm.solve(containerHeight!, containerWidth!, groups!, orders!);
+            return algorithm.solve(containerHeight, containerWidth, groups, orders);
         }`,
         outputTemplate: InterfaceCodes.Solution,
         requireCustomImplementation: false

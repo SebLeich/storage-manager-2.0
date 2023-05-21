@@ -70,8 +70,6 @@ export class EmbeddedFunctionImplementationComponent implements IEmbeddedView, A
   }
 
   public ngAfterViewInit(): void {
-    this._autoNormalizeNames();
-
     this._subscriptions.add(...[
       this.returnValueStatus$.subscribe((status) => {
         this.formGroup.controls.outputParamName![status === MethodEvaluationStatus.ReturnValueFound ? 'enable' : 'disable']();
@@ -91,24 +89,6 @@ export class EmbeddedFunctionImplementationComponent implements IEmbeddedView, A
 
   public get canFailControl(): UntypedFormControl {
     return this.formGroup.controls['canFail'] as FormControl<boolean>;
-  }
-
-  public get normalizedNameControl() {
-    return this.formGroup.controls['normalizedName'] as FormControl<string>;
-  }
-
-  private _autoNormalizeNames() {
-    this._subscriptions.add(...[
-      this.formGroup.controls.name!
-        .valueChanges
-        .pipe(debounceTime(200), map((name) => ProcessBuilderRepository.normalizeName(name)))
-        .subscribe((normalizedName) => this.normalizedNameControl.setValue(normalizedName)),
-
-      this.formGroup.controls.outputParamName!
-        .valueChanges
-        .pipe(debounceTime(200), map((name) => ProcessBuilderRepository.normalizeName(name)))
-        .subscribe((normalizedName) => this.formGroup.controls.normalizedName!.setValue(normalizedName)),
-    ]);
   }
 
 }

@@ -11,7 +11,8 @@ export class PredefinedFunctionTemplates {
             useDynamicInputParams: true,
             payload: undefined,
             outputTemplate: 'dynamic',
-            requireCustomImplementation: true
+            requireCustomImplementation: true,
+            requireStaticOutputDefinition: false
         } as IFunctionTemplate;
     }
 
@@ -32,7 +33,8 @@ export class PredefinedFunctionTemplates {
                 return await firstValueFrom(timer(delay));
             }`,
             outputTemplate: null,
-            requireCustomImplementation: false
+            requireCustomImplementation: false,
+            requireStaticOutputDefinition: false
         } as IFunctionTemplate;
     }
 
@@ -67,8 +69,22 @@ export class PredefinedFunctionTemplates {
                 return new Promise<void>((resolve => resolve()));
             }`,
             outputTemplate: null,
-            requireCustomImplementation: false
+            requireCustomImplementation: false,
+            requireStaticOutputDefinition: false
         } as IFunctionTemplate;
+    }
+
+    public provideStaticData(identifier: number, name = 'provide static data'): IFunctionTemplate {
+        return {
+            identifier: identifier,
+            canFail: false,
+            description: 'provide static data during design time',
+            inputTemplates: null,
+            name: name,
+            outputTemplate: 'dynamic',
+            requireCustomImplementation: true,
+            requireStaticOutputDefinition: true
+        }
     }
 
     public simulateFailMethod(identifier: number, name = 'fail'): IFunctionTemplate {
@@ -82,7 +98,8 @@ export class PredefinedFunctionTemplates {
                 throw 'mock error';
             }`,
             outputTemplate: null,
-            requireCustomImplementation: false
+            requireCustomImplementation: false,
+            requireStaticOutputDefinition: false
         } as IFunctionTemplate;
     }
 
@@ -100,7 +117,8 @@ export class PredefinedFunctionTemplates {
             ],
             name: name,
             outputTemplate: "dynamic",
-            requireCustomImplementation: false
+            requireCustomImplementation: false,
+            requireStaticOutputDefinition: false
         } as IFunctionTemplate;
     }
 
