@@ -65,7 +65,7 @@
             <h3>File</h3>
         </p>
         <p class="comment">
-            <code>src/lib/bpmn-io/interfaces/event-bus-module.interface.ts</code>
+            <code>src/lib/bpmn-io/interfaces/modules/event-bus-module.interface.ts</code>
         </p>
 
 
@@ -177,8 +177,8 @@
 
 
     <div class="tab-pane fade  tab-source-code" id="c-source">
-        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { BpmnJsEventType } from &quot;../bpmn-js-event-types&quot;;
-import { IElement } from &quot;./element.interface&quot;;
+        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { BpmnJsEventType } from &quot;../../bpmn-js-event-types&quot;;
+import { IElement } from &quot;../element.interface&quot;;
 
 export interface IEventBusModule {
     fire: (event: BpmnJsEventType, element: IElement) &#x3D;&gt; void;

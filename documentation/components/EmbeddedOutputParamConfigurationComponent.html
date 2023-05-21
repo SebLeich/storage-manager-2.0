@@ -149,6 +149,21 @@
                     </td>
                 </tr>
 
+                <tr>
+                    <td class="col-md-4">
+                        <h6><b>Methods</b></h6>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <ul class="index-list">
+                            <li>
+                                    <span class="modifier">Public</span>
+                                <a href="#sampleData" >sampleData</a>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
 
 
 
@@ -237,7 +252,51 @@
 
 
 
+    <section>
+    
+    <h3 id="methods">
+        Methods
+    </h3>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="sampleData"></a>
+                    <span class="name">
+                        <span class="modifier">Public</span>
+                        <span ><b>sampleData</b></span>
+                        <a href="#sampleData"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>sampleData()</code>
+                </td>
+            </tr>
 
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="36"
+                            class="link-to-prism">src/lib/process-builder/components/embedded/embedded-output-param-configuration/embedded-output-param-configuration.component.ts:36</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</section>
     <section>
     
     <h3 id="inputs">
@@ -265,7 +324,7 @@
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="19" class="link-to-prism">src/lib/process-builder/components/embedded/embedded-output-param-configuration/embedded-output-param-configuration.component.ts:19</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="18" class="link-to-prism">src/lib/process-builder/components/embedded/embedded-output-param-configuration/embedded-output-param-configuration.component.ts:18</a></div>
                         </td>
                     </tr>
 
@@ -290,13 +349,14 @@
     if (iFace) {
       return ProcessBuilderRepository.createPseudoObjectFromIInterface(iFace ?? undefined);
     }
+
     return null;
   }))</code>
                     </td>
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="23" class="link-to-prism">src/lib/process-builder/components/embedded/embedded-output-param-configuration/embedded-output-param-configuration.component.ts:23</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="22" class="link-to-prism">src/lib/process-builder/components/embedded/embedded-output-param-configuration/embedded-output-param-configuration.component.ts:22</a></div>
                         </td>
                     </tr>
 
@@ -322,7 +382,7 @@
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="18" class="link-to-prism">src/lib/process-builder/components/embedded/embedded-output-param-configuration/embedded-output-param-configuration.component.ts:18</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="17" class="link-to-prism">src/lib/process-builder/components/embedded/embedded-output-param-configuration/embedded-output-param-configuration.component.ts:17</a></div>
                         </td>
                     </tr>
 
@@ -369,7 +429,6 @@ import { Store } from &#x27;@ngrx/store&#x27;;
 import { IEmbeddedView } from &#x27;src/lib/process-builder/classes/embedded-view&#x27;;
 import { TaskCreationFormGroup } from &#x27;src/lib/process-builder/interfaces/task-creation-form-group-value.interface&#x27;;
 import { selectIInterface, selectIInterfaces } from &#x27;src/lib/process-builder/store/selectors/interface.selectors&#x27;;
-import { mapIParamsInterfaces } from &#x27;src/lib/process-builder/extensions/rxjs/map-i-params-interfaces.rxjs&#x27;;
 import { ProcessBuilderRepository } from &#x27;src/lib/core/process-builder-repository&#x27;;
 
 @Component({
@@ -388,6 +447,7 @@ export class EmbeddedOutputParamConfigurationComponent implements IEmbeddedView 
     if (iFace) {
       return ProcessBuilderRepository.createPseudoObjectFromIInterface(iFace ?? undefined);
     }
+
     return null;
   }));
 
@@ -396,6 +456,10 @@ export class EmbeddedOutputParamConfigurationComponent implements IEmbeddedView 
   }
 
   constructor(private _controlContainer: ControlContainer, private _store: Store) { }
+
+  public sampleData() {
+    this.formGroup.controls.interface?.setValue(null);
+  }
 
 }
 </code></pre>
@@ -412,21 +476,21 @@ export class EmbeddedOutputParamConfigurationComponent implements IEmbeddedView 
             &lt;mat-form-field appearance&#x3D;&quot;outline&quot; class&#x3D;&quot;mat-form-field-outline-white-bg&quot;&gt;
                 &lt;mat-label class&#x3D;&quot;label&quot;&gt;Template&lt;/mat-label&gt;
                 &lt;mat-select formControlName&#x3D;&quot;interface&quot;&gt;
+                    &lt;mat-option [value]&#x3D;&quot;null&quot;&gt;Keine Auswahl&lt;/mat-option&gt;
                     &lt;mat-option *ngFor&#x3D;&quot;let interface of (interfaces$|async)&quot; [value]&#x3D;&quot;interface.identifier&quot;&gt;
                         {{interface.name}}
                     &lt;/mat-option&gt;
                 &lt;/mat-select&gt;
             &lt;/mat-form-field&gt;
             &lt;div class&#x3D;&quot;interface-preview&quot;&gt;
-                &lt;div class&#x3D;&quot;headline&quot;&gt;exemplary data&lt;/div&gt;
+                &lt;div class&#x3D;&quot;headline&quot;&gt;exemplary data ({{formGroup.controls.interface?.value}})&lt;/div&gt;
                 &lt;pre&gt;{{(interfaceDummyObject$|async) | json}}&lt;/pre&gt;
             &lt;/div&gt;
         &lt;/div&gt;
         &lt;div class&#x3D;&quot;section further-options&quot;&gt;
-            &lt;div class&#x3D;&quot;option&quot;&gt;
+            &lt;div class&#x3D;&quot;option&quot; (click)&#x3D;&quot;sampleData()&quot;&gt;
                 &lt;div class&#x3D;&quot;headline&quot;&gt;Data sampling&lt;/div&gt;
-                &lt;div class&#x3D;&quot;subtitle&quot;&gt;Use the data sampling tool to run yout code and automatically create an data
-                    template&lt;/div&gt;
+                &lt;div class&#x3D;&quot;subtitle&quot;&gt;Utilize the data sampling tool to execute your code and effortlessly generate a data template automatically&lt;/div&gt;
             &lt;/div&gt;
             &lt;div class&#x3D;&quot;option&quot;&gt;
                 &lt;div class&#x3D;&quot;headline&quot;&gt;Manually design interface&lt;/div&gt;
@@ -532,8 +596,8 @@ export class EmbeddedOutputParamConfigurationComponent implements IEmbeddedView 
 <script src="../js/libs/htmlparser.js"></script>
 <script src="../js/libs/deep-iterator.js"></script>
 <script>
-        var COMPONENT_TEMPLATE = '<div><div class="body" [formGroup]="formGroup">    <div class="hint">        We aren\'t able to recognize the functions output structure. Select an existing template or use the data sampling        tool to detect the structure.    </div>    <div class="content">        <div class="section select-existing-interface">            <mat-form-field appearance="outline" class="mat-form-field-outline-white-bg">                <mat-label class="label">Template</mat-label>                <mat-select formControlName="interface">                    <mat-option *ngFor="let interface of (interfaces$|async)" [value]="interface.identifier">                        {{interface.name}}                    </mat-option>                </mat-select>            </mat-form-field>            <div class="interface-preview">                <div class="headline">exemplary data</div>                <pre>{{(interfaceDummyObject$|async) | json}}</pre>            </div>        </div>        <div class="section further-options">            <div class="option">                <div class="headline">Data sampling</div>                <div class="subtitle">Use the data sampling tool to run yout code and automatically create an data                    template</div>            </div>            <div class="option">                <div class="headline">Manually design interface</div>                <div class="subtitle">Use the data structure designer to create a template</div>            </div>        </div>    </div></div></div>'
-    var COMPONENTS = [{'name': 'AboutComponent', 'selector': 'app-about'},{'name': 'AccessTokenInputComponent', 'selector': 'app-access-token-input'},{'name': 'ApiCallConfiguratorComponent', 'selector': 'app-api-call-configurator'},{'name': 'ApiCallConfiguratorDialogComponent', 'selector': 'app-api-call-configurator-dialog'},{'name': 'ApiConfigurationPreviewComponent', 'selector': 'app-api-configuration-preview'},{'name': 'ApiLoginTestComponent', 'selector': 'app-api-login-test'},{'name': 'AppComponent', 'selector': 'app-root'},{'name': 'CalculationComponent', 'selector': 'app-calculation'},{'name': 'CalculationContextOverviewComponent', 'selector': 'app-calculation-context-overview'},{'name': 'CodeEditorComponent', 'selector': 'app-code-editor'},{'name': 'ConfirmationComponent', 'selector': 'app-confirmation'},{'name': 'ContainerPreviewComponent', 'selector': 'app-container-preview'},{'name': 'EditDataDialogComponent', 'selector': 'app-edit-data-dialog'},{'name': 'EmbeddedConfigureErrorGatewayEntranceConnectionComponent', 'selector': 'app-embedded-configure-error-gateway-entrance-connection'},{'name': 'EmbeddedFunctionImplementationComponent', 'selector': 'app-embedded-function-implementation'},{'name': 'EmbeddedFunctionInputSelectionComponent', 'selector': 'app-embedded-function-input-selection'},{'name': 'EmbeddedFunctionSelectionComponent', 'selector': 'app-embedded-function-selection'},{'name': 'EmbeddedInputOutputMappingComponent', 'selector': '[app-embedded-input-output-mapping]'},{'name': 'EmbeddedInputOutputMappingTableRowComponent', 'selector': 'app-embedded-input-output-mapping-table-row'},{'name': 'EmbeddedOutputParamConfigurationComponent', 'selector': 'app-embedded-output-param-configuration'},{'name': 'EmbeddedParamEditorComponent', 'selector': 'app-embedded-param-editor'},{'name': 'EndpointInputComponent', 'selector': 'app-endpoint-input'},{'name': 'ErrorComponent', 'selector': 'app-error'},{'name': 'FunctionPreviewComponent', 'selector': 'app-function-preview'},{'name': 'GoodPreviewComponent', 'selector': 'app-good-preview'},{'name': 'GoodsPanelComponent', 'selector': 'app-goods-panel'},{'name': 'GroupsFormComponent', 'selector': 'app-groups-form'},{'name': 'GroupsPanelComponent', 'selector': 'app-groups-panel'},{'name': 'LocalDataComponent', 'selector': 'app-local-data'},{'name': 'MethodQuickInteractionComponent', 'selector': 'app-method-quick-interaction'},{'name': 'NavbarComponent', 'selector': 'app-navbar'},{'name': 'NoSolutionDialogComponent', 'selector': 'app-no-solution-dialog'},{'name': 'OrdersFormComponent', 'selector': 'app-orders-form'},{'name': 'ParamEditorComponent', 'selector': 'app-param-editor'},{'name': 'ParamMemberPathPreviewComponent', 'selector': 'app-param-member-path-preview'},{'name': 'ParamMemberPreviewComponent', 'selector': 'app-param-member-preview'},{'name': 'ParamPreviewComponent', 'selector': 'app-param-preview'},{'name': 'PipelineActionPreviewComponent', 'selector': 'app-pipeline-action-preview'},{'name': 'PipeRunnerComponent', 'selector': 'app-pipe-runner'},{'name': 'ProcessBuilderComponent', 'selector': 'app-process-builder'},{'name': 'ProcessBuilderWrapperComponent', 'selector': 'app-process-builder-wrapper'},{'name': 'ProductFormComponent', 'selector': 'app-products-form'},{'name': 'SceneVisualizationComponent', 'selector': 'app-scene-visualization'},{'name': 'SelectApiAuthorizationComponent', 'selector': 'app-select-api-authorization'},{'name': 'SelectGroupComponent', 'selector': 'app-select-group'},{'name': 'SelectProductComponent', 'selector': 'app-select-product'},{'name': 'SelectUnitComponent', 'selector': 'app-select-unit'},{'name': 'SolutionAnimationComponent', 'selector': 'app-solution-animation'},{'name': 'SolutionPreviewComponent', 'selector': 'app-solution-preview'},{'name': 'SolutionPreviewRenderingComponent', 'selector': 'app-solution-preview-rendering'},{'name': 'SolutionValidationComponent', 'selector': 'app-solution-validation'},{'name': 'SolutionVisualizationDialogComponent', 'selector': 'app-solution-visualization-dialog'},{'name': 'TaskCreationComponent', 'selector': 'app-task-creation'},{'name': 'UserInputComponent', 'selector': 'app-user-input'},{'name': 'UsernamePasswordCombinationComponent', 'selector': 'app-username-password-combination'},{'name': 'VisualizerComponent', 'selector': 'app-visualizer'},{'name': 'WidgetComponent', 'selector': 'app-widget'}];
+        var COMPONENT_TEMPLATE = '<div><div class="body" [formGroup]="formGroup">    <div class="hint">        We aren\'t able to recognize the functions output structure. Select an existing template or use the data sampling        tool to detect the structure.    </div>    <div class="content">        <div class="section select-existing-interface">            <mat-form-field appearance="outline" class="mat-form-field-outline-white-bg">                <mat-label class="label">Template</mat-label>                <mat-select formControlName="interface">                    <mat-option [value]="null">Keine Auswahl</mat-option>                    <mat-option *ngFor="let interface of (interfaces$|async)" [value]="interface.identifier">                        {{interface.name}}                    </mat-option>                </mat-select>            </mat-form-field>            <div class="interface-preview">                <div class="headline">exemplary data ({{formGroup.controls.interface?.value}})</div>                <pre>{{(interfaceDummyObject$|async) | json}}</pre>            </div>        </div>        <div class="section further-options">            <div class="option" (click)="sampleData()">                <div class="headline">Data sampling</div>                <div class="subtitle">Utilize the data sampling tool to execute your code and effortlessly generate a data template automatically</div>            </div>            <div class="option">                <div class="headline">Manually design interface</div>                <div class="subtitle">Use the data structure designer to create a template</div>            </div>        </div>    </div></div></div>'
+    var COMPONENTS = [{'name': 'AboutComponent', 'selector': 'app-about'},{'name': 'AccessTokenInputComponent', 'selector': 'app-access-token-input'},{'name': 'ApiCallConfiguratorComponent', 'selector': 'app-api-call-configurator'},{'name': 'ApiCallConfiguratorDialogComponent', 'selector': 'app-api-call-configurator-dialog'},{'name': 'ApiConfigurationPreviewComponent', 'selector': 'app-api-configuration-preview'},{'name': 'ApiLoginTestComponent', 'selector': 'app-api-login-test'},{'name': 'AppComponent', 'selector': 'app-root'},{'name': 'CalculationComponent', 'selector': 'app-calculation'},{'name': 'CalculationContextOverviewComponent', 'selector': 'app-calculation-context-overview'},{'name': 'CodeEditorComponent', 'selector': 'app-code-editor'},{'name': 'ConfirmationComponent', 'selector': 'app-confirmation'},{'name': 'ContainerPreviewComponent', 'selector': 'app-container-preview'},{'name': 'EditDataDialogComponent', 'selector': 'app-edit-data-dialog'},{'name': 'EmbeddedConfigureErrorGatewayEntranceConnectionComponent', 'selector': 'app-embedded-configure-error-gateway-entrance-connection'},{'name': 'EmbeddedFunctionImplementationComponent', 'selector': 'app-embedded-function-implementation'},{'name': 'EmbeddedFunctionInputSelectionComponent', 'selector': 'app-embedded-function-input-selection'},{'name': 'EmbeddedFunctionSelectionComponent', 'selector': 'app-embedded-function-selection'},{'name': 'EmbeddedInputOutputMappingComponent', 'selector': 'app-embedded-input-output-mapping'},{'name': 'EmbeddedInputOutputMappingTableRowComponent', 'selector': 'app-embedded-input-output-mapping-table-row'},{'name': 'EmbeddedOutputParamConfigurationComponent', 'selector': 'app-embedded-output-param-configuration'},{'name': 'EmbeddedParamEditorComponent', 'selector': 'app-embedded-param-editor'},{'name': 'EmbeddedStaticOutputDefinitionComponent', 'selector': 'app-embedded-static-output-definition'},{'name': 'EndpointInputComponent', 'selector': 'app-endpoint-input'},{'name': 'ErrorComponent', 'selector': 'app-error'},{'name': 'FunctionPreviewComponent', 'selector': 'app-function-preview'},{'name': 'GoodPreviewComponent', 'selector': 'app-good-preview'},{'name': 'GoodsPanelComponent', 'selector': 'app-goods-panel'},{'name': 'GroupsFormComponent', 'selector': 'app-groups-form'},{'name': 'GroupsPanelComponent', 'selector': 'app-groups-panel'},{'name': 'LocalDataComponent', 'selector': 'app-local-data'},{'name': 'MethodQuickInteractionComponent', 'selector': 'app-method-quick-interaction'},{'name': 'NavbarComponent', 'selector': 'app-navbar'},{'name': 'NoSolutionDialogComponent', 'selector': 'app-no-solution-dialog'},{'name': 'OrdersFormComponent', 'selector': 'app-orders-form'},{'name': 'ParamEditorComponent', 'selector': 'app-param-editor'},{'name': 'ParamMemberPathPreviewComponent', 'selector': 'app-param-member-path-preview'},{'name': 'ParamMemberPreviewComponent', 'selector': 'app-param-member-preview'},{'name': 'ParamPreviewComponent', 'selector': 'app-param-preview'},{'name': 'PipelineActionPreviewComponent', 'selector': 'app-pipeline-action-preview'},{'name': 'PipeRunnerComponent', 'selector': 'app-pipe-runner'},{'name': 'ProcessBuilderComponent', 'selector': 'app-process-builder'},{'name': 'ProcessBuilderWrapperComponent', 'selector': 'app-process-builder-wrapper'},{'name': 'ProductFormComponent', 'selector': 'app-products-form'},{'name': 'SceneVisualizationComponent', 'selector': 'app-scene-visualization'},{'name': 'SelectApiAuthorizationComponent', 'selector': 'app-select-api-authorization'},{'name': 'SelectGroupComponent', 'selector': 'app-select-group'},{'name': 'SelectProductComponent', 'selector': 'app-select-product'},{'name': 'SelectUnitComponent', 'selector': 'app-select-unit'},{'name': 'SolutionAnimationComponent', 'selector': 'app-solution-animation'},{'name': 'SolutionPreviewComponent', 'selector': 'app-solution-preview'},{'name': 'SolutionPreviewRenderingComponent', 'selector': 'app-solution-preview-rendering'},{'name': 'SolutionValidationComponent', 'selector': 'app-solution-validation'},{'name': 'SolutionVisualizationDialogComponent', 'selector': 'app-solution-visualization-dialog'},{'name': 'TaskCreationComponent', 'selector': 'app-task-creation'},{'name': 'UserInputComponent', 'selector': 'app-user-input'},{'name': 'UsernamePasswordCombinationComponent', 'selector': 'app-username-password-combination'},{'name': 'VisualizerComponent', 'selector': 'app-visualizer'},{'name': 'WidgetComponent', 'selector': 'app-widget'}];
     var DIRECTIVES = [{'name': 'AnimatedCounterDirective', 'selector': '[appAnimatedCounter]'}];
     var ACTUAL_COMPONENT = {'name': 'EmbeddedOutputParamConfigurationComponent'};
 </script>

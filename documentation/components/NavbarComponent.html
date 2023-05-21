@@ -672,81 +672,96 @@ export class NavbarComponent {
     </div>
 
     <div class="tab-pane fade " id="c-templateData">
-        <pre class="line-numbers"><code class="language-html">&lt;div class&#x3D;&quot;body&quot; [class.limited-height]&#x3D;&quot;(limitedHeight$|async)&quot;&gt;
+        <pre class="line-numbers"><code class="language-html">&lt;div class&#x3D;&quot;body&quot; [class.limited-height]&#x3D;&quot;limitedHeight$ | async&quot;&gt;
+  &lt;a class&#x3D;&quot;option-wrapper disabled&quot;&gt;
+    &lt;div
+      class&#x3D;&quot;option&quot;
+      routerLink&#x3D;&quot;route-planning&quot;
+      [class.active]&#x3D;&quot;location.pathname &#x3D;&#x3D;&#x3D; &#x27;/route-planning&#x27;&quot;
+    &gt;
+      &lt;mat-icon class&#x3D;&quot;icon&quot;&gt;map&lt;/mat-icon&gt;
+      &lt;div class&#x3D;&quot;text&quot;&gt;routing&lt;/div&gt;
+    &lt;/div&gt;
+  &lt;/a&gt;
 
-   &lt;div class&#x3D;&quot;option-wrapper disabled&quot;&gt;
+  &lt;a class&#x3D;&quot;option-wrapper&quot;&gt;
+    &lt;div
+      class&#x3D;&quot;option&quot;
+      routerLink&#x3D;&quot;data-pipeline-designer&quot;
+      [class.active]&#x3D;&quot;location.pathname &#x3D;&#x3D;&#x3D; &#x27;/data-pipeline-designer&#x27;&quot;
+    &gt;
+      &lt;mat-icon class&#x3D;&quot;icon&quot;&gt;hub&lt;/mat-icon&gt;
+      &lt;div class&#x3D;&quot;text&quot;&gt;pipeline&lt;/div&gt;
+    &lt;/div&gt;
+  &lt;/a&gt;
 
-      &lt;div class&#x3D;&quot;option&quot; routerLink&#x3D;&quot;route-planning&quot; [class.active]&#x3D;&quot;location.pathname &#x3D;&#x3D;&#x3D; &#x27;/route-planning&#x27;&quot;&gt;
+  &lt;a class&#x3D;&quot;option-wrapper&quot;&gt;
+    &lt;div
+      class&#x3D;&quot;option&quot;
+      routerLink&#x3D;&quot;pipe-runner&quot;
+      [class.active]&#x3D;&quot;location.pathname &#x3D;&#x3D;&#x3D; &#x27;/pipe-runner&#x27;&quot;
+    &gt;
+      &lt;mat-icon class&#x3D;&quot;icon&quot;&gt;play_arrow&lt;/mat-icon&gt;
+      &lt;div class&#x3D;&quot;text&quot;&gt;run pipe&lt;/div&gt;
+    &lt;/div&gt;
+  &lt;/a&gt;
 
-         &lt;mat-icon class&#x3D;&quot;icon&quot;&gt;map&lt;/mat-icon&gt;
-         &lt;div class&#x3D;&quot;text&quot;&gt;routing&lt;/div&gt;
-   
-      &lt;/div&gt;
-   &lt;/div&gt;
+  &lt;a class&#x3D;&quot;option-wrapper&quot;&gt;
+    &lt;div
+      class&#x3D;&quot;option&quot;
+      routerLink&#x3D;&quot;local-data&quot;
+      [class.active]&#x3D;&quot;location.pathname &#x3D;&#x3D;&#x3D; &#x27;/local-data&#x27;&quot;
+    &gt;
+      &lt;mat-icon class&#x3D;&quot;icon&quot;&gt;web_stories&lt;/mat-icon&gt;
+      &lt;div class&#x3D;&quot;text&quot;&gt;local data&lt;/div&gt;
+    &lt;/div&gt;
+  &lt;/a&gt;
 
-   &lt;div class&#x3D;&quot;option-wrapper&quot;&gt;
-      &lt;div class&#x3D;&quot;option&quot; routerLink&#x3D;&quot;data-pipeline-designer&quot; [class.active]&#x3D;&quot;location.pathname &#x3D;&#x3D;&#x3D; &#x27;/data-pipeline-designer&#x27;&quot;&gt;
+  &lt;a class&#x3D;&quot;option-wrapper&quot;&gt;
+    &lt;div
+      class&#x3D;&quot;option&quot;
+      routerLink&#x3D;&quot;calculation&quot;
+      [class.active]&#x3D;&quot;location.pathname &#x3D;&#x3D;&#x3D; &#x27;/calculation&#x27;&quot;
+    &gt;
+      &lt;mat-icon class&#x3D;&quot;icon&quot;&gt;rocket_launch&lt;/mat-icon&gt;
+      &lt;div class&#x3D;&quot;text&quot;&gt;calculation&lt;/div&gt;
+    &lt;/div&gt;
+  &lt;/a&gt;
 
-         &lt;mat-icon class&#x3D;&quot;icon&quot;&gt;hub&lt;/mat-icon&gt;
-         &lt;div class&#x3D;&quot;text&quot;&gt;pipeline&lt;/div&gt;
-   
-      &lt;/div&gt;
-   &lt;/div&gt;
+  &lt;a
+    id&#x3D;&quot;visualization-option-wrapper&quot;
+    class&#x3D;&quot;option-wrapper&quot;
+    [class.disabled]&#x3D;&quot;(solutionCount$ | async) &#x3D;&#x3D;&#x3D; 0&quot;
+  &gt;
+    &lt;div
+      class&#x3D;&quot;option&quot;
+      (click)&#x3D;&quot;gotoVisualizer()&quot;
+      [ngClass]&#x3D;&quot;{
+        active: location.pathname &#x3D;&#x3D;&#x3D; &#x27;/visualizer&#x27;,
+        highlighted: solutionNavItemHighlighted$ | async
+      }&quot;
+    &gt;
+      &lt;mat-icon class&#x3D;&quot;icon&quot;&gt;view_in_ar&lt;/mat-icon&gt;
+      &lt;div class&#x3D;&quot;text&quot;&gt;visualization&lt;/div&gt;
+    &lt;/div&gt;
+  &lt;/a&gt;
 
-   &lt;div class&#x3D;&quot;option-wrapper&quot;&gt;
-      &lt;div class&#x3D;&quot;option&quot; routerLink&#x3D;&quot;pipe-runner&quot; [class.active]&#x3D;&quot;location.pathname &#x3D;&#x3D;&#x3D; &#x27;/pipe-runner&#x27;&quot;&gt;
+  &lt;div class&#x3D;&quot;spacer&quot;&gt;&lt;/div&gt;
 
-         &lt;mat-icon class&#x3D;&quot;icon&quot;&gt;play_arrow&lt;/mat-icon&gt;
-         &lt;div class&#x3D;&quot;text&quot;&gt;run pipe&lt;/div&gt;
-   
-      &lt;/div&gt;
-   &lt;/div&gt;
-   
-   &lt;div class&#x3D;&quot;option-wrapper&quot;&gt;
-      &lt;div class&#x3D;&quot;option&quot; routerLink&#x3D;&quot;local-data&quot; [class.active]&#x3D;&quot;location.pathname &#x3D;&#x3D;&#x3D; &#x27;/local-data&#x27;&quot;&gt;
+  &lt;a class&#x3D;&quot;option-wrapper&quot;&gt;
+    &lt;div
+      class&#x3D;&quot;option&quot;
+      routerLink&#x3D;&quot;about&quot;
+      [class.active]&#x3D;&quot;location.pathname &#x3D;&#x3D;&#x3D; &#x27;/about&#x27;&quot;
+    &gt;
+      &lt;mat-icon class&#x3D;&quot;icon&quot;&gt;help&lt;/mat-icon&gt;
+      &lt;div class&#x3D;&quot;text&quot;&gt;about&lt;/div&gt;
+    &lt;/div&gt;
+  &lt;/a&gt;
 
-         &lt;mat-icon class&#x3D;&quot;icon&quot;&gt;web_stories&lt;/mat-icon&gt;
-         &lt;div class&#x3D;&quot;text&quot;&gt;local data&lt;/div&gt;
-   
-      &lt;/div&gt;
-   &lt;/div&gt;
-
-   &lt;div class&#x3D;&quot;option-wrapper&quot;&gt;
-      &lt;div class&#x3D;&quot;option&quot; routerLink&#x3D;&quot;calculation&quot; [class.active]&#x3D;&quot;location.pathname &#x3D;&#x3D;&#x3D; &#x27;/calculation&#x27;&quot;&gt;
-
-         &lt;mat-icon class&#x3D;&quot;icon&quot;&gt;rocket_launch&lt;/mat-icon&gt;
-         &lt;div class&#x3D;&quot;text&quot;&gt;calculation&lt;/div&gt;
-   
-      &lt;/div&gt;
-   &lt;/div&gt;
-
-   &lt;div id&#x3D;&quot;visualization-option-wrapper&quot; class&#x3D;&quot;option-wrapper&quot; [class.disabled]&#x3D;&quot;(solutionCount$|async) &#x3D;&#x3D;&#x3D; 0&quot;&gt;
-      &lt;div class&#x3D;&quot;option&quot; (click)&#x3D;&quot;gotoVisualizer()&quot; [ngClass]&#x3D;&quot;{
-         &#x27;active&#x27;: location.pathname &#x3D;&#x3D;&#x3D; &#x27;/visualizer&#x27;,
-         &#x27;highlighted&#x27;: solutionNavItemHighlighted$|async
-      }&quot;&gt;
-
-         &lt;mat-icon class&#x3D;&quot;icon&quot;&gt;view_in_ar&lt;/mat-icon&gt;
-         &lt;div class&#x3D;&quot;text&quot;&gt;visualization&lt;/div&gt;
-   
-      &lt;/div&gt;
-   &lt;/div&gt;
-
-   &lt;div class&#x3D;&quot;spacer&quot;&gt;&lt;/div&gt;
-
-   &lt;div class&#x3D;&quot;option-wrapper&quot;&gt;
-      &lt;div class&#x3D;&quot;option&quot; routerLink&#x3D;&quot;about&quot; [class.active]&#x3D;&quot;location.pathname &#x3D;&#x3D;&#x3D; &#x27;/about&#x27;&quot;&gt;
-
-         &lt;mat-icon class&#x3D;&quot;icon&quot;&gt;help&lt;/mat-icon&gt;
-         &lt;div class&#x3D;&quot;text&quot;&gt;about&lt;/div&gt;
-   
-      &lt;/div&gt;
-   &lt;/div&gt;
-
-   &lt;div class&#x3D;&quot;version&quot;&gt;
-      version {{currentApplicationVersion ?? &#x27;local dev&#x27;}}
-   &lt;/div&gt;
-
+  &lt;div class&#x3D;&quot;version&quot;&gt;
+    version {{ currentApplicationVersion ?? &quot;local dev&quot; }}
+  &lt;/div&gt;
 &lt;/div&gt;
 </code></pre>
     </div>
@@ -773,37 +788,37 @@ export class NavbarComponent {
 
 .option-wrapper {
   overflow: hidden;
-}
 
-.option-wrapper.disabled {
-  opacity: 0.2;
-  pointer-events: none;
-}
-
-.option {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  height: 80px;
-  width: 80px;
-  cursor: pointer;
-  transition: all 0.2s;
-  overflow: hidden;
-  -webkit-user-select: none;
-  user-select: none;
-  border-left: 3px solid transparent;
-  box-sizing: border-box;
-  padding-right: 5px;
-
-  &amp;.highlighted {
-    animation: blinking 1s infinite;
+  &amp;.disabled {
+    opacity: 0.2;
+    pointer-events: none;
   }
-}
 
-.option.active {
-  background: linear-gradient(135deg, #0078d4, #0078d4bd, #0078d4);
-  border-color: #ffffff75;
+  .option {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 80px;
+    width: 80px;
+    cursor: pointer;
+    transition: all 0.2s;
+    overflow: hidden;
+    -webkit-user-select: none;
+    user-select: none;
+    border-left: 3px solid transparent;
+    box-sizing: border-box;
+    padding-right: 5px;
+
+    &amp;.highlighted {
+      animation: blinking 1s infinite;
+    }
+
+    &amp;.active {
+      background: linear-gradient(135deg, #0078d4, #0078d4bd, #0078d4);
+      border-color: #ffffff75;
+    }
+  }
 }
 
 .option:hover {
@@ -918,8 +933,8 @@ export class NavbarComponent {
 <script src="../js/libs/htmlparser.js"></script>
 <script src="../js/libs/deep-iterator.js"></script>
 <script>
-        var COMPONENT_TEMPLATE = '<div><div class="body" [class.limited-height]="(limitedHeight$|async)">   <div class="option-wrapper disabled">      <div class="option" routerLink="route-planning" [class.active]="location.pathname === \'/route-planning\'">         <mat-icon class="icon">map</mat-icon>         <div class="text">routing</div>         </div>   </div>   <div class="option-wrapper">      <div class="option" routerLink="data-pipeline-designer" [class.active]="location.pathname === \'/data-pipeline-designer\'">         <mat-icon class="icon">hub</mat-icon>         <div class="text">pipeline</div>         </div>   </div>   <div class="option-wrapper">      <div class="option" routerLink="pipe-runner" [class.active]="location.pathname === \'/pipe-runner\'">         <mat-icon class="icon">play_arrow</mat-icon>         <div class="text">run pipe</div>         </div>   </div>      <div class="option-wrapper">      <div class="option" routerLink="local-data" [class.active]="location.pathname === \'/local-data\'">         <mat-icon class="icon">web_stories</mat-icon>         <div class="text">local data</div>         </div>   </div>   <div class="option-wrapper">      <div class="option" routerLink="calculation" [class.active]="location.pathname === \'/calculation\'">         <mat-icon class="icon">rocket_launch</mat-icon>         <div class="text">calculation</div>         </div>   </div>   <div id="visualization-option-wrapper" class="option-wrapper" [class.disabled]="(solutionCount$|async) === 0">      <div class="option" (click)="gotoVisualizer()" [ngClass]="{         \'active\': location.pathname === \'/visualizer\',         \'highlighted\': solutionNavItemHighlighted$|async      }">         <mat-icon class="icon">view_in_ar</mat-icon>         <div class="text">visualization</div>         </div>   </div>   <div class="spacer"></div>   <div class="option-wrapper">      <div class="option" routerLink="about" [class.active]="location.pathname === \'/about\'">         <mat-icon class="icon">help</mat-icon>         <div class="text">about</div>         </div>   </div>   <div class="version">      version {{currentApplicationVersion ?? \'local dev\'}}   </div></div></div>'
-    var COMPONENTS = [{'name': 'AboutComponent', 'selector': 'app-about'},{'name': 'AccessTokenInputComponent', 'selector': 'app-access-token-input'},{'name': 'ApiCallConfiguratorComponent', 'selector': 'app-api-call-configurator'},{'name': 'ApiCallConfiguratorDialogComponent', 'selector': 'app-api-call-configurator-dialog'},{'name': 'ApiConfigurationPreviewComponent', 'selector': 'app-api-configuration-preview'},{'name': 'ApiLoginTestComponent', 'selector': 'app-api-login-test'},{'name': 'AppComponent', 'selector': 'app-root'},{'name': 'CalculationComponent', 'selector': 'app-calculation'},{'name': 'CalculationContextOverviewComponent', 'selector': 'app-calculation-context-overview'},{'name': 'CodeEditorComponent', 'selector': 'app-code-editor'},{'name': 'ConfirmationComponent', 'selector': 'app-confirmation'},{'name': 'ContainerPreviewComponent', 'selector': 'app-container-preview'},{'name': 'EditDataDialogComponent', 'selector': 'app-edit-data-dialog'},{'name': 'EmbeddedConfigureErrorGatewayEntranceConnectionComponent', 'selector': 'app-embedded-configure-error-gateway-entrance-connection'},{'name': 'EmbeddedFunctionImplementationComponent', 'selector': 'app-embedded-function-implementation'},{'name': 'EmbeddedFunctionInputSelectionComponent', 'selector': 'app-embedded-function-input-selection'},{'name': 'EmbeddedFunctionSelectionComponent', 'selector': 'app-embedded-function-selection'},{'name': 'EmbeddedInputOutputMappingComponent', 'selector': '[app-embedded-input-output-mapping]'},{'name': 'EmbeddedInputOutputMappingTableRowComponent', 'selector': 'app-embedded-input-output-mapping-table-row'},{'name': 'EmbeddedOutputParamConfigurationComponent', 'selector': 'app-embedded-output-param-configuration'},{'name': 'EmbeddedParamEditorComponent', 'selector': 'app-embedded-param-editor'},{'name': 'EndpointInputComponent', 'selector': 'app-endpoint-input'},{'name': 'ErrorComponent', 'selector': 'app-error'},{'name': 'FunctionPreviewComponent', 'selector': 'app-function-preview'},{'name': 'GoodPreviewComponent', 'selector': 'app-good-preview'},{'name': 'GoodsPanelComponent', 'selector': 'app-goods-panel'},{'name': 'GroupsFormComponent', 'selector': 'app-groups-form'},{'name': 'GroupsPanelComponent', 'selector': 'app-groups-panel'},{'name': 'LocalDataComponent', 'selector': 'app-local-data'},{'name': 'MethodQuickInteractionComponent', 'selector': 'app-method-quick-interaction'},{'name': 'NavbarComponent', 'selector': 'app-navbar'},{'name': 'NoSolutionDialogComponent', 'selector': 'app-no-solution-dialog'},{'name': 'OrdersFormComponent', 'selector': 'app-orders-form'},{'name': 'ParamEditorComponent', 'selector': 'app-param-editor'},{'name': 'ParamMemberPathPreviewComponent', 'selector': 'app-param-member-path-preview'},{'name': 'ParamMemberPreviewComponent', 'selector': 'app-param-member-preview'},{'name': 'ParamPreviewComponent', 'selector': 'app-param-preview'},{'name': 'PipelineActionPreviewComponent', 'selector': 'app-pipeline-action-preview'},{'name': 'PipeRunnerComponent', 'selector': 'app-pipe-runner'},{'name': 'ProcessBuilderComponent', 'selector': 'app-process-builder'},{'name': 'ProcessBuilderWrapperComponent', 'selector': 'app-process-builder-wrapper'},{'name': 'ProductFormComponent', 'selector': 'app-products-form'},{'name': 'SceneVisualizationComponent', 'selector': 'app-scene-visualization'},{'name': 'SelectApiAuthorizationComponent', 'selector': 'app-select-api-authorization'},{'name': 'SelectGroupComponent', 'selector': 'app-select-group'},{'name': 'SelectProductComponent', 'selector': 'app-select-product'},{'name': 'SelectUnitComponent', 'selector': 'app-select-unit'},{'name': 'SolutionAnimationComponent', 'selector': 'app-solution-animation'},{'name': 'SolutionPreviewComponent', 'selector': 'app-solution-preview'},{'name': 'SolutionPreviewRenderingComponent', 'selector': 'app-solution-preview-rendering'},{'name': 'SolutionValidationComponent', 'selector': 'app-solution-validation'},{'name': 'SolutionVisualizationDialogComponent', 'selector': 'app-solution-visualization-dialog'},{'name': 'TaskCreationComponent', 'selector': 'app-task-creation'},{'name': 'UserInputComponent', 'selector': 'app-user-input'},{'name': 'UsernamePasswordCombinationComponent', 'selector': 'app-username-password-combination'},{'name': 'VisualizerComponent', 'selector': 'app-visualizer'},{'name': 'WidgetComponent', 'selector': 'app-widget'}];
+        var COMPONENT_TEMPLATE = '<div><div class="body" [class.limited-height]="limitedHeight$ | async">  <a class="option-wrapper disabled">    <div      class="option"      routerLink="route-planning"      [class.active]="location.pathname === \'/route-planning\'"    >      <mat-icon class="icon">map</mat-icon>      <div class="text">routing</div>    </div>  </a>  <a class="option-wrapper">    <div      class="option"      routerLink="data-pipeline-designer"      [class.active]="location.pathname === \'/data-pipeline-designer\'"    >      <mat-icon class="icon">hub</mat-icon>      <div class="text">pipeline</div>    </div>  </a>  <a class="option-wrapper">    <div      class="option"      routerLink="pipe-runner"      [class.active]="location.pathname === \'/pipe-runner\'"    >      <mat-icon class="icon">play_arrow</mat-icon>      <div class="text">run pipe</div>    </div>  </a>  <a class="option-wrapper">    <div      class="option"      routerLink="local-data"      [class.active]="location.pathname === \'/local-data\'"    >      <mat-icon class="icon">web_stories</mat-icon>      <div class="text">local data</div>    </div>  </a>  <a class="option-wrapper">    <div      class="option"      routerLink="calculation"      [class.active]="location.pathname === \'/calculation\'"    >      <mat-icon class="icon">rocket_launch</mat-icon>      <div class="text">calculation</div>    </div>  </a>  <a    id="visualization-option-wrapper"    class="option-wrapper"    [class.disabled]="(solutionCount$ | async) === 0"  >    <div      class="option"      (click)="gotoVisualizer()"      [ngClass]="{        active: location.pathname === \'/visualizer\',        highlighted: solutionNavItemHighlighted$ | async      }"    >      <mat-icon class="icon">view_in_ar</mat-icon>      <div class="text">visualization</div>    </div>  </a>  <div class="spacer"></div>  <a class="option-wrapper">    <div      class="option"      routerLink="about"      [class.active]="location.pathname === \'/about\'"    >      <mat-icon class="icon">help</mat-icon>      <div class="text">about</div>    </div>  </a>  <div class="version">    version {{ currentApplicationVersion ?? "local dev" }}  </div></div></div>'
+    var COMPONENTS = [{'name': 'AboutComponent', 'selector': 'app-about'},{'name': 'AccessTokenInputComponent', 'selector': 'app-access-token-input'},{'name': 'ApiCallConfiguratorComponent', 'selector': 'app-api-call-configurator'},{'name': 'ApiCallConfiguratorDialogComponent', 'selector': 'app-api-call-configurator-dialog'},{'name': 'ApiConfigurationPreviewComponent', 'selector': 'app-api-configuration-preview'},{'name': 'ApiLoginTestComponent', 'selector': 'app-api-login-test'},{'name': 'AppComponent', 'selector': 'app-root'},{'name': 'CalculationComponent', 'selector': 'app-calculation'},{'name': 'CalculationContextOverviewComponent', 'selector': 'app-calculation-context-overview'},{'name': 'CodeEditorComponent', 'selector': 'app-code-editor'},{'name': 'ConfirmationComponent', 'selector': 'app-confirmation'},{'name': 'ContainerPreviewComponent', 'selector': 'app-container-preview'},{'name': 'EditDataDialogComponent', 'selector': 'app-edit-data-dialog'},{'name': 'EmbeddedConfigureErrorGatewayEntranceConnectionComponent', 'selector': 'app-embedded-configure-error-gateway-entrance-connection'},{'name': 'EmbeddedFunctionImplementationComponent', 'selector': 'app-embedded-function-implementation'},{'name': 'EmbeddedFunctionInputSelectionComponent', 'selector': 'app-embedded-function-input-selection'},{'name': 'EmbeddedFunctionSelectionComponent', 'selector': 'app-embedded-function-selection'},{'name': 'EmbeddedInputOutputMappingComponent', 'selector': 'app-embedded-input-output-mapping'},{'name': 'EmbeddedInputOutputMappingTableRowComponent', 'selector': 'app-embedded-input-output-mapping-table-row'},{'name': 'EmbeddedOutputParamConfigurationComponent', 'selector': 'app-embedded-output-param-configuration'},{'name': 'EmbeddedParamEditorComponent', 'selector': 'app-embedded-param-editor'},{'name': 'EmbeddedStaticOutputDefinitionComponent', 'selector': 'app-embedded-static-output-definition'},{'name': 'EndpointInputComponent', 'selector': 'app-endpoint-input'},{'name': 'ErrorComponent', 'selector': 'app-error'},{'name': 'FunctionPreviewComponent', 'selector': 'app-function-preview'},{'name': 'GoodPreviewComponent', 'selector': 'app-good-preview'},{'name': 'GoodsPanelComponent', 'selector': 'app-goods-panel'},{'name': 'GroupsFormComponent', 'selector': 'app-groups-form'},{'name': 'GroupsPanelComponent', 'selector': 'app-groups-panel'},{'name': 'LocalDataComponent', 'selector': 'app-local-data'},{'name': 'MethodQuickInteractionComponent', 'selector': 'app-method-quick-interaction'},{'name': 'NavbarComponent', 'selector': 'app-navbar'},{'name': 'NoSolutionDialogComponent', 'selector': 'app-no-solution-dialog'},{'name': 'OrdersFormComponent', 'selector': 'app-orders-form'},{'name': 'ParamEditorComponent', 'selector': 'app-param-editor'},{'name': 'ParamMemberPathPreviewComponent', 'selector': 'app-param-member-path-preview'},{'name': 'ParamMemberPreviewComponent', 'selector': 'app-param-member-preview'},{'name': 'ParamPreviewComponent', 'selector': 'app-param-preview'},{'name': 'PipelineActionPreviewComponent', 'selector': 'app-pipeline-action-preview'},{'name': 'PipeRunnerComponent', 'selector': 'app-pipe-runner'},{'name': 'ProcessBuilderComponent', 'selector': 'app-process-builder'},{'name': 'ProcessBuilderWrapperComponent', 'selector': 'app-process-builder-wrapper'},{'name': 'ProductFormComponent', 'selector': 'app-products-form'},{'name': 'SceneVisualizationComponent', 'selector': 'app-scene-visualization'},{'name': 'SelectApiAuthorizationComponent', 'selector': 'app-select-api-authorization'},{'name': 'SelectGroupComponent', 'selector': 'app-select-group'},{'name': 'SelectProductComponent', 'selector': 'app-select-product'},{'name': 'SelectUnitComponent', 'selector': 'app-select-unit'},{'name': 'SolutionAnimationComponent', 'selector': 'app-solution-animation'},{'name': 'SolutionPreviewComponent', 'selector': 'app-solution-preview'},{'name': 'SolutionPreviewRenderingComponent', 'selector': 'app-solution-preview-rendering'},{'name': 'SolutionValidationComponent', 'selector': 'app-solution-validation'},{'name': 'SolutionVisualizationDialogComponent', 'selector': 'app-solution-visualization-dialog'},{'name': 'TaskCreationComponent', 'selector': 'app-task-creation'},{'name': 'UserInputComponent', 'selector': 'app-user-input'},{'name': 'UsernamePasswordCombinationComponent', 'selector': 'app-username-password-combination'},{'name': 'VisualizerComponent', 'selector': 'app-visualizer'},{'name': 'WidgetComponent', 'selector': 'app-widget'}];
     var DIRECTIVES = [{'name': 'AnimatedCounterDirective', 'selector': '[appAnimatedCounter]'}];
     var ACTUAL_COMPONENT = {'name': 'NavbarComponent'};
 </script>

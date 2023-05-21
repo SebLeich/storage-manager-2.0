@@ -65,7 +65,7 @@
             <h3>File</h3>
         </p>
         <p class="comment">
-            <code>src/lib/bpmn-io/bpmn-modules.ts</code>
+            <code>src/lib/bpmn-io/interfaces/modules/tooltip-module.interface.ts</code>
         </p>
 
 
@@ -294,49 +294,13 @@
 
 
     <div class="tab-pane fade  tab-source-code" id="c-source">
-        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { IBpmnJS } from &quot;../process-builder/interfaces/bpmn-js.interface&quot;;
-import bpmnJsModules from &quot;./bpmn-js-modules&quot;;
-import { IElement } from &quot;./interfaces/element.interface&quot;;
-import { IModelingModule } from &quot;./interfaces/modeling-module.interface&quot;;
-import { IZoomScrollModule } from &quot;./interfaces/zoom-scroll-module.interface&quot;;
-import { ICanvasModule } from &quot;./interfaces/canvas-module.interface&quot;;
-import { IEventBusModule } from &quot;./interfaces/event-bus-module.interface&quot;;
-import { IDirectEditingModule } from &quot;./interfaces/direct-editing-module.interface&quot;;
-import { IGraphicsFactory } from &quot;./interfaces/graphics-factory.interface&quot;;
-import { IConnector } from &quot;./interfaces/connector.interface&quot;;
-
-export const getCanvasModule &#x3D; (bpmnJS: IBpmnJS) &#x3D;&gt; bpmnJS.get(bpmnJsModules.Canvas) as ICanvasModule;
-export const getDirectEditingModule &#x3D; (bpmnJS: IBpmnJS) &#x3D;&gt; bpmnJS.get(bpmnJsModules.DirectEditing) as IDirectEditingModule;
-export const getModelingModule &#x3D; (bpmnJS: IBpmnJS) &#x3D;&gt; bpmnJS.get(bpmnJsModules.Modeling) as IModelingModule;
-export const getGraphicsFactory &#x3D; (bpmnJS: IBpmnJS) &#x3D;&gt; bpmnJS.get(bpmnJsModules.GraphicsFactory) as IGraphicsFactory;
-export const getElementRegistryModule &#x3D; (bpmnJS: IBpmnJS) &#x3D;&gt; bpmnJS.get(bpmnJsModules.ElementRegistry) as IElementRegistryModule;
-export const getEventBusModule &#x3D; (bpmnJS: IBpmnJS) &#x3D;&gt; bpmnJS.get(bpmnJsModules.EventBus) as IEventBusModule;
-export const getTooltipModule &#x3D; (bpmnJS: IBpmnJS) &#x3D;&gt; bpmnJS.get(bpmnJsModules.Tooltip) as ITooltipModule;
-export const getZoomScrollModule &#x3D; (bpmnJS: IBpmnJS) &#x3D;&gt; bpmnJS.get(bpmnJsModules.ZoomScroll) as IZoomScrollModule;
-
-export interface ITooltipModule {
+        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">export interface ITooltipModule {
     add: (data: { position: { x: number, y: number }, html: string }) &#x3D;&gt; void;
     hide: () &#x3D;&gt; void;
     remove: (data: any) &#x3D;&gt; void;
     show: () &#x3D;&gt; void;
     _tooltips: { [key: string]: object };
-}
-
-export interface IElementRegistryModule {
-    add: (element: IElement) &#x3D;&gt; void;
-    filter: (cond: (e: IElement) &#x3D;&gt; boolean) &#x3D;&gt; IElement[];
-    find: (cond: (e: IElement) &#x3D;&gt; boolean) &#x3D;&gt; IElement | undefined;
-    forEach: (arg: (e: IElement) &#x3D;&gt; void) &#x3D;&gt; void;
-    get: (id: string) &#x3D;&gt; IElement | IConnector | undefined;
-    getAll: () &#x3D;&gt; IElement[];
-    remove: (element: IElement) &#x3D;&gt; void;
-    updateId: (element: IElement, id: string) &#x3D;&gt; void;
-    /*
-    getGraphics: ƒ (e, t)
-    updateGraphics: ƒ (e, t, n)
-    */
-}
-</code></pre>
+}</code></pre>
     </div>
 </div>
 

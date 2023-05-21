@@ -146,9 +146,8 @@
     <div class="tab-pane fade  tab-source-code" id="c-source">
         <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { createEntityAdapter, EntityAdapter, EntityState, Update } from &#x27;@ngrx/entity&#x27;;
 import { createReducer, on } from &#x27;@ngrx/store&#x27;;
-import { IFunction } from &#x27;../../interfaces/function.interface&#x27;;
+import { IFunction } from &#x27;@process-builder/interfaces&#x27;;
 import { addIFunction, addIFunctions, removeIFunction, setIFunctionsCanFailFlag, updateIFunction, updateIFunctionOutputParam, upsertIFunction, upsertIFunctions } from &#x27;../actions/function.actions&#x27;;
-
 
 export const featureKey &#x3D; &#x27;function&#x27;;
 
@@ -212,7 +211,7 @@ export const reducer &#x3D; createReducer(
         implementation: func.implementation,
         requireCustomImplementation: func.requireCustomImplementation,
         requireDynamicInput: func.requireDynamicInput,
-        useDynamicInputParams: func.useDynamicInputParams
+        //useDynamicInputParams: func.useDynamicInputParams
       }
     }
     return adapter.updateOne(update, state);
@@ -221,7 +220,7 @@ export const reducer &#x3D; createReducer(
   on(updateIFunctionOutputParam, (state: State, { identifier, outputParam }) &#x3D;&gt; {
     let update: Update&lt;IFunction&gt; &#x3D; {
       id: identifier,
-      changes: { output: { &#x27;param&#x27;: outputParam } }
+      changes: { output: outputParam }
     }
     return adapter.updateOne(update, state);
   }),

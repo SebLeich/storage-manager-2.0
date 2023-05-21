@@ -119,12 +119,12 @@
             <tbody>
                 <tr>
                     <td class="col-md-4">
-<code>constructor(_dialog: MatDialog, funcs: <a href="../interfaces/IFunction.html" target="_self">IFunction[]</a>, _injector: <a href="https://angular.io/api/core/Injector" target="_blank">Injector</a>)</code>
+<code>constructor(_dialog: MatDialog, funcs: <a href="../interfaces/IFunction.html" target="_self">IFunction[]</a>, _injector: <a href="https://angular.io/api/core/Injector" target="_blank">Injector</a>, sso: ScrollStrategyOptions)</code>
                     </td>
                 </tr>
                         <tr>
                             <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="15" class="link-to-prism">src/lib/process-builder/services/dialog.service.ts:15</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="16" class="link-to-prism">src/lib/process-builder/services/dialog.service.ts:16</a></div>
                             </td>
                         </tr>
 
@@ -177,6 +177,18 @@
                                                     </td>
                                                     
                                                 </tr>
+                                                <tr>
+                                                        <td>sso</td>
+                                                  
+                                                        <td>
+                                                                    <code>ScrollStrategyOptions</code>
+                                                        </td>
+                                                  
+                                                    <td>
+                                                            No
+                                                    </td>
+                                                    
+                                                </tr>
                                         </tbody>
                                     </table>
                             </div>
@@ -213,8 +225,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="23"
-                            class="link-to-prism">src/lib/process-builder/services/dialog.service.ts:23</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="25"
+                            class="link-to-prism">src/lib/process-builder/services/dialog.service.ts:25</a></div>
                 </td>
             </tr>
 
@@ -284,8 +296,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="38"
-                            class="link-to-prism">src/lib/process-builder/services/dialog.service.ts:38</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="41"
+                            class="link-to-prism">src/lib/process-builder/services/dialog.service.ts:41</a></div>
                 </td>
             </tr>
 
@@ -335,7 +347,7 @@
                     <div>
                     </div>
                     <div class="io-description">
-                        <b>Returns : </b>    <code>Observable&lt;Object&gt;</code>
+                        <b>Returns : </b>    <code>Observable&lt;object&gt;</code>
 
                     </div>
                     <div class="io-description">
@@ -380,7 +392,7 @@
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="19" class="link-to-prism">src/lib/process-builder/services/dialog.service.ts:19</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="20" class="link-to-prism">src/lib/process-builder/services/dialog.service.ts:20</a></div>
                         </td>
                     </tr>
 
@@ -403,6 +415,7 @@ import { TaskCreationComponent } from &#x27;../components/dialog/task-creation/t
 import { FUNCTIONS_CONFIG_TOKEN, IFunction } from &#x27;../interfaces/function.interface&#x27;;
 import { ITaskCreationDataWrapper } from &#x27;../interfaces/task-creation-data-wrapper.interface&#x27;;
 import { ITaskCreationFormGroupValue } from &#x27;../interfaces/task-creation-form-group-value.interface&#x27;;
+import { CloseScrollStrategy, ScrollStrategyOptions } from &#x27;@angular/cdk/overlay&#x27;;
 
 @Injectable({
   providedIn: &#x27;root&#x27;
@@ -412,7 +425,8 @@ export class DialogService {
   constructor(
     private _dialog: MatDialog,
     @Inject(FUNCTIONS_CONFIG_TOKEN) public funcs: IFunction[],
-    private _injector: Injector
+    private _injector: Injector,
+    private readonly sso: ScrollStrategyOptions
   ) { }
 
   public configTaskCreation(data: ITaskCreationDataWrapper): Observable&lt;ITaskCreationFormGroupValue&gt; {
@@ -420,7 +434,8 @@ export class DialogService {
       injector: this._injector,
       panelClass: &#x27;no-padding-dialog&#x27;,
       data: data,
-      disableClose: true
+      disableClose: true,
+      maxWidth: &#x27;unset&#x27;
     });
     document.getElementsByClassName(&#x27;cdk-overlay-container&#x27;)[0]?.classList.add(&#x27;z-index-1002&#x27;);
     return ref.afterClosed().pipe(
@@ -430,8 +445,8 @@ export class DialogService {
     );
   }
 
-  public editParam(paramCode: ParamCodes, element: IElement): Observable&lt;Object&gt; {
-    let ref &#x3D; this._dialog.open(ParamEditorComponent, {
+  public editParam(paramCode: ParamCodes, element: IElement): Observable&lt;object&gt; {
+    const ref &#x3D; this._dialog.open(ParamEditorComponent, {
       data: { paramCode: paramCode, element: element },
       panelClass: &#x27;no-padding-dialog&#x27;,
       disableClose: true

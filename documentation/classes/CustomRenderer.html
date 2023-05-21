@@ -660,7 +660,7 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-<code>drawShape(parentNode: <a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank">any</a>, element: <a href="../interfaces/IElement.html" target="_self">IElement</a>)</code>
+<code>drawShape(parentNode: SVGElement, element: Shape)</code>
                 </td>
             </tr>
 
@@ -691,7 +691,7 @@
                                 <tr>
                                     <td>parentNode</td>
                                     <td>
-                                                <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
+                                            <code>SVGElement</code>
                                     </td>
 
                                     <td>
@@ -703,7 +703,7 @@
                                 <tr>
                                     <td>element</td>
                                     <td>
-                                                <code><a href="../interfaces/IElement.html" target="_self" >IElement</a></code>
+                                            <code>Shape</code>
                                     </td>
 
                                     <td>
@@ -718,7 +718,7 @@
                     <div>
                     </div>
                     <div class="io-description">
-                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
+                        <b>Returns : </b>    <code>SVGElement</code>
 
                     </div>
                     <div class="io-description">
@@ -847,7 +847,7 @@ import { BPMNJsRepository } from &#x27;src/lib/core/bpmn-js.repository&#x27;;
 // @ts-ignore
 import { isAny } from &#x27;bpmn-js/lib/features/modeling/util/ModelingUtil&#x27;;
 import shapeTypes from &#x27;src/lib/bpmn-io/shape-types&#x27;;
-import { IElement } from &#x27;src/lib/bpmn-io/interfaces/element.interface&#x27;;
+import { Shape } from &#x27;diagram-js/lib/model&#x27;;
 
 const HIGH_PRIORITY &#x3D; 1500;
 
@@ -868,7 +868,7 @@ export default class CustomRenderer extends BaseRenderer {
         return isAny(element, [shapeTypes.DataObjectReference]) &amp;&amp; !element.labelTarget;
     }
 
-    drawShape(parentNode: any, element: IElement) {
+    drawShape(parentNode: SVGElement, element: Shape): SVGElement {
         const shape &#x3D; this.bpmnRenderer.drawShape(parentNode, element),
             matchesProcessOutputInterface &#x3D; BPMNJsRepository.getSLPBExtension(element.businessObject, &#x27;DataObjectExtension&#x27;, (ext) &#x3D;&gt; ext.matchesProcessOutputInterface),
             isProcessOutput &#x3D; BPMNJsRepository.getSLPBExtension(element.businessObject, &#x27;DataObjectExtension&#x27;, (ext) &#x3D;&gt; ext.isProcessOutput);

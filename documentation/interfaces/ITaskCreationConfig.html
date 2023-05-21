@@ -84,6 +84,7 @@
                         <td class="col-md-4">
                             <ul class="index-list">
                                 <li>
+                                            <span class="modifier">Optional</span>
                                         <a href="#autoProceed$" 
 >
                                             autoProceed$
@@ -153,6 +154,11 @@
                                         </td>
                                     </tr>
 
+                                    <tr>
+                                        <td class="col-md-4">
+                                            <i>Optional</i>
+                                        </td>
+                                    </tr>
 
 
 
@@ -314,7 +320,7 @@ export interface ITaskCreationConfig {
     payload?: any;
     element: any;
     disabled$?: Observable&lt;boolean&gt;;
-    autoProceed$: Observable&lt;number&gt;;
+    autoProceed$?: Observable&lt;number&gt;;
 }
 </code></pre>
     </div>

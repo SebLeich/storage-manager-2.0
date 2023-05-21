@@ -101,7 +101,7 @@
             <tr>
                 <td class="col-md-4">
                     <span class="modifier-icon icon ion-ios-reset"></span>
-                    <code>transform(param: <a href="../interfaces/IInputParam.html" target="_self">IInputParam | undefined | null</a>)</code>
+                    <code>transform(param: <a href="../interfaces/IInputParam.html" target="_self">IInputParam | undefined | null | &quot;dynamic&quot;</a>)</code>
                 </td>
             </tr>
 
@@ -132,7 +132,7 @@
                                 <tr>
                                     <td>param</td>
                                     <td>
-                                                <code><a href="../interfaces/IInputParam.html" target="_self" >IInputParam | undefined | null</a></code>
+                                                <code><a href="../interfaces/IInputParam.html" target="_self" >IInputParam | undefined | null | &quot;dynamic&quot;</a></code>
                                     </td>
 
                                     <td>
@@ -176,14 +176,17 @@ export class InputParamPipe implements PipeTransform {
 
   constructor(private _store: Store) { }
 
-  public async transform(param: IInputParam | undefined | null): Promise&lt;string | undefined&gt; {
+  public async transform(param: IInputParam | undefined | null | &#x27;dynamic&#x27;): Promise&lt;string | undefined&gt; {
+    if (param &#x3D;&#x3D;&#x3D; &#x27;dynamic&#x27;) {
+      return &#x27;dynamic type&#x27;;
+    }
     if (param) {
       if (param.type &#x3D;&#x3D;&#x3D; &#x27;object&#x27; || param.type &#x3D;&#x3D;&#x3D; &#x27;array&#x27;) {
         if (typeof param.interface &#x3D;&#x3D;&#x3D; &#x27;number&#x27;) {
           const iFace &#x3D; await selectSnapshot(this._store.select(selectIInterface(param.interface)));
           if (iFace) {
             const prefix &#x3D; param.type &#x3D;&#x3D;&#x3D; &#x27;array&#x27; ? &#x27;array of &#x27; : &#x27;&#x27;, suffix &#x3D; param.type &#x3D;&#x3D;&#x3D; &#x27;array&#x27; ? &#x27;s&#x27; : &#x27;&#x27;;
-            return prefix + iFace.name + suffix;;
+            return prefix + iFace.name + suffix;
           }
         }
       }

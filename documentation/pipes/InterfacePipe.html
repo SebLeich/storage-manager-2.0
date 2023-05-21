@@ -100,7 +100,7 @@
             <tr>
                 <td class="col-md-4">
                     <span class="modifier-icon icon ion-ios-reset"></span>
-                    <code>transform(value: number | null | undefined)</code>
+                    <code>transform(value: string | null | undefined)</code>
                 </td>
             </tr>
 
@@ -131,7 +131,7 @@
                                 <tr>
                                     <td>value</td>
                                     <td>
-                                            <code>number | null | undefined</code>
+                                            <code>string | null | undefined</code>
                                     </td>
 
                                     <td>
@@ -249,12 +249,12 @@ export class InterfacePipe implements PipeTransform {
 
   constructor(private _store: Store&lt;State&gt;) { }
 
-  public transform(value: number | null | undefined): Observable&lt;string&gt; {
-    if (typeof value !&#x3D;&#x3D; &#x27;number&#x27;) {
+  public transform(value: string | null | undefined): Observable&lt;string&gt; {
+    if (typeof value !&#x3D;&#x3D; &#x27;string&#x27;) {
       return of(this._emptyResult);
     }
 
-    return this._store.select(selectIInterface(value)).pipe(map(x &#x3D;&gt; x ? x.name : this._notFoundResult));
+    return this._store.select(selectIInterface(value)).pipe(map(iFace &#x3D;&gt; iFace ? iFace.name : this._notFoundResult));
   }
 
 }

@@ -14,13 +14,13 @@
 <title>cluster_SharedModule</title>
 <polygon fill="none" stroke="black" stroke-dasharray="1,5" points="8,-32.8 8,-230.8 344,-230.8 344,-32.8 8,-32.8"/>
 </g>
-<g id="clust2" class="cluster">
-<title>cluster_SharedModule_declarations</title>
-<polygon fill="none" stroke="black" points="20,-40.8 20,-92.8 333,-92.8 333,-40.8 20,-40.8"/>
-</g>
 <g id="clust6" class="cluster">
 <title>cluster_SharedModule_exports</title>
 <polygon fill="none" stroke="black" points="16,-170.8 16,-222.8 336,-222.8 336,-170.8 16,-170.8"/>
+</g>
+<g id="clust2" class="cluster">
+<title>cluster_SharedModule_declarations</title>
+<polygon fill="none" stroke="black" points="20,-40.8 20,-92.8 333,-92.8 333,-40.8 20,-40.8"/>
 </g>
 <!-- AnimatedCounterDirective -->
 <g id="node1" class="node">

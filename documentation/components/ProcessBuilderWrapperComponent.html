@@ -128,18 +128,6 @@
                     <td class="col-md-4">
                         <ul class="index-list">
                             <li>
-                                    <span class="modifier">Private</span>
-                                <a href="#_methodsVisible" >_methodsVisible</a>
-                            </li>
-                            <li>
-                                    <span class="modifier">Private</span>
-                                <a href="#_modelsVisible" >_modelsVisible</a>
-                            </li>
-                            <li>
-                                    <span class="modifier">Private</span>
-                                <a href="#_paramsVisible" >_paramsVisible</a>
-                            </li>
-                            <li>
                                     <span class="modifier">Public</span>
                                 <a href="#bpmnJSModels$" >bpmnJSModels$</a>
                             </li>
@@ -165,11 +153,11 @@
                             </li>
                             <li>
                                     <span class="modifier">Public</span>
-                                <a href="#methodsVisible$" >methodsVisible$</a>
+                                <a href="#methodsVisible" >methodsVisible</a>
                             </li>
                             <li>
                                     <span class="modifier">Public</span>
-                                <a href="#modelsVisible$" >modelsVisible$</a>
+                                <a href="#modelsVisible" >modelsVisible</a>
                             </li>
                             <li>
                                     <span class="modifier">Public</span>
@@ -177,11 +165,23 @@
                             </li>
                             <li>
                                     <span class="modifier">Public</span>
-                                <a href="#paramsVisible$" >paramsVisible$</a>
+                                <a href="#paramsVisible" >paramsVisible</a>
                             </li>
                             <li>
                                     <span class="modifier">Public</span>
                                 <a href="#processBuilderService" >processBuilderService</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Public</span>
+                                <a href="#toggleBpmnJsModels" >toggleBpmnJsModels</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Public</span>
+                                <a href="#toggleMethods" >toggleMethods</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Public</span>
+                                <a href="#toggleParams" >toggleParams</a>
                             </li>
                         </ul>
                     </td>
@@ -235,21 +235,6 @@
                                     <span class="modifier">Public</span>
                                 <a href="#setModel" >setModel</a>
                             </li>
-                            <li>
-                                    <span class="modifier">Public</span>
-                                    <span class="modifier">Async</span>
-                                <a href="#toggleBpmnJsModels" >toggleBpmnJsModels</a>
-                            </li>
-                            <li>
-                                    <span class="modifier">Public</span>
-                                    <span class="modifier">Async</span>
-                                <a href="#toggleMethods" >toggleMethods</a>
-                            </li>
-                            <li>
-                                    <span class="modifier">Public</span>
-                                    <span class="modifier">Async</span>
-                                <a href="#toggleParams" >toggleParams</a>
-                            </li>
                         </ul>
                     </td>
                 </tr>
@@ -268,12 +253,12 @@
             <tbody>
                 <tr>
                     <td class="col-md-4">
-<code>constructor(_store: Store, bpmnJsService: <a href="../injectables/BpmnJsService.html" target="_self">BpmnJsService</a>, processBuilderService: <a href="../injectables/ProcessBuilderService.html" target="_self">ProcessBuilderService</a>, _snackBar: MatSnackBar)</code>
+<code>constructor(_bpmnJs: <a href="../interfaces/IBpmnJS.html" target="_self">IBpmnJS</a>, _store: Store, bpmnJsService: <a href="../injectables/BpmnJsService.html" target="_self">BpmnJsService</a>, processBuilderService: <a href="../injectables/ProcessBuilderService.html" target="_self">ProcessBuilderService</a>)</code>
                     </td>
                 </tr>
                         <tr>
                             <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="47" class="link-to-prism">src/lib/process-builder-wrapper/components/process-builder-wrapper/process-builder-wrapper.component.ts:47</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="37" class="link-to-prism">src/lib/process-builder-wrapper/components/process-builder-wrapper/process-builder-wrapper.component.ts:37</a></div>
                             </td>
                         </tr>
 
@@ -290,6 +275,18 @@
                                             </tr>
                                         </thead>
                                         <tbody>
+                                                <tr>
+                                                        <td>_bpmnJs</td>
+                                                  
+                                                        <td>
+                                                                        <code><a href="../interfaces/IBpmnJS.html" target="_self" >IBpmnJS</a></code>
+                                                        </td>
+                                                  
+                                                    <td>
+                                                            No
+                                                    </td>
+                                                    
+                                                </tr>
                                                 <tr>
                                                         <td>_store</td>
                                                   
@@ -319,18 +316,6 @@
                                                   
                                                         <td>
                                                                         <code><a href="../injectables/ProcessBuilderService.html" target="_self" >ProcessBuilderService</a></code>
-                                                        </td>
-                                                  
-                                                    <td>
-                                                            No
-                                                    </td>
-                                                    
-                                                </tr>
-                                                <tr>
-                                                        <td>_snackBar</td>
-                                                  
-                                                        <td>
-                                                                    <code>MatSnackBar</code>
                                                         </td>
                                                   
                                                     <td>
@@ -378,8 +363,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="55"
-                            class="link-to-prism">src/lib/process-builder-wrapper/components/process-builder-wrapper/process-builder-wrapper.component.ts:55</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="46"
+                            class="link-to-prism">src/lib/process-builder-wrapper/components/process-builder-wrapper/process-builder-wrapper.component.ts:46</a></div>
                 </td>
             </tr>
 
@@ -462,8 +447,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="63"
-                            class="link-to-prism">src/lib/process-builder-wrapper/components/process-builder-wrapper/process-builder-wrapper.component.ts:63</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="55"
+                            class="link-to-prism">src/lib/process-builder-wrapper/components/process-builder-wrapper/process-builder-wrapper.component.ts:55</a></div>
                 </td>
             </tr>
 
@@ -501,8 +486,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="70"
-                            class="link-to-prism">src/lib/process-builder-wrapper/components/process-builder-wrapper/process-builder-wrapper.component.ts:70</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="69"
+                            class="link-to-prism">src/lib/process-builder-wrapper/components/process-builder-wrapper/process-builder-wrapper.component.ts:69</a></div>
                 </td>
             </tr>
 
@@ -541,8 +526,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="105"
-                            class="link-to-prism">src/lib/process-builder-wrapper/components/process-builder-wrapper/process-builder-wrapper.component.ts:105</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="93"
+                            class="link-to-prism">src/lib/process-builder-wrapper/components/process-builder-wrapper/process-builder-wrapper.component.ts:93</a></div>
                 </td>
             </tr>
 
@@ -581,8 +566,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="110"
-                            class="link-to-prism">src/lib/process-builder-wrapper/components/process-builder-wrapper/process-builder-wrapper.component.ts:110</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="98"
+                            class="link-to-prism">src/lib/process-builder-wrapper/components/process-builder-wrapper/process-builder-wrapper.component.ts:98</a></div>
                 </td>
             </tr>
 
@@ -620,8 +605,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="74"
-                            class="link-to-prism">src/lib/process-builder-wrapper/components/process-builder-wrapper/process-builder-wrapper.component.ts:74</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="73"
+                            class="link-to-prism">src/lib/process-builder-wrapper/components/process-builder-wrapper/process-builder-wrapper.component.ts:73</a></div>
                 </td>
             </tr>
 
@@ -691,8 +676,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="78"
-                            class="link-to-prism">src/lib/process-builder-wrapper/components/process-builder-wrapper/process-builder-wrapper.component.ts:78</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="77"
+                            class="link-to-prism">src/lib/process-builder-wrapper/components/process-builder-wrapper/process-builder-wrapper.component.ts:77</a></div>
                 </td>
             </tr>
 
@@ -763,8 +748,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="82"
-                            class="link-to-prism">src/lib/process-builder-wrapper/components/process-builder-wrapper/process-builder-wrapper.component.ts:82</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="81"
+                            class="link-to-prism">src/lib/process-builder-wrapper/components/process-builder-wrapper/process-builder-wrapper.component.ts:81</a></div>
                 </td>
             </tr>
 
@@ -834,8 +819,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="86"
-                            class="link-to-prism">src/lib/process-builder-wrapper/components/process-builder-wrapper/process-builder-wrapper.component.ts:86</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="85"
+                            class="link-to-prism">src/lib/process-builder-wrapper/components/process-builder-wrapper/process-builder-wrapper.component.ts:85</a></div>
                 </td>
             </tr>
 
@@ -883,210 +868,12 @@
             </tr>
         </tbody>
     </table>
-    <table class="table table-sm table-bordered">
-        <tbody>
-            <tr>
-                <td class="col-md-4">
-                    <a name="toggleBpmnJsModels"></a>
-                    <span class="name">
-                        <span class="modifier">Public</span>
-                        <span class="modifier">Async</span>
-                        <span ><b>toggleBpmnJsModels</b></span>
-                        <a href="#toggleBpmnJsModels"><span class="icon ion-ios-link"></span></a>
-                    </span>
-                </td>
-            </tr>
-            <tr>
-                <td class="col-md-4">
-                    <span class="modifier-icon icon ion-ios-reset"></span>
-                    <code>toggleBpmnJsModels()</code>
-                </td>
-            </tr>
-
-
-            <tr>
-                <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="90"
-                            class="link-to-prism">src/lib/process-builder-wrapper/components/process-builder-wrapper/process-builder-wrapper.component.ts:90</a></div>
-                </td>
-            </tr>
-
-
-            <tr>
-                <td class="col-md-4">
-
-                    <div class="io-description">
-                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
-
-                    </div>
-                </td>
-            </tr>
-        </tbody>
-    </table>
-    <table class="table table-sm table-bordered">
-        <tbody>
-            <tr>
-                <td class="col-md-4">
-                    <a name="toggleMethods"></a>
-                    <span class="name">
-                        <span class="modifier">Public</span>
-                        <span class="modifier">Async</span>
-                        <span ><b>toggleMethods</b></span>
-                        <a href="#toggleMethods"><span class="icon ion-ios-link"></span></a>
-                    </span>
-                </td>
-            </tr>
-            <tr>
-                <td class="col-md-4">
-                    <span class="modifier-icon icon ion-ios-reset"></span>
-                    <code>toggleMethods()</code>
-                </td>
-            </tr>
-
-
-            <tr>
-                <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="95"
-                            class="link-to-prism">src/lib/process-builder-wrapper/components/process-builder-wrapper/process-builder-wrapper.component.ts:95</a></div>
-                </td>
-            </tr>
-
-
-            <tr>
-                <td class="col-md-4">
-
-                    <div class="io-description">
-                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
-
-                    </div>
-                </td>
-            </tr>
-        </tbody>
-    </table>
-    <table class="table table-sm table-bordered">
-        <tbody>
-            <tr>
-                <td class="col-md-4">
-                    <a name="toggleParams"></a>
-                    <span class="name">
-                        <span class="modifier">Public</span>
-                        <span class="modifier">Async</span>
-                        <span ><b>toggleParams</b></span>
-                        <a href="#toggleParams"><span class="icon ion-ios-link"></span></a>
-                    </span>
-                </td>
-            </tr>
-            <tr>
-                <td class="col-md-4">
-                    <span class="modifier-icon icon ion-ios-reset"></span>
-                    <code>toggleParams()</code>
-                </td>
-            </tr>
-
-
-            <tr>
-                <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="100"
-                            class="link-to-prism">src/lib/process-builder-wrapper/components/process-builder-wrapper/process-builder-wrapper.component.ts:100</a></div>
-                </td>
-            </tr>
-
-
-            <tr>
-                <td class="col-md-4">
-
-                    <div class="io-description">
-                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
-
-                    </div>
-                </td>
-            </tr>
-        </tbody>
-    </table>
 </section>
     <section>
     
     <h3 id="inputs">
         Properties
     </h3>
-    <table class="table table-sm table-bordered">
-        <tbody>
-            <tr>
-                <td class="col-md-4">
-                    <a name="_methodsVisible"></a>
-                    <span class="name">
-                            <span class="modifier">Private</span>
-                        <span ><b>_methodsVisible</b></span>
-                        <a href="#_methodsVisible"><span class="icon ion-ios-link"></span></a>
-                    </span>
-                </td>
-            </tr>
-                <tr>
-                    <td class="col-md-4">
-                        <i>Default value : </i><code>new BehaviorSubject&lt;boolean&gt;(false)</code>
-                    </td>
-                </tr>
-                    <tr>
-                        <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="42" class="link-to-prism">src/lib/process-builder-wrapper/components/process-builder-wrapper/process-builder-wrapper.component.ts:42</a></div>
-                        </td>
-                    </tr>
-
-
-        </tbody>
-    </table>
-    <table class="table table-sm table-bordered">
-        <tbody>
-            <tr>
-                <td class="col-md-4">
-                    <a name="_modelsVisible"></a>
-                    <span class="name">
-                            <span class="modifier">Private</span>
-                        <span ><b>_modelsVisible</b></span>
-                        <a href="#_modelsVisible"><span class="icon ion-ios-link"></span></a>
-                    </span>
-                </td>
-            </tr>
-                <tr>
-                    <td class="col-md-4">
-                        <i>Default value : </i><code>new BehaviorSubject&lt;boolean&gt;(true)</code>
-                    </td>
-                </tr>
-                    <tr>
-                        <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="41" class="link-to-prism">src/lib/process-builder-wrapper/components/process-builder-wrapper/process-builder-wrapper.component.ts:41</a></div>
-                        </td>
-                    </tr>
-
-
-        </tbody>
-    </table>
-    <table class="table table-sm table-bordered">
-        <tbody>
-            <tr>
-                <td class="col-md-4">
-                    <a name="_paramsVisible"></a>
-                    <span class="name">
-                            <span class="modifier">Private</span>
-                        <span ><b>_paramsVisible</b></span>
-                        <a href="#_paramsVisible"><span class="icon ion-ios-link"></span></a>
-                    </span>
-                </td>
-            </tr>
-                <tr>
-                    <td class="col-md-4">
-                        <i>Default value : </i><code>new BehaviorSubject&lt;boolean&gt;(false)</code>
-                    </td>
-                </tr>
-                    <tr>
-                        <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="43" class="link-to-prism">src/lib/process-builder-wrapper/components/process-builder-wrapper/process-builder-wrapper.component.ts:43</a></div>
-                        </td>
-                    </tr>
-
-
-        </tbody>
-    </table>
     <table class="table table-sm table-bordered">
         <tbody>
             <tr>
@@ -1106,7 +893,7 @@
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="34" class="link-to-prism">src/lib/process-builder-wrapper/components/process-builder-wrapper/process-builder-wrapper.component.ts:34</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="28" class="link-to-prism">src/lib/process-builder-wrapper/components/process-builder-wrapper/process-builder-wrapper.component.ts:28</a></div>
                         </td>
                     </tr>
 
@@ -1133,7 +920,7 @@
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="49" class="link-to-prism">src/lib/process-builder-wrapper/components/process-builder-wrapper/process-builder-wrapper.component.ts:49</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="42" class="link-to-prism">src/lib/process-builder-wrapper/components/process-builder-wrapper/process-builder-wrapper.component.ts:42</a></div>
                         </td>
                     </tr>
 
@@ -1159,7 +946,7 @@
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="37" class="link-to-prism">src/lib/process-builder-wrapper/components/process-builder-wrapper/process-builder-wrapper.component.ts:37</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="31" class="link-to-prism">src/lib/process-builder-wrapper/components/process-builder-wrapper/process-builder-wrapper.component.ts:31</a></div>
                         </td>
                     </tr>
 
@@ -1185,7 +972,7 @@
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="39" class="link-to-prism">src/lib/process-builder-wrapper/components/process-builder-wrapper/process-builder-wrapper.component.ts:39</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="33" class="link-to-prism">src/lib/process-builder-wrapper/components/process-builder-wrapper/process-builder-wrapper.component.ts:33</a></div>
                         </td>
                     </tr>
 
@@ -1211,7 +998,7 @@
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="35" class="link-to-prism">src/lib/process-builder-wrapper/components/process-builder-wrapper/process-builder-wrapper.component.ts:35</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="29" class="link-to-prism">src/lib/process-builder-wrapper/components/process-builder-wrapper/process-builder-wrapper.component.ts:29</a></div>
                         </td>
                     </tr>
 
@@ -1237,7 +1024,7 @@
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="38" class="link-to-prism">src/lib/process-builder-wrapper/components/process-builder-wrapper/process-builder-wrapper.component.ts:38</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="32" class="link-to-prism">src/lib/process-builder-wrapper/components/process-builder-wrapper/process-builder-wrapper.component.ts:32</a></div>
                         </td>
                     </tr>
 
@@ -1248,22 +1035,22 @@
         <tbody>
             <tr>
                 <td class="col-md-4">
-                    <a name="methodsVisible$"></a>
+                    <a name="methodsVisible"></a>
                     <span class="name">
                             <span class="modifier">Public</span>
-                        <span ><b>methodsVisible$</b></span>
-                        <a href="#methodsVisible$"><span class="icon ion-ios-link"></span></a>
+                        <span ><b>methodsVisible</b></span>
+                        <a href="#methodsVisible"><span class="icon ion-ios-link"></span></a>
                     </span>
                 </td>
             </tr>
                 <tr>
                     <td class="col-md-4">
-                        <i>Default value : </i><code>this._methodsVisible.asObservable()</code>
+                        <i>Default value : </i><code>signal(false)</code>
                     </td>
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="46" class="link-to-prism">src/lib/process-builder-wrapper/components/process-builder-wrapper/process-builder-wrapper.component.ts:46</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="36" class="link-to-prism">src/lib/process-builder-wrapper/components/process-builder-wrapper/process-builder-wrapper.component.ts:36</a></div>
                         </td>
                     </tr>
 
@@ -1274,22 +1061,22 @@
         <tbody>
             <tr>
                 <td class="col-md-4">
-                    <a name="modelsVisible$"></a>
+                    <a name="modelsVisible"></a>
                     <span class="name">
                             <span class="modifier">Public</span>
-                        <span ><b>modelsVisible$</b></span>
-                        <a href="#modelsVisible$"><span class="icon ion-ios-link"></span></a>
+                        <span ><b>modelsVisible</b></span>
+                        <a href="#modelsVisible"><span class="icon ion-ios-link"></span></a>
                     </span>
                 </td>
             </tr>
                 <tr>
                     <td class="col-md-4">
-                        <i>Default value : </i><code>this._modelsVisible.asObservable()</code>
+                        <i>Default value : </i><code>signal(false)</code>
                     </td>
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="45" class="link-to-prism">src/lib/process-builder-wrapper/components/process-builder-wrapper/process-builder-wrapper.component.ts:45</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="35" class="link-to-prism">src/lib/process-builder-wrapper/components/process-builder-wrapper/process-builder-wrapper.component.ts:35</a></div>
                         </td>
                     </tr>
 
@@ -1315,7 +1102,7 @@
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="36" class="link-to-prism">src/lib/process-builder-wrapper/components/process-builder-wrapper/process-builder-wrapper.component.ts:36</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="30" class="link-to-prism">src/lib/process-builder-wrapper/components/process-builder-wrapper/process-builder-wrapper.component.ts:30</a></div>
                         </td>
                     </tr>
 
@@ -1326,22 +1113,22 @@
         <tbody>
             <tr>
                 <td class="col-md-4">
-                    <a name="paramsVisible$"></a>
+                    <a name="paramsVisible"></a>
                     <span class="name">
                             <span class="modifier">Public</span>
-                        <span ><b>paramsVisible$</b></span>
-                        <a href="#paramsVisible$"><span class="icon ion-ios-link"></span></a>
+                        <span ><b>paramsVisible</b></span>
+                        <a href="#paramsVisible"><span class="icon ion-ios-link"></span></a>
                     </span>
                 </td>
             </tr>
                 <tr>
                     <td class="col-md-4">
-                        <i>Default value : </i><code>this._paramsVisible.asObservable()</code>
+                        <i>Default value : </i><code>signal(false)</code>
                     </td>
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="47" class="link-to-prism">src/lib/process-builder-wrapper/components/process-builder-wrapper/process-builder-wrapper.component.ts:47</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="37" class="link-to-prism">src/lib/process-builder-wrapper/components/process-builder-wrapper/process-builder-wrapper.component.ts:37</a></div>
                         </td>
                     </tr>
 
@@ -1368,7 +1155,85 @@
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="49" class="link-to-prism">src/lib/process-builder-wrapper/components/process-builder-wrapper/process-builder-wrapper.component.ts:49</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="43" class="link-to-prism">src/lib/process-builder-wrapper/components/process-builder-wrapper/process-builder-wrapper.component.ts:43</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="toggleBpmnJsModels"></a>
+                    <span class="name">
+                            <span class="modifier">Public</span>
+                        <span ><b>toggleBpmnJsModels</b></span>
+                        <a href="#toggleBpmnJsModels"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>() &#x3D;&gt; {...}</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="89" class="link-to-prism">src/lib/process-builder-wrapper/components/process-builder-wrapper/process-builder-wrapper.component.ts:89</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="toggleMethods"></a>
+                    <span class="name">
+                            <span class="modifier">Public</span>
+                        <span ><b>toggleMethods</b></span>
+                        <a href="#toggleMethods"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>() &#x3D;&gt; {...}</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="90" class="link-to-prism">src/lib/process-builder-wrapper/components/process-builder-wrapper/process-builder-wrapper.component.ts:90</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="toggleParams"></a>
+                    <span class="name">
+                            <span class="modifier">Public</span>
+                        <span ><b>toggleParams</b></span>
+                        <a href="#toggleParams"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>() &#x3D;&gt; {...}</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="91" class="link-to-prism">src/lib/process-builder-wrapper/components/process-builder-wrapper/process-builder-wrapper.component.ts:91</a></div>
                         </td>
                     </tr>
 
@@ -1381,30 +1246,24 @@
 
 
     <div class="tab-pane fade  tab-source-code" id="c-source">
-        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { Component, OnDestroy, OnInit } from &#x27;@angular/core&#x27;;
-import { MatSnackBar } from &#x27;@angular/material/snack-bar&#x27;;
+        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { Component, Inject, signal } from &#x27;@angular/core&#x27;;
 import { Store } from &#x27;@ngrx/store&#x27;;
-import { BehaviorSubject } from &#x27;rxjs&#x27;;
 import { firstValueFrom } from &#x27;rxjs/internal/firstValueFrom&#x27;;
-import { combineLatest } from &#x27;rxjs/internal/observable/combineLatest&#x27;;
-import { switchMap } from &#x27;rxjs/internal/operators/switchMap&#x27;;
-import { Subscription } from &#x27;rxjs/internal/Subscription&#x27;;
-import { map, filter } from &#x27;rxjs/operators&#x27;;
+import { map } from &#x27;rxjs/operators&#x27;;
 import { BPMNJsRepository } from &#x27;src/lib/core/bpmn-js.repository&#x27;;
 import { removeIPipeline } from &#x27;src/lib/pipeline-store/store/actions/pipeline.actions&#x27;;
 import { selectPipelineByBpmnJsModel } from &#x27;src/lib/pipeline-store/store/selectors/pipeline.selectors&#x27;;
-import { IFunction } from &#x27;src/lib/process-builder/interfaces/function.interface&#x27;;
+import { IBpmnJS, IBpmnJSModel, IFunction } from &#x27;@process-builder/interfaces&#x27;;
 import { selectSnapshot } from &#x27;src/lib/process-builder/globals/select-snapshot&#x27;;
-import { IBpmnJSModel } from &#x27;src/lib/process-builder/interfaces/bpmn-js-model.interface&#x27;;
 import { BpmnJsService } from &#x27;src/lib/process-builder/services/bpmn-js.service&#x27;;
 import { ProcessBuilderService } from &#x27;src/lib/process-builder/services/process-builder.service&#x27;;
 import { removeIBpmnJSModel, setCurrentIBpmnJSModel, updateCurrentIBpmnJSModel } from &#x27;src/lib/process-builder/store/actions/bpmn-js-model.actions&#x27;;
 import { removeIFunction } from &#x27;src/lib/process-builder/store/actions/function.actions&#x27;;
 import { selectCurrentIBpmnJSModel, selectCurrentIBpmnJSModelGuid, selectIBpmnJSModels } from &#x27;src/lib/process-builder/store/selectors/bpmn-js-model.selectors&#x27;;
-import { selectIFunctions } from &#x27;src/lib/process-builder/store/selectors/function.selector&#x27;;
-import { selectIParams } from &#x27;src/lib/process-builder/store/selectors/param.selectors&#x27;;
+import { selectIFunctions, selectIParams } from &#x27;@process-builder/selectors&#x27;;
 import { fadeInAnimation } from &#x27;src/lib/shared/animations/fade-in.animation&#x27;;
 import { showListAnimation } from &#x27;src/lib/shared/animations/show-list&#x27;;
+import { BPMN_JS } from &#x27;@process-builder/injection&#x27;;
 
 @Component({
   selector: &#x27;app-process-builder-wrapper&#x27;,
@@ -1421,37 +1280,42 @@ export class ProcessBuilderWrapperComponent {
   public hasCurrentBpmnJSModel$ &#x3D; this.currentBpmnJSModel$.pipe(map(currentBpmnJSModel &#x3D;&gt; !!currentBpmnJSModel));
   public currentBpmnJSModelGuid$ &#x3D; this._store.select(selectCurrentIBpmnJSModelGuid);
 
-  private _modelsVisible &#x3D; new BehaviorSubject&lt;boolean&gt;(true);
-  private _methodsVisible &#x3D; new BehaviorSubject&lt;boolean&gt;(false);
-  private _paramsVisible &#x3D; new BehaviorSubject&lt;boolean&gt;(false);
+  public modelsVisible &#x3D; signal(false);
+  public methodsVisible &#x3D; signal(false);
+  public paramsVisible &#x3D; signal(false);
 
-  public modelsVisible$ &#x3D; this._modelsVisible.asObservable();
-  public methodsVisible$ &#x3D; this._methodsVisible.asObservable();
-  public paramsVisible$ &#x3D; this._paramsVisible.asObservable();
-
-  constructor(private _store: Store, public bpmnJsService: BpmnJsService, public processBuilderService: ProcessBuilderService, private _snackBar: MatSnackBar) {
-    this._snackBar.open(&#x27;under construction ;)&#x27;, &#x27;Ok&#x27;, {
-      duration: 3000
-    });
-  }
+  constructor(
+    @Inject(BPMN_JS) private _bpmnJs: IBpmnJS,
+    private _store: Store,
+    public bpmnJsService: BpmnJsService,
+    public processBuilderService: ProcessBuilderService
+  ) { }
 
   public blurElement(element: HTMLElement, event?: Event) {
     if (event) {
       event.stopPropagation();
       event.preventDefault();
     }
+
     element.blur();
   }
 
   public async compile() {
     const model &#x3D; await firstValueFrom(this.currentBpmnJSModel$);
-    const existingPipeline &#x3D; await selectSnapshot(this._store.select(selectPipelineByBpmnJsModel(model!.guid)));
-    if(existingPipeline) this._store.dispatch(removeIPipeline(existingPipeline));
-    this.bpmnJsService.compile(model!.guid, model?.name ?? undefined);
+    if(!model){
+      return;
+    }
+
+    const existingPipeline &#x3D; await selectSnapshot(this._store.select(selectPipelineByBpmnJsModel(model.guid)));
+    if(existingPipeline) {
+      this._store.dispatch(removeIPipeline(existingPipeline));
+    }
+
+    this.bpmnJsService.compile(model.guid, model?.name ?? undefined);
   }
 
   public hideAllHints() {
-    BPMNJsRepository.clearAllTooltips(this.bpmnJsService.bpmnJs);
+    BPMNJsRepository.clearAllTooltips(this._bpmnJs);
   }
 
   public removeFunction(func: IFunction) {
@@ -1470,20 +1334,9 @@ export class ProcessBuilderWrapperComponent {
     this._store.dispatch(setCurrentIBpmnJSModel(bpmnJSModel));
   }
 
-  public async toggleBpmnJsModels() {
-    const modelsVisible &#x3D; await selectSnapshot(this._modelsVisible);
-    this._modelsVisible.next(!modelsVisible);
-  }
-
-  public async toggleMethods() {
-    const methodsVisible &#x3D; await selectSnapshot(this._methodsVisible);
-    this._methodsVisible.next(!methodsVisible);
-  }
-
-  public async toggleParams() {
-    const paramsVisible &#x3D; await selectSnapshot(this._paramsVisible);
-    this._paramsVisible.next(!paramsVisible);
-  }
+  public toggleBpmnJsModels &#x3D; () &#x3D;&gt; this.modelsVisible.set(!this.modelsVisible());
+  public toggleMethods &#x3D; () &#x3D;&gt; this.methodsVisible.set(!this.methodsVisible());
+  public toggleParams &#x3D; () &#x3D;&gt; this.paramsVisible.set(!this.paramsVisible());
 
   public async logFunctions() {
     const funcs &#x3D; await selectSnapshot(this._store.select(selectIFunctions()));
@@ -1574,7 +1427,7 @@ export class ProcessBuilderWrapperComponent {
                 &lt;/span&gt;
             &lt;/div&gt;
 
-            &lt;div [@showList]&#x3D;&quot;(bpmnJSModels$|async)?.length&quot; *ngIf&#x3D;&quot;modelsVisible$|async&quot;&gt;
+            &lt;div [@showList]&#x3D;&quot;(bpmnJSModels$|async)?.length&quot; *ngIf&#x3D;&quot;modelsVisible()&quot;&gt;
 
                 &lt;div class&#x3D;&quot;quick-interaction-wrapper&quot;&gt;
 
@@ -1595,7 +1448,7 @@ export class ProcessBuilderWrapperComponent {
                 &lt;/span&gt;
             &lt;/div&gt;
 
-            &lt;div [@showList]&#x3D;&quot;(funcs$|async)?.length&quot; *ngIf&#x3D;&quot;methodsVisible$|async&quot;&gt;
+            &lt;div [@showList]&#x3D;&quot;(funcs$|async)?.length&quot; *ngIf&#x3D;&quot;methodsVisible()&quot;&gt;
 
                 &lt;div class&#x3D;&quot;option&quot; *ngFor&#x3D;&quot;let func of (funcs$|async)&quot;&gt;
 
@@ -1618,7 +1471,7 @@ export class ProcessBuilderWrapperComponent {
                 &lt;/span&gt;
             &lt;/div&gt;
 
-            &lt;div [@showList]&#x3D;&quot;(params$|async)?.length&quot; *ngIf&#x3D;&quot;paramsVisible$|async&quot;&gt;
+            &lt;div [@showList]&#x3D;&quot;(params$|async)?.length&quot; *ngIf&#x3D;&quot;paramsVisible()&quot;&gt;
 
                 &lt;div class&#x3D;&quot;option&quot; *ngFor&#x3D;&quot;let param of (params$|async)&quot;&gt;
 
@@ -1688,7 +1541,7 @@ export class ProcessBuilderWrapperComponent {
     box-shadow: 0px 3px 1px -2px rgb(0 0 0 / 20%), 0px 2px 2px 0px rgb(0 0 0 / 14%), 0px 1px 5px 0px rgb(0 0 0 / 12%)
     z-index: 100
     right: 1rem
-    bottom: 1rem
+    top: 1rem
     padding: 0.2rem 0.4rem
     max-height: calc(100vh - 2rem)
     overflow-y: auto
@@ -1869,8 +1722,8 @@ export class ProcessBuilderWrapperComponent {
 <script src="../js/libs/htmlparser.js"></script>
 <script src="../js/libs/deep-iterator.js"></script>
 <script>
-        var COMPONENT_TEMPLATE = '<div><div class="body">    <div class="process-builder-wrapper">        <app-process-builder *ngIf="hasCurrentBpmnJSModel$|async; else noBpmnModelSetted" @fadeIn></app-process-builder>    </div>    <div class="control-footer">        <mat-form-field class="mat-form-field-outline-white-bg mat-form-field-no-padding draft-selection-input"            appearance="outline">            <mat-label>current draft (total: {{(bpmnJSModels$|async)?.length ?? 0}})</mat-label>            <mat-select [value]="currentBpmnJSModelGuid$|async">                <mat-select-trigger>                    <div #element class="editable-select-trigger" contenteditable (click)="$event.stopPropagation()"                        (keydown.enter)="blurElement(element, $event)" (keydown)="$event.stopPropagation()"                        (focusout)="renameCurrentModel(element.innerText)">                        {{(currentBpmnJSModel$|async)?.name ?? \'no name\'}}                    </div>                </mat-select-trigger>                <mat-option class="dropdown-option" *ngFor="let model of ((bpmnJSModels$|async) ?? [])"                    [value]="model.guid" (click)="setModel(model)">                    {{model.name ?? \'no name\'}}                </mat-option>                <mat-option class="dropdown-interaction-control" (click)="processBuilderService.createBpmnJsModel()">                    Add new draft                </mat-option>            </mat-select>        </mat-form-field>        <div class="spacer"></div>        <div class="hint" [ngClass]="(bpmnJsService.validationContainsErrors$|async)? \'error\': \'success\'"            (mouseleave)="hideAllHints()">            <span class="counter">{{(bpmnJsService.validation$|async)?.errors?.length ?? 0}}</span>            <span class="text">errors</span>        </div>        <div class="hint"            [ngClass]="((bpmnJsService.validation$|async)?.warnings?.length ?? 0) > 0? \'warning\': \'success\'"            (mouseleave)="hideAllHints()">            <span class="counter">{{(bpmnJsService.validation$|async)?.warnings?.length ?? 0}}</span>            <span class="text">warn\'s</span>        </div>        <div class="control-footer-item accent" *ngIf="(bpmnJsService.containsChanges$|async)" @fadeIn            (click)="bpmnJsService.saveCurrentBpmnModel(true)">            <mat-icon>save</mat-icon>        </div>        <div class="control-footer-item accent" @fadeIn (click)="compile()">            <mat-icon>play_arrow</mat-icon>        </div>        <div class="control-footer-item accent" matTooltip="more options" [matMenuTriggerFor]="menu">            <mat-icon>more_horiz</mat-icon>        </div>    </div>    <div class="control-wrapper" style="display: none;">        <div class="option-wrapper">            <div class="headline" (click)="toggleBpmnJsModels()">                <span class="text">BPMN Models</span>                <span class="counter">                    {{(bpmnJSModels$|async)?.length}}                </span>            </div>            <div [@showList]="(bpmnJSModels$|async)?.length" *ngIf="modelsVisible$|async">                <div class="quick-interaction-wrapper">                    <app-method-quick-interaction></app-method-quick-interaction>                </div>            </div>        </div>        <div class="option-wrapper">            <div class="headline" (click)="toggleMethods()">                <span class="text">Functions</span>                <span class="counter">                    {{(funcs$|async)?.length}}                </span>            </div>            <div [@showList]="(funcs$|async)?.length" *ngIf="methodsVisible$|async">                <div class="option" *ngFor="let func of (funcs$|async)">                    <div class="text">{{func.name}}</div>                    <mat-icon *ngIf="func.customImplementation" (click)="removeFunction(func)" class="control"                        color="warn">delete_forever</mat-icon>                </div>            </div>        </div>        <div class="option-wrapper">            <div class="headline" (click)="toggleParams()">                <span class="text">Params</span>                <span class="counter">                    {{(params$|async)?.length}}                </span>            </div>            <div [@showList]="(params$|async)?.length" *ngIf="paramsVisible$|async">                <div class="option" *ngFor="let param of (params$|async)">                    <div class="text">{{param.name}}</div>                </div>            </div>        </div>    </div></div><mat-menu #menu="matMenu" class="smgr-menu">    <div mat-menu-item class="inactive" (click)="$event.stopPropagation()">        <span class="text" (click)="bpmnJsService.zoomIn()">zoom in</span>    </div>    <div mat-menu-item class="inactive" (click)="$event.stopPropagation()">        <span class="text" (click)="bpmnJsService.zoomOut()">zoom out</span>    </div>    <div mat-menu-item [disabled]="!(bpmnJsService.containsChanges$|async)"        (click)="bpmnJsService.saveCurrentBpmnModel(true)">        <span class="text">save model</span>    </div>    <div mat-menu-item class="bordered">        <span class="text">run pipeline</span>    </div>    <div mat-menu-item (click)="processBuilderService.resetLocalState()">        <span class="text">reset environment</span>    </div></mat-menu><ng-template #noBpmnModelSetted>    <div class="no-bpmn-model-hint">        no bpmn model setted    </div></ng-template></div>'
-    var COMPONENTS = [{'name': 'AboutComponent', 'selector': 'app-about'},{'name': 'AccessTokenInputComponent', 'selector': 'app-access-token-input'},{'name': 'ApiCallConfiguratorComponent', 'selector': 'app-api-call-configurator'},{'name': 'ApiCallConfiguratorDialogComponent', 'selector': 'app-api-call-configurator-dialog'},{'name': 'ApiConfigurationPreviewComponent', 'selector': 'app-api-configuration-preview'},{'name': 'ApiLoginTestComponent', 'selector': 'app-api-login-test'},{'name': 'AppComponent', 'selector': 'app-root'},{'name': 'CalculationComponent', 'selector': 'app-calculation'},{'name': 'CalculationContextOverviewComponent', 'selector': 'app-calculation-context-overview'},{'name': 'CodeEditorComponent', 'selector': 'app-code-editor'},{'name': 'ConfirmationComponent', 'selector': 'app-confirmation'},{'name': 'ContainerPreviewComponent', 'selector': 'app-container-preview'},{'name': 'EditDataDialogComponent', 'selector': 'app-edit-data-dialog'},{'name': 'EmbeddedConfigureErrorGatewayEntranceConnectionComponent', 'selector': 'app-embedded-configure-error-gateway-entrance-connection'},{'name': 'EmbeddedFunctionImplementationComponent', 'selector': 'app-embedded-function-implementation'},{'name': 'EmbeddedFunctionInputSelectionComponent', 'selector': 'app-embedded-function-input-selection'},{'name': 'EmbeddedFunctionSelectionComponent', 'selector': 'app-embedded-function-selection'},{'name': 'EmbeddedInputOutputMappingComponent', 'selector': '[app-embedded-input-output-mapping]'},{'name': 'EmbeddedInputOutputMappingTableRowComponent', 'selector': 'app-embedded-input-output-mapping-table-row'},{'name': 'EmbeddedOutputParamConfigurationComponent', 'selector': 'app-embedded-output-param-configuration'},{'name': 'EmbeddedParamEditorComponent', 'selector': 'app-embedded-param-editor'},{'name': 'EndpointInputComponent', 'selector': 'app-endpoint-input'},{'name': 'ErrorComponent', 'selector': 'app-error'},{'name': 'FunctionPreviewComponent', 'selector': 'app-function-preview'},{'name': 'GoodPreviewComponent', 'selector': 'app-good-preview'},{'name': 'GoodsPanelComponent', 'selector': 'app-goods-panel'},{'name': 'GroupsFormComponent', 'selector': 'app-groups-form'},{'name': 'GroupsPanelComponent', 'selector': 'app-groups-panel'},{'name': 'LocalDataComponent', 'selector': 'app-local-data'},{'name': 'MethodQuickInteractionComponent', 'selector': 'app-method-quick-interaction'},{'name': 'NavbarComponent', 'selector': 'app-navbar'},{'name': 'NoSolutionDialogComponent', 'selector': 'app-no-solution-dialog'},{'name': 'OrdersFormComponent', 'selector': 'app-orders-form'},{'name': 'ParamEditorComponent', 'selector': 'app-param-editor'},{'name': 'ParamMemberPathPreviewComponent', 'selector': 'app-param-member-path-preview'},{'name': 'ParamMemberPreviewComponent', 'selector': 'app-param-member-preview'},{'name': 'ParamPreviewComponent', 'selector': 'app-param-preview'},{'name': 'PipelineActionPreviewComponent', 'selector': 'app-pipeline-action-preview'},{'name': 'PipeRunnerComponent', 'selector': 'app-pipe-runner'},{'name': 'ProcessBuilderComponent', 'selector': 'app-process-builder'},{'name': 'ProcessBuilderWrapperComponent', 'selector': 'app-process-builder-wrapper'},{'name': 'ProductFormComponent', 'selector': 'app-products-form'},{'name': 'SceneVisualizationComponent', 'selector': 'app-scene-visualization'},{'name': 'SelectApiAuthorizationComponent', 'selector': 'app-select-api-authorization'},{'name': 'SelectGroupComponent', 'selector': 'app-select-group'},{'name': 'SelectProductComponent', 'selector': 'app-select-product'},{'name': 'SelectUnitComponent', 'selector': 'app-select-unit'},{'name': 'SolutionAnimationComponent', 'selector': 'app-solution-animation'},{'name': 'SolutionPreviewComponent', 'selector': 'app-solution-preview'},{'name': 'SolutionPreviewRenderingComponent', 'selector': 'app-solution-preview-rendering'},{'name': 'SolutionValidationComponent', 'selector': 'app-solution-validation'},{'name': 'SolutionVisualizationDialogComponent', 'selector': 'app-solution-visualization-dialog'},{'name': 'TaskCreationComponent', 'selector': 'app-task-creation'},{'name': 'UserInputComponent', 'selector': 'app-user-input'},{'name': 'UsernamePasswordCombinationComponent', 'selector': 'app-username-password-combination'},{'name': 'VisualizerComponent', 'selector': 'app-visualizer'},{'name': 'WidgetComponent', 'selector': 'app-widget'}];
+        var COMPONENT_TEMPLATE = '<div><div class="body">    <div class="process-builder-wrapper">        <app-process-builder *ngIf="hasCurrentBpmnJSModel$|async; else noBpmnModelSetted" @fadeIn></app-process-builder>    </div>    <div class="control-footer">        <mat-form-field class="mat-form-field-outline-white-bg mat-form-field-no-padding draft-selection-input"            appearance="outline">            <mat-label>current draft (total: {{(bpmnJSModels$|async)?.length ?? 0}})</mat-label>            <mat-select [value]="currentBpmnJSModelGuid$|async">                <mat-select-trigger>                    <div #element class="editable-select-trigger" contenteditable (click)="$event.stopPropagation()"                        (keydown.enter)="blurElement(element, $event)" (keydown)="$event.stopPropagation()"                        (focusout)="renameCurrentModel(element.innerText)">                        {{(currentBpmnJSModel$|async)?.name ?? \'no name\'}}                    </div>                </mat-select-trigger>                <mat-option class="dropdown-option" *ngFor="let model of ((bpmnJSModels$|async) ?? [])"                    [value]="model.guid" (click)="setModel(model)">                    {{model.name ?? \'no name\'}}                </mat-option>                <mat-option class="dropdown-interaction-control" (click)="processBuilderService.createBpmnJsModel()">                    Add new draft                </mat-option>            </mat-select>        </mat-form-field>        <div class="spacer"></div>        <div class="hint" [ngClass]="(bpmnJsService.validationContainsErrors$|async)? \'error\': \'success\'"            (mouseleave)="hideAllHints()">            <span class="counter">{{(bpmnJsService.validation$|async)?.errors?.length ?? 0}}</span>            <span class="text">errors</span>        </div>        <div class="hint"            [ngClass]="((bpmnJsService.validation$|async)?.warnings?.length ?? 0) > 0? \'warning\': \'success\'"            (mouseleave)="hideAllHints()">            <span class="counter">{{(bpmnJsService.validation$|async)?.warnings?.length ?? 0}}</span>            <span class="text">warn\'s</span>        </div>        <div class="control-footer-item accent" *ngIf="(bpmnJsService.containsChanges$|async)" @fadeIn            (click)="bpmnJsService.saveCurrentBpmnModel(true)">            <mat-icon>save</mat-icon>        </div>        <div class="control-footer-item accent" @fadeIn (click)="compile()">            <mat-icon>play_arrow</mat-icon>        </div>        <div class="control-footer-item accent" matTooltip="more options" [matMenuTriggerFor]="menu">            <mat-icon>more_horiz</mat-icon>        </div>    </div>    <div class="control-wrapper" style="display: none;">        <div class="option-wrapper">            <div class="headline" (click)="toggleBpmnJsModels()">                <span class="text">BPMN Models</span>                <span class="counter">                    {{(bpmnJSModels$|async)?.length}}                </span>            </div>            <div [@showList]="(bpmnJSModels$|async)?.length" *ngIf="modelsVisible()">                <div class="quick-interaction-wrapper">                    <app-method-quick-interaction></app-method-quick-interaction>                </div>            </div>        </div>        <div class="option-wrapper">            <div class="headline" (click)="toggleMethods()">                <span class="text">Functions</span>                <span class="counter">                    {{(funcs$|async)?.length}}                </span>            </div>            <div [@showList]="(funcs$|async)?.length" *ngIf="methodsVisible()">                <div class="option" *ngFor="let func of (funcs$|async)">                    <div class="text">{{func.name}}</div>                    <mat-icon *ngIf="func.customImplementation" (click)="removeFunction(func)" class="control"                        color="warn">delete_forever</mat-icon>                </div>            </div>        </div>        <div class="option-wrapper">            <div class="headline" (click)="toggleParams()">                <span class="text">Params</span>                <span class="counter">                    {{(params$|async)?.length}}                </span>            </div>            <div [@showList]="(params$|async)?.length" *ngIf="paramsVisible()">                <div class="option" *ngFor="let param of (params$|async)">                    <div class="text">{{param.name}}</div>                </div>            </div>        </div>    </div></div><mat-menu #menu="matMenu" class="smgr-menu">    <div mat-menu-item class="inactive" (click)="$event.stopPropagation()">        <span class="text" (click)="bpmnJsService.zoomIn()">zoom in</span>    </div>    <div mat-menu-item class="inactive" (click)="$event.stopPropagation()">        <span class="text" (click)="bpmnJsService.zoomOut()">zoom out</span>    </div>    <div mat-menu-item [disabled]="!(bpmnJsService.containsChanges$|async)"        (click)="bpmnJsService.saveCurrentBpmnModel(true)">        <span class="text">save model</span>    </div>    <div mat-menu-item class="bordered">        <span class="text">run pipeline</span>    </div>    <div mat-menu-item (click)="processBuilderService.resetLocalState()">        <span class="text">reset environment</span>    </div></mat-menu><ng-template #noBpmnModelSetted>    <div class="no-bpmn-model-hint">        no bpmn model setted    </div></ng-template></div>'
+    var COMPONENTS = [{'name': 'AboutComponent', 'selector': 'app-about'},{'name': 'AccessTokenInputComponent', 'selector': 'app-access-token-input'},{'name': 'ApiCallConfiguratorComponent', 'selector': 'app-api-call-configurator'},{'name': 'ApiCallConfiguratorDialogComponent', 'selector': 'app-api-call-configurator-dialog'},{'name': 'ApiConfigurationPreviewComponent', 'selector': 'app-api-configuration-preview'},{'name': 'ApiLoginTestComponent', 'selector': 'app-api-login-test'},{'name': 'AppComponent', 'selector': 'app-root'},{'name': 'CalculationComponent', 'selector': 'app-calculation'},{'name': 'CalculationContextOverviewComponent', 'selector': 'app-calculation-context-overview'},{'name': 'CodeEditorComponent', 'selector': 'app-code-editor'},{'name': 'ConfirmationComponent', 'selector': 'app-confirmation'},{'name': 'ContainerPreviewComponent', 'selector': 'app-container-preview'},{'name': 'EditDataDialogComponent', 'selector': 'app-edit-data-dialog'},{'name': 'EmbeddedConfigureErrorGatewayEntranceConnectionComponent', 'selector': 'app-embedded-configure-error-gateway-entrance-connection'},{'name': 'EmbeddedFunctionImplementationComponent', 'selector': 'app-embedded-function-implementation'},{'name': 'EmbeddedFunctionInputSelectionComponent', 'selector': 'app-embedded-function-input-selection'},{'name': 'EmbeddedFunctionSelectionComponent', 'selector': 'app-embedded-function-selection'},{'name': 'EmbeddedInputOutputMappingComponent', 'selector': 'app-embedded-input-output-mapping'},{'name': 'EmbeddedInputOutputMappingTableRowComponent', 'selector': 'app-embedded-input-output-mapping-table-row'},{'name': 'EmbeddedOutputParamConfigurationComponent', 'selector': 'app-embedded-output-param-configuration'},{'name': 'EmbeddedParamEditorComponent', 'selector': 'app-embedded-param-editor'},{'name': 'EmbeddedStaticOutputDefinitionComponent', 'selector': 'app-embedded-static-output-definition'},{'name': 'EndpointInputComponent', 'selector': 'app-endpoint-input'},{'name': 'ErrorComponent', 'selector': 'app-error'},{'name': 'FunctionPreviewComponent', 'selector': 'app-function-preview'},{'name': 'GoodPreviewComponent', 'selector': 'app-good-preview'},{'name': 'GoodsPanelComponent', 'selector': 'app-goods-panel'},{'name': 'GroupsFormComponent', 'selector': 'app-groups-form'},{'name': 'GroupsPanelComponent', 'selector': 'app-groups-panel'},{'name': 'LocalDataComponent', 'selector': 'app-local-data'},{'name': 'MethodQuickInteractionComponent', 'selector': 'app-method-quick-interaction'},{'name': 'NavbarComponent', 'selector': 'app-navbar'},{'name': 'NoSolutionDialogComponent', 'selector': 'app-no-solution-dialog'},{'name': 'OrdersFormComponent', 'selector': 'app-orders-form'},{'name': 'ParamEditorComponent', 'selector': 'app-param-editor'},{'name': 'ParamMemberPathPreviewComponent', 'selector': 'app-param-member-path-preview'},{'name': 'ParamMemberPreviewComponent', 'selector': 'app-param-member-preview'},{'name': 'ParamPreviewComponent', 'selector': 'app-param-preview'},{'name': 'PipelineActionPreviewComponent', 'selector': 'app-pipeline-action-preview'},{'name': 'PipeRunnerComponent', 'selector': 'app-pipe-runner'},{'name': 'ProcessBuilderComponent', 'selector': 'app-process-builder'},{'name': 'ProcessBuilderWrapperComponent', 'selector': 'app-process-builder-wrapper'},{'name': 'ProductFormComponent', 'selector': 'app-products-form'},{'name': 'SceneVisualizationComponent', 'selector': 'app-scene-visualization'},{'name': 'SelectApiAuthorizationComponent', 'selector': 'app-select-api-authorization'},{'name': 'SelectGroupComponent', 'selector': 'app-select-group'},{'name': 'SelectProductComponent', 'selector': 'app-select-product'},{'name': 'SelectUnitComponent', 'selector': 'app-select-unit'},{'name': 'SolutionAnimationComponent', 'selector': 'app-solution-animation'},{'name': 'SolutionPreviewComponent', 'selector': 'app-solution-preview'},{'name': 'SolutionPreviewRenderingComponent', 'selector': 'app-solution-preview-rendering'},{'name': 'SolutionValidationComponent', 'selector': 'app-solution-validation'},{'name': 'SolutionVisualizationDialogComponent', 'selector': 'app-solution-visualization-dialog'},{'name': 'TaskCreationComponent', 'selector': 'app-task-creation'},{'name': 'UserInputComponent', 'selector': 'app-user-input'},{'name': 'UsernamePasswordCombinationComponent', 'selector': 'app-username-password-combination'},{'name': 'VisualizerComponent', 'selector': 'app-visualizer'},{'name': 'WidgetComponent', 'selector': 'app-widget'}];
     var DIRECTIVES = [{'name': 'AnimatedCounterDirective', 'selector': '[appAnimatedCounter]'}];
     var ACTUAL_COMPONENT = {'name': 'ProcessBuilderWrapperComponent'};
 </script>
