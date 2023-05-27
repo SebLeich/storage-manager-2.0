@@ -74,7 +74,6 @@
         <h3>Implements</h3>
     </p>
     <p class="comment">
-                    <code><a href="https://angular.io/api/core/OnDestroy" target="_blank" >OnDestroy</a></code>
                     <code><a href="https://angular.io/api/core/OnInit" target="_blank" >OnInit</a></code>
                     <code><a href="../interfaces/IEmbeddedView.html" target="_self" >IEmbeddedView</a></code>
     </p>
@@ -140,10 +139,6 @@
                                 <a href="#_jsonEditorInstance" >_jsonEditorInstance</a>
                             </li>
                             <li>
-                                    <span class="modifier">Private</span>
-                                <a href="#_subscription" >_subscription</a>
-                            </li>
-                            <li>
                                     <span class="modifier">Public</span>
                                 <a href="#currentTemplate$" >currentTemplate$</a>
                             </li>
@@ -192,16 +187,21 @@
                     <td class="col-md-4">
                         <ul class="index-list">
                             <li>
-                                    <span class="modifier">Public</span>
-                                <a href="#ngOnDestroy" >ngOnDestroy</a>
+                                    <span class="modifier">Private</span>
+                                <a href="#initJsonEditor" >initJsonEditor</a>
                             </li>
                             <li>
                                     <span class="modifier">Public</span>
                                 <a href="#ngOnInit" >ngOnInit</a>
                             </li>
                             <li>
+                                    <span class="modifier">Private</span>
+                                    <span class="modifier">Async</span>
+                                <a href="#onFormValueUpdated" >onFormValueUpdated</a>
+                            </li>
+                            <li>
                                     <span class="modifier">Public</span>
-                                <a href="#setIsCollection" >setIsCollection</a>
+                                <a href="#toggleIsCollection" >toggleIsCollection</a>
                             </li>
                         </ul>
                     </td>
@@ -235,12 +235,12 @@
             <tbody>
                 <tr>
                     <td class="col-md-4">
-<code>constructor(_store: Store, _controlContainer: <a href="https://angular.io/api/forms/ControlContainer" target="_blank">ControlContainer</a>)</code>
+<code>constructor(_store: Store, _controlContainer: <a href="https://angular.io/api/forms/ControlContainer" target="_blank">ControlContainer</a>, _destroyRef: DestroyRef)</code>
                     </td>
                 </tr>
                         <tr>
                             <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="58" class="link-to-prism">src/lib/process-builder/components/embedded/embedded-static-output-definition/embedded-static-output-definition.component.ts:58</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="62" class="link-to-prism">src/lib/process-builder/components/embedded/embedded-static-output-definition/embedded-static-output-definition.component.ts:62</a></div>
                             </td>
                         </tr>
 
@@ -281,6 +281,18 @@
                                                     </td>
                                                     
                                                 </tr>
+                                                <tr>
+                                                        <td>_destroyRef</td>
+                                                  
+                                                        <td>
+                                                                    <code>DestroyRef</code>
+                                                        </td>
+                                                  
+                                                    <td>
+                                                            No
+                                                    </td>
+                                                    
+                                                </tr>
                                         </tbody>
                                     </table>
                             </div>
@@ -303,26 +315,26 @@
         <tbody>
             <tr>
                 <td class="col-md-4">
-                    <a name="ngOnDestroy"></a>
+                    <a name="initJsonEditor"></a>
                     <span class="name">
-                        <span class="modifier">Public</span>
-                        <span ><b>ngOnDestroy</b></span>
-                        <a href="#ngOnDestroy"><span class="icon ion-ios-link"></span></a>
+                        <span class="modifier">Private</span>
+                        <span ><b>initJsonEditor</b></span>
+                        <a href="#initJsonEditor"><span class="icon ion-ios-link"></span></a>
                     </span>
                 </td>
             </tr>
             <tr>
                 <td class="col-md-4">
                     <span class="modifier-icon icon ion-ios-reset"></span>
-                    <code>ngOnDestroy()</code>
+                    <code>initJsonEditor()</code>
                 </td>
             </tr>
 
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="65"
-                            class="link-to-prism">src/lib/process-builder/components/embedded/embedded-static-output-definition/embedded-static-output-definition.component.ts:65</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="82"
+                            class="link-to-prism">src/lib/process-builder/components/embedded/embedded-static-output-definition/embedded-static-output-definition.component.ts:82</a></div>
                 </td>
             </tr>
 
@@ -360,8 +372,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="71"
-                            class="link-to-prism">src/lib/process-builder/components/embedded/embedded-static-output-definition/embedded-static-output-definition.component.ts:71</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="66"
+                            class="link-to-prism">src/lib/process-builder/components/embedded/embedded-static-output-definition/embedded-static-output-definition.component.ts:66</a></div>
                 </td>
             </tr>
 
@@ -381,26 +393,66 @@
         <tbody>
             <tr>
                 <td class="col-md-4">
-                    <a name="setIsCollection"></a>
+                    <a name="onFormValueUpdated"></a>
                     <span class="name">
-                        <span class="modifier">Public</span>
-                        <span ><b>setIsCollection</b></span>
-                        <a href="#setIsCollection"><span class="icon ion-ios-link"></span></a>
+                        <span class="modifier">Private</span>
+                        <span class="modifier">Async</span>
+                        <span ><b>onFormValueUpdated</b></span>
+                        <a href="#onFormValueUpdated"><span class="icon ion-ios-link"></span></a>
                     </span>
                 </td>
             </tr>
             <tr>
                 <td class="col-md-4">
                     <span class="modifier-icon icon ion-ios-reset"></span>
-                    <code>setIsCollection()</code>
+                    <code>onFormValueUpdated()</code>
                 </td>
             </tr>
 
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="123"
-                            class="link-to-prism">src/lib/process-builder/components/embedded/embedded-static-output-definition/embedded-static-output-definition.component.ts:123</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="98"
+                            class="link-to-prism">src/lib/process-builder/components/embedded/embedded-static-output-definition/embedded-static-output-definition.component.ts:98</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
+
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="toggleIsCollection"></a>
+                    <span class="name">
+                        <span class="modifier">Public</span>
+                        <span ><b>toggleIsCollection</b></span>
+                        <a href="#toggleIsCollection"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>toggleIsCollection()</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="77"
+                            class="link-to-prism">src/lib/process-builder/components/embedded/embedded-static-output-definition/embedded-static-output-definition.component.ts:77</a></div>
                 </td>
             </tr>
 
@@ -441,33 +493,7 @@
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="54" class="link-to-prism">src/lib/process-builder/components/embedded/embedded-static-output-definition/embedded-static-output-definition.component.ts:54</a></div>
-                        </td>
-                    </tr>
-
-
-        </tbody>
-    </table>
-    <table class="table table-sm table-bordered">
-        <tbody>
-            <tr>
-                <td class="col-md-4">
-                    <a name="_subscription"></a>
-                    <span class="name">
-                            <span class="modifier">Private</span>
-                        <span ><b>_subscription</b></span>
-                        <a href="#_subscription"><span class="icon ion-ios-link"></span></a>
-                    </span>
-                </td>
-            </tr>
-                <tr>
-                    <td class="col-md-4">
-                        <i>Default value : </i><code>new Subscription()</code>
-                    </td>
-                </tr>
-                    <tr>
-                        <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="58" class="link-to-prism">src/lib/process-builder/components/embedded/embedded-static-output-definition/embedded-static-output-definition.component.ts:58</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="60" class="link-to-prism">src/lib/process-builder/components/embedded/embedded-static-output-definition/embedded-static-output-definition.component.ts:60</a></div>
                         </td>
                     </tr>
 
@@ -529,7 +555,7 @@
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="55" class="link-to-prism">src/lib/process-builder/components/embedded/embedded-static-output-definition/embedded-static-output-definition.component.ts:55</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="61" class="link-to-prism">src/lib/process-builder/components/embedded/embedded-static-output-definition/embedded-static-output-definition.component.ts:61</a></div>
                         </td>
                     </tr>
 
@@ -646,7 +672,7 @@
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="46" class="link-to-prism">src/lib/process-builder/components/embedded/embedded-static-output-definition/embedded-static-output-definition.component.ts:46</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="52" class="link-to-prism">src/lib/process-builder/components/embedded/embedded-static-output-definition/embedded-static-output-definition.component.ts:52</a></div>
                         </td>
                     </tr>
 
@@ -667,12 +693,18 @@
             </tr>
                 <tr>
                     <td class="col-md-4">
-                        <i>Default value : </i><code>this.currentTemplate$.pipe(
-    map((currentTemplate) &#x3D;&gt; {
+                        <i>Default value : </i><code>combineLatest([this.currentTemplate$, toObservable(this.isCollection)]).pipe(
+    map(([currentTemplate, isCollection]) &#x3D;&gt; {
       const def &#x3D; this.formGroup.controls.outputParamValue?.value;
-      const currIFace &#x3D; (Array.isArray(def) ? def[0] : def) as IParamDefinition;
-      const output &#x3D; currentTemplate?.identifier &#x3D;&#x3D;&#x3D; currIFace.interface ? currIFace.defaultValue : ProcessBuilderRepository.createPseudoObjectFromIInterface(currentTemplate as IInterface);
-      return this.isCollection() &amp;&amp; !Array.isArray(output) ? [output] : output;
+      const currIFace &#x3D; (Array.isArray(def) ? def[0] : def) as IParamDefinition | null;
+
+      if (currIFace &amp;&amp; currentTemplate?.identifier &#x3D;&#x3D;&#x3D; currIFace?.interface) {
+        const defaultValue &#x3D; Array.isArray(currIFace.defaultValue) ? currIFace.defaultValue[0] : currIFace.defaultValue;
+        return isCollection ? [defaultValue] : defaultValue;
+      }
+
+      const output &#x3D; ProcessBuilderRepository.createPseudoObjectFromIInterface(currentTemplate as IInterface);
+      return isCollection &amp;&amp; !Array.isArray(output) ? [output] : output;
     })
   )</code>
                     </td>
@@ -731,7 +763,7 @@
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="56" class="link-to-prism">src/lib/process-builder/components/embedded/embedded-static-output-definition/embedded-static-output-definition.component.ts:56</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="62" class="link-to-prism">src/lib/process-builder/components/embedded/embedded-static-output-definition/embedded-static-output-definition.component.ts:62</a></div>
                         </td>
                     </tr>
 
@@ -760,7 +792,7 @@
                 </tr>
                             <tr>
                                 <td class="col-md-4">
-                                    <div class="io-line">Defined in <a href="" data-line="50" class="link-to-prism">src/lib/process-builder/components/embedded/embedded-static-output-definition/embedded-static-output-definition.component.ts:50</a></div>
+                                    <div class="io-line">Defined in <a href="" data-line="56" class="link-to-prism">src/lib/process-builder/components/embedded/embedded-static-output-definition/embedded-static-output-definition.component.ts:56</a></div>
                                 </td>
                             </tr>
 
@@ -778,19 +810,19 @@ import { selectSnapshot } from &#x27;@/lib/process-builder/globals/select-snapsh
 import { IInterface, IParam, IParamDefinition } from &#x27;@/lib/process-builder/interfaces&#x27;;
 import { TaskCreationFormGroup } from &#x27;@/lib/process-builder/interfaces/task-creation-form-group-value.interface&#x27;;
 import { selectIInterface, selectIInterfaces } from &#x27;@/lib/process-builder/store/selectors&#x27;;
-import { Component, ElementRef, OnDestroy, OnInit, ViewChild, signal } from &#x27;@angular/core&#x27;;
-import { toObservable } from &#x27;@angular/core/rxjs-interop&#x27;;
+import { Component, DestroyRef, ElementRef, OnInit, ViewChild, signal } from &#x27;@angular/core&#x27;;
+import { takeUntilDestroyed, toObservable } from &#x27;@angular/core/rxjs-interop&#x27;;
 import { ControlContainer } from &#x27;@angular/forms&#x27;;
 import { Store } from &#x27;@ngrx/store&#x27;;
 import JSONEditor from &#x27;jsoneditor&#x27;;
-import { defer, Subscription, startWith, switchMap, distinctUntilChanged, map, merge, Subject, debounceTime, shareReplay } from &#x27;rxjs&#x27;;
+import { defer, startWith, switchMap, distinctUntilChanged, map, merge, Subject, debounceTime, shareReplay, combineLatest } from &#x27;rxjs&#x27;;
 
 @Component({
   selector: &#x27;app-embedded-static-output-definition&#x27;,
   templateUrl: &#x27;./embedded-static-output-definition.component.html&#x27;,
   styleUrls: [&#x27;./embedded-static-output-definition.component.scss&#x27;],
 })
-export class EmbeddedStaticOutputDefinitionComponent implements OnDestroy, OnInit, IEmbeddedView {
+export class EmbeddedStaticOutputDefinitionComponent implements OnInit, IEmbeddedView {
   @ViewChild(&#x27;parameterBody&#x27;, { static: true, read: ElementRef })
   private parameterBody!: ElementRef&lt;HTMLDivElement&gt;;
 
@@ -808,12 +840,18 @@ export class EmbeddedStaticOutputDefinitionComponent implements OnDestroy, OnIni
   );
   public json &#x3D; signal&lt;object&gt;({});
   public isCollection &#x3D; signal(!Array.isArray(this.formGroup.value.outputParamValue) &amp;&amp; this.formGroup.value.outputParamValue?.type &#x3D;&#x3D;&#x3D; &#x27;array&#x27;);
-  public templateObject$ &#x3D; this.currentTemplate$.pipe(
-    map((currentTemplate) &#x3D;&gt; {
+  public templateObject$ &#x3D; combineLatest([this.currentTemplate$, toObservable(this.isCollection)]).pipe(
+    map(([currentTemplate, isCollection]) &#x3D;&gt; {
       const def &#x3D; this.formGroup.controls.outputParamValue?.value;
-      const currIFace &#x3D; (Array.isArray(def) ? def[0] : def) as IParamDefinition;
-      const output &#x3D; currentTemplate?.identifier &#x3D;&#x3D;&#x3D; currIFace.interface ? currIFace.defaultValue : ProcessBuilderRepository.createPseudoObjectFromIInterface(currentTemplate as IInterface);
-      return this.isCollection() &amp;&amp; !Array.isArray(output) ? [output] : output;
+      const currIFace &#x3D; (Array.isArray(def) ? def[0] : def) as IParamDefinition | null;
+
+      if (currIFace &amp;&amp; currentTemplate?.identifier &#x3D;&#x3D;&#x3D; currIFace?.interface) {
+        const defaultValue &#x3D; Array.isArray(currIFace.defaultValue) ? currIFace.defaultValue[0] : currIFace.defaultValue;
+        return isCollection ? [defaultValue] : defaultValue;
+      }
+
+      const output &#x3D; ProcessBuilderRepository.createPseudoObjectFromIInterface(currentTemplate as IInterface);
+      return isCollection &amp;&amp; !Array.isArray(output) ? [output] : output;
     })
   );
   public paramObjectPseudoObject$ &#x3D; merge(
@@ -828,64 +866,12 @@ export class EmbeddedStaticOutputDefinitionComponent implements OnDestroy, OnIni
   public destroy$$ &#x3D; new Subject&lt;void&gt;();
   public updateFormValue$ &#x3D; merge(this.paramObjectPseudoObject$.pipe(debounceTime(200)), toObservable(this.isCollection).pipe(debounceTime(200)), toObservable(this.json).pipe(debounceTime(200)), this.destroy$$);
 
-  private _subscription &#x3D; new Subscription();
-
-  constructor(
-    private _store: Store,
-    private _controlContainer: ControlContainer
-  ) { }
-
-  public ngOnDestroy(): void {
-    this._subscription.unsubscribe();
-    this.destroy$$.next();
-
-  }
+  constructor(private _store: Store, private _controlContainer: ControlContainer, private _destroyRef: DestroyRef) { }
 
   public ngOnInit(): void {
-    this._jsonEditorInstance.set(
-      new JSONEditor(this.parameterBody.nativeElement, {
-        mode: &#x27;code&#x27;,
-        onChange: () &#x3D;&gt; {
-          try {
-            JSON.stringify(this._jsonEditorInstance()?.get());
-            this.json.set(this._jsonEditorInstance()?.get() as object);
-          } catch(e){
-            // do nothing
-          }
-        },
-      })
-    );
-    this._subscription.add(this.templateObject$.subscribe(obj &#x3D;&gt; {
-      this._jsonEditorInstance()?.set(obj);
-    }));
-    this._subscription.add(this.updateFormValue$.subscribe(async () &#x3D;&gt; {
-      const iFace &#x3D; await selectSnapshot(this.currentTemplate$),
-        paramValue &#x3D; await selectSnapshot(this.paramObjectPseudoObject$);
-
-      this.formGroup.controls.outputParamValue?.patchValue({
-        constant: true,
-        defaultValue: paramValue,
-        interface: iFace?.identifier,
-        type: Array.isArray(paramValue) ? &#x27;array&#x27; : &#x27;object&#x27;
-      } as IParam);
-
-      const lines &#x3D; [&#x27;async () &#x3D;&gt; {&#x27;];
-      const stringified &#x3D; Array.isArray(paramValue) ? paramValue.map(obj &#x3D;&gt; JSON.stringify(obj)) : JSON.stringify(paramValue);
-      if (Array.isArray(stringified)) {
-        lines.push(
-          &#x27;  return [&#x27;,
-          ...stringified.map((line, index, array) &#x3D;&gt; {
-            return index &#x3D;&#x3D;&#x3D; array.length - 1 ? &#x60;    ${line}&#x60; : &#x60;    ${line},&#x60;;
-          }),
-          &#x27;  ];&#x27;);
-      } else {
-        lines.push(&#x27;  return ${stringified};&#x27;);
-      }
-      lines.push(&#x27;}&#x27;);
-
-      const leaf &#x3D; CodemirrorRepository.stringToTextLeaf(lines);
-      this.formGroup.controls.implementation?.setValue(leaf);
-    }));
+    this.initJsonEditor();
+    this.templateObject$.pipe(takeUntilDestroyed(this._destroyRef)).subscribe(obj &#x3D;&gt; this._jsonEditorInstance()?.set(obj));
+    this.updateFormValue$.pipe(takeUntilDestroyed(this._destroyRef)).subscribe(async () &#x3D;&gt; await this.onFormValueUpdated());
 
     const initialValue &#x3D; this.formGroup.controls.outputParamValue?.value;
     if (!Array.isArray(initialValue) &amp;&amp; initialValue?.constant) {
@@ -893,9 +879,54 @@ export class EmbeddedStaticOutputDefinitionComponent implements OnDestroy, OnIni
     }
   }
 
-  public setIsCollection() {
+  public toggleIsCollection() {
     const value &#x3D; !this.isCollection();
     this.isCollection.set(value);
+  }
+
+  private initJsonEditor(){
+    this._jsonEditorInstance.set(
+      new JSONEditor(this.parameterBody.nativeElement, {
+        mode: &#x27;code&#x27;,
+        onChange: () &#x3D;&gt; {
+          try {
+            JSON.stringify(this._jsonEditorInstance()?.get());
+            this.json.set(this._jsonEditorInstance()?.get() as object);
+          } catch (e) {
+            // do nothing
+          }
+        },
+      })
+    );
+  }
+
+  private async onFormValueUpdated() {
+    const iFace &#x3D; await selectSnapshot(this.currentTemplate$),
+      paramValue &#x3D; await selectSnapshot(this.paramObjectPseudoObject$);
+
+    this.formGroup.controls.outputParamValue?.patchValue({
+      constant: true,
+      defaultValue: paramValue,
+      interface: iFace?.identifier,
+      type: Array.isArray(paramValue) ? &#x27;array&#x27; : &#x27;object&#x27;
+    } as IParam);
+
+    const lines &#x3D; [&#x27;async () &#x3D;&gt; {&#x27;];
+    const stringified &#x3D; Array.isArray(paramValue) ? paramValue.map(obj &#x3D;&gt; JSON.stringify(obj)) : JSON.stringify(paramValue);
+    if (Array.isArray(stringified)) {
+      lines.push(
+        &#x27;  return [&#x27;,
+        ...stringified.map((line, index, array) &#x3D;&gt; {
+          return index &#x3D;&#x3D;&#x3D; array.length - 1 ? &#x60;    ${line}&#x60; : &#x60;    ${line},&#x60;;
+        }),
+        &#x27;  ];&#x27;);
+    } else {
+      lines.push(&#x27;  return ${stringified};&#x27;);
+    }
+    lines.push(&#x27;}&#x27;);
+
+    const leaf &#x3D; CodemirrorRepository.stringToTextLeaf(lines);
+    this.formGroup.controls.implementation?.setValue(leaf);
   }
 }
 </code></pre>
@@ -921,7 +952,7 @@ export class EmbeddedStaticOutputDefinitionComponent implements OnDestroy, OnIni
             &lt;/mat-select&gt;
         &lt;/mat-form-field&gt;
 
-        &lt;mat-slide-toggle (toggleChange)&#x3D;&quot;setIsCollection()&quot; [checked]&#x3D;&quot;isCollection()&quot;&gt;is collection&lt;/mat-slide-toggle&gt;
+        &lt;mat-slide-toggle (toggleChange)&#x3D;&quot;toggleIsCollection()&quot; [checked]&#x3D;&quot;isCollection()&quot;&gt;is collection&lt;/mat-slide-toggle&gt;
     
     &lt;/div&gt;
 
@@ -980,7 +1011,7 @@ export class EmbeddedStaticOutputDefinitionComponent implements OnDestroy, OnIni
 <script src="../js/libs/htmlparser.js"></script>
 <script src="../js/libs/deep-iterator.js"></script>
 <script>
-        var COMPONENT_TEMPLATE = '<div><div class="body" [formGroup]="formGroup">    <div class="header">        <mat-form-field appearance="outline" class="mat-form-field-outline-white-bg mat-form-field-outline-no-padding-bottom">            <mat-label>output param name</mat-label>            <input matInput type="text" formControlName="outputParamName" />        </mat-form-field>        <mat-form-field class="mat-form-field-outline-white-bg mat-form-field-no-padding" appearance="outline">            <mat-label>current output template</mat-label>            <mat-select formControlName="interface">                <mat-option class="dropdown-option" *ngFor="let template of ((templates$|async) ?? [])"                    [value]="template.identifier">                    {{template.name}}                </mat-option>            </mat-select>        </mat-form-field>        <mat-slide-toggle (toggleChange)="setIsCollection()" [checked]="isCollection()">is collection</mat-slide-toggle>        </div>    <div class="content" #parameterBody></div></div></div>'
+        var COMPONENT_TEMPLATE = '<div><div class="body" [formGroup]="formGroup">    <div class="header">        <mat-form-field appearance="outline" class="mat-form-field-outline-white-bg mat-form-field-outline-no-padding-bottom">            <mat-label>output param name</mat-label>            <input matInput type="text" formControlName="outputParamName" />        </mat-form-field>        <mat-form-field class="mat-form-field-outline-white-bg mat-form-field-no-padding" appearance="outline">            <mat-label>current output template</mat-label>            <mat-select formControlName="interface">                <mat-option class="dropdown-option" *ngFor="let template of ((templates$|async) ?? [])"                    [value]="template.identifier">                    {{template.name}}                </mat-option>            </mat-select>        </mat-form-field>        <mat-slide-toggle (toggleChange)="toggleIsCollection()" [checked]="isCollection()">is collection</mat-slide-toggle>        </div>    <div class="content" #parameterBody></div></div></div>'
     var COMPONENTS = [{'name': 'AboutComponent', 'selector': 'app-about'},{'name': 'AccessTokenInputComponent', 'selector': 'app-access-token-input'},{'name': 'ApiCallConfiguratorComponent', 'selector': 'app-api-call-configurator'},{'name': 'ApiCallConfiguratorDialogComponent', 'selector': 'app-api-call-configurator-dialog'},{'name': 'ApiConfigurationPreviewComponent', 'selector': 'app-api-configuration-preview'},{'name': 'ApiLoginTestComponent', 'selector': 'app-api-login-test'},{'name': 'AppComponent', 'selector': 'app-root'},{'name': 'CalculationComponent', 'selector': 'app-calculation'},{'name': 'CalculationContextOverviewComponent', 'selector': 'app-calculation-context-overview'},{'name': 'CodeEditorComponent', 'selector': 'app-code-editor'},{'name': 'ConfirmationComponent', 'selector': 'app-confirmation'},{'name': 'ContainerPreviewComponent', 'selector': 'app-container-preview'},{'name': 'EditDataDialogComponent', 'selector': 'app-edit-data-dialog'},{'name': 'EmbeddedConfigureErrorGatewayEntranceConnectionComponent', 'selector': 'app-embedded-configure-error-gateway-entrance-connection'},{'name': 'EmbeddedFunctionImplementationComponent', 'selector': 'app-embedded-function-implementation'},{'name': 'EmbeddedFunctionInputSelectionComponent', 'selector': 'app-embedded-function-input-selection'},{'name': 'EmbeddedFunctionSelectionComponent', 'selector': 'app-embedded-function-selection'},{'name': 'EmbeddedInputOutputMappingComponent', 'selector': 'app-embedded-input-output-mapping'},{'name': 'EmbeddedInputOutputMappingTableRowComponent', 'selector': 'app-embedded-input-output-mapping-table-row'},{'name': 'EmbeddedOutputParamConfigurationComponent', 'selector': 'app-embedded-output-param-configuration'},{'name': 'EmbeddedParamEditorComponent', 'selector': 'app-embedded-param-editor'},{'name': 'EmbeddedStaticOutputDefinitionComponent', 'selector': 'app-embedded-static-output-definition'},{'name': 'EndpointInputComponent', 'selector': 'app-endpoint-input'},{'name': 'ErrorComponent', 'selector': 'app-error'},{'name': 'FunctionPreviewComponent', 'selector': 'app-function-preview'},{'name': 'GoodPreviewComponent', 'selector': 'app-good-preview'},{'name': 'GoodsPanelComponent', 'selector': 'app-goods-panel'},{'name': 'GroupsFormComponent', 'selector': 'app-groups-form'},{'name': 'GroupsPanelComponent', 'selector': 'app-groups-panel'},{'name': 'LocalDataComponent', 'selector': 'app-local-data'},{'name': 'MethodQuickInteractionComponent', 'selector': 'app-method-quick-interaction'},{'name': 'NavbarComponent', 'selector': 'app-navbar'},{'name': 'NoSolutionDialogComponent', 'selector': 'app-no-solution-dialog'},{'name': 'OrdersFormComponent', 'selector': 'app-orders-form'},{'name': 'ParamEditorComponent', 'selector': 'app-param-editor'},{'name': 'ParamMemberPathPreviewComponent', 'selector': 'app-param-member-path-preview'},{'name': 'ParamMemberPreviewComponent', 'selector': 'app-param-member-preview'},{'name': 'ParamPreviewComponent', 'selector': 'app-param-preview'},{'name': 'PipelineActionPreviewComponent', 'selector': 'app-pipeline-action-preview'},{'name': 'PipeRunnerComponent', 'selector': 'app-pipe-runner'},{'name': 'ProcessBuilderComponent', 'selector': 'app-process-builder'},{'name': 'ProcessBuilderWrapperComponent', 'selector': 'app-process-builder-wrapper'},{'name': 'ProductFormComponent', 'selector': 'app-products-form'},{'name': 'SceneVisualizationComponent', 'selector': 'app-scene-visualization'},{'name': 'SelectApiAuthorizationComponent', 'selector': 'app-select-api-authorization'},{'name': 'SelectGroupComponent', 'selector': 'app-select-group'},{'name': 'SelectProductComponent', 'selector': 'app-select-product'},{'name': 'SelectUnitComponent', 'selector': 'app-select-unit'},{'name': 'SolutionAnimationComponent', 'selector': 'app-solution-animation'},{'name': 'SolutionPreviewComponent', 'selector': 'app-solution-preview'},{'name': 'SolutionPreviewRenderingComponent', 'selector': 'app-solution-preview-rendering'},{'name': 'SolutionValidationComponent', 'selector': 'app-solution-validation'},{'name': 'SolutionVisualizationDialogComponent', 'selector': 'app-solution-visualization-dialog'},{'name': 'TaskCreationComponent', 'selector': 'app-task-creation'},{'name': 'UserInputComponent', 'selector': 'app-user-input'},{'name': 'UsernamePasswordCombinationComponent', 'selector': 'app-username-password-combination'},{'name': 'VisualizerComponent', 'selector': 'app-visualizer'},{'name': 'WidgetComponent', 'selector': 'app-widget'}];
     var DIRECTIVES = [{'name': 'AnimatedCounterDirective', 'selector': '[appAnimatedCounter]'}];
     var ACTUAL_COMPONENT = {'name': 'EmbeddedStaticOutputDefinitionComponent'};

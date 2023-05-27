@@ -1,6 +1,6 @@
-import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Component, DestroyRef, OnInit, ViewChild } from '@angular/core';
 import { Store } from '@ngrx/store';
-import { debounceTime, map, Subscription, distinctUntilChanged, delay, startWith, BehaviorSubject, scan, merge } from 'rxjs';
+import { debounceTime, map, distinctUntilChanged, delay, startWith, BehaviorSubject, scan, merge } from 'rxjs';
 import { ActivatedRoute, Router } from '@angular/router';
 import { selectPipelines } from 'src/lib/pipeline-store/store/selectors/pipeline.selectors';
 import moment from 'moment';
@@ -12,6 +12,7 @@ import { FormControl } from '@angular/forms';
 import { PipeRunnerService } from './pipe-runner.service';
 import { fadeInAnimation } from 'src/lib/shared/animations/fade-in.animation';
 import { showAnimation } from 'src/lib/shared/animations/show';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 @Component({
   selector: 'app-pipe-runner',
@@ -20,7 +21,7 @@ import { showAnimation } from 'src/lib/shared/animations/show';
   providers: [PipeRunnerService, VisualizationService],
   animations: [fadeInAnimation, showAnimation]
 })
-export class PipeRunnerComponent implements OnDestroy, OnInit {
+export class PipeRunnerComponent implements OnInit {
 
   @ViewChild('tabGroup', { static: true }) public tabGroup!: MatTabGroup;
 
@@ -42,9 +43,7 @@ export class PipeRunnerComponent implements OnDestroy, OnInit {
   public scene = new ThreeJS.Scene();
   public meshRegistry = [];
 
-  private _subscriptions = new Subscription();
-
-  constructor(private _store: Store, private _route: ActivatedRoute, private _router: Router, private _visualizationService: VisualizationService, public pipeRunnerService: PipeRunnerService) { }
+  constructor(private _store: Store, private _route: ActivatedRoute, private _router: Router, private _visualizationService: VisualizationService, public pipeRunnerService: PipeRunnerService, private _destroyRef: DestroyRef) { }
 
   public blurElement(element: HTMLElement, event?: Event) {
     if (event) {
@@ -58,27 +57,25 @@ export class PipeRunnerComponent implements OnDestroy, OnInit {
     this._router.navigate(['/data-pipeline-designer']);
   }
 
-  public ngOnDestroy(): void {
-    this._subscriptions.unsubscribe();
-  }
-
   public ngOnInit(): void {
-    this._subscriptions.add(this.pipeRunnerService.selectedPipeline$.subscribe(pipeline => this.pipelineControl.setValue(pipeline)));
-    this._subscriptions.add(
-      this.tabGroup.selectedTabChange.pipe(
+    this.pipeRunnerService.selectedPipeline$.pipe(takeUntilDestroyed(this._destroyRef)).subscribe(pipeline => this.pipelineControl.setValue(pipeline));
+    this.tabGroup
+      .selectedTabChange
+      .pipe(
+        takeUntilDestroyed(this._destroyRef),
         map(event => event.tab.textLabel === 'visualization'),
         delay(500),
         startWith(false),
-        distinctUntilChanged()
-      ).subscribe(value => this._visualizationTabRendered$$.next(value))
-    );
-    this._subscriptions.add(this.pipeRunnerService.solution$.pipe(debounceTime(500)).subscribe(async solution => await this._updateScene(solution)));
-    this._subscriptions.add(this.pipelineControl.valueChanges.subscribe(pipeline => this._router.navigate(['/pipe-runner'], {
+        distinctUntilChanged(),
+      ).subscribe(value => this._visualizationTabRendered$$.next(value));
+
+    this.pipeRunnerService.solution$.pipe(takeUntilDestroyed(this._destroyRef), debounceTime(500)).subscribe(async solution => await this._updateScene(solution));
+    this.pipelineControl.valueChanges.pipe(takeUntilDestroyed(this._destroyRef)).subscribe(pipeline => this._router.navigate(['/pipe-runner'], {
       relativeTo: this._route,
       queryParams: {
         pipeline: pipeline
       }
-    })));
+    }));
   }
 
   public openVisualization = () => this._router.navigate(['/visualizer']);

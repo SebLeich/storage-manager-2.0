@@ -163,7 +163,7 @@
                 </tr>
                         <tr>
                             <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="100" class="link-to-prism">src/lib/pipe-runner/components/pipe-runner/pipe-runner.service.ts:100</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="102" class="link-to-prism">src/lib/pipe-runner/components/pipe-runner/pipe-runner.service.ts:102</a></div>
                             </td>
                         </tr>
 
@@ -289,8 +289,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="104"
-                            class="link-to-prism">src/lib/pipe-runner/components/pipe-runner/pipe-runner.service.ts:104</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="106"
+                            class="link-to-prism">src/lib/pipe-runner/components/pipe-runner/pipe-runner.service.ts:106</a></div>
                 </td>
             </tr>
 
@@ -361,8 +361,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="118"
-                            class="link-to-prism">src/lib/pipe-runner/components/pipe-runner/pipe-runner.service.ts:118</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="120"
+                            class="link-to-prism">src/lib/pipe-runner/components/pipe-runner/pipe-runner.service.ts:120</a></div>
                 </td>
             </tr>
 
@@ -401,8 +401,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="215"
-                            class="link-to-prism">src/lib/pipe-runner/components/pipe-runner/pipe-runner.service.ts:215</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="217"
+                            class="link-to-prism">src/lib/pipe-runner/components/pipe-runner/pipe-runner.service.ts:217</a></div>
                 </td>
             </tr>
 
@@ -556,7 +556,7 @@
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="102" class="link-to-prism">src/lib/pipe-runner/components/pipe-runner/pipe-runner.service.ts:102</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="104" class="link-to-prism">src/lib/pipe-runner/components/pipe-runner/pipe-runner.service.ts:104</a></div>
                         </td>
                     </tr>
 
@@ -583,11 +583,13 @@
     mapIParamsInterfaces(this._store),
     rxjs.map(inputs &#x3D;&gt; {
       return inputs.reduce((prev, curr) &#x3D;&gt; {
-        if (curr.defaultValue) {
-          prev[curr.normalizedName] &#x3D; curr.defaultValue;
-        } else {
-          const dummyValue &#x3D; ProcessBuilderRepository.createPseudoObjectFromIParam(curr);
-          prev[curr.normalizedName] &#x3D; dummyValue;
+        if(curr.normalizedName){
+          if (curr.defaultValue) {
+            prev[curr.normalizedName] &#x3D; curr.defaultValue;
+          } else {
+            const dummyValue &#x3D; ProcessBuilderRepository.createPseudoObjectFromIParam(curr);
+            prev[curr.normalizedName] &#x3D; dummyValue;
+          }
         }
 
         return prev;
@@ -851,11 +853,13 @@ export class PipeRunnerService {
     mapIParamsInterfaces(this._store),
     rxjs.map(inputs &#x3D;&gt; {
       return inputs.reduce((prev, curr) &#x3D;&gt; {
-        if (curr.defaultValue) {
-          prev[curr.normalizedName] &#x3D; curr.defaultValue;
-        } else {
-          const dummyValue &#x3D; ProcessBuilderRepository.createPseudoObjectFromIParam(curr);
-          prev[curr.normalizedName] &#x3D; dummyValue;
+        if(curr.normalizedName){
+          if (curr.defaultValue) {
+            prev[curr.normalizedName] &#x3D; curr.defaultValue;
+          } else {
+            const dummyValue &#x3D; ProcessBuilderRepository.createPseudoObjectFromIParam(curr);
+            prev[curr.normalizedName] &#x3D; dummyValue;
+          }
         }
 
         return prev;

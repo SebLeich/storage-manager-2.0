@@ -1,5 +1,5 @@
-import { Component, ElementRef, EventEmitter, Inject, Input, OnChanges, OnDestroy, OnInit, Optional, Output, SimpleChanges, ViewChild } from '@angular/core';
-import { BehaviorSubject, debounceTime, fromEvent, map, ReplaySubject, Subscription, switchMap } from 'rxjs';
+import { Component, DestroyRef, ElementRef, EventEmitter, Inject, Input, OnChanges, OnInit, Optional, Output, SimpleChanges, ViewChild } from '@angular/core';
+import { BehaviorSubject, debounceTime, fromEvent, map, ReplaySubject, switchMap } from 'rxjs';
 import { Scene } from 'three';
 import { SceneVisualizationComponentService } from './scene-visualization-component.service';
 import * as ThreeJS from 'three';
@@ -8,6 +8,7 @@ import { selectSnapshot } from 'src/lib/process-builder/globals/select-snapshot'
 import { IVisualizerContextService, VISUALIZER_CONTEXT } from 'src/app/interfaces/i-visualizer-context.service';
 import { selectCurrentSolutionGoods, selectGroups } from '@smgr/store';
 import { IGood } from '@smgr/interfaces';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 @Component({
   selector: 'app-scene-visualization',
@@ -15,8 +16,7 @@ import { IGood } from '@smgr/interfaces';
   styleUrls: ['./scene-visualization.component.css'],
   providers: [SceneVisualizationComponentService],
 })
-export class SceneVisualizationComponent implements OnChanges, OnDestroy, OnInit
-{
+export class SceneVisualizationComponent implements OnChanges, OnInit {
   @ViewChild('visualizationWrapper', { static: true })
   public visualizerWrapperRef!: ElementRef<HTMLDivElement>;
 
@@ -24,9 +24,7 @@ export class SceneVisualizationComponent implements OnChanges, OnDestroy, OnInit
   @Input() public responsive = true;
   @Input() public interactable = true;
 
-  @Output() public sceneRendered = new EventEmitter<{
-    canvas: HTMLCanvasElement;
-  }>();
+  @Output() public sceneRendered = new EventEmitter<{ canvas: HTMLCanvasElement }>();
   @Output() public hoveredGood = new EventEmitter<string | null>();
   @Output() public selectGood = new EventEmitter<string | null>();
 
@@ -43,48 +41,29 @@ export class SceneVisualizationComponent implements OnChanges, OnDestroy, OnInit
 
   private _sceneRendered = new ReplaySubject<{ canvas: HTMLCanvasElement }>(1);
 
-  private subscription = new Subscription();
-
-  constructor(
-    @Optional()
-    @Inject(VISUALIZER_CONTEXT)
-    public visualizerComponentService: IVisualizerContextService,
-    public sceneVisualizationComponentService: SceneVisualizationComponentService,
-    private _store: Store
-  ) {}
+  constructor(@Optional() @Inject(VISUALIZER_CONTEXT) public visualizerComponentService: IVisualizerContextService, public sceneVisualizationComponentService: SceneVisualizationComponentService, private _store: Store, private _destroyRef: DestroyRef) { }
 
   public async highlightGood(arg: IGood | string) {
     const groups = await selectSnapshot(this._store.select(selectGroups));
     const goodId = typeof arg === 'string' ? arg : arg.id;
-    const meshes = this.scene.children.filter(
-      (candidate) =>
-        candidate instanceof ThreeJS.Mesh && !!candidate.userData['goodId']
-    ) as ThreeJS.Mesh[];
-    meshes.forEach((mesh) => {
-      const group = groups.find(
-        (group) => group.id === mesh.userData['groupId']
-      );
-      (mesh.material as ThreeJS.MeshBasicMaterial).color.set(
-        mesh.userData['goodId'] === goodId ? 'white' : group?.color ?? 'black'
-      );
-    });
+    const meshes = this.getGoodMeshes();
+
+    for(const mesh of meshes){
+      const group = groups.find((group) => group.id === mesh.userData['groupId']);
+      (mesh.material as ThreeJS.MeshBasicMaterial).color.set(mesh.userData['goodId'] === goodId ? 'white' : group?.color ?? 'black');
+    }
   }
 
   public async highlightGoods(arg: IGood[] | string[]) {
     const groups = await selectSnapshot(this._store.select(selectGroups));
     const goodIds = arg.map((arg) => (typeof arg === 'string' ? arg : arg.id));
-    const meshes = this.scene.children.filter(
-      (candidate) => candidate instanceof ThreeJS.Mesh
-    ) as ThreeJS.Mesh[];
-    meshes.forEach((mesh) => {
-      const group = groups.find(
-        (group) => group.id === mesh.userData['groupId']
-      );
+    const meshes = this.getGoodMeshes();
+
+    for(const mesh of meshes){
+      const group = groups.find((group) => group.id === mesh.userData['groupId']);
       const shouldHighlight = goodIds.indexOf(mesh.userData['goodId']) > -1;
-      (mesh.material as ThreeJS.MeshBasicMaterial).color.set(
-        shouldHighlight ? 'white' : group?.color ?? 'black'
-      );
-    });
+      (mesh.material as ThreeJS.MeshBasicMaterial).color.set(shouldHighlight ? 'white' : group?.color ?? 'black');
+    }
   }
 
   public ngOnChanges(changes: SimpleChanges): void {
@@ -93,43 +72,15 @@ export class SceneVisualizationComponent implements OnChanges, OnDestroy, OnInit
     }
   }
 
-  public ngOnDestroy(): void {
-    this.subscription.unsubscribe();
-  }
-
   public ngOnInit(): void {
     this.tryToRender();
-    this.subscription.add(
-      ...[
-        this._sceneRendered.pipe(debounceTime(1500)).subscribe((arg) => {
-          this.sceneRendered.emit(arg);
-        }),
-        this.resized$.subscribe(() => this.onResize()),
-      ]
-    );
-    if (this.visualizerComponentService) {
-      this.subscription.add(
-        this.visualizerComponentService.reRenderingTriggered$.subscribe(() =>
-          this.tryToRender()
-        )
-      );
-    }
-  }
 
-  public async resetGoodColors() {
-    const groups = await selectSnapshot(this._store.select(selectGroups));
-    const meshes = this.scene.children.filter(
-      (candidate) =>
-        candidate instanceof ThreeJS.Mesh && !!candidate.userData['goodId']
-    ) as ThreeJS.Mesh[];
-    meshes.forEach((mesh) => {
-      const group = groups.find(
-        (group) => group.id === mesh.userData['groupId']
-      );
-      (mesh.material as ThreeJS.MeshBasicMaterial).color.set(
-        group?.color ?? 'black'
-      );
-    });
+    this._sceneRendered.pipe(takeUntilDestroyed(this._destroyRef), debounceTime(1500)).subscribe((arg) => this.sceneRendered.emit(arg));
+    this.resized$.pipe(takeUntilDestroyed(this._destroyRef)).subscribe(() => this.onResize());
+
+    if (this.visualizerComponentService) {
+      this.visualizerComponentService.reRenderingTriggered$.pipe(takeUntilDestroyed(this._destroyRef)).subscribe(() => this.tryToRender());
+    }
   }
 
   public tryToRender() {
@@ -146,17 +97,6 @@ export class SceneVisualizationComponent implements OnChanges, OnDestroy, OnInit
   }
 
   public updateSize() {
-    this.sceneVisualizationComponentService.updateSize(
-      this.visualizerWrapperRef.nativeElement.clientHeight,
-      this.visualizerWrapperRef.nativeElement.clientWidth
-    );
-  }
-
-  private onResize() {
-    if (!this.responsive) {
-      return;
-    }
-
     this.sceneVisualizationComponentService.updateSize(this.visualizerWrapperRef.nativeElement.clientHeight, this.visualizerWrapperRef.nativeElement.clientWidth);
   }
 
@@ -165,11 +105,7 @@ export class SceneVisualizationComponent implements OnChanges, OnDestroy, OnInit
       return;
     }
 
-    const hoveredElement =
-      this.sceneVisualizationComponentService.getPointedElement(
-        event,
-        this.scene
-      );
+    const hoveredElement = this.sceneVisualizationComponentService.getPointedElement(event, this.scene);
     if (!hoveredElement || !hoveredElement.object.userData['goodId']) {
       await this.resetGoodColors();
       this._hoveredGoodId.next(null);
@@ -183,6 +119,7 @@ export class SceneVisualizationComponent implements OnChanges, OnDestroy, OnInit
 
     const goodId = hoveredElement.object.userData['goodId'];
     await this.highlightGood(goodId);
+
     this._hoveredGoodId.next(goodId);
     this.hoveredGood.emit(goodId);
     this.selectGood.emit(goodId);
@@ -219,4 +156,23 @@ export class SceneVisualizationComponent implements OnChanges, OnDestroy, OnInit
       this.visualizerComponentService.hoverGoodById(goodId);
     }
   }
+
+  private onResize() {
+    if (!this.responsive) {
+      return;
+    }
+
+    this.sceneVisualizationComponentService.updateSize(this.visualizerWrapperRef.nativeElement.clientHeight, this.visualizerWrapperRef.nativeElement.clientWidth);
+  }
+
+  private async resetGoodColors() {
+    const groups = await selectSnapshot(this._store.select(selectGroups));
+    const meshes = this.getGoodMeshes();
+    for (const mesh of meshes) {
+      const group = groups.find((group) => group.id === mesh.userData['groupId']);
+      (mesh.material as ThreeJS.MeshBasicMaterial).color.set(group?.color ?? 'black');
+    }
+  }
+
+  private getGoodMeshes = () => this.scene.children.filter((candidate) => candidate instanceof ThreeJS.Mesh && candidate.userData['goodId']) as ThreeJS.Mesh[];
 }

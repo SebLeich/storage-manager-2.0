@@ -87,11 +87,13 @@ export class PipeRunnerService {
     mapIParamsInterfaces(this._store),
     rxjs.map(inputs => {
       return inputs.reduce((prev, curr) => {
-        if (curr.defaultValue) {
-          prev[curr.normalizedName] = curr.defaultValue;
-        } else {
-          const dummyValue = ProcessBuilderRepository.createPseudoObjectFromIParam(curr);
-          prev[curr.normalizedName] = dummyValue;
+        if(curr.normalizedName){
+          if (curr.defaultValue) {
+            prev[curr.normalizedName] = curr.defaultValue;
+          } else {
+            const dummyValue = ProcessBuilderRepository.createPseudoObjectFromIParam(curr);
+            prev[curr.normalizedName] = dummyValue;
+          }
         }
 
         return prev;

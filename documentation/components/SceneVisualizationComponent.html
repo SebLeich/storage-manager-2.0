@@ -75,7 +75,6 @@
     </p>
     <p class="comment">
                     <code><a href="https://angular.io/api/core/OnChanges" target="_blank" >OnChanges</a></code>
-                    <code><a href="https://angular.io/api/core/OnDestroy" target="_blank" >OnDestroy</a></code>
                     <code><a href="https://angular.io/api/core/OnInit" target="_blank" >OnInit</a></code>
     </p>
 
@@ -150,6 +149,10 @@
                                 <a href="#_sceneRendered" >_sceneRendered</a>
                             </li>
                             <li>
+                                    <span class="modifier">Private</span>
+                                <a href="#getGoodMeshes" >getGoodMeshes</a>
+                            </li>
+                            <li>
                                     <span class="modifier">Public</span>
                                 <a href="#hoveredGood$" >hoveredGood$</a>
                             </li>
@@ -160,10 +163,6 @@
                             <li>
                                     <span class="modifier">Public</span>
                                 <a href="#sceneVisualizationComponentService" >sceneVisualizationComponentService</a>
-                            </li>
-                            <li>
-                                    <span class="modifier">Private</span>
-                                <a href="#subscription" >subscription</a>
                             </li>
                             <li>
                                     <span class="modifier">Public</span>
@@ -201,10 +200,6 @@
                             </li>
                             <li>
                                     <span class="modifier">Public</span>
-                                <a href="#ngOnDestroy" >ngOnDestroy</a>
-                            </li>
-                            <li>
-                                    <span class="modifier">Public</span>
                                 <a href="#ngOnInit" >ngOnInit</a>
                             </li>
                             <li>
@@ -222,7 +217,7 @@
                                 <a href="#onResize" >onResize</a>
                             </li>
                             <li>
-                                    <span class="modifier">Public</span>
+                                    <span class="modifier">Private</span>
                                     <span class="modifier">Async</span>
                                 <a href="#resetGoodColors" >resetGoodColors</a>
                             </li>
@@ -292,12 +287,12 @@
             <tbody>
                 <tr>
                     <td class="col-md-4">
-<code>constructor(visualizerComponentService: <a href="../interfaces/IVisualizerContextService.html" target="_self">IVisualizerContextService</a>, sceneVisualizationComponentService: <a href="../injectables/SceneVisualizationComponentService.html" target="_self">SceneVisualizationComponentService</a>, _store: Store)</code>
+<code>constructor(visualizerComponentService: <a href="../interfaces/IVisualizerContextService.html" target="_self">IVisualizerContextService</a>, sceneVisualizationComponentService: <a href="../injectables/SceneVisualizationComponentService.html" target="_self">SceneVisualizationComponentService</a>, _store: Store, _destroyRef: DestroyRef)</code>
                     </td>
                 </tr>
                         <tr>
                             <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="46" class="link-to-prism">src/lib/visualization/components/scene-visualization/scene-visualization.component.ts:46</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="42" class="link-to-prism">src/lib/visualization/components/scene-visualization/scene-visualization.component.ts:42</a></div>
                             </td>
                         </tr>
 
@@ -343,6 +338,18 @@
                                                   
                                                         <td>
                                                                     <code>Store</code>
+                                                        </td>
+                                                  
+                                                    <td>
+                                                            No
+                                                    </td>
+                                                    
+                                                </tr>
+                                                <tr>
+                                                        <td>_destroyRef</td>
+                                                  
+                                                        <td>
+                                                                    <code>DestroyRef</code>
                                                         </td>
                                                   
                                                     <td>
@@ -453,7 +460,7 @@
                 </tr>
                         <tr>
                             <td class="col-md-2" colspan="2">
-                                    <div class="io-line">Defined in <a href="" data-line="30" class="link-to-prism">src/lib/visualization/components/scene-visualization/scene-visualization.component.ts:30</a></div>
+                                    <div class="io-line">Defined in <a href="" data-line="28" class="link-to-prism">src/lib/visualization/components/scene-visualization/scene-visualization.component.ts:28</a></div>
                             </td>
                         </tr>
             </tbody>
@@ -495,7 +502,7 @@
                 </tr>
                         <tr>
                             <td class="col-md-2" colspan="2">
-                                    <div class="io-line">Defined in <a href="" data-line="31" class="link-to-prism">src/lib/visualization/components/scene-visualization/scene-visualization.component.ts:31</a></div>
+                                    <div class="io-line">Defined in <a href="" data-line="29" class="link-to-prism">src/lib/visualization/components/scene-visualization/scene-visualization.component.ts:29</a></div>
                             </td>
                         </tr>
             </tbody>
@@ -531,8 +538,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="56"
-                            class="link-to-prism">src/lib/visualization/components/scene-visualization/scene-visualization.component.ts:56</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="46"
+                            class="link-to-prism">src/lib/visualization/components/scene-visualization/scene-visualization.component.ts:46</a></div>
                 </td>
             </tr>
 
@@ -603,8 +610,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="73"
-                            class="link-to-prism">src/lib/visualization/components/scene-visualization/scene-visualization.component.ts:73</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="57"
+                            class="link-to-prism">src/lib/visualization/components/scene-visualization/scene-visualization.component.ts:57</a></div>
                 </td>
             </tr>
 
@@ -674,8 +681,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="90"
-                            class="link-to-prism">src/lib/visualization/components/scene-visualization/scene-visualization.component.ts:90</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="69"
+                            class="link-to-prism">src/lib/visualization/components/scene-visualization/scene-visualization.component.ts:69</a></div>
                 </td>
             </tr>
 
@@ -727,45 +734,6 @@
         <tbody>
             <tr>
                 <td class="col-md-4">
-                    <a name="ngOnDestroy"></a>
-                    <span class="name">
-                        <span class="modifier">Public</span>
-                        <span ><b>ngOnDestroy</b></span>
-                        <a href="#ngOnDestroy"><span class="icon ion-ios-link"></span></a>
-                    </span>
-                </td>
-            </tr>
-            <tr>
-                <td class="col-md-4">
-                    <span class="modifier-icon icon ion-ios-reset"></span>
-                    <code>ngOnDestroy()</code>
-                </td>
-            </tr>
-
-
-            <tr>
-                <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="96"
-                            class="link-to-prism">src/lib/visualization/components/scene-visualization/scene-visualization.component.ts:96</a></div>
-                </td>
-            </tr>
-
-
-            <tr>
-                <td class="col-md-4">
-
-                    <div class="io-description">
-                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
-
-                    </div>
-                </td>
-            </tr>
-        </tbody>
-    </table>
-    <table class="table table-sm table-bordered">
-        <tbody>
-            <tr>
-                <td class="col-md-4">
                     <a name="ngOnInit"></a>
                     <span class="name">
                         <span class="modifier">Public</span>
@@ -784,8 +752,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="100"
-                            class="link-to-prism">src/lib/visualization/components/scene-visualization/scene-visualization.component.ts:100</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="75"
+                            class="link-to-prism">src/lib/visualization/components/scene-visualization/scene-visualization.component.ts:75</a></div>
                 </td>
             </tr>
 
@@ -824,8 +792,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="163"
-                            class="link-to-prism">src/lib/visualization/components/scene-visualization/scene-visualization.component.ts:163</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="103"
+                            class="link-to-prism">src/lib/visualization/components/scene-visualization/scene-visualization.component.ts:103</a></div>
                 </td>
             </tr>
 
@@ -896,8 +864,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="194"
-                            class="link-to-prism">src/lib/visualization/components/scene-visualization/scene-visualization.component.ts:194</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="131"
+                            class="link-to-prism">src/lib/visualization/components/scene-visualization/scene-visualization.component.ts:131</a></div>
                 </td>
             </tr>
 
@@ -967,8 +935,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="155"
-                            class="link-to-prism">src/lib/visualization/components/scene-visualization/scene-visualization.component.ts:155</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="160"
+                            class="link-to-prism">src/lib/visualization/components/scene-visualization/scene-visualization.component.ts:160</a></div>
                 </td>
             </tr>
 
@@ -990,7 +958,7 @@
                 <td class="col-md-4">
                     <a name="resetGoodColors"></a>
                     <span class="name">
-                        <span class="modifier">Public</span>
+                        <span class="modifier">Private</span>
                         <span class="modifier">Async</span>
                         <span ><b>resetGoodColors</b></span>
                         <a href="#resetGoodColors"><span class="icon ion-ios-link"></span></a>
@@ -1007,8 +975,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="119"
-                            class="link-to-prism">src/lib/visualization/components/scene-visualization/scene-visualization.component.ts:119</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="168"
+                            class="link-to-prism">src/lib/visualization/components/scene-visualization/scene-visualization.component.ts:168</a></div>
                 </td>
             </tr>
 
@@ -1046,8 +1014,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="135"
-                            class="link-to-prism">src/lib/visualization/components/scene-visualization/scene-visualization.component.ts:135</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="86"
+                            class="link-to-prism">src/lib/visualization/components/scene-visualization/scene-visualization.component.ts:86</a></div>
                 </td>
             </tr>
 
@@ -1085,8 +1053,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="148"
-                            class="link-to-prism">src/lib/visualization/components/scene-visualization/scene-visualization.component.ts:148</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="99"
+                            class="link-to-prism">src/lib/visualization/components/scene-visualization/scene-visualization.component.ts:99</a></div>
                 </td>
             </tr>
 
@@ -1127,7 +1095,7 @@
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="35" class="link-to-prism">src/lib/visualization/components/scene-visualization/scene-visualization.component.ts:35</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="33" class="link-to-prism">src/lib/visualization/components/scene-visualization/scene-visualization.component.ts:33</a></div>
                         </td>
                     </tr>
 
@@ -1153,7 +1121,33 @@
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="44" class="link-to-prism">src/lib/visualization/components/scene-visualization/scene-visualization.component.ts:44</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="42" class="link-to-prism">src/lib/visualization/components/scene-visualization/scene-visualization.component.ts:42</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="getGoodMeshes"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                        <span ><b>getGoodMeshes</b></span>
+                        <a href="#getGoodMeshes"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>() &#x3D;&gt; {...}</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="177" class="link-to-prism">src/lib/visualization/components/scene-visualization/scene-visualization.component.ts:177</a></div>
                         </td>
                     </tr>
 
@@ -1185,7 +1179,7 @@
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="36" class="link-to-prism">src/lib/visualization/components/scene-visualization/scene-visualization.component.ts:36</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="34" class="link-to-prism">src/lib/visualization/components/scene-visualization/scene-visualization.component.ts:34</a></div>
                         </td>
                     </tr>
 
@@ -1211,7 +1205,7 @@
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="33" class="link-to-prism">src/lib/visualization/components/scene-visualization/scene-visualization.component.ts:33</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="31" class="link-to-prism">src/lib/visualization/components/scene-visualization/scene-visualization.component.ts:31</a></div>
                         </td>
                     </tr>
 
@@ -1238,33 +1232,7 @@
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="52" class="link-to-prism">src/lib/visualization/components/scene-visualization/scene-visualization.component.ts:52</a></div>
-                        </td>
-                    </tr>
-
-
-        </tbody>
-    </table>
-    <table class="table table-sm table-bordered">
-        <tbody>
-            <tr>
-                <td class="col-md-4">
-                    <a name="subscription"></a>
-                    <span class="name">
-                            <span class="modifier">Private</span>
-                        <span ><b>subscription</b></span>
-                        <a href="#subscription"><span class="icon ion-ios-link"></span></a>
-                    </span>
-                </td>
-            </tr>
-                <tr>
-                    <td class="col-md-4">
-                        <i>Default value : </i><code>new Subscription()</code>
-                    </td>
-                </tr>
-                    <tr>
-                        <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="46" class="link-to-prism">src/lib/visualization/components/scene-visualization/scene-visualization.component.ts:46</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="44" class="link-to-prism">src/lib/visualization/components/scene-visualization/scene-visualization.component.ts:44</a></div>
                         </td>
                     </tr>
 
@@ -1300,7 +1268,7 @@
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="51" class="link-to-prism">src/lib/visualization/components/scene-visualization/scene-visualization.component.ts:51</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="44" class="link-to-prism">src/lib/visualization/components/scene-visualization/scene-visualization.component.ts:44</a></div>
                         </td>
                     </tr>
 
@@ -1349,8 +1317,8 @@
 
 
     <div class="tab-pane fade  tab-source-code" id="c-source">
-        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { Component, ElementRef, EventEmitter, Inject, Input, OnChanges, OnDestroy, OnInit, Optional, Output, SimpleChanges, ViewChild } from &#x27;@angular/core&#x27;;
-import { BehaviorSubject, debounceTime, fromEvent, map, ReplaySubject, Subscription, switchMap } from &#x27;rxjs&#x27;;
+        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { Component, DestroyRef, ElementRef, EventEmitter, Inject, Input, OnChanges, OnInit, Optional, Output, SimpleChanges, ViewChild } from &#x27;@angular/core&#x27;;
+import { BehaviorSubject, debounceTime, fromEvent, map, ReplaySubject, switchMap } from &#x27;rxjs&#x27;;
 import { Scene } from &#x27;three&#x27;;
 import { SceneVisualizationComponentService } from &#x27;./scene-visualization-component.service&#x27;;
 import * as ThreeJS from &#x27;three&#x27;;
@@ -1359,6 +1327,7 @@ import { selectSnapshot } from &#x27;src/lib/process-builder/globals/select-snap
 import { IVisualizerContextService, VISUALIZER_CONTEXT } from &#x27;src/app/interfaces/i-visualizer-context.service&#x27;;
 import { selectCurrentSolutionGoods, selectGroups } from &#x27;@smgr/store&#x27;;
 import { IGood } from &#x27;@smgr/interfaces&#x27;;
+import { takeUntilDestroyed } from &#x27;@angular/core/rxjs-interop&#x27;;
 
 @Component({
   selector: &#x27;app-scene-visualization&#x27;,
@@ -1366,8 +1335,7 @@ import { IGood } from &#x27;@smgr/interfaces&#x27;;
   styleUrls: [&#x27;./scene-visualization.component.css&#x27;],
   providers: [SceneVisualizationComponentService],
 })
-export class SceneVisualizationComponent implements OnChanges, OnDestroy, OnInit
-{
+export class SceneVisualizationComponent implements OnChanges, OnInit {
   @ViewChild(&#x27;visualizationWrapper&#x27;, { static: true })
   public visualizerWrapperRef!: ElementRef&lt;HTMLDivElement&gt;;
 
@@ -1375,9 +1343,7 @@ export class SceneVisualizationComponent implements OnChanges, OnDestroy, OnInit
   @Input() public responsive &#x3D; true;
   @Input() public interactable &#x3D; true;
 
-  @Output() public sceneRendered &#x3D; new EventEmitter&lt;{
-    canvas: HTMLCanvasElement;
-  }&gt;();
+  @Output() public sceneRendered &#x3D; new EventEmitter&lt;{ canvas: HTMLCanvasElement }&gt;();
   @Output() public hoveredGood &#x3D; new EventEmitter&lt;string | null&gt;();
   @Output() public selectGood &#x3D; new EventEmitter&lt;string | null&gt;();
 
@@ -1394,48 +1360,29 @@ export class SceneVisualizationComponent implements OnChanges, OnDestroy, OnInit
 
   private _sceneRendered &#x3D; new ReplaySubject&lt;{ canvas: HTMLCanvasElement }&gt;(1);
 
-  private subscription &#x3D; new Subscription();
-
-  constructor(
-    @Optional()
-    @Inject(VISUALIZER_CONTEXT)
-    public visualizerComponentService: IVisualizerContextService,
-    public sceneVisualizationComponentService: SceneVisualizationComponentService,
-    private _store: Store
-  ) {}
+  constructor(@Optional() @Inject(VISUALIZER_CONTEXT) public visualizerComponentService: IVisualizerContextService, public sceneVisualizationComponentService: SceneVisualizationComponentService, private _store: Store, private _destroyRef: DestroyRef) { }
 
   public async highlightGood(arg: IGood | string) {
     const groups &#x3D; await selectSnapshot(this._store.select(selectGroups));
     const goodId &#x3D; typeof arg &#x3D;&#x3D;&#x3D; &#x27;string&#x27; ? arg : arg.id;
-    const meshes &#x3D; this.scene.children.filter(
-      (candidate) &#x3D;&gt;
-        candidate instanceof ThreeJS.Mesh &amp;&amp; !!candidate.userData[&#x27;goodId&#x27;]
-    ) as ThreeJS.Mesh[];
-    meshes.forEach((mesh) &#x3D;&gt; {
-      const group &#x3D; groups.find(
-        (group) &#x3D;&gt; group.id &#x3D;&#x3D;&#x3D; mesh.userData[&#x27;groupId&#x27;]
-      );
-      (mesh.material as ThreeJS.MeshBasicMaterial).color.set(
-        mesh.userData[&#x27;goodId&#x27;] &#x3D;&#x3D;&#x3D; goodId ? &#x27;white&#x27; : group?.color ?? &#x27;black&#x27;
-      );
-    });
+    const meshes &#x3D; this.getGoodMeshes();
+
+    for(const mesh of meshes){
+      const group &#x3D; groups.find((group) &#x3D;&gt; group.id &#x3D;&#x3D;&#x3D; mesh.userData[&#x27;groupId&#x27;]);
+      (mesh.material as ThreeJS.MeshBasicMaterial).color.set(mesh.userData[&#x27;goodId&#x27;] &#x3D;&#x3D;&#x3D; goodId ? &#x27;white&#x27; : group?.color ?? &#x27;black&#x27;);
+    }
   }
 
   public async highlightGoods(arg: IGood[] | string[]) {
     const groups &#x3D; await selectSnapshot(this._store.select(selectGroups));
     const goodIds &#x3D; arg.map((arg) &#x3D;&gt; (typeof arg &#x3D;&#x3D;&#x3D; &#x27;string&#x27; ? arg : arg.id));
-    const meshes &#x3D; this.scene.children.filter(
-      (candidate) &#x3D;&gt; candidate instanceof ThreeJS.Mesh
-    ) as ThreeJS.Mesh[];
-    meshes.forEach((mesh) &#x3D;&gt; {
-      const group &#x3D; groups.find(
-        (group) &#x3D;&gt; group.id &#x3D;&#x3D;&#x3D; mesh.userData[&#x27;groupId&#x27;]
-      );
+    const meshes &#x3D; this.getGoodMeshes();
+
+    for(const mesh of meshes){
+      const group &#x3D; groups.find((group) &#x3D;&gt; group.id &#x3D;&#x3D;&#x3D; mesh.userData[&#x27;groupId&#x27;]);
       const shouldHighlight &#x3D; goodIds.indexOf(mesh.userData[&#x27;goodId&#x27;]) &gt; -1;
-      (mesh.material as ThreeJS.MeshBasicMaterial).color.set(
-        shouldHighlight ? &#x27;white&#x27; : group?.color ?? &#x27;black&#x27;
-      );
-    });
+      (mesh.material as ThreeJS.MeshBasicMaterial).color.set(shouldHighlight ? &#x27;white&#x27; : group?.color ?? &#x27;black&#x27;);
+    }
   }
 
   public ngOnChanges(changes: SimpleChanges): void {
@@ -1444,43 +1391,15 @@ export class SceneVisualizationComponent implements OnChanges, OnDestroy, OnInit
     }
   }
 
-  public ngOnDestroy(): void {
-    this.subscription.unsubscribe();
-  }
-
   public ngOnInit(): void {
     this.tryToRender();
-    this.subscription.add(
-      ...[
-        this._sceneRendered.pipe(debounceTime(1500)).subscribe((arg) &#x3D;&gt; {
-          this.sceneRendered.emit(arg);
-        }),
-        this.resized$.subscribe(() &#x3D;&gt; this.onResize()),
-      ]
-    );
-    if (this.visualizerComponentService) {
-      this.subscription.add(
-        this.visualizerComponentService.reRenderingTriggered$.subscribe(() &#x3D;&gt;
-          this.tryToRender()
-        )
-      );
-    }
-  }
 
-  public async resetGoodColors() {
-    const groups &#x3D; await selectSnapshot(this._store.select(selectGroups));
-    const meshes &#x3D; this.scene.children.filter(
-      (candidate) &#x3D;&gt;
-        candidate instanceof ThreeJS.Mesh &amp;&amp; !!candidate.userData[&#x27;goodId&#x27;]
-    ) as ThreeJS.Mesh[];
-    meshes.forEach((mesh) &#x3D;&gt; {
-      const group &#x3D; groups.find(
-        (group) &#x3D;&gt; group.id &#x3D;&#x3D;&#x3D; mesh.userData[&#x27;groupId&#x27;]
-      );
-      (mesh.material as ThreeJS.MeshBasicMaterial).color.set(
-        group?.color ?? &#x27;black&#x27;
-      );
-    });
+    this._sceneRendered.pipe(takeUntilDestroyed(this._destroyRef), debounceTime(1500)).subscribe((arg) &#x3D;&gt; this.sceneRendered.emit(arg));
+    this.resized$.pipe(takeUntilDestroyed(this._destroyRef)).subscribe(() &#x3D;&gt; this.onResize());
+
+    if (this.visualizerComponentService) {
+      this.visualizerComponentService.reRenderingTriggered$.pipe(takeUntilDestroyed(this._destroyRef)).subscribe(() &#x3D;&gt; this.tryToRender());
+    }
   }
 
   public tryToRender() {
@@ -1497,17 +1416,6 @@ export class SceneVisualizationComponent implements OnChanges, OnDestroy, OnInit
   }
 
   public updateSize() {
-    this.sceneVisualizationComponentService.updateSize(
-      this.visualizerWrapperRef.nativeElement.clientHeight,
-      this.visualizerWrapperRef.nativeElement.clientWidth
-    );
-  }
-
-  private onResize() {
-    if (!this.responsive) {
-      return;
-    }
-
     this.sceneVisualizationComponentService.updateSize(this.visualizerWrapperRef.nativeElement.clientHeight, this.visualizerWrapperRef.nativeElement.clientWidth);
   }
 
@@ -1516,11 +1424,7 @@ export class SceneVisualizationComponent implements OnChanges, OnDestroy, OnInit
       return;
     }
 
-    const hoveredElement &#x3D;
-      this.sceneVisualizationComponentService.getPointedElement(
-        event,
-        this.scene
-      );
+    const hoveredElement &#x3D; this.sceneVisualizationComponentService.getPointedElement(event, this.scene);
     if (!hoveredElement || !hoveredElement.object.userData[&#x27;goodId&#x27;]) {
       await this.resetGoodColors();
       this._hoveredGoodId.next(null);
@@ -1534,6 +1438,7 @@ export class SceneVisualizationComponent implements OnChanges, OnDestroy, OnInit
 
     const goodId &#x3D; hoveredElement.object.userData[&#x27;goodId&#x27;];
     await this.highlightGood(goodId);
+
     this._hoveredGoodId.next(goodId);
     this.hoveredGood.emit(goodId);
     this.selectGood.emit(goodId);
@@ -1570,6 +1475,25 @@ export class SceneVisualizationComponent implements OnChanges, OnDestroy, OnInit
       this.visualizerComponentService.hoverGoodById(goodId);
     }
   }
+
+  private onResize() {
+    if (!this.responsive) {
+      return;
+    }
+
+    this.sceneVisualizationComponentService.updateSize(this.visualizerWrapperRef.nativeElement.clientHeight, this.visualizerWrapperRef.nativeElement.clientWidth);
+  }
+
+  private async resetGoodColors() {
+    const groups &#x3D; await selectSnapshot(this._store.select(selectGroups));
+    const meshes &#x3D; this.getGoodMeshes();
+    for (const mesh of meshes) {
+      const group &#x3D; groups.find((group) &#x3D;&gt; group.id &#x3D;&#x3D;&#x3D; mesh.userData[&#x27;groupId&#x27;]);
+      (mesh.material as ThreeJS.MeshBasicMaterial).color.set(group?.color ?? &#x27;black&#x27;);
+    }
+  }
+
+  private getGoodMeshes &#x3D; () &#x3D;&gt; this.scene.children.filter((candidate) &#x3D;&gt; candidate instanceof ThreeJS.Mesh &amp;&amp; candidate.userData[&#x27;goodId&#x27;]) as ThreeJS.Mesh[];
 }
 </code></pre>
     </div>

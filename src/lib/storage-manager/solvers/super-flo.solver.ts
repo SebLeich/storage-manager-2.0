@@ -14,7 +14,7 @@ export class SuperFloSolver extends Solver implements ISolver {
 
     public solve(containerHeight: number, containerWidth: number, groups: IGroup[], orders: IOrder[]): ISolution {
 
-        let solution = {
+        const solution = {
             id: generateGuid(),
             description: this._description,
             container: {
@@ -36,12 +36,12 @@ export class SuperFloSolver extends Solver implements ISolver {
             }
         } as ISolution;
 
-        const containerPosition = getContainerPosition(solution.container!);
+        const containerPosition = getContainerPosition(solution.container);
         let positions: IPosition[] = [containerPosition];
         let positionBacklog: IPosition[] = [containerPosition];
         let sequenceNumber = 1;
 
-        for (let group of groups) {
+        for (const group of groups) {
 
             const groupOrders = orders
                 .filter(order => order.group === group.id)
@@ -51,7 +51,7 @@ export class SuperFloSolver extends Solver implements ISolver {
                     return a1 < a2 ? 1 : -1;
                 });
 
-            for (let order of groupOrders) {
+            for (const order of groupOrders) {
 
                 for (let i = 0; i < (order.quantity ?? 0); i++) {
 
@@ -61,9 +61,9 @@ export class SuperFloSolver extends Solver implements ISolver {
                         continue;
                     }
 
-                    positions = [...positions.filter(position => position.id !== addOrderResult.usedPosition!.id), ...addOrderResult.createdPositions!];
+                    positions = [...positions.filter(position => position.id !== addOrderResult.usedPosition?.id), ...addOrderResult.createdPositions];
                     positionBacklog = [...positionBacklog, ...addOrderResult.createdPositions];
-                    solution.container!.goods.push({
+                    solution.container.goods.push({
                         ...addOrderResult.placedAtPosition,
                         desc: order.description,
                         group: order.group,
@@ -75,23 +75,23 @@ export class SuperFloSolver extends Solver implements ISolver {
                         turned: addOrderResult.placedAtPosition?.rotated,
                         orderGuid: order.id
                     } as IGood);
-                    solution.steps!.push({ ...addOrderResult, sequenceNumber: sequenceNumber });
+                    solution.steps.push({ ...addOrderResult, sequenceNumber: sequenceNumber });
                     sequenceNumber++;
 
                     const mergingResult = this.mergePositions(positions, sequenceNumber);
                     positions = mergingResult.positions;
                     sequenceNumber = mergingResult.sequenceNumber;
-                    solution.steps! = [...solution.steps!, ...mergingResult.steps];
+                    solution.steps = [...solution.steps, ...mergingResult.steps];
                 }
             }
         }
 
-        solution.container!.length = Math.max(...solution.container!.goods.map(good => good.zCoord + good.length), 0);
+        solution.container.length = Math.max(...solution.container.goods.map(good => good.zCoord + good.length), 0);
         return solution;
     }
 
     private addOrder(order: IOrder, orderGroup: IGroup, availablePositions: IPosition[], index: number, positionBacklog: IPosition[]): false | IStep {
-        let possibilities: IPossibilities = {
+        const possibilities: IPossibilities = {
             notRotated: availablePositions
                 .filter(availablePosition => {
                     return availablePosition.height >= order.height
@@ -153,22 +153,22 @@ export class SuperFloSolver extends Solver implements ISolver {
     }
 
     private mergePositions(availablePositions: IPosition[], startingSequenceNumber: number) {
-        var positions = [...availablePositions];
-        var steps: IStep[] = [];
-        var found = true;
-        var sequenceNumber = startingSequenceNumber;
+        let positions = [...availablePositions];
+        const steps: IStep[] = [];
+        let found = true;
+        let sequenceNumber = startingSequenceNumber;
 
         while (found) {
 
             found = false;
             let mergedPosition: IPosition | false = false;
 
-            for (let position of positions) {
+            for (const position of positions) {
 
                 if (mergedPosition) {
                     break;
                 }
-                for (let candidate of positions) {
+                for (const candidate of positions) {
 
                     if (candidate === position) continue;
 
