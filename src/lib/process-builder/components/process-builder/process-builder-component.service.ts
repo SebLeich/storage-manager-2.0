@@ -460,7 +460,6 @@ export class ProcessBuilderComponentService {
             const call = /^([a-zA-Z0-9]*).{0,1}\((.*)\)/.exec(pathArray.slice(currentIndex).join('.'));
             const array: any = ProcessBuilderRepository.createPseudoObjectFromIParam(currentTypeDef);
             const result = call![2] ? `${array[call![1]]}(${call![2]})` : array[call![1]];
-            debugger;
           }
         } else {
           currentIndex++;

@@ -26,8 +26,8 @@ export class BPMNJsRepository {
             return null;
         }
 
-        let createdDataOutputElement: IElement | undefined,
-            existingElement = element.outgoing.find(x => x.type === shapeTypes.DataOutputAssociation)?.target;
+        let createdDataOutputElement: IElement | undefined;
+        const existingElement = element.outgoing.find(x => x.type === shapeTypes.DataOutputAssociation)?.target;
 
         if (!preventDublet || !existingElement) {
             createdDataOutputElement = getModelingModule(bpmnJS).appendShape(element, {
@@ -43,7 +43,7 @@ export class BPMNJsRepository {
             .filter(element => element.type === shapeTypes.DataOutputAssociation && BPMNJsRepository.sLPBExtensionSetted((element as IConnector).target.businessObject, 'DataObjectExtension', (ext) => ext.outputParam === param.identifier))
             .map(connector => (connector as IConnector).target);
 
-        for (let referencingDataRepresentation of referencingDataRepresentations) {
+        for (const referencingDataRepresentation of referencingDataRepresentations) {
             getModelingModule(bpmnJS).updateLabel(referencingDataRepresentation, param.name);
         }
 

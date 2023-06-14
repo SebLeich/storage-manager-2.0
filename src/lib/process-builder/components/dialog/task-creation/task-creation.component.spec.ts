@@ -24,10 +24,10 @@ describe('TaskCreationComponent', () => {
   let component: TaskCreationComponent;
   let fixture: ComponentFixture<TaskCreationComponent>;
   let debugElement: DebugElement;
-  let exemplaryBpmnModel = new ExemplaryBpmnModel();
+  const exemplaryBpmnModel = new ExemplaryBpmnModel();
   let bpmnJsService: BpmnJsService;
   const diagramWrapper = document.createElement('div');
-  let taskCreationPayload: ITaskCreationPayload = {} as ITaskCreationPayload;
+  const taskCreationPayload: ITaskCreationPayload = {} as ITaskCreationPayload;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
@@ -38,7 +38,9 @@ describe('TaskCreationComponent', () => {
         {
           provide: MatDialogRef,
           useValue: {
-            close: () => { },
+            close: () => {
+              return;
+            },
           },
         },
         {
@@ -48,7 +50,7 @@ describe('TaskCreationComponent', () => {
         {
           provide: MAT_DIALOG_DATA,
           useValue: {
-            taskCreationData: {},
+            taskCreationFormGroupValue: {},
             taskCreationPayload: taskCreationPayload,
           },
         },

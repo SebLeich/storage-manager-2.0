@@ -49,7 +49,7 @@ export class EmbeddedFunctionImplementationComponent implements IEmbeddedView, A
         const code = implementation?.text;
         return CodemirrorRepository.evaluateCustomMethod(undefined, code)?.status;
       }),
-      startWith(CodemirrorRepository.evaluateCustomMethod(undefined, this.formGroup.controls.implementation!.value?.text)?.status)
+      startWith(CodemirrorRepository.evaluateCustomMethod(undefined, this.formGroup.controls.implementation!.value?.text ?? [])?.status)
     )
   );
 

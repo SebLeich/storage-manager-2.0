@@ -1,5 +1,5 @@
 import { firstValueFrom, of } from 'rxjs';
-import { IInterface, IParam } from '../../interfaces';
+import { IInterface, IParam, IParamDefinition } from '../../interfaces';
 import { createMockStore } from '@ngrx/store/testing';
 import { Store } from '@ngrx/store';
 import { mapIParamsInterfaces } from './map-params-interfaces.rxjs';
@@ -60,7 +60,7 @@ describe('Map Param Interfaces', () => {
   const mockStore = createMockStore(initialState as any);
 
   it('should map param interfaces', async () => {
-    const result: IParam[] = await firstValueFrom(of([myParam]).pipe(mapIParamsInterfaces(mockStore as Store)));
+    const result: IParamDefinition[] = await firstValueFrom(of([myParam]).pipe(mapIParamsInterfaces(mockStore as Store)));
     const expected = {
       ...myParam,
       typeDef: solutionInterface.typeDef.map((def) => {

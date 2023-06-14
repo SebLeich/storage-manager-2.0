@@ -27,7 +27,7 @@ describe('EmbeddedFunctionImplementationComponent', () => {
             const directive = {
               control: new FormGroup({
                 canFail: new FormControl(),
-                implementation: new FormControl(),
+                implementation: new FormControl(null),
                 name: new FormControl(''),
                 outputParamName: new FormControl('')
               }) as TaskCreationFormGroup
