@@ -1,22 +1,37 @@
 import { createAction } from "@ngrx/store";
-import { IPipeline } from "src/lib/pipeline-store/interfaces/pipeline.interface";
+import IPipeline from "src/lib/pipeline-store/interfaces/pipeline.interface";
 
-export const addIPipeline = createAction(
-    '[IPipeline] Add IPipeline',
+export const addPipeline = createAction(
+    '[Pipeline] Add Pipeline',
     (pipeline: IPipeline) => ({ pipeline })
 );
 
-export const removeIPipeline = createAction(
-    '[IPipeline] Remove IPipeline',
+export const removePipeline = createAction(
+    '[Pipeline] Remove Pipeline',
     (pipeline: IPipeline) => ({ pipeline })
 );
 
-export const setIPipelineSolutionReference = createAction(
-    '[IPipeline] Set IPipeline Solution Reference',
-    (pipelineName: string, solutionIdentifier: string) => ({ pipelineName, solutionIdentifier })
+export const removePipelineById = createAction(
+    '[Pipeline] Remove Pipeline By Id',
+    (pipelineIdentifier: string) => ({ pipelineIdentifier })
 );
 
-export const renameIPipeline = createAction(
-    '[IPipeline] Rename IPipeline',
-    (pipelineName: string, updatedName: string) => ({ pipelineName, updatedName })
+export const setSelectedPipeline = createAction(
+    '[Pipeline] Select Pipeline',
+    (pipelineId: string) => ({ pipelineId })
+);
+
+export const setPipelineSolutionReference = createAction(
+    '[Pipeline] Set Pipeline Solution Reference',
+    (pipelineId: string, solutionIdentifier: string) => ({ pipelineId, solutionIdentifier })
+);
+
+export const renamePipeline = createAction(
+    '[Pipeline] Rename Pipeline',
+    (pipeline: IPipeline, updatedName: string) => ({ pipeline, updatedName })
+);
+
+export const renamePipelineById = createAction(
+    '[Pipeline] Rename Pipeline By Id',
+    (pipelineIdentifier: string, updatedName: string) => ({ pipelineIdentifier, updatedName })
 );

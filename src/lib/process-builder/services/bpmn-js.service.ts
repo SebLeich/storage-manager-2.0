@@ -23,13 +23,13 @@ import { IProcedure } from 'src/lib/procedure-store/interfaces/procedure.interfa
 import { TaskEditingStatus } from '../types/task-editing-status.type';
 import shapeTypes from 'src/lib/bpmn-io/shape-types';
 import { IElement } from 'src/lib/bpmn-io/interfaces/element.interface';
-import { IPipeline } from 'src/lib/pipeline-store/interfaces/pipeline.interface';
+import IPipeline from 'src/lib/pipeline-store/interfaces/pipeline.interface';
 import { selectIFunction, selectIParam } from '@process-builder/selectors';
 import { IConnector } from 'src/lib/bpmn-io/interfaces/connector.interface';
 import { IPipelineAction } from 'src/lib/pipeline-store/interfaces/pipeline-action.interface';
 import { ConfirmationService } from 'src/lib/confirmation/services/confirmation.service';
 import { Router } from '@angular/router';
-import { addIPipeline, removeIPipeline } from 'src/lib/pipeline-store/store/actions/pipeline.actions';
+import { addPipeline, removePipeline, setSelectedPipeline } from 'src/lib/pipeline-store/store/actions/pipeline.actions';
 import { addIPipelineActions } from 'src/lib/pipeline-store/store/actions/pipeline-action.actions';
 import { selectPipelineByBpmnJsModel } from 'src/lib/pipeline-store/store/selectors/pipeline.selectors';
 import { GatewayType } from '../types/gateway.type';
@@ -239,14 +239,14 @@ export class BpmnJsService {
   public async compile(bpmnJsModelIdentifier: string, name: string = generateGuid()) {
     const existingPipeline = await selectSnapshot(this._store.select(selectPipelineByBpmnJsModel(bpmnJsModelIdentifier)));
     if (existingPipeline) {
-      this._store.dispatch(removeIPipeline(existingPipeline));
+      this._store.dispatch(removePipeline(existingPipeline));
     }
 
     const startEvent = BPMNJsRepository.getStartEvents(this.elementRegistryModule)[0];
     let cursor: { element: IElement, gatewayType?: GatewayType, successorFor: IElement[] } | null = { element: startEvent.outgoing[0].target, successorFor: [] },
       stack: { element: IElement, successorFor: IElement[], gatewayType: GatewayType }[] = [];
       
-    const pipeline: IPipeline = { bpmnJsModelReference: bpmnJsModelIdentifier, name: name, solutionReference: null },
+    const pipeline: IPipeline = { id: generateGuid(), bpmnJsModelReference: bpmnJsModelIdentifier, name: name, solutionReference: null },
       pipelineActions: IPipelineAction[] = [];
 
     let anchestors: IPipelineAction[] = [], index = 0;
@@ -286,11 +286,13 @@ export class BpmnJsService {
       }
     }
 
-    this._store.dispatch(addIPipeline(pipeline));
+    this._store.dispatch(addPipeline(pipeline));
     this._store.dispatch(addIPipelineActions(pipelineActions));
+
     const redirect = await this._confirmationService.requestConfirmation('Pipeline compiled', 'Your model compiled successfully! Do you want to run your pipeline?');
     if (redirect) {
-      this._router.navigate(['/pipe-runner'], { queryParams: { pipeline: pipeline.name } });
+      this._router.navigate(['/pipe-runner'], { queryParams: { pipeline: pipeline.id } });
+      this._store.dispatch(setSelectedPipeline(pipeline.id));
     }
   }
 
@@ -323,7 +325,7 @@ export class BpmnJsService {
     const action: IPipelineAction = {
       isPipelineStart: index === 0,
       identifier: identifier,
-      pipeline: pipeline.name,
+      pipeline: pipeline.id,
       name: func?.name,
       executableCode: executableCode,
       onSuccess: '',

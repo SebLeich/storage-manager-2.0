@@ -3,7 +3,7 @@ import { Store } from '@ngrx/store';
 import { firstValueFrom } from 'rxjs/internal/firstValueFrom';
 import { map } from 'rxjs/operators';
 import { BPMNJsRepository } from 'src/lib/core/bpmn-js.repository';
-import { removeIPipeline } from 'src/lib/pipeline-store/store/actions/pipeline.actions';
+import { removePipeline } from 'src/lib/pipeline-store/store/actions/pipeline.actions';
 import { selectPipelineByBpmnJsModel } from 'src/lib/pipeline-store/store/selectors/pipeline.selectors';
 import { IBpmnJS, IBpmnJSModel, IFunction } from '@process-builder/interfaces';
 import { selectSnapshot } from 'src/lib/process-builder/globals/select-snapshot';
@@ -60,7 +60,7 @@ export class ProcessBuilderWrapperComponent {
 
     const existingPipeline = await selectSnapshot(this._store.select(selectPipelineByBpmnJsModel(model.guid)));
     if(existingPipeline) {
-      this._store.dispatch(removeIPipeline(existingPipeline));
+      this._store.dispatch(removePipeline(existingPipeline));
     }
 
     this.bpmnJsService.compile(model.guid, model?.name ?? undefined);

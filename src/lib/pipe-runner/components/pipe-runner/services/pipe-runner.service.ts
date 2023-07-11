@@ -1,24 +1,26 @@
 import { ProcessBuilderRepository } from '@/lib/core/process-builder-repository';
+import IPipeline from '@/lib/pipeline-store/interfaces/pipeline.interface';
 import { mapIParamsInterfaces } from '@/lib/process-builder/extensions/rxjs/map-params-interfaces.rxjs';
 import { selectIParams } from '@/lib/process-builder/store/selectors';
 import { AllInOneRowSolver, StartLeftBottomSolver, SuperFloSolver } from '@/lib/storage-manager/solvers';
 import { HttpClient } from '@angular/common/http';
-import { EnvironmentInjector, EventEmitter, Injectable } from '@angular/core';
+import { EventEmitter, Injectable } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { ISolutionWrapper } from '@smgr/interfaces';
 import { addGroups, addSolution, selectSolutionById, setCurrentSolution } from '@smgr/store';
 import moment from 'moment';
 import * as rxjs from 'rxjs';
+import { filter, map, shareReplay, switchMap } from 'rxjs';
 import { highlightSolutionNavItem } from 'src/app/store/actions/application.actions';
 import { IPipelineAction } from 'src/lib/pipeline-store/interfaces/pipeline-action.interface';
 import { updateIPipelineActionStatus, updateIPipelineActionStatuses } from 'src/lib/pipeline-store/store/actions/pipeline-action-status.action';
 import { setIPipelineActionSolution } from 'src/lib/pipeline-store/store/actions/pipeline-action.actions';
-import { renameIPipeline, setIPipelineSolutionReference } from 'src/lib/pipeline-store/store/actions/pipeline.actions';
+import { renamePipelineById, setPipelineSolutionReference } from 'src/lib/pipeline-store/store/actions/pipeline.actions';
 import { selectPipelineActionStates } from 'src/lib/pipeline-store/store/selectors/pipeline-action-status.selectors';
 import { selectPipelineActionAndSuccessors, selectPipelineActionByPipelineName } from 'src/lib/pipeline-store/store/selectors/pipeline-action.selectors';
-import { selectPipelineByName } from 'src/lib/pipeline-store/store/selectors/pipeline.selectors';
+import { selectPipelineById } from 'src/lib/pipeline-store/store/selectors/pipeline.selectors';
 import { selectSnapshot } from 'src/lib/process-builder/globals/select-snapshot';
 
 @Injectable()
@@ -26,36 +28,27 @@ export class PipeRunnerService {
 
   public consoleOutput = new EventEmitter<{ message: string, class: string }>();
 
-  public selectedPipeline$ = this._route.queryParams.pipe(rxjs.map(queryParam => queryParam.pipeline), rxjs.filter(pipeline => !!pipeline));
-  public pipeline$ = this.selectedPipeline$.pipe(rxjs.switchMap(pipeline => this._store.select(selectPipelineByName(pipeline))));
-  public pipelineName$ = this.pipeline$.pipe(rxjs.map(pipeline => pipeline?.name));
-  public solution$ = this.pipeline$.pipe(
-    rxjs.map(pipeline => {
+  public selectedPipelineId$ = this._route.queryParams.pipe(map((queryParam) => (queryParam.pipeline ?? null) as string | null), filter(pipeline => pipeline ? true : false));
+  public selectedPipeline$ = this.selectedPipelineId$.pipe(switchMap((pipeline) => this._store.select(selectPipelineById(pipeline))));
+  public pipelineId$ = this.selectedPipeline$.pipe(map((pipeline: IPipeline | null) => pipeline?.id));
+  public pipelineName$ = this.selectedPipeline$.pipe(map((pipeline: IPipeline | null) => pipeline?.name));
+  public solution$ = this.selectedPipeline$.pipe(
+    map(pipeline => {
       return pipeline?.solutionReference;
     }),
-    rxjs.filter(solutionReference => !!solutionReference),
-    rxjs.switchMap(solutionReference => this._store.select(selectSolutionById(solutionReference ?? null)))
+    filter(solutionReference => !!solutionReference),
+    switchMap(solutionReference => this._store.select(selectSolutionById(solutionReference ?? null)))
   );
-  public actions$ = this.pipeline$.pipe(
-    rxjs.switchMap(pipeline => {
-      if (!pipeline) {
-        return rxjs.NEVER;
-      }
-      return this._store.select(selectPipelineActionByPipelineName(pipeline.name));
-    }),
-    rxjs.map(actions => {
+  public actions$ = this.selectedPipeline$.pipe(
+    switchMap((pipeline: IPipeline | null) => pipeline ? this._store.select(selectPipelineActionByPipelineName(pipeline.id)) : rxjs.NEVER),
+    map(actions => {
       const initialAction = actions.find(actions => actions?.isPipelineStart), sortedActions = [initialAction];
       let currentActions = [initialAction];
 
       while (currentActions.length > 0) {
         const successors = actions.filter(action => currentActions
-          .flatMap(action => {
-            const successors = [action?.onSuccess, action?.onError];
-            return successors;
-          })
-          .filter(identifier => {
-            return !!identifier;
-          })
+          .flatMap(action => [action?.onSuccess, action?.onError])
+          .filter(identifier => !!identifier)
           .indexOf(action?.identifier) > -1);
 
         sortedActions.push(...successors);
@@ -66,8 +59,8 @@ export class PipeRunnerService {
     })
   );
   public status$ = this.actions$.pipe(
-    rxjs.switchMap((actions) => this._store.select(selectPipelineActionStates(actions.map(action => action?.identifier).filter(action => action ? true : false) as string[]))),
-    rxjs.map(states => {
+    switchMap((actions) => this._store.select(selectPipelineActionStates(actions.map(action => action?.identifier).filter(action => action ? true : false) as string[]))),
+    map(states => {
       if (states.every(status => status.status === 'INITIALIZED')) {
         return 'Ready for run';
       }
@@ -82,12 +75,12 @@ export class PipeRunnerService {
     rxjs.distinctUntilChanged((prev, curr) => prev === curr)
   );
   public inputParams$ = this._store.select(selectIParams()).pipe(
-    rxjs.shareReplay(1),
-    rxjs.map(inputParams => inputParams ?? []),
+    shareReplay(1),
+    map(inputParams => inputParams ?? []),
     mapIParamsInterfaces(this._store),
-    rxjs.map(inputs => {
+    map(inputs => {
       return inputs.reduce((prev, curr) => {
-        if(curr.normalizedName){
+        if (curr.normalizedName) {
           if (curr.defaultValue) {
             prev[curr.normalizedName] = curr.defaultValue;
           } else {
@@ -101,18 +94,12 @@ export class PipeRunnerService {
     })
   );
 
-  constructor(private _router: Router, private _route: ActivatedRoute, private _store: Store, public httpClient: HttpClient, private _environmentInjector: EnvironmentInjector, private _snackBar: MatSnackBar) { }
+  constructor(private _route: ActivatedRoute, private _store: Store, public httpClient: HttpClient, private _snackBar: MatSnackBar) { }
 
   public async renameCurrentPipeline(updatedName: string) {
-    const currentPipelineName = await selectSnapshot(this.pipelineName$);
-    if (typeof currentPipelineName === 'string' && updatedName !== currentPipelineName) {
-      this._store.dispatch(renameIPipeline(currentPipelineName, updatedName));
-      this._router.navigate(['/pipe-runner'], {
-        relativeTo: this._route,
-        queryParams: {
-          pipeline: updatedName
-        }
-      });
+    const currentPipelineId = await selectSnapshot(this.pipelineId$), currentPipeName = await selectSnapshot(this.pipelineName$);
+    if (typeof currentPipelineId === 'string' && updatedName !== currentPipeName) {
+      this._store.dispatch(renamePipelineById(currentPipelineId, updatedName));
       this._snackBar.open(`the pipe was successfully renamed to ${updatedName}`, 'ok', { duration: 2000 });
     }
   }
@@ -133,9 +120,9 @@ export class PipeRunnerService {
 
       try {
         const console = {
-          log: (...args: (string|number|object)[]) => {
+          log: (...args: (string | number | object)[]) => {
             args.forEach(arg => {
-              const stringified = typeof arg === 'object'? JSON.stringify(arg): arg.toString();
+              const stringified = typeof arg === 'object' ? JSON.stringify(arg) : arg.toString();
               this.consoleOutput.next({
                 message: `${moment().format('HH:mm:ss')}: ${stringified}`,
                 class: 'default'
@@ -220,7 +207,7 @@ export class PipeRunnerService {
 
     const pipeName = await rxjs.firstValueFrom(this.pipelineName$);
     if (pipeName) {
-      this._store.dispatch(setIPipelineSolutionReference(pipeName, solutionWrapper.solution.id));
+      this._store.dispatch(setPipelineSolutionReference(pipeName, solutionWrapper.solution.id));
     }
   }
 }

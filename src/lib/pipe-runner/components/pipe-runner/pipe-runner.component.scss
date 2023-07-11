@@ -88,27 +88,8 @@
   }
 }
 
-.header {
-  display: flex;
-  align-items: center;
-
-  .pipeline-name {
-    padding: 1rem 0.5rem;
-    font-weight: 500;
-    flex: 1;
-    display: flex;
-    align-items: baseline;
-
-    .prefix {
-      font-size: 1.4rem;
-      font-weight: 400;
-    }
-
-    mat-form-field {
-      flex: 1;
-      margin-left: 0.5rem;
-    }
-  }
+.pipeline-name {
+  flex: 1;
 }
 
 .control-wrapper {

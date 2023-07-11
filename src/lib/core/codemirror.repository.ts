@@ -1,6 +1,6 @@
 import { javascript } from "@codemirror/lang-javascript";
 import { syntaxTree } from "@codemirror/language";
-import { EditorState, Text } from "@codemirror/state";
+import { EditorState } from "@codemirror/state";
 import { MethodEvaluationStatus } from "../process-builder/globals/method-evaluation-status";
 import { Tree, SyntaxNode } from 'node_modules/@lezer/common/dist/tree';
 import { IMethodEvaluationResult } from "../process-builder/interfaces/method-evaluation-result.interface";
@@ -17,10 +17,11 @@ export class CodemirrorRepository {
                 javascript()
             ]
         });
-        return state.doc as any;
+
+        return state.doc as unknown as ITextLeaf;
     }
 
-    static evaluateCustomMethod(state?: EditorState, text?: string[] | string, injector?: any): IMethodEvaluationResult {
+    static evaluateCustomMethod(state?: EditorState, text?: string[] | string, injector?: unknown): IMethodEvaluationResult {
         const convertedText = Array.isArray(text) ? text.join('\n') : text;
         if (!state) {
             if (!text) {
@@ -45,7 +46,7 @@ export class CodemirrorRepository {
         const block = arrowFunction ? arrowFunction.getChild('Block') : mainMethod.node.getChild('Block');
         const returnStatement = block?.getChild('ReturnStatement') ?? undefined;
         if (returnStatement) {
-            const result = this.getEvaluationResult(state, returnStatement, block!, injector);
+            const result = this.getEvaluationResult(state, returnStatement, block as SyntaxNode, injector);
             if (result) {
                 return result;
             }
@@ -54,17 +55,16 @@ export class CodemirrorRepository {
         return { status: MethodEvaluationStatus.NoReturnValue, valueIsDefinite: false };
     }
 
-    static getEvaluationResult(state: EditorState, parent: SyntaxNode, block: SyntaxNode, injector: any): IMethodEvaluationResult {
+    static getEvaluationResult(state: EditorState, parent: SyntaxNode, block: SyntaxNode, injector: unknown): IMethodEvaluationResult {
         const memberExpression = parent.getChild('MemberExpression');
         if (memberExpression) {
             const representation = state.sliceDoc(memberExpression?.from, memberExpression?.to);
             const navigationPath = representation.split('.');
-            let dependsOnInjector = navigationPath[0] === 'injector';
+            const dependsOnInjector = navigationPath[0] === 'injector';
             if (!dependsOnInjector) {
-                const variableValue = this.resolveVariableValue(state, block!, representation);
+                const variableValue = this.resolveVariableValue(state, block, representation);
                 if (variableValue) {
-                    let result = this.getEvaluationResult(state, variableValue, block, injector);
-                    result.valueIsDefinite = false;
+                    const result = { ...this.getEvaluationResult(state, variableValue, block, injector), valueIsDefinite: false };
                     return result;
                 }
             }
@@ -78,10 +78,9 @@ export class CodemirrorRepository {
                 return { status: MethodEvaluationStatus.ReturnValueFound, detectedValue: undefined, type: 'undefined', valueIsDefinite: true };
             }
 
-            const variableValue = this.resolveVariableValue(state, block!, representation);
+            const variableValue = this.resolveVariableValue(state, block, representation);
             if (variableValue) {
-                let result = this.getEvaluationResult(state, variableValue, block, injector);
-                result.valueIsDefinite = false;
+                const result = { ...this.getEvaluationResult(state, variableValue, block, injector), valueIsDefinite: false };
                 return result;
             }
 
@@ -94,11 +93,10 @@ export class CodemirrorRepository {
 
             const equals = variableDeclaration.getChild('Equals');
             if (!equals) {
-                return { status: MethodEvaluationStatus.ReturnValueFound, valueIsDefinite: false };   
+                return { status: MethodEvaluationStatus.ReturnValueFound, valueIsDefinite: false, variableDeclaration: representation };   
             }
 
-            let result = this.getEvaluationResult(state, equals.nextSibling as SyntaxNode, block, injector);
-            result.valueIsDefinite = false;
+            const result = { ...this.getEvaluationResult(state, equals.nextSibling as SyntaxNode, block, injector), valueIsDefinite: false };
             return result; 
         }
 
@@ -168,7 +166,7 @@ export class CodemirrorRepository {
 
     static getMainMethod(tree?: Tree, state?: EditorState, text?: string[] | string): ISyntaxNodeResponse {
 
-        let convertedText = Array.isArray(text) ? text.join('\n') : text;
+        const convertedText = Array.isArray(text) ? text.join('\n') : text;
 
         if (!state) {
             if (!text) throw ('no state and no text passed');
@@ -183,8 +181,8 @@ export class CodemirrorRepository {
 
         if (!tree) tree = syntaxTree(state);
 
-        let node = tree.resolveInner(0);
-        let functions = [...node.getChildren("ExpressionStatement")];
+        const node = tree.resolveInner(0);
+        const functions = [...node.getChildren("ExpressionStatement")];
 
         return { 'node': functions.length > 0 ? functions[functions.length - 1] : null, 'tree': tree };
 
@@ -192,9 +190,8 @@ export class CodemirrorRepository {
 
     static getUsedInputParams(state?: EditorState, text?: string[] | string): { varName: string, propertyName: string | null }[] {
 
-        let output: { varName: string, propertyName: string | null }[] = [];
-
-        let convertedText = text ? Array.isArray(text) ? text.join('\n') : text : (state?.doc as any).text.join('\n');
+        const output: { varName: string, propertyName: string | null }[] = [];
+        const convertedText = text ? Array.isArray(text) ? text.join('\n') : text : (state?.doc as unknown as ITextLeaf).text.join('\n');
 
         if (!state) {
             if (!text) throw ('no state and no text passed');
@@ -207,35 +204,34 @@ export class CodemirrorRepository {
             });
         }
 
-        let tree = syntaxTree(state);
-        let mainMethod = this.getMainMethod(tree, state, text);
+        const tree = syntaxTree(state);
+        const mainMethod = this.getMainMethod(tree, state, text);
         if (!mainMethod.node) return [];
 
-        let arrowFunction = mainMethod.node.getChild('ArrowFunction');
-        let block = arrowFunction ? arrowFunction.getChild('Block') : mainMethod.node.getChild('Block');
+        const arrowFunction = mainMethod.node.getChild('ArrowFunction');
+        const block = arrowFunction ? arrowFunction.getChild('Block') : mainMethod.node.getChild('Block');
+        const candidates = this.getMemberExpressionContainingCandidates(block);
 
-        let candidates = this.getMemberExpressionContainingCandidates(block);
-
-        for (let candidate of candidates) {
+        for (const candidate of candidates) {
 
             let statement: SyntaxNode | null = candidate;
             while (statement && statement.type.name !== 'MemberExpression') {
-                let result = this.iterateToMemberStatementNode(statement);
+                const result = this.iterateToMemberStatementNode(statement);
                 statement = result[0] ?? null;
                 candidates.push(...result.slice(1));
             }
 
-            let variableNameNode = this.extractMemberExpressionVariableNameNode(statement);
+            const variableNameNode = this.extractMemberExpressionVariableNameNode(statement);
             if (variableNameNode == null) continue;
 
-            var varNodeName = convertedText!.slice(variableNameNode.from, variableNameNode.to);
+            const varNodeName = convertedText.slice(variableNameNode.from, variableNameNode.to);
 
             if (varNodeName === 'console') {
                 if (statement.nextSibling) candidates.push(statement.nextSibling);
                 continue;
             }
 
-            let propertyNameNode = variableNameNode.nextSibling?.nextSibling;
+            const propertyNameNode = variableNameNode.nextSibling?.nextSibling;
 
             output.push({
                 'varName': varNodeName,
@@ -247,7 +243,7 @@ export class CodemirrorRepository {
     }
 
     static getMemberExpressionContainingCandidates(blockNode: SyntaxNode | null): SyntaxNode[] {
-        let candidates = blockNode ? [
+        const candidates = blockNode ? [
             ...blockNode.getChildren('ExpressionStatement'),
             ...blockNode.getChildren('VariableDeclaration'),
             ...blockNode.getChildren('ObjectExpression')

@@ -4,7 +4,7 @@ import { PipeRunnerComponent } from './components/pipe-runner/pipe-runner.compon
 import { RouterModule } from '@angular/router';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { PipelineStoreModule } from '../pipeline-store/pipeline-store.module';
-import { PipelineActionPreviewComponent } from './components/pipeline-action-preview/pipeline-action-preview.component';
+import { PipelineActionPreviewComponent } from './components/pipe-runner/pipeline-action-preview/pipeline-action-preview.component';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
@@ -14,12 +14,14 @@ import { VisualizationModule } from '../visualization/visualization.module';
 import { StorageManagerModule } from '../storage-manager/storage-manager.module';
 import { MatSelectModule } from '@angular/material/select';
 import { ReactiveFormsModule } from '@angular/forms';
+import { SelectPipelineComponent } from './components/pipe-runner/select-pipeline/select-pipeline.component';
 
 
 @NgModule({
   declarations: [
     PipeRunnerComponent,
-    PipelineActionPreviewComponent
+    PipelineActionPreviewComponent,
+    SelectPipelineComponent
   ],
   imports: [
     CommonModule,

@@ -8,4 +8,5 @@ export interface IMethodEvaluationResult {
     detectedValue?: string | number | object | [] | boolean | null;
     valueIsDefinite: boolean;
     unaryExpression?: string;
+    variableDeclaration?: string;
 }

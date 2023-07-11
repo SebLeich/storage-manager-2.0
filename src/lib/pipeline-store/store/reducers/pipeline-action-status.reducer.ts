@@ -4,7 +4,7 @@ import moment from "moment";
 import { IPipelineActionStatusInformation } from "../../interfaces/pipeline-action-status.interface";
 import { updateIPipelineActionStatus, updateIPipelineActionStatuses } from "../actions/pipeline-action-status.action";
 import { addIPipelineActions } from "../actions/pipeline-action.actions";
-import { removeIPipeline } from "../actions/pipeline.actions";
+import { removePipeline } from "../actions/pipeline.actions";
 
 export const featureKey = 'pipelineActionStatus';
 
@@ -36,8 +36,8 @@ export const reducer = createReducer(
         );
     }),
 
-    on(removeIPipeline, (state, { pipeline }) => {
-        const effectedPipelineActions = Object.values(state.entities).filter(action => action?.pipeline === pipeline.name) as IPipelineActionStatusInformation[];
+    on(removePipeline, (state, { pipeline }) => {
+        const effectedPipelineActions = Object.values(state.entities).filter(action => action?.pipeline === pipeline.id) as IPipelineActionStatusInformation[];
         return adapter.removeMany(effectedPipelineActions.map(action => action.pipelineAction), state);
     }),
 
