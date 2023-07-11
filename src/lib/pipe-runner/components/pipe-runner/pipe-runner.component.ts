@@ -27,13 +27,14 @@ import { showAnimation } from 'src/lib/shared/animations/show';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { setSelectedPipeline } from '@/lib/pipeline-store/store/actions/pipeline.actions';
 import { PipeRunnerService } from './services/pipe-runner.service';
+import { showListAnimation } from '@/lib/shared/animations/show-list';
 
 @Component({
   selector: 'app-pipe-runner',
   templateUrl: './pipe-runner.component.html',
   styleUrls: ['./pipe-runner.component.scss'],
   providers: [PipeRunnerService, VisualizationService],
-  animations: [fadeInAnimation, showAnimation],
+  animations: [fadeInAnimation, showAnimation, showListAnimation],
 })
 export class PipeRunnerComponent implements OnInit {
   @ViewChild('tabGroup', { static: true }) public tabGroup!: MatTabGroup;

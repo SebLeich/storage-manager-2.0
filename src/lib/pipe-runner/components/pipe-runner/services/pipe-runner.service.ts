@@ -33,9 +33,7 @@ export class PipeRunnerService {
   public pipelineId$ = this.selectedPipeline$.pipe(map((pipeline: IPipeline | null) => pipeline?.id));
   public pipelineName$ = this.selectedPipeline$.pipe(map((pipeline: IPipeline | null) => pipeline?.name));
   public solution$ = this.selectedPipeline$.pipe(
-    map(pipeline => {
-      return pipeline?.solutionReference;
-    }),
+    map(pipeline => pipeline?.solutionReference),
     filter(solutionReference => !!solutionReference),
     switchMap(solutionReference => this._store.select(selectSolutionById(solutionReference ?? null)))
   );
@@ -205,9 +203,9 @@ export class PipeRunnerService {
     this._store.dispatch(setCurrentSolution({ solution: solutionWrapper.solution }));
     this._store.dispatch(addGroups({ groups: (solutionWrapper as ISolutionWrapper).groups }));
 
-    const pipeName = await rxjs.firstValueFrom(this.pipelineName$);
-    if (pipeName) {
-      this._store.dispatch(setPipelineSolutionReference(pipeName, solutionWrapper.solution.id));
+    const pipelineIdentifier = await selectSnapshot(this.pipelineId$);
+    if (pipelineIdentifier) {
+      this._store.dispatch(setPipelineSolutionReference(pipelineIdentifier, solutionWrapper.solution.id));
     }
   }
 }

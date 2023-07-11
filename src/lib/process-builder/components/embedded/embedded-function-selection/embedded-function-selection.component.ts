@@ -12,7 +12,7 @@ import { removeIFunction } from 'src/lib/process-builder/store/actions/function.
 import { combineLatest } from 'rxjs/internal/observable/combineLatest';
 import { TaskCreationFormGroup } from 'src/lib/process-builder/interfaces/task-creation-form-group-value.interface';
 import { showAnimation } from 'src/lib/shared/animations/show';
-import { showListAnimation } from 'src/lib/shared/animations/show-list';
+import { showListAnimation } from 'src/lib/shared/animations/show-list-slow';
 
 @Component({
   selector: 'app-embedded-function-selection',
