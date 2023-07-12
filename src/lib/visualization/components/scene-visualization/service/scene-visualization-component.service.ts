@@ -1,7 +1,5 @@
 import * as ThreeJS from 'three';
-
 import { Injectable } from '@angular/core';
-
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 import { Scene } from 'three';
 
@@ -20,9 +18,9 @@ export class SceneVisualizationComponentService {
     const meshes = scene.children.filter(child => child instanceof ThreeJS.Mesh) as ThreeJS.Mesh[];
     const x = (event.offsetX / (event.target as HTMLCanvasElement).offsetWidth) * 2 - 1;
     const y = - (event.clientY / window.innerHeight) * 2 + 1;
-    this._ray.setFromCamera({ x: x, y: y }, this._camera!);
+    this._ray.setFromCamera({ x: x, y: y }, this._camera as ThreeJS.Camera);
     const intersects = this._ray.intersectObjects(meshes);
-    var found: null | ThreeJS.Intersection = null;
+    let found: null | ThreeJS.Intersection = null;
     intersects.forEach(function (object) {
       if (object.object instanceof ThreeJS.Mesh && (found == null || found.distance > object.distance)) {
         found = object;
@@ -47,8 +45,8 @@ export class SceneVisualizationComponentService {
       throw ('cannot update renderer: camera not initialized!');
     }
     this._renderer.setSize(width, height);
-    this._camera!.aspect = width / height;
-    this._camera!.updateProjectionMatrix();
+    this._camera.aspect = width / height;
+    this._camera.updateProjectionMatrix();
   }
 
   public setScreenDimensions(height: number, width: number) {
@@ -68,7 +66,11 @@ export class SceneVisualizationComponentService {
   }
 
   public updateOrbitControls() {
-    this._controls = new OrbitControls(this._camera!, this._renderer.domElement);
+    if(!this._camera){
+      return;
+    }
+
+    this._controls = new OrbitControls(this._camera, this._renderer.domElement);
     this._controls.enableDamping = true;
     this._controls.dampingFactor = 0.25;
     this._controls.screenSpacePanning = false;
@@ -79,8 +81,12 @@ export class SceneVisualizationComponentService {
   }
 
   private _render(scene: Scene) {
+    if(!this._camera){
+      return;
+    }
+
     requestAnimationFrame(() => this._render(scene));
-    this._renderer.render(scene, this._camera!);
+    this._renderer.render(scene, this._camera);
   }
 
 }

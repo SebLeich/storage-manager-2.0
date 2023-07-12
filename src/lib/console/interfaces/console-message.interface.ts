@@ -5,6 +5,7 @@ export interface IConsoleMessage {
     channel?: string;
     timeStamp: Date;
     message: string;
+    messageObject?: object;
     level: LogLevel;
     styles?: CSSStyleDeclaration;
 }

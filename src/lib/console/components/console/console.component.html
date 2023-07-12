@@ -14,8 +14,13 @@
             <mat-icon [class.invisible]="message.message.length < 250">
                 {{message.expanded? 'expand_more': 'chevron_right'}}
             </mat-icon>
-            <div class="text-content level-{{message.level}}" [class.collapsed]="!message.expanded">{{message.message}}
+            <div class="text-content level-{{message.level}}" [class.collapsed]="!message.expanded">
+                <pre *ngIf="message.messageObject; else messageStringContent">{{message.messageObject | json}}</pre>
             </div>
+
+            <ng-template #messageStringContent>
+                {{message.message}}
+            </ng-template>
         </div>
     </div>
 

@@ -1,7 +1,6 @@
 import { Component, DestroyRef, ElementRef, EventEmitter, Inject, Input, OnChanges, OnInit, Optional, Output, SimpleChanges, ViewChild } from '@angular/core';
 import { BehaviorSubject, debounceTime, fromEvent, map, ReplaySubject, switchMap } from 'rxjs';
 import { Scene } from 'three';
-import { SceneVisualizationComponentService } from './scene-visualization-component.service';
 import * as ThreeJS from 'three';
 import { Store } from '@ngrx/store';
 import { selectSnapshot } from 'src/lib/process-builder/globals/select-snapshot';
@@ -9,11 +8,12 @@ import { IVisualizerContextService, VISUALIZER_CONTEXT } from 'src/app/interface
 import { selectCurrentSolutionGoods, selectGroups } from '@smgr/store';
 import { IGood } from '@smgr/interfaces';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { SceneVisualizationComponentService } from './service/scene-visualization-component.service';
 
 @Component({
   selector: 'app-scene-visualization',
   templateUrl: './scene-visualization.component.html',
-  styleUrls: ['./scene-visualization.component.css'],
+  styleUrls: ['./scene-visualization.component.scss'],
   providers: [SceneVisualizationComponentService],
 })
 export class SceneVisualizationComponent implements OnChanges, OnInit {

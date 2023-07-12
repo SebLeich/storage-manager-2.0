@@ -148,7 +148,7 @@ export class PipeRunnerService {
         const representation = typeof solutionWrapper === 'object' ? JSON.stringify(result) : result;
         this._store.dispatch(updateIPipelineActionStatus(currentAction.identifier, 'SUCCEEDED'));
         if (sink) {
-          sink.log({ message: `${moment().format('HH:mm:ss')}: ${representation}`, level: 'info', channel });
+          sink.log({ message: `${moment().format('HH:mm:ss')}: ${representation}`, level: 'info', channel, messageObject: result && typeof result === 'object'? result: undefined });
         }
 
         const skippedAction = actions.find(action => action.identifier === currentAction?.onError);

@@ -42,7 +42,7 @@
       word-wrap: break-word;
       cursor: pointer;
 
-      >mat-icon.invisible {
+      > mat-icon.invisible {
         visibility: hidden;
       }
 
@@ -74,6 +74,10 @@
 
         &.level-warning {
           color: rgb(225, 199, 50);
+        }
+
+        pre {
+          margin: 0px;
         }
       }
     }
