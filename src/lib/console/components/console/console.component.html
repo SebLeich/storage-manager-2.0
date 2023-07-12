@@ -1,0 +1,15 @@
+<div class="body">
+
+    <div class="control-bar">
+        <button mat-icon-button [matTooltip]="infosEnabled()? 'click to hide infos': 'click to show infos'" [class.deactivated]="infosEnabled()? false: true" (click)="toggleInfoLevel()">
+            <mat-icon>info</mat-icon>
+        </button>
+    </div>
+
+    <div class="content">
+        <div *ngFor="let message of messages()" class="section level-{{message.level}}" [class.collapsed]="!message.expanded" (click)="toggleMessage(message.id)">
+            {{message.message}}
+        </div>
+    </div>
+
+</div>

@@ -1,9 +1,10 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { PipeRunnerComponent } from './pipe-runner.component';
-import { PipeRunnerService } from './pipe-runner.service';
 import defaultImportsConstant from 'src/app/default-imports.constant';
 import { RouterTestingModule } from '@angular/router/testing';
 import { PipelineStoreModule } from 'src/lib/pipeline-store/pipeline-store.module';
+import { PipeRunnerService } from './services/pipe-runner.service';
+import { PipeRunnerModule } from '../../pipe-runner.module';
 
 describe('PipeRunnerComponent', () => {
   let component: PipeRunnerComponent;
@@ -11,8 +12,7 @@ describe('PipeRunnerComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [PipeRunnerComponent],
-      imports: [...defaultImportsConstant, RouterTestingModule, PipelineStoreModule],
+      imports: [...defaultImportsConstant, RouterTestingModule, PipelineStoreModule, PipeRunnerModule],
       providers: [PipeRunnerService]
     })
       .compileComponents();

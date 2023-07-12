@@ -1,22 +1,9 @@
-import { Component, DestroyRef, OnInit, ViewChild } from '@angular/core';
+import { Component, DestroyRef, OnInit, ViewChild, effect } from '@angular/core';
 import { Store } from '@ngrx/store';
-import {
-  debounceTime,
-  map,
-  distinctUntilChanged,
-  delay,
-  startWith,
-  BehaviorSubject,
-  scan,
-  merge,
-  firstValueFrom,
-} from 'rxjs';
+import { debounceTime, map, distinctUntilChanged, delay, startWith, BehaviorSubject, firstValueFrom } from 'rxjs';
 import { ActivatedRoute, Router } from '@angular/router';
-import {
-  selectPipelines,
-  selectSelectedPipeline,
-} from 'src/lib/pipeline-store/store/selectors/pipeline.selectors';
-import moment from 'moment';
+import { selectPipelines, selectSelectedPipeline } from 'src/lib/pipeline-store/store/selectors/pipeline.selectors';
+import { v4 as generateGuid } from 'uuid';
 import * as ThreeJS from 'three';
 import { VisualizationService } from 'src/lib/visualization/services/visualization.service';
 import { MatTabGroup } from '@angular/material/tabs';
@@ -28,6 +15,8 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { setSelectedPipeline } from '@/lib/pipeline-store/store/actions/pipeline.actions';
 import { PipeRunnerService } from './services/pipe-runner.service';
 import { showListAnimation } from '@/lib/shared/animations/show-list';
+import { ConsoleService } from '@/lib/console/services/console.service';
+import { LogLevel } from '@/lib/shared/types/log-level.type';
 
 @Component({
   selector: 'app-pipe-runner',
@@ -39,36 +28,18 @@ import { showListAnimation } from '@/lib/shared/animations/show-list';
 export class PipeRunnerComponent implements OnInit {
   @ViewChild('tabGroup', { static: true }) public tabGroup!: MatTabGroup;
 
-  public consoleOutputSections$ = merge(
-    this.pipeRunnerService.consoleOutput,
-    this.pipeRunnerService.status$.pipe(
-      map((status) => {
-        return {
-          message: `${moment().format(
-            'HH:mm:ss'
-          )}: status changed to ${status}`,
-          class:
-            status === 'Succeeded'
-              ? 'success'
-              : status === 'Errors occurred'
-              ? 'error'
-              : status === 'Running'
-              ? 'primary'
-              : 'default',
-        };
-      })
-    )
-  ).pipe(
-    scan(
-      (
-        acc: { message: string; class: string }[],
-        curr: { message: string; class: string }
-      ) => {
-        return [curr, ...acc];
-      },
-      []
-    )
-  );
+  public statusEffectRef = effect(() => {
+    const status = this.pipeRunnerService.status();
+    const level: LogLevel = status === 'Succeeded' ? 'success' : status === 'Errors occurred' ? 'error' : 'info';
+    const date = new Date();
+    this.consoleService.log({
+      channel: 'pipe-runner',
+      id: generateGuid(),
+      level: level,
+      message: `${date.toDateString()}: status changed to ${status}`,
+      timeStamp: date
+    });
+  }, { allowSignalWrites: true });
 
   private _visualizationTabRendered$$ = new BehaviorSubject(false);
   public visualizationTabRendered$ = this._visualizationTabRendered$$.asObservable();
@@ -76,6 +47,7 @@ export class PipeRunnerComponent implements OnInit {
   public pipelineControl = new FormControl();
   public pipelines$ = this._store.select(selectPipelines);
 
+  public initializationDate = new Date();
   public scene = new ThreeJS.Scene();
   public meshRegistry = [];
 
@@ -85,8 +57,9 @@ export class PipeRunnerComponent implements OnInit {
     private _router: Router,
     private _visualizationService: VisualizationService,
     public pipeRunnerService: PipeRunnerService,
+    public consoleService: ConsoleService,
     private _destroyRef: DestroyRef
-  ) {}
+  ) { }
 
   public designPipeline(): void {
     this._router.navigate(['/data-pipeline-designer']);
@@ -109,9 +82,9 @@ export class PipeRunnerComponent implements OnInit {
       .subscribe(async (solution) => await this._updateScene(solution));
 
     this.pipelineControl.valueChanges.pipe(takeUntilDestroyed(this._destroyRef)).subscribe((pipeline: string) => {
-        this._router.navigate(['/pipe-runner'], { relativeTo: this._route, queryParams: { pipeline: pipeline } });
-        this._store.dispatch(setSelectedPipeline(pipeline));
-      });
+      this._router.navigate(['/pipe-runner'], { relativeTo: this._route, queryParams: { pipeline: pipeline } });
+      this._store.dispatch(setSelectedPipeline(pipeline));
+    });
 
     this._tryInitiallySetLastPipeline();
   }

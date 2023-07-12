@@ -13,8 +13,9 @@ import { MatTabsModule } from '@angular/material/tabs';
 import { VisualizationModule } from '../visualization/visualization.module';
 import { StorageManagerModule } from '../storage-manager/storage-manager.module';
 import { MatSelectModule } from '@angular/material/select';
-import { ReactiveFormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { SelectPipelineComponent } from './components/pipe-runner/select-pipeline/select-pipeline.component';
+import { ConsoleModule } from '../console/console.module';
 
 
 @NgModule({
@@ -25,6 +26,8 @@ import { SelectPipelineComponent } from './components/pipe-runner/select-pipelin
   ],
   imports: [
     CommonModule,
+    ConsoleModule,
+    FormsModule,
     MatButtonModule,
     MatIconModule,
     MatSnackBarModule,

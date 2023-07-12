@@ -19,8 +19,6 @@
     "target": "ES2022",
     "module": "es2020",
     "lib": ["es2020", "dom"],
-    "types": ["jasmine", "node", "rxjs"],
-    "typeRoots": ["../node_modules/@types"],
     "useDefineForClassFields": false,
     "paths": {
       "@/*": ["src/*"],
@@ -42,5 +40,5 @@
       "@smgr/store": ["./src/lib/storage-manager/store"]
     }
   },
-  "exclude": ["./cypress.config.ts", "./cypress"],
+  "exclude": ["./cypress.config.ts", "../*/cypress/**/*"],
 }

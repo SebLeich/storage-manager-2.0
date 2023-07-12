@@ -2,7 +2,7 @@ import { createEntityAdapter, EntityAdapter, EntityState } from "@ngrx/entity";
 import { createReducer, on } from "@ngrx/store";
 import { IPipelineAction } from "src/lib/pipeline-store/interfaces/pipeline-action.interface";
 import { addIPipelineAction, addIPipelineActions, setIPipelineActionSolution } from "../actions/pipeline-action.actions";
-import { removePipeline, renamePipeline, renamePipelineById } from "../actions/pipeline.actions";
+import { removePipeline } from "../actions/pipeline.actions";
 
 export const featureKey = 'pipelineAction';
 

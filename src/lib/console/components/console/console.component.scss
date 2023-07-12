@@ -1,0 +1,56 @@
+.body {
+    background-color: #424242;
+    color: white;
+    font-family: monospace;
+    border-radius: 2px;
+    display: flex;
+    flex-direction: column;
+    padding: 0.5rem;
+    box-sizing: border-box;
+    flex: 1;
+    overflow: hidden;
+    height: 100%;
+
+    .control-bar > button.deactivated {
+      opacity: .2;
+    }
+
+    .content {
+      flex: 1;
+      overflow-y: scroll;
+      padding: 0.5rem;
+
+      .section {
+        overflow: hidden;
+        margin-bottom: 0.5rem;
+        word-wrap: break-word;
+        cursor: pointer;
+      }
+
+      .section.collapsed {
+        display: -webkit-box;
+        -webkit-line-clamp: 3;
+        -webkit-box-orient: vertical;
+      }
+
+      .section.level-info {
+        color: rgb(255, 255, 255);
+      }
+
+      .section.level-prioritized {
+        color: rgb(51, 133, 227);
+      }
+
+      .section.level-success {
+        color: rgb(166, 227, 51);
+      }
+
+      .section.level-error {
+        color: rgb(232, 79, 79);
+      }
+
+      .section.level-warning {
+        color: rgb(225, 199, 50);
+      }
+    }
+  }

@@ -2,9 +2,11 @@ import { ProcessBuilderRepository } from '@/lib/core/process-builder-repository'
 import IPipeline from '@/lib/pipeline-store/interfaces/pipeline.interface';
 import { mapIParamsInterfaces } from '@/lib/process-builder/extensions/rxjs/map-params-interfaces.rxjs';
 import { selectIParams } from '@/lib/process-builder/store/selectors';
+import { ISink } from '@/lib/shared/interfaces/sink.interface';
 import { AllInOneRowSolver, StartLeftBottomSolver, SuperFloSolver } from '@/lib/storage-manager/solvers';
 import { HttpClient } from '@angular/common/http';
-import { EventEmitter, Injectable } from '@angular/core';
+import { Injectable } from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ActivatedRoute } from '@angular/router';
 import { Store } from '@ngrx/store';
@@ -25,8 +27,6 @@ import { selectSnapshot } from 'src/lib/process-builder/globals/select-snapshot'
 
 @Injectable()
 export class PipeRunnerService {
-
-  public consoleOutput = new EventEmitter<{ message: string, class: string }>();
 
   public selectedPipelineId$ = this._route.queryParams.pipe(map((queryParam) => (queryParam.pipeline ?? null) as string | null), filter(pipeline => pipeline ? true : false));
   public selectedPipeline$ = this.selectedPipelineId$.pipe(switchMap((pipeline) => this._store.select(selectPipelineById(pipeline))));
@@ -92,6 +92,8 @@ export class PipeRunnerService {
     })
   );
 
+  public status = toSignal(this.status$);
+
   constructor(private _route: ActivatedRoute, private _store: Store, public httpClient: HttpClient, private _snackBar: MatSnackBar) { }
 
   public async renameCurrentPipeline(updatedName: string) {
@@ -102,8 +104,11 @@ export class PipeRunnerService {
     }
   }
 
-  public async run() {
-    this.consoleOutput.emit({ message: `--------------- new run ---------------`, class: 'default' });
+  public async run(sink?: ISink, channel?: string) {
+    if(sink){
+      sink.log({ message: `--------------- new run ---------------`, level: 'prioritized', channel });
+    }
+
     const actions = (await selectSnapshot(this.actions$)).filter(action => action ? true : false) as IPipelineAction[],
       injector: { [key: string]: unknown } = {},
       params = await rxjs.firstValueFrom(this.inputParams$);
@@ -117,24 +122,13 @@ export class PipeRunnerService {
       this._store.dispatch(updateIPipelineActionStatus(currentAction.identifier, 'RUNNING'));
 
       try {
-        const console = {
-          log: (...args: (string | number | object)[]) => {
-            args.forEach(arg => {
-              const stringified = typeof arg === 'object' ? JSON.stringify(arg) : arg.toString();
-              this.consoleOutput.next({
-                message: `${moment().format('HH:mm:ss')}: ${stringified}`,
-                class: 'default'
-              });
-            });
-          }
-        }
         const solvers = [StartLeftBottomSolver, AllInOneRowSolver, SuperFloSolver];
         const rxjsElements = Object.keys(rxjs) as (keyof typeof rxjs)[];
         const mainMethodStart = currentAction?.executableCode?.indexOf('async () => {') ?? 0;
         const executableCode = currentAction?.executableCode?.substring(mainMethodStart) ?? undefined;
         const executableFunction = new Function('console', 'httpClient', ...solvers.map(solver => new solver().constructor.name), ...rxjsElements, ...paramNames, executableCode ? `return ${executableCode};` : 'return undefined;');
         const result = await executableFunction(
-          console,
+          sink,
           this.httpClient,
           ...solvers,
           ...rxjsElements.map(element => rxjs[element]),
@@ -145,18 +139,17 @@ export class PipeRunnerService {
           injector[currentAction.ouputParamName] = result;
         }
 
-        if (currentAction!.outputMatchesPipelineOutput) {
+        if (currentAction.outputMatchesPipelineOutput) {
           solutionWrapper = result as ISolutionWrapper;
-          this._store.dispatch(setIPipelineActionSolution(currentAction!.identifier, solutionWrapper!));
-          this._store.dispatch(addSolution({ solution: (solutionWrapper as ISolutionWrapper)!.solution }));
+          this._store.dispatch(setIPipelineActionSolution(currentAction.identifier, solutionWrapper));
+          this._store.dispatch(addSolution({ solution: (solutionWrapper as ISolutionWrapper).solution }));
         }
 
         const representation = typeof solutionWrapper === 'object' ? JSON.stringify(result) : result;
-        this.consoleOutput.emit({
-          message: `${moment().format('HH:mm:ss')}: ${representation}`,
-          class: 'default'
-        });
-        this._store.dispatch(updateIPipelineActionStatus(currentAction!.identifier, 'SUCCEEDED'));
+        this._store.dispatch(updateIPipelineActionStatus(currentAction.identifier, 'SUCCEEDED'));
+        if(sink){
+          sink.log({ message: `${moment().format('HH:mm:ss')}: ${representation}`, level: 'info', channel });
+        }
 
         const skippedAction = actions.find(action => action.identifier === currentAction?.onError);
         if (skippedAction) {
@@ -167,10 +160,9 @@ export class PipeRunnerService {
         currentAction = actions.find(action => action.identifier === currentAction?.onSuccess);
       } catch (error) {
 
-        this.consoleOutput.emit({
-          message: `${moment().format('HH:mm:ss')}: ${error}`,
-          class: 'error'
-        });
+        if(sink){
+          sink.log({ message: `${moment().format('HH:mm:ss')}: ${error}`, level: 'error', channel });
+        }
 
         if (!currentAction) {
           throw ('action not defined');
