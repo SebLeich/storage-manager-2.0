@@ -3,6 +3,8 @@ import { ConsoleService } from '../../services/console.service';
 import { IConsoleMessage } from '../../interfaces/console-message.interface';
 import { LogLevel } from '@/lib/shared/types/log-level.type';
 import { showListAnimation } from '@/lib/shared/animations/show-list';
+import { FormControl, FormGroup } from '@angular/forms';
+import { toSignal } from '@angular/core/rxjs-interop';
 
 @Component({
   selector: 'app-console',
@@ -19,7 +21,7 @@ export class ConsoleComponent {
   public messages = computed(() => {
     const expandedMessages = this._expandedMessages();
     return this.consoleService.allConsoleOutputs()
-      .filter(message => this._messagePassesFilters(message, this._channels(), this._endDate(), this._startDate(), this._levels()))
+      .filter(message => this._messagePassesFilters(message, this._channels(), this._endDate(), this._startDate(), this._levels(), this._search()))
       .map(message => ({ ...message, expanded: expandedMessages.indexOf(message.id) > -1 }))
       .reverse();
   });
@@ -28,11 +30,16 @@ export class ConsoleComponent {
     return Array.isArray(levels) ? levels.indexOf('info') > -1 : true;
   });
 
+  public formGroup = new FormGroup({
+    search: new FormControl<string>('')
+  });
+
   private _expandedMessages = signal<string[]>([]);
   private _channels = signal<string[] | undefined>(undefined);
   private _levels = signal<LogLevel[] | undefined>(undefined);
   private _endDate = signal<Date | undefined>(undefined);
   private _startDate = signal<Date | undefined>(new Date());
+  private _search = toSignal(this.formGroup.controls.search.valueChanges, { initialValue: '' });
 
   constructor(public consoleService: ConsoleService) { }
 
@@ -47,7 +54,7 @@ export class ConsoleComponent {
     this._expandedMessages.update(currentValue => index > -1 ? [...currentValue.slice(0, index), ...currentValue.slice(index + 1)] : [...currentValue, messageId]);
   }
 
-  private _messagePassesFilters(message: IConsoleMessage, channelFilter: undefined | string[], endDate: undefined | Date, startDate: undefined | Date, levelFilter: LogLevel[] | undefined): boolean {
+  private _messagePassesFilters(message: IConsoleMessage, channelFilter: undefined | string[], endDate: undefined | Date, startDate: undefined | Date, levelFilter: LogLevel[] | undefined, search: string | null | undefined): boolean {
     if (channelFilter != null && channelFilter.every(channelFilter => message.channel !== channelFilter)) {
       return false;
     }
@@ -62,6 +69,13 @@ export class ConsoleComponent {
 
     if (levelFilter != null && levelFilter.every(levelFilter => message.level !== levelFilter)) {
       return false;
+    }
+
+    if (search != null) {
+      const searchArray = search.toLocaleLowerCase().split(' '), lowerCaseMessage = message.message.toLocaleLowerCase();
+      if (searchArray.every(term => lowerCaseMessage.indexOf(term) === -1)) {
+        return false;
+      }
     }
 
     return true;
