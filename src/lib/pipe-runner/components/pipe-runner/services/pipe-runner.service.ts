@@ -105,7 +105,7 @@ export class PipeRunnerService {
   }
 
   public async run(sink?: ISink, channel?: string) {
-    if(sink){
+    if (sink) {
       sink.log({ message: `--------------- new run ---------------`, level: 'prioritized', channel });
     }
 
@@ -147,7 +147,7 @@ export class PipeRunnerService {
 
         const representation = typeof solutionWrapper === 'object' ? JSON.stringify(result) : result;
         this._store.dispatch(updateIPipelineActionStatus(currentAction.identifier, 'SUCCEEDED'));
-        if(sink){
+        if (sink) {
           sink.log({ message: `${moment().format('HH:mm:ss')}: ${representation}`, level: 'info', channel });
         }
 
@@ -160,7 +160,7 @@ export class PipeRunnerService {
         currentAction = actions.find(action => action.identifier === currentAction?.onSuccess);
       } catch (error) {
 
-        if(sink){
+        if (sink) {
           sink.log({ message: `${moment().format('HH:mm:ss')}: ${error}`, level: 'error', channel });
         }
 
@@ -181,6 +181,10 @@ export class PipeRunnerService {
 
         currentAction = actions.find(action => action?.identifier === currentAction?.onError);
       }
+    }
+
+    if (sink) {
+      sink.log({ message: `--------------- finished ---------------`, level: 'prioritized', channel });
     }
 
     if (!solutionWrapper) {

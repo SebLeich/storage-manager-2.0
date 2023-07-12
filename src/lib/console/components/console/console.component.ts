@@ -1,25 +1,27 @@
 import { Component, Input, computed, signal } from '@angular/core';
 import { ConsoleService } from '../../services/console.service';
 import { IConsoleMessage } from '../../interfaces/console-message.interface';
-import { toObservable } from '@angular/core/rxjs-interop';
-import { defer, map } from 'rxjs';
 import { LogLevel } from '@/lib/shared/types/log-level.type';
+import { showListAnimation } from '@/lib/shared/animations/show-list';
 
 @Component({
   selector: 'app-console',
   templateUrl: './console.component.html',
-  styleUrls: ['./console.component.scss']
+  styleUrls: ['./console.component.scss'],
+  animations: [showListAnimation]
 })
 export class ConsoleComponent {
   @Input() public set channels(channels: string | string[] | undefined | null) { this._setChannelFilter(channels) }
   @Input() public set endDate(endDate: Date | undefined | null) { this._setEndDate(endDate) }
   @Input() public set startDate(startDate: Date | undefined | null) { this._setStartDate(startDate) }
+  @Input() public animationDisabled = true;
 
   public messages = computed(() => {
     const expandedMessages = this._expandedMessages();
     return this.consoleService.allConsoleOutputs()
       .filter(message => this._messagePassesFilters(message, this._channels(), this._endDate(), this._startDate(), this._levels()))
-      .map(message => ({ ...message, expanded: expandedMessages.indexOf(message.id) > -1 }));
+      .map(message => ({ ...message, expanded: expandedMessages.indexOf(message.id) > -1 }))
+      .reverse();
   });
   public infosEnabled = computed(() => {
     const levels = this._levels();

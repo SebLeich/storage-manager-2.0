@@ -21,36 +21,46 @@
       padding: 0.5rem;
 
       .section {
+        display: flex;
         overflow: hidden;
-        margin-bottom: 0.5rem;
+        margin-bottom: 1rem;
         word-wrap: break-word;
         cursor: pointer;
-      }
 
-      .section.collapsed {
-        display: -webkit-box;
-        -webkit-line-clamp: 3;
-        -webkit-box-orient: vertical;
-      }
+        > mat-icon.invisible {
+          visibility: hidden;
+        }
 
-      .section.level-info {
-        color: rgb(255, 255, 255);
-      }
+        .text-content {
+          flex: 1;
+          overflow: hidden;
 
-      .section.level-prioritized {
-        color: rgb(51, 133, 227);
-      }
+          &.collapsed {
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+          }
 
-      .section.level-success {
-        color: rgb(166, 227, 51);
-      }
-
-      .section.level-error {
-        color: rgb(232, 79, 79);
-      }
-
-      .section.level-warning {
-        color: rgb(225, 199, 50);
+          &.level-info {
+            color: rgb(255, 255, 255);
+          }
+    
+          &.level-prioritized {
+            color: rgb(51, 133, 227);
+          }
+    
+          &.level-success {
+            color: rgb(166, 227, 51);
+          }
+    
+          &.level-error {
+            color: rgb(232, 79, 79);
+          }
+    
+          &.level-warning {
+            color: rgb(225, 199, 50);
+          }
+        }
       }
     }
   }
