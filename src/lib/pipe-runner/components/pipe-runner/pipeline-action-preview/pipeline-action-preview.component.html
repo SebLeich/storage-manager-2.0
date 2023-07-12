@@ -9,19 +9,19 @@
         </div>
 
         <mat-icon class="icon pending" *ngIf="(actionStatus$|async)?.status === 'INITIALIZED'"
-            matTooltip="that action is initialized but not run yet">more_horiz</mat-icon>
+            matTooltip="The action has been initiated but has not been executed yet.">more_horiz</mat-icon>
 
         <mat-icon class="icon success" *ngIf="(actionStatus$|async)?.status === 'SUCCEEDED'"
-            matTooltip="that action was executed successfully">done</mat-icon>
+            matTooltip="That action was executed successfully.">done</mat-icon>
 
         <mat-spinner *ngIf="(actionStatus$|async)?.status === 'RUNNING'" diameter="20"
-            matTooltip="running ..."></mat-spinner>
+            matTooltip="Running ..."></mat-spinner>
 
         <mat-icon class="icon danger" *ngIf="(actionStatus$|async)?.status === 'FAILED'"
-            matTooltip="that action failed">clear</mat-icon>
+            matTooltip="The execution of that action was unsuccessful.">clear</mat-icon>
 
         <mat-icon class="icon pending" *ngIf="(actionStatus$|async)?.status === 'SKIPPED'"
-            matTooltip="that action was skipped">shortcut</mat-icon>
+            matTooltip="The execution of that action was omitted or bypassed.">shortcut</mat-icon>
 
     </div>
 
