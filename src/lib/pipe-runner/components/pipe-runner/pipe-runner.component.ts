@@ -63,8 +63,6 @@ export class PipeRunnerComponent implements OnInit {
     private _destroyRef: DestroyRef
   ) { }
 
-  
-
   public designPipeline(): void {
     this._router.navigate(['/data-pipeline-designer']);
   }
@@ -93,7 +91,11 @@ export class PipeRunnerComponent implements OnInit {
     this._tryInitiallySetLastPipeline();
   }
 
-  public async runPipeline(){
+  public async renameCurrentPipeline(pipelineName: string) {
+    await this.pipeRunnerService.renameCurrentPipeline(pipelineName, this.consoleService, 'pipe-runner');
+  }
+
+  public async runPipeline() {
     this.isRunning = true;
     await selectSnapshot(timer(10));
     await this.pipeRunnerService.run(this.consoleService, 'pipe-runner');

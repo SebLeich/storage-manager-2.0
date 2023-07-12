@@ -11,7 +11,7 @@
 
     <div class="content" [@showList]="messages().length" [@.disabled]="animationDisabled">
         <div *ngFor="let message of messages()" class="section" (click)="toggleMessage(message.id)">
-            <mat-icon [class.invisible]="message.message.length < 250">
+            <mat-icon [class.invisible]="!message.messageObject && message.message.length < 250">
                 {{message.expanded? 'expand_more': 'chevron_right'}}
             </mat-icon>
             <div class="text-content level-{{message.level}}" [class.collapsed]="!message.expanded">

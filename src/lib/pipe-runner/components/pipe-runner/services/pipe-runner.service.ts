@@ -14,7 +14,7 @@ import { ISolutionWrapper } from '@smgr/interfaces';
 import { addGroups, addSolution, selectSolutionById, setCurrentSolution } from '@smgr/store';
 import moment from 'moment';
 import * as rxjs from 'rxjs';
-import { filter, map, shareReplay, switchMap } from 'rxjs';
+import { filter, map, Observable, shareReplay, switchMap } from 'rxjs';
 import { highlightSolutionNavItem } from 'src/app/store/actions/application.actions';
 import { IPipelineAction } from 'src/lib/pipeline-store/interfaces/pipeline-action.interface';
 import { updateIPipelineActionStatus, updateIPipelineActionStatuses } from 'src/lib/pipeline-store/store/actions/pipeline-action-status.action';
@@ -37,7 +37,7 @@ export class PipeRunnerService {
     filter(solutionReference => !!solutionReference),
     switchMap(solutionReference => this._store.select(selectSolutionById(solutionReference ?? null)))
   );
-  public actions$ = this.selectedPipeline$.pipe(
+  public actions$: Observable<IPipelineAction[]> = this.selectedPipeline$.pipe(
     switchMap((pipeline: IPipeline | null) => pipeline ? this._store.select(selectPipelineActionByPipelineName(pipeline.id)) : rxjs.NEVER),
     map(actions => {
       const initialAction = actions.find(actions => actions?.isPipelineStart), sortedActions = [initialAction];
@@ -53,7 +53,7 @@ export class PipeRunnerService {
         currentActions = successors;
       }
 
-      return sortedActions.filter(action => action);
+      return sortedActions.filter(action => action) as IPipelineAction[];
     })
   );
   public status$ = this.actions$.pipe(
@@ -96,11 +96,15 @@ export class PipeRunnerService {
 
   constructor(private _route: ActivatedRoute, private _store: Store, public httpClient: HttpClient, private _snackBar: MatSnackBar) { }
 
-  public async renameCurrentPipeline(updatedName: string) {
-    const currentPipelineId = await selectSnapshot(this.pipelineId$), currentPipeName = await selectSnapshot(this.pipelineName$);
-    if (typeof currentPipelineId === 'string' && updatedName !== currentPipeName) {
+  public async renameCurrentPipeline(updatedName: string, sink?: ISink, channel?: string) {
+    const currentPipelineId = await selectSnapshot(this.pipelineId$), outdatedPipelineName = await selectSnapshot(this.pipelineName$);
+    if (typeof currentPipelineId === 'string' && updatedName !== outdatedPipelineName) {
       this._store.dispatch(renamePipelineById(currentPipelineId, updatedName));
       this._snackBar.open(`the pipe was successfully renamed to ${updatedName}`, 'ok', { duration: 2000 });
+
+      if (sink) {
+        sink.log({ message: `renamed pipeline "${updatedName}" (former name: ${outdatedPipelineName})`, level: 'success', channel });
+      }
     }
   }
 

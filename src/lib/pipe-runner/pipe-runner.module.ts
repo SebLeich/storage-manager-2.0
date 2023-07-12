@@ -16,13 +16,15 @@ import { MatSelectModule } from '@angular/material/select';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { SelectPipelineComponent } from './components/pipe-runner/select-pipeline/select-pipeline.component';
 import { ConsoleModule } from '../console/console.module';
+import { PipeRunnerOptionsBarComponent } from './components/pipe-runner/pipe-runner-options-bar/pipe-runner-options-bar.component';
 
 
 @NgModule({
   declarations: [
     PipeRunnerComponent,
     PipelineActionPreviewComponent,
-    SelectPipelineComponent
+    SelectPipelineComponent,
+    PipeRunnerOptionsBarComponent
   ],
   imports: [
     CommonModule,

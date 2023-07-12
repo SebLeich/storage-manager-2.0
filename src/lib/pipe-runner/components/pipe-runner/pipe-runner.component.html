@@ -1,40 +1,20 @@
 <div class="body">
-
     <div class="content">
         <div class="actions">
             <div class="header">
                 <div class="pipeline-name">
                     <app-select-pipeline [formControl]="pipelineControl" [pipelines]="pipelines$|async"
                         [currentPipeName]="(pipeRunnerService.pipelineName$|async) ?? null"
-                        (currentPipelineRenamed)="pipeRunnerService.renameCurrentPipeline($event)">
+                        (currentPipelineRenamed)="renameCurrentPipeline($event)">
                     </app-select-pipeline>
                 </div>
             </div>
-
             <div class="control-wrapper">
-                <button mat-icon-button [disabled]="(pipeRunnerService.selectedPipeline$|async) ? true : false"
-                    (click)="designPipeline()" matTooltip="design pipeline" matTooltipPosition="right">
-                    <mat-icon>hub</mat-icon>
-                </button>
-                <button mat-icon-button
-                    [disabled]="(pipeRunnerService.selectedPipeline$|async)? false: true || ((pipeRunnerService.actions$|async)?.length? false: true)"
-                    (click)="runPipeline()" matTooltip="run pipeline"
-                    matTooltipPosition="right">
-                    <mat-icon>play_arrow</mat-icon>
-                </button>
-                <button mat-icon-button [disabled]="true" matTooltip="pause pipeline" matTooltipPosition="right">
-                    <mat-icon>pause</mat-icon>
-                </button>
-                <button mat-icon-button [disabled]="true" matTooltip="stop pipeline" matTooltipPosition="right">
-                    <mat-icon>stop</mat-icon>
-                </button>
-                <button mat-icon-button [disabled]="true" matTooltip="clear all data" matTooltipPosition="right">
-                    <mat-icon>refresh</mat-icon>
-                </button>
-                <button mat-icon-button [disabled]="(pipeRunnerService.solution$|async)? false: true"
-                    (click)="openVisualization()" matTooltip="open visualization" matTooltipPosition="right">
-                    <mat-icon>view_in_ar</mat-icon>
-                </button>
+                <app-pipe-runner-options-bar [actions]="(pipeRunnerService.actions$|async) ?? undefined"
+                    [selectedPipeline]="(pipeRunnerService.selectedPipeline$|async) ?? undefined"
+                    [solution]="(pipeRunnerService.solution$|async) ?? undefined" (designPipeline)="designPipeline()"
+                    (openVisualization)="openVisualization()"
+                    (runPipeline)="runPipeline()"></app-pipe-runner-options-bar>
             </div>
 
             <ng-container *ngIf="pipeRunnerService.actions$|async as pipelineActions; else noActions">
@@ -51,7 +31,8 @@
         </div>
         <mat-tab-group class="auto-size-tab-group" #tabGroup>
             <mat-tab label="console output">
-                <app-console [startDate]="initializationDate" [channels]="'pipe-runner'" [animationDisabled]="isRunning"></app-console>
+                <app-console [startDate]="initializationDate" [channels]="'pipe-runner'"
+                    [animationDisabled]="isRunning"></app-console>
             </mat-tab>
             <mat-tab label="visualization" #visualizationTab [disabled]="!scene">
                 <div class="visualization">
