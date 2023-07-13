@@ -1,5 +1,5 @@
 import { Injectable, Signal } from '@angular/core';
-import { Subject, scan } from 'rxjs';
+import { Subject, scan, shareReplay } from 'rxjs';
 import { IConsoleMessage } from '../interfaces/console-message.interface';
 import { v4 as generateGuid } from 'uuid';
 import { toSignal } from '@angular/core/rxjs-interop';
@@ -17,7 +17,8 @@ export class ConsoleService implements ISink {
         return accumulated;
       },
       [] as IConsoleMessage[]
-    )
+    ),
+    shareReplay(1)
   );
   public allConsoleOutputs = toSignal(this.allConsoleOutputs$, { initialValue: [] }) as Signal<IConsoleMessage[]>;
 

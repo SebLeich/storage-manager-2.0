@@ -56,10 +56,14 @@ describe('ConsoleComponent', () => {
   });
 
   [
-    { shouldFilterInfos: true, shouldFilterErrors: true, expectedMessages: ['1', '2'] },
-    { shouldFilterInfos: false, shouldFilterErrors: true, expectedMessages: ['2'] },
-    { shouldFilterInfos: true, shouldFilterErrors: false, expectedMessages: ['1'] },
-    { shouldFilterInfos: false, shouldFilterErrors: false, expectedMessages: ['1', '2', '3'] }
+    { shouldFilterInfos: true, shouldFilterErrors: true, shouldDisplaySuccess: true, expectedMessages: ['1', '2', '3'] },
+    { shouldFilterInfos: false, shouldFilterErrors: true, shouldDisplaySuccess: true, expectedMessages: ['2', '3'] },
+    { shouldFilterInfos: true, shouldFilterErrors: true, shouldDisplaySuccess: false, expectedMessages: ['1', '2'] },
+    { shouldFilterInfos: false, shouldFilterErrors: true, shouldDisplaySuccess: false, expectedMessages: ['2'] },
+    { shouldFilterInfos: false, shouldFilterErrors: false, shouldDisplaySuccess: true, expectedMessages: ['3'] },
+    { shouldFilterInfos: true, shouldFilterErrors: false, shouldDisplaySuccess: false, expectedMessages: ['1'] },
+    { shouldFilterInfos: true, shouldFilterErrors: false, shouldDisplaySuccess: true, expectedMessages: ['1', '3'] },
+    { shouldFilterInfos: false, shouldFilterErrors: false, shouldDisplaySuccess: false, expectedMessages: ['1', '2', '3'] }
   ].forEach((testCase) => {
     let levels: LogLevel[] | undefined = [];
     if (testCase.shouldFilterInfos) {
@@ -68,11 +72,14 @@ describe('ConsoleComponent', () => {
     if (testCase.shouldFilterErrors) {
       levels.push('error');
     }
+    if (testCase.shouldDisplaySuccess) {
+      levels.push('success');
+    }
     if (levels.length === 0) {
       levels = undefined;
     }
 
-    it(`should filter infos: ${testCase.shouldFilterInfos}, errors: ${testCase.shouldFilterErrors}`, () => {
+    it(`should filter infos: ${testCase.shouldFilterInfos}, errors: ${testCase.shouldFilterErrors}, success: ${testCase.shouldDisplaySuccess}`, () => {
       component.levels = levels;
 
       const filteredMessages = component.messages();
