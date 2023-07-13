@@ -1,12 +1,15 @@
 import { TestBed } from '@angular/core/testing';
 
 import { ConsoleService } from './console.service';
+import { ConsoleModule } from '../console.module';
 
 describe('ConsoleService', () => {
   let service: ConsoleService;
 
   beforeEach(() => {
-    TestBed.configureTestingModule({});
+    TestBed.configureTestingModule({
+      imports: [ConsoleModule]
+    });
     service = TestBed.inject(ConsoleService);
   });
 

@@ -56,7 +56,7 @@ describe('SolutionPreviewComponent', () => {
     store.dispatch(setCurrentSolution({ solution: solution }));
     fixture.detectChanges();
 
-    expect((solutionHeadline.nativeElement as HTMLDivElement).innerHTML).toContain(solution.description!);
+    expect((solutionHeadline.nativeElement as HTMLDivElement).innerHTML).toContain(solution.description as string);
   });
 
   it('should display solution calculation date', () => {
