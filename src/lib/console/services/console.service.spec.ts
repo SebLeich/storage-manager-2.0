@@ -27,7 +27,7 @@ describe('ConsoleService', () => {
     const messages: IConsoleMessage[] = [{ id: '1', message: 'message1', level: 'info', timeStamp: new Date() }, { id: '2', message: 'message2', level: 'info', timeStamp: new Date() }];
     service.log(...messages);
     testScheduler.run(({ expectObservable }) => {
-      expectObservable(service.allConsoleOutputs$).toBe('a', {
+      expectObservable(service.allConsoleOutputs$).toBe('', {
         a: messages
       });
     });

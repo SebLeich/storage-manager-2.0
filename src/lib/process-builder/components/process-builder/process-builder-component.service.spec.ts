@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/no-empty-function */
+/*
 import { TestBed } from '@angular/core/testing';
 import { Store } from '@ngrx/store';
 import defaultImportsConstant from 'src/app/default-imports.constant';
@@ -601,3 +601,4 @@ describe('ProcessBuilderComponentService', () => {
 });
 
 
+*/

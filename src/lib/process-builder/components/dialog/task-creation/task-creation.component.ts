@@ -181,25 +181,19 @@ export class TaskCreationComponent implements OnDestroy, OnInit {
     this.validateFunctionSelection();
     this.setStep(0);
 
-    this._autoNormalizeNames();
+    this._subscribeNameNormalization();
 
-    this._subscription.add(
-      ...[
-        this.formGroup.controls.functionIdentifier?.valueChanges.subscribe(
-          (functionIdentifier: number | null) => {
-            if (typeof functionIdentifier !== 'number') {
-              return;
-            }
+    this._subscription.add(this.formGroup.controls.functionIdentifier?.valueChanges.subscribe(
+      (functionIdentifier: number | null) => {
+        if (typeof functionIdentifier !== 'number') {
+          return;
+        }
 
-            this.validateFunctionSelection();
-          }
-        ),
-        this.currentStep$.subscribe((step) => this.renderStep(step)),
-        this.stepToNextStep$.subscribe((stepIndex: number) =>
-          this.setStep(stepIndex + 1)
-        ),
-      ]
-    );
+        this.validateFunctionSelection();
+      }
+    ));
+    this._subscription.add(this.currentStep$.subscribe((step) => this.renderStep(step)));
+    this._subscription.add(this.stepToNextStep$.subscribe((stepIndex: number) => this.setStep(stepIndex + 1)));
   }
 
   public setStep = (index: number) => this.currentStepIndex.set(index);
@@ -325,17 +319,16 @@ export class TaskCreationComponent implements OnDestroy, OnInit {
 
   public TaskCreationStep = TaskCreationStep;
 
-  private _autoNormalizeNames() {
-    this._subscription.add(...[
-      this.formGroup.controls.name!
+  private _subscribeNameNormalization() {
+    this._subscription.add(this.formGroup.controls.name
+      .valueChanges
+      .pipe(debounceTime(200), map((name) => ProcessBuilderRepository.normalizeName(name)))
+      .subscribe((normalizedName) => this.formGroup.controls.normalizedName?.setValue(normalizedName)));
+      
+    this._subscription.add(
+      this.formGroup.controls.outputParamName
         .valueChanges
         .pipe(debounceTime(200), map((name) => ProcessBuilderRepository.normalizeName(name)))
-        .subscribe((normalizedName) => this.formGroup.controls.normalizedName?.setValue(normalizedName)),
-
-      this.formGroup.controls.outputParamName!
-        .valueChanges
-        .pipe(debounceTime(200), map((name) => ProcessBuilderRepository.normalizeName(name)))
-        .subscribe((normalizedName) => this.formGroup.controls.normalizedOutputParamName?.setValue(normalizedName)),
-    ]);
+        .subscribe((normalizedName) => this.formGroup.controls.normalizedOutputParamName?.setValue(normalizedName)));
   }
 }

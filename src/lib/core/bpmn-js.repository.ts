@@ -21,6 +21,8 @@ export class BPMNJsRepository {
 
     constructor(@Inject(PROCESS_BUILDER_CONFIG_TOKEN) private _config: IProcessBuilderConfig) { }
 
+    public static activityFunctionId = (activity: IElement) => BPMNJsRepository.getSLPBExtension(activity.businessObject, 'ActivityExtension', (ext) => ext.activityFunctionId) as number | undefined;
+
     public static appendOutputParam(bpmnJS: IBpmnJS, element: IElement, param: IParam | null | undefined, preventDublet = true, expectedInterface?: string) {
         if (!param) {
             return null;

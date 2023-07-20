@@ -1,0 +1,9 @@
+<ng-container *ngIf="hasMessages$|async; else noMessages">
+    <ng-container *ngFor="let message of messages">
+        <div (click)="toggleMessage(message.id)">
+            <div *ngIf="!message.hidden; else hiddenMessage">{{ message.message }}</div>
+        </div>
+    </ng-container>
+</ng-container>
+<ng-template #noMessages>no messages to display</ng-template>
+<ng-template #hiddenMessage>message is hidden</ng-template>

@@ -12,13 +12,30 @@ import { upsertProcedure } from '@procedure';
 import { IElement } from 'src/lib/bpmn-io/interfaces/element.interface';
 import { IBpmnJS } from '../../interfaces/bpmn-js.interface';
 import { BPMN_JS } from '@process-builder/injection';
+import { C2M_INJECTION_TOKEN } from './constants/c2m-processor.constant';
+import { ActivityC2MProcessor } from './c2m-processors/activity.c2m-processor';
+import { IC2mProcessor } from './interfaces/c2m-processor.interface';
+import { ConnectorC2MProcessor } from './c2m-processors/connector.c2m-processor';
+import { C2mProcessingObjects } from './constants/c2m-processing-objects.constant';
+import { ITaskCreationPayload } from '../../interfaces/task-creation-payload.interface';
+import { ITaskCreationFormGroupValue } from '../../interfaces/task-creation-form-group-value.interface';
+import { EventC2MProcessor } from './c2m-processors/event.c2m-processor';
+import { DataC2MProcessor } from './c2m-processors/data.c2m-processor';
+import { GatewayC2MProcessor } from './c2m-processors/gateway.c2m-processor';
 
 @Component({
   selector: 'app-process-builder',
   templateUrl: './process-builder.component.html',
   styleUrls: ['./process-builder.component.scss'],
   animations: [showAnimation],
-  providers: [ProcessBuilderComponentService]
+  providers: [
+    ProcessBuilderComponentService,
+    { provide: C2M_INJECTION_TOKEN, useClass: ActivityC2MProcessor, multi: true },
+    { provide: C2M_INJECTION_TOKEN, useClass: ConnectorC2MProcessor, multi: true },
+    { provide: C2M_INJECTION_TOKEN, useClass: DataC2MProcessor, multi: true },
+    { provide: C2M_INJECTION_TOKEN, useClass: EventC2MProcessor, multi: true },
+    { provide: C2M_INJECTION_TOKEN, useClass: GatewayC2MProcessor, multi: true },
+  ]
 })
 export class ProcessBuilderComponent implements OnDestroy, OnInit {
 
@@ -39,6 +56,7 @@ export class ProcessBuilderComponent implements OnDestroy, OnInit {
     public bpmnJsService: BpmnJsService,
     private _store: Store,
     private _processBuilderComponentService: ProcessBuilderComponentService,
+    @Inject(C2M_INJECTION_TOKEN) private _c2mProcessors: IC2mProcessor[]
   ) { }
 
   public ngOnDestroy(): void {
@@ -55,9 +73,7 @@ export class ProcessBuilderComponent implements OnDestroy, OnInit {
     this._subscription.add(
       this._processBuilderComponentService
         .taskEditingDialogResultReceived$
-        .subscribe((args) => {
-          this._processBuilderComponentService.applyTaskCreationConfig(args.taskCreationPayload, args.taskCreationFormGroupValue);
-        })
+        .subscribe(async (args) => await this._processC2m(args))
     );
 
     this._subscription.add(
@@ -77,6 +93,7 @@ export class ProcessBuilderComponent implements OnDestroy, OnInit {
             break;
 
           case shapeTypes.EndEvent:
+            // eslint-disable-next-line no-case-declarations
             const firstOuputProvidingActivity = this._getFirstProvidedOutputWithSLPBExtension(element, 'isProcessOutput');
             if (firstOuputProvidingActivity) {
               BPMNJsRepository.updateBpmnElementSLPBExtension(this._bpmnJs, firstOuputProvidingActivity.businessObject, 'DataObjectExtension', (ext) => ext.isProcessOutput = false);
@@ -102,6 +119,32 @@ export class ProcessBuilderComponent implements OnDestroy, OnInit {
         this.bpmnJsService.saveCurrentBpmnModel();
       })
     );
+  }
+
+  private async _processC2m(args: { taskCreationPayload: ITaskCreationPayload, taskCreationFormGroupValue: ITaskCreationFormGroupValue }) {
+    let c2mChanges: Partial<C2mProcessingObjects> = {},
+      nextSteps = this._c2mProcessors.filter(c2mProcessor => !c2mProcessor.requirements || c2mProcessor.requirements.length === 0);
+
+    const finished = [] as IC2mProcessor[];
+
+    while (nextSteps.length > 0) {
+      for (const step of nextSteps) {
+        const result = await step.processConfiguration(args, c2mChanges);
+        if(result){
+          c2mChanges = { ...c2mChanges, ...result };
+        }
+
+        finished.push(step);
+      }
+
+      nextSteps = this._c2mProcessors.filter(c2mProcessor => {
+        if (finished.findIndex(finishedStep => finishedStep.constructor.name === c2mProcessor.constructor.name) > -1) {
+          return false;
+        }
+
+        return (c2mProcessor.requirements as []).every(requirement => Object.keys(c2mChanges).includes(requirement));
+      });
+    }
   }
 
   private _getFirstProvidedOutputWithSLPBExtension(currentElement: IElement, extension: 'matchesProcessOutputInterface' | 'isProcessOutput') {

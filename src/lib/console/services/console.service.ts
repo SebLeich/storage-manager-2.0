@@ -1,26 +1,17 @@
-import { Injectable, Signal } from '@angular/core';
-import { Subject, scan, shareReplay } from 'rxjs';
+import { Injectable, Injector, signal } from '@angular/core';
 import { IConsoleMessage } from '../interfaces/console-message.interface';
 import { v4 as generateGuid } from 'uuid';
-import { toSignal } from '@angular/core/rxjs-interop';
+import { toObservable } from '@angular/core/rxjs-interop';
 import { ISink } from '@/lib/shared/interfaces/sink.interface';
 import { LogLevel } from '@/lib/shared/types/log-level.type';
+import { shareReplay } from 'rxjs';
 
 @Injectable()
 export class ConsoleService implements ISink {
-  private _consoleOutput$$ = new Subject<IConsoleMessage>();
-  public consoleOutput$ = this._consoleOutput$$.asObservable();
-  public allConsoleOutputs$ = this._consoleOutput$$.asObservable().pipe(
-    scan(
-      (accumulated: IConsoleMessage[], currentMessage: IConsoleMessage) => {
-        accumulated.push(currentMessage);
-        return accumulated;
-      },
-      [] as IConsoleMessage[]
-    ),
-    shareReplay(1)
-  );
-  public allConsoleOutputs = toSignal(this.allConsoleOutputs$, { initialValue: [] }) as Signal<IConsoleMessage[]>;
+  public allConsoleOutputs = signal<IConsoleMessage[]>([]);
+  public allConsoleOutputs$ = toObservable(this.allConsoleOutputs, { injector: this._injector }).pipe(shareReplay(1));
+
+  constructor(private _injector: Injector){}
 
   public log(...messages: (string | { message: string, level: LogLevel } | IConsoleMessage)[]) {
     for (let message of messages) {
@@ -32,11 +23,12 @@ export class ConsoleService implements ISink {
           timeStamp: new Date()
         } as IConsoleMessage;
       }
-      this._consoleOutput$$.next({
-        ...message,
+
+      this.allConsoleOutputs.update(messages => ([...messages, {
+        ...message as IConsoleMessage,
         id: (message as IConsoleMessage).id ?? generateGuid(),
         timeStamp: (message as IConsoleMessage).timeStamp ?? new Date()
-      });
+      }]));
     }
   }
 
@@ -49,7 +41,11 @@ export class ConsoleService implements ISink {
           timeStamp: new Date()
         } as IConsoleMessage;
       }
-      this._consoleOutput$$.next({ ...message, level: 'error' });
+
+      this.allConsoleOutputs.update(messages => ([...messages, {
+        ...message as IConsoleMessage,
+        level: 'error'
+      } as IConsoleMessage]));
     }
   }
 
@@ -62,7 +58,11 @@ export class ConsoleService implements ISink {
           timeStamp: new Date()
         } as IConsoleMessage;
       }
-      this._consoleOutput$$.next({ ...message, level: 'info' });
+
+      this.allConsoleOutputs.update(messages => ([...messages, {
+        ...message as IConsoleMessage,
+        level: 'info'
+      } as IConsoleMessage]));
     }
   }
 
@@ -75,7 +75,11 @@ export class ConsoleService implements ISink {
           timeStamp: new Date
         } as IConsoleMessage;
       }
-      this._consoleOutput$$.next({ ...message, level: 'success' });
+
+      this.allConsoleOutputs.update(messages => ([...messages, {
+        ...message as IConsoleMessage,
+        level: 'success'
+      } as IConsoleMessage]));
     }
   }
 
@@ -88,7 +92,11 @@ export class ConsoleService implements ISink {
           timeStamp: new Date()
         } as IConsoleMessage;
       }
-      this._consoleOutput$$.next({ ...message, level: 'warning' });
+
+      this.allConsoleOutputs.update(messages => ([...messages, {
+        ...message as IConsoleMessage,
+        level: 'warning'
+      } as IConsoleMessage]));
     }
   }
 }
