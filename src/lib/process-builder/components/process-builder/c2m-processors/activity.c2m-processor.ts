@@ -44,7 +44,7 @@ export class ActivityC2MProcessor implements IC2mProcessor {
     }
 
     if (!taskCreationFormGroupValue) {
-      const activityFunctionId = BPMNJsRepository.activityFunctionId(configureActivity);
+      const activityFunctionId = BPMNJsRepository.getActivityFunctionId(configureActivity);
       if (typeof activityFunctionId !== 'number') {
         this._bpmnJsService.modelingModule.removeElements([configureActivity]);
         return;
@@ -84,7 +84,7 @@ export class ActivityC2MProcessor implements IC2mProcessor {
       typeof referencedFunction.output === 'number' ? referencedFunction.output : nextParamId
     );
 
-    this._updateBpmnModelElementActivityIdentifier(configureActivity, referencedFunction);
+    BPMNJsRepository.setActivityFunctionId(this._bpmnJs, configureActivity, referencedFunction.identifier);
 
     const effectedActivities = this._bpmnJsService.elementRegistryModule.filter(element => element.type === shapeTypes.Task && BPMNJsRepository.getSLPBExtension(element.businessObject, 'ActivityExtension', (ext => ext.activityFunctionId)) === referencedFunction?.identifier);
     for (const activity of effectedActivities) {
@@ -147,14 +147,5 @@ export class ActivityC2MProcessor implements IC2mProcessor {
       }));
     }
     return inputParams;
-  }
-
-  private _updateBpmnModelElementActivityIdentifier(configureActivity: IElement, referencedFunction: IFunction) {
-    BPMNJsRepository.updateBpmnElementSLPBExtension(
-      this._bpmnJs,
-      configureActivity.businessObject,
-      'ActivityExtension',
-      (e) => e.activityFunctionId = referencedFunction.identifier
-    );
   }
 }

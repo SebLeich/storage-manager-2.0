@@ -15,13 +15,18 @@ import { ValidationWarning } from "../process-builder/globals/validation-warning
 import { IExtensionElement } from "../bpmn-io/interfaces/extension-element.interface";
 import { SebleichProcessBuilderExtensionType } from "../process-builder/globals/sebleich-process-builder-extension.type";
 import { IConnector } from "../bpmn-io/interfaces/connector.interface";
+import { GatewayType } from "../process-builder/types/gateway.type";
 
 @Injectable()
 export class BPMNJsRepository {
 
     constructor(@Inject(PROCESS_BUILDER_CONFIG_TOKEN) private _config: IProcessBuilderConfig) { }
 
-    public static activityFunctionId = (activity: IElement) => BPMNJsRepository.getSLPBExtension(activity.businessObject, 'ActivityExtension', (ext) => ext.activityFunctionId) as number | undefined;
+    public static getActivityFunctionId = (activity: IElement) => BPMNJsRepository.getSLPBExtension(activity.businessObject, 'ActivityExtension', (ext) => ext.activityFunctionId) as number | undefined;
+    public static getSequenceFlowType = (activity: IConnector) => BPMNJsRepository.getSLPBExtension(activity.businessObject, 'SequenceFlowExtension', (ext) => ext.sequenceFlowType) as 'success' | 'error' | undefined;
+
+    public static setActivityFunctionId = (bpmnJs: IBpmnJS, element: IElement, functionIdentifier: number) => BPMNJsRepository.updateBpmnElementSLPBExtension(bpmnJs, element.businessObject, 'ActivityExtension', (ext) => ext.activityFunctionId = functionIdentifier);
+    public static setSequenceFlowType = (bpmnJs: IBpmnJS, connector: IConnector, entranceGatewayType: GatewayType) => BPMNJsRepository.updateBpmnElementSLPBExtension(bpmnJs, connector.businessObject, 'SequenceFlowExtension', (ext) => ext.sequenceFlowType = entranceGatewayType === 'Success' ? 'success' : 'error');
 
     public static appendOutputParam(bpmnJS: IBpmnJS, element: IElement, param: IParam | null | undefined, preventDublet = true, expectedInterface?: string) {
         if (!param) {
