@@ -29,10 +29,7 @@ export class DataC2MProcessor implements IC2mProcessor {
 
     constructor(@Inject(BPMN_JS) private _bpmnJs: IBpmnJS, @Inject(PROCESS_BUILDER_CONFIG_TOKEN) private _config: IProcessBuilderConfig, private _bpmnJsService: BpmnJsService, private _store: Store) { }
 
-    public async processConfiguration({ taskCreationPayload, taskCreationFormGroupValue }: { taskCreationPayload: ITaskCreationPayload, taskCreationFormGroupValue?: ITaskCreationFormGroupValue }, c2mProcessingObjects: Partial<C2mProcessingObjects>) {
-        console.log(`processing data ...`);
-        await selectSnapshot(timer(2000));
-        
+    public async processConfiguration({ taskCreationPayload, taskCreationFormGroupValue }: { taskCreationPayload: ITaskCreationPayload, taskCreationFormGroupValue?: ITaskCreationFormGroupValue }, c2mProcessingObjects: Partial<C2mProcessingObjects>) {     
         const configureActivity = taskCreationPayload.configureActivity,
             updatedFunction = c2mProcessingObjects.updatedFunction;
 
@@ -40,25 +37,31 @@ export class DataC2MProcessor implements IC2mProcessor {
             return;
         }
 
-        const code = taskCreationFormGroupValue.implementation ? taskCreationFormGroupValue.implementation.text : defaultImplementation,
-            methodEvaluation = CodemirrorRepository.evaluateCustomMethod(undefined, code),
+        const code = taskCreationFormGroupValue.implementation ? taskCreationFormGroupValue.implementation.text : defaultImplementation;
+        const methodEvaluation = CodemirrorRepository.evaluateCustomMethod(undefined, code),
             nextParamId = await selectSnapshot(this._store.select(selectNextParameterIdentifier()));
+            
+        let outputParam: IParam | undefined = undefined;
 
-        if (typeof updatedFunction.output === 'number') {
+        if (typeof updatedFunction.output === 'number' || methodEvaluation.status === MethodEvaluationStatus.ReturnValueFound) {
             const param = await selectSnapshot(this._store.select(selectIParam(updatedFunction.output))) ?? { identifier: nextParamId } as IParam;
             
-            await this._handleFunctionOutputParam(taskCreationFormGroupValue, taskCreationPayload, param, methodEvaluation);
+            outputParam = (await this._handleFunctionOutputParam(taskCreationFormGroupValue, taskCreationPayload, param, methodEvaluation))?.outputParam;
         }
         else if (typeof updatedFunction.outputTemplate === 'string') {
             const iFace = await selectSnapshot(this._store.select(selectIInterface(updatedFunction.outputTemplate)));
             const param = { identifier: nextParamId, interface: iFace?.identifier, name: taskCreationFormGroupValue.outputParamName ?? iFace?.name, normalizedName: taskCreationFormGroupValue.normalizedOutputParamName ?? iFace?.normalizedName } as IParam;
             
-            await this._handleFunctionOutputParam(taskCreationFormGroupValue, taskCreationPayload, param, methodEvaluation);
+            outputParam = (await this._handleFunctionOutputParam(taskCreationFormGroupValue, taskCreationPayload, param, methodEvaluation))?.outputParam;
+        }
+        else {
+            const dataOutputAssociations = configureActivity.outgoing.filter(x => x.type === shapeTypes.DataOutputAssociation);
+            this._bpmnJsService.modelingModule.removeElements(dataOutputAssociations.map(dataOutputAssociation => dataOutputAssociation.target));
         }
 
         this._handleDataInputConfiguration(taskCreationFormGroupValue, taskCreationPayload, updatedFunction);
 
-        return Promise.resolve({});
+        return { outputParam };
     }
 
     private _handleDataInputConfiguration(taskCreationFormGroupValue: ITaskCreationFormGroupValue, taskCreationPayload: ITaskCreationPayload, resultingFunction: IFunction) {
@@ -78,64 +81,54 @@ export class DataC2MProcessor implements IC2mProcessor {
     
           if (configureActivity) {
             const availableInputParamsIElements = BPMNJsRepository.getAvailableInputParamsIElements(configureActivity);
-            for (const param of inputParams.filter(inputParam => !(taskCreationPayload.configureActivity as IElement).incoming.some(y => BPMNJsRepository.sLPBExtensionSetted(y.source.businessObject, 'DataObjectExtension', (ext) => ext.outputParam === inputParam)))) {
-              const element = availableInputParamsIElements.find(x => BPMNJsRepository.sLPBExtensionSetted(x.businessObject, 'DataObjectExtension', (ext) => ext.outputParam === param as IInputParam));
+            for (const param of inputParams.filter((inputParam) => !(taskCreationPayload.configureActivity as IElement).incoming.some((connector) => BPMNJsRepository.getDataParamId(connector.source) === (inputParam as IParam).identifier))) {
+              const element = availableInputParamsIElements.find((element) => BPMNJsRepository.getDataParamId(element) === (param as IParam).identifier);
               if (element) {
                 this._bpmnJsService.modelingModule.connect(element, configureActivity);
               }
             }
           }
         }
-      }
+    }
 
-    private async _handleFunctionOutputParam(taskCreationFormGroupValue: ITaskCreationFormGroupValue, taskCreationPayload: ITaskCreationPayload, outputParam: IParam, methodEvaluation?: IMethodEvaluationResult) {
-        if (!methodEvaluation) {
-            const code = taskCreationFormGroupValue.implementation ? taskCreationFormGroupValue.implementation.text : defaultImplementation;
-            methodEvaluation = CodemirrorRepository.evaluateCustomMethod(undefined, code);
+    private async _handleFunctionOutputParam(taskCreationFormGroupValue: ITaskCreationFormGroupValue, taskCreationPayload: ITaskCreationPayload, outputParam: IParam, methodEvaluation: IMethodEvaluationResult) {
+        const paramInterface = outputParam.interface ?? taskCreationFormGroupValue.interface ?? await this._outputParamInterface(methodEvaluation);
+        const defaultValue = !Array.isArray(taskCreationFormGroupValue.outputParamValue) && taskCreationFormGroupValue.outputParamValue?.constant ? taskCreationFormGroupValue.outputParamValue.defaultValue : outputParam.defaultValue ?? await this._outputParamValue(methodEvaluation, taskCreationFormGroupValue.outputParamValue);
+        outputParam = {
+            ...outputParam,
+            name: taskCreationFormGroupValue.outputParamName ?? outputParam.name ?? this._config.dynamicParamDefaultNaming,
+            normalizedName: taskCreationFormGroupValue.normalizedOutputParamName ?? outputParam.normalizedName ?? ProcessBuilderRepository.normalizeName(taskCreationFormGroupValue.outputParamName ?? this._config.dynamicParamDefaultNaming),
+            defaultValue: defaultValue,
+            interface: paramInterface,
+        } as IParam;
+        if (!Array.isArray(taskCreationFormGroupValue.outputParamValue) && taskCreationFormGroupValue.outputParamValue?.type === 'array') {
+            outputParam.interface = null;
+            outputParam.type = 'array';
+            outputParam.typeDef = [
+                {
+                    interface: paramInterface ?? null,
+                    type: 'object',
+                } as IParamDefinition
+            ]
         }
-
-        if (methodEvaluation.status === MethodEvaluationStatus.ReturnValueFound || outputParam) {
-            const paramInterface = outputParam.interface ?? taskCreationFormGroupValue.interface ?? await this._outputParamInterface(methodEvaluation);
-            const defaultValue = !Array.isArray(taskCreationFormGroupValue.outputParamValue) && taskCreationFormGroupValue.outputParamValue?.constant ? taskCreationFormGroupValue.outputParamValue.defaultValue : outputParam.defaultValue ?? await this._outputParamValue(methodEvaluation, taskCreationFormGroupValue.outputParamValue);
-            outputParam = {
-                ...outputParam,
-                name: taskCreationFormGroupValue.outputParamName ?? outputParam.name ?? this._config.dynamicParamDefaultNaming,
-                normalizedName: taskCreationFormGroupValue.normalizedOutputParamName ?? outputParam.normalizedName ?? ProcessBuilderRepository.normalizeName(taskCreationFormGroupValue.outputParamName ?? this._config.dynamicParamDefaultNaming),
-                defaultValue: defaultValue,
-                interface: paramInterface,
-            } as IParam;
-            if (!Array.isArray(taskCreationFormGroupValue.outputParamValue) && taskCreationFormGroupValue.outputParamValue?.type === 'array') {
-                outputParam.interface = null;
-                outputParam.type = 'array';
-                outputParam.typeDef = [
-                    {
-                        interface: paramInterface ?? null,
-                        type: 'object',
-                    } as IParamDefinition
-                ]
-            }
-            if (typeof outputParam.interface === 'string') {
-                outputParam.type = 'object';
-            } else {
-                const outputType = await this._methodEvaluationTypeToOutputType(taskCreationPayload.configureActivity!, methodEvaluation);
-                outputParam.type = outputType;
-            }
-
-            this._store.dispatch(upsertIParam(outputParam));
-
-            BPMNJsRepository.appendOutputParam(
-                this._bpmnJs,
-                taskCreationPayload.configureActivity!,
-                outputParam,
-                true,
-                this._config.expectInterface
-            );
-
-            return { outputParam }
+        if (typeof outputParam.interface === 'string') {
+            outputParam.type = 'object';
         } else {
-            const dataOutputAssociations = taskCreationPayload.configureActivity!.outgoing.filter(x => x.type === shapeTypes.DataOutputAssociation);
-            this._bpmnJsService.modelingModule.removeElements(dataOutputAssociations.map(dataOutputAssociation => dataOutputAssociation.target));
+            const outputType = await this._methodEvaluationTypeToOutputType(taskCreationPayload.configureActivity!, methodEvaluation);
+            outputParam.type = outputType;
         }
+
+        this._store.dispatch(upsertIParam(outputParam));
+
+        BPMNJsRepository.appendOutputParam(
+            this._bpmnJs,
+            taskCreationPayload.configureActivity!,
+            outputParam,
+            true,
+            this._config.expectInterface
+        );
+
+        return { outputParam }
     }
 
     private async _methodEvaluationTypeToOutputType(element: IElement, methodEvaluation?: IMethodEvaluationResult) {

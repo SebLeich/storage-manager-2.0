@@ -10,6 +10,7 @@ import { ProcessBuilderComponentService } from "../process-builder-component.ser
 import processBuilderConfig from "@/config/process-builder-config";
 import { FUNCTIONS_CONFIG_TOKEN, PROCESS_BUILDER_CONFIG_TOKEN } from "@/lib/process-builder/interfaces";
 import { EventC2MProcessor } from "./event.c2m-processor";
+import { ITaskCreationPayload } from "@/lib/process-builder/interfaces/task-creation-payload.interface";
 
 describe('EventC2MProcessor', () => {
     let processor: EventC2MProcessor;
@@ -39,5 +40,15 @@ describe('EventC2MProcessor', () => {
 
     it('should create', () => {
         expect(processor).toBeTruthy();
+    });
+
+    it('should not apply changes when no updated function is passed', async () => {
+        const appendShapeSpy = spyOn(modelingModule, 'appendShape'),
+            removeElementsSpy = spyOn(modelingModule, 'removeElements');
+
+        await processor.processConfiguration({ taskCreationPayload: {} as ITaskCreationPayload }, {});
+
+        expect(appendShapeSpy).not.toHaveBeenCalled();
+        expect(removeElementsSpy).not.toHaveBeenCalled();
     });
 });

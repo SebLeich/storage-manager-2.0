@@ -23,9 +23,11 @@ export class BPMNJsRepository {
     constructor(@Inject(PROCESS_BUILDER_CONFIG_TOKEN) private _config: IProcessBuilderConfig) { }
 
     public static getActivityFunctionId = (activity: IElement) => BPMNJsRepository.getSLPBExtension(activity.businessObject, 'ActivityExtension', (ext) => ext.activityFunctionId) as number | undefined;
+    public static getDataParamId = (activity: IElement) => BPMNJsRepository.getSLPBExtension(activity.businessObject, 'DataObjectExtension', (ext) => ext.dataParamId) as number | undefined;
     public static getSequenceFlowType = (activity: IConnector) => BPMNJsRepository.getSLPBExtension(activity.businessObject, 'SequenceFlowExtension', (ext) => ext.sequenceFlowType) as 'success' | 'error' | undefined;
 
-    public static setActivityFunctionId = (bpmnJs: IBpmnJS, element: IElement, functionIdentifier: number) => BPMNJsRepository.updateBpmnElementSLPBExtension(bpmnJs, element.businessObject, 'ActivityExtension', (ext) => ext.activityFunctionId = functionIdentifier);
+    public static setActivityFunctionId = (bpmnJs: IBpmnJS, element: IElement, arg: number | IFunction | undefined | null) => BPMNJsRepository.updateBpmnElementSLPBExtension(bpmnJs, element.businessObject, 'ActivityExtension', (ext) => ext.activityFunctionId = typeof arg === 'number'? arg: arg?.identifier);
+    public static setDataParamId = (bpmnJs: IBpmnJS, element: IElement, arg: number | IParam | undefined | null) => BPMNJsRepository.updateBpmnElementSLPBExtension(bpmnJs, element.businessObject, 'DataObjectExtension', (ext) => ext.dataParamId = typeof arg === 'number'? arg: arg?.identifier);
     public static setSequenceFlowType = (bpmnJs: IBpmnJS, connector: IConnector, entranceGatewayType: GatewayType) => BPMNJsRepository.updateBpmnElementSLPBExtension(bpmnJs, connector.businessObject, 'SequenceFlowExtension', (ext) => ext.sequenceFlowType = entranceGatewayType === 'Success' ? 'success' : 'error');
 
     public static appendOutputParam(bpmnJS: IBpmnJS, element: IElement, param: IParam | null | undefined, preventDublet = true, expectedInterface?: string) {
@@ -41,13 +43,13 @@ export class BPMNJsRepository {
                 type: shapeTypes.DataObjectReference
             }, { x: element.x + 50, y: element.y - 60 });
 
-            BPMNJsRepository.updateBpmnElementSLPBExtension(bpmnJS, createdDataOutputElement.businessObject, 'DataObjectExtension', (ext) => ext.outputParam = param.identifier);
+            BPMNJsRepository.setDataParamId(bpmnJS, createdDataOutputElement, param);
             BPMNJsRepository.updateBpmnElementSLPBExtension(bpmnJS, createdDataOutputElement.businessObject, 'DataObjectExtension', (ext) => ext.matchesProcessOutputInterface = param.interface === expectedInterface);
             BPMNJsRepository.updateBpmnElementSLPBExtension(bpmnJS, createdDataOutputElement.businessObject, 'DataObjectExtension', (ext) => ext.isProcessOutput = param.isProcessOutput);
         }
 
         const referencingDataRepresentations = getElementRegistryModule(bpmnJS)
-            .filter(element => element.type === shapeTypes.DataOutputAssociation && BPMNJsRepository.sLPBExtensionSetted((element as IConnector).target.businessObject, 'DataObjectExtension', (ext) => ext.outputParam === param.identifier))
+            .filter(element => element.type === shapeTypes.DataOutputAssociation && BPMNJsRepository.getDataParamId(element as IElement) === param.identifier)
             .map(connector => (connector as IConnector).target);
 
         for (const referencingDataRepresentation of referencingDataRepresentations) {
@@ -78,7 +80,7 @@ export class BPMNJsRepository {
     }
 
     public static getAvailableInputParams(element: IElement) {
-        return this.getAvailableInputParamsIElements(element).map(x => BPMNJsRepository.getSLPBExtension(x.businessObject, 'DataObjectExtension', (ext) => ext.outputParam)) as ParamCodes[];
+        return this.getAvailableInputParamsIElements(element).map((element) => BPMNJsRepository.getDataParamId(element)) as ParamCodes[];
     }
 
     public static getAvailableInputParamsIElements(element: IElement) {

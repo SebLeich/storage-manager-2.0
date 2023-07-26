@@ -8,10 +8,9 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { ReactiveFormsModule } from '@angular/forms';
 
 
-
 @NgModule({
   declarations: [
-    ConsoleComponent
+    ConsoleComponent,
   ],
   exports: [
     ConsoleComponent
@@ -21,7 +20,7 @@ import { ReactiveFormsModule } from '@angular/forms';
     MatButtonModule,
     MatIconModule,
     MatTooltipModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
   ],
   providers: [ConsoleService]
 })

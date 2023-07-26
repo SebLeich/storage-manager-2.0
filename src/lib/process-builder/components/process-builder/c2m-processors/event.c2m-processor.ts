@@ -5,8 +5,6 @@ import { BpmnJsService } from "@/lib/process-builder/services/bpmn-js.service";
 import { Injectable } from "@angular/core";
 import { C2mProcessingObjects } from "../constants/c2m-processing-objects.constant";
 import shapeTypes from "@/lib/bpmn-io/shape-types";
-import { timer } from "rxjs";
-import { selectSnapshot } from "@/lib/process-builder/globals/select-snapshot";
 
 @Injectable()
 export class EventC2MProcessor implements IC2mProcessor {
@@ -14,9 +12,6 @@ export class EventC2MProcessor implements IC2mProcessor {
   constructor(private _bpmnJsService: BpmnJsService) { }
 
   public async processConfiguration({ taskCreationPayload }: { taskCreationPayload: ITaskCreationPayload, taskCreationFormGroupValue?: ITaskCreationFormGroupValue }, c2mProcessingObjects: Partial<C2mProcessingObjects>) {
-    console.log(`processing events ...`);
-    await selectSnapshot(timer(2000));
-
     if (!c2mProcessingObjects?.updatedFunction) {
       return;
     }

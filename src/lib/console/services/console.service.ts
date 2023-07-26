@@ -4,12 +4,13 @@ import { v4 as generateGuid } from 'uuid';
 import { toObservable } from '@angular/core/rxjs-interop';
 import { ISink } from '@/lib/shared/interfaces/sink.interface';
 import { LogLevel } from '@/lib/shared/types/log-level.type';
-import { shareReplay } from 'rxjs';
+import { filter, map } from 'rxjs';
 
 @Injectable()
 export class ConsoleService implements ISink {
   public allConsoleOutputs = signal<IConsoleMessage[]>([]);
-  public allConsoleOutputs$ = toObservable(this.allConsoleOutputs, { injector: this._injector }).pipe(shareReplay(1));
+  public allConsoleOutputs$ = toObservable(this.allConsoleOutputs, { injector: this._injector });
+  public latestConsoleOutput$ = this.allConsoleOutputs$.pipe(map((allConsoleOutputs) => allConsoleOutputs[allConsoleOutputs.length - 1]), filter((message) => message != null));
 
   constructor(private _injector: Injector){}
 
