@@ -8,6 +8,10 @@
   display: flex;
   flex-direction: column;
 
+  &.blocked {
+    pointer-events: none;
+  }
+
   .content-wrapper {
     height: calc(80vh - 153px);
     width: 100%;
@@ -15,6 +19,17 @@
     flex: 1;
     overflow-y: auto;
     background-color: #f8f8f8;
+  }
+
+  .overlay {
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: rgba(255, 255, 255, 0.95);
+    z-index: 1;
   }
 }
 

@@ -1,4 +1,4 @@
-<div class="body">
+<div class="body" [class.blocked]="isBlocked">
 
     <div class="dialog-navbar">
 
@@ -53,6 +53,10 @@
             Finish
         </div>
 
+    </div>
+
+    <div *ngIf="isBlocked" @show class="overlay">
+        <mat-spinner [diameter]="60"></mat-spinner>
     </div>
 
 </div>

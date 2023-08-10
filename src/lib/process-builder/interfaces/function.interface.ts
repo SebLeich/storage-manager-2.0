@@ -7,6 +7,7 @@ export interface IFunction extends IFunctionTemplate {
     requireDataMapping?: boolean;
     inputs: number | number[] | null;
     output: number | null;
+    _isImplementation: true;
 }
 
 export const FUNCTIONS_CONFIG_TOKEN: InjectionToken<IFunction[]> = new InjectionToken<IFunction[]>("FUNCTION_CONFIG");

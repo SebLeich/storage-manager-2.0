@@ -1,75 +1,72 @@
 import { ITaskCreationFormGroupValue } from "@/lib/process-builder/interfaces/task-creation-form-group-value.interface";
 import { ITaskCreationPayload } from "@/lib/process-builder/interfaces/task-creation-payload.interface";
 import { IC2mProcessor } from "../interfaces/c2m-processor.interface";
-import { BPMNJsRepository } from "@/lib/core/bpmn-js.repository";
 import { BpmnJsService } from "@/lib/process-builder/services/bpmn-js.service";
 import { Inject, Injectable } from "@angular/core";
-import { BPMN_JS } from "@/lib/process-builder/injection-token";
-import { IBpmnJS, IFunction, IProcessBuilderConfig, PROCESS_BUILDER_CONFIG_TOKEN } from "@/lib/process-builder/interfaces";
+import { IProcessBuilderConfig, PROCESS_BUILDER_CONFIG_TOKEN } from "@/lib/process-builder/interfaces";
 import shapeTypes from "@/lib/bpmn-io/shape-types";
-import { C2mProcessingObjects } from "../constants/c2m-processing-objects.constant";
 import { IElement } from "@/lib/bpmn-io/interfaces/element.interface";
-import { selectSnapshot } from "@/lib/process-builder/globals/select-snapshot";
-import { timer } from "rxjs";
 
 @Injectable()
 export class GatewayC2MProcessor implements IC2mProcessor {
 
-    public requirements = ['updatedFunction' as keyof C2mProcessingObjects];
+    constructor(@Inject(PROCESS_BUILDER_CONFIG_TOKEN) private _config: IProcessBuilderConfig, private _bpmnJsService: BpmnJsService) { }
 
-    constructor(@Inject(BPMN_JS) private _bpmnJs: IBpmnJS, @Inject(PROCESS_BUILDER_CONFIG_TOKEN) private _config: IProcessBuilderConfig, private _bpmnJsService: BpmnJsService) { }
-
-    public async processConfiguration({ taskCreationPayload }: { taskCreationPayload: ITaskCreationPayload, taskCreationFormGroupValue?: ITaskCreationFormGroupValue }, c2mProcessingObject: Partial<C2mProcessingObjects>) {
-        console.log(`processing gateways ...`);
-        await selectSnapshot(timer(2000));
-        
-        const updatedFunction = c2mProcessingObject.updatedFunction,
-            configureActivity = taskCreationPayload.configureActivity;
-
-        if (!updatedFunction || !configureActivity) {
+    public processConfiguration({ taskCreationPayload, taskCreationFormGroupValue }: { taskCreationPayload: ITaskCreationPayload, taskCreationFormGroupValue?: ITaskCreationFormGroupValue }): void {
+        const configureActivity = taskCreationPayload.configureActivity;
+        if (!configureActivity || !taskCreationFormGroupValue) {
             return;
         }
+        const canFail = taskCreationFormGroupValue.canFail,
+            outgoingErrorGatewaySequenceFlows = configureActivity
+                .outgoing
+                .filter(sequenceFlow => sequenceFlow.type === shapeTypes.SequenceFlow && sequenceFlow.target?.type === shapeTypes.ExclusiveGateway);
 
-        const resultingGateway = this._handleErrorGatewayConfiguration(configureActivity, updatedFunction);
-        if (!resultingGateway) {
+        const hasSomeGateways = outgoingErrorGatewaySequenceFlows.length > 0;
+
+        if (canFail && !hasSomeGateways) {
+            const reconnectGatewayTo = this._disconnectOutgoingElements(configureActivity);
+            const gatewayShape = this._appendGateway(configureActivity);
+            this._connectGatewayToElements(gatewayShape, reconnectGatewayTo);
+
             return;
-        }
-
-        return Promise.resolve({ resultingGateway: resultingGateway });
+        } 
+        else if (!canFail && hasSomeGateways) this._bpmnJsService.modelingModule.removeElements([
+            ...outgoingErrorGatewaySequenceFlows,
+            ...outgoingErrorGatewaySequenceFlows.map(flow => flow.target),
+            ...outgoingErrorGatewaySequenceFlows.flatMap(flow => flow.target.outgoing)
+        ]);
     }
 
-    private _handleErrorGatewayConfiguration(configureActivity: IElement, resultingFunction: IFunction) {
-        const outgoingErrorGatewaySequenceFlow = configureActivity
-            .outgoing
-            .find(sequenceFlow => sequenceFlow.type === shapeTypes.SequenceFlow && sequenceFlow.target?.type === shapeTypes.ExclusiveGateway);
-
-        let gatewayShape = outgoingErrorGatewaySequenceFlow?.target;
-
-        if (resultingFunction.canFail && !gatewayShape) {
-            const outgoingSequenceFlows = configureActivity.outgoing.filter(outgoing => outgoing.type === shapeTypes.SequenceFlow);
-            const formerConnectedTargets = outgoingSequenceFlows.map(outgoingSequenceFlow => outgoingSequenceFlow.target);
-            this._bpmnJsService.modelingModule.removeElements(formerConnectedTargets);
-
-            gatewayShape = this._bpmnJsService.modelingModule.appendShape(
-                configureActivity,
-                { type: shapeTypes.ExclusiveGateway },
-                {
-                    x: configureActivity.x + 200,
-                    y: configureActivity.y + 40
-                }
-            );
-
-            this._bpmnJsService.modelingModule.updateLabel(gatewayShape, this._config.errorGatewayConfig.gatewayName);
-
-            // reconnect the former connected target as success action
-            if (formerConnectedTargets[0]) {
-                const connector = this._bpmnJsService.modelingModule.connect(gatewayShape, formerConnectedTargets[0]);
-                BPMNJsRepository.updateBpmnElementSLPBExtension(this._bpmnJs, connector.businessObject, 'SequenceFlowExtension', (ext) => ext.sequenceFlowType = 'success');
+    private _appendGateway(configureActivity: IElement): IElement {
+        const gatewayShape = this._bpmnJsService.modelingModule.appendShape(
+            configureActivity,
+            { type: shapeTypes.ExclusiveGateway },
+            {
+                x: configureActivity.x + 200,
+                y: configureActivity.y + 40
             }
-        } else if (!resultingFunction.canFail && gatewayShape) {
-            this._bpmnJsService.modelingModule.removeElements([gatewayShape, ...gatewayShape.incoming, ...gatewayShape.outgoing]);
-        }
+        );
+        this._bpmnJsService.modelingModule.updateLabel(gatewayShape, this._config.errorGatewayConfig.gatewayName);
 
         return gatewayShape;
+    }
+
+    private _connectGatewayToElements(gatewayShape: IElement, targets: IElement[]){
+        for(const target of targets){
+            this._bpmnJsService.modelingModule.connect(gatewayShape, target);
+        }
+    }
+
+    private _disconnectOutgoingElements(configureActivity: IElement): IElement[] {
+        const formerConnectedTargetConnectors = configureActivity.outgoing
+            .filter((outgoing) => outgoing.type === shapeTypes.SequenceFlow)
+            .filter((element) => element ? true : false);
+
+        const connectionTargets = formerConnectedTargetConnectors.map((connector) => connector.target);
+
+        this._bpmnJsService.modelingModule.removeElements(formerConnectedTargetConnectors);
+
+        return connectionTargets;
     }
 }

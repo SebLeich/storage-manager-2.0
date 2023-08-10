@@ -102,21 +102,18 @@ export class CodemirrorRepository {
 
         const unaryExpression = parent.getChild('UnaryExpression');
         if (unaryExpression) {
-            // method call
             const representation = state.sliceDoc(unaryExpression?.from, unaryExpression?.to);
             return { status: MethodEvaluationStatus.ReturnValueFound, valueIsDefinite: false, unaryExpression: representation };
         }
 
         const binaryExpression = parent.getChild('BinaryExpression');
         if (binaryExpression) {
-            // calclation
             const representation = state.sliceDoc(binaryExpression?.from, binaryExpression?.to);
             return { status: MethodEvaluationStatus.ReturnValueFound, valueIsDefinite: false, unaryExpression: representation };
         }
 
         const callExpression = parent.getChild('CallExpression');
         if (callExpression) {
-            // calclation
             const representation = state.sliceDoc(callExpression?.from, callExpression?.to);
             return { status: MethodEvaluationStatus.ReturnValueFound, valueIsDefinite: false, unaryExpression: representation };
         }

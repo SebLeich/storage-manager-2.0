@@ -24,7 +24,7 @@ export class NavbarComponent {
   constructor(private _router: Router, private _store: Store) { }
 
   @HostListener('window:resize', ['$event'])
-  private _onResize(event: Event) {
+  private _() {
     this.validateClient();
   }
 

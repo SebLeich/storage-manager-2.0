@@ -3,7 +3,7 @@ import { TestBed } from "@angular/core/testing";
 import defaultImportsConstant from "@/app/default-imports.constant";
 import { ProcessBuilderModule } from "@/lib/process-builder/process-builder.module";
 import { provideMockStore } from "@ngrx/store/testing";
-import INITIAL_STATE from "./testing/inititial-state.constant";
+import INITIAL_STATE from "../testing/inititial-state.constant";
 import { ProcessBuilderComponentService } from "../process-builder-component.service";
 import processBuilderConfig from "@/config/process-builder-config";
 import { FUNCTIONS_CONFIG_TOKEN, IParam, PROCESS_BUILDER_CONFIG_TOKEN } from "@/lib/process-builder/interfaces";
@@ -12,12 +12,10 @@ import { ITaskCreationPayload } from "@/lib/process-builder/interfaces/task-crea
 import { upsertIParam } from "@/lib/process-builder/store";
 import { ITaskCreationFormGroupValue } from "@/lib/process-builder/interfaces/task-creation-form-group-value.interface";
 import { IElement } from "@/lib/bpmn-io/interfaces/element.interface";
-import MOCK_FUNCTION_ReturnA from "./testing/function-return-solution.constant";
-import MOCK_PARAM_Solution from "./testing/param-solution.constant";
+import MOCK_PARAM_Solution from "../testing/param-solution.constant";
 import { ProcessBuilderRepository } from "@/lib/core/process-builder-repository";
 import { BPMNJsRepository } from "@/lib/core/bpmn-js.repository";
 import { IConnector } from "@/lib/bpmn-io/interfaces/connector.interface";
-import MOCK_FUNCTION_Void from "./testing/function-void.constant";
 import shapeTypes from "@/lib/bpmn-io/shape-types";
 import { IModelingModule } from "@/lib/bpmn-io/interfaces/modules";
 import { BpmnJsService } from "@/lib/process-builder/services/bpmn-js.service";
@@ -60,8 +58,7 @@ describe('DataC2MProcessor', () => {
             {
                 taskCreationPayload: { configureActivity: undefined } as ITaskCreationPayload,
                 taskCreationFormGroupValue: taskCreationFormGroupValue
-            }
-            , {});
+            });
 
         expect(dispatchSpy).not.toHaveBeenCalledWith(upsertIParam({} as IParam));
     });
@@ -73,9 +70,7 @@ describe('DataC2MProcessor', () => {
             {
                 taskCreationPayload: { configureActivity: activity } as ITaskCreationPayload,
                 taskCreationFormGroupValue: taskCreationFormGroupValue
-            },
-            { updatedFunction: MOCK_FUNCTION_ReturnA }
-        );
+            });
 
         expect(dispatchSpy).toHaveBeenCalledWith(upsertIParam(updatedParam));
         expect(appendOutputParamSpy).toHaveBeenCalledWith(jasmine.any(Object), activity, updatedParam, true, processBuilderConfig.expectInterface);
@@ -88,9 +83,7 @@ describe('DataC2MProcessor', () => {
             {
                 taskCreationPayload: { configureActivity: activity } as ITaskCreationPayload,
                 taskCreationFormGroupValue: taskCreationFormGroupValue
-            },
-            { updatedFunction: MOCK_FUNCTION_Void }
-        );
+            });
 
         expect(dispatchSpy).not.toHaveBeenCalledWith(upsertIParam(updatedParam));
         expect(appendOutputParamSpy).not.toHaveBeenCalledWith(jasmine.any(Object), activity, updatedParam, true, processBuilderConfig.expectInterface);

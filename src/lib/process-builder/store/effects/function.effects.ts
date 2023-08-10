@@ -1,7 +1,7 @@
-import { ApplicationRef, Inject, Injectable, Optional } from '@angular/core';
+import { Inject, Injectable, Optional } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { of } from 'rxjs';
-import { finalize, mergeMap } from 'rxjs/operators';
+import { mergeMap } from 'rxjs/operators';
 import { FUNCTIONS_CONFIG_TOKEN, IFunction } from '../../interfaces/function.interface';
 import { addIFunctions, loadIFunctions } from '../actions/function.actions';
 
@@ -10,7 +10,7 @@ import { addIFunctions, loadIFunctions } from '../actions/function.actions';
 @Injectable()
 export class IFunctionEffects {
 
-  loadParams$ = createEffect(() =>
+  public loadParams$ = createEffect(() =>
     this._actions$.pipe(
       ofType(loadIFunctions),
       mergeMap(

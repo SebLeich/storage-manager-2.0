@@ -19,8 +19,6 @@ export class ConnectorC2MProcessor implements IC2mProcessor {
             BPMNJsRepository.setSequenceFlowType(this._bpmnJs, connector, taskCreationFormGroupValue.entranceGatewayType);
             this._applyConnectorDefaultLabels(connector, taskCreationFormGroupValue);
         }
-
-        return Promise.resolve({});
     }
 
     private _applyConnectorDefaultLabels(connector: IConnector, taskCreationFormGroupValue: ITaskCreationFormGroupValue) {

@@ -1,30 +1,27 @@
 import { ITaskCreationFormGroupValue } from "@/lib/process-builder/interfaces/task-creation-form-group-value.interface";
 import { ITaskCreationPayload } from "@/lib/process-builder/interfaces/task-creation-payload.interface";
-import { IC2mProcessor } from "../interfaces/c2m-processor.interface";
 import { BPMNJsRepository } from "@/lib/core/bpmn-js.repository";
-import { BpmnJsService } from "@/lib/process-builder/services/bpmn-js.service";
 import { Inject, Injectable } from "@angular/core";
-import { BPMN_JS } from "@/lib/process-builder/injection-token";
-import { IBpmnJS, IFunction, IInterface, IMethodEvaluationResult, IParam, IParamDefinition, IProcessBuilderConfig, PROCESS_BUILDER_CONFIG_TOKEN } from "@/lib/process-builder/interfaces";
+import { IMethodEvaluationResult, IParam, IParamDefinition, IProcessBuilderConfig, PROCESS_BUILDER_CONFIG_TOKEN } from "@/lib/process-builder/interfaces";
 import { Store } from "@ngrx/store";
 import { CodemirrorRepository } from "@/lib/core/codemirror.repository";
 import { MethodEvaluationStatus } from "@/lib/process-builder/globals/method-evaluation-status";
 import defaultImplementation from "@/lib/process-builder/globals/default-implementation";
 import { ProcessBuilderRepository } from "@/lib/core/process-builder-repository";
 import { firstValueFrom, map, shareReplay } from "rxjs";
-import { selectIFunction, selectIInterface, selectIParam, selectIParams, selectNextParameterIdentifier } from "@/lib/process-builder/store/selectors";
+import { selectIParam, selectIParams } from "@/lib/process-builder/store/selectors";
 import { mapIParamInterfaces } from "@/lib/process-builder/extensions/rxjs/map-param-interfaces.rxjs";
-import shapeTypes from "@/lib/bpmn-io/shape-types";
 import { upsertIParam } from "@/lib/process-builder/store";
 import { IElement } from "@/lib/bpmn-io/interfaces/element.interface";
 import { mapIParamsInterfaces } from "@/lib/process-builder/extensions/rxjs/map-params-interfaces.rxjs";
 import { deepObjectLookup } from "@/lib/shared/globals/deep-object-lookup.function";
 import { selectSnapshot } from "@/lib/process-builder/globals/select-snapshot";
+import { IC2SProcessor } from "../interfaces/c2s-processor.interface";
 
 @Injectable()
-export class DataC2MProcessor implements IC2mProcessor {
+export class OutputC2SProcessor implements IC2SProcessor {
 
-    constructor(@Inject(BPMN_JS) private _bpmnJs: IBpmnJS, @Inject(PROCESS_BUILDER_CONFIG_TOKEN) private _config: IProcessBuilderConfig, private _bpmnJsService: BpmnJsService, private _store: Store) { }
+    constructor(@Inject(PROCESS_BUILDER_CONFIG_TOKEN) private _config: IProcessBuilderConfig, private _store: Store) { }
 
     public async processConfiguration({ taskCreationPayload, taskCreationFormGroupValue }: { taskCreationPayload: ITaskCreationPayload, taskCreationFormGroupValue?: ITaskCreationFormGroupValue }) {
         const configureActivity = taskCreationPayload.configureActivity;
@@ -32,76 +29,31 @@ export class DataC2MProcessor implements IC2mProcessor {
             return;
         }
 
-        const updatedFunction = await selectSnapshot(this._store.select(selectIFunction(taskCreationFormGroupValue?.functionIdentifier)));
-        if (!updatedFunction) {
+        const code = taskCreationFormGroupValue.implementation ? taskCreationFormGroupValue.implementation.text : defaultImplementation;
+        const methodEvaluation = CodemirrorRepository.evaluateCustomMethod(undefined, code);
+        let outputParam: IParam | null = await selectSnapshot(this._store.select(selectIParam(taskCreationFormGroupValue.outputParamIdentifier)));
+        if(!outputParam && methodEvaluation.status === MethodEvaluationStatus.ReturnValueFound) {
+            const type = methodEvaluation.type === 'member' || methodEvaluation.type === 'variable'? 'object': methodEvaluation.type == null || methodEvaluation.type === 'null'? 'undefined': methodEvaluation.type;
+            outputParam = {
+                identifier: taskCreationFormGroupValue.outputParamIdentifier!,
+                _isIParam: true,
+                constant: methodEvaluation.valueIsDefinite ?? false,
+                name: taskCreationFormGroupValue.outputParamName ?? this._config.dynamicParamDefaultNaming,
+                normalizedName: taskCreationFormGroupValue.normalizedOutputParamName ?? ProcessBuilderRepository.normalizeName(this._config.dynamicParamDefaultNaming),
+                interface: taskCreationFormGroupValue.interface,
+                type: type,
+                defaultValue: methodEvaluation.detectedValue,
+                typeDef: ProcessBuilderRepository.extractObjectTypeDefinition(methodEvaluation.detectedValue, true),
+                nullable: false,
+                optional: false
+            };
+        }
+
+        if(!outputParam) {
             return;
         }
-
-        // HEREEE
-        const output = this._getFunctionOutput(updatedFunction);
-        const code = taskCreationFormGroupValue.implementation ? taskCreationFormGroupValue.implementation.text : defaultImplementation;
-        const methodEvaluation = CodemirrorRepository.evaluateCustomMethod(undefined, code),
-            nextParamId = await selectSnapshot(this._store.select(selectNextParameterIdentifier()));
-
-        if (typeof updatedFunction.output === 'number' || methodEvaluation.status === MethodEvaluationStatus.ReturnValueFound) {
-            const param = await selectSnapshot(this._store.select(selectIParam(updatedFunction.output))) ?? { identifier: nextParamId } as IParam;
-
-            await this._handleFunctionOutputParam(taskCreationFormGroupValue, taskCreationPayload, param, methodEvaluation);
-        }
-        else if (typeof updatedFunction.outputTemplate === 'string') {
-            const iFace = await selectSnapshot(this._store.select(selectIInterface(updatedFunction.outputTemplate)));
-            const param = { identifier: nextParamId, interface: iFace?.identifier, name: taskCreationFormGroupValue.outputParamName ?? iFace?.name, normalizedName: taskCreationFormGroupValue.normalizedOutputParamName ?? iFace?.normalizedName } as IParam;
-
-            await this._handleFunctionOutputParam(taskCreationFormGroupValue, taskCreationPayload, param, methodEvaluation);
-        }
-        else {
-            const dataOutputAssociations = configureActivity.outgoing.filter(x => x.type === shapeTypes.DataOutputAssociation);
-            this._bpmnJsService.modelingModule.removeElements(dataOutputAssociations.map(dataOutputAssociation => dataOutputAssociation.target));
-        }
-
-        this._handleDataInputConfiguration(taskCreationFormGroupValue, taskCreationPayload, updatedFunction);
-    }
-
-    private async _getFunctionOutput(updatedFunction: IFunction) {
-        let outputTemplate: IInterface | null = null,
-            outputParam: IParam | null = null;
-
-        if (updatedFunction._isImplementation) {
-            
-            outputParam = await selectSnapshot(this._store.select(selectIParam(updatedFunction.output)));
-        }
-        else {
-            outputTemplate = await selectSnapshot(this._store.select(selectIInterface(updatedFunction.outputTemplate)));
-        }
-
-        return { outputTemplate, outputParam };
-    }
-
-    private _handleDataInputConfiguration(taskCreationFormGroupValue: ITaskCreationFormGroupValue, taskCreationPayload: ITaskCreationPayload, resultingFunction: IFunction) {
-        const configureActivity = taskCreationPayload.configureActivity;
-        if (configureActivity) {
-            const dataInputAssociations = configureActivity.incoming.filter(incoming => incoming.type === shapeTypes.DataInputAssociation);
-            if (dataInputAssociations.length > 0) {
-                this._bpmnJsService.modelingModule.removeElements(dataInputAssociations);
-            }
-        }
-
-        if (resultingFunction.inputTemplates || resultingFunction.inputTemplates === 'dynamic') {
-            const inputParams = Array.isArray(resultingFunction.inputTemplates) ? [...resultingFunction.inputTemplates] : [];
-            if (typeof taskCreationFormGroupValue.inputParam === 'number') {
-                inputParams.push({ optional: false, interface: taskCreationFormGroupValue.interface ?? undefined, name: 'my input', type: 'string' });
-            }
-
-            if (configureActivity) {
-                const availableInputParamsIElements = BPMNJsRepository.getAvailableInputParamsIElements(configureActivity);
-                for (const param of inputParams.filter((inputParam) => !(taskCreationPayload.configureActivity as IElement).incoming.some((connector) => BPMNJsRepository.getDataParamId(connector.source) === (inputParam as IParam).identifier))) {
-                    const element = availableInputParamsIElements.find((element) => BPMNJsRepository.getDataParamId(element) === (param as IParam).identifier);
-                    if (element) {
-                        this._bpmnJsService.modelingModule.connect(element, configureActivity);
-                    }
-                }
-            }
-        }
+        
+        this._handleFunctionOutputParam(taskCreationFormGroupValue, taskCreationPayload, outputParam, methodEvaluation);
     }
 
     private async _handleFunctionOutputParam(taskCreationFormGroupValue: ITaskCreationFormGroupValue, taskCreationPayload: ITaskCreationPayload, outputParam: IParam, methodEvaluation: IMethodEvaluationResult) {
@@ -132,16 +84,6 @@ export class DataC2MProcessor implements IC2mProcessor {
         }
 
         this._store.dispatch(upsertIParam(outputParam));
-
-        BPMNJsRepository.appendOutputParam(
-            this._bpmnJs,
-            taskCreationPayload.configureActivity!,
-            outputParam,
-            true,
-            this._config.expectInterface
-        );
-
-        return { outputParam }
     }
 
     private async _methodEvaluationTypeToOutputType(element: IElement, methodEvaluation?: IMethodEvaluationResult) {

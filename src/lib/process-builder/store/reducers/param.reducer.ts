@@ -46,41 +46,25 @@ export const reducer = createReducer(
   }),
 
   on(addIParams, (state: State, { params }) => {
-    let output: IParam[] = [];
-    for (let param of params) {
+    const output: IParam[] = [];
+
+    for (const param of params) {
       output.push({
+        ...param,
         identifier: typeof param.identifier === 'number' ? param.identifier : nextId(state),
-        defaultValue: param.defaultValue,
-        name: param.name,
-        normalizedName: param.normalizedName,
-        constant: param.constant,
-        interface: param.interface,
-        nullable: param.nullable,
-        optional: param.optional,
-        type: param.type,
-        typeDef: param.typeDef,
         _isIParam: true
       });
     }
+
     return adapter.addMany(output, state);
   }),
 
   on(updateIParam, (state: State, { param }) => {
-    let update: Update<IParam> = {
+    const update: Update<IParam> = {
       'id': param.identifier,
-      'changes': {
-        defaultValue: param.defaultValue,
-        name: param.name,
-        normalizedName: param.normalizedName,
-        constant: param.constant,
-        interface: param.interface,
-        nullable: param.nullable,
-        optional: param.optional,
-        type: param.type,
-        typeDef: param.typeDef,
-        isProcessOutput: param.isProcessOutput
-      }
+      'changes': { ...param }
     }
+
     return adapter.updateOne(update, state);
   }),
 
@@ -120,20 +104,23 @@ export const reducer = createReducer(
 
   on(removeIFunction, (state: State, { func }) => {
     const referencedOutputParam = func.output;
+
     if (typeof referencedOutputParam === 'number') {
       return adapter.removeOne(referencedOutputParam, state);
     }
+
     return state;
   }),
 
   on(removeIParam, (state: State, { param }) => {
-    let key = typeof param === 'number' ? param : param.identifier;
+    const key = typeof param === 'number' ? param : param.identifier;
+
     return adapter.removeOne(key, state);
   }),
 
 );
 
 export const nextId = (state: State) => {
-  let ids = state && state.entities ? (Object.values(state.entities) as IParam[]).map(x => x.identifier) : [];
+  const ids = state && state.entities ? (Object.values(state.entities) as IParam[]).map(x => x.identifier) : [];
   return ids.length === 0 ? 0 : Math.max(...(ids.map(x => typeof x === 'number' ? x : 0))) + 1;
 }

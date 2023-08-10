@@ -8,7 +8,7 @@ import { TaskCreationComponent } from '../components/dialog/task-creation/task-c
 import { FUNCTIONS_CONFIG_TOKEN, IFunction } from '../interfaces/function.interface';
 import { ITaskCreationDataWrapper } from '../interfaces/task-creation-data-wrapper.interface';
 import { ITaskCreationFormGroupValue } from '../interfaces/task-creation-form-group-value.interface';
-import { CloseScrollStrategy, ScrollStrategyOptions } from '@angular/cdk/overlay';
+import { ScrollStrategyOptions } from '@angular/cdk/overlay';
 
 @Injectable({
   providedIn: 'root'

@@ -1,14 +1,13 @@
-import { Inject, Injectable, OnDestroy, OnInit } from "@angular/core";
+import { Injectable, OnDestroy } from "@angular/core";
 import { Store } from "@ngrx/store";
 import { BehaviorSubject, combineLatest, Subscription, timer } from "rxjs";
 import { filter, map, takeUntil, tap } from "rxjs/operators";
 import { IStep } from "@smgr/interfaces";
 import { selectSnapshot } from "src/lib/process-builder/globals/select-snapshot";
-import { IVisualizerContextService, VISUALIZER_CONTEXT } from "src/app/interfaces/i-visualizer-context.service";
 import { selectCurrentSolutionSteps } from "@smgr/store";
 
 @Injectable()
-export class SolutionAnimationComponentService implements OnDestroy, OnInit {
+export class SolutionAnimationComponentService implements OnDestroy {
 
     private _animationRunning$$ = new BehaviorSubject<boolean>(false);
     private _stepIndex$$ = new BehaviorSubject<number>(0);
@@ -27,13 +26,13 @@ export class SolutionAnimationComponentService implements OnDestroy, OnInit {
 
     private _subscriptions = new Subscription();
 
-    constructor(private _store: Store) { }
-
-    public ngOnDestroy(): void {
-        this._subscriptions.unsubscribe();
+    constructor(private _store: Store) {
+        this.subscribeAnimationIndicators();
     }
 
-    public ngOnInit(): void {
+    public ngOnDestroy = () => this._subscriptions.unsubscribe();
+
+    private subscribeAnimationIndicators(): void {
         this._subscriptions.add(
             combineLatest([this.animationRunning$, this.stepIndex$, this._store.select(selectCurrentSolutionSteps)])
                 .pipe(
@@ -73,8 +72,6 @@ export class SolutionAnimationComponentService implements OnDestroy, OnInit {
         );
     }
 
-    public stopAnimation() {
-        this._animationRunning$$.next(false);
-    }
+    public stopAnimation = () => this._animationRunning$$.next(false);
 
 }

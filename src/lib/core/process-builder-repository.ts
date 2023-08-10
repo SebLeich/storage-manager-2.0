@@ -27,8 +27,6 @@ export class ProcessBuilderRepository {
 
         if (!arg) return {};
 
-        let index = 0;
-
         try {
 
             let defaultValue = arg.type === 'array' ? [] : arg.type === 'object' ? {} : arg.defaultValue;
@@ -39,16 +37,12 @@ export class ProcessBuilderRepository {
             else if (parent && typeof parent === 'object') parent[arg.name] = defaultValue;
 
             if (arg.typeDef) {
-                let typeDefArray = Array.isArray(arg.typeDef) ? arg.typeDef : [arg.typeDef];
+                const typeDefArray = Array.isArray(arg.typeDef) ? arg.typeDef : [arg.typeDef];
 
-                for (let def of typeDefArray) {
-
+                for (const def of typeDefArray) {
                     this.createPseudoObjectFromIParamDefinition(def, defaultValue);
-
                 }
             }
-
-            index++;
 
             return defaultValue;
 
@@ -172,7 +166,7 @@ export class ProcessBuilderRepository {
 
     }
 
-    public static extractObjectTypeDefinition(arg: object | string | number | null | undefined, isRoot = true, defaultParamName = 'unnamed param', isNullable = false, isOptional = false, isConstant = false): IParamDefinition | IParamDefinition[] {
+    public static extractObjectTypeDefinition(arg: boolean | object | string | number | null | undefined, isRoot = true, defaultParamName = 'unnamed param', isNullable = false, isOptional = false, isConstant = false): IParamDefinition | IParamDefinition[] {
 
         const rootDef: IParamDefinition = {
             'name': defaultParamName,

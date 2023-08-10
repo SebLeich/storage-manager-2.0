@@ -1,12 +1,11 @@
-import { Component, ElementRef, Input, QueryList, ViewChild, ViewChildren, ViewContainerRef } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, Input, OnDestroy, OnInit, QueryList, ViewChild, ViewChildren, ViewContainerRef } from '@angular/core';
 import { ParamCodes } from 'src/config/param-codes';
 import { IEmbeddedView } from 'src/lib/process-builder/classes/embedded-view';
 import { IInputParam, IFunction } from '@process-builder/interfaces';
 import { Store } from '@ngrx/store';
 import { selectIFunction, selectIFunctions } from 'src/lib/process-builder/store/selectors/function.selector';
-import { FunctionPreviewComponent } from '../../previews/function-preview/function-preview.component';
 import { ControlContainer, FormControl } from '@angular/forms';
-import { defer, map, startWith, switchMap } from 'rxjs';
+import { Subscription, defer, map, startWith, switchMap, timer } from 'rxjs';
 import * as fromIFunctionState from 'src/lib/process-builder/store/reducers/function.reducer';
 import { removeIFunction } from 'src/lib/process-builder/store/actions/function.actions';
 import { combineLatest } from 'rxjs/internal/observable/combineLatest';
@@ -20,11 +19,10 @@ import { showListAnimation } from 'src/lib/shared/animations/show-list-slow';
   styleUrls: ['./embedded-function-selection.component.scss'],
   animations: [showAnimation, showListAnimation]
 })
-export class EmbeddedFunctionSelectionComponent implements IEmbeddedView {
+export class EmbeddedFunctionSelectionComponent implements IEmbeddedView, OnDestroy, AfterViewInit {
 
   @Input() public inputParams!: ParamCodes | ParamCodes[] | null;
 
-  @ViewChildren(FunctionPreviewComponent, { read: ViewContainerRef }) private activeFunctionWrappers!: QueryList<ViewContainerRef>;
   @ViewChild('searchInput', { static: true, read: ElementRef }) private _searchInput!: ElementRef<HTMLInputElement>;
 
   public filterControl = new FormControl<string>('');
@@ -65,8 +63,8 @@ export class EmbeddedFunctionSelectionComponent implements IEmbeddedView {
     });
   }));
 
-  public functionTemplates$ = this.functions$.pipe(map(funcs => funcs.filter(func => func.requireCustomImplementation)));
-  public customFunctions$ = this.functions$.pipe(map(funcs => funcs.filter(func => func.customImplementation)));
+  public functionTemplates$ = this.functions$.pipe(map(funcs => funcs.filter(func => !func._isImplementation)));
+  public customFunctions$ = this.functions$.pipe(map(funcs => funcs.filter(func => func._isImplementation && func.customImplementation)));
 
   public selectedFunction$ = defer(() => {
     const control = this.formGroup.controls.functionIdentifier as FormControl;
@@ -79,7 +77,17 @@ export class EmbeddedFunctionSelectionComponent implements IEmbeddedView {
   });
   public requiresCustomOutputParamName$ = this.selectedFunction$.pipe(map(selectedFunction => !selectedFunction?.requireCustomImplementation && !selectedFunction?.customImplementation && typeof selectedFunction?.outputTemplate === 'string'));
 
-  constructor(private _store: Store<fromIFunctionState.State>, private _controlContainer: ControlContainer) { }
+  private _subscriptions = new Subscription();
+
+  constructor(private _store: Store<fromIFunctionState.State>, private _controlContainer: ControlContainer, private elementRef: ElementRef) { }
+
+  public ngOnDestroy(): void {
+    this._subscriptions.unsubscribe();
+  }
+
+  public ngAfterViewInit(): void {
+    this._subscriptions.add(timer(200).subscribe(() => this._scrollToActiveFunction()));
+  }
 
   public removeFunction(func: IFunction, evt?: Event) {
     if (evt) {
@@ -104,9 +112,9 @@ export class EmbeddedFunctionSelectionComponent implements IEmbeddedView {
   }
 
   private _scrollToActiveFunction() {
-    const ref = this.activeFunctionWrappers.find(x => (x.element.nativeElement as HTMLDivElement).hasAttribute('active'));
+    const ref = (this.elementRef.nativeElement as HTMLElement).querySelector('.function-wrapper.active');
     if (ref) {
-      ref.element.nativeElement.scrollIntoView({ behavior: 'smooth' });
+      ref.scrollIntoView({ behavior: 'smooth' });
     }
   }
 

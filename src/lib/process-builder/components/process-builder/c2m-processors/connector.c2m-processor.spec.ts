@@ -5,7 +5,7 @@ import { TestBed } from "@angular/core/testing";
 import defaultImportsConstant from "@/app/default-imports.constant";
 import { ProcessBuilderModule } from "@/lib/process-builder/process-builder.module";
 import { provideMockStore } from "@ngrx/store/testing";
-import INITIAL_STATE from "./testing/inititial-state.constant";
+import INITIAL_STATE from "../testing/inititial-state.constant";
 import { ProcessBuilderComponentService } from "../process-builder-component.service";
 import processBuilderConfig from "@/config/process-builder-config";
 import { FUNCTIONS_CONFIG_TOKEN, PROCESS_BUILDER_CONFIG_TOKEN } from "@/lib/process-builder/interfaces";

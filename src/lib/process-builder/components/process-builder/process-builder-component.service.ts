@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { BpmnJsService } from '../../services/bpmn-js.service';
 import { DialogService } from '../../services/dialog.service';
-import { combineLatest, tap, map, of, switchMap } from 'rxjs';
+import { combineLatest, map, of, switchMap } from 'rxjs';
 import { BPMNJsRepository } from 'src/lib/core/bpmn-js.repository';
 import { TaskCreationStep } from '../../globals/task-creation-step';
 import { ITaskCreationPayload } from '../../interfaces/task-creation-payload.interface';
@@ -17,8 +17,7 @@ import { selectIFunction, selectIFunctions } from '@process-builder/selectors';
 @Injectable()
 export class ProcessBuilderComponentService {
 
-  public taskEditingDialogResultReceived$ = this._bpmnJsService
-    .bufferedTaskEditingEvents$
+  public taskEditingDialogResultReceived$ = this._bpmnJsService.bufferedTaskEditingEvents$
     .pipe(
       switchMap((events) => {
         const functionSelectionConfig = events.find(event => event.taskCreationStep === TaskCreationStep.ConfigureFunctionSelection);
@@ -42,12 +41,6 @@ export class ProcessBuilderComponentService {
       })
     );
 
-  public paramEditorDialogResultReceived$ = this._bpmnJsService
-    .bufferedDataObjectReferenceEditingEvents$
-    .pipe(
-      tap(result => console.log(result))
-    );
-
   constructor(
     private _dialogService: DialogService,
     private _bpmnJsService: BpmnJsService,
@@ -69,12 +62,14 @@ export class ProcessBuilderComponentService {
       `By deleting that gateway, you will remove the 'canFail'-flag from the methods listed below.<ul>${referencedFunctions.map(func => '<li>' + func.normalizedName + '</li>')}</ul><b>Do you want to proceed?</b>`
     );
 
-    if (result) {
-      const action = setIFunctionsCanFailFlag({ funcs: referencedFunctionIdentifiers, canFail: false });
-      this._store.dispatch(action);
-      this._bpmnJsService.modelingModule.removeElements([element]);
-      this._bpmnJsService.saveCurrentBpmnModel();
+    if (!result) {
+      return;
     }
+
+    const action = setIFunctionsCanFailFlag({ funcs: referencedFunctionIdentifiers, canFail: false });
+    this._store.dispatch(action);
+    this._bpmnJsService.modelingModule.removeElements([element]);
+    this._bpmnJsService.saveCurrentBpmnModel();
   }
 
   public async tryDeleteFunction(element: IElement) {
@@ -86,12 +81,14 @@ export class ProcessBuilderComponentService {
       `By deleting that activity, you will remove the method '${func.normalizedName}', all resulting parameters and all following gateways. That may break your pipeline!</br><b>Do you want to proceed?</b>`
     ) : true;
 
-    if (result) {
-      this._bpmnJsService.removeOutgoingDataObjectReferences(element);
-      this._bpmnJsService.removeOutgoingGateways(element);
-      this._bpmnJsService.modelingModule.removeElements([element]);
-      if (func?.customImplementation) this._store.dispatch(removeIFunction(func));
-      this._bpmnJsService.saveCurrentBpmnModel();
+    if (!result) {
+      return;
     }
+
+    this._bpmnJsService.removeOutgoingDataObjectReferences(element);
+    this._bpmnJsService.removeOutgoingGateways(element);
+    this._bpmnJsService.modelingModule.removeElements([element]);
+    if (func?.customImplementation) this._store.dispatch(removeIFunction(func));
+    this._bpmnJsService.saveCurrentBpmnModel();
   }
 }

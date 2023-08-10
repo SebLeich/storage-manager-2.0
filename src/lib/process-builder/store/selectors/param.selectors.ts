@@ -6,21 +6,18 @@ export const selectIParamState = createFeatureSelector<fromIParam.State>(
   fromIParam.featureKey
 );
 
-export const selectIParam = (
-  arg:
-    | number
-    | 'dynamic'
-    | undefined
-    | null
-    | (() => number | 'dynamic' | null | undefined)
-) =>
-  createSelector(selectIParamState, (state: fromIParam.State) => {
-    if (!state || !state.entities || !arg || arg === 'dynamic') return null;
-    const code = typeof arg === 'function' ? arg() : arg;
-    if (typeof code !== 'number') return null;
+export const selectIParam = (arg: | number | 'dynamic' | undefined | null | (() => number | 'dynamic' | null | undefined)) => createSelector(selectIParamState, (state: fromIParam.State) => {
+  if (!state || !state.entities || !arg || arg === 'dynamic') {
+    return null;
+  }
 
-    return state.entities[code];
-  });
+  const code = typeof arg === 'function' ? arg() : arg;
+  if (typeof code !== 'number') {
+    return null;
+  }
+
+  return state.entities[code] ?? null;
+});
 
 export const selectIParams = (arg?: number[] | (() => number[])) => createSelector(selectIParamState, (state: fromIParam.State) => {
   if (!state || !state.entities) {

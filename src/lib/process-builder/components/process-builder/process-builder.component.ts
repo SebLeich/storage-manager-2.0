@@ -16,12 +16,16 @@ import { C2M_INJECTION_TOKEN } from './constants/c2m-processor.constant';
 import { ActivityC2MProcessor } from './c2m-processors/activity.c2m-processor';
 import { IC2mProcessor } from './interfaces/c2m-processor.interface';
 import { ConnectorC2MProcessor } from './c2m-processors/connector.c2m-processor';
-import { C2mProcessingObjects } from './constants/c2m-processing-objects.constant';
 import { ITaskCreationPayload } from '../../interfaces/task-creation-payload.interface';
 import { ITaskCreationFormGroupValue } from '../../interfaces/task-creation-form-group-value.interface';
 import { EventC2MProcessor } from './c2m-processors/event.c2m-processor';
 import { DataC2MProcessor } from './c2m-processors/data.c2m-processor';
 import { GatewayC2MProcessor } from './c2m-processors/gateway.c2m-processor';
+import { isPromise } from '@/lib/shared/globals/is-promise.constant';
+import { C2S_INJECTION_TOKEN } from './constants/c2s-processing.constant';
+import { IC2SProcessor } from './interfaces/c2s-processor.interface';
+import { ActivityC2SProcessor } from './c2s-processors/activity.c2s-processor';
+import { OutputC2SProcessor } from './c2s-processors/output.c2s-processor';
 
 @Component({
   selector: 'app-process-builder',
@@ -30,6 +34,8 @@ import { GatewayC2MProcessor } from './c2m-processors/gateway.c2m-processor';
   animations: [showAnimation],
   providers: [
     ProcessBuilderComponentService,
+    { provide: C2S_INJECTION_TOKEN, useClass: ActivityC2SProcessor, multi: true },
+    { provide: C2S_INJECTION_TOKEN, useClass: OutputC2SProcessor, multi: true },
     { provide: C2M_INJECTION_TOKEN, useClass: ActivityC2MProcessor, multi: true },
     { provide: C2M_INJECTION_TOKEN, useClass: ConnectorC2MProcessor, multi: true },
     { provide: C2M_INJECTION_TOKEN, useClass: DataC2MProcessor, multi: true },
@@ -51,12 +57,13 @@ export class ProcessBuilderComponent implements OnDestroy, OnInit {
   private _subscription = new Subscription();
 
   constructor(
+    @Inject(C2S_INJECTION_TOKEN) private _c2sProcessors: IC2SProcessor[],
+    @Inject(C2M_INJECTION_TOKEN) private _c2mProcessors: IC2mProcessor[],
     @Inject(BPMN_JS) private _bpmnJs: IBpmnJS,
     public processBuilderService: ProcessBuilderService,
     public bpmnJsService: BpmnJsService,
     private _store: Store,
     private _processBuilderComponentService: ProcessBuilderComponentService,
-    @Inject(C2M_INJECTION_TOKEN) private _c2mProcessors: IC2mProcessor[]
   ) { }
 
   public ngOnDestroy(): void {
@@ -73,7 +80,7 @@ export class ProcessBuilderComponent implements OnDestroy, OnInit {
     this._subscription.add(
       this._processBuilderComponentService
         .taskEditingDialogResultReceived$
-        .subscribe(async (args) => await this._processC2m(args))
+        .subscribe(async (args) => await this._processConfiguration(args))
     );
 
     this._subscription.add(
@@ -121,29 +128,24 @@ export class ProcessBuilderComponent implements OnDestroy, OnInit {
     );
   }
 
+  private async _processConfiguration(args: { taskCreationPayload: ITaskCreationPayload, taskCreationFormGroupValue: ITaskCreationFormGroupValue }){
+    await this._processC2S(args);
+    await this._processC2m(args);
+  }
+
+  private async _processC2S(args: { taskCreationPayload: ITaskCreationPayload, taskCreationFormGroupValue: ITaskCreationFormGroupValue }){
+    for (const step of this._c2sProcessors) {
+      const processOutputCandidate = step.processConfiguration(args);
+
+      isPromise(processOutputCandidate)? await processOutputCandidate: processOutputCandidate;
+    }
+  }
+
   private async _processC2m(args: { taskCreationPayload: ITaskCreationPayload, taskCreationFormGroupValue: ITaskCreationFormGroupValue }) {
-    let c2mChanges: Partial<C2mProcessingObjects> = {},
-      nextSteps = this._c2mProcessors.filter(c2mProcessor => !c2mProcessor.requirements || c2mProcessor.requirements.length === 0);
+    for (const step of this._c2mProcessors) {
+      const processOutputCandidate = step.processConfiguration(args);
 
-    const finished = [] as IC2mProcessor[];
-
-    while (nextSteps.length > 0) {
-      for (const step of nextSteps) {
-        const result = await step.processConfiguration(args, c2mChanges);
-        if(result){
-          c2mChanges = { ...c2mChanges, ...result };
-        }
-
-        finished.push(step);
-      }
-
-      nextSteps = this._c2mProcessors.filter(c2mProcessor => {
-        if (finished.findIndex(finishedStep => finishedStep.constructor.name === c2mProcessor.constructor.name) > -1) {
-          return false;
-        }
-
-        return (c2mProcessor.requirements as []).every(requirement => Object.keys(c2mChanges).includes(requirement));
-      });
+      isPromise(processOutputCandidate)? await processOutputCandidate: processOutputCandidate;
     }
   }
 

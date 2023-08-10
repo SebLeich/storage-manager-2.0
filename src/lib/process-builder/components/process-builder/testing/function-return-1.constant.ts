@@ -1,10 +1,10 @@
 import { ProcessBuilderRepository } from "@/lib/core/process-builder-repository";
 import { IFunction } from "@/lib/process-builder/interfaces";
 
-const mockName = 'Void';
-const MOCK_FUNCTION_Void = {
-    identifier: 3,
-    customImplementation: ["console.log('void');"],
+const mockName = 'Return1';
+const MOCK_FUNCTION_Return1 = {
+    identifier: 1,
+    customImplementation: ['return 1;'],
     name: mockName,
     normalizedName: ProcessBuilderRepository.normalizeName(mockName),
     inputTemplates: [],
@@ -13,7 +13,8 @@ const MOCK_FUNCTION_Void = {
     inputs: [],
     requireCustomImplementation: false,
     outputTemplate: null,
-    requireStaticOutputDefinition: false
+    requireStaticOutputDefinition: false,
+    _isImplementation: true
 } as IFunction;
 
-export default MOCK_FUNCTION_Void;
+export default MOCK_FUNCTION_Return1;

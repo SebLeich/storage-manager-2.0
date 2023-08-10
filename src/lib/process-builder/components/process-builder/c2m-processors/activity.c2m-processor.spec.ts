@@ -8,13 +8,13 @@ import { BpmnJsService } from "@/lib/process-builder/services/bpmn-js.service";
 import { IModelingModule } from "@/lib/bpmn-io/interfaces/modules";
 import { FUNCTIONS_CONFIG_TOKEN, PROCESS_BUILDER_CONFIG_TOKEN } from "@/lib/process-builder/interfaces";
 import processBuilderConfig from "@/config/process-builder-config";
-import INITIAL_STATE from "./testing/inititial-state.constant";
+import INITIAL_STATE from "../testing/inititial-state.constant";
 import { selectSnapshot } from "@/lib/process-builder/globals/select-snapshot";
 import { Store } from "@ngrx/store";
 import { selectIFunction } from "@/lib/process-builder/store/selectors";
-import MOCK_FUNCTION_Return1 from "./testing/function-return-1.constant";
+import MOCK_FUNCTION_Return1 from "../testing/function-return-1.constant";
 import { ITaskCreationPayload } from "@/lib/process-builder/interfaces/task-creation-payload.interface";
-import ACTIVITY_FACTORY from "./testing/activity-factory.constant";
+import ACTIVITY_FACTORY from "../testing/activity-factory.constant";
 import { MatDialog, MatDialogRef } from "@angular/material/dialog";
 import { of } from "rxjs";
 import { ITaskCreationFormGroupValue } from "@/lib/process-builder/interfaces/task-creation-form-group-value.interface";
@@ -61,7 +61,7 @@ describe('ActivityC2MProcessor', () => {
         expect(updatedFunction).toEqual(MOCK_FUNCTION_Return1);
     });
 
-    it('should remove activity if there  are no updates passed and no function reference setted', async () => {
+    it('should remove activity if there are no updates passed and no function reference setted', async () => {
         const removedElementsSpy = spyOn(modelingModule, 'removeElements');
         const activity = ACTIVITY_FACTORY(undefined);
         await processor.processConfiguration({ taskCreationPayload: { configureActivity: activity } as ITaskCreationPayload });
