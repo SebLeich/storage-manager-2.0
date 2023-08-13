@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, ElementRef, Input, OnDestroy, OnInit, QueryList, ViewChild, ViewChildren, ViewContainerRef } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, Input, OnDestroy, ViewChild } from '@angular/core';
 import { ParamCodes } from 'src/config/param-codes';
 import { IEmbeddedView } from 'src/lib/process-builder/classes/embedded-view';
 import { IInputParam, IFunction } from '@process-builder/interfaces';
@@ -22,7 +22,6 @@ import { showListAnimation } from 'src/lib/shared/animations/show-list-slow';
 export class EmbeddedFunctionSelectionComponent implements IEmbeddedView, OnDestroy, AfterViewInit {
 
   @Input() public inputParams!: ParamCodes | ParamCodes[] | null;
-
   @ViewChild('searchInput', { static: true, read: ElementRef }) private _searchInput!: ElementRef<HTMLInputElement>;
 
   public filterControl = new FormControl<string>('');
@@ -89,20 +88,21 @@ export class EmbeddedFunctionSelectionComponent implements IEmbeddedView, OnDest
     this._subscriptions.add(timer(200).subscribe(() => this._scrollToActiveFunction()));
   }
 
-  public removeFunction(func: IFunction, evt?: Event) {
+  public removeFunction(removedFunction: IFunction, evt?: Event) {
     if (evt) {
       evt.stopPropagation();
       evt.preventDefault();
     }
 
-    this._store.dispatch(removeIFunction(func));
+    this._store.dispatch(removeIFunction(removedFunction));
   }
 
-  public selectFunction(func: IFunction) {
-    const functionIdentifier = this.formGroup.controls.functionIdentifier?.value === func.identifier ? null : func.identifier;
-    this.formGroup.controls.functionIdentifier?.setValue(functionIdentifier);
+  public selectFunction(selectedFunction: IFunction) {
+    const functionIdentifier = this.formGroup.controls.functionIdentifier?.value === selectedFunction.identifier ? null : selectedFunction.identifier;
+
     this.formGroup.patchValue({
-      functionIdentifier: functionIdentifier
+      functionIdentifier: functionIdentifier,
+      functionOutputParamIdentifier: functionIdentifier == null? null: selectedFunction.output,
     });
   }
 

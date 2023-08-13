@@ -1,6 +1,6 @@
 import { ITaskCreationFormGroupValue } from "@/lib/process-builder/interfaces/task-creation-form-group-value.interface";
 import { ITaskCreationPayload } from "@/lib/process-builder/interfaces/task-creation-payload.interface";
-import { IC2mProcessor } from "../interfaces/c2m-processor.interface";
+import { IC2MProcessor } from "../interfaces/c2m-processor.interface";
 import { BPMNJsRepository } from "@/lib/core/bpmn-js.repository";
 import { BpmnJsService } from "@/lib/process-builder/services/bpmn-js.service";
 import { Inject, Injectable } from "@angular/core";
@@ -9,7 +9,7 @@ import { BPMN_JS } from "@/lib/process-builder/injection-token";
 import { IBpmnJS, IProcessBuilderConfig, PROCESS_BUILDER_CONFIG_TOKEN } from "@/lib/process-builder/interfaces";
 
 @Injectable()
-export class ConnectorC2MProcessor implements IC2mProcessor {
+export class ConnectorC2MProcessor implements IC2MProcessor {
 
     constructor(@Inject(BPMN_JS) private _bpmnJs: IBpmnJS, @Inject(PROCESS_BUILDER_CONFIG_TOKEN) private _config: IProcessBuilderConfig, private _bpmnJsService: BpmnJsService) { }
 

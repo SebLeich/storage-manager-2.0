@@ -1,0 +1,25 @@
+<div class="body">
+
+    <div *ngIf="outputParamType === 'object'; else nonObjectType">
+        <div *ngIf="interfaceIdentifier; else unknownInterface">
+            <i>{{outputParamName}}</i> ({{interfaceIdentifier|interface|async}})
+        </div>
+    </div>
+
+</div>
+
+<ng-template #nonObjectType>
+
+    <div>
+        {{outputParamName}} of type {{outputParamType}}
+    </div>
+
+</ng-template>
+
+<ng-template #unknownInterface>
+
+    <div>
+        object without interface
+    </div>
+
+</ng-template>

@@ -3,6 +3,13 @@ import { IInterface, IParamDefinition, IParam } from "@process-builder/interface
 
 export class ProcessBuilderRepository {
 
+    /**
+     * @deprecated
+     * @param arg 
+     * @param parent 
+     * @param config 
+     * @returns 
+     */
     public static createPseudoObjectFromIParam(arg: IParamDefinition | null | undefined, parent: any = null, config: {
         string: () => string | undefined,
         boolean: () => boolean | undefined,

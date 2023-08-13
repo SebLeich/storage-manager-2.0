@@ -11,6 +11,7 @@ import { EmbeddedFunctionSelectionComponent } from "../../../embedded/embedded-f
 import { EmbeddedInputOutputMappingComponent } from "../../../embedded/embedded-input-output-mapping/embedded-input-output-mapping.component";
 import { EmbeddedOutputParamConfigurationComponent } from '../../../embedded/embedded-output-param-configuration/embedded-output-param-configuration.component';
 import { EmbeddedStaticOutputDefinitionComponent } from '../../../embedded/embedded-static-output-definition/embedded-static-output-definition.component';
+import { ParamCodes } from '@/config/param-codes';
 
 export default new Map<TaskCreationStep, {
     type: Type<IEmbeddedView>;
@@ -27,7 +28,7 @@ export default new Map<TaskCreationStep, {
         type: EmbeddedFunctionImplementationComponent,
         provideInputParams: (arg: IEmbeddedView, element: IElement) => {
             const component = arg as EmbeddedFunctionImplementationComponent;
-            component.inputParams = BPMNJsRepository.getAvailableInputParams(element);
+            component.inputParams = [...BPMNJsRepository.getAvailableInputParams(element), ParamCodes.ExemplarySolutionWrapper];
         },
     }],
     [TaskCreationStep.ConfigureFunctionInput, {

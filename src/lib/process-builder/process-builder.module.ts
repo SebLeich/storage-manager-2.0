@@ -69,6 +69,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import sebleichProcessBuilderExtension from './globals/sebleich-process-builder-extension';
 import { BPMN_JS } from '@process-builder/injection';
 import { EmbeddedStaticOutputDefinitionComponent } from './components/embedded/embedded-static-output-definition/embedded-static-output-definition.component';
+import { FunctionOutputPreviewComponent } from './components/embedded/embedded-function-implementation/components/function-output-preview/function-output-preview.component';
 
 
 @NgModule({
@@ -97,7 +98,8 @@ import { EmbeddedStaticOutputDefinitionComponent } from './components/embedded/e
     UserInputComponent,
     EmbeddedOutputParamConfigurationComponent,
     InputParamPipe,
-    EmbeddedStaticOutputDefinitionComponent
+    EmbeddedStaticOutputDefinitionComponent,
+    FunctionOutputPreviewComponent
   ],
   imports: [
     CommonModule,

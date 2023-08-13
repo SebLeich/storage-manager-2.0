@@ -4,9 +4,11 @@ import { MethodEvaluationResultType } from "../types/method-evaluation-result.ty
 export interface IMethodEvaluationResult {
     status: MethodEvaluationStatus;
     injectorNavigationPath?: string;
+    paramName?: string;
     type?: MethodEvaluationResultType;
     detectedValue?: string | number | object | [] | boolean | null;
     valueIsDefinite: boolean;
     unaryExpression?: string;
     variableDeclaration?: string;
+    interface?: string;
 }

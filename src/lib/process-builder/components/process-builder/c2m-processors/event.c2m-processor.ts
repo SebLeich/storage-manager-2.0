@@ -1,12 +1,12 @@
 import { ITaskCreationFormGroupValue } from "@/lib/process-builder/interfaces/task-creation-form-group-value.interface";
 import { ITaskCreationPayload } from "@/lib/process-builder/interfaces/task-creation-payload.interface";
-import { IC2mProcessor } from "../interfaces/c2m-processor.interface";
+import { IC2MProcessor } from "../interfaces/c2m-processor.interface";
 import { BpmnJsService } from "@/lib/process-builder/services/bpmn-js.service";
 import { Injectable } from "@angular/core";
 import shapeTypes from "@/lib/bpmn-io/shape-types";
 
 @Injectable()
-export class EventC2MProcessor implements IC2mProcessor {
+export class EventC2MProcessor implements IC2MProcessor {
 
   constructor(private _bpmnJsService: BpmnJsService) { }
 

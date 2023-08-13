@@ -8,7 +8,6 @@ import { TaskCreationComponent } from '../components/dialog/task-creation/task-c
 import { FUNCTIONS_CONFIG_TOKEN, IFunction } from '../interfaces/function.interface';
 import { ITaskCreationDataWrapper } from '../interfaces/task-creation-data-wrapper.interface';
 import { ITaskCreationFormGroupValue } from '../interfaces/task-creation-form-group-value.interface';
-import { ScrollStrategyOptions } from '@angular/cdk/overlay';
 
 @Injectable({
   providedIn: 'root'
@@ -18,8 +17,7 @@ export class DialogService {
   constructor(
     private _dialog: MatDialog,
     @Inject(FUNCTIONS_CONFIG_TOKEN) public funcs: IFunction[],
-    private _injector: Injector,
-    private readonly sso: ScrollStrategyOptions
+    private _injector: Injector
   ) { }
 
   public configTaskCreation(data: ITaskCreationDataWrapper): Observable<ITaskCreationFormGroupValue> {
@@ -30,7 +28,9 @@ export class DialogService {
       disableClose: true,
       maxWidth: 'unset'
     });
+
     document.getElementsByClassName('cdk-overlay-container')[0]?.classList.add('z-index-1002');
+
     return ref.afterClosed().pipe(
       finalize(() => {
         document.getElementsByClassName('cdk-overlay-container')[0]?.classList.remove('z-index-1002');

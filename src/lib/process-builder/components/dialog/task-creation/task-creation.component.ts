@@ -23,11 +23,15 @@ import defaultImplementation from 'src/lib/process-builder/globals/default-imple
 import { ITextLeaf } from 'src/lib/process-builder/interfaces/text-leaf.interface';
 import { ProcessBuilderRepository } from '@/lib/core/process-builder-repository';
 import { showAnimation } from '@/lib/shared/animations/show';
+import { BPMNJsRepository } from '@/lib/core/bpmn-js.repository';
+import { ParameterService } from '@/lib/process-builder/services/parameter.service';
+import { MethodEvaluationResultType } from '@/lib/process-builder/types/method-evaluation-result.type';
 
 @Component({
 	selector: 'app-task-creation',
 	templateUrl: './task-creation.component.html',
 	styleUrls: ['./task-creation.component.scss'],
+	providers: [ParameterService],
 	animations: [showAnimation],
 	changeDetection: ChangeDetectionStrategy.OnPush
 })
@@ -39,6 +43,7 @@ export class TaskCreationComponent implements OnDestroy, OnInit {
 		canFail: new FormControl<boolean>(this.data.taskCreationFormGroupValue.canFail),
 		entranceGatewayType: new FormControl<GatewayType | null>(this.data.taskCreationFormGroupValue.entranceGatewayType),
 		functionIdentifier: new FormControl<number | null>(this.data.taskCreationFormGroupValue.functionIdentifier),
+		functionOutputParamIdentifier: new FormControl<number | null>(this.data.taskCreationFormGroupValue.functionOutputParamIdentifier),
 		implementation: new FormControl<ITextLeaf | null>(this.data.taskCreationFormGroupValue.implementation),
 		inputParam: new FormControl<ParamCodes[] | number | null>(this.data.taskCreationFormGroupValue.inputParam),
 		interface: new FormControl<string | null>(this.data.taskCreationFormGroupValue.interface),
@@ -48,6 +53,7 @@ export class TaskCreationComponent implements OnDestroy, OnInit {
 		normalizedName: new FormControl<string>(this.data.taskCreationFormGroupValue.normalizedName),
 		outputParamName: new FormControl<string | null>(this.data.taskCreationFormGroupValue.outputParamName),
 		outputParamValue: new FormControl<IParam | IParamDefinition[] | null>(this.data.taskCreationFormGroupValue.outputParamValue),
+		outputParamType: new FormControl<MethodEvaluationResultType | null>(this.data.taskCreationFormGroupValue.outputParamType),
 		outputTemplateName: new FormControl<string | null>(this.data.taskCreationFormGroupValue.outputTemplateName),
 		outputParamIdentifier: new FormControl<number | null>(this.data.taskCreationFormGroupValue.outputParamIdentifier),
 		outputParamInterface: new FormControl<string | null>(this.data.taskCreationFormGroupValue.outputParamInterface),
@@ -141,7 +147,7 @@ export class TaskCreationComponent implements OnDestroy, OnInit {
 	public steps$ = combineLatest([this.hasCustomImplementation$, this.hasDynamicInputParameters$, this.hasDataMapping$, this.unableToDetermineOutputParam$, this.hasStaticOutputDefinition$]).pipe(
 		map(
 			([hasCustomImplementation, hasDynamicInputParameters, hasDataMapping, unableToDetermineOutputParam, hasStaticOutputDefinition]) =>
-				this.getSteps([
+				this._getSteps([
 					hasDynamicInputParameters,
 					hasCustomImplementation,
 					hasDataMapping,
@@ -168,7 +174,7 @@ export class TaskCreationComponent implements OnDestroy, OnInit {
 
 	public stepToNextStep$: Observable<number> = this.currentStep$.pipe(switchMap(step => step?.autoProceed$ ?? NEVER)) as Observable<number>;
 
-	public formInvalid$ = this.formGroup.statusChanges.pipe(map((status) => status === 'INVALID'), startWith(this.formGroup.status));
+	public formInvalid$ = this.formGroup.statusChanges.pipe(startWith(this.formGroup.status), map((status) => status === 'INVALID'));
 
 	public isBlocked = false;
 
@@ -177,6 +183,7 @@ export class TaskCreationComponent implements OnDestroy, OnInit {
 	constructor(
 		@Inject(PROCESS_BUILDER_CONFIG_TOKEN) public config: IProcessBuilderConfig,
 		@Inject(MAT_DIALOG_DATA) public data: ITaskCreationDataWrapper,
+		private _parameterService: ParameterService,
 		private _ref: MatDialogRef<TaskCreationComponent>,
 		private _store: Store
 	) { }
@@ -203,7 +210,7 @@ export class TaskCreationComponent implements OnDestroy, OnInit {
 				this.validateFunctionSelection();
 			}
 		));
-		this._subscription.add(this.currentStep$.subscribe((step) => this.renderStep(step)));
+		this._subscription.add(this.currentStep$.subscribe((step) => this._renderStep(step)));
 		this._subscription.add(this.stepToNextStep$.subscribe((stepIndex: number) => this.setStep(stepIndex + 1)));
 	}
 
@@ -247,11 +254,11 @@ export class TaskCreationComponent implements OnDestroy, OnInit {
 		});
 	}
 
+	public TaskCreationStep = TaskCreationStep;
+
 	private async _onClose(){
 		this.isBlocked = true;
 		this._ref.disableClose = true;
-
-		await firstValueFrom(timer(1000));
 
 		const selectedFunction = await firstValueFrom(this._store.select(selectIFunction(this.formGroup.controls.functionIdentifier?.value)));
 		if(selectedFunction){
@@ -262,12 +269,15 @@ export class TaskCreationComponent implements OnDestroy, OnInit {
 			}
 
 			if(this.formGroup.value.implementation){
-				const methodEvaluation = CodemirrorRepository.evaluateCustomMethod(undefined, this.formGroup.value.implementation?.text);
+				const inputParams = BPMNJsRepository.getAvailableInputParams(this.data.taskCreationPayload.configureActivity!);
+				const injectorDef = await this._parameterService.parameterToInjector([...inputParams, ParamCodes.ExemplarySolutionWrapper, ParamCodes.ExemplarySolutionWrapper2]);
+				const methodEvaluation = CodemirrorRepository.evaluateCustomMethod(undefined, this.formGroup.value.implementation?.text, injectorDef.injector, injectorDef.mappedParameters);
 
 				if(methodEvaluation.status === MethodEvaluationStatus.ReturnValueFound){
 					const nextOutputParamIdentifier = await firstValueFrom(this._store.select(selectNextParameterIdentifier()));
 					this.formGroup.patchValue({ outputParamIdentifier: nextOutputParamIdentifier });
 				}
+				else this.formGroup.patchValue({ outputParamIdentifier: undefined });
 			}
 		}
 
@@ -277,7 +287,7 @@ export class TaskCreationComponent implements OnDestroy, OnInit {
 		this._ref.close(this.formGroup.value);
 	}
 
-	private renderStep(step: ITaskCreationConfig) {
+	private _renderStep(step: ITaskCreationConfig) {
 		this.dynamicInner.clear();
 		const stepConfiguration = STEP_REGISTRY.get(step.taskCreationStep);
 		if (!stepConfiguration) {
@@ -290,7 +300,7 @@ export class TaskCreationComponent implements OnDestroy, OnInit {
 		}
 	}
 
-	private getSteps([hasDynamicInputParam, hasCustomImplementation, hasDataMapping, unableToDetermineOutputParam, hasStaticOutputDefinition]: boolean[]) {
+	private _getSteps([hasDynamicInputParam, hasCustomImplementation, hasDataMapping, unableToDetermineOutputParam, hasStaticOutputDefinition]: boolean[]) {
 		const availableSteps: ITaskCreationConfig[] = [];
 		if (this.data) {
 			const gateway = this.data?.taskCreationPayload?.configureIncomingErrorGatewaySequenceFlow;
@@ -359,8 +369,6 @@ export class TaskCreationComponent implements OnDestroy, OnInit {
 		}
 		return availableSteps;
 	}
-
-	public TaskCreationStep = TaskCreationStep;
 
 	private _subscribeNameNormalization() {
 		this._subscription.add(this.formGroup.controls.name

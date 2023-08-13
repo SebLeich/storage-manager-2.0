@@ -29,6 +29,7 @@ export class CodeEditorComponent implements ControlValueAccessor, OnInit {
   @Input() public inputParams: { [param: string]: object | string | number } | null = null;
 
   public implementation: Text = Text.of(defaultImplementation);
+
   private _onTouched?: (value: Text) => void;
   private _onChange?: (value: Text) => void;
   private _codeMirror?: EditorView;
@@ -81,15 +82,10 @@ export class CodeEditorComponent implements ControlValueAccessor, OnInit {
         EditorView.updateListener.of((evt) => {
           if (evt.docChanged) {
             this.implementation = evt.state.doc;
-            if (typeof this._onChange === 'function') {
-              this._onChange(this.implementation);
-            }
+            if (typeof this._onChange === 'function') this._onChange(this.implementation);
           }
-          if (evt.focusChanged) {
-            if (typeof this._onTouched === 'function') {
-              this._onTouched(this.implementation);
-            }
-          }
+
+          if (evt.focusChanged && typeof this._onTouched === 'function') this._onTouched(this.implementation);
         }),
         lintGutter(),
       ]

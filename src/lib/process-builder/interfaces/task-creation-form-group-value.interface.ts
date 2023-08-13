@@ -3,11 +3,13 @@ import { ParamCodes } from "src/config/param-codes";
 import { IParam, IParamDefinition } from "@process-builder/interfaces";
 import { GatewayType } from "../types/gateway.type";
 import { ITextLeaf } from "./text-leaf.interface";
+import { MethodEvaluationResultType } from "../types/method-evaluation-result.type";
 
 export interface ITaskCreationFormGroupValue {
     canFail: boolean;
     entranceGatewayType: GatewayType | null;
     functionIdentifier: number | null;
+    functionOutputParamIdentifier: number | null;
     implementation: ITextLeaf | null;
     inputParam: ParamCodes[] | number | null;
     interface: string | null;
@@ -20,6 +22,7 @@ export interface ITaskCreationFormGroupValue {
     outputTemplateName: string;
     outputParamIdentifier: number | null;
     outputParamInterface: string | null;
+    outputParamType: MethodEvaluationResultType | null;
     requireCustomImplementation: boolean;
 }
 

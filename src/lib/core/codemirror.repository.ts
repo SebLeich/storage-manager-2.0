@@ -6,10 +6,11 @@ import { Tree, SyntaxNode } from 'node_modules/@lezer/common/dist/tree';
 import { IMethodEvaluationResult } from "../process-builder/interfaces/method-evaluation-result.interface";
 import { ISyntaxNodeResponse } from "./interfaces/syntax-node-response.interface";
 import { ITextLeaf } from "../process-builder/interfaces/text-leaf.interface";
+import { IParamDefinition } from "../process-builder/interfaces";
 
 export class CodemirrorRepository {
 
-    static stringToTextLeaf(text: string[] | string): ITextLeaf {
+    public static stringToTextLeaf(text: string[] | string): ITextLeaf {
         const convertedText = Array.isArray(text) ? text.join('\n') : text;
         const state = EditorState.create({
             doc: convertedText,
@@ -21,7 +22,7 @@ export class CodemirrorRepository {
         return state.doc as unknown as ITextLeaf;
     }
 
-    static evaluateCustomMethod(state?: EditorState, text?: string[] | string, injector?: unknown): IMethodEvaluationResult {
+    public static evaluateCustomMethod(state?: EditorState, text?: string[] | string, injector: { [key: string]: number | string | object } = {}, injectorDef: IParamDefinition[] = []): IMethodEvaluationResult {
         const convertedText = Array.isArray(text) ? text.join('\n') : text;
         if (!state) {
             if (!text) {
@@ -46,7 +47,7 @@ export class CodemirrorRepository {
         const block = arrowFunction ? arrowFunction.getChild('Block') : mainMethod.node.getChild('Block');
         const returnStatement = block?.getChild('ReturnStatement') ?? undefined;
         if (returnStatement) {
-            const result = this.getEvaluationResult(state, returnStatement, block as SyntaxNode, injector);
+            const result = this.getEvaluationResult(state, returnStatement, block as SyntaxNode, injector, injectorDef);
             if (result) {
                 return result;
             }
@@ -55,7 +56,7 @@ export class CodemirrorRepository {
         return { status: MethodEvaluationStatus.NoReturnValue, valueIsDefinite: false };
     }
 
-    static getEvaluationResult(state: EditorState, parent: SyntaxNode, block: SyntaxNode, injector: unknown): IMethodEvaluationResult {
+    private static getEvaluationResult(state: EditorState, parent: SyntaxNode, block: SyntaxNode, injector: unknown, injectorDef: IParamDefinition[]): IMethodEvaluationResult {
         const memberExpression = parent.getChild('MemberExpression');
         if (memberExpression) {
             const representation = state.sliceDoc(memberExpression?.from, memberExpression?.to);
@@ -64,11 +65,26 @@ export class CodemirrorRepository {
             if (!dependsOnInjector) {
                 const variableValue = this.resolveVariableValue(state, block, representation);
                 if (variableValue) {
-                    const result = { ...this.getEvaluationResult(state, variableValue, block, injector), valueIsDefinite: false };
+                    const result = { ...this.getEvaluationResult(state, variableValue, block, injector, injectorDef), valueIsDefinite: false };
                     return result;
                 }
             }
-            return { status: MethodEvaluationStatus.ReturnValueFound, injectorNavigationPath: representation, type: 'member', valueIsDefinite: false };
+
+            let index = 0;
+            let currentPathSegment = navigationPath[index],
+                injectorDefEntry = injectorDef.find(definitionElement => definitionElement.normalizedName === currentPathSegment);
+
+            while (currentPathSegment && injectorDefEntry) {
+                index++;
+                currentPathSegment = navigationPath[index];
+
+                if(currentPathSegment){
+                    injectorDefEntry = (injectorDefEntry.typeDef as IParamDefinition[]).find((definitionElement) => (definitionElement.normalizedName ?? definitionElement.name) === currentPathSegment);
+                }
+            }
+
+            const paramName = navigationPath[navigationPath.length - 1];
+            return { status: MethodEvaluationStatus.ReturnValueFound, injectorNavigationPath: representation, type: injectorDefEntry?.type, valueIsDefinite: false, interface: injectorDefEntry?.interface ?? undefined, paramName: paramName };
         }
 
         const variableExpression = parent.getChild('VariableName');
@@ -80,11 +96,11 @@ export class CodemirrorRepository {
 
             const variableValue = this.resolveVariableValue(state, block, representation);
             if (variableValue) {
-                const result = { ...this.getEvaluationResult(state, variableValue, block, injector), valueIsDefinite: false };
+                const result = { ...this.getEvaluationResult(state, variableValue, block, injector, injectorDef), valueIsDefinite: false };
                 return result;
             }
 
-            return { status: MethodEvaluationStatus.ReturnValueFound, valueIsDefinite: false };    
+            return { status: MethodEvaluationStatus.ReturnValueFound, valueIsDefinite: false };
         }
 
         const variableDeclaration = parent.getChild('VariableDeclaration');
@@ -93,11 +109,11 @@ export class CodemirrorRepository {
 
             const equals = variableDeclaration.getChild('Equals');
             if (!equals) {
-                return { status: MethodEvaluationStatus.ReturnValueFound, valueIsDefinite: false, variableDeclaration: representation };   
+                return { status: MethodEvaluationStatus.ReturnValueFound, valueIsDefinite: false, variableDeclaration: representation };
             }
 
-            const result = { ...this.getEvaluationResult(state, equals.nextSibling as SyntaxNode, block, injector), valueIsDefinite: false };
-            return result; 
+            const result = { ...this.getEvaluationResult(state, equals.nextSibling as SyntaxNode, block, injector, injectorDef), valueIsDefinite: false };
+            return result;
         }
 
         const unaryExpression = parent.getChild('UnaryExpression');

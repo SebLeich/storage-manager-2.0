@@ -11,7 +11,7 @@ import { ProcessBuilderRepository } from "@/lib/core/process-builder-repository"
 import { firstValueFrom, map, shareReplay } from "rxjs";
 import { selectIParam, selectIParams } from "@/lib/process-builder/store/selectors";
 import { mapIParamInterfaces } from "@/lib/process-builder/extensions/rxjs/map-param-interfaces.rxjs";
-import { upsertIParam } from "@/lib/process-builder/store";
+import { removeIParam, upsertIParam } from "@/lib/process-builder/store";
 import { IElement } from "@/lib/bpmn-io/interfaces/element.interface";
 import { mapIParamsInterfaces } from "@/lib/process-builder/extensions/rxjs/map-params-interfaces.rxjs";
 import { deepObjectLookup } from "@/lib/shared/globals/deep-object-lookup.function";
@@ -33,7 +33,7 @@ export class OutputC2SProcessor implements IC2SProcessor {
         const methodEvaluation = CodemirrorRepository.evaluateCustomMethod(undefined, code);
         let outputParam: IParam | null = await selectSnapshot(this._store.select(selectIParam(taskCreationFormGroupValue.outputParamIdentifier)));
         if(!outputParam && methodEvaluation.status === MethodEvaluationStatus.ReturnValueFound) {
-            const type = methodEvaluation.type === 'member' || methodEvaluation.type === 'variable'? 'object': methodEvaluation.type == null || methodEvaluation.type === 'null'? 'undefined': methodEvaluation.type;
+            const type = methodEvaluation.type == null || methodEvaluation.type === 'null'? 'undefined': methodEvaluation.type;
             outputParam = {
                 identifier: taskCreationFormGroupValue.outputParamIdentifier!,
                 _isIParam: true,
@@ -47,43 +47,50 @@ export class OutputC2SProcessor implements IC2SProcessor {
                 nullable: false,
                 optional: false
             };
+        } 
+        else if(methodEvaluation.status !== MethodEvaluationStatus.ReturnValueFound && typeof taskCreationFormGroupValue.functionOutputParamIdentifier === 'number') {
+            this._store.dispatch(removeIParam(taskCreationFormGroupValue.functionOutputParamIdentifier));
+            return;
         }
 
         if(!outputParam) {
             return;
         }
-        
-        this._handleFunctionOutputParam(taskCreationFormGroupValue, taskCreationPayload, outputParam, methodEvaluation);
-    }
+    
+        const defaultValue = !Array.isArray(taskCreationFormGroupValue.outputParamValue) && taskCreationFormGroupValue.outputParamValue?.constant ? taskCreationFormGroupValue.outputParamValue.defaultValue : outputParam.defaultValue ?? await this._outputParamValue(methodEvaluation, taskCreationFormGroupValue.outputParamValue),
+            outputParamName = taskCreationFormGroupValue.outputParamName ?? outputParam.name ?? this._config.dynamicParamDefaultNaming,
+            normalizedOutputParamName = taskCreationFormGroupValue.normalizedOutputParamName ?? outputParam.normalizedName ?? ProcessBuilderRepository.normalizeName(taskCreationFormGroupValue.outputParamName ?? this._config.dynamicParamDefaultNaming),
+            paramInterface = outputParam.interface ?? taskCreationFormGroupValue.interface ?? await this._outputParamInterface(methodEvaluation);
 
-    private async _handleFunctionOutputParam(taskCreationFormGroupValue: ITaskCreationFormGroupValue, taskCreationPayload: ITaskCreationPayload, outputParam: IParam, methodEvaluation: IMethodEvaluationResult) {
-        const paramInterface = outputParam.interface ?? taskCreationFormGroupValue.interface ?? await this._outputParamInterface(methodEvaluation);
-        const defaultValue = !Array.isArray(taskCreationFormGroupValue.outputParamValue) && taskCreationFormGroupValue.outputParamValue?.constant ? taskCreationFormGroupValue.outputParamValue.defaultValue : outputParam.defaultValue ?? await this._outputParamValue(methodEvaluation, taskCreationFormGroupValue.outputParamValue);
-        outputParam = {
+        let updatedOutputParam = {
             ...outputParam,
-            name: taskCreationFormGroupValue.outputParamName ?? outputParam.name ?? this._config.dynamicParamDefaultNaming,
-            normalizedName: taskCreationFormGroupValue.normalizedOutputParamName ?? outputParam.normalizedName ?? ProcessBuilderRepository.normalizeName(taskCreationFormGroupValue.outputParamName ?? this._config.dynamicParamDefaultNaming),
+            name: outputParamName,
+            normalizedName: normalizedOutputParamName,
             defaultValue: defaultValue,
             interface: paramInterface,
         } as IParam;
+
         if (!Array.isArray(taskCreationFormGroupValue.outputParamValue) && taskCreationFormGroupValue.outputParamValue?.type === 'array') {
-            outputParam.interface = null;
-            outputParam.type = 'array';
-            outputParam.typeDef = [
-                {
-                    interface: paramInterface ?? null,
-                    type: 'object',
-                } as IParamDefinition
-            ]
-        }
-        if (typeof outputParam.interface === 'string') {
-            outputParam.type = 'object';
-        } else {
-            const outputType = await this._methodEvaluationTypeToOutputType(taskCreationPayload.configureActivity!, methodEvaluation);
-            outputParam.type = outputType;
+            updatedOutputParam = {
+                ...updatedOutputParam,
+                interface: null,
+                type: 'array',
+                typeDef: [
+                    {
+                        interface: paramInterface ?? null,
+                        type: 'object',
+                    } as IParamDefinition
+                ]
+            };
         }
 
-        this._store.dispatch(upsertIParam(outputParam));
+        if (typeof outputParam.interface === 'string') updatedOutputParam.type = 'object';
+        else {
+            const outputType = await this._methodEvaluationTypeToOutputType(configureActivity, methodEvaluation);
+            updatedOutputParam.type = outputType;
+        }
+
+        this._store.dispatch(upsertIParam(updatedOutputParam));
     }
 
     private async _methodEvaluationTypeToOutputType(element: IElement, methodEvaluation?: IMethodEvaluationResult) {

@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { BpmnJsService } from '../../services/bpmn-js.service';
 import { DialogService } from '../../services/dialog.service';
-import { combineLatest, map, of, switchMap } from 'rxjs';
+import { combineLatest, map, of, switchMap, tap } from 'rxjs';
 import { BPMNJsRepository } from 'src/lib/core/bpmn-js.repository';
 import { TaskCreationStep } from '../../globals/task-creation-step';
 import { ITaskCreationPayload } from '../../interfaces/task-creation-payload.interface';
@@ -19,6 +19,7 @@ export class ProcessBuilderComponentService {
 
   public taskEditingDialogResultReceived$ = this._bpmnJsService.bufferedTaskEditingEvents$
     .pipe(
+      tap(() => (document.activeElement as HTMLElement)?.blur()),
       switchMap((events) => {
         const functionSelectionConfig = events.find(event => event.taskCreationStep === TaskCreationStep.ConfigureFunctionSelection);
         const functionIdentifier = BPMNJsRepository.getSLPBExtension<number>(functionSelectionConfig?.element?.businessObject, 'ActivityExtension', (ext) => ext.activityFunctionId) ?? null;

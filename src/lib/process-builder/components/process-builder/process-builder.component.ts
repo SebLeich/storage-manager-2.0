@@ -14,7 +14,7 @@ import { IBpmnJS } from '../../interfaces/bpmn-js.interface';
 import { BPMN_JS } from '@process-builder/injection';
 import { C2M_INJECTION_TOKEN } from './constants/c2m-processor.constant';
 import { ActivityC2MProcessor } from './c2m-processors/activity.c2m-processor';
-import { IC2mProcessor } from './interfaces/c2m-processor.interface';
+import { IC2MProcessor } from './interfaces/c2m-processor.interface';
 import { ConnectorC2MProcessor } from './c2m-processors/connector.c2m-processor';
 import { ITaskCreationPayload } from '../../interfaces/task-creation-payload.interface';
 import { ITaskCreationFormGroupValue } from '../../interfaces/task-creation-form-group-value.interface';
@@ -26,6 +26,7 @@ import { C2S_INJECTION_TOKEN } from './constants/c2s-processing.constant';
 import { IC2SProcessor } from './interfaces/c2s-processor.interface';
 import { ActivityC2SProcessor } from './c2s-processors/activity.c2s-processor';
 import { OutputC2SProcessor } from './c2s-processors/output.c2s-processor';
+import { OutputC2MProcessor } from './c2m-processors/output.c2m-processor';
 
 @Component({
   selector: 'app-process-builder',
@@ -38,7 +39,7 @@ import { OutputC2SProcessor } from './c2s-processors/output.c2s-processor';
     { provide: C2S_INJECTION_TOKEN, useClass: OutputC2SProcessor, multi: true },
     { provide: C2M_INJECTION_TOKEN, useClass: ActivityC2MProcessor, multi: true },
     { provide: C2M_INJECTION_TOKEN, useClass: ConnectorC2MProcessor, multi: true },
-    { provide: C2M_INJECTION_TOKEN, useClass: DataC2MProcessor, multi: true },
+    { provide: C2M_INJECTION_TOKEN, useClass: OutputC2MProcessor, multi: true },
     { provide: C2M_INJECTION_TOKEN, useClass: EventC2MProcessor, multi: true },
     { provide: C2M_INJECTION_TOKEN, useClass: GatewayC2MProcessor, multi: true },
   ]
@@ -58,7 +59,7 @@ export class ProcessBuilderComponent implements OnDestroy, OnInit {
 
   constructor(
     @Inject(C2S_INJECTION_TOKEN) private _c2sProcessors: IC2SProcessor[],
-    @Inject(C2M_INJECTION_TOKEN) private _c2mProcessors: IC2mProcessor[],
+    @Inject(C2M_INJECTION_TOKEN) private _c2mProcessors: IC2MProcessor[],
     @Inject(BPMN_JS) private _bpmnJs: IBpmnJS,
     public processBuilderService: ProcessBuilderService,
     public bpmnJsService: BpmnJsService,
