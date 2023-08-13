@@ -7,9 +7,8 @@ import { BpmnJsService } from "@/lib/process-builder/services/bpmn-js.service";
 import { Store } from "@ngrx/store";
 import { ITaskCreationFormGroupValue } from "@/lib/process-builder/interfaces/task-creation-form-group-value.interface";
 import { selectSnapshot } from "@/lib/process-builder/globals/select-snapshot";
-import { selectIFunction } from "@/lib/process-builder/store/selectors";
+import { selectIFunction, selectIParam } from "@/lib/process-builder/store/selectors";
 import shapeTypes from "@/lib/bpmn-io/shape-types";
-import { ProcessBuilderRepository } from "@/lib/core/process-builder-repository";
 import { BPMNJsRepository } from "@/lib/core/bpmn-js.repository";
 import { IElement } from "@/lib/bpmn-io/interfaces/element.interface";
 
@@ -35,6 +34,24 @@ export class OutputC2MProcessor implements IC2MProcessor {
             return;
         }
 
-        
+        if(referencedFunction.output == null){
+            return;
+        }
+
+        const outputParam = await selectSnapshot(this._store.select(selectIParam(taskCreationFormGroupValue.outputParamIdentifier)));
+        if(!outputParam){
+            return;
+        }
+
+        BPMNJsRepository.appendOutputParam(
+            this._bpmnJs,
+            taskCreationPayload.configureActivity as IElement,
+            outputParam.identifier,
+            outputParam.name ?? 'no param name',
+            outputParam.interface,
+            outputParam.isProcessOutput ?? false,
+            true,
+            this._config.expectInterface
+        );
     }
 }

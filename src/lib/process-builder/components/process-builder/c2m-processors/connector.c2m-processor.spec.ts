@@ -13,7 +13,7 @@ import { IConnector } from "@/lib/bpmn-io/interfaces/connector.interface";
 import { ITaskCreationFormGroupValue } from "@/lib/process-builder/interfaces/task-creation-form-group-value.interface";
 import { ITaskCreationPayload } from "@/lib/process-builder/interfaces/task-creation-payload.interface";
 import { BPMNJsRepository } from "@/lib/core/bpmn-js.repository";
-import ExtensionElementWrapper from "@/lib/bpmn-io/testing/extension-element";
+import ExtensionElementWrapper from "@/lib/bpmn-io/classes/extension-element.class";
 
 describe('ConnectorC2MProcessor', () => {
     let processor: ConnectorC2MProcessor;

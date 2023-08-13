@@ -133,6 +133,7 @@ export class DataC2MProcessor implements IC2MProcessor {
 
         this._store.dispatch(upsertIParam(outputParam));
 
+        /*
         BPMNJsRepository.appendOutputParam(
             this._bpmnJs,
             taskCreationPayload.configureActivity!,
@@ -140,6 +141,7 @@ export class DataC2MProcessor implements IC2MProcessor {
             true,
             this._config.expectInterface
         );
+        */
 
         return { outputParam }
     }

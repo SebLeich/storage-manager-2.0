@@ -73,7 +73,7 @@ describe('DataC2MProcessor', () => {
             });
 
         expect(dispatchSpy).toHaveBeenCalledWith(upsertIParam(updatedParam));
-        expect(appendOutputParamSpy).toHaveBeenCalledWith(jasmine.any(Object), activity, updatedParam, true, processBuilderConfig.expectInterface);
+        expect(appendOutputParamSpy).toHaveBeenCalledWith(jasmine.any(Object), activity, updatedParam.identifier, updatedParam.name, updatedParam.interface, updatedParam.isProcessOutput ?? false, true, processBuilderConfig.expectInterface);
     });
 
     it('should delete all output data constructs when there is no output value', async () => {
@@ -86,7 +86,7 @@ describe('DataC2MProcessor', () => {
             });
 
         expect(dispatchSpy).not.toHaveBeenCalledWith(upsertIParam(updatedParam));
-        expect(appendOutputParamSpy).not.toHaveBeenCalledWith(jasmine.any(Object), activity, updatedParam, true, processBuilderConfig.expectInterface);
+        expect(appendOutputParamSpy).not.toHaveBeenCalledWith(jasmine.any(Object), activity, updatedParam.identifier, updatedParam.name, updatedParam.interface, updatedParam.isProcessOutput ?? false, true, processBuilderConfig.expectInterface);
         expect(removeElementsSpy).toHaveBeenCalledWith(outputTargets);
     });
 

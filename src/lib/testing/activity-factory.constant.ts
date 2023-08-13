@@ -4,7 +4,7 @@ import shapeTypes from "@/lib/bpmn-io/shape-types";
 import sebleichProcessBuilderExtension from "@/lib/process-builder/globals/sebleich-process-builder-extension";
 import { IElement } from "@/lib/bpmn-io/interfaces/element.interface";
 
-const createActivityExtension = (functionIdentifier: any) => {
+const createActivityExtension = (functionIdentifier: string | number | undefined) => {
     return {
         $instanceOf: (type) => {
             const prefix = sebleichProcessBuilderExtension.prefix;
@@ -15,7 +15,7 @@ const createActivityExtension = (functionIdentifier: any) => {
 }
 
 
-const ACTIVITY_FACTORY = (functionIdentifier: any) => {
+const ACTIVITY_FACTORY = (functionIdentifier: string | number | undefined) => {
     return {
         businessObject: {
             extensionElements:

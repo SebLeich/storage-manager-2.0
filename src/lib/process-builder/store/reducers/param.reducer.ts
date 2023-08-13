@@ -5,7 +5,7 @@ import { removeIFunction } from '../actions/function.actions';
 import { addIParam, addIParams, removeIParam, updateIParam, upsertIParam, upsertIParams } from '../actions/param.actions';
 
 
-export const featureKey = 'Param';
+export const featureKey = 'param';
 
 function sortByIdentifier(a: IParam, b: IParam) {
   return a.identifier > b.identifier ? 1 : -1;

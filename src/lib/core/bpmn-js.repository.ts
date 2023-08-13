@@ -30,11 +30,7 @@ export class BPMNJsRepository {
     public static setDataParamId = (bpmnJs: IBpmnJS, element: IElement, arg: number | IParam | undefined | null) => BPMNJsRepository.updateBpmnElementSLPBExtension(bpmnJs, element.businessObject, 'DataObjectExtension', (ext) => ext.dataParamId = typeof arg === 'number'? arg: arg?.identifier);
     public static setSequenceFlowType = (bpmnJs: IBpmnJS, connector: IConnector, entranceGatewayType: GatewayType) => BPMNJsRepository.updateBpmnElementSLPBExtension(bpmnJs, connector.businessObject, 'SequenceFlowExtension', (ext) => ext.sequenceFlowType = entranceGatewayType === 'Success' ? 'success' : 'error');
 
-    public static appendOutputParam(bpmnJS: IBpmnJS, element: IElement, param: IParam | null | undefined, preventDublet = true, expectedInterface?: string) {
-        if (!param) {
-            return null;
-        }
-
+    public static appendOutputParam(bpmnJS: IBpmnJS, element: IElement, parameterIdentifier: number, parameterName: string, parameterInterface: string | null, parameterIsProcessOutput: boolean, preventDublet = true, expectedInterface?: string) {
         let createdDataOutputElement: IElement | undefined;
         const existingElement = element.outgoing.find(x => x.type === shapeTypes.DataOutputAssociation)?.target;
 
@@ -43,17 +39,14 @@ export class BPMNJsRepository {
                 type: shapeTypes.DataObjectReference
             }, { x: element.x + 50, y: element.y - 60 });
 
-            BPMNJsRepository.setDataParamId(bpmnJS, createdDataOutputElement, param);
-            BPMNJsRepository.updateBpmnElementSLPBExtension(bpmnJS, createdDataOutputElement.businessObject, 'DataObjectExtension', (ext) => ext.matchesProcessOutputInterface = param.interface === expectedInterface);
-            BPMNJsRepository.updateBpmnElementSLPBExtension(bpmnJS, createdDataOutputElement.businessObject, 'DataObjectExtension', (ext) => ext.isProcessOutput = param.isProcessOutput);
+            BPMNJsRepository.setDataParamId(bpmnJS, createdDataOutputElement, parameterIdentifier);
+            BPMNJsRepository.updateBpmnElementSLPBExtension(bpmnJS, createdDataOutputElement.businessObject, 'DataObjectExtension', (ext) => ext.matchesProcessOutputInterface = parameterInterface === expectedInterface);
+            BPMNJsRepository.updateBpmnElementSLPBExtension(bpmnJS, createdDataOutputElement.businessObject, 'DataObjectExtension', (ext) => ext.isProcessOutput = parameterIsProcessOutput);
         }
 
-        const referencingDataRepresentations = getElementRegistryModule(bpmnJS)
-            .filter(element => element.type === shapeTypes.DataOutputAssociation && BPMNJsRepository.getDataParamId(element as IElement) === param.identifier)
-            .map(connector => (connector as IConnector).target);
-
+        const referencingDataRepresentations = getElementRegistryModule(bpmnJS).filter(element => element.type === shapeTypes.DataObjectReference && BPMNJsRepository.getDataParamId(element as IElement) === parameterIdentifier);
         for (const referencingDataRepresentation of referencingDataRepresentations) {
-            getModelingModule(bpmnJS).updateLabel(referencingDataRepresentation, param.name);
+            getModelingModule(bpmnJS).updateLabel(referencingDataRepresentation, parameterName ?? 'no param name');
         }
 
         return { createdDataOutputElement };

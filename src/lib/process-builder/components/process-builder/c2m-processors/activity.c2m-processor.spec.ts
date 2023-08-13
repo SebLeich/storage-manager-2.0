@@ -14,7 +14,7 @@ import { Store } from "@ngrx/store";
 import { selectIFunction } from "@/lib/process-builder/store/selectors";
 import MOCK_FUNCTION_Return1 from "../testing/function-return-1.constant";
 import { ITaskCreationPayload } from "@/lib/process-builder/interfaces/task-creation-payload.interface";
-import ACTIVITY_FACTORY from "../testing/activity-factory.constant";
+import ACTIVITY_FACTORY from "../../../../testing/activity-factory.constant";
 import { MatDialog, MatDialogRef } from "@angular/material/dialog";
 import { of } from "rxjs";
 import { ITaskCreationFormGroupValue } from "@/lib/process-builder/interfaces/task-creation-form-group-value.interface";

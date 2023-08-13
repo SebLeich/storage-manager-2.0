@@ -15,7 +15,8 @@
             <input matInput type="text" formControlName="outputParamName" />
         </mat-form-field>
 
-        <mat-form-field appearance="outline" class="mat-form-field-outline-white-bg mat-form-field-outline-no-padding-bottom template-control">
+        <mat-form-field appearance="outline"
+            class="mat-form-field-outline-white-bg mat-form-field-outline-no-padding-bottom template-control">
             <mat-label>
                 <app-function-output-preview [outputParamType]="formGroup.controls.outputParamType?.value ?? null"
                     [outputParamName]="formGroup.controls.outputParamName?.value ?? null"
@@ -29,8 +30,9 @@
             </mat-select>
         </mat-form-field>
 
-        <mat-slide-toggle formControlName="canFail">{{canFailControl.value? 'can fail': 'can not
-            fail'}}</mat-slide-toggle>
+        <mat-slide-toggle formControlName="canFail">
+            {{canFailControl.value? 'can fail': 'can not fail'}}
+        </mat-slide-toggle>
 
         <div class="loading-wrapper">
             <mat-spinner *ngIf="(returnValueStatus$|async) === MethodEvaluationStatus.Calculating"
