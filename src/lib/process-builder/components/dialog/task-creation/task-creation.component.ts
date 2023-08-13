@@ -32,8 +32,8 @@ import { MethodEvaluationResultType } from '@/lib/process-builder/types/method-e
 	templateUrl: './task-creation.component.html',
 	styleUrls: ['./task-creation.component.scss'],
 	providers: [ParameterService],
+	changeDetection: ChangeDetectionStrategy.OnPush,
 	animations: [showAnimation],
-	changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TaskCreationComponent implements OnDestroy, OnInit {
 	@ViewChild('dynamicInner', { static: true, read: ViewContainerRef })
@@ -130,12 +130,10 @@ export class TaskCreationComponent implements OnDestroy, OnInit {
 		),
 		distinctUntilChanged()
 	);
-
 	public hasDataMapping$ = this.selectedFunction$.pipe(
 		map((selectedFunction) => selectedFunction?.requireDataMapping ?? false),
 		distinctUntilChanged()
 	);
-
 	public hasStaticOutputDefinition$ = this.selectedFunction$.pipe(
 		map((selectedFunction) => {
 			const outp = selectedFunction?.requireStaticOutputDefinition ?? false;
@@ -143,7 +141,6 @@ export class TaskCreationComponent implements OnDestroy, OnInit {
 		}),
 		distinctUntilChanged()
 	);
-
 	public steps$ = combineLatest([this.hasCustomImplementation$, this.hasDynamicInputParameters$, this.hasDataMapping$, this.unableToDetermineOutputParam$, this.hasStaticOutputDefinition$]).pipe(
 		map(
 			([hasCustomImplementation, hasDynamicInputParameters, hasDataMapping, unableToDetermineOutputParam, hasStaticOutputDefinition]) =>
@@ -156,7 +153,6 @@ export class TaskCreationComponent implements OnDestroy, OnInit {
 				])
 		)
 	);
-
 	public currentStep$ = combineLatest([this.steps$, toObservable(this.currentStepIndex)]).pipe(
 		map(([steps, index]) => steps[index]),
 		filter((step) => (step ? true : false)),
@@ -164,16 +160,13 @@ export class TaskCreationComponent implements OnDestroy, OnInit {
 			(prev, curr) => prev.taskCreationStep === curr.taskCreationStep
 		)
 	);
-
 	public hasPreviousStep$ = toObservable(this.currentStepIndex).pipe(map((index) => index > 0));
 	public hasNextStep$ = combineLatest([this.steps$, toObservable(this.currentStepIndex)]).pipe(map(([steps, index]) => index < steps.length - 1));
 	public canAnalyzeCustomImplementation$ = this.currentStep$.pipe(
 		filter((x) => (x ? true : false)),
 		map((x) => x.taskCreationStep === TaskCreationStep.ConfigureFunctionImplementation || x.taskCreationStep === TaskCreationStep.ConfigureFunctionOutput)
 	);
-
 	public stepToNextStep$: Observable<number> = this.currentStep$.pipe(switchMap(step => step?.autoProceed$ ?? NEVER)) as Observable<number>;
-
 	public formInvalid$ = this.formGroup.statusChanges.pipe(startWith(this.formGroup.status), map((status) => status === 'INVALID'));
 
 	public isBlocked = false;
@@ -249,6 +242,7 @@ export class TaskCreationComponent implements OnDestroy, OnInit {
 			normalizedOutputParamName: outputParam?.normalizedName,
 			interface: outputParam?.type === 'array' ? (outputParam.typeDef as IParamDefinition[])[0].interface : outputParam?.interface,
 			outputParamName: outputParam?.name,
+			outputParamIdentifier: currentFunction.output,
 			outputParamValue: objectTypeDefinition,
 			inputParam: inputParams.length === 1 ? inputParams[0].interface : null,
 		});
@@ -274,7 +268,7 @@ export class TaskCreationComponent implements OnDestroy, OnInit {
 				const methodEvaluation = CodemirrorRepository.evaluateCustomMethod(undefined, this.formGroup.value.implementation?.text, injectorDef.injector, injectorDef.mappedParameters);
 
 				if(methodEvaluation.status === MethodEvaluationStatus.ReturnValueFound){
-					const nextOutputParamIdentifier = await firstValueFrom(this._store.select(selectNextParameterIdentifier()));
+					const nextOutputParamIdentifier = typeof selectedFunction.output === 'number'? selectedFunction.output: await firstValueFrom(this._store.select(selectNextParameterIdentifier()));
 					this.formGroup.patchValue({ outputParamIdentifier: nextOutputParamIdentifier });
 				}
 				else this.formGroup.patchValue({ outputParamIdentifier: undefined });

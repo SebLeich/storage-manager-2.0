@@ -10,7 +10,7 @@ import { IProcessBuilderConfig, PROCESS_BUILDER_CONFIG_TOKEN } from 'src/lib/pro
 import { CodemirrorRepository } from 'src/lib/core/codemirror.repository';
 import { ParameterService } from '@/lib/process-builder/services/parameter.service';
 import { Store } from '@ngrx/store';
-import { selectIInterface, selectIInterfaces } from '@/lib/process-builder/store/selectors';
+import { selectIInterface, selectIInterfaces, selectIParam } from '@/lib/process-builder/store/selectors';
 import { selectSnapshot } from '@/lib/process-builder/globals/select-snapshot';
 import { MethodEvaluationResultType } from '@/lib/process-builder/types/method-evaluation-result.type';
 
@@ -30,6 +30,7 @@ export class EmbeddedFunctionImplementationComponent implements IEmbeddedView, A
   public implementationChanged$ = defer(() => this.formGroup.controls.implementation?.valueChanges ?? NEVER);
   public methodEvaluationStatus$ = defer(
     () => this.implementationChanged$.pipe(
+      startWith(this.formGroup.controls.implementation?.value),
       debounceTime(500),
       switchMap(async (implementation) => {
         const injector = await this._parameterService.parameterToInjector(this.inputParams),
@@ -97,6 +98,10 @@ export class EmbeddedFunctionImplementationComponent implements IEmbeddedView, A
       outputParamName = template.name;
     }
 
+    const persistedParam = await selectSnapshot(this._store.select(selectIParam(this.formGroup.controls.outputParamIdentifier?.value)));
+    if(persistedParam){
+      return;
+    }
 
     if (this.formGroup.controls.outputParamName?.pristine) {
       this.formGroup.controls.outputParamName!.setValue(outputParamName);

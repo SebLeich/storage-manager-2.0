@@ -32,16 +32,20 @@ export class ActivityC2SProcessor implements IC2SProcessor {
       functionObject = {
         identifier: taskCreationFormGroupValue.functionIdentifier,
         _isImplementation: true,
-        canFail: taskCreationFormGroupValue.canFail ?? false,
-        name: taskCreationFormGroupValue.name ?? this._config.defaultFunctionName,
-        normalizedName: taskCreationFormGroupValue.normalizedName ?? ProcessBuilderRepository.normalizeName(taskCreationFormGroupValue.name ?? undefined),
         requireCustomImplementation: taskCreationFormGroupValue.requireCustomImplementation ?? false,
         requireDynamicInput: false,
-        finalizesFlow: taskCreationFormGroupValue.isProcessOutput ?? false,
-        customImplementation: taskCreationFormGroupValue.implementation?.text ?? undefined,
-        output: taskCreationFormGroupValue.outputParamIdentifier,
       } as IFunction;
     }
+
+    functionObject = {
+      ...functionObject,
+      canFail: taskCreationFormGroupValue.canFail ?? false,
+      name: taskCreationFormGroupValue.name ?? this._config.defaultFunctionName,
+      normalizedName: taskCreationFormGroupValue.normalizedName ?? ProcessBuilderRepository.normalizeName(taskCreationFormGroupValue.name ?? undefined),
+      finalizesFlow: taskCreationFormGroupValue.isProcessOutput ?? false,
+      customImplementation: taskCreationFormGroupValue.implementation?.text ?? undefined,
+      output: taskCreationFormGroupValue.outputParamIdentifier,
+    };
 
     await this._applyFunctionConfiguration(taskCreationFormGroupValue, functionObject);
   }

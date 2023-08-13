@@ -100,6 +100,11 @@ export class CodemirrorRepository {
                 return result;
             }
 
+            const injectorDefEntry = injectorDef.find(definitionElement => definitionElement.normalizedName === representation);
+            if(injectorDefEntry){
+                return { status: MethodEvaluationStatus.ReturnValueFound, injectorNavigationPath: representation, type: injectorDefEntry?.type, valueIsDefinite: false, interface: injectorDefEntry?.interface ?? undefined, paramName: representation };
+            }
+
             return { status: MethodEvaluationStatus.ReturnValueFound, valueIsDefinite: false };
         }
 
