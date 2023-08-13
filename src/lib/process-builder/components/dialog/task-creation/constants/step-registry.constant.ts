@@ -28,7 +28,7 @@ export default new Map<TaskCreationStep, {
         type: EmbeddedFunctionImplementationComponent,
         provideInputParams: (arg: IEmbeddedView, element: IElement) => {
             const component = arg as EmbeddedFunctionImplementationComponent;
-            component.inputParams = [...BPMNJsRepository.getAvailableInputParams(element), ParamCodes.ExemplarySolutionWrapper];
+            component.inputParams = BPMNJsRepository.getAvailableInputParams(element);
         },
     }],
     [TaskCreationStep.ConfigureFunctionInput, {

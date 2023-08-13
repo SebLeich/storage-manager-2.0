@@ -26,13 +26,13 @@ import { showAnimation } from '@/lib/shared/animations/show';
 import { BPMNJsRepository } from '@/lib/core/bpmn-js.repository';
 import { ParameterService } from '@/lib/process-builder/services/parameter.service';
 import { MethodEvaluationResultType } from '@/lib/process-builder/types/method-evaluation-result.type';
+import { outputNameValidator } from './validators/output-name.validator';
 
 @Component({
 	selector: 'app-task-creation',
 	templateUrl: './task-creation.component.html',
 	styleUrls: ['./task-creation.component.scss'],
 	providers: [ParameterService],
-	changeDetection: ChangeDetectionStrategy.OnPush,
 	animations: [showAnimation],
 })
 export class TaskCreationComponent implements OnDestroy, OnInit {
@@ -58,16 +58,21 @@ export class TaskCreationComponent implements OnDestroy, OnInit {
 		outputParamIdentifier: new FormControl<number | null>(this.data.taskCreationFormGroupValue.outputParamIdentifier),
 		outputParamInterface: new FormControl<string | null>(this.data.taskCreationFormGroupValue.outputParamInterface),
 		requireCustomImplementation: new FormControl<boolean>(this.data.taskCreationFormGroupValue.requireCustomImplementation),
-	}, Validators.compose([
-		functionSelectedsWhenRequiredValidator(this.data?.taskCreationPayload?.configureActivity ? true : false),
-		implementationExistsWhenRequiredValidator
-	]));
+	}, {
+		asyncValidators: [outputNameValidator(this._store)],
+		validators: [functionSelectedsWhenRequiredValidator(this.data?.taskCreationPayload?.configureActivity ? true : false), implementationExistsWhenRequiredValidator]
+	});
 
 	public customEvaluationResult$ = this.formGroup.controls.implementation
 		.valueChanges
 		.pipe(
-			throttleTime(2000), 
-			map(implementation => CodemirrorRepository.evaluateCustomMethod(undefined, implementation?.text ?? []))
+			debounceTime(500),
+			switchMap(async (implementation) => {
+				const inputParams = BPMNJsRepository.getAvailableInputParams(this.data.taskCreationPayload.configureActivity!);
+				const { injector, mappedParameters } = await this._parameterService.parameterToInjector(inputParams);
+
+				return CodemirrorRepository.evaluateCustomMethod(undefined, implementation?.text ?? [], injector, mappedParameters);
+			})
 		);
 
 	public unableToDetermineOutputParam$ = this.customEvaluationResult$.pipe(
@@ -89,8 +94,6 @@ export class TaskCreationComponent implements OnDestroy, OnInit {
 				.map((x) => x.propertyName)
 				.filter((x, index, array) => array.indexOf(x) === index);
 		}));
-
-	public hasOutputParam$ = this.customEvaluationResult$.pipe(map(evaluationResult => evaluationResult.status === MethodEvaluationStatus.ReturnValueFound));
 
 	public statusMessage$ = this.usedInputParams$.pipe(map(inputParams => {
 		if (!inputParams) {
@@ -250,25 +253,25 @@ export class TaskCreationComponent implements OnDestroy, OnInit {
 
 	public TaskCreationStep = TaskCreationStep;
 
-	private async _onClose(){
+	private async _onClose() {
 		this.isBlocked = true;
 		this._ref.disableClose = true;
 
 		const selectedFunction = await firstValueFrom(this._store.select(selectIFunction(this.formGroup.controls.functionIdentifier?.value)));
-		if(selectedFunction){
+		if (selectedFunction) {
 
-			if(!selectedFunction._isImplementation){
+			if (!selectedFunction._isImplementation) {
 				const nextFunctionIdentifier = await firstValueFrom(this._store.select(selectNextFunctionIdentifier()));
 				this.formGroup.patchValue({ functionIdentifier: nextFunctionIdentifier });
 			}
 
-			if(this.formGroup.value.implementation){
+			if (this.formGroup.value.implementation) {
 				const inputParams = BPMNJsRepository.getAvailableInputParams(this.data.taskCreationPayload.configureActivity!);
 				const injectorDef = await this._parameterService.parameterToInjector([...inputParams, ParamCodes.ExemplarySolutionWrapper, ParamCodes.ExemplarySolutionWrapper2]);
 				const methodEvaluation = CodemirrorRepository.evaluateCustomMethod(undefined, this.formGroup.value.implementation?.text, injectorDef.injector, injectorDef.mappedParameters);
 
-				if(methodEvaluation.status === MethodEvaluationStatus.ReturnValueFound){
-					const nextOutputParamIdentifier = typeof selectedFunction.output === 'number'? selectedFunction.output: await firstValueFrom(this._store.select(selectNextParameterIdentifier()));
+				if (methodEvaluation.status === MethodEvaluationStatus.ReturnValueFound) {
+					const nextOutputParamIdentifier = typeof selectedFunction.output === 'number' ? selectedFunction.output : await firstValueFrom(this._store.select(selectNextParameterIdentifier()));
 					this.formGroup.patchValue({ outputParamIdentifier: nextOutputParamIdentifier });
 				}
 				else this.formGroup.patchValue({ outputParamIdentifier: undefined });
@@ -289,7 +292,7 @@ export class TaskCreationComponent implements OnDestroy, OnInit {
 		}
 
 		const component = this.dynamicInner.createComponent(stepConfiguration.type);
-		if (typeof 	stepConfiguration.provideInputParams === 'function') {
+		if (typeof stepConfiguration.provideInputParams === 'function') {
 			stepConfiguration.provideInputParams(component.instance, step.element);
 		}
 	}

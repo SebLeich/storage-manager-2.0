@@ -26,8 +26,8 @@ export class BPMNJsRepository {
     public static getDataParamId = (activity: IElement) => BPMNJsRepository.getSLPBExtension(activity.businessObject, 'DataObjectExtension', (ext) => ext.dataParamId) as number | undefined;
     public static getSequenceFlowType = (activity: IConnector) => BPMNJsRepository.getSLPBExtension(activity.businessObject, 'SequenceFlowExtension', (ext) => ext.sequenceFlowType) as 'success' | 'error' | undefined;
 
-    public static setActivityFunctionId = (bpmnJs: IBpmnJS, element: IElement, arg: number | IFunction | undefined | null) => BPMNJsRepository.updateBpmnElementSLPBExtension(bpmnJs, element.businessObject, 'ActivityExtension', (ext) => ext.activityFunctionId = typeof arg === 'number'? arg: arg?.identifier);
-    public static setDataParamId = (bpmnJs: IBpmnJS, element: IElement, arg: number | IParam | undefined | null) => BPMNJsRepository.updateBpmnElementSLPBExtension(bpmnJs, element.businessObject, 'DataObjectExtension', (ext) => ext.dataParamId = typeof arg === 'number'? arg: arg?.identifier);
+    public static setActivityFunctionId = (bpmnJs: IBpmnJS, element: IElement, arg: number | IFunction | undefined | null) => BPMNJsRepository.updateBpmnElementSLPBExtension(bpmnJs, element.businessObject, 'ActivityExtension', (ext) => ext.activityFunctionId = typeof arg === 'number' ? arg : arg?.identifier);
+    public static setDataParamId = (bpmnJs: IBpmnJS, element: IElement, arg: number | IParam | undefined | null) => BPMNJsRepository.updateBpmnElementSLPBExtension(bpmnJs, element.businessObject, 'DataObjectExtension', (ext) => ext.dataParamId = typeof arg === 'number' ? arg : arg?.identifier);
     public static setSequenceFlowType = (bpmnJs: IBpmnJS, connector: IConnector, entranceGatewayType: GatewayType) => BPMNJsRepository.updateBpmnElementSLPBExtension(bpmnJs, connector.businessObject, 'SequenceFlowExtension', (ext) => ext.sequenceFlowType = entranceGatewayType === 'Success' ? 'success' : 'error');
 
     public static appendOutputParam(bpmnJS: IBpmnJS, element: IElement, parameterIdentifier: number, parameterName: string, parameterInterface: string | null, parameterIsProcessOutput: boolean, preventDublet = true, expectedInterface?: string) {
@@ -73,16 +73,23 @@ export class BPMNJsRepository {
     }
 
     public static getAvailableInputParams(element: IElement) {
-        return this.getAvailableInputParamsIElements(element).map((element) => BPMNJsRepository.getDataParamId(element)) as ParamCodes[];
+        const availableInputParamsIElements = this.getAvailableInputParamsIElements(element);
+        const availableInputParams = availableInputParamsIElements.map((element) => BPMNJsRepository.getDataParamId(element)) as ParamCodes[];
+        return availableInputParams;
     }
 
     public static getAvailableInputParamsIElements(element: IElement) {
         const anchestors: IElement[] = [];
         this.fillAnchestors(element, anchestors);
 
-        const tasks = anchestors.filter(x => x.type === shapeTypes.Task);
-        const outputParams = tasks.flatMap(x => x.outgoing).filter(x => x.type === shapeTypes.DataOutputAssociation).map(x => x.target);
-        return outputParams.filter(x => BPMNJsRepository.sLPBExtensionSetted(x.businessObject, 'DataObjectExtension', (ext) => 'outputParam' in ext)) as IElement[];
+        const outputParams = anchestors
+            .filter((anchestor) => anchestor.type === shapeTypes.Task)
+            .flatMap((taskElement) => taskElement.outgoing)
+            .filter((outgoingConnector) => outgoingConnector.type === shapeTypes.DataOutputAssociation)
+            .map((outgoingDataOutputAssociation) => outgoingDataOutputAssociation.target)
+            .filter((dataObjectReference) => typeof BPMNJsRepository.getDataParamId(dataObjectReference) === 'number');
+
+        return outputParams;
     }
 
     public static getExtensionElement(element: IBusinessObject, type: string): undefined | IExtensionElement {

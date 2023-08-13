@@ -1,20 +1,5 @@
 /* You can add global styles to this file, and also import other style files */
 
-html,
-body {
-    height: -webkit-fill-available;
-    width: -webkit-fill-available;
-}
-
-body {
-    margin: 0;
-    font-family: Roboto, "Helvetica Neue", sans-serif;
-}
-
-.spacer {
-    flex: 1;
-}
-
 .main-component-body {
     height: -webkit-fill-available;
     width: -webkit-fill-available;
@@ -151,11 +136,6 @@ body {
     color: grey;
     font-weight: 100;
     font-size: .8rem;
-}
-
-.mat-form-field-outline-white-bg .mat-mdc-text-field-wrapper {
-    background-color: white;
-    border-radius: 5px;
 }
 
 .mat-form-field-outline-no-padding-bottom .mat-mdc-form-field-subscript-wrapper {

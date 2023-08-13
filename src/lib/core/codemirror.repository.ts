@@ -7,6 +7,7 @@ import { IMethodEvaluationResult } from "../process-builder/interfaces/method-ev
 import { ISyntaxNodeResponse } from "./interfaces/syntax-node-response.interface";
 import { ITextLeaf } from "../process-builder/interfaces/text-leaf.interface";
 import { IParamDefinition } from "../process-builder/interfaces";
+import { MethodEvaluationResultType } from "../process-builder/types/method-evaluation-result.type";
 
 export class CodemirrorRepository {
 
@@ -129,8 +130,8 @@ export class CodemirrorRepository {
 
         const binaryExpression = parent.getChild('BinaryExpression');
         if (binaryExpression) {
-            const representation = state.sliceDoc(binaryExpression?.from, binaryExpression?.to);
-            return { status: MethodEvaluationStatus.ReturnValueFound, valueIsDefinite: false, unaryExpression: representation };
+            const result = this.evaluateBinaryExpression(state, binaryExpression, block, injector, injectorDef);
+            return result;
         }
 
         const callExpression = parent.getChild('CallExpression');
@@ -180,6 +181,81 @@ export class CodemirrorRepository {
         }
 
         return { status: MethodEvaluationStatus.NoReturnValue, valueIsDefinite: false };
+    }
+
+    static isNumeric(state: EditorState, node: SyntaxNode | null, block: SyntaxNode, injector: unknown, injectorDef: IParamDefinition[]){
+        if(!node){
+            return false;
+        }
+        
+        if(node.type.name === 'Number'){
+            return true;
+        }
+
+        if(node.type.name === 'VariableName'){
+            const evaluation = CodemirrorRepository.evaluateVariable(state, node, block, injector, injectorDef);
+            return evaluation.type === 'number';
+        } 
+
+        return false;
+    }
+
+    static isBoolean(state: EditorState, node: SyntaxNode, block: SyntaxNode, injector: unknown, injectorDef: IParamDefinition[]){
+        if(node.type.name === 'Boolean'){
+            return true;
+        }
+
+        if(node.type.name === 'VariableName'){
+            const evaluation = CodemirrorRepository.evaluateVariable(state, node, block, injector, injectorDef);
+            return evaluation.type === 'number';
+        } 
+
+        return false;
+    }
+
+    static evaluateVariable(state: EditorState, variableExpression: SyntaxNode, block: SyntaxNode, injector: unknown, injectorDef: IParamDefinition[]){
+        const representation = state.sliceDoc(variableExpression?.from, variableExpression?.to);
+        if (representation === 'undefined') {
+            return { status: MethodEvaluationStatus.ReturnValueFound, detectedValue: undefined, type: 'undefined', valueIsDefinite: true };
+        }
+
+        const variableValue = this.resolveVariableValue(state, block, representation);
+        if (variableValue) {
+            const result = { ...this.getEvaluationResult(state, variableValue, block, injector, injectorDef), valueIsDefinite: false };
+            return result;
+        }
+
+        const injectorDefEntry = injectorDef.find(definitionElement => definitionElement.normalizedName === representation);
+        if(injectorDefEntry){
+            return { status: MethodEvaluationStatus.ReturnValueFound, injectorNavigationPath: representation, type: injectorDefEntry?.type, valueIsDefinite: false, interface: injectorDefEntry?.interface ?? undefined, paramName: representation };
+        }
+
+        return { status: MethodEvaluationStatus.ReturnValueFound, valueIsDefinite: false };
+    }
+
+    static evaluateBinaryExpression(state: EditorState, binaryExpression: SyntaxNode, block: SyntaxNode, injector: unknown, injectorDef: IParamDefinition[]): IMethodEvaluationResult {
+        const representation = state.sliceDoc(binaryExpression?.from, binaryExpression?.to);
+
+        let currentChild = binaryExpression.firstChild;
+        let allNumericTypes = true;
+
+        while(currentChild && allNumericTypes){
+            if(currentChild?.type?.name === 'BinaryExpression'){
+                allNumericTypes = CodemirrorRepository.evaluateBinaryExpression(state, currentChild as SyntaxNode, block, injector, injectorDef).type === 'number';
+                currentChild = currentChild.nextSibling;
+                continue;
+            }
+
+            if(currentChild?.type?.name === "ArithOp"){
+                currentChild = currentChild.nextSibling;
+                continue;
+            }
+
+            allNumericTypes = CodemirrorRepository.isNumeric(state, currentChild as SyntaxNode, block, injector, injectorDef);
+            currentChild = currentChild.nextSibling;
+        }
+        
+        return { status: MethodEvaluationStatus.ReturnValueFound, valueIsDefinite: false, unaryExpression: representation, type: (allNumericTypes ? 'number' : 'string') as MethodEvaluationResultType };
     }
 
     static getMainMethod(tree?: Tree, state?: EditorState, text?: string[] | string): ISyntaxNodeResponse {

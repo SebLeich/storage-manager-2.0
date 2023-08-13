@@ -1,22 +1,22 @@
 <div class="body" [formGroup]="formGroup">
 
-    <div class="method-name-wrapper">
+    <div class="control-header">
 
         <mat-form-field appearance="outline"
-            class="mat-form-field-outline-white-bg mat-form-field-outline-no-padding-bottom">
+            class="mat-form-field-outline-lightblue-bg mat-form-field-outline-no-padding-bottom">
             <mat-label>method name</mat-label>
             <input matInput type="text" formControlName="name" />
         </mat-form-field>
 
         <mat-form-field appearance="outline"
-            class="mat-form-field-outline-white-bg mat-form-field-outline-no-padding-bottom">
+            class="mat-form-field-outline-lightblue-bg mat-form-field-outline-no-padding-bottom">
             <mat-label>{{(returnValueStatus$|async) === MethodEvaluationStatus.ReturnValueFound? 'output param name':
                 'no output param'}}</mat-label>
             <input matInput type="text" formControlName="outputParamName" />
         </mat-form-field>
 
         <mat-form-field appearance="outline"
-            class="mat-form-field-outline-white-bg mat-form-field-outline-no-padding-bottom template-control">
+            class="mat-form-field-outline-lightblue-bg mat-form-field-outline-no-padding-bottom template-control">
             <mat-label>
                 <app-function-output-preview [outputParamType]="formGroup.controls.outputParamType?.value ?? null"
                     [outputParamName]="formGroup.controls.outputParamName?.value ?? null"
@@ -40,6 +40,11 @@
         </div>
 
     </div>
+
+    <ul *ngIf="formGroup.errors" class="custom-validation-error-list">
+        <li *ngIf="formGroup.errors.outputParamNameRequired">output param name required</li>
+        <li *ngIf="formGroup.errors.duplicateParamExisting">output param name already used</li>
+    </ul>
 
     <app-code-editor formControlName="implementation" [inputParams]="injector$|async"></app-code-editor>
 

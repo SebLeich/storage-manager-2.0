@@ -6,5 +6,6 @@ export const implementationExistsWhenRequiredValidator = (control: AbstractContr
     if (formGroup.controls.implementation?.value || !formGroup.controls.requireCustomImplementation?.value) {
         return null;
     }
+    
     return { implementationExistsWhenRequiredValidator: true };
 }
