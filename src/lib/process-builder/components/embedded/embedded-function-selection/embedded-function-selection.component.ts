@@ -14,6 +14,8 @@ import { showListAnimation } from 'src/lib/shared/animations/show-list-slow';
 import { ProcessBuilderRepository } from '@/lib/core/process-builder-repository';
 import { selectIInterface } from '@/lib/process-builder/store/selectors';
 import { selectSnapshot } from '@/lib/process-builder/globals/select-snapshot';
+import defaultImplementation from '@/lib/process-builder/globals/default-implementation';
+import { CodemirrorRepository } from '@/lib/core/codemirror.repository';
 
 @Component({
 	selector: 'app-embedded-function-selection',
@@ -102,9 +104,14 @@ export class EmbeddedFunctionSelectionComponent implements IEmbeddedView, OnDest
 
 	public async selectFunction(selectedFunction: IFunction) {
 		const functionIdentifier = this.formGroup.controls.functionIdentifier?.value === selectedFunction.identifier ? null : selectedFunction.identifier;
+		const implementation = selectedFunction.requireCustomImplementation? CodemirrorRepository.stringToTextLeaf(selectedFunction.implementation ?? defaultImplementation) : null;
 		const patchValue: Partial<ITaskCreationFormGroupValue> = {
 			functionIdentifier: functionIdentifier,
 			outputParamInterface: selectedFunction.outputTemplate ?? null,
+			functionName: selectedFunction.name,
+			functionNormalizedName: selectedFunction.normalizedName,
+			functionCanFail: selectedFunction.canFail,
+			functionImplementation: implementation,
 		};
 
 		if (!selectedFunction._isImplementation && selectedFunction.outputTemplate && this.formGroup.controls.outputParamName?.pristine) {

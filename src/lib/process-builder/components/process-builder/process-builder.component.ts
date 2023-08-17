@@ -25,6 +25,7 @@ import { ActivityC2SProcessor } from './c2s-processors/activity.c2s-processor';
 import { OutputC2SProcessor } from './c2s-processors/output.c2s-processor';
 import { OutputC2MProcessor } from './c2m-processors/output.c2m-processor';
 import { ITaskCreationOutput } from '../dialog/task-creation/interfaces/task-creation-output.interface';
+import { IC2SOutput } from '../dialog/task-creation/interfaces/c2S-output.interface';
 
 @Component({
   selector: 'app-process-builder',
@@ -128,22 +129,27 @@ export class ProcessBuilderComponent implements OnDestroy, OnInit {
   }
 
   private async _processConfiguration(args: ITaskCreationOutput){
-    await this._processC2S(args);
-    await this._processC2m(args);
+    const c2SOutputs: IC2SOutput = {} as IC2SOutput;
+    await this._processC2S(args, c2SOutputs);
+    await this._processC2m(args, c2SOutputs);
     await this.bpmnJsService.saveCurrentBpmnModel(true);
   }
 
-  private async _processC2S(args: ITaskCreationOutput){
+  private async _processC2S(args: ITaskCreationOutput, c2SOutputs: IC2SOutput){
     for (const step of this._c2sProcessors) {
-      const processOutputCandidate = step.processConfiguration(args);
+      const processOutputCandidate = step.processConfiguration(args, c2SOutputs);
 
-      isPromise(processOutputCandidate)? await processOutputCandidate: processOutputCandidate;
+      const result = isPromise(processOutputCandidate)? await processOutputCandidate: processOutputCandidate;
+
+      if(result){
+        c2SOutputs = { ...c2SOutputs, ...result };
+      }
     }
   }
 
-  private async _processC2m(args: ITaskCreationOutput) {
+  private async _processC2m(args: ITaskCreationOutput, c2SOutputs: IC2SOutput) {
     for (const step of this._c2mProcessors) {
-      const processOutputCandidate = step.processConfiguration(args);
+      const processOutputCandidate = step.processConfiguration(args, c2SOutputs);
 
       isPromise(processOutputCandidate)? await processOutputCandidate: processOutputCandidate;
     }

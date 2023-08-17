@@ -20,7 +20,7 @@ export class OutputC2SProcessor implements IC2SProcessor {
             return;
         }
 
-        const { hasOutput, outputParamIsRemoved, outputParamIdentifier, outputParamObject } = await this._functionOutputService.detectFunctionOutput(selectedFunction, methodEvaluation);
+        const { hasOutput, outputParamIsRemoved, outputParamIdentifier, outputParamObject, outputParamInterface, outputParamType } = await this._functionOutputService.detectFunctionOutput(selectedFunction, methodEvaluation);
         if(!hasOutput) {
             if(outputParamIsRemoved){
                 this._store.dispatch(removeIParam(outputParamIdentifier));
@@ -44,11 +44,12 @@ export class OutputC2SProcessor implements IC2SProcessor {
 
         outputParam = {
             ...outputParam,
-            interface: formValue.outputParamInterface,
+            interface: formValue.outputParamInterface ?? outputParamInterface,
             isProcessOutput: false,
             name: formValue.outputParamName,
             normalizedName: formValue.outputParamNormalizedName,
-            type: formValue.outputParamType as ParamType,
+            type: outputParamType as ParamType,
+            defaultValue:  methodEvaluation?.detectedValue ?? null,
         }
 
         this._store.dispatch(upsertIParam(outputParam));

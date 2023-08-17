@@ -59,6 +59,8 @@ export class EmbeddedFunctionImplementationComponent implements IEmbeddedView, A
 	public ngOnInit(): void {
 		this._subscriptions.add(this.returnValueStatus$.subscribe((status) => this._verifyOutputParamNameControl(status)));
 		this._subscriptions.add(this.methodEvaluationStatus$.subscribe(async (status) => await this._verifyOutput(status.type ?? null, status.interface, status.paramName ?? '', status)));
+		this._subscriptions.add(this.formGroup.controls.functionName?.valueChanges.subscribe((value) => this._normalizeFunctionName(value)));
+		this._subscriptions.add(this.formGroup.controls.outputParamName?.valueChanges.subscribe((value) => this._normalizeOutputParamName(value)));
 	}
 
 	public ngAfterContentInit = () => this.formGroup.controls.outputParamInterface?.disable();
@@ -131,6 +133,16 @@ export class EmbeddedFunctionImplementationComponent implements IEmbeddedView, A
 		}
 
 		control[status === MethodEvaluationStatus.ReturnValueFound ? 'enable' : 'disable']();
+	}
+
+	private _normalizeFunctionName(functionName: string) {
+		const normalizedName = ProcessBuilderRepository.normalizeName(functionName);
+		this.formGroup.controls.functionNormalizedName?.setValue(normalizedName);
+	}
+
+	private _normalizeOutputParamName(outputParamName: string) {
+		const normalizedName = ProcessBuilderRepository.normalizeName(outputParamName);
+		this.formGroup.controls.outputParamNormalizedName?.setValue(normalizedName);
 	}
 
 }

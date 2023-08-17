@@ -16,7 +16,9 @@ export class FunctionOutputService {
             outputParamIsRemoved = false,
             outputParamIsNew = false,
             outputParamIdentifier = null,
-            outputParamObject = null;
+            outputParamObject = null,
+            outputParamInterface = null,
+            outputParamType = null;
 
         if (selectedFunction._isImplementation) {
             if(selectedFunction.requireCustomImplementation){
@@ -28,22 +30,49 @@ export class FunctionOutputService {
                 outputParamIsRemoved = typeof selectedFunction.output === 'number' && !hasOutput;
                 outputParamIsNew = typeof selectedFunction.output !== 'number' && hasOutput;
                 outputParamIdentifier = hasOutput ? outputParamIsNew ? await selectSnapshot(this._store.select(selectNextParameterIdentifier())) : selectedFunction.output : null;
+                outputParamInterface = hasOutput ? methodEvaluation.interface ?? null : null;
+                outputParamType = methodEvaluation.type ?? null;
             }
             else {
                 hasOutput = typeof selectedFunction.output === 'number';
-                outputParamIdentifier = hasOutput ? selectedFunction.output : null;
+                if(hasOutput){
+                    outputParamObject = await selectSnapshot(this._store.select(selectIParam(outputParamIdentifier)));
+                    outputParamIdentifier = selectedFunction.output;
+                    outputParamInterface = selectedFunction.outputTemplate;
+                    outputParamType = outputParamObject?.type;
+                }
             }
         }
         else {
-            hasOutput = selectedFunction.outputTemplate ? true : false;
-            outputParamIsNew = true;
-            outputParamIdentifier = await selectSnapshot(this._store.select(selectNextParameterIdentifier()));
+            if(selectedFunction.outputTemplate === 'dynamic'){
+                if(!methodEvaluation){
+                    throw('method evaluation is required for dynamic output!');
+                }
+
+                hasOutput = methodEvaluation.status === MethodEvaluationStatus.ReturnValueFound;
+                outputParamIsRemoved = false;
+                outputParamIsNew = true;
+                outputParamIdentifier = await selectSnapshot(this._store.select(selectNextParameterIdentifier()));
+                outputParamInterface = methodEvaluation.interface ?? null;
+                outputParamType = methodEvaluation.type ?? null;
+            }
+            else {
+                hasOutput = selectedFunction.outputTemplate ? true : false;
+
+                if(hasOutput){
+                    outputParamIsNew = true;
+                    outputParamIdentifier = await selectSnapshot(this._store.select(selectNextParameterIdentifier()));
+                    outputParamInterface = selectedFunction.outputTemplate;
+                    outputParamType = 'object';
+                }
+            }
         }
 
         if(!outputParamIsNew){
             outputParamObject = await selectSnapshot(this._store.select(selectIParam(outputParamIdentifier)));
+            outputParamType = outputParamObject?.type;
         }
 
-        return { hasOutput, outputParamIsNew, outputParamIsRemoved, outputParamIdentifier, outputParamObject };
+        return { hasOutput, outputParamIsNew, outputParamIsRemoved, outputParamIdentifier, outputParamObject, outputParamInterface, outputParamType };
     }
 }

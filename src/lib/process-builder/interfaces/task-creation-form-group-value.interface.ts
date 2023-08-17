@@ -9,6 +9,7 @@ export interface ITaskCreationFormGroupValue {
     functionIdentifier: number | null;
     functionImplementation: ITextLeaf | null;
     functionCanFail: boolean;
+    functionFinalizesFlow: boolean;
     functionName: string;
     functionNormalizedName: string;
     outputIsProcessOutput: boolean;

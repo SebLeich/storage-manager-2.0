@@ -13,6 +13,8 @@ import shapeTypes from "@/lib/bpmn-io/shape-types";
 import { ConfirmationComponent } from "@/lib/confirmation/components/confirmation/confirmation.component";
 import { IConfirmationInput } from "@/lib/confirmation/interfaces/confirmation-input.interface";
 import { MatDialog } from "@angular/material/dialog";
+import { ITaskCreationOutput } from "../../dialog/task-creation/interfaces/task-creation-output.interface";
+import { IC2SOutput } from "../../dialog/task-creation/interfaces/c2S-output.interface";
 
 /**
  * that processor applies changes provided by a task creation form group value to the bpmn model
@@ -27,13 +29,13 @@ export class ActivityC2MProcessor implements IC2MProcessor {
     private _dialog: MatDialog
   ) { }
 
-  public async processConfiguration({ taskCreationPayload, taskCreationFormGroupValue }: { taskCreationPayload?: ITaskCreationPayload, taskCreationFormGroupValue?: ITaskCreationFormGroupValue }) {
+  public async processConfiguration({ taskCreationPayload, formValue }: ITaskCreationOutput, c2SOutput: IC2SOutput) {
     const configureActivity = taskCreationPayload?.configureActivity;
     if (!configureActivity) {
       return;
     }
 
-    if (!taskCreationFormGroupValue) {
+    if (!formValue) {
       const activityFunctionId = BPMNJsRepository.getActivityFunctionId(configureActivity);
       if (typeof activityFunctionId !== 'number') {
         this._bpmnJsService.modelingModule.removeElements([configureActivity]);
@@ -58,7 +60,7 @@ export class ActivityC2MProcessor implements IC2MProcessor {
       return;
     }
 
-    const referencedFunction = await selectSnapshot(this._store.select(selectIFunction(taskCreationFormGroupValue.functionIdentifier)));
+    const referencedFunction = await selectSnapshot(this._store.select(selectIFunction(c2SOutput.functionIdentifier)));
     if (!referencedFunction) {
       this._bpmnJsService.modelingModule.removeElements([configureActivity]);
       return;

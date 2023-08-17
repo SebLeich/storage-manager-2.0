@@ -11,6 +11,7 @@ import { BPMNJsRepository } from "@/lib/core/bpmn-js.repository";
 import { IElement } from "@/lib/bpmn-io/interfaces/element.interface";
 import { ITaskCreationOutput } from "../../dialog/task-creation/interfaces/task-creation-output.interface";
 import { FunctionOutputService } from "../services/function-output.service";
+import { IC2SOutput } from "../../dialog/task-creation/interfaces/c2S-output.interface";
 
 @Injectable()
 export class OutputC2MProcessor implements IC2MProcessor {
@@ -19,13 +20,13 @@ export class OutputC2MProcessor implements IC2MProcessor {
     
     constructor(@Inject(BPMN_JS) private _bpmnJs: IBpmnJS, @Inject(PROCESS_BUILDER_CONFIG_TOKEN) private _config: IProcessBuilderConfig, private _bpmnJsService: BpmnJsService, private _store: Store) { }
 
-    public async processConfiguration({ taskCreationPayload, formValue, methodEvaluation }: ITaskCreationOutput) {
+    public async processConfiguration({ taskCreationPayload, formValue, methodEvaluation }: ITaskCreationOutput, c2SOutput: IC2SOutput) {
         const configureActivity = taskCreationPayload.configureActivity;
         if (!configureActivity || !formValue) {
             return;
         }
 
-        const referencedFunction = await selectSnapshot(this._store.select(selectIFunction(formValue.functionIdentifier)));
+        const referencedFunction = await selectSnapshot(this._store.select(selectIFunction(c2SOutput.functionIdentifier)));
         if (!referencedFunction) {
             return;
         }

@@ -5,7 +5,7 @@
         <mat-form-field appearance="outline"
             class="mat-form-field-outline-lightblue-bg mat-form-field-outline-no-padding-bottom">
             <mat-label>method name</mat-label>
-            <input matInput type="text" formControlName="name" />
+            <input matInput type="text" formControlName="functionName" />
         </mat-form-field>
 
         <mat-form-field appearance="outline"
@@ -22,7 +22,7 @@
                     [outputParamName]="formGroup.controls.outputParamName?.value ?? null"
                     [interfaceIdentifier]="formGroup.controls.outputParamInterface?.value ?? null"></app-function-output-preview>
             </mat-label>
-            <mat-select formControlName="interface">
+            <mat-select formControlName="outputParamInterface">
                 <mat-option class="dropdown-option" *ngFor="let template of ((templates$|async) ?? [])"
                     [value]="template.identifier">
                     {{template.name}}
@@ -41,6 +41,6 @@
 
     </div>
 
-    <app-code-editor formControlName="implementation" [inputParams]="injector$|async"></app-code-editor>
+    <app-code-editor formControlName="functionImplementation" [inputParams]="injector$|async"></app-code-editor>
 
 </div>
