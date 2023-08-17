@@ -1,0 +1,1 @@
+export type NodeType = 'BinaryExpression' | 'UnaryExpression' | 'VariableDeclaration' |'VariableName';

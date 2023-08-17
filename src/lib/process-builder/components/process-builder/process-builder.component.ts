@@ -26,6 +26,7 @@ import { OutputC2SProcessor } from './c2s-processors/output.c2s-processor';
 import { OutputC2MProcessor } from './c2m-processors/output.c2m-processor';
 import { ITaskCreationOutput } from '../dialog/task-creation/interfaces/task-creation-output.interface';
 import { IC2SOutput } from '../dialog/task-creation/interfaces/c2S-output.interface';
+import { InputC2MProcessor } from './c2m-processors/input.c2m-processor';
 
 @Component({
   selector: 'app-process-builder',
@@ -39,6 +40,7 @@ import { IC2SOutput } from '../dialog/task-creation/interfaces/c2S-output.interf
     { provide: C2M_INJECTION_TOKEN, useClass: ActivityC2MProcessor, multi: true },
     { provide: C2M_INJECTION_TOKEN, useClass: ConnectorC2MProcessor, multi: true },
     { provide: C2M_INJECTION_TOKEN, useClass: OutputC2MProcessor, multi: true },
+    { provide: C2M_INJECTION_TOKEN, useClass: InputC2MProcessor, multi: true },
     { provide: C2M_INJECTION_TOKEN, useClass: EventC2MProcessor, multi: true },
     { provide: C2M_INJECTION_TOKEN, useClass: GatewayC2MProcessor, multi: true },
   ]
@@ -131,7 +133,7 @@ export class ProcessBuilderComponent implements OnDestroy, OnInit {
   private async _processConfiguration(args: ITaskCreationOutput){
     const c2SOutputs: IC2SOutput = {} as IC2SOutput;
     await this._processC2S(args, c2SOutputs);
-    await this._processC2m(args, c2SOutputs);
+    await this._processC2M(args, c2SOutputs);
     await this.bpmnJsService.saveCurrentBpmnModel(true);
   }
 
@@ -147,7 +149,7 @@ export class ProcessBuilderComponent implements OnDestroy, OnInit {
     }
   }
 
-  private async _processC2m(args: ITaskCreationOutput, c2SOutputs: IC2SOutput) {
+  private async _processC2M(args: ITaskCreationOutput, c2SOutputs: IC2SOutput) {
     for (const step of this._c2mProcessors) {
       const processOutputCandidate = step.processConfiguration(args, c2SOutputs);
 

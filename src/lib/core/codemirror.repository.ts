@@ -7,6 +7,7 @@ import { IMethodEvaluationResult } from "../process-builder/interfaces/method-ev
 import { ISyntaxNodeResponse } from "./interfaces/syntax-node-response.interface";
 import { ITextLeaf } from "../process-builder/interfaces/text-leaf.interface";
 import { IParamDefinition } from "../process-builder/interfaces";
+import { NodeType } from "./types/node-type.type";
 
 export class CodemirrorRepository {
 
@@ -37,8 +38,9 @@ export class CodemirrorRepository {
             });
         }
 
-        const tree = syntaxTree(state);
-        const mainMethod = this.getMainMethod(tree, state, text);
+        const tree = syntaxTree(state),
+            mainMethod = this.getMainMethod(tree, state, text);
+            
         if (!mainMethod.node) {
             return { status: MethodEvaluationStatus.NoMainMethodFound, valueIsDefinite: false };
         }
@@ -46,14 +48,36 @@ export class CodemirrorRepository {
         const arrowFunction = mainMethod.node.getChild('ArrowFunction');
         const block = arrowFunction ? arrowFunction.getChild('Block') : mainMethod.node.getChild('Block');
         const returnStatement = block?.getChild('ReturnStatement') ?? undefined;
+        const inputParamCandidates = this.findAllChildrenOfType(tree, 'VariableName')
+            .map((node) => state?.sliceDoc(node.from, node.to))
+            .filter((name) => typeof name === 'string') as string[];
+        
         if (returnStatement) {
             const result = this.getEvaluationResult(state, returnStatement, block as SyntaxNode, injector, injectorDef);
             if (result) {
-                return result;
+                return { ...result, inputParamCandidates };
             }
         }
 
-        return { status: MethodEvaluationStatus.NoReturnValue, valueIsDefinite: false };
+        return { status: MethodEvaluationStatus.NoReturnValue, valueIsDefinite: false, inputParamCandidates };
+    }
+
+    public static findAllChildrenOfType(tree: Tree, nodeTypeFilter?: NodeType | NodeType[]) {
+        if (nodeTypeFilter && !Array.isArray(nodeTypeFilter)) {
+            nodeTypeFilter = [nodeTypeFilter];
+        }
+
+        const output: SyntaxNode[] = [];
+
+        tree.iterate({
+            enter: (node) => {
+                if ((nodeTypeFilter as NodeType[]).indexOf(node.type.name as NodeType) > -1) {
+                    output.push(node.node);
+                }
+            }
+        });
+
+        return output;
     }
 
     private static getEvaluationResult(state: EditorState, parent: SyntaxNode, block: SyntaxNode, injector: unknown, injectorDef: IParamDefinition[]): IMethodEvaluationResult {
@@ -78,7 +102,7 @@ export class CodemirrorRepository {
                 index++;
                 currentPathSegment = navigationPath[index];
 
-                if(currentPathSegment){
+                if (currentPathSegment) {
                     injectorDefEntry = (injectorDefEntry.typeDef as IParamDefinition[]).find((definitionElement) => (definitionElement.normalizedName ?? definitionElement.name) === currentPathSegment);
                 }
             }
@@ -101,7 +125,7 @@ export class CodemirrorRepository {
             }
 
             const injectorDefEntry = injectorDef.find(definitionElement => definitionElement.normalizedName === representation);
-            if(injectorDefEntry){
+            if (injectorDefEntry) {
                 return { status: MethodEvaluationStatus.ReturnValueFound, injectorNavigationPath: representation, type: injectorDefEntry?.type, valueIsDefinite: false, interface: injectorDefEntry?.interface ?? undefined, paramName: representation };
             }
 
@@ -182,37 +206,37 @@ export class CodemirrorRepository {
         return { status: MethodEvaluationStatus.NoReturnValue, valueIsDefinite: false };
     }
 
-    static isNumeric(state: EditorState, node: SyntaxNode | null, block: SyntaxNode, injector: unknown, injectorDef: IParamDefinition[]){
-        if(!node){
+    static isNumeric(state: EditorState, node: SyntaxNode | null, block: SyntaxNode, injector: unknown, injectorDef: IParamDefinition[]) {
+        if (!node) {
             return false;
         }
-        
-        if(node.type.name === 'Number'){
+
+        if (node.type.name === 'Number') {
             return true;
         }
 
-        if(node.type.name === 'VariableName'){
+        if (node.type.name === 'VariableName') {
             const evaluation = CodemirrorRepository.evaluateVariable(state, node, block, injector, injectorDef);
             return evaluation.type === 'number';
-        } 
+        }
 
         return false;
     }
 
-    static isBoolean(state: EditorState, node: SyntaxNode, block: SyntaxNode, injector: unknown, injectorDef: IParamDefinition[]){
-        if(node.type.name === 'Boolean'){
+    static isBoolean(state: EditorState, node: SyntaxNode, block: SyntaxNode, injector: unknown, injectorDef: IParamDefinition[]) {
+        if (node.type.name === 'Boolean') {
             return true;
         }
 
-        if(node.type.name === 'VariableName'){
+        if (node.type.name === 'VariableName') {
             const evaluation = CodemirrorRepository.evaluateVariable(state, node, block, injector, injectorDef);
             return evaluation.type === 'number';
-        } 
+        }
 
         return false;
     }
 
-    static evaluateVariable(state: EditorState, variableExpression: SyntaxNode, block: SyntaxNode, injector: unknown, injectorDef: IParamDefinition[]){
+    static evaluateVariable(state: EditorState, variableExpression: SyntaxNode, block: SyntaxNode, injector: unknown, injectorDef: IParamDefinition[]) {
         const representation = state.sliceDoc(variableExpression?.from, variableExpression?.to);
         if (representation === 'undefined') {
             return { status: MethodEvaluationStatus.ReturnValueFound, detectedValue: undefined, type: 'undefined', valueIsDefinite: true };
@@ -225,7 +249,7 @@ export class CodemirrorRepository {
         }
 
         const injectorDefEntry = injectorDef.find(definitionElement => definitionElement.normalizedName === representation);
-        if(injectorDefEntry){
+        if (injectorDefEntry) {
             return { status: MethodEvaluationStatus.ReturnValueFound, injectorNavigationPath: representation, type: injectorDefEntry?.type, valueIsDefinite: false, interface: injectorDefEntry?.interface ?? undefined, paramName: representation };
         }
 
@@ -238,14 +262,14 @@ export class CodemirrorRepository {
         let currentChild = binaryExpression.firstChild;
         let allNumericTypes = true;
 
-        while(currentChild && allNumericTypes){
-            if(currentChild?.type?.name === 'BinaryExpression'){
+        while (currentChild && allNumericTypes) {
+            if (currentChild?.type?.name === 'BinaryExpression') {
                 allNumericTypes = CodemirrorRepository.evaluateBinaryExpression(state, currentChild as SyntaxNode, block, injector, injectorDef).type === 'number';
                 currentChild = currentChild.nextSibling;
                 continue;
             }
 
-            if(currentChild?.type?.name === "ArithOp"){
+            if (currentChild?.type?.name === "ArithOp") {
                 currentChild = currentChild.nextSibling;
                 continue;
             }
@@ -253,7 +277,7 @@ export class CodemirrorRepository {
             allNumericTypes = CodemirrorRepository.isNumeric(state, currentChild as SyntaxNode, block, injector, injectorDef);
             currentChild = currentChild.nextSibling;
         }
-        
+
         return { status: MethodEvaluationStatus.ReturnValueFound, valueIsDefinite: false, unaryExpression: representation, type: (allNumericTypes ? 'number' : 'string') };
     }
 

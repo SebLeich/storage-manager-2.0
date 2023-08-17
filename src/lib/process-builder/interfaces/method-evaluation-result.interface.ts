@@ -11,4 +11,5 @@ export interface IMethodEvaluationResult {
     unaryExpression?: string;
     variableDeclaration?: string;
     interface?: string;
+    inputParamCandidates?: string[];
 }
