@@ -1,6 +1,5 @@
-import { ITaskCreationFormGroupValue } from "@/lib/process-builder/interfaces/task-creation-form-group-value.interface";
-import { ITaskCreationPayload } from "@/lib/process-builder/interfaces/task-creation-payload.interface";
+import { ITaskCreationOutput } from "../../dialog/task-creation/interfaces/task-creation-output.interface";
 
 export interface IC2MProcessor {
-    processConfiguration(configuration: { taskCreationPayload: ITaskCreationPayload, taskCreationFormGroupValue?: ITaskCreationFormGroupValue }): Promise<void> | void;
+    processConfiguration(configuration: ITaskCreationOutput): Promise<void> | void;
 }

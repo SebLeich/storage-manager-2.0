@@ -6,12 +6,8 @@ import { IEmbeddedView } from "src/lib/process-builder/classes/embedded-view";
 import { TaskCreationStep } from "src/lib/process-builder/globals/task-creation-step";
 import { EmbeddedConfigureErrorGatewayEntranceConnectionComponent } from "../../../embedded/embedded-configure-error-gateway-entrance-connection/embedded-configure-error-gateway-entrance-connection.component";
 import { EmbeddedFunctionImplementationComponent } from "../../../embedded/embedded-function-implementation/embedded-function-implementation.component";
-import { EmbeddedFunctionInputSelectionComponent } from "../../../embedded/embedded-function-input-selection/embedded-function-input-selection.component";
 import { EmbeddedFunctionSelectionComponent } from "../../../embedded/embedded-function-selection/embedded-function-selection.component";
 import { EmbeddedInputOutputMappingComponent } from "../../../embedded/embedded-input-output-mapping/embedded-input-output-mapping.component";
-import { EmbeddedOutputParamConfigurationComponent } from '../../../embedded/embedded-output-param-configuration/embedded-output-param-configuration.component';
-import { EmbeddedStaticOutputDefinitionComponent } from '../../../embedded/embedded-static-output-definition/embedded-static-output-definition.component';
-import { ParamCodes } from '@/config/param-codes';
 
 export default new Map<TaskCreationStep, {
     type: Type<IEmbeddedView>;
@@ -31,14 +27,6 @@ export default new Map<TaskCreationStep, {
             component.inputParams = BPMNJsRepository.getAvailableInputParams(element);
         },
     }],
-    [TaskCreationStep.ConfigureFunctionInput, {
-        type: EmbeddedFunctionInputSelectionComponent,
-        provideInputParams: (arg: IEmbeddedView, element: IElement) => {
-            const component = arg as EmbeddedFunctionInputSelectionComponent, availableInputParams = BPMNJsRepository.getAvailableInputParams(element);
-            component.setInputParams(availableInputParams);
-        },
-    }],
-    [TaskCreationStep.ConfigureFunctionOutput, { type: EmbeddedOutputParamConfigurationComponent }],
     [TaskCreationStep.ConfigureFunctionSelection, {
         type: EmbeddedFunctionSelectionComponent,
         provideInputParams: (arg: IEmbeddedView, element: IElement) => {
@@ -48,13 +36,6 @@ export default new Map<TaskCreationStep, {
     }],
     [TaskCreationStep.ConfigureInputOutputMapping, {
         type: EmbeddedInputOutputMappingComponent,
-        provideInputParams: (arg: IEmbeddedView, element: IElement) => {
-            const component = arg as EmbeddedInputOutputMappingComponent;
-            component.inputParams = BPMNJsRepository.getAvailableInputParams(element);
-        },
-    }],
-    [TaskCreationStep.ConfigureStaticOutput, {
-        type: EmbeddedStaticOutputDefinitionComponent,
         provideInputParams: (arg: IEmbeddedView, element: IElement) => {
             const component = arg as EmbeddedInputOutputMappingComponent;
             component.inputParams = BPMNJsRepository.getAvailableInputParams(element);

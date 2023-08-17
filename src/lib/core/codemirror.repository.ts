@@ -7,12 +7,11 @@ import { IMethodEvaluationResult } from "../process-builder/interfaces/method-ev
 import { ISyntaxNodeResponse } from "./interfaces/syntax-node-response.interface";
 import { ITextLeaf } from "../process-builder/interfaces/text-leaf.interface";
 import { IParamDefinition } from "../process-builder/interfaces";
-import { MethodEvaluationResultType } from "../process-builder/types/method-evaluation-result.type";
 
 export class CodemirrorRepository {
 
-    public static stringToTextLeaf(text: string[] | string): ITextLeaf {
-        const convertedText = Array.isArray(text) ? text.join('\n') : text;
+    public static stringToTextLeaf(text: string[] | string | null | undefined): ITextLeaf {
+        const convertedText = Array.isArray(text) ? text.join('\n') : text ?? '';
         const state = EditorState.create({
             doc: convertedText,
             extensions: [
@@ -61,7 +60,7 @@ export class CodemirrorRepository {
         const memberExpression = parent.getChild('MemberExpression');
         if (memberExpression) {
             const representation = state.sliceDoc(memberExpression?.from, memberExpression?.to);
-            const navigationPath = representation.split('.');
+            const navigationPath = representation.split('.').map(segment => segment.trim().replace('\n', ''));
             const dependsOnInjector = navigationPath[0] === 'injector';
             if (!dependsOnInjector) {
                 const variableValue = this.resolveVariableValue(state, block, representation);
@@ -92,7 +91,7 @@ export class CodemirrorRepository {
         if (variableExpression) {
             const representation = state.sliceDoc(variableExpression?.from, variableExpression?.to);
             if (representation === 'undefined') {
-                return { status: MethodEvaluationStatus.ReturnValueFound, detectedValue: undefined, type: 'undefined', valueIsDefinite: true };
+                return { status: MethodEvaluationStatus.ReturnValueFound, detectedValue: undefined, type: undefined, valueIsDefinite: true };
             }
 
             const variableValue = this.resolveVariableValue(state, block, representation);
@@ -177,7 +176,7 @@ export class CodemirrorRepository {
 
         const nullExpression = parent.getChild('null');
         if (nullExpression) {
-            return { status: MethodEvaluationStatus.ReturnValueFound, detectedValue: null, type: 'null', valueIsDefinite: true };
+            return { status: MethodEvaluationStatus.ReturnValueFound, detectedValue: null, type: undefined, valueIsDefinite: true };
         }
 
         return { status: MethodEvaluationStatus.NoReturnValue, valueIsDefinite: false };
@@ -255,7 +254,7 @@ export class CodemirrorRepository {
             currentChild = currentChild.nextSibling;
         }
         
-        return { status: MethodEvaluationStatus.ReturnValueFound, valueIsDefinite: false, unaryExpression: representation, type: (allNumericTypes ? 'number' : 'string') as MethodEvaluationResultType };
+        return { status: MethodEvaluationStatus.ReturnValueFound, valueIsDefinite: false, unaryExpression: representation, type: (allNumericTypes ? 'number' : 'string') };
     }
 
     static getMainMethod(tree?: Tree, state?: EditorState, text?: string[] | string): ISyntaxNodeResponse {

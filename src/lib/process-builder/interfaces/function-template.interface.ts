@@ -11,5 +11,5 @@ export interface IFunctionTemplate {
     requireStaticOutputDefinition: boolean;
     finalizesFlow?: boolean;
     inputTemplates: (IInputParam | 'dynamic')[] | null | 'dynamic';
-    outputTemplate: string | null | 'dynamic';
+    outputTemplate: string | null;
 }

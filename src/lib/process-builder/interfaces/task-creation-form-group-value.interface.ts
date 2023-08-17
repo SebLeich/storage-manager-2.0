@@ -1,29 +1,22 @@
 import { FormControl, FormGroup } from "@angular/forms";
-import { ParamCodes } from "src/config/param-codes";
 import { IParam, IParamDefinition } from "@process-builder/interfaces";
 import { GatewayType } from "../types/gateway.type";
 import { ITextLeaf } from "./text-leaf.interface";
-import { MethodEvaluationResultType } from "../types/method-evaluation-result.type";
+import { ParamType } from "../types/param.type";
 
 export interface ITaskCreationFormGroupValue {
-    canFail: boolean;
     entranceGatewayType: GatewayType | null;
     functionIdentifier: number | null;
-    functionOutputParamIdentifier: number | null;
-    implementation: ITextLeaf | null;
-    inputParam: ParamCodes[] | number | null;
-    interface: string | null;
-    isProcessOutput: boolean;
-    name: string;
-    normalizedOutputParamName: string;
-    normalizedName: string;
+    functionImplementation: ITextLeaf | null;
+    functionCanFail: boolean;
+    functionName: string;
+    functionNormalizedName: string;
+    outputIsProcessOutput: boolean;
     outputParamName: string;
+    outputParamNormalizedName: string;
     outputParamValue: IParam | IParamDefinition[] | null;
-    outputTemplateName: string;
-    outputParamIdentifier: number | null;
+    outputParamType: ParamType | null;
     outputParamInterface: string | null;
-    outputParamType: MethodEvaluationResultType | null;
-    requireCustomImplementation: boolean;
 }
 
 export type TaskCreationFormGroup = FormGroup<{ [key in keyof ITaskCreationFormGroupValue]?: FormControl<ITaskCreationFormGroupValue[key]> }>; 

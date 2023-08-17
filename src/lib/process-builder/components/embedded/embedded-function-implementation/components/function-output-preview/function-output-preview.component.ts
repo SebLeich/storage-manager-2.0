@@ -1,4 +1,4 @@
-import { MethodEvaluationResultType } from '@/lib/process-builder/types/method-evaluation-result.type';
+import { ParamType } from '@/lib/process-builder/types/param.type';
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 
 @Component({
@@ -8,7 +8,7 @@ import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class FunctionOutputPreviewComponent {
-  @Input() public outputParamType: MethodEvaluationResultType | null = null;
+  @Input() public outputParamType: ParamType | null = null;
   @Input() public outputParamName: string | null = null;
   @Input() public interfaceIdentifier: string | null = null;
 }

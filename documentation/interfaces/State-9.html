@@ -151,137 +151,128 @@ import { removeIFunction } from &#x27;../actions/function.actions&#x27;;
 import { addIParam, addIParams, removeIParam, updateIParam, upsertIParam, upsertIParams } from &#x27;../actions/param.actions&#x27;;
 
 
-export const featureKey &#x3D; &#x27;Param&#x27;;
+export const featureKey &#x3D; &#x27;param&#x27;;
 
 function sortByIdentifier(a: IParam, b: IParam) {
-  return a.identifier &gt; b.identifier ? 1 : -1;
+	return a.identifier &gt; b.identifier ? 1 : -1;
 }
 
 export const adapter: EntityAdapter&lt;IParam&gt; &#x3D; createEntityAdapter&lt;IParam&gt;({
-  selectId: (arg: IParam) &#x3D;&gt; arg.identifier,
-  sortComparer: sortByIdentifier
+	selectId: (arg: IParam) &#x3D;&gt; arg.identifier,
+	sortComparer: sortByIdentifier
 });
 
 export interface State extends EntityState&lt;IParam&gt; {
-  ids: number[];
+	ids: number[];
 }
 
 export const initialState: State &#x3D; {
-  ids: [],
-  entities: {}
+	ids: [],
+	entities: {}
 };
 
 export const reducer &#x3D; createReducer(
 
-  initialState,
+	initialState,
 
-  on(addIParam, (state: State, { param }) &#x3D;&gt; {
-    return adapter.addOne({
-      identifier: typeof param.identifier &#x3D;&#x3D;&#x3D; &#x27;number&#x27; ? param.identifier : nextId(state),
-      defaultValue: param.defaultValue,
-      name: param.name,
-      normalizedName: param.normalizedName,
-      constant: param.constant,
-      interface: param.interface,
-      nullable: param.nullable,
-      optional: param.optional,
-      type: param.type,
-      typeDef: param.typeDef,
-      _isIParam: true
-    }, state);
-  }),
+	on(addIParam, (state: State, { param }) &#x3D;&gt; {
+		return adapter.addOne({
+			identifier: typeof param.identifier &#x3D;&#x3D;&#x3D; &#x27;number&#x27; ? param.identifier : nextId(state),
+			defaultValue: param.defaultValue,
+			name: param.name,
+			normalizedName: param.normalizedName,
+			constant: param.constant,
+			interface: param.interface,
+			nullable: param.nullable,
+			optional: param.optional,
+			type: param.type,
+			typeDef: param.typeDef,
+			_isIParam: true
+		}, state);
+	}),
 
-  on(addIParams, (state: State, { params }) &#x3D;&gt; {
-    let output: IParam[] &#x3D; [];
-    for (let param of params) {
-      output.push({
-        identifier: typeof param.identifier &#x3D;&#x3D;&#x3D; &#x27;number&#x27; ? param.identifier : nextId(state),
-        defaultValue: param.defaultValue,
-        name: param.name,
-        normalizedName: param.normalizedName,
-        constant: param.constant,
-        interface: param.interface,
-        nullable: param.nullable,
-        optional: param.optional,
-        type: param.type,
-        typeDef: param.typeDef,
-        _isIParam: true
-      });
-    }
-    return adapter.addMany(output, state);
-  }),
+	on(addIParams, (state: State, { params }) &#x3D;&gt; {
+		const output: IParam[] &#x3D; [];
 
-  on(updateIParam, (state: State, { param }) &#x3D;&gt; {
-    let update: Update&lt;IParam&gt; &#x3D; {
-      &#x27;id&#x27;: param.identifier,
-      &#x27;changes&#x27;: {
-        defaultValue: param.defaultValue,
-        name: param.name,
-        normalizedName: param.normalizedName,
-        constant: param.constant,
-        interface: param.interface,
-        nullable: param.nullable,
-        optional: param.optional,
-        type: param.type,
-        typeDef: param.typeDef,
-        isProcessOutput: param.isProcessOutput
-      }
-    }
-    return adapter.updateOne(update, state);
-  }),
+		for (const param of params) {
+			output.push({
+				...param,
+				identifier: typeof param.identifier &#x3D;&#x3D;&#x3D; &#x27;number&#x27; ? param.identifier : nextId(state),
+				_isIParam: true
+			});
+		}
 
-  on(upsertIParam, (state: State, { param }) &#x3D;&gt; {
-    return adapter.upsertOne({
-      _isIParam: true,
-      constant: param.constant,
-      defaultValue: param.defaultValue,
-      identifier: param.identifier,
-      interface: param.interface,
-      name: param.name,
-      normalizedName: param.normalizedName,
-      nullable: param.nullable,
-      optional: param.optional,
-      type: param.type,
-      typeDef: param.typeDef
-    }, state);
-  }),
+		return adapter.addMany(output, state);
+	}),
 
-  on(upsertIParams, (state: State, { params }) &#x3D;&gt; {
-    return adapter.upsertMany(params.map(param &#x3D;&gt; {
-      return {
-        _isIParam: true,
-        constant: param.constant,
-        defaultValue: param.defaultValue,
-        identifier: param.identifier,
-        interface: param.interface,
-        name: param.name,
-        normalizedName: param.normalizedName,
-        nullable: param.nullable,
-        optional: param.optional,
-        type: param.type,
-        typeDef: param.typeDef
-      }
-    }), state);
-  }),
+	on(updateIParam, (state: State, { param }) &#x3D;&gt; {
+		const update: Update&lt;IParam&gt; &#x3D; {
+			&#x27;id&#x27;: param.identifier,
+			&#x27;changes&#x27;: { ...param }
+		}
 
-  on(removeIFunction, (state: State, { func }) &#x3D;&gt; {
-    const referencedOutputParam &#x3D; func.output;
-    if (typeof referencedOutputParam &#x3D;&#x3D;&#x3D; &#x27;number&#x27;) {
-      return adapter.removeOne(referencedOutputParam, state);
-    }
-    return state;
-  }),
+		return adapter.updateOne(update, state);
+	}),
 
-  on(removeIParam, (state: State, { param }) &#x3D;&gt; {
-    let key &#x3D; typeof param &#x3D;&#x3D;&#x3D; &#x27;number&#x27; ? param : param.identifier;
-    return adapter.removeOne(key, state);
-  }),
+	on(upsertIParam, (state: State, { param }) &#x3D;&gt; {
+		return adapter.upsertOne({
+			_isIParam: true,
+			constant: param.constant,
+			defaultValue: param.defaultValue,
+			identifier: param.identifier,
+			interface: param.interface,
+			name: param.name,
+			normalizedName: param.normalizedName,
+			nullable: param.nullable,
+			optional: param.optional,
+			type: param.type,
+			typeDef: param.typeDef
+		}, state);
+	}),
+
+	on(upsertIParams, (state: State, { params }) &#x3D;&gt; {
+		return adapter.upsertMany(params.map(param &#x3D;&gt; {
+			return {
+				_isIParam: true,
+				constant: param.constant,
+				defaultValue: param.defaultValue,
+				identifier: param.identifier,
+				interface: param.interface,
+				name: param.name,
+				normalizedName: param.normalizedName,
+				nullable: param.nullable,
+				optional: param.optional,
+				type: param.type,
+				typeDef: param.typeDef
+			}
+		}), state);
+	}),
+
+	on(removeIFunction, (state: State, { func }) &#x3D;&gt; {
+		const referencedOutputParam &#x3D; func.output;
+
+		if (typeof referencedOutputParam &#x3D;&#x3D;&#x3D; &#x27;number&#x27;) {
+			return adapter.removeOne(referencedOutputParam, state);
+		}
+
+		return state;
+	}),
+
+	on(removeIParam, (state: State, { param }) &#x3D;&gt; {
+		if (param &#x3D;&#x3D; null) {
+			return state;
+		}
+
+		const key &#x3D; typeof param &#x3D;&#x3D;&#x3D; &#x27;number&#x27; ? param : param.identifier;
+
+		return adapter.removeOne(key, state);
+	}),
 
 );
 
 export const nextId &#x3D; (state: State) &#x3D;&gt; {
-  let ids &#x3D; state &amp;&amp; state.entities ? (Object.values(state.entities) as IParam[]).map(x &#x3D;&gt; x.identifier) : [];
-  return ids.length &#x3D;&#x3D;&#x3D; 0 ? 0 : Math.max(...(ids.map(x &#x3D;&gt; typeof x &#x3D;&#x3D;&#x3D; &#x27;number&#x27; ? x : 0))) + 1;
+	const ids &#x3D; state &amp;&amp; state.entities ? (Object.values(state.entities) as IParam[]).map(x &#x3D;&gt; x.identifier) : [];
+	return ids.length &#x3D;&#x3D;&#x3D; 0 ? 0 : Math.max(...(ids.map(x &#x3D;&gt; typeof x &#x3D;&#x3D;&#x3D; &#x27;number&#x27; ? x : 0))) + 1;
 }
 </code></pre>
     </div>

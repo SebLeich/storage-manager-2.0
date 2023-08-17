@@ -95,6 +95,12 @@
                                             ids
                                         </a>
                                 </li>
+                                <li>
+                                        <a href="#lastSelectedPipeline" 
+>
+                                            lastSelectedPipeline
+                                        </a>
+                                </li>
                             </ul>
                         </td>
                     </tr>
@@ -139,6 +145,39 @@
 
                         </tbody>
                     </table>
+                    <table class="table table-sm table-bordered">
+                        <tbody>
+                                <tr>
+                                    <td class="col-md-4">
+                                        <a name="lastSelectedPipeline"></a>
+                                        <span class="name "><b>lastSelectedPipeline</b>
+                                            <a href="#lastSelectedPipeline">
+                                                <span class="icon ion-ios-link"></span>
+                                            </a>
+                                        </span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="col-md-4">
+                                        <code>lastSelectedPipeline:     <code>string | null</code>
+</code>
+                                    </td>
+                                </tr>
+
+
+                                    <tr>
+                                        <td class="col-md-4">
+                                            <i>Type : </i>    <code>string | null</code>
+
+                                        </td>
+                                    </tr>
+
+
+
+
+
+                        </tbody>
+                    </table>
             </section>
     </div>
 
@@ -146,54 +185,66 @@
     <div class="tab-pane fade  tab-source-code" id="c-source">
         <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { createEntityAdapter, EntityAdapter, EntityState } from &quot;@ngrx/entity&quot;;
 import { createReducer, on } from &quot;@ngrx/store&quot;;
-import { addIPipeline, removeIPipeline, renameIPipeline, setIPipelineSolutionReference } from &quot;../actions/pipeline.actions&quot;;
-import { IPipeline } from &quot;src/lib/pipeline-store/interfaces/pipeline.interface&quot;;
+import { addPipeline, removePipeline, renamePipelineById, setSelectedPipeline, setPipelineSolutionReference, removePipelineById, renamePipeline } from &quot;../actions/pipeline.actions&quot;;
+import IPipeline from &quot;src/lib/pipeline-store/interfaces/pipeline.interface&quot;;
 
 export const featureKey &#x3D; &#x27;pipeline&#x27;;
 
 export interface State extends EntityState&lt;IPipeline&gt; {
     ids: string[];
+    lastSelectedPipeline: string | null;
 }
 
 export const adapter: EntityAdapter&lt;IPipeline&gt; &#x3D; createEntityAdapter&lt;IPipeline&gt;(
     {
-        selectId: (pipeline) &#x3D;&gt; pipeline.name,
-        sortComparer: (pipeline1, pipeline2) &#x3D;&gt; {
-            return pipeline1.name &gt; pipeline2.name ? 1 : -1;
+        selectId: (pipeline) &#x3D;&gt; pipeline.id,
+        sortComparer: (pipelineA, pipelineB) &#x3D;&gt; {
+            return pipelineA.id &gt; pipelineB.id ? 1 : -1;
         }
     }
 );
 
 export const initialState: State &#x3D; adapter.getInitialState({
+    lastSelectedPipeline: null,
     entities: {},
     ids: [],
 });
 
 export const reducer &#x3D; createReducer(
     initialState,
-    on(addIPipeline, (state, { pipeline }) &#x3D;&gt; {
+    on(addPipeline, (state, { pipeline }) &#x3D;&gt; {
         return adapter.addOne(
             { ...pipeline },
             state
         );
     }),
-    on(renameIPipeline, (state, { pipelineName, updatedName }) &#x3D;&gt; {
+    on(renamePipeline, (state, { pipeline, updatedName }) &#x3D;&gt; {
         return adapter.updateOne({
-            id: pipelineName,
+            id: pipeline.id,
             changes: {
                 name: updatedName
             }
         }, state)
     }),
-    on(removeIPipeline, (state, { pipeline }) &#x3D;&gt; adapter.removeOne(pipeline.name, state)),
-    on(setIPipelineSolutionReference, (state, { pipelineName, solutionIdentifier }) &#x3D;&gt; {
+    on(renamePipelineById, (state, { pipelineIdentifier, updatedName }) &#x3D;&gt; {
         return adapter.updateOne({
-            id: pipelineName,
+            id: pipelineIdentifier,
+            changes: {
+                name: updatedName
+            }
+        }, state)
+    }),
+    on(removePipeline, (state, { pipeline }) &#x3D;&gt; adapter.removeOne(pipeline.id, state)),
+    on(removePipelineById, (state, { pipelineIdentifier }) &#x3D;&gt; adapter.removeOne(pipelineIdentifier, state)),
+    on(setPipelineSolutionReference, (state, { pipelineId, solutionIdentifier }) &#x3D;&gt; {
+        return adapter.updateOne({
+            id: pipelineId,
             changes: {
                 solutionReference: solutionIdentifier
             }
         }, state);
-    })
+    }),
+    on(setSelectedPipeline, (state, { pipelineId }) &#x3D;&gt; ({ ...state, lastSelectedPipeline: pipelineId }))
 )
 </code></pre>
     </div>

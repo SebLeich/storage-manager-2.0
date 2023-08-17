@@ -44,7 +44,6 @@ import { ReturnValueStatusPipe } from './pipes/return-value-status.pipe';
 import { EmbeddedParamEditorComponent } from './components/embedded/embedded-param-editor/embedded-param-editor.component';
 import { localStorageAdapter, provideLocalStorageSettings } from './adapters/local-storage-adapter';
 import { ValidationErrorPipe } from './pipes/validation-error.pipe';
-import { EmbeddedFunctionInputSelectionComponent } from './components/embedded/embedded-function-input-selection/embedded-function-input-selection.component';
 import { ParamPreviewComponent } from './components/previews/param-preview/param-preview.component';
 import { ValidationWarningPipe } from './pipes/validation-warning.pipe';
 import { EmbeddedInputOutputMappingComponent } from './components/embedded/embedded-input-output-mapping/embedded-input-output-mapping.component';
@@ -60,7 +59,6 @@ import { ConfirmationModule } from '../confirmation/confirmation.module';
 import { ConfirmationService } from '../confirmation/services/confirmation.service';
 import { PipelineStoreModule } from '../pipeline-store/pipeline-store.module';
 import { UserInputComponent } from './components/helpers/user-input/user-input.component';
-import { EmbeddedOutputParamConfigurationComponent } from './components/embedded/embedded-output-param-configuration/embedded-output-param-configuration.component';
 import { MatSelectModule } from '@angular/material/select';
 import { InputParamPipe } from './pipes/input-param.pipe';
 import { ProcedureStoreModule } from '../procedure-store/procedure-store.module';
@@ -68,7 +66,6 @@ import { CodeEditorModule } from '../code-editor/code-editor.module';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import sebleichProcessBuilderExtension from './globals/sebleich-process-builder-extension';
 import { BPMN_JS } from '@process-builder/injection';
-import { EmbeddedStaticOutputDefinitionComponent } from './components/embedded/embedded-static-output-definition/embedded-static-output-definition.component';
 import { FunctionOutputPreviewComponent } from './components/embedded/embedded-function-implementation/components/function-output-preview/function-output-preview.component';
 
 
@@ -87,7 +84,6 @@ import { FunctionOutputPreviewComponent } from './components/embedded/embedded-f
     ReturnValueStatusPipe,
     EmbeddedParamEditorComponent,
     ValidationErrorPipe,
-    EmbeddedFunctionInputSelectionComponent,
     ParamPreviewComponent,
     ValidationWarningPipe,
     EmbeddedInputOutputMappingComponent,
@@ -96,9 +92,7 @@ import { FunctionOutputPreviewComponent } from './components/embedded/embedded-f
     ParamMemberPreviewComponent,
     ParamMemberPathPreviewComponent,
     UserInputComponent,
-    EmbeddedOutputParamConfigurationComponent,
     InputParamPipe,
-    EmbeddedStaticOutputDefinitionComponent,
     FunctionOutputPreviewComponent
   ],
   imports: [

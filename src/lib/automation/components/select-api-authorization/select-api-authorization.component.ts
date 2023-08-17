@@ -1,5 +1,5 @@
 import { Component, forwardRef, Input, OnDestroy, OnInit } from '@angular/core';
-import { ControlValueAccessor, UntypedFormControl, NG_VALUE_ACCESSOR, FormControl } from '@angular/forms';
+import { ControlValueAccessor, NG_VALUE_ACCESSOR, FormControl } from '@angular/forms';
 import { MatFormFieldAppearance } from '@angular/material/form-field';
 import { Subscription } from 'rxjs';
 import { apiCallAuthorizationTypeToString, API_CALL_AUTHORIZATION } from '../../globals';
@@ -26,18 +26,15 @@ export class SelectApiAuthorizationComponent implements ControlValueAccessor, On
     return { display: apiCallAuthorizationTypeToString(x as any), type: x.valueOf() };
   });
 
-  private _subscriptions: Subscription[] = [];
+  private _subscription = new Subscription();
 
-  public ngOnDestroy(): void {
-    for (let sub of this._subscriptions) sub.unsubscribe();
-    this._subscriptions = [];
-  }
+  public ngOnDestroy = () => this._subscription.unsubscribe();
 
   public onTouched: () => void = () => { };
   registerOnTouched = (fn: any) => this.onTouched = fn;
 
   registerOnChange(fn: any): void {
-    this._subscriptions.push(this.valueControl.valueChanges.subscribe(fn));
+    this._subscription.add(this.valueControl.valueChanges.subscribe(fn));
   }
 
   setDisabledState?(isDisabled: boolean): void {

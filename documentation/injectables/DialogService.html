@@ -119,12 +119,12 @@
             <tbody>
                 <tr>
                     <td class="col-md-4">
-<code>constructor(_dialog: MatDialog, funcs: <a href="../interfaces/IFunction.html" target="_self">IFunction[]</a>, _injector: <a href="https://angular.io/api/core/Injector" target="_blank">Injector</a>, sso: ScrollStrategyOptions)</code>
+<code>constructor(_dialog: MatDialog, funcs: <a href="../interfaces/IFunction.html" target="_self">IFunction[]</a>, _injector: <a href="https://angular.io/api/core/Injector" target="_blank">Injector</a>)</code>
                     </td>
                 </tr>
                         <tr>
                             <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="16" class="link-to-prism">src/lib/process-builder/services/dialog.service.ts:16</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="15" class="link-to-prism">src/lib/process-builder/services/dialog.service.ts:15</a></div>
                             </td>
                         </tr>
 
@@ -177,18 +177,6 @@
                                                     </td>
                                                     
                                                 </tr>
-                                                <tr>
-                                                        <td>sso</td>
-                                                  
-                                                        <td>
-                                                                    <code>ScrollStrategyOptions</code>
-                                                        </td>
-                                                  
-                                                    <td>
-                                                            No
-                                                    </td>
-                                                    
-                                                </tr>
                                         </tbody>
                                     </table>
                             </div>
@@ -218,15 +206,15 @@
             <tr>
                 <td class="col-md-4">
                     <span class="modifier-icon icon ion-ios-reset"></span>
-                    <code>configTaskCreation(data: <a href="../interfaces/ITaskCreationDataWrapper.html" target="_self">ITaskCreationDataWrapper</a>)</code>
+                    <code>configTaskCreation(data: <a href="../interfaces/ITaskCreationInput.html" target="_self">ITaskCreationInput</a>)</code>
                 </td>
             </tr>
 
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="25"
-                            class="link-to-prism">src/lib/process-builder/services/dialog.service.ts:25</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="19"
+                            class="link-to-prism">src/lib/process-builder/services/dialog.service.ts:19</a></div>
                 </td>
             </tr>
 
@@ -249,7 +237,7 @@
                                 <tr>
                                     <td>data</td>
                                     <td>
-                                                <code><a href="../interfaces/ITaskCreationDataWrapper.html" target="_self" >ITaskCreationDataWrapper</a></code>
+                                                <code><a href="../interfaces/ITaskCreationInput.html" target="_self" >ITaskCreationInput</a></code>
                                     </td>
 
                                     <td>
@@ -264,7 +252,7 @@
                     <div>
                     </div>
                     <div class="io-description">
-                        <b>Returns : </b>        <code><a href="../interfaces/ITaskCreationFormGroupValue.html" target="_self" >Observable&lt;ITaskCreationFormGroupValue&gt;</a></code>
+                        <b>Returns : </b>        <code><a href="../interfaces/ITaskCreationOutput.html" target="_self" >Observable&lt;ITaskCreationOutput&gt;</a></code>
 
                     </div>
                     <div class="io-description">
@@ -296,8 +284,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="41"
-                            class="link-to-prism">src/lib/process-builder/services/dialog.service.ts:41</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="37"
+                            class="link-to-prism">src/lib/process-builder/services/dialog.service.ts:37</a></div>
                 </td>
             </tr>
 
@@ -392,7 +380,7 @@
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="20" class="link-to-prism">src/lib/process-builder/services/dialog.service.ts:20</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="17" class="link-to-prism">src/lib/process-builder/services/dialog.service.ts:17</a></div>
                         </td>
                     </tr>
 
@@ -413,23 +401,17 @@ import { IElement } from &#x27;src/lib/bpmn-io/interfaces/element.interface&#x27
 import { ParamEditorComponent } from &#x27;../components/dialog/param-editor/param-editor.component&#x27;;
 import { TaskCreationComponent } from &#x27;../components/dialog/task-creation/task-creation.component&#x27;;
 import { FUNCTIONS_CONFIG_TOKEN, IFunction } from &#x27;../interfaces/function.interface&#x27;;
-import { ITaskCreationDataWrapper } from &#x27;../interfaces/task-creation-data-wrapper.interface&#x27;;
-import { ITaskCreationFormGroupValue } from &#x27;../interfaces/task-creation-form-group-value.interface&#x27;;
-import { CloseScrollStrategy, ScrollStrategyOptions } from &#x27;@angular/cdk/overlay&#x27;;
+import { ITaskCreationInput } from &#x27;../components/dialog/task-creation/interfaces/task-creation-input.interface&#x27;;
+import { ITaskCreationOutput } from &#x27;../components/dialog/task-creation/interfaces/task-creation-output.interface&#x27;;
 
 @Injectable({
   providedIn: &#x27;root&#x27;
 })
 export class DialogService {
 
-  constructor(
-    private _dialog: MatDialog,
-    @Inject(FUNCTIONS_CONFIG_TOKEN) public funcs: IFunction[],
-    private _injector: Injector,
-    private readonly sso: ScrollStrategyOptions
-  ) { }
+  constructor(private _dialog: MatDialog, @Inject(FUNCTIONS_CONFIG_TOKEN) public funcs: IFunction[], private _injector: Injector) { }
 
-  public configTaskCreation(data: ITaskCreationDataWrapper): Observable&lt;ITaskCreationFormGroupValue&gt; {
+  public configTaskCreation(data: ITaskCreationInput): Observable&lt;ITaskCreationOutput&gt; {
     const ref &#x3D; this._dialog.open(TaskCreationComponent, {
       injector: this._injector,
       panelClass: &#x27;no-padding-dialog&#x27;,
@@ -437,7 +419,9 @@ export class DialogService {
       disableClose: true,
       maxWidth: &#x27;unset&#x27;
     });
+
     document.getElementsByClassName(&#x27;cdk-overlay-container&#x27;)[0]?.classList.add(&#x27;z-index-1002&#x27;);
+
     return ref.afterClosed().pipe(
       finalize(() &#x3D;&gt; {
         document.getElementsByClassName(&#x27;cdk-overlay-container&#x27;)[0]?.classList.remove(&#x27;z-index-1002&#x27;);

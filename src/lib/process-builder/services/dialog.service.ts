@@ -6,21 +6,17 @@ import { IElement } from 'src/lib/bpmn-io/interfaces/element.interface';
 import { ParamEditorComponent } from '../components/dialog/param-editor/param-editor.component';
 import { TaskCreationComponent } from '../components/dialog/task-creation/task-creation.component';
 import { FUNCTIONS_CONFIG_TOKEN, IFunction } from '../interfaces/function.interface';
-import { ITaskCreationDataWrapper } from '../interfaces/task-creation-data-wrapper.interface';
-import { ITaskCreationFormGroupValue } from '../interfaces/task-creation-form-group-value.interface';
+import { ITaskCreationInput } from '../components/dialog/task-creation/interfaces/task-creation-input.interface';
+import { ITaskCreationOutput } from '../components/dialog/task-creation/interfaces/task-creation-output.interface';
 
 @Injectable({
   providedIn: 'root'
 })
 export class DialogService {
 
-  constructor(
-    private _dialog: MatDialog,
-    @Inject(FUNCTIONS_CONFIG_TOKEN) public funcs: IFunction[],
-    private _injector: Injector
-  ) { }
+  constructor(private _dialog: MatDialog, @Inject(FUNCTIONS_CONFIG_TOKEN) public funcs: IFunction[], private _injector: Injector) { }
 
-  public configTaskCreation(data: ITaskCreationDataWrapper): Observable<ITaskCreationFormGroupValue> {
+  public configTaskCreation(data: ITaskCreationInput): Observable<ITaskCreationOutput> {
     const ref = this._dialog.open(TaskCreationComponent, {
       injector: this._injector,
       panelClass: 'no-padding-dialog',

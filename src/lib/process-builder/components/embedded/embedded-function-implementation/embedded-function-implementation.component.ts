@@ -10,9 +10,12 @@ import { IProcessBuilderConfig, PROCESS_BUILDER_CONFIG_TOKEN } from 'src/lib/pro
 import { CodemirrorRepository } from 'src/lib/core/codemirror.repository';
 import { ParameterService } from '@/lib/process-builder/services/parameter.service';
 import { Store } from '@ngrx/store';
-import { selectIFunction, selectIInterface, selectIInterfaces, selectIParam, selectNextParameterIdentifier } from '@/lib/process-builder/store/selectors';
+import { selectIFunction, selectIInterface, selectIInterfaces } from '@/lib/process-builder/store/selectors';
 import { selectSnapshot } from '@/lib/process-builder/globals/select-snapshot';
-import { MethodEvaluationResultType } from '@/lib/process-builder/types/method-evaluation-result.type';
+import { ProcessBuilderRepository } from '@/lib/core/process-builder-repository';
+import { ParamType } from '@/lib/process-builder/types/param.type';
+import { FunctionOutputService } from '../../process-builder/services/function-output.service';
+import { IFunction, IMethodEvaluationResult } from '@/lib/process-builder/interfaces';
 
 @Component({
 	selector: 'app-embedded-function-implementation',
@@ -26,10 +29,10 @@ export class EmbeddedFunctionImplementationComponent implements IEmbeddedView, A
 
 	public injectorDef$ = defer(() => from(this._parameterService.parameterToInjector(this.inputParams)));
 	public injector$ = this.injectorDef$.pipe(map((def) => def.injector));
-	public implementationChanged$ = defer(() => this.formGroup.controls.implementation?.valueChanges ?? NEVER);
+	public implementationChanged$ = defer(() => this.formGroup.controls.functionImplementation?.valueChanges ?? NEVER);
 	public methodEvaluationStatus$ = defer(
 		() => this.implementationChanged$.pipe(
-			startWith(this.formGroup.controls.implementation?.value),
+			startWith(this.formGroup.controls.functionImplementation?.value),
 			debounceTime(300),
 			switchMap(async (implementation) => {
 				const injector = await this._parameterService.parameterToInjector(this.inputParams),
@@ -43,6 +46,7 @@ export class EmbeddedFunctionImplementationComponent implements IEmbeddedView, A
 	public returnValueStatus$ = defer(() => this.methodEvaluationStatus$.pipe(map((status) => status?.status), startWith(MethodEvaluationStatus.Initial)));
 	public templates$ = this._store.select(selectIInterfaces());
 
+	private _functionOutputService = new FunctionOutputService(this._store);
 	private _subscriptions = new Subscription();
 
 	constructor(
@@ -54,10 +58,10 @@ export class EmbeddedFunctionImplementationComponent implements IEmbeddedView, A
 
 	public ngOnInit(): void {
 		this._subscriptions.add(this.returnValueStatus$.subscribe((status) => this._verifyOutputParamNameControl(status)));
-		this._subscriptions.add(this.methodEvaluationStatus$.subscribe(async (status) => await this._verifyOutput(status.type ?? 'undefined', status.interface, status.paramName ?? '', status.status)));
+		this._subscriptions.add(this.methodEvaluationStatus$.subscribe(async (status) => await this._verifyOutput(status.type ?? null, status.interface, status.paramName ?? '', status)));
 	}
 
-	public ngAfterContentInit = () => this.formGroup.controls.interface?.disable();
+	public ngAfterContentInit = () => this.formGroup.controls.outputParamInterface?.disable();
 	public ngOnDestroy = () => this._subscriptions.unsubscribe();
 
 	public MethodEvaluationStatus = MethodEvaluationStatus;
@@ -66,56 +70,55 @@ export class EmbeddedFunctionImplementationComponent implements IEmbeddedView, A
 		return this._controlContainer.control as TaskCreationFormGroup;
 	}
 
-	public get canFailControl(): UntypedFormControl {
-		return this.formGroup.controls['canFail'] as FormControl<boolean>;
+	public get functionCanFailControl(): FormControl<boolean> {
+		return this.formGroup.controls.functionCanFail as FormControl<boolean>;
 	}
 
-	private async _verifyOutput(type: MethodEvaluationResultType, templateIdentifier: string | null | undefined, paramName: string, status: MethodEvaluationStatus): Promise<void> {
+	private async _verifyOutput(type: ParamType | null, templateIdentifier: string | null | undefined, paramName: string, status: IMethodEvaluationResult): Promise<void> {
 		let outputParamName: string;
 		this.formGroup.controls.outputParamType!.setValue(type);
 
-		if (status === MethodEvaluationStatus.ReturnValueFound) {
-			const referencedFunction = await selectSnapshot(this._store.select(selectIFunction(this.formGroup.value.functionIdentifier)));
-			const outputParamId = referencedFunction?.output ?? await selectSnapshot(this._store.select(selectNextParameterIdentifier()));
-			this.formGroup.controls.outputParamIdentifier?.setValue(outputParamId);
-		}
-		else this.formGroup.controls.outputParamIdentifier?.setValue(null);
-
 		if (type !== 'object') {
-			this.formGroup.controls.interface?.setValue(null);
-			this.formGroup.controls.interface?.disable();
+			this.formGroup.controls.outputParamInterface?.setValue(null);
+			this.formGroup.controls.outputParamInterface?.disable();
 			outputParamName = paramName;
 		}
 		else {
 			if (!templateIdentifier) {
-				this.formGroup.controls.interface?.setValue(null);
-				this.formGroup.controls.interface?.disable();
+				this.formGroup.controls.outputParamInterface?.setValue(null);
+				this.formGroup.controls.outputParamInterface?.disable();
 				return;
 			}
 
 			const template = await selectSnapshot(this._store.select(selectIInterface(templateIdentifier)));
 			if (!template) {
-				this.formGroup.controls.interface?.setValue(null);
-				this.formGroup.controls.interface?.disable();
+				this.formGroup.controls.outputParamInterface?.setValue(null);
+				this.formGroup.controls.outputParamInterface?.disable();
 				return;
 			}
 
-			this.formGroup.controls.interface?.setValue(template.identifier);
-			this.formGroup.controls.interface?.enable();
+			this.formGroup.controls.outputParamInterface?.setValue(template.identifier);
+			this.formGroup.controls.outputParamInterface?.enable();
 			outputParamName = template.name;
 		}
 
-		const persistedParam = await selectSnapshot(this._store.select(selectIParam(this.formGroup.controls.outputParamIdentifier?.value)));
-		if (persistedParam) {
+		const selectedFunction = await selectSnapshot(this._store.select(selectIFunction(this.formGroup.controls.functionIdentifier?.value))) as IFunction;
+		const { outputParamObject } = await this._functionOutputService.detectFunctionOutput(selectedFunction, status);
+		if (outputParamObject) {
 			return;
 		}
 
+		const normalizedOutputParamName = ProcessBuilderRepository.normalizeName(outputParamName);
 		if (this.formGroup.controls.outputParamName?.pristine) {
-			this.formGroup.controls.outputParamName!.setValue(outputParamName);
+			this.formGroup.controls.outputParamName.setValue(outputParamName);
+			(this.formGroup.controls.outputParamNormalizedName as FormControl).setValue(normalizedOutputParamName);
 		}
 
-		if (this.formGroup.controls.name?.pristine) {
-			this.formGroup.controls.name!.setValue(`provide ${outputParamName}`);
+		if (this.formGroup.controls.functionName?.pristine) {
+			const functionName = `provide ${outputParamName}`;
+			const normalizedName = ProcessBuilderRepository.normalizeName(functionName);
+			this.formGroup.controls.functionName.setValue(functionName);
+			(this.formGroup.controls.functionNormalizedName as FormControl).setValue(normalizedName);
 		}
 
 

@@ -96,6 +96,13 @@
                 <td class="col-md-3">providers</td>
                 <td class="col-md-9">
                                 <code><a href="../injectables/ProcessBuilderComponentService.html" target="_self" >ProcessBuilderComponentService</a></code>
+                                <code><a href="../injectables/ActivityC2SProcessor.html" target="_self" >{ provide: C2S_INJECTION_TOKEN, useClass: ActivityC2SProcessor, multi: true }</a></code>
+                                <code><a href="../injectables/OutputC2SProcessor.html" target="_self" >{ provide: C2S_INJECTION_TOKEN, useClass: OutputC2SProcessor, multi: true }</a></code>
+                                <code><a href="../injectables/ActivityC2MProcessor.html" target="_self" >{ provide: C2M_INJECTION_TOKEN, useClass: ActivityC2MProcessor, multi: true }</a></code>
+                                <code><a href="../injectables/ConnectorC2MProcessor.html" target="_self" >{ provide: C2M_INJECTION_TOKEN, useClass: ConnectorC2MProcessor, multi: true }</a></code>
+                                <code><a href="../injectables/OutputC2MProcessor.html" target="_self" >{ provide: C2M_INJECTION_TOKEN, useClass: OutputC2MProcessor, multi: true }</a></code>
+                                <code><a href="../injectables/EventC2MProcessor.html" target="_self" >{ provide: C2M_INJECTION_TOKEN, useClass: EventC2MProcessor, multi: true }</a></code>
+                                <code><a href="../injectables/GatewayC2MProcessor.html" target="_self" >{ provide: C2M_INJECTION_TOKEN, useClass: GatewayC2MProcessor, multi: true }</a></code>
                 </td>
             </tr>
 
@@ -179,6 +186,21 @@
                             <li>
                                     <span class="modifier">Private</span>
                                     <span class="modifier">Async</span>
+                                <a href="#_processC2m" >_processC2m</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                    <span class="modifier">Async</span>
+                                <a href="#_processC2S" >_processC2S</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                    <span class="modifier">Async</span>
+                                <a href="#_processConfiguration" >_processConfiguration</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                    <span class="modifier">Async</span>
                                 <a href="#init" >init</a>
                             </li>
                             <li>
@@ -207,12 +229,12 @@
             <tbody>
                 <tr>
                     <td class="col-md-4">
-<code>constructor(_bpmnJs: <a href="../interfaces/IBpmnJS.html" target="_self">IBpmnJS</a>, processBuilderService: <a href="../injectables/ProcessBuilderService.html" target="_self">ProcessBuilderService</a>, bpmnJsService: <a href="../injectables/BpmnJsService.html" target="_self">BpmnJsService</a>, _store: Store, _processBuilderComponentService: <a href="../injectables/ProcessBuilderComponentService.html" target="_self">ProcessBuilderComponentService</a>)</code>
+<code>constructor(_c2sProcessors: <a href="../interfaces/IC2SProcessor.html" target="_self">IC2SProcessor[]</a>, _c2mProcessors: <a href="../interfaces/IC2MProcessor.html" target="_self">IC2MProcessor[]</a>, _bpmnJs: <a href="../interfaces/IBpmnJS.html" target="_self">IBpmnJS</a>, processBuilderService: <a href="../injectables/ProcessBuilderService.html" target="_self">ProcessBuilderService</a>, bpmnJsService: <a href="../injectables/BpmnJsService.html" target="_self">BpmnJsService</a>, _store: Store, _processBuilderComponentService: <a href="../injectables/ProcessBuilderComponentService.html" target="_self">ProcessBuilderComponentService</a>)</code>
                     </td>
                 </tr>
                         <tr>
                             <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="34" class="link-to-prism">src/lib/process-builder/components/process-builder/process-builder.component.ts:34</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="56" class="link-to-prism">src/lib/process-builder/components/process-builder/process-builder.component.ts:56</a></div>
                             </td>
                         </tr>
 
@@ -229,6 +251,30 @@
                                             </tr>
                                         </thead>
                                         <tbody>
+                                                <tr>
+                                                        <td>_c2sProcessors</td>
+                                                  
+                                                        <td>
+                                                                        <code><a href="../interfaces/IC2SProcessor.html" target="_self" >IC2SProcessor[]</a></code>
+                                                        </td>
+                                                  
+                                                    <td>
+                                                            No
+                                                    </td>
+                                                    
+                                                </tr>
+                                                <tr>
+                                                        <td>_c2mProcessors</td>
+                                                  
+                                                        <td>
+                                                                        <code><a href="../interfaces/IC2MProcessor.html" target="_self" >IC2MProcessor[]</a></code>
+                                                        </td>
+                                                  
+                                                    <td>
+                                                            No
+                                                    </td>
+                                                    
+                                                </tr>
                                                 <tr>
                                                         <td>_bpmnJs</td>
                                                   
@@ -329,8 +375,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="107"
-                            class="link-to-prism">src/lib/process-builder/components/process-builder/process-builder.component.ts:107</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="152"
+                            class="link-to-prism">src/lib/process-builder/components/process-builder/process-builder.component.ts:152</a></div>
                 </td>
             </tr>
 
@@ -394,6 +440,222 @@
         <tbody>
             <tr>
                 <td class="col-md-4">
+                    <a name="_processC2m"></a>
+                    <span class="name">
+                        <span class="modifier">Private</span>
+                        <span class="modifier">Async</span>
+                        <span ><b>_processC2m</b></span>
+                        <a href="#_processC2m"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>_processC2m(args: <a href="../interfaces/ITaskCreationOutput.html" target="_self">ITaskCreationOutput</a>)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="144"
+                            class="link-to-prism">src/lib/process-builder/components/process-builder/process-builder.component.ts:144</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>args</td>
+                                    <td>
+                                                <code><a href="../interfaces/ITaskCreationOutput.html" target="_self" >ITaskCreationOutput</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="_processC2S"></a>
+                    <span class="name">
+                        <span class="modifier">Private</span>
+                        <span class="modifier">Async</span>
+                        <span ><b>_processC2S</b></span>
+                        <a href="#_processC2S"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>_processC2S(args: <a href="../interfaces/ITaskCreationOutput.html" target="_self">ITaskCreationOutput</a>)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="136"
+                            class="link-to-prism">src/lib/process-builder/components/process-builder/process-builder.component.ts:136</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>args</td>
+                                    <td>
+                                                <code><a href="../interfaces/ITaskCreationOutput.html" target="_self" >ITaskCreationOutput</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="_processConfiguration"></a>
+                    <span class="name">
+                        <span class="modifier">Private</span>
+                        <span class="modifier">Async</span>
+                        <span ><b>_processConfiguration</b></span>
+                        <a href="#_processConfiguration"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>_processConfiguration(args: <a href="../interfaces/ITaskCreationOutput.html" target="_self">ITaskCreationOutput</a>)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="130"
+                            class="link-to-prism">src/lib/process-builder/components/process-builder/process-builder.component.ts:130</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>args</td>
+                                    <td>
+                                                <code><a href="../interfaces/ITaskCreationOutput.html" target="_self" >ITaskCreationOutput</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
                     <a name="init"></a>
                     <span class="name">
                         <span class="modifier">Private</span>
@@ -413,8 +675,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="52"
-                            class="link-to-prism">src/lib/process-builder/components/process-builder/process-builder.component.ts:52</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="76"
+                            class="link-to-prism">src/lib/process-builder/components/process-builder/process-builder.component.ts:76</a></div>
                 </td>
             </tr>
 
@@ -452,8 +714,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="44"
-                            class="link-to-prism">src/lib/process-builder/components/process-builder/process-builder.component.ts:44</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="68"
+                            class="link-to-prism">src/lib/process-builder/components/process-builder/process-builder.component.ts:68</a></div>
                 </td>
             </tr>
 
@@ -491,8 +753,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="48"
-                            class="link-to-prism">src/lib/process-builder/components/process-builder/process-builder.component.ts:48</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="72"
+                            class="link-to-prism">src/lib/process-builder/components/process-builder/process-builder.component.ts:72</a></div>
                 </td>
             </tr>
 
@@ -533,7 +795,7 @@
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="34" class="link-to-prism">src/lib/process-builder/components/process-builder/process-builder.component.ts:34</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="56" class="link-to-prism">src/lib/process-builder/components/process-builder/process-builder.component.ts:56</a></div>
                         </td>
                     </tr>
 
@@ -564,7 +826,7 @@
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="27" class="link-to-prism">src/lib/process-builder/components/process-builder/process-builder.component.ts:27</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="49" class="link-to-prism">src/lib/process-builder/components/process-builder/process-builder.component.ts:49</a></div>
                         </td>
                     </tr>
 
@@ -591,7 +853,7 @@
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="39" class="link-to-prism">src/lib/process-builder/components/process-builder/process-builder.component.ts:39</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="63" class="link-to-prism">src/lib/process-builder/components/process-builder/process-builder.component.ts:63</a></div>
                         </td>
                     </tr>
 
@@ -627,7 +889,7 @@
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="25" class="link-to-prism">src/lib/process-builder/components/process-builder/process-builder.component.ts:25</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="47" class="link-to-prism">src/lib/process-builder/components/process-builder/process-builder.component.ts:47</a></div>
                         </td>
                     </tr>
 
@@ -654,7 +916,7 @@
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="38" class="link-to-prism">src/lib/process-builder/components/process-builder/process-builder.component.ts:38</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="62" class="link-to-prism">src/lib/process-builder/components/process-builder/process-builder.component.ts:62</a></div>
                         </td>
                     </tr>
 
@@ -681,13 +943,35 @@ import { upsertProcedure } from &#x27;@procedure&#x27;;
 import { IElement } from &#x27;src/lib/bpmn-io/interfaces/element.interface&#x27;;
 import { IBpmnJS } from &#x27;../../interfaces/bpmn-js.interface&#x27;;
 import { BPMN_JS } from &#x27;@process-builder/injection&#x27;;
+import { C2M_INJECTION_TOKEN } from &#x27;./constants/c2m-processor.constant&#x27;;
+import { ActivityC2MProcessor } from &#x27;./c2m-processors/activity.c2m-processor&#x27;;
+import { IC2MProcessor } from &#x27;./interfaces/c2m-processor.interface&#x27;;
+import { ConnectorC2MProcessor } from &#x27;./c2m-processors/connector.c2m-processor&#x27;;
+import { EventC2MProcessor } from &#x27;./c2m-processors/event.c2m-processor&#x27;;
+import { GatewayC2MProcessor } from &#x27;./c2m-processors/gateway.c2m-processor&#x27;;
+import { isPromise } from &#x27;@/lib/shared/globals/is-promise.constant&#x27;;
+import { C2S_INJECTION_TOKEN } from &#x27;./constants/c2s-processing.constant&#x27;;
+import { IC2SProcessor } from &#x27;./interfaces/c2s-processor.interface&#x27;;
+import { ActivityC2SProcessor } from &#x27;./c2s-processors/activity.c2s-processor&#x27;;
+import { OutputC2SProcessor } from &#x27;./c2s-processors/output.c2s-processor&#x27;;
+import { OutputC2MProcessor } from &#x27;./c2m-processors/output.c2m-processor&#x27;;
+import { ITaskCreationOutput } from &#x27;../dialog/task-creation/interfaces/task-creation-output.interface&#x27;;
 
 @Component({
   selector: &#x27;app-process-builder&#x27;,
   templateUrl: &#x27;./process-builder.component.html&#x27;,
   styleUrls: [&#x27;./process-builder.component.scss&#x27;],
   animations: [showAnimation],
-  providers: [ProcessBuilderComponentService]
+  providers: [
+    ProcessBuilderComponentService,
+    { provide: C2S_INJECTION_TOKEN, useClass: ActivityC2SProcessor, multi: true },
+    { provide: C2S_INJECTION_TOKEN, useClass: OutputC2SProcessor, multi: true },
+    { provide: C2M_INJECTION_TOKEN, useClass: ActivityC2MProcessor, multi: true },
+    { provide: C2M_INJECTION_TOKEN, useClass: ConnectorC2MProcessor, multi: true },
+    { provide: C2M_INJECTION_TOKEN, useClass: OutputC2MProcessor, multi: true },
+    { provide: C2M_INJECTION_TOKEN, useClass: EventC2MProcessor, multi: true },
+    { provide: C2M_INJECTION_TOKEN, useClass: GatewayC2MProcessor, multi: true },
+  ]
 })
 export class ProcessBuilderComponent implements OnDestroy, OnInit {
 
@@ -703,6 +987,8 @@ export class ProcessBuilderComponent implements OnDestroy, OnInit {
   private _subscription &#x3D; new Subscription();
 
   constructor(
+    @Inject(C2S_INJECTION_TOKEN) private _c2sProcessors: IC2SProcessor[],
+    @Inject(C2M_INJECTION_TOKEN) private _c2mProcessors: IC2MProcessor[],
     @Inject(BPMN_JS) private _bpmnJs: IBpmnJS,
     public processBuilderService: ProcessBuilderService,
     public bpmnJsService: BpmnJsService,
@@ -724,9 +1010,7 @@ export class ProcessBuilderComponent implements OnDestroy, OnInit {
     this._subscription.add(
       this._processBuilderComponentService
         .taskEditingDialogResultReceived$
-        .subscribe((args) &#x3D;&gt; {
-          this._processBuilderComponentService.applyTaskCreationConfig(args.taskCreationPayload, args.taskCreationFormGroupValue);
-        })
+        .subscribe(async (args) &#x3D;&gt; await this._processConfiguration(args))
     );
 
     this._subscription.add(
@@ -746,6 +1030,7 @@ export class ProcessBuilderComponent implements OnDestroy, OnInit {
             break;
 
           case shapeTypes.EndEvent:
+            // eslint-disable-next-line no-case-declarations
             const firstOuputProvidingActivity &#x3D; this._getFirstProvidedOutputWithSLPBExtension(element, &#x27;isProcessOutput&#x27;);
             if (firstOuputProvidingActivity) {
               BPMNJsRepository.updateBpmnElementSLPBExtension(this._bpmnJs, firstOuputProvidingActivity.businessObject, &#x27;DataObjectExtension&#x27;, (ext) &#x3D;&gt; ext.isProcessOutput &#x3D; false);
@@ -771,6 +1056,28 @@ export class ProcessBuilderComponent implements OnDestroy, OnInit {
         this.bpmnJsService.saveCurrentBpmnModel();
       })
     );
+  }
+
+  private async _processConfiguration(args: ITaskCreationOutput){
+    await this._processC2S(args);
+    await this._processC2m(args);
+    await this.bpmnJsService.saveCurrentBpmnModel(true);
+  }
+
+  private async _processC2S(args: ITaskCreationOutput){
+    for (const step of this._c2sProcessors) {
+      const processOutputCandidate &#x3D; step.processConfiguration(args);
+
+      isPromise(processOutputCandidate)? await processOutputCandidate: processOutputCandidate;
+    }
+  }
+
+  private async _processC2m(args: ITaskCreationOutput) {
+    for (const step of this._c2mProcessors) {
+      const processOutputCandidate &#x3D; step.processConfiguration(args);
+
+      isPromise(processOutputCandidate)? await processOutputCandidate: processOutputCandidate;
+    }
   }
 
   private _getFirstProvidedOutputWithSLPBExtension(currentElement: IElement, extension: &#x27;matchesProcessOutputInterface&#x27; | &#x27;isProcessOutput&#x27;) {
@@ -903,7 +1210,7 @@ export class ProcessBuilderComponent implements OnDestroy, OnInit {
 <script src="../js/libs/deep-iterator.js"></script>
 <script>
         var COMPONENT_TEMPLATE = '<div><div class="PB_diagram-body" [@show]="(animationStatus$|async) ?? \'hidden\'">  <div #diagramWrapper class="diagram-wrapper"></div>  <div class="info">    <div>      {{(processBuilderService.models$|async)?.length ?? 0}} Models    </div>    <div>      {{(processBuilderService.params$|async)?.length ?? 0}} Params    </div>    <div>      {{(processBuilderService.funcs$|async)?.length ?? 0}} Funcs    </div>    <button mat-raised-button color="primary" (click)="processBuilderService.createBpmnJsModel()">      New model    </button>    <button mat-raised-button color="primary" (click)="processBuilderService.setNextModel()"      [disabled]="((processBuilderService.models$|async)?.length ?? 0) < 2">      Next model    </button>    <button mat-raised-button color="primary" (click)="bpmnJsService.undo()">      Undo    </button>    <button mat-raised-button color="primary" (click)="bpmnJsService.redo()">      Redo    </button>    <button mat-raised-button color="primary" (click)="bpmnJsService.saveCurrentBpmnModel(true)">      Save model    </button>    <button mat-raised-button color="warn" (click)="processBuilderService.resetLocalState()">      Clear state    </button>  </div></div></div>'
-    var COMPONENTS = [{'name': 'AboutComponent', 'selector': 'app-about'},{'name': 'AccessTokenInputComponent', 'selector': 'app-access-token-input'},{'name': 'ApiCallConfiguratorComponent', 'selector': 'app-api-call-configurator'},{'name': 'ApiCallConfiguratorDialogComponent', 'selector': 'app-api-call-configurator-dialog'},{'name': 'ApiConfigurationPreviewComponent', 'selector': 'app-api-configuration-preview'},{'name': 'ApiLoginTestComponent', 'selector': 'app-api-login-test'},{'name': 'AppComponent', 'selector': 'app-root'},{'name': 'CalculationComponent', 'selector': 'app-calculation'},{'name': 'CalculationContextOverviewComponent', 'selector': 'app-calculation-context-overview'},{'name': 'CodeEditorComponent', 'selector': 'app-code-editor'},{'name': 'ConfirmationComponent', 'selector': 'app-confirmation'},{'name': 'ContainerPreviewComponent', 'selector': 'app-container-preview'},{'name': 'EditDataDialogComponent', 'selector': 'app-edit-data-dialog'},{'name': 'EmbeddedConfigureErrorGatewayEntranceConnectionComponent', 'selector': 'app-embedded-configure-error-gateway-entrance-connection'},{'name': 'EmbeddedFunctionImplementationComponent', 'selector': 'app-embedded-function-implementation'},{'name': 'EmbeddedFunctionInputSelectionComponent', 'selector': 'app-embedded-function-input-selection'},{'name': 'EmbeddedFunctionSelectionComponent', 'selector': 'app-embedded-function-selection'},{'name': 'EmbeddedInputOutputMappingComponent', 'selector': 'app-embedded-input-output-mapping'},{'name': 'EmbeddedInputOutputMappingTableRowComponent', 'selector': 'app-embedded-input-output-mapping-table-row'},{'name': 'EmbeddedOutputParamConfigurationComponent', 'selector': 'app-embedded-output-param-configuration'},{'name': 'EmbeddedParamEditorComponent', 'selector': 'app-embedded-param-editor'},{'name': 'EmbeddedStaticOutputDefinitionComponent', 'selector': 'app-embedded-static-output-definition'},{'name': 'EndpointInputComponent', 'selector': 'app-endpoint-input'},{'name': 'ErrorComponent', 'selector': 'app-error'},{'name': 'FunctionPreviewComponent', 'selector': 'app-function-preview'},{'name': 'GoodPreviewComponent', 'selector': 'app-good-preview'},{'name': 'GoodsPanelComponent', 'selector': 'app-goods-panel'},{'name': 'GroupsFormComponent', 'selector': 'app-groups-form'},{'name': 'GroupsPanelComponent', 'selector': 'app-groups-panel'},{'name': 'LocalDataComponent', 'selector': 'app-local-data'},{'name': 'MethodQuickInteractionComponent', 'selector': 'app-method-quick-interaction'},{'name': 'NavbarComponent', 'selector': 'app-navbar'},{'name': 'NoSolutionDialogComponent', 'selector': 'app-no-solution-dialog'},{'name': 'OrdersFormComponent', 'selector': 'app-orders-form'},{'name': 'ParamEditorComponent', 'selector': 'app-param-editor'},{'name': 'ParamMemberPathPreviewComponent', 'selector': 'app-param-member-path-preview'},{'name': 'ParamMemberPreviewComponent', 'selector': 'app-param-member-preview'},{'name': 'ParamPreviewComponent', 'selector': 'app-param-preview'},{'name': 'PipelineActionPreviewComponent', 'selector': 'app-pipeline-action-preview'},{'name': 'PipeRunnerComponent', 'selector': 'app-pipe-runner'},{'name': 'ProcessBuilderComponent', 'selector': 'app-process-builder'},{'name': 'ProcessBuilderWrapperComponent', 'selector': 'app-process-builder-wrapper'},{'name': 'ProductFormComponent', 'selector': 'app-products-form'},{'name': 'SceneVisualizationComponent', 'selector': 'app-scene-visualization'},{'name': 'SelectApiAuthorizationComponent', 'selector': 'app-select-api-authorization'},{'name': 'SelectGroupComponent', 'selector': 'app-select-group'},{'name': 'SelectProductComponent', 'selector': 'app-select-product'},{'name': 'SelectUnitComponent', 'selector': 'app-select-unit'},{'name': 'SolutionAnimationComponent', 'selector': 'app-solution-animation'},{'name': 'SolutionPreviewComponent', 'selector': 'app-solution-preview'},{'name': 'SolutionPreviewRenderingComponent', 'selector': 'app-solution-preview-rendering'},{'name': 'SolutionValidationComponent', 'selector': 'app-solution-validation'},{'name': 'SolutionVisualizationDialogComponent', 'selector': 'app-solution-visualization-dialog'},{'name': 'TaskCreationComponent', 'selector': 'app-task-creation'},{'name': 'UserInputComponent', 'selector': 'app-user-input'},{'name': 'UsernamePasswordCombinationComponent', 'selector': 'app-username-password-combination'},{'name': 'VisualizerComponent', 'selector': 'app-visualizer'},{'name': 'WidgetComponent', 'selector': 'app-widget'}];
+    var COMPONENTS = [{'name': 'AboutComponent', 'selector': 'app-about'},{'name': 'AccessTokenInputComponent', 'selector': 'app-access-token-input'},{'name': 'ApiCallConfiguratorComponent', 'selector': 'app-api-call-configurator'},{'name': 'ApiCallConfiguratorDialogComponent', 'selector': 'app-api-call-configurator-dialog'},{'name': 'ApiConfigurationPreviewComponent', 'selector': 'app-api-configuration-preview'},{'name': 'ApiLoginTestComponent', 'selector': 'app-api-login-test'},{'name': 'AppComponent', 'selector': 'app-root'},{'name': 'CalculationComponent', 'selector': 'app-calculation'},{'name': 'CalculationContextOverviewComponent', 'selector': 'app-calculation-context-overview'},{'name': 'CodeEditorComponent', 'selector': 'app-code-editor'},{'name': 'ConfirmationComponent', 'selector': 'app-confirmation'},{'name': 'ConsoleComponent', 'selector': 'app-console'},{'name': 'ContainerPreviewComponent', 'selector': 'app-container-preview'},{'name': 'EditDataDialogComponent', 'selector': 'app-edit-data-dialog'},{'name': 'EmbeddedConfigureErrorGatewayEntranceConnectionComponent', 'selector': 'app-embedded-configure-error-gateway-entrance-connection'},{'name': 'EmbeddedFunctionImplementationComponent', 'selector': 'app-embedded-function-implementation'},{'name': 'EmbeddedFunctionSelectionComponent', 'selector': 'app-embedded-function-selection'},{'name': 'EmbeddedInputOutputMappingComponent', 'selector': 'app-embedded-input-output-mapping'},{'name': 'EmbeddedInputOutputMappingTableRowComponent', 'selector': 'app-embedded-input-output-mapping-table-row'},{'name': 'EmbeddedParamEditorComponent', 'selector': 'app-embedded-param-editor'},{'name': 'EndpointInputComponent', 'selector': 'app-endpoint-input'},{'name': 'ErrorComponent', 'selector': 'app-error'},{'name': 'FunctionOutputPreviewComponent', 'selector': 'app-function-output-preview'},{'name': 'FunctionPreviewComponent', 'selector': 'app-function-preview'},{'name': 'GoodPreviewComponent', 'selector': 'app-good-preview'},{'name': 'GoodsPanelComponent', 'selector': 'app-goods-panel'},{'name': 'GroupsFormComponent', 'selector': 'app-groups-form'},{'name': 'GroupsPanelComponent', 'selector': 'app-groups-panel'},{'name': 'LocalDataComponent', 'selector': 'app-local-data'},{'name': 'MethodQuickInteractionComponent', 'selector': 'app-method-quick-interaction'},{'name': 'NavbarComponent', 'selector': 'app-navbar'},{'name': 'NoSolutionDialogComponent', 'selector': 'app-no-solution-dialog'},{'name': 'OrdersFormComponent', 'selector': 'app-orders-form'},{'name': 'ParamEditorComponent', 'selector': 'app-param-editor'},{'name': 'ParamMemberPathPreviewComponent', 'selector': 'app-param-member-path-preview'},{'name': 'ParamMemberPreviewComponent', 'selector': 'app-param-member-preview'},{'name': 'ParamPreviewComponent', 'selector': 'app-param-preview'},{'name': 'PipelineActionPreviewComponent', 'selector': 'app-pipeline-action-preview'},{'name': 'PipeRunnerComponent', 'selector': 'app-pipe-runner'},{'name': 'PipeRunnerOptionsBarComponent', 'selector': 'app-pipe-runner-options-bar'},{'name': 'ProcessBuilderComponent', 'selector': 'app-process-builder'},{'name': 'ProcessBuilderWrapperComponent', 'selector': 'app-process-builder-wrapper'},{'name': 'ProductFormComponent', 'selector': 'app-products-form'},{'name': 'SceneVisualizationComponent', 'selector': 'app-scene-visualization'},{'name': 'SelectApiAuthorizationComponent', 'selector': 'app-select-api-authorization'},{'name': 'SelectGroupComponent', 'selector': 'app-select-group'},{'name': 'SelectPipelineComponent', 'selector': 'app-select-pipeline'},{'name': 'SelectProductComponent', 'selector': 'app-select-product'},{'name': 'SelectUnitComponent', 'selector': 'app-select-unit'},{'name': 'SolutionAnimationComponent', 'selector': 'app-solution-animation'},{'name': 'SolutionPreviewComponent', 'selector': 'app-solution-preview'},{'name': 'SolutionPreviewRenderingComponent', 'selector': 'app-solution-preview-rendering'},{'name': 'SolutionValidationComponent', 'selector': 'app-solution-validation'},{'name': 'SolutionVisualizationDialogComponent', 'selector': 'app-solution-visualization-dialog'},{'name': 'TaskCreationComponent', 'selector': 'app-task-creation'},{'name': 'UserInputComponent', 'selector': 'app-user-input'},{'name': 'UsernamePasswordCombinationComponent', 'selector': 'app-username-password-combination'},{'name': 'VisualizerComponent', 'selector': 'app-visualizer'},{'name': 'WidgetComponent', 'selector': 'app-widget'}];
     var DIRECTIVES = [{'name': 'AnimatedCounterDirective', 'selector': '[appAnimatedCounter]'}];
     var ACTUAL_COMPONENT = {'name': 'ProcessBuilderComponent'};
 </script>

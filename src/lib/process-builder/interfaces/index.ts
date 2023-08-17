@@ -14,4 +14,3 @@ export * from './param.interface';
 export * from './process-builder-config.interface';
 export * from './process-status-config.interface';
 export * from './task-config.interface';
-export * from './task-creation-component-input.interface';

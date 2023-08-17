@@ -1,11 +1,11 @@
 import { MethodEvaluationStatus } from "../globals/method-evaluation-status";
-import { MethodEvaluationResultType } from "../types/method-evaluation-result.type";
+import { ParamType } from "../types/param.type";
 
 export interface IMethodEvaluationResult {
     status: MethodEvaluationStatus;
     injectorNavigationPath?: string;
     paramName?: string;
-    type?: MethodEvaluationResultType;
+    type?: ParamType;
     detectedValue?: string | number | object | [] | boolean | null;
     valueIsDefinite: boolean;
     unaryExpression?: string;

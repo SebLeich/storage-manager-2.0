@@ -85,13 +85,22 @@
                         <ul class="index-list">
                             <li>
                                     <span class="modifier">Static</span>
+                                <a href="#evaluateBinaryExpression" >evaluateBinaryExpression</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Static</span>
                                 <a href="#evaluateCustomMethod" >evaluateCustomMethod</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Static</span>
+                                <a href="#evaluateVariable" >evaluateVariable</a>
                             </li>
                             <li>
                                     <span class="modifier">Static</span>
                                 <a href="#extractMemberExpressionVariableNameNode" >extractMemberExpressionVariableNameNode</a>
                             </li>
                             <li>
+                                    <span class="modifier">Private</span>
                                     <span class="modifier">Static</span>
                                 <a href="#getEvaluationResult" >getEvaluationResult</a>
                             </li>
@@ -106,6 +115,14 @@
                             <li>
                                     <span class="modifier">Static</span>
                                 <a href="#getUsedInputParams" >getUsedInputParams</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Static</span>
+                                <a href="#isBoolean" >isBoolean</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Static</span>
+                                <a href="#isNumeric" >isNumeric</a>
                             </li>
                             <li>
                                     <span class="modifier">Static</span>
@@ -142,26 +159,26 @@
         <tbody>
             <tr>
                 <td class="col-md-4">
-                    <a name="evaluateCustomMethod"></a>
+                    <a name="evaluateBinaryExpression"></a>
                     <span class="name">
                         <span class="modifier">Static</span>
-                        <span ><b>evaluateCustomMethod</b></span>
-                        <a href="#evaluateCustomMethod"><span class="icon ion-ios-link"></span></a>
+                        <span ><b>evaluateBinaryExpression</b></span>
+                        <a href="#evaluateBinaryExpression"><span class="icon ion-ios-link"></span></a>
                     </span>
                 </td>
             </tr>
             <tr>
                 <td class="col-md-4">
                     <span class="modifier-icon icon ion-ios-reset"></span>
-                    <code>evaluateCustomMethod(state?: EditorState, text?: string[] | string, injector?: <a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank">any</a>)</code>
+                    <code>evaluateBinaryExpression(state: EditorState, binaryExpression: SyntaxNode, block: SyntaxNode, injector, injectorDef: IParamDefinition[])</code>
                 </td>
             </tr>
 
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="23"
-                            class="link-to-prism">src/lib/core/codemirror.repository.ts:23</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="235"
+                            class="link-to-prism">src/lib/core/codemirror.repository.ts:235</a></div>
                 </td>
             </tr>
 
@@ -188,9 +205,130 @@
                                     </td>
 
                                     <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                                <tr>
+                                    <td>binaryExpression</td>
+                                    <td>
+                                            <code>SyntaxNode</code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                                <tr>
+                                    <td>block</td>
+                                    <td>
+                                            <code>SyntaxNode</code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                                <tr>
+                                    <td>injector</td>
+                                    <td>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                                <tr>
+                                    <td>injectorDef</td>
+                                    <td>
+                                            <code>IParamDefinition[]</code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="../interfaces/IMethodEvaluationResult.html" target="_self" >IMethodEvaluationResult</a></code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="evaluateCustomMethod"></a>
+                    <span class="name">
+                        <span class="modifier">Static</span>
+                        <span ><b>evaluateCustomMethod</b></span>
+                        <a href="#evaluateCustomMethod"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>evaluateCustomMethod(state?: EditorState, text?: string[] | string, injector: literal type, injectorDef: IParamDefinition[])</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="25"
+                            class="link-to-prism">src/lib/core/codemirror.repository.ts:25</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                    <td>Default value</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>state</td>
+                                    <td>
+                                            <code>EditorState</code>
+                                    </td>
+
+                                    <td>
                                         Yes
                                     </td>
 
+                                    <td>
+                                    </td>
 
                                 </tr>
                                 <tr>
@@ -203,16 +341,154 @@
                                         Yes
                                     </td>
 
+                                    <td>
+                                    </td>
 
                                 </tr>
                                 <tr>
                                     <td>injector</td>
                                     <td>
-                                                <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
+                                            <code>literal type</code>
                                     </td>
 
                                     <td>
-                                        Yes
+                                        No
+                                    </td>
+
+                                    <td>
+                                        <code>{}</code>
+                                    </td>
+
+                                </tr>
+                                <tr>
+                                    <td>injectorDef</td>
+                                    <td>
+                                            <code>IParamDefinition[]</code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+                                    <td>
+                                        <code>[]</code>
+                                    </td>
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="../interfaces/IMethodEvaluationResult.html" target="_self" >IMethodEvaluationResult</a></code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="evaluateVariable"></a>
+                    <span class="name">
+                        <span class="modifier">Static</span>
+                        <span ><b>evaluateVariable</b></span>
+                        <a href="#evaluateVariable"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>evaluateVariable(state: EditorState, variableExpression: SyntaxNode, block: SyntaxNode, injector, injectorDef: IParamDefinition[])</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="215"
+                            class="link-to-prism">src/lib/core/codemirror.repository.ts:215</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>state</td>
+                                    <td>
+                                            <code>EditorState</code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                                <tr>
+                                    <td>variableExpression</td>
+                                    <td>
+                                            <code>SyntaxNode</code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                                <tr>
+                                    <td>block</td>
+                                    <td>
+                                            <code>SyntaxNode</code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                                <tr>
+                                    <td>injector</td>
+                                    <td>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                                <tr>
+                                    <td>injectorDef</td>
+                                    <td>
+                                            <code>IParamDefinition[]</code>
+                                    </td>
+
+                                    <td>
+                                        No
                                     </td>
 
 
@@ -223,7 +499,7 @@
                     <div>
                     </div>
                     <div class="io-description">
-                        <b>Returns : </b>        <code><a href="../interfaces/IMethodEvaluationResult.html" target="_self" >IMethodEvaluationResult</a></code>
+                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
 
                     </div>
                     <div class="io-description">
@@ -255,8 +531,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="268"
-                            class="link-to-prism">src/lib/core/codemirror.repository.ts:268</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="357"
+                            class="link-to-prism">src/lib/core/codemirror.repository.ts:357</a></div>
                 </td>
             </tr>
 
@@ -310,6 +586,7 @@
                 <td class="col-md-4">
                     <a name="getEvaluationResult"></a>
                     <span class="name">
+                        <span class="modifier">Private</span>
                         <span class="modifier">Static</span>
                         <span ><b>getEvaluationResult</b></span>
                         <a href="#getEvaluationResult"><span class="icon ion-ios-link"></span></a>
@@ -319,15 +596,15 @@
             <tr>
                 <td class="col-md-4">
                     <span class="modifier-icon icon ion-ios-reset"></span>
-                    <code>getEvaluationResult(state: EditorState, parent: SyntaxNode, block: SyntaxNode, injector: <a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank">any</a>)</code>
+                    <code>getEvaluationResult(state: EditorState, parent: SyntaxNode, block: SyntaxNode, injector, injectorDef: IParamDefinition[])</code>
                 </td>
             </tr>
 
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="57"
-                            class="link-to-prism">src/lib/core/codemirror.repository.ts:57</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="59"
+                            class="link-to-prism">src/lib/core/codemirror.repository.ts:59</a></div>
                 </td>
             </tr>
 
@@ -386,7 +663,18 @@
                                 <tr>
                                     <td>injector</td>
                                     <td>
-                                                <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                                <tr>
+                                    <td>injectorDef</td>
+                                    <td>
+                                            <code>IParamDefinition[]</code>
                                     </td>
 
                                     <td>
@@ -433,8 +721,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="169"
-                            class="link-to-prism">src/lib/core/codemirror.repository.ts:169</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="260"
+                            class="link-to-prism">src/lib/core/codemirror.repository.ts:260</a></div>
                 </td>
             </tr>
 
@@ -528,8 +816,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="249"
-                            class="link-to-prism">src/lib/core/codemirror.repository.ts:249</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="338"
+                            class="link-to-prism">src/lib/core/codemirror.repository.ts:338</a></div>
                 </td>
             </tr>
 
@@ -599,8 +887,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="193"
-                            class="link-to-prism">src/lib/core/codemirror.repository.ts:193</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="284"
+                            class="link-to-prism">src/lib/core/codemirror.repository.ts:284</a></div>
                 </td>
             </tr>
 
@@ -664,6 +952,242 @@
         <tbody>
             <tr>
                 <td class="col-md-4">
+                    <a name="isBoolean"></a>
+                    <span class="name">
+                        <span class="modifier">Static</span>
+                        <span ><b>isBoolean</b></span>
+                        <a href="#isBoolean"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>isBoolean(state: EditorState, node: SyntaxNode, block: SyntaxNode, injector, injectorDef: IParamDefinition[])</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="202"
+                            class="link-to-prism">src/lib/core/codemirror.repository.ts:202</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>state</td>
+                                    <td>
+                                            <code>EditorState</code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                                <tr>
+                                    <td>node</td>
+                                    <td>
+                                            <code>SyntaxNode</code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                                <tr>
+                                    <td>block</td>
+                                    <td>
+                                            <code>SyntaxNode</code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                                <tr>
+                                    <td>injector</td>
+                                    <td>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                                <tr>
+                                    <td>injectorDef</td>
+                                    <td>
+                                            <code>IParamDefinition[]</code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/boolean" target="_blank" >boolean</a></code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="isNumeric"></a>
+                    <span class="name">
+                        <span class="modifier">Static</span>
+                        <span ><b>isNumeric</b></span>
+                        <a href="#isNumeric"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>isNumeric(state: EditorState, node: SyntaxNode | null, block: SyntaxNode, injector, injectorDef: IParamDefinition[])</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="185"
+                            class="link-to-prism">src/lib/core/codemirror.repository.ts:185</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>state</td>
+                                    <td>
+                                            <code>EditorState</code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                                <tr>
+                                    <td>node</td>
+                                    <td>
+                                            <code>SyntaxNode | null</code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                                <tr>
+                                    <td>block</td>
+                                    <td>
+                                            <code>SyntaxNode</code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                                <tr>
+                                    <td>injector</td>
+                                    <td>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                                <tr>
+                                    <td>injectorDef</td>
+                                    <td>
+                                            <code>IParamDefinition[]</code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/boolean" target="_blank" >boolean</a></code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
                     <a name="iterateToMemberStatementNode"></a>
                     <span class="name">
                         <span class="modifier">Static</span>
@@ -682,8 +1206,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="275"
-                            class="link-to-prism">src/lib/core/codemirror.repository.ts:275</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="364"
+                            class="link-to-prism">src/lib/core/codemirror.repository.ts:364</a></div>
                 </td>
             </tr>
 
@@ -753,8 +1277,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="313"
-                            class="link-to-prism">src/lib/core/codemirror.repository.ts:313</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="402"
+                            class="link-to-prism">src/lib/core/codemirror.repository.ts:402</a></div>
                 </td>
             </tr>
 
@@ -841,15 +1365,15 @@
             <tr>
                 <td class="col-md-4">
                     <span class="modifier-icon icon ion-ios-reset"></span>
-                    <code>stringToTextLeaf(text: string[] | string)</code>
+                    <code>stringToTextLeaf(text: string[] | string | null | undefined)</code>
                 </td>
             </tr>
 
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="12"
-                            class="link-to-prism">src/lib/core/codemirror.repository.ts:12</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="13"
+                            class="link-to-prism">src/lib/core/codemirror.repository.ts:13</a></div>
                 </td>
             </tr>
 
@@ -872,7 +1396,7 @@
                                 <tr>
                                     <td>text</td>
                                     <td>
-                                            <code>string[] | string</code>
+                                            <code>string[] | string | null | undefined</code>
                                     </td>
 
                                     <td>
@@ -909,27 +1433,29 @@
     <div class="tab-pane fade  tab-source-code" id="c-source">
         <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { javascript } from &quot;@codemirror/lang-javascript&quot;;
 import { syntaxTree } from &quot;@codemirror/language&quot;;
-import { EditorState, Text } from &quot;@codemirror/state&quot;;
+import { EditorState } from &quot;@codemirror/state&quot;;
 import { MethodEvaluationStatus } from &quot;../process-builder/globals/method-evaluation-status&quot;;
 import { Tree, SyntaxNode } from &#x27;node_modules/@lezer/common/dist/tree&#x27;;
 import { IMethodEvaluationResult } from &quot;../process-builder/interfaces/method-evaluation-result.interface&quot;;
 import { ISyntaxNodeResponse } from &quot;./interfaces/syntax-node-response.interface&quot;;
 import { ITextLeaf } from &quot;../process-builder/interfaces/text-leaf.interface&quot;;
+import { IParamDefinition } from &quot;../process-builder/interfaces&quot;;
 
 export class CodemirrorRepository {
 
-    static stringToTextLeaf(text: string[] | string): ITextLeaf {
-        const convertedText &#x3D; Array.isArray(text) ? text.join(&#x27;\n&#x27;) : text;
+    public static stringToTextLeaf(text: string[] | string | null | undefined): ITextLeaf {
+        const convertedText &#x3D; Array.isArray(text) ? text.join(&#x27;\n&#x27;) : text ?? &#x27;&#x27;;
         const state &#x3D; EditorState.create({
             doc: convertedText,
             extensions: [
                 javascript()
             ]
         });
-        return state.doc as any;
+
+        return state.doc as unknown as ITextLeaf;
     }
 
-    static evaluateCustomMethod(state?: EditorState, text?: string[] | string, injector?: any): IMethodEvaluationResult {
+    public static evaluateCustomMethod(state?: EditorState, text?: string[] | string, injector: { [key: string]: number | string | object } &#x3D; {}, injectorDef: IParamDefinition[] &#x3D; []): IMethodEvaluationResult {
         const convertedText &#x3D; Array.isArray(text) ? text.join(&#x27;\n&#x27;) : text;
         if (!state) {
             if (!text) {
@@ -954,7 +1480,7 @@ export class CodemirrorRepository {
         const block &#x3D; arrowFunction ? arrowFunction.getChild(&#x27;Block&#x27;) : mainMethod.node.getChild(&#x27;Block&#x27;);
         const returnStatement &#x3D; block?.getChild(&#x27;ReturnStatement&#x27;) ?? undefined;
         if (returnStatement) {
-            const result &#x3D; this.getEvaluationResult(state, returnStatement, block!, injector);
+            const result &#x3D; this.getEvaluationResult(state, returnStatement, block as SyntaxNode, injector, injectorDef);
             if (result) {
                 return result;
             }
@@ -963,38 +1489,56 @@ export class CodemirrorRepository {
         return { status: MethodEvaluationStatus.NoReturnValue, valueIsDefinite: false };
     }
 
-    static getEvaluationResult(state: EditorState, parent: SyntaxNode, block: SyntaxNode, injector: any): IMethodEvaluationResult {
+    private static getEvaluationResult(state: EditorState, parent: SyntaxNode, block: SyntaxNode, injector: unknown, injectorDef: IParamDefinition[]): IMethodEvaluationResult {
         const memberExpression &#x3D; parent.getChild(&#x27;MemberExpression&#x27;);
         if (memberExpression) {
             const representation &#x3D; state.sliceDoc(memberExpression?.from, memberExpression?.to);
-            const navigationPath &#x3D; representation.split(&#x27;.&#x27;);
-            let dependsOnInjector &#x3D; navigationPath[0] &#x3D;&#x3D;&#x3D; &#x27;injector&#x27;;
+            const navigationPath &#x3D; representation.split(&#x27;.&#x27;).map(segment &#x3D;&gt; segment.trim().replace(&#x27;\n&#x27;, &#x27;&#x27;));
+            const dependsOnInjector &#x3D; navigationPath[0] &#x3D;&#x3D;&#x3D; &#x27;injector&#x27;;
             if (!dependsOnInjector) {
-                const variableValue &#x3D; this.resolveVariableValue(state, block!, representation);
+                const variableValue &#x3D; this.resolveVariableValue(state, block, representation);
                 if (variableValue) {
-                    let result &#x3D; this.getEvaluationResult(state, variableValue, block, injector);
-                    result.valueIsDefinite &#x3D; false;
+                    const result &#x3D; { ...this.getEvaluationResult(state, variableValue, block, injector, injectorDef), valueIsDefinite: false };
                     return result;
                 }
             }
-            return { status: MethodEvaluationStatus.ReturnValueFound, injectorNavigationPath: representation, type: &#x27;member&#x27;, valueIsDefinite: false };
+
+            let index &#x3D; 0;
+            let currentPathSegment &#x3D; navigationPath[index],
+                injectorDefEntry &#x3D; injectorDef.find(definitionElement &#x3D;&gt; definitionElement.normalizedName &#x3D;&#x3D;&#x3D; currentPathSegment);
+
+            while (currentPathSegment &amp;&amp; injectorDefEntry) {
+                index++;
+                currentPathSegment &#x3D; navigationPath[index];
+
+                if(currentPathSegment){
+                    injectorDefEntry &#x3D; (injectorDefEntry.typeDef as IParamDefinition[]).find((definitionElement) &#x3D;&gt; (definitionElement.normalizedName ?? definitionElement.name) &#x3D;&#x3D;&#x3D; currentPathSegment);
+                }
+            }
+
+            const paramName &#x3D; navigationPath[navigationPath.length - 1];
+            return { status: MethodEvaluationStatus.ReturnValueFound, injectorNavigationPath: representation, type: injectorDefEntry?.type, valueIsDefinite: false, interface: injectorDefEntry?.interface ?? undefined, paramName: paramName };
         }
 
         const variableExpression &#x3D; parent.getChild(&#x27;VariableName&#x27;);
         if (variableExpression) {
             const representation &#x3D; state.sliceDoc(variableExpression?.from, variableExpression?.to);
             if (representation &#x3D;&#x3D;&#x3D; &#x27;undefined&#x27;) {
-                return { status: MethodEvaluationStatus.ReturnValueFound, detectedValue: undefined, type: &#x27;undefined&#x27;, valueIsDefinite: true };
+                return { status: MethodEvaluationStatus.ReturnValueFound, detectedValue: undefined, type: undefined, valueIsDefinite: true };
             }
 
-            const variableValue &#x3D; this.resolveVariableValue(state, block!, representation);
+            const variableValue &#x3D; this.resolveVariableValue(state, block, representation);
             if (variableValue) {
-                let result &#x3D; this.getEvaluationResult(state, variableValue, block, injector);
-                result.valueIsDefinite &#x3D; false;
+                const result &#x3D; { ...this.getEvaluationResult(state, variableValue, block, injector, injectorDef), valueIsDefinite: false };
                 return result;
             }
 
-            return { status: MethodEvaluationStatus.ReturnValueFound, valueIsDefinite: false };    
+            const injectorDefEntry &#x3D; injectorDef.find(definitionElement &#x3D;&gt; definitionElement.normalizedName &#x3D;&#x3D;&#x3D; representation);
+            if(injectorDefEntry){
+                return { status: MethodEvaluationStatus.ReturnValueFound, injectorNavigationPath: representation, type: injectorDefEntry?.type, valueIsDefinite: false, interface: injectorDefEntry?.interface ?? undefined, paramName: representation };
+            }
+
+            return { status: MethodEvaluationStatus.ReturnValueFound, valueIsDefinite: false };
         }
 
         const variableDeclaration &#x3D; parent.getChild(&#x27;VariableDeclaration&#x27;);
@@ -1003,31 +1547,27 @@ export class CodemirrorRepository {
 
             const equals &#x3D; variableDeclaration.getChild(&#x27;Equals&#x27;);
             if (!equals) {
-                return { status: MethodEvaluationStatus.ReturnValueFound, valueIsDefinite: false };   
+                return { status: MethodEvaluationStatus.ReturnValueFound, valueIsDefinite: false, variableDeclaration: representation };
             }
 
-            let result &#x3D; this.getEvaluationResult(state, equals.nextSibling as SyntaxNode, block, injector);
-            result.valueIsDefinite &#x3D; false;
-            return result; 
+            const result &#x3D; { ...this.getEvaluationResult(state, equals.nextSibling as SyntaxNode, block, injector, injectorDef), valueIsDefinite: false };
+            return result;
         }
 
         const unaryExpression &#x3D; parent.getChild(&#x27;UnaryExpression&#x27;);
         if (unaryExpression) {
-            // method call
             const representation &#x3D; state.sliceDoc(unaryExpression?.from, unaryExpression?.to);
             return { status: MethodEvaluationStatus.ReturnValueFound, valueIsDefinite: false, unaryExpression: representation };
         }
 
         const binaryExpression &#x3D; parent.getChild(&#x27;BinaryExpression&#x27;);
         if (binaryExpression) {
-            // calclation
-            const representation &#x3D; state.sliceDoc(binaryExpression?.from, binaryExpression?.to);
-            return { status: MethodEvaluationStatus.ReturnValueFound, valueIsDefinite: false, unaryExpression: representation };
+            const result &#x3D; this.evaluateBinaryExpression(state, binaryExpression, block, injector, injectorDef);
+            return result;
         }
 
         const callExpression &#x3D; parent.getChild(&#x27;CallExpression&#x27;);
         if (callExpression) {
-            // calclation
             const representation &#x3D; state.sliceDoc(callExpression?.from, callExpression?.to);
             return { status: MethodEvaluationStatus.ReturnValueFound, valueIsDefinite: false, unaryExpression: representation };
         }
@@ -1069,15 +1609,90 @@ export class CodemirrorRepository {
 
         const nullExpression &#x3D; parent.getChild(&#x27;null&#x27;);
         if (nullExpression) {
-            return { status: MethodEvaluationStatus.ReturnValueFound, detectedValue: null, type: &#x27;null&#x27;, valueIsDefinite: true };
+            return { status: MethodEvaluationStatus.ReturnValueFound, detectedValue: null, type: undefined, valueIsDefinite: true };
         }
 
         return { status: MethodEvaluationStatus.NoReturnValue, valueIsDefinite: false };
     }
 
+    static isNumeric(state: EditorState, node: SyntaxNode | null, block: SyntaxNode, injector: unknown, injectorDef: IParamDefinition[]){
+        if(!node){
+            return false;
+        }
+        
+        if(node.type.name &#x3D;&#x3D;&#x3D; &#x27;Number&#x27;){
+            return true;
+        }
+
+        if(node.type.name &#x3D;&#x3D;&#x3D; &#x27;VariableName&#x27;){
+            const evaluation &#x3D; CodemirrorRepository.evaluateVariable(state, node, block, injector, injectorDef);
+            return evaluation.type &#x3D;&#x3D;&#x3D; &#x27;number&#x27;;
+        } 
+
+        return false;
+    }
+
+    static isBoolean(state: EditorState, node: SyntaxNode, block: SyntaxNode, injector: unknown, injectorDef: IParamDefinition[]){
+        if(node.type.name &#x3D;&#x3D;&#x3D; &#x27;Boolean&#x27;){
+            return true;
+        }
+
+        if(node.type.name &#x3D;&#x3D;&#x3D; &#x27;VariableName&#x27;){
+            const evaluation &#x3D; CodemirrorRepository.evaluateVariable(state, node, block, injector, injectorDef);
+            return evaluation.type &#x3D;&#x3D;&#x3D; &#x27;number&#x27;;
+        } 
+
+        return false;
+    }
+
+    static evaluateVariable(state: EditorState, variableExpression: SyntaxNode, block: SyntaxNode, injector: unknown, injectorDef: IParamDefinition[]){
+        const representation &#x3D; state.sliceDoc(variableExpression?.from, variableExpression?.to);
+        if (representation &#x3D;&#x3D;&#x3D; &#x27;undefined&#x27;) {
+            return { status: MethodEvaluationStatus.ReturnValueFound, detectedValue: undefined, type: &#x27;undefined&#x27;, valueIsDefinite: true };
+        }
+
+        const variableValue &#x3D; this.resolveVariableValue(state, block, representation);
+        if (variableValue) {
+            const result &#x3D; { ...this.getEvaluationResult(state, variableValue, block, injector, injectorDef), valueIsDefinite: false };
+            return result;
+        }
+
+        const injectorDefEntry &#x3D; injectorDef.find(definitionElement &#x3D;&gt; definitionElement.normalizedName &#x3D;&#x3D;&#x3D; representation);
+        if(injectorDefEntry){
+            return { status: MethodEvaluationStatus.ReturnValueFound, injectorNavigationPath: representation, type: injectorDefEntry?.type, valueIsDefinite: false, interface: injectorDefEntry?.interface ?? undefined, paramName: representation };
+        }
+
+        return { status: MethodEvaluationStatus.ReturnValueFound, valueIsDefinite: false };
+    }
+
+    static evaluateBinaryExpression(state: EditorState, binaryExpression: SyntaxNode, block: SyntaxNode, injector: unknown, injectorDef: IParamDefinition[]): IMethodEvaluationResult {
+        const representation &#x3D; state.sliceDoc(binaryExpression?.from, binaryExpression?.to);
+
+        let currentChild &#x3D; binaryExpression.firstChild;
+        let allNumericTypes &#x3D; true;
+
+        while(currentChild &amp;&amp; allNumericTypes){
+            if(currentChild?.type?.name &#x3D;&#x3D;&#x3D; &#x27;BinaryExpression&#x27;){
+                allNumericTypes &#x3D; CodemirrorRepository.evaluateBinaryExpression(state, currentChild as SyntaxNode, block, injector, injectorDef).type &#x3D;&#x3D;&#x3D; &#x27;number&#x27;;
+                currentChild &#x3D; currentChild.nextSibling;
+                continue;
+            }
+
+            if(currentChild?.type?.name &#x3D;&#x3D;&#x3D; &quot;ArithOp&quot;){
+                currentChild &#x3D; currentChild.nextSibling;
+                continue;
+            }
+
+            allNumericTypes &#x3D; CodemirrorRepository.isNumeric(state, currentChild as SyntaxNode, block, injector, injectorDef);
+            currentChild &#x3D; currentChild.nextSibling;
+        }
+        
+        return { status: MethodEvaluationStatus.ReturnValueFound, valueIsDefinite: false, unaryExpression: representation, type: (allNumericTypes ? &#x27;number&#x27; : &#x27;string&#x27;) };
+    }
+
     static getMainMethod(tree?: Tree, state?: EditorState, text?: string[] | string): ISyntaxNodeResponse {
 
-        let convertedText &#x3D; Array.isArray(text) ? text.join(&#x27;\n&#x27;) : text;
+        const convertedText &#x3D; Array.isArray(text) ? text.join(&#x27;\n&#x27;) : text;
 
         if (!state) {
             if (!text) throw (&#x27;no state and no text passed&#x27;);
@@ -1092,8 +1707,8 @@ export class CodemirrorRepository {
 
         if (!tree) tree &#x3D; syntaxTree(state);
 
-        let node &#x3D; tree.resolveInner(0);
-        let functions &#x3D; [...node.getChildren(&quot;ExpressionStatement&quot;)];
+        const node &#x3D; tree.resolveInner(0);
+        const functions &#x3D; [...node.getChildren(&quot;ExpressionStatement&quot;)];
 
         return { &#x27;node&#x27;: functions.length &gt; 0 ? functions[functions.length - 1] : null, &#x27;tree&#x27;: tree };
 
@@ -1101,9 +1716,8 @@ export class CodemirrorRepository {
 
     static getUsedInputParams(state?: EditorState, text?: string[] | string): { varName: string, propertyName: string | null }[] {
 
-        let output: { varName: string, propertyName: string | null }[] &#x3D; [];
-
-        let convertedText &#x3D; text ? Array.isArray(text) ? text.join(&#x27;\n&#x27;) : text : (state?.doc as any).text.join(&#x27;\n&#x27;);
+        const output: { varName: string, propertyName: string | null }[] &#x3D; [];
+        const convertedText &#x3D; text ? Array.isArray(text) ? text.join(&#x27;\n&#x27;) : text : (state?.doc as unknown as ITextLeaf).text.join(&#x27;\n&#x27;);
 
         if (!state) {
             if (!text) throw (&#x27;no state and no text passed&#x27;);
@@ -1116,35 +1730,34 @@ export class CodemirrorRepository {
             });
         }
 
-        let tree &#x3D; syntaxTree(state);
-        let mainMethod &#x3D; this.getMainMethod(tree, state, text);
+        const tree &#x3D; syntaxTree(state);
+        const mainMethod &#x3D; this.getMainMethod(tree, state, text);
         if (!mainMethod.node) return [];
 
-        let arrowFunction &#x3D; mainMethod.node.getChild(&#x27;ArrowFunction&#x27;);
-        let block &#x3D; arrowFunction ? arrowFunction.getChild(&#x27;Block&#x27;) : mainMethod.node.getChild(&#x27;Block&#x27;);
+        const arrowFunction &#x3D; mainMethod.node.getChild(&#x27;ArrowFunction&#x27;);
+        const block &#x3D; arrowFunction ? arrowFunction.getChild(&#x27;Block&#x27;) : mainMethod.node.getChild(&#x27;Block&#x27;);
+        const candidates &#x3D; this.getMemberExpressionContainingCandidates(block);
 
-        let candidates &#x3D; this.getMemberExpressionContainingCandidates(block);
-
-        for (let candidate of candidates) {
+        for (const candidate of candidates) {
 
             let statement: SyntaxNode | null &#x3D; candidate;
             while (statement &amp;&amp; statement.type.name !&#x3D;&#x3D; &#x27;MemberExpression&#x27;) {
-                let result &#x3D; this.iterateToMemberStatementNode(statement);
+                const result &#x3D; this.iterateToMemberStatementNode(statement);
                 statement &#x3D; result[0] ?? null;
                 candidates.push(...result.slice(1));
             }
 
-            let variableNameNode &#x3D; this.extractMemberExpressionVariableNameNode(statement);
+            const variableNameNode &#x3D; this.extractMemberExpressionVariableNameNode(statement);
             if (variableNameNode &#x3D;&#x3D; null) continue;
 
-            var varNodeName &#x3D; convertedText!.slice(variableNameNode.from, variableNameNode.to);
+            const varNodeName &#x3D; convertedText.slice(variableNameNode.from, variableNameNode.to);
 
             if (varNodeName &#x3D;&#x3D;&#x3D; &#x27;console&#x27;) {
                 if (statement.nextSibling) candidates.push(statement.nextSibling);
                 continue;
             }
 
-            let propertyNameNode &#x3D; variableNameNode.nextSibling?.nextSibling;
+            const propertyNameNode &#x3D; variableNameNode.nextSibling?.nextSibling;
 
             output.push({
                 &#x27;varName&#x27;: varNodeName,
@@ -1156,7 +1769,7 @@ export class CodemirrorRepository {
     }
 
     static getMemberExpressionContainingCandidates(blockNode: SyntaxNode | null): SyntaxNode[] {
-        let candidates &#x3D; blockNode ? [
+        const candidates &#x3D; blockNode ? [
             ...blockNode.getChildren(&#x27;ExpressionStatement&#x27;),
             ...blockNode.getChildren(&#x27;VariableDeclaration&#x27;),
             ...blockNode.getChildren(&#x27;ObjectExpression&#x27;)

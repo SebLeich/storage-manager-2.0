@@ -76,7 +76,7 @@ export class ParameterService {
 			return defaultValue;
 
 		} catch (e) {
-			debugger;
+			console.error(e);
 			return {};
 		}
 
@@ -89,7 +89,7 @@ export class ParameterService {
 		object: () => object,
 		array: () => any[],
 		bigint: () => bigint | undefined,
-		function: () => Function | undefined,
+		function: () => any,
 		symbol: () => symbol | undefined,
 		undefined: () => undefined
 	} = {
@@ -106,7 +106,6 @@ export class ParameterService {
 
 		if (!arg) return {};
 
-		let index = 0;
 		let defaultValue = arg.type === 'array' ? [] : arg.type === 'object' ? {} : arg.defaultValue;
 
 		try {
@@ -122,21 +121,17 @@ export class ParameterService {
 			else if (parent && typeof parent === 'object') parent[arg.name] = defaultValue;
 
 			if (arg.typeDef) {
-				let typeDefArray = Array.isArray(arg.typeDef) ? arg.typeDef : [arg.typeDef];
-
-				for (let def of typeDefArray) {
-
+				const typeDefArray = Array.isArray(arg.typeDef) ? arg.typeDef : [arg.typeDef];
+				for (const def of typeDefArray) {
 					this.createPseudoObjectFromIParamDefinition(def, defaultValue);
-
 				}
 			}
 
-			index++;
-
-		} catch (e) {
-			debugger;
-		} finally {
 			return parent ?? defaultValue;
+		}
+		catch (e) {
+			console.error(e);
+			return defaultValue;
 		}
 
 	}

@@ -146,7 +146,15 @@
                             </li>
                             <li>
                                     <span class="modifier">Public</span>
-                                <a href="#consoleOutputSections$" >consoleOutputSections$</a>
+                                <a href="#consoleService" >consoleService</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Public</span>
+                                <a href="#initializationDate" >initializationDate</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Public</span>
+                                <a href="#isRunning" >isRunning</a>
                             </li>
                             <li>
                                     <span class="modifier">Public</span>
@@ -174,6 +182,10 @@
                             </li>
                             <li>
                                     <span class="modifier">Public</span>
+                                <a href="#statusEffectRef" >statusEffectRef</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Public</span>
                                 <a href="#tabGroup" >tabGroup</a>
                             </li>
                             <li>
@@ -195,11 +207,12 @@
                             <li>
                                     <span class="modifier">Private</span>
                                     <span class="modifier">Async</span>
-                                <a href="#_updateScene" >_updateScene</a>
+                                <a href="#_tryInitiallySetLastPipeline" >_tryInitiallySetLastPipeline</a>
                             </li>
                             <li>
-                                    <span class="modifier">Public</span>
-                                <a href="#blurElement" >blurElement</a>
+                                    <span class="modifier">Private</span>
+                                    <span class="modifier">Async</span>
+                                <a href="#_updateScene" >_updateScene</a>
                             </li>
                             <li>
                                     <span class="modifier">Public</span>
@@ -208,6 +221,16 @@
                             <li>
                                     <span class="modifier">Public</span>
                                 <a href="#ngOnInit" >ngOnInit</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Public</span>
+                                    <span class="modifier">Async</span>
+                                <a href="#renameCurrentPipeline" >renameCurrentPipeline</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Public</span>
+                                    <span class="modifier">Async</span>
+                                <a href="#runPipeline" >runPipeline</a>
                             </li>
                         </ul>
                     </td>
@@ -227,12 +250,12 @@
             <tbody>
                 <tr>
                     <td class="col-md-4">
-<code>constructor(_store: Store, _route: <a href="https://angular.io/api/router/ActivatedRoute" target="_blank">ActivatedRoute</a>, _router: <a href="https://angular.io/api/router/Router" target="_blank">Router</a>, _visualizationService: <a href="../injectables/VisualizationService.html" target="_self">VisualizationService</a>, pipeRunnerService: <a href="../injectables/PipeRunnerService.html" target="_self">PipeRunnerService</a>, _destroyRef: DestroyRef)</code>
+<code>constructor(_store: Store, _route: <a href="https://angular.io/api/router/ActivatedRoute" target="_blank">ActivatedRoute</a>, _router: <a href="https://angular.io/api/router/Router" target="_blank">Router</a>, _visualizationService: <a href="../injectables/VisualizationService.html" target="_self">VisualizationService</a>, pipeRunnerService: <a href="../injectables/PipeRunnerService.html" target="_self">PipeRunnerService</a>, consoleService: <a href="../injectables/ConsoleService.html" target="_self">ConsoleService</a>, _destroyRef: DestroyRef)</code>
                     </td>
                 </tr>
                         <tr>
                             <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="44" class="link-to-prism">src/lib/pipe-runner/components/pipe-runner/pipe-runner.component.ts:44</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="54" class="link-to-prism">src/lib/pipe-runner/components/pipe-runner/pipe-runner.component.ts:54</a></div>
                             </td>
                         </tr>
 
@@ -310,6 +333,18 @@
                                                     
                                                 </tr>
                                                 <tr>
+                                                        <td>consoleService</td>
+                                                  
+                                                        <td>
+                                                                        <code><a href="../injectables/ConsoleService.html" target="_self" >ConsoleService</a></code>
+                                                        </td>
+                                                  
+                                                    <td>
+                                                            No
+                                                    </td>
+                                                    
+                                                </tr>
+                                                <tr>
                                                         <td>_destroyRef</td>
                                                   
                                                         <td>
@@ -343,6 +378,46 @@
         <tbody>
             <tr>
                 <td class="col-md-4">
+                    <a name="_tryInitiallySetLastPipeline"></a>
+                    <span class="name">
+                        <span class="modifier">Private</span>
+                        <span class="modifier">Async</span>
+                        <span ><b>_tryInitiallySetLastPipeline</b></span>
+                        <a href="#_tryInitiallySetLastPipeline"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>_tryInitiallySetLastPipeline()</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="120"
+                            class="link-to-prism">src/lib/pipe-runner/components/pipe-runner/pipe-runner.component.ts:120</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
+
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
                     <a name="_updateScene"></a>
                     <span class="name">
                         <span class="modifier">Private</span>
@@ -362,8 +437,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="83"
-                            class="link-to-prism">src/lib/pipe-runner/components/pipe-runner/pipe-runner.component.ts:83</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="108"
+                            class="link-to-prism">src/lib/pipe-runner/components/pipe-runner/pipe-runner.component.ts:108</a></div>
                 </td>
             </tr>
 
@@ -415,89 +490,6 @@
         <tbody>
             <tr>
                 <td class="col-md-4">
-                    <a name="blurElement"></a>
-                    <span class="name">
-                        <span class="modifier">Public</span>
-                        <span ><b>blurElement</b></span>
-                        <a href="#blurElement"><span class="icon ion-ios-link"></span></a>
-                    </span>
-                </td>
-            </tr>
-            <tr>
-                <td class="col-md-4">
-                    <span class="modifier-icon icon ion-ios-reset"></span>
-                    <code>blurElement(element: HTMLElement, event?: <a href="https://angular.io/api/router/Event" target="_blank">Event</a>)</code>
-                </td>
-            </tr>
-
-
-            <tr>
-                <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="48"
-                            class="link-to-prism">src/lib/pipe-runner/components/pipe-runner/pipe-runner.component.ts:48</a></div>
-                </td>
-            </tr>
-
-
-            <tr>
-                <td class="col-md-4">
-
-                    <div class="io-description">
-                        <b>Parameters :</b>
-                        
-                        <table class="params">
-                            <thead>
-                                <tr>
-                                    <td>Name</td>
-                                    <td>Type</td>
-                                    <td>Optional</td>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td>element</td>
-                                    <td>
-                                            <code>HTMLElement</code>
-                                    </td>
-
-                                    <td>
-                                        No
-                                    </td>
-
-
-                                </tr>
-                                <tr>
-                                    <td>event</td>
-                                    <td>
-                                                <code><a href="https://angular.io/api/router/Event" target="_blank" >Event</a></code>
-                                    </td>
-
-                                    <td>
-                                        Yes
-                                    </td>
-
-
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                    <div>
-                    </div>
-                    <div class="io-description">
-                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
-
-                    </div>
-                    <div class="io-description">
-                        
-                    </div>
-                </td>
-            </tr>
-        </tbody>
-    </table>
-    <table class="table table-sm table-bordered">
-        <tbody>
-            <tr>
-                <td class="col-md-4">
                     <a name="designPipeline"></a>
                     <span class="name">
                         <span class="modifier">Public</span>
@@ -516,8 +508,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="56"
-                            class="link-to-prism">src/lib/pipe-runner/components/pipe-runner/pipe-runner.component.ts:56</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="66"
+                            class="link-to-prism">src/lib/pipe-runner/components/pipe-runner/pipe-runner.component.ts:66</a></div>
                 </td>
             </tr>
 
@@ -555,8 +547,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="60"
-                            class="link-to-prism">src/lib/pipe-runner/components/pipe-runner/pipe-runner.component.ts:60</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="70"
+                            class="link-to-prism">src/lib/pipe-runner/components/pipe-runner/pipe-runner.component.ts:70</a></div>
                 </td>
             </tr>
 
@@ -566,6 +558,118 @@
 
                     <div class="io-description">
                         <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="renameCurrentPipeline"></a>
+                    <span class="name">
+                        <span class="modifier">Public</span>
+                        <span class="modifier">Async</span>
+                        <span ><b>renameCurrentPipeline</b></span>
+                        <a href="#renameCurrentPipeline"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>renameCurrentPipeline(pipelineName: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="94"
+                            class="link-to-prism">src/lib/pipe-runner/components/pipe-runner/pipe-runner.component.ts:94</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>pipelineName</td>
+                                    <td>
+                                                <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="runPipeline"></a>
+                    <span class="name">
+                        <span class="modifier">Public</span>
+                        <span class="modifier">Async</span>
+                        <span ><b>runPipeline</b></span>
+                        <a href="#runPipeline"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>runPipeline()</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="98"
+                            class="link-to-prism">src/lib/pipe-runner/components/pipe-runner/pipe-runner.component.ts:98</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
 
                     </div>
                 </td>
@@ -597,7 +701,7 @@
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="37" class="link-to-prism">src/lib/pipe-runner/components/pipe-runner/pipe-runner.component.ts:37</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="45" class="link-to-prism">src/lib/pipe-runner/components/pipe-runner/pipe-runner.component.ts:45</a></div>
                         </td>
                     </tr>
 
@@ -608,29 +712,75 @@
         <tbody>
             <tr>
                 <td class="col-md-4">
-                    <a name="consoleOutputSections$"></a>
+                    <a name="consoleService"></a>
                     <span class="name">
                             <span class="modifier">Public</span>
-                        <span ><b>consoleOutputSections$</b></span>
-                        <a href="#consoleOutputSections$"><span class="icon ion-ios-link"></span></a>
+                        <span ><b>consoleService</b></span>
+                        <a href="#consoleService"><span class="icon ion-ios-link"></span></a>
                     </span>
                 </td>
             </tr>
                 <tr>
                     <td class="col-md-4">
-                        <i>Default value : </i><code>merge(this.pipeRunnerService.consoleOutput, this.pipeRunnerService.status$.pipe(map(status &#x3D;&gt; {
-    return {
-      message: &#x60;${moment().format(&#x27;HH:mm:ss&#x27;)}: status changed to ${status}&#x60;,
-      class: status &#x3D;&#x3D;&#x3D; &#x27;Succeeded&#x27; ? &#x27;success&#x27; : status &#x3D;&#x3D;&#x3D; &#x27;Errors occurred&#x27; ? &#x27;error&#x27; : status &#x3D;&#x3D;&#x3D; &#x27;Running&#x27; ? &#x27;primary&#x27; : &#x27;default&#x27;
-    };
-  }))).pipe(scan((acc: { message: string, class: string }[], curr: { message: string, class: string }) &#x3D;&gt; {
-    return [curr, ...acc];
-  }, []))</code>
+                        <i>Type : </i>        <code><a href="../injectables/ConsoleService.html" target="_self" >ConsoleService</a></code>
+
                     </td>
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="28" class="link-to-prism">src/lib/pipe-runner/components/pipe-runner/pipe-runner.component.ts:28</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="62" class="link-to-prism">src/lib/pipe-runner/components/pipe-runner/pipe-runner.component.ts:62</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="initializationDate"></a>
+                    <span class="name">
+                            <span class="modifier">Public</span>
+                        <span ><b>initializationDate</b></span>
+                        <a href="#initializationDate"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>new Date()</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="51" class="link-to-prism">src/lib/pipe-runner/components/pipe-runner/pipe-runner.component.ts:51</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="isRunning"></a>
+                    <span class="name">
+                            <span class="modifier">Public</span>
+                        <span ><b>isRunning</b></span>
+                        <a href="#isRunning"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>false</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="54" class="link-to-prism">src/lib/pipe-runner/components/pipe-runner/pipe-runner.component.ts:54</a></div>
                         </td>
                     </tr>
 
@@ -662,7 +812,7 @@
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="44" class="link-to-prism">src/lib/pipe-runner/components/pipe-runner/pipe-runner.component.ts:44</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="53" class="link-to-prism">src/lib/pipe-runner/components/pipe-runner/pipe-runner.component.ts:53</a></div>
                         </td>
                     </tr>
 
@@ -688,7 +838,7 @@
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="81" class="link-to-prism">src/lib/pipe-runner/components/pipe-runner/pipe-runner.component.ts:81</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="106" class="link-to-prism">src/lib/pipe-runner/components/pipe-runner/pipe-runner.component.ts:106</a></div>
                         </td>
                     </tr>
 
@@ -714,7 +864,7 @@
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="40" class="link-to-prism">src/lib/pipe-runner/components/pipe-runner/pipe-runner.component.ts:40</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="48" class="link-to-prism">src/lib/pipe-runner/components/pipe-runner/pipe-runner.component.ts:48</a></div>
                         </td>
                     </tr>
 
@@ -740,7 +890,7 @@
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="41" class="link-to-prism">src/lib/pipe-runner/components/pipe-runner/pipe-runner.component.ts:41</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="49" class="link-to-prism">src/lib/pipe-runner/components/pipe-runner/pipe-runner.component.ts:49</a></div>
                         </td>
                     </tr>
 
@@ -767,7 +917,7 @@
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="46" class="link-to-prism">src/lib/pipe-runner/components/pipe-runner/pipe-runner.component.ts:46</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="61" class="link-to-prism">src/lib/pipe-runner/components/pipe-runner/pipe-runner.component.ts:61</a></div>
                         </td>
                     </tr>
 
@@ -793,7 +943,44 @@
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="43" class="link-to-prism">src/lib/pipe-runner/components/pipe-runner/pipe-runner.component.ts:43</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="52" class="link-to-prism">src/lib/pipe-runner/components/pipe-runner/pipe-runner.component.ts:52</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="statusEffectRef"></a>
+                    <span class="name">
+                            <span class="modifier">Public</span>
+                        <span ><b>statusEffectRef</b></span>
+                        <a href="#statusEffectRef"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>effect(() &#x3D;&gt; {
+    const status &#x3D; this.pipeRunnerService.status();
+    const level: LogLevel &#x3D; status &#x3D;&#x3D;&#x3D; &#x27;Succeeded&#x27; ? &#x27;success&#x27; : status &#x3D;&#x3D;&#x3D; &#x27;Errors occurred&#x27; ? &#x27;error&#x27; : &#x27;info&#x27;;
+    const date &#x3D; new Date();
+    this.consoleService.log({
+      channel: &#x27;pipe-runner&#x27;,
+      id: generateGuid(),
+      level: level,
+      message: &#x60;${date.toDateString()}: status changed to ${status}&#x60;,
+      timeStamp: date
+    });
+  }, { allowSignalWrites: true })</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="32" class="link-to-prism">src/lib/pipe-runner/components/pipe-runner/pipe-runner.component.ts:32</a></div>
                         </td>
                     </tr>
 
@@ -829,7 +1016,7 @@
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="26" class="link-to-prism">src/lib/pipe-runner/components/pipe-runner/pipe-runner.component.ts:26</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="30" class="link-to-prism">src/lib/pipe-runner/components/pipe-runner/pipe-runner.component.ts:30</a></div>
                         </td>
                     </tr>
 
@@ -855,7 +1042,7 @@
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="38" class="link-to-prism">src/lib/pipe-runner/components/pipe-runner/pipe-runner.component.ts:38</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="46" class="link-to-prism">src/lib/pipe-runner/components/pipe-runner/pipe-runner.component.ts:46</a></div>
                         </td>
                     </tr>
 
@@ -868,41 +1055,49 @@
 
 
     <div class="tab-pane fade  tab-source-code" id="c-source">
-        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { Component, DestroyRef, OnInit, ViewChild } from &#x27;@angular/core&#x27;;
+        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { Component, DestroyRef, OnInit, ViewChild, effect } from &#x27;@angular/core&#x27;;
 import { Store } from &#x27;@ngrx/store&#x27;;
-import { debounceTime, map, distinctUntilChanged, delay, startWith, BehaviorSubject, scan, merge } from &#x27;rxjs&#x27;;
+import { debounceTime, map, distinctUntilChanged, delay, startWith, BehaviorSubject, firstValueFrom, timer } from &#x27;rxjs&#x27;;
 import { ActivatedRoute, Router } from &#x27;@angular/router&#x27;;
-import { selectPipelines } from &#x27;src/lib/pipeline-store/store/selectors/pipeline.selectors&#x27;;
-import moment from &#x27;moment&#x27;;
+import { selectPipelines, selectSelectedPipeline } from &#x27;src/lib/pipeline-store/store/selectors/pipeline.selectors&#x27;;
+import { v4 as generateGuid } from &#x27;uuid&#x27;;
 import * as ThreeJS from &#x27;three&#x27;;
 import { VisualizationService } from &#x27;src/lib/visualization/services/visualization.service&#x27;;
 import { MatTabGroup } from &#x27;@angular/material/tabs&#x27;;
 import { ISolution } from &#x27;@smgr/interfaces&#x27;;
 import { FormControl } from &#x27;@angular/forms&#x27;;
-import { PipeRunnerService } from &#x27;./pipe-runner.service&#x27;;
 import { fadeInAnimation } from &#x27;src/lib/shared/animations/fade-in.animation&#x27;;
 import { showAnimation } from &#x27;src/lib/shared/animations/show&#x27;;
 import { takeUntilDestroyed } from &#x27;@angular/core/rxjs-interop&#x27;;
+import { setSelectedPipeline } from &#x27;@/lib/pipeline-store/store/actions/pipeline.actions&#x27;;
+import { PipeRunnerService } from &#x27;./services/pipe-runner.service&#x27;;
+import { showListAnimation } from &#x27;@/lib/shared/animations/show-list&#x27;;
+import { ConsoleService } from &#x27;@/lib/console/services/console.service&#x27;;
+import { LogLevel } from &#x27;@/lib/shared/types/log-level.type&#x27;;
+import { selectSnapshot } from &#x27;@/lib/process-builder/globals/select-snapshot&#x27;;
 
 @Component({
   selector: &#x27;app-pipe-runner&#x27;,
   templateUrl: &#x27;./pipe-runner.component.html&#x27;,
   styleUrls: [&#x27;./pipe-runner.component.scss&#x27;],
   providers: [PipeRunnerService, VisualizationService],
-  animations: [fadeInAnimation, showAnimation]
+  animations: [fadeInAnimation, showAnimation, showListAnimation],
 })
 export class PipeRunnerComponent implements OnInit {
-
   @ViewChild(&#x27;tabGroup&#x27;, { static: true }) public tabGroup!: MatTabGroup;
 
-  public consoleOutputSections$ &#x3D; merge(this.pipeRunnerService.consoleOutput, this.pipeRunnerService.status$.pipe(map(status &#x3D;&gt; {
-    return {
-      message: &#x60;${moment().format(&#x27;HH:mm:ss&#x27;)}: status changed to ${status}&#x60;,
-      class: status &#x3D;&#x3D;&#x3D; &#x27;Succeeded&#x27; ? &#x27;success&#x27; : status &#x3D;&#x3D;&#x3D; &#x27;Errors occurred&#x27; ? &#x27;error&#x27; : status &#x3D;&#x3D;&#x3D; &#x27;Running&#x27; ? &#x27;primary&#x27; : &#x27;default&#x27;
-    };
-  }))).pipe(scan((acc: { message: string, class: string }[], curr: { message: string, class: string }) &#x3D;&gt; {
-    return [curr, ...acc];
-  }, []));
+  public statusEffectRef &#x3D; effect(() &#x3D;&gt; {
+    const status &#x3D; this.pipeRunnerService.status();
+    const level: LogLevel &#x3D; status &#x3D;&#x3D;&#x3D; &#x27;Succeeded&#x27; ? &#x27;success&#x27; : status &#x3D;&#x3D;&#x3D; &#x27;Errors occurred&#x27; ? &#x27;error&#x27; : &#x27;info&#x27;;
+    const date &#x3D; new Date();
+    this.consoleService.log({
+      channel: &#x27;pipe-runner&#x27;,
+      id: generateGuid(),
+      level: level,
+      message: &#x60;${date.toDateString()}: status changed to ${status}&#x60;,
+      timeStamp: date
+    });
+  }, { allowSignalWrites: true });
 
   private _visualizationTabRendered$$ &#x3D; new BehaviorSubject(false);
   public visualizationTabRendered$ &#x3D; this._visualizationTabRendered$$.asObservable();
@@ -910,42 +1105,59 @@ export class PipeRunnerComponent implements OnInit {
   public pipelineControl &#x3D; new FormControl();
   public pipelines$ &#x3D; this._store.select(selectPipelines);
 
+  public initializationDate &#x3D; new Date();
   public scene &#x3D; new ThreeJS.Scene();
   public meshRegistry &#x3D; [];
+  public isRunning &#x3D; false;
 
-  constructor(private _store: Store, private _route: ActivatedRoute, private _router: Router, private _visualizationService: VisualizationService, public pipeRunnerService: PipeRunnerService, private _destroyRef: DestroyRef) { }
-
-  public blurElement(element: HTMLElement, event?: Event) {
-    if (event) {
-      event.stopPropagation();
-      event.preventDefault();
-    }
-    element.blur();
-  }
+  constructor(
+    private _store: Store,
+    private _route: ActivatedRoute,
+    private _router: Router,
+    private _visualizationService: VisualizationService,
+    public pipeRunnerService: PipeRunnerService,
+    public consoleService: ConsoleService,
+    private _destroyRef: DestroyRef
+  ) { }
 
   public designPipeline(): void {
     this._router.navigate([&#x27;/data-pipeline-designer&#x27;]);
   }
 
   public ngOnInit(): void {
-    this.pipeRunnerService.selectedPipeline$.pipe(takeUntilDestroyed(this._destroyRef)).subscribe(pipeline &#x3D;&gt; this.pipelineControl.setValue(pipeline));
-    this.tabGroup
-      .selectedTabChange
+    this.pipeRunnerService.selectedPipelineId$.pipe(takeUntilDestroyed(this._destroyRef)).subscribe((pipeline) &#x3D;&gt; this.pipelineControl.setValue(pipeline));
+    this.tabGroup.selectedTabChange
       .pipe(
         takeUntilDestroyed(this._destroyRef),
-        map(event &#x3D;&gt; event.tab.textLabel &#x3D;&#x3D;&#x3D; &#x27;visualization&#x27;),
+        map((event) &#x3D;&gt; event.tab.textLabel &#x3D;&#x3D;&#x3D; &#x27;visualization&#x27;),
         delay(500),
         startWith(false),
-        distinctUntilChanged(),
-      ).subscribe(value &#x3D;&gt; this._visualizationTabRendered$$.next(value));
+        distinctUntilChanged()
+      )
+      .subscribe((value) &#x3D;&gt; this._visualizationTabRendered$$.next(value));
 
-    this.pipeRunnerService.solution$.pipe(takeUntilDestroyed(this._destroyRef), debounceTime(500)).subscribe(async solution &#x3D;&gt; await this._updateScene(solution));
-    this.pipelineControl.valueChanges.pipe(takeUntilDestroyed(this._destroyRef)).subscribe(pipeline &#x3D;&gt; this._router.navigate([&#x27;/pipe-runner&#x27;], {
-      relativeTo: this._route,
-      queryParams: {
-        pipeline: pipeline
-      }
-    }));
+    this.pipeRunnerService.solution$
+      .pipe(takeUntilDestroyed(this._destroyRef), debounceTime(500))
+      .subscribe(async (solution) &#x3D;&gt; await this._updateScene(solution));
+
+    this.pipelineControl.valueChanges.pipe(takeUntilDestroyed(this._destroyRef)).subscribe((pipeline: string) &#x3D;&gt; {
+      this._router.navigate([&#x27;/pipe-runner&#x27;], { relativeTo: this._route, queryParams: { pipeline: pipeline } });
+      this._store.dispatch(setSelectedPipeline(pipeline));
+    });
+
+    this._tryInitiallySetLastPipeline();
+  }
+
+  public async renameCurrentPipeline(pipelineName: string) {
+    await this.pipeRunnerService.renameCurrentPipeline(pipelineName, this.consoleService, &#x27;pipe-runner&#x27;);
+  }
+
+  public async runPipeline() {
+    this.isRunning &#x3D; true;
+    await selectSnapshot(timer(10));
+    await this.pipeRunnerService.run(this.consoleService, &#x27;pipe-runner&#x27;);
+    await selectSnapshot(timer(10));
+    this.isRunning &#x3D; false;
   }
 
   public openVisualization &#x3D; () &#x3D;&gt; this._router.navigate([&#x27;/visualizer&#x27;]);
@@ -954,86 +1166,66 @@ export class PipeRunnerComponent implements OnInit {
     if (!solution) {
       return;
     }
-    this._visualizationService.configureSolutionScene(solution, this.scene, &#x27;#ffffff&#x27;);
+    this._visualizationService.configureSolutionScene(
+      solution,
+      this.scene,
+      &#x27;#ffffff&#x27;
+    );
     this.tabGroup.selectedIndex &#x3D; 1;
   }
 
+  private async _tryInitiallySetLastPipeline() {
+    const currentPipeline &#x3D; this._route.snapshot.queryParams[&#x27;pipeline&#x27;];
+    if (currentPipeline) return;
+
+    const lastSelectedPipeline &#x3D; await firstValueFrom(this._store.select(selectSelectedPipeline));
+    if (!lastSelectedPipeline) return;
+
+    this._router.navigate([], {
+      queryParams: { pipeline: lastSelectedPipeline },
+      queryParamsHandling: &#x27;merge&#x27;,
+    });
+  }
 }
 </code></pre>
     </div>
 
     <div class="tab-pane fade " id="c-templateData">
-        <pre class="line-numbers"><code class="language-html">&lt;div class&#x3D;&quot;body&quot; @show&gt;
-
+        <pre class="line-numbers"><code class="language-html">&lt;div class&#x3D;&quot;body&quot;&gt;
     &lt;div class&#x3D;&quot;content&quot;&gt;
         &lt;div class&#x3D;&quot;actions&quot;&gt;
             &lt;div class&#x3D;&quot;header&quot;&gt;
                 &lt;div class&#x3D;&quot;pipeline-name&quot;&gt;
-                    &lt;ng-container *ngIf&#x3D;&quot;(pipelines$|async)?.length; else noPipeline&quot;&gt;
-                        &lt;span class&#x3D;&quot;prefix&quot;&gt;Run pipeline&lt;/span&gt;
-                        &lt;mat-form-field class&#x3D;&quot;width&quot;&gt;
-                            &lt;mat-label class&#x3D;&quot;label&quot;&gt;current pipeline&lt;/mat-label&gt;
-                            &lt;mat-select [formControl]&#x3D;&quot;pipelineControl&quot;&gt;
-                                &lt;mat-select-trigger&gt;
-                                    &lt;div #element class&#x3D;&quot;editable-select-trigger&quot; contenteditable
-                                        (click)&#x3D;&quot;$event.stopPropagation()&quot;
-                                        (keydown.enter)&#x3D;&quot;blurElement(element, $event)&quot;
-                                        (keydown)&#x3D;&quot;$event.stopPropagation()&quot;
-                                        (focusout)&#x3D;&quot;pipeRunnerService.renameCurrentPipeline(element.innerText)&quot;&gt;
-                                        {{(pipeRunnerService.pipelineName$|async) ?? &#x27;no name&#x27;}}
-                                    &lt;/div&gt;
-                                &lt;/mat-select-trigger&gt;
-                                &lt;mat-option *ngFor&#x3D;&quot;let pipeline of (pipelines$|async)&quot; [value]&#x3D;&quot;pipeline.name&quot;&gt;
-                                    {{pipeline.name}}
-                                &lt;/mat-option&gt;
-                            &lt;/mat-select&gt;
-                        &lt;/mat-form-field&gt;
-                    &lt;/ng-container&gt;
-                    &lt;ng-template #noPipeline&gt;
-                        No pipeline to run
-                    &lt;/ng-template&gt;
+                    &lt;app-select-pipeline [formControl]&#x3D;&quot;pipelineControl&quot; [pipelines]&#x3D;&quot;pipelines$|async&quot;
+                        [currentPipeName]&#x3D;&quot;(pipeRunnerService.pipelineName$|async) ?? null&quot;
+                        (currentPipelineRenamed)&#x3D;&quot;renameCurrentPipeline($event)&quot;&gt;
+                    &lt;/app-select-pipeline&gt;
                 &lt;/div&gt;
+            &lt;/div&gt;
+            &lt;div class&#x3D;&quot;control-wrapper&quot;&gt;
+                &lt;app-pipe-runner-options-bar [actions]&#x3D;&quot;(pipeRunnerService.actions$|async) ?? undefined&quot;
+                    [selectedPipeline]&#x3D;&quot;(pipeRunnerService.selectedPipeline$|async) ?? undefined&quot;
+                    [solution]&#x3D;&quot;(pipeRunnerService.solution$|async) ?? undefined&quot; (designPipeline)&#x3D;&quot;designPipeline()&quot;
+                    (openVisualization)&#x3D;&quot;openVisualization()&quot;
+                    (runPipeline)&#x3D;&quot;runPipeline()&quot;&gt;&lt;/app-pipe-runner-options-bar&gt;
             &lt;/div&gt;
 
-            &lt;div class&#x3D;&quot;control-wrapper&quot;&gt;
-                &lt;button mat-icon-button [disabled]&#x3D;&quot;(pipeRunnerService.pipeline$|async) ? true : false&quot;
-                    (click)&#x3D;&quot;designPipeline()&quot; matTooltip&#x3D;&quot;design pipeline&quot; matTooltipPosition&#x3D;&quot;right&quot;&gt;
-                    &lt;mat-icon&gt;hub&lt;/mat-icon&gt;
-                &lt;/button&gt;
-                &lt;button mat-icon-button
-                    [disabled]&#x3D;&quot;(pipeRunnerService.pipeline$|async)? false: true || ((pipeRunnerService.actions$|async)?.length? false: true)&quot;
-                    (click)&#x3D;&quot;pipeRunnerService.run()&quot; matTooltip&#x3D;&quot;run pipeline&quot; matTooltipPosition&#x3D;&quot;right&quot;&gt;
-                    &lt;mat-icon&gt;play_arrow&lt;/mat-icon&gt;
-                &lt;/button&gt;
-                &lt;button mat-icon-button [disabled]&#x3D;&quot;true&quot; matTooltip&#x3D;&quot;pause pipeline&quot; matTooltipPosition&#x3D;&quot;right&quot;&gt;
-                    &lt;mat-icon&gt;pause&lt;/mat-icon&gt;
-                &lt;/button&gt;
-                &lt;button mat-icon-button [disabled]&#x3D;&quot;true&quot; matTooltip&#x3D;&quot;stop pipeline&quot; matTooltipPosition&#x3D;&quot;right&quot;&gt;
-                    &lt;mat-icon&gt;stop&lt;/mat-icon&gt;
-                &lt;/button&gt;
-                &lt;button mat-icon-button [disabled]&#x3D;&quot;true&quot; matTooltip&#x3D;&quot;clear all data&quot; matTooltipPosition&#x3D;&quot;right&quot;&gt;
-                    &lt;mat-icon&gt;refresh&lt;/mat-icon&gt;
-                &lt;/button&gt;
-                &lt;button mat-icon-button [disabled]&#x3D;&quot;(pipeRunnerService.solution$|async)? false: true&quot; (click)&#x3D;&quot;openVisualization()&quot;
-                    matTooltip&#x3D;&quot;open visualization&quot; matTooltipPosition&#x3D;&quot;right&quot;&gt;
-                    &lt;mat-icon&gt;view_in_ar&lt;/mat-icon&gt;
-                &lt;/button&gt;
-            &lt;/div&gt;
-            &lt;ng-container *ngIf&#x3D;&quot;(pipeRunnerService.actions$|async)?.length; else noActions&quot;&gt;
-                &lt;div *ngFor&#x3D;&quot;let pipelineAction of (pipeRunnerService.actions$|async)&quot; class&#x3D;&quot;action-wrapper&quot;&gt;
-                    &lt;app-pipeline-action-preview [pipelineAction]&#x3D;&quot;pipelineAction!&quot;
-                        (setOutput)&#x3D;&quot;pipeRunnerService.setOutput($event)&quot;&gt;&lt;/app-pipeline-action-preview&gt;
-                &lt;/div&gt;
+            &lt;ng-container *ngIf&#x3D;&quot;pipeRunnerService.actions$|async as pipelineActions; else noActions&quot;&gt;
+                &lt;ng-container *ngIf&#x3D;&quot;pipelineActions.length; else noActions&quot;&gt;
+                    &lt;div [@showList]&#x3D;&quot;pipelineActions.length&quot; class&#x3D;&quot;actions-wrapper&quot;&gt;
+                        &lt;div *ngFor&#x3D;&quot;let pipelineAction of pipelineActions&quot; class&#x3D;&quot;action-wrapper&quot;&gt;
+                            &lt;app-pipeline-action-preview [pipelineAction]&#x3D;&quot;pipelineAction!&quot;
+                                (setOutput)&#x3D;&quot;pipeRunnerService.setOutput($event)&quot;&gt;&lt;/app-pipeline-action-preview&gt;
+                        &lt;/div&gt;
+                    &lt;/div&gt;
+                &lt;/ng-container&gt;
             &lt;/ng-container&gt;
+
         &lt;/div&gt;
         &lt;mat-tab-group class&#x3D;&quot;auto-size-tab-group&quot; #tabGroup&gt;
             &lt;mat-tab label&#x3D;&quot;console output&quot;&gt;
-                &lt;div class&#x3D;&quot;console&quot;&gt;
-                    &lt;div class&#x3D;&quot;console-inner&quot;&gt;
-                        &lt;div *ngFor&#x3D;&quot;let section of (consoleOutputSections$|async)&quot; class&#x3D;&quot;section {{section.class}}&quot;&gt;
-                            {{section.message}}&lt;/div&gt;
-                    &lt;/div&gt;
-                &lt;/div&gt;
+                &lt;app-console [startDate]&#x3D;&quot;initializationDate&quot; [channels]&#x3D;&quot;&#x27;pipe-runner&#x27;&quot;
+                    [animationDisabled]&#x3D;&quot;isRunning&quot;&gt;&lt;/app-console&gt;
             &lt;/mat-tab&gt;
             &lt;mat-tab label&#x3D;&quot;visualization&quot; #visualizationTab [disabled]&#x3D;&quot;!scene&quot;&gt;
                 &lt;div class&#x3D;&quot;visualization&quot;&gt;
@@ -1077,13 +1269,20 @@ export class PipeRunnerComponent implements OnInit {
       margin-right: 1rem;
       max-width: 450px;
       padding: 0.5rem;
-      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
 
-      .action-wrapper {
-        background-color: white;
-        border-radius: 3px;
-        box-shadow: 0 0 4px #9d9d9d;
-        margin-bottom: 0.5rem;
+      .actions-wrapper {
+        flex: 1;
+        overflow-y: scroll;
+        padding: 0.5rem 1rem 1rem 0.5rem;
+
+        .action-wrapper {
+          background-color: white;
+          border-radius: 3px;
+          box-shadow: 0 0 4px #9d9d9d;
+          margin-bottom: 0.5rem;
+        }
       }
     }
 
@@ -1147,35 +1346,8 @@ export class PipeRunnerComponent implements OnInit {
   }
 }
 
-.header {
-  display: flex;
-  align-items: center;
-
-  .pipeline-name {
-    padding: 1rem 0.5rem;
-    font-weight: 500;
-    flex: 1;
-    display: flex;
-    align-items: baseline;
-
-    .prefix {
-      font-size: 1.4rem;
-      font-weight: 400;
-    }
-
-    mat-form-field {
-      flex: 1;
-      margin-left: 0.5rem;
-    }
-  }
-}
-
-.control-wrapper {
-  margin-bottom: 0.5rem;
-
-  * {
-    margin-right: 0.5rem;
-  }
+.pipeline-name {
+  flex: 1;
 }
 
 .auto-size-tab-group {
@@ -1237,8 +1409,8 @@ export class PipeRunnerComponent implements OnInit {
 <script src="../js/libs/htmlparser.js"></script>
 <script src="../js/libs/deep-iterator.js"></script>
 <script>
-        var COMPONENT_TEMPLATE = '<div><div class="body" @show>    <div class="content">        <div class="actions">            <div class="header">                <div class="pipeline-name">                    <ng-container *ngIf="(pipelines$|async)?.length; else noPipeline">                        <span class="prefix">Run pipeline</span>                        <mat-form-field class="width">                            <mat-label class="label">current pipeline</mat-label>                            <mat-select [formControl]="pipelineControl">                                <mat-select-trigger>                                    <div #element class="editable-select-trigger" contenteditable                                        (click)="$event.stopPropagation()"                                        (keydown.enter)="blurElement(element, $event)"                                        (keydown)="$event.stopPropagation()"                                        (focusout)="pipeRunnerService.renameCurrentPipeline(element.innerText)">                                        {{(pipeRunnerService.pipelineName$|async) ?? \'no name\'}}                                    </div>                                </mat-select-trigger>                                <mat-option *ngFor="let pipeline of (pipelines$|async)" [value]="pipeline.name">                                    {{pipeline.name}}                                </mat-option>                            </mat-select>                        </mat-form-field>                    </ng-container>                    <ng-template #noPipeline>                        No pipeline to run                    </ng-template>                </div>            </div>            <div class="control-wrapper">                <button mat-icon-button [disabled]="(pipeRunnerService.pipeline$|async) ? true : false"                    (click)="designPipeline()" matTooltip="design pipeline" matTooltipPosition="right">                    <mat-icon>hub</mat-icon>                </button>                <button mat-icon-button                    [disabled]="(pipeRunnerService.pipeline$|async)? false: true || ((pipeRunnerService.actions$|async)?.length? false: true)"                    (click)="pipeRunnerService.run()" matTooltip="run pipeline" matTooltipPosition="right">                    <mat-icon>play_arrow</mat-icon>                </button>                <button mat-icon-button [disabled]="true" matTooltip="pause pipeline" matTooltipPosition="right">                    <mat-icon>pause</mat-icon>                </button>                <button mat-icon-button [disabled]="true" matTooltip="stop pipeline" matTooltipPosition="right">                    <mat-icon>stop</mat-icon>                </button>                <button mat-icon-button [disabled]="true" matTooltip="clear all data" matTooltipPosition="right">                    <mat-icon>refresh</mat-icon>                </button>                <button mat-icon-button [disabled]="(pipeRunnerService.solution$|async)? false: true" (click)="openVisualization()"                    matTooltip="open visualization" matTooltipPosition="right">                    <mat-icon>view_in_ar</mat-icon>                </button>            </div>            <ng-container *ngIf="(pipeRunnerService.actions$|async)?.length; else noActions">                <div *ngFor="let pipelineAction of (pipeRunnerService.actions$|async)" class="action-wrapper">                    <app-pipeline-action-preview [pipelineAction]="pipelineAction!"                        (setOutput)="pipeRunnerService.setOutput($event)"></app-pipeline-action-preview>                </div>            </ng-container>        </div>        <mat-tab-group class="auto-size-tab-group" #tabGroup>            <mat-tab label="console output">                <div class="console">                    <div class="console-inner">                        <div *ngFor="let section of (consoleOutputSections$|async)" class="section {{section.class}}">                            {{section.message}}</div>                    </div>                </div>            </mat-tab>            <mat-tab label="visualization" #visualizationTab [disabled]="!scene">                <div class="visualization">                    <app-scene-visualization *ngIf="visualizationTabRendered$|async" @show                        [scene]="scene"></app-scene-visualization>                </div>            </mat-tab>        </mat-tab-group>    </div></div><ng-template #noActions>    <div class="no-actions-hint">        no actions found    </div></ng-template></div>'
-    var COMPONENTS = [{'name': 'AboutComponent', 'selector': 'app-about'},{'name': 'AccessTokenInputComponent', 'selector': 'app-access-token-input'},{'name': 'ApiCallConfiguratorComponent', 'selector': 'app-api-call-configurator'},{'name': 'ApiCallConfiguratorDialogComponent', 'selector': 'app-api-call-configurator-dialog'},{'name': 'ApiConfigurationPreviewComponent', 'selector': 'app-api-configuration-preview'},{'name': 'ApiLoginTestComponent', 'selector': 'app-api-login-test'},{'name': 'AppComponent', 'selector': 'app-root'},{'name': 'CalculationComponent', 'selector': 'app-calculation'},{'name': 'CalculationContextOverviewComponent', 'selector': 'app-calculation-context-overview'},{'name': 'CodeEditorComponent', 'selector': 'app-code-editor'},{'name': 'ConfirmationComponent', 'selector': 'app-confirmation'},{'name': 'ContainerPreviewComponent', 'selector': 'app-container-preview'},{'name': 'EditDataDialogComponent', 'selector': 'app-edit-data-dialog'},{'name': 'EmbeddedConfigureErrorGatewayEntranceConnectionComponent', 'selector': 'app-embedded-configure-error-gateway-entrance-connection'},{'name': 'EmbeddedFunctionImplementationComponent', 'selector': 'app-embedded-function-implementation'},{'name': 'EmbeddedFunctionInputSelectionComponent', 'selector': 'app-embedded-function-input-selection'},{'name': 'EmbeddedFunctionSelectionComponent', 'selector': 'app-embedded-function-selection'},{'name': 'EmbeddedInputOutputMappingComponent', 'selector': 'app-embedded-input-output-mapping'},{'name': 'EmbeddedInputOutputMappingTableRowComponent', 'selector': 'app-embedded-input-output-mapping-table-row'},{'name': 'EmbeddedOutputParamConfigurationComponent', 'selector': 'app-embedded-output-param-configuration'},{'name': 'EmbeddedParamEditorComponent', 'selector': 'app-embedded-param-editor'},{'name': 'EmbeddedStaticOutputDefinitionComponent', 'selector': 'app-embedded-static-output-definition'},{'name': 'EndpointInputComponent', 'selector': 'app-endpoint-input'},{'name': 'ErrorComponent', 'selector': 'app-error'},{'name': 'FunctionPreviewComponent', 'selector': 'app-function-preview'},{'name': 'GoodPreviewComponent', 'selector': 'app-good-preview'},{'name': 'GoodsPanelComponent', 'selector': 'app-goods-panel'},{'name': 'GroupsFormComponent', 'selector': 'app-groups-form'},{'name': 'GroupsPanelComponent', 'selector': 'app-groups-panel'},{'name': 'LocalDataComponent', 'selector': 'app-local-data'},{'name': 'MethodQuickInteractionComponent', 'selector': 'app-method-quick-interaction'},{'name': 'NavbarComponent', 'selector': 'app-navbar'},{'name': 'NoSolutionDialogComponent', 'selector': 'app-no-solution-dialog'},{'name': 'OrdersFormComponent', 'selector': 'app-orders-form'},{'name': 'ParamEditorComponent', 'selector': 'app-param-editor'},{'name': 'ParamMemberPathPreviewComponent', 'selector': 'app-param-member-path-preview'},{'name': 'ParamMemberPreviewComponent', 'selector': 'app-param-member-preview'},{'name': 'ParamPreviewComponent', 'selector': 'app-param-preview'},{'name': 'PipelineActionPreviewComponent', 'selector': 'app-pipeline-action-preview'},{'name': 'PipeRunnerComponent', 'selector': 'app-pipe-runner'},{'name': 'ProcessBuilderComponent', 'selector': 'app-process-builder'},{'name': 'ProcessBuilderWrapperComponent', 'selector': 'app-process-builder-wrapper'},{'name': 'ProductFormComponent', 'selector': 'app-products-form'},{'name': 'SceneVisualizationComponent', 'selector': 'app-scene-visualization'},{'name': 'SelectApiAuthorizationComponent', 'selector': 'app-select-api-authorization'},{'name': 'SelectGroupComponent', 'selector': 'app-select-group'},{'name': 'SelectProductComponent', 'selector': 'app-select-product'},{'name': 'SelectUnitComponent', 'selector': 'app-select-unit'},{'name': 'SolutionAnimationComponent', 'selector': 'app-solution-animation'},{'name': 'SolutionPreviewComponent', 'selector': 'app-solution-preview'},{'name': 'SolutionPreviewRenderingComponent', 'selector': 'app-solution-preview-rendering'},{'name': 'SolutionValidationComponent', 'selector': 'app-solution-validation'},{'name': 'SolutionVisualizationDialogComponent', 'selector': 'app-solution-visualization-dialog'},{'name': 'TaskCreationComponent', 'selector': 'app-task-creation'},{'name': 'UserInputComponent', 'selector': 'app-user-input'},{'name': 'UsernamePasswordCombinationComponent', 'selector': 'app-username-password-combination'},{'name': 'VisualizerComponent', 'selector': 'app-visualizer'},{'name': 'WidgetComponent', 'selector': 'app-widget'}];
+        var COMPONENT_TEMPLATE = '<div><div class="body">    <div class="content">        <div class="actions">            <div class="header">                <div class="pipeline-name">                    <app-select-pipeline [formControl]="pipelineControl" [pipelines]="pipelines$|async"                        [currentPipeName]="(pipeRunnerService.pipelineName$|async) ?? null"                        (currentPipelineRenamed)="renameCurrentPipeline($event)">                    </app-select-pipeline>                </div>            </div>            <div class="control-wrapper">                <app-pipe-runner-options-bar [actions]="(pipeRunnerService.actions$|async) ?? undefined"                    [selectedPipeline]="(pipeRunnerService.selectedPipeline$|async) ?? undefined"                    [solution]="(pipeRunnerService.solution$|async) ?? undefined" (designPipeline)="designPipeline()"                    (openVisualization)="openVisualization()"                    (runPipeline)="runPipeline()"></app-pipe-runner-options-bar>            </div>            <ng-container *ngIf="pipeRunnerService.actions$|async as pipelineActions; else noActions">                <ng-container *ngIf="pipelineActions.length; else noActions">                    <div [@showList]="pipelineActions.length" class="actions-wrapper">                        <div *ngFor="let pipelineAction of pipelineActions" class="action-wrapper">                            <app-pipeline-action-preview [pipelineAction]="pipelineAction!"                                (setOutput)="pipeRunnerService.setOutput($event)"></app-pipeline-action-preview>                        </div>                    </div>                </ng-container>            </ng-container>        </div>        <mat-tab-group class="auto-size-tab-group" #tabGroup>            <mat-tab label="console output">                <app-console [startDate]="initializationDate" [channels]="\'pipe-runner\'"                    [animationDisabled]="isRunning"></app-console>            </mat-tab>            <mat-tab label="visualization" #visualizationTab [disabled]="!scene">                <div class="visualization">                    <app-scene-visualization *ngIf="visualizationTabRendered$|async" @show                        [scene]="scene"></app-scene-visualization>                </div>            </mat-tab>        </mat-tab-group>    </div></div><ng-template #noActions>    <div class="no-actions-hint">        no actions found    </div></ng-template></div>'
+    var COMPONENTS = [{'name': 'AboutComponent', 'selector': 'app-about'},{'name': 'AccessTokenInputComponent', 'selector': 'app-access-token-input'},{'name': 'ApiCallConfiguratorComponent', 'selector': 'app-api-call-configurator'},{'name': 'ApiCallConfiguratorDialogComponent', 'selector': 'app-api-call-configurator-dialog'},{'name': 'ApiConfigurationPreviewComponent', 'selector': 'app-api-configuration-preview'},{'name': 'ApiLoginTestComponent', 'selector': 'app-api-login-test'},{'name': 'AppComponent', 'selector': 'app-root'},{'name': 'CalculationComponent', 'selector': 'app-calculation'},{'name': 'CalculationContextOverviewComponent', 'selector': 'app-calculation-context-overview'},{'name': 'CodeEditorComponent', 'selector': 'app-code-editor'},{'name': 'ConfirmationComponent', 'selector': 'app-confirmation'},{'name': 'ConsoleComponent', 'selector': 'app-console'},{'name': 'ContainerPreviewComponent', 'selector': 'app-container-preview'},{'name': 'EditDataDialogComponent', 'selector': 'app-edit-data-dialog'},{'name': 'EmbeddedConfigureErrorGatewayEntranceConnectionComponent', 'selector': 'app-embedded-configure-error-gateway-entrance-connection'},{'name': 'EmbeddedFunctionImplementationComponent', 'selector': 'app-embedded-function-implementation'},{'name': 'EmbeddedFunctionSelectionComponent', 'selector': 'app-embedded-function-selection'},{'name': 'EmbeddedInputOutputMappingComponent', 'selector': 'app-embedded-input-output-mapping'},{'name': 'EmbeddedInputOutputMappingTableRowComponent', 'selector': 'app-embedded-input-output-mapping-table-row'},{'name': 'EmbeddedParamEditorComponent', 'selector': 'app-embedded-param-editor'},{'name': 'EndpointInputComponent', 'selector': 'app-endpoint-input'},{'name': 'ErrorComponent', 'selector': 'app-error'},{'name': 'FunctionOutputPreviewComponent', 'selector': 'app-function-output-preview'},{'name': 'FunctionPreviewComponent', 'selector': 'app-function-preview'},{'name': 'GoodPreviewComponent', 'selector': 'app-good-preview'},{'name': 'GoodsPanelComponent', 'selector': 'app-goods-panel'},{'name': 'GroupsFormComponent', 'selector': 'app-groups-form'},{'name': 'GroupsPanelComponent', 'selector': 'app-groups-panel'},{'name': 'LocalDataComponent', 'selector': 'app-local-data'},{'name': 'MethodQuickInteractionComponent', 'selector': 'app-method-quick-interaction'},{'name': 'NavbarComponent', 'selector': 'app-navbar'},{'name': 'NoSolutionDialogComponent', 'selector': 'app-no-solution-dialog'},{'name': 'OrdersFormComponent', 'selector': 'app-orders-form'},{'name': 'ParamEditorComponent', 'selector': 'app-param-editor'},{'name': 'ParamMemberPathPreviewComponent', 'selector': 'app-param-member-path-preview'},{'name': 'ParamMemberPreviewComponent', 'selector': 'app-param-member-preview'},{'name': 'ParamPreviewComponent', 'selector': 'app-param-preview'},{'name': 'PipelineActionPreviewComponent', 'selector': 'app-pipeline-action-preview'},{'name': 'PipeRunnerComponent', 'selector': 'app-pipe-runner'},{'name': 'PipeRunnerOptionsBarComponent', 'selector': 'app-pipe-runner-options-bar'},{'name': 'ProcessBuilderComponent', 'selector': 'app-process-builder'},{'name': 'ProcessBuilderWrapperComponent', 'selector': 'app-process-builder-wrapper'},{'name': 'ProductFormComponent', 'selector': 'app-products-form'},{'name': 'SceneVisualizationComponent', 'selector': 'app-scene-visualization'},{'name': 'SelectApiAuthorizationComponent', 'selector': 'app-select-api-authorization'},{'name': 'SelectGroupComponent', 'selector': 'app-select-group'},{'name': 'SelectPipelineComponent', 'selector': 'app-select-pipeline'},{'name': 'SelectProductComponent', 'selector': 'app-select-product'},{'name': 'SelectUnitComponent', 'selector': 'app-select-unit'},{'name': 'SolutionAnimationComponent', 'selector': 'app-solution-animation'},{'name': 'SolutionPreviewComponent', 'selector': 'app-solution-preview'},{'name': 'SolutionPreviewRenderingComponent', 'selector': 'app-solution-preview-rendering'},{'name': 'SolutionValidationComponent', 'selector': 'app-solution-validation'},{'name': 'SolutionVisualizationDialogComponent', 'selector': 'app-solution-visualization-dialog'},{'name': 'TaskCreationComponent', 'selector': 'app-task-creation'},{'name': 'UserInputComponent', 'selector': 'app-user-input'},{'name': 'UsernamePasswordCombinationComponent', 'selector': 'app-username-password-combination'},{'name': 'VisualizerComponent', 'selector': 'app-visualizer'},{'name': 'WidgetComponent', 'selector': 'app-widget'}];
     var DIRECTIVES = [{'name': 'AnimatedCounterDirective', 'selector': '[appAnimatedCounter]'}];
     var ACTUAL_COMPONENT = {'name': 'PipeRunnerComponent'};
 </script>

@@ -16,10 +16,7 @@ import { C2M_INJECTION_TOKEN } from './constants/c2m-processor.constant';
 import { ActivityC2MProcessor } from './c2m-processors/activity.c2m-processor';
 import { IC2MProcessor } from './interfaces/c2m-processor.interface';
 import { ConnectorC2MProcessor } from './c2m-processors/connector.c2m-processor';
-import { ITaskCreationPayload } from '../../interfaces/task-creation-payload.interface';
-import { ITaskCreationFormGroupValue } from '../../interfaces/task-creation-form-group-value.interface';
 import { EventC2MProcessor } from './c2m-processors/event.c2m-processor';
-import { DataC2MProcessor } from './c2m-processors/data.c2m-processor';
 import { GatewayC2MProcessor } from './c2m-processors/gateway.c2m-processor';
 import { isPromise } from '@/lib/shared/globals/is-promise.constant';
 import { C2S_INJECTION_TOKEN } from './constants/c2s-processing.constant';
@@ -27,6 +24,7 @@ import { IC2SProcessor } from './interfaces/c2s-processor.interface';
 import { ActivityC2SProcessor } from './c2s-processors/activity.c2s-processor';
 import { OutputC2SProcessor } from './c2s-processors/output.c2s-processor';
 import { OutputC2MProcessor } from './c2m-processors/output.c2m-processor';
+import { ITaskCreationOutput } from '../dialog/task-creation/interfaces/task-creation-output.interface';
 
 @Component({
   selector: 'app-process-builder',
@@ -129,12 +127,13 @@ export class ProcessBuilderComponent implements OnDestroy, OnInit {
     );
   }
 
-  private async _processConfiguration(args: { taskCreationPayload: ITaskCreationPayload, taskCreationFormGroupValue: ITaskCreationFormGroupValue }){
+  private async _processConfiguration(args: ITaskCreationOutput){
     await this._processC2S(args);
     await this._processC2m(args);
+    await this.bpmnJsService.saveCurrentBpmnModel(true);
   }
 
-  private async _processC2S(args: { taskCreationPayload: ITaskCreationPayload, taskCreationFormGroupValue: ITaskCreationFormGroupValue }){
+  private async _processC2S(args: ITaskCreationOutput){
     for (const step of this._c2sProcessors) {
       const processOutputCandidate = step.processConfiguration(args);
 
@@ -142,7 +141,7 @@ export class ProcessBuilderComponent implements OnDestroy, OnInit {
     }
   }
 
-  private async _processC2m(args: { taskCreationPayload: ITaskCreationPayload, taskCreationFormGroupValue: ITaskCreationFormGroupValue }) {
+  private async _processC2m(args: ITaskCreationOutput) {
     for (const step of this._c2mProcessors) {
       const processOutputCandidate = step.processConfiguration(args);
 

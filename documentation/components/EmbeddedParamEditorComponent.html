@@ -145,7 +145,7 @@
                             </li>
                             <li>
                                     <span class="modifier">Private</span>
-                                <a href="#_subscriptions" >_subscriptions</a>
+                                <a href="#_subscription" >_subscription</a>
                             </li>
                             <li>
                                     <span class="modifier">Public</span>
@@ -459,11 +459,11 @@
         <tbody>
             <tr>
                 <td class="col-md-4">
-                    <a name="_subscriptions"></a>
+                    <a name="_subscription"></a>
                     <span class="name">
                             <span class="modifier">Private</span>
-                        <span ><b>_subscriptions</b></span>
-                        <a href="#_subscriptions"><span class="icon ion-ios-link"></span></a>
+                        <span ><b>_subscription</b></span>
+                        <a href="#_subscription"><span class="icon ion-ios-link"></span></a>
                     </span>
                 </td>
             </tr>
@@ -590,8 +590,8 @@
                 <tr>
                     <td class="col-md-4">
                         <i>Default value : </i><code>new FormGroup({
-    isProcessOutput: new FormControl&lt;boolean&gt;(false),
-    name: new FormControl&lt;string&gt;(&#x27;&#x27;),
+    outputIsProcessOutput: new FormControl&lt;boolean&gt;(false),
+    functionName: new FormControl&lt;string&gt;(&#x27;&#x27;),
     outputParamName: new FormControl&lt;string&gt;(&#x27;&#x27;),
   }) as TaskCreationFormGroup</code>
                     </td>
@@ -650,7 +650,7 @@
         <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { AfterViewInit, Component, ElementRef, EventEmitter, Inject, OnDestroy, Output, ViewChild } from &#x27;@angular/core&#x27;;
 import { FormControl, FormGroup } from &#x27;@angular/forms&#x27;;
 import JSONEditor from &#x27;jsoneditor&#x27;;
-import { combineLatest, ReplaySubject, Subject, Subscription } from &#x27;rxjs&#x27;;
+import { combineLatest, ReplaySubject, Subscription } from &#x27;rxjs&#x27;;
 import { debounceTime, startWith } from &#x27;rxjs/operators&#x27;;
 import { ProcessBuilderRepository } from &#x27;src/lib/core/process-builder-repository&#x27;;
 import { IEmbeddedView } from &#x27;src/lib/process-builder/classes/embedded-view&#x27;;
@@ -669,8 +669,8 @@ export class EmbeddedParamEditorComponent implements IEmbeddedView, AfterViewIni
   @Output() public jsonChanged &#x3D; new EventEmitter&lt;object&gt;();
 
   public formGroup &#x3D; new FormGroup({
-    isProcessOutput: new FormControl&lt;boolean&gt;(false),
-    name: new FormControl&lt;string&gt;(&#x27;&#x27;),
+    outputIsProcessOutput: new FormControl&lt;boolean&gt;(false),
+    functionName: new FormControl&lt;string&gt;(&#x27;&#x27;),
     outputParamName: new FormControl&lt;string&gt;(&#x27;&#x27;),
   }) as TaskCreationFormGroup;
 
@@ -678,37 +678,37 @@ export class EmbeddedParamEditorComponent implements IEmbeddedView, AfterViewIni
   private _editor$$ &#x3D; new ReplaySubject&lt;JSONEditor&gt;(1);
   public editor$ &#x3D; this._editor$$.asObservable();
 
-  private _subscriptions: Subscription &#x3D; new Subscription();
+  private _subscription: Subscription &#x3D; new Subscription();
 
   constructor(@Inject(PROCESS_BUILDER_CONFIG_TOKEN) public config: IProcessBuilderConfig) { }
 
   public blurEditor &#x3D; () &#x3D;&gt; this.editorBlurred.emit();
 
   public ngAfterViewInit(): void {
-    this._subscriptions.add(...[
-      this.jsonChanged.pipe(debounceTime(500))
-        .subscribe((json) &#x3D;&gt; {
-          const extracted: any &#x3D; ProcessBuilderRepository.extractObjectTypeDefinition(json);
-          this.formGroup.controls.outputParamName!.setValue(extracted);
-        }),
+    this._subscription.add(this.jsonChanged.pipe(debounceTime(500))
+      .subscribe((json) &#x3D;&gt; {
+        const extracted: any &#x3D; ProcessBuilderRepository.extractObjectTypeDefinition(json as any);
+        this.formGroup.controls.outputParamName!.setValue(extracted);
+      }));
+
+    this._subscription.add(
       combineLatest([this.editor$, this.formGroup.controls.outputParamName!.valueChanges.pipe(startWith(this.formGroup.controls.outputParamName!.value))])
         .pipe(debounceTime(100))
         .subscribe(([editor, param]: [JSONEditor, any]) &#x3D;&gt; {
-          let obj &#x3D; ProcessBuilderRepository.createPseudoObjectFromIParamDefinition(param);
+          const obj &#x3D; ProcessBuilderRepository.createPseudoObjectFromIParamDefinition(param);
           editor.set(obj ?? {});
           editor.expandAll();
         })
-    ]);
-    this._instance &#x3D; new JSONEditor(this.parameterBody.nativeElement, {
-      &#x27;onChangeJSON&#x27;: (value: object) &#x3D;&gt; this.jsonChanged.emit(value),
-    });
+    );
+
+    this._instance &#x3D; new JSONEditor(this.parameterBody.nativeElement, { &#x27;onChangeJSON&#x27;: (value: object) &#x3D;&gt; this.jsonChanged.emit(value) });
     this._editor$$.next(this._instance);
   }
 
   public ngOnDestroy() {
     const obj &#x3D; this._instance?.get();
     this.formGroup.controls[&#x27;outputParamName&#x27;]!.setValue(obj ? ProcessBuilderRepository.extractObjectTypeDefinition(obj) as any : null);
-    this._subscriptions.unsubscribe();
+    this._subscription.unsubscribe();
   }
 
 }
@@ -822,7 +822,7 @@ export class EmbeddedParamEditorComponent implements IEmbeddedView, AfterViewIni
 <script src="../js/libs/deep-iterator.js"></script>
 <script>
         var COMPONENT_TEMPLATE = '<div><div class="body" [formGroup]="formGroup">    <div class="method-name-wrapper">        <mat-form-field class="width">            <mat-label>method name</mat-label>            <input matInput type="text" formControlName="name" />        </mat-form-field>        <mat-form-field class="width">            <mat-label>output param name</mat-label>            <input matInput type="text" formControlName="outputParamName" />        </mat-form-field>        <mat-slide-toggle formControlName="isProcessOutput">            is process output        </mat-slide-toggle>    </div>    <div class="structure-editor-wrapper" #parameterBody></div></div></div>'
-    var COMPONENTS = [{'name': 'AboutComponent', 'selector': 'app-about'},{'name': 'AccessTokenInputComponent', 'selector': 'app-access-token-input'},{'name': 'ApiCallConfiguratorComponent', 'selector': 'app-api-call-configurator'},{'name': 'ApiCallConfiguratorDialogComponent', 'selector': 'app-api-call-configurator-dialog'},{'name': 'ApiConfigurationPreviewComponent', 'selector': 'app-api-configuration-preview'},{'name': 'ApiLoginTestComponent', 'selector': 'app-api-login-test'},{'name': 'AppComponent', 'selector': 'app-root'},{'name': 'CalculationComponent', 'selector': 'app-calculation'},{'name': 'CalculationContextOverviewComponent', 'selector': 'app-calculation-context-overview'},{'name': 'CodeEditorComponent', 'selector': 'app-code-editor'},{'name': 'ConfirmationComponent', 'selector': 'app-confirmation'},{'name': 'ContainerPreviewComponent', 'selector': 'app-container-preview'},{'name': 'EditDataDialogComponent', 'selector': 'app-edit-data-dialog'},{'name': 'EmbeddedConfigureErrorGatewayEntranceConnectionComponent', 'selector': 'app-embedded-configure-error-gateway-entrance-connection'},{'name': 'EmbeddedFunctionImplementationComponent', 'selector': 'app-embedded-function-implementation'},{'name': 'EmbeddedFunctionInputSelectionComponent', 'selector': 'app-embedded-function-input-selection'},{'name': 'EmbeddedFunctionSelectionComponent', 'selector': 'app-embedded-function-selection'},{'name': 'EmbeddedInputOutputMappingComponent', 'selector': 'app-embedded-input-output-mapping'},{'name': 'EmbeddedInputOutputMappingTableRowComponent', 'selector': 'app-embedded-input-output-mapping-table-row'},{'name': 'EmbeddedOutputParamConfigurationComponent', 'selector': 'app-embedded-output-param-configuration'},{'name': 'EmbeddedParamEditorComponent', 'selector': 'app-embedded-param-editor'},{'name': 'EmbeddedStaticOutputDefinitionComponent', 'selector': 'app-embedded-static-output-definition'},{'name': 'EndpointInputComponent', 'selector': 'app-endpoint-input'},{'name': 'ErrorComponent', 'selector': 'app-error'},{'name': 'FunctionPreviewComponent', 'selector': 'app-function-preview'},{'name': 'GoodPreviewComponent', 'selector': 'app-good-preview'},{'name': 'GoodsPanelComponent', 'selector': 'app-goods-panel'},{'name': 'GroupsFormComponent', 'selector': 'app-groups-form'},{'name': 'GroupsPanelComponent', 'selector': 'app-groups-panel'},{'name': 'LocalDataComponent', 'selector': 'app-local-data'},{'name': 'MethodQuickInteractionComponent', 'selector': 'app-method-quick-interaction'},{'name': 'NavbarComponent', 'selector': 'app-navbar'},{'name': 'NoSolutionDialogComponent', 'selector': 'app-no-solution-dialog'},{'name': 'OrdersFormComponent', 'selector': 'app-orders-form'},{'name': 'ParamEditorComponent', 'selector': 'app-param-editor'},{'name': 'ParamMemberPathPreviewComponent', 'selector': 'app-param-member-path-preview'},{'name': 'ParamMemberPreviewComponent', 'selector': 'app-param-member-preview'},{'name': 'ParamPreviewComponent', 'selector': 'app-param-preview'},{'name': 'PipelineActionPreviewComponent', 'selector': 'app-pipeline-action-preview'},{'name': 'PipeRunnerComponent', 'selector': 'app-pipe-runner'},{'name': 'ProcessBuilderComponent', 'selector': 'app-process-builder'},{'name': 'ProcessBuilderWrapperComponent', 'selector': 'app-process-builder-wrapper'},{'name': 'ProductFormComponent', 'selector': 'app-products-form'},{'name': 'SceneVisualizationComponent', 'selector': 'app-scene-visualization'},{'name': 'SelectApiAuthorizationComponent', 'selector': 'app-select-api-authorization'},{'name': 'SelectGroupComponent', 'selector': 'app-select-group'},{'name': 'SelectProductComponent', 'selector': 'app-select-product'},{'name': 'SelectUnitComponent', 'selector': 'app-select-unit'},{'name': 'SolutionAnimationComponent', 'selector': 'app-solution-animation'},{'name': 'SolutionPreviewComponent', 'selector': 'app-solution-preview'},{'name': 'SolutionPreviewRenderingComponent', 'selector': 'app-solution-preview-rendering'},{'name': 'SolutionValidationComponent', 'selector': 'app-solution-validation'},{'name': 'SolutionVisualizationDialogComponent', 'selector': 'app-solution-visualization-dialog'},{'name': 'TaskCreationComponent', 'selector': 'app-task-creation'},{'name': 'UserInputComponent', 'selector': 'app-user-input'},{'name': 'UsernamePasswordCombinationComponent', 'selector': 'app-username-password-combination'},{'name': 'VisualizerComponent', 'selector': 'app-visualizer'},{'name': 'WidgetComponent', 'selector': 'app-widget'}];
+    var COMPONENTS = [{'name': 'AboutComponent', 'selector': 'app-about'},{'name': 'AccessTokenInputComponent', 'selector': 'app-access-token-input'},{'name': 'ApiCallConfiguratorComponent', 'selector': 'app-api-call-configurator'},{'name': 'ApiCallConfiguratorDialogComponent', 'selector': 'app-api-call-configurator-dialog'},{'name': 'ApiConfigurationPreviewComponent', 'selector': 'app-api-configuration-preview'},{'name': 'ApiLoginTestComponent', 'selector': 'app-api-login-test'},{'name': 'AppComponent', 'selector': 'app-root'},{'name': 'CalculationComponent', 'selector': 'app-calculation'},{'name': 'CalculationContextOverviewComponent', 'selector': 'app-calculation-context-overview'},{'name': 'CodeEditorComponent', 'selector': 'app-code-editor'},{'name': 'ConfirmationComponent', 'selector': 'app-confirmation'},{'name': 'ConsoleComponent', 'selector': 'app-console'},{'name': 'ContainerPreviewComponent', 'selector': 'app-container-preview'},{'name': 'EditDataDialogComponent', 'selector': 'app-edit-data-dialog'},{'name': 'EmbeddedConfigureErrorGatewayEntranceConnectionComponent', 'selector': 'app-embedded-configure-error-gateway-entrance-connection'},{'name': 'EmbeddedFunctionImplementationComponent', 'selector': 'app-embedded-function-implementation'},{'name': 'EmbeddedFunctionSelectionComponent', 'selector': 'app-embedded-function-selection'},{'name': 'EmbeddedInputOutputMappingComponent', 'selector': 'app-embedded-input-output-mapping'},{'name': 'EmbeddedInputOutputMappingTableRowComponent', 'selector': 'app-embedded-input-output-mapping-table-row'},{'name': 'EmbeddedParamEditorComponent', 'selector': 'app-embedded-param-editor'},{'name': 'EndpointInputComponent', 'selector': 'app-endpoint-input'},{'name': 'ErrorComponent', 'selector': 'app-error'},{'name': 'FunctionOutputPreviewComponent', 'selector': 'app-function-output-preview'},{'name': 'FunctionPreviewComponent', 'selector': 'app-function-preview'},{'name': 'GoodPreviewComponent', 'selector': 'app-good-preview'},{'name': 'GoodsPanelComponent', 'selector': 'app-goods-panel'},{'name': 'GroupsFormComponent', 'selector': 'app-groups-form'},{'name': 'GroupsPanelComponent', 'selector': 'app-groups-panel'},{'name': 'LocalDataComponent', 'selector': 'app-local-data'},{'name': 'MethodQuickInteractionComponent', 'selector': 'app-method-quick-interaction'},{'name': 'NavbarComponent', 'selector': 'app-navbar'},{'name': 'NoSolutionDialogComponent', 'selector': 'app-no-solution-dialog'},{'name': 'OrdersFormComponent', 'selector': 'app-orders-form'},{'name': 'ParamEditorComponent', 'selector': 'app-param-editor'},{'name': 'ParamMemberPathPreviewComponent', 'selector': 'app-param-member-path-preview'},{'name': 'ParamMemberPreviewComponent', 'selector': 'app-param-member-preview'},{'name': 'ParamPreviewComponent', 'selector': 'app-param-preview'},{'name': 'PipelineActionPreviewComponent', 'selector': 'app-pipeline-action-preview'},{'name': 'PipeRunnerComponent', 'selector': 'app-pipe-runner'},{'name': 'PipeRunnerOptionsBarComponent', 'selector': 'app-pipe-runner-options-bar'},{'name': 'ProcessBuilderComponent', 'selector': 'app-process-builder'},{'name': 'ProcessBuilderWrapperComponent', 'selector': 'app-process-builder-wrapper'},{'name': 'ProductFormComponent', 'selector': 'app-products-form'},{'name': 'SceneVisualizationComponent', 'selector': 'app-scene-visualization'},{'name': 'SelectApiAuthorizationComponent', 'selector': 'app-select-api-authorization'},{'name': 'SelectGroupComponent', 'selector': 'app-select-group'},{'name': 'SelectPipelineComponent', 'selector': 'app-select-pipeline'},{'name': 'SelectProductComponent', 'selector': 'app-select-product'},{'name': 'SelectUnitComponent', 'selector': 'app-select-unit'},{'name': 'SolutionAnimationComponent', 'selector': 'app-solution-animation'},{'name': 'SolutionPreviewComponent', 'selector': 'app-solution-preview'},{'name': 'SolutionPreviewRenderingComponent', 'selector': 'app-solution-preview-rendering'},{'name': 'SolutionValidationComponent', 'selector': 'app-solution-validation'},{'name': 'SolutionVisualizationDialogComponent', 'selector': 'app-solution-visualization-dialog'},{'name': 'TaskCreationComponent', 'selector': 'app-task-creation'},{'name': 'UserInputComponent', 'selector': 'app-user-input'},{'name': 'UsernamePasswordCombinationComponent', 'selector': 'app-username-password-combination'},{'name': 'VisualizerComponent', 'selector': 'app-visualizer'},{'name': 'WidgetComponent', 'selector': 'app-widget'}];
     var DIRECTIVES = [{'name': 'AnimatedCounterDirective', 'selector': '[appAnimatedCounter]'}];
     var ACTUAL_COMPONENT = {'name': 'EmbeddedParamEditorComponent'};
 </script>

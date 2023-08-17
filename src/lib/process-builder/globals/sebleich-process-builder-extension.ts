@@ -41,7 +41,7 @@ export const sebleichProcessBuilderExtension = {
             "superClass": ["Element"],
             "properties": [
                 {
-                    "name": "outputParam",
+                    "name": "dataParamId",
                     "isAttr": true,
                     "type": "Integer"
                 }, {

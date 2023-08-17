@@ -20,6 +20,13 @@
                 [disabled]="(tab.disabled$|async) ?? false"></mat-tab>
         </mat-tab-group>
 
+        <ul *ngIf="formGroup.errors" class="custom-validation-error-list">
+            <li *ngIf="formGroup.errors.noFunctionSelected">no function selected</li>
+            <li *ngIf="formGroup.errors.implementationExistsWhenRequiredValidator">please provide an implementation</li>
+            <li *ngIf="formGroup.errors.outputParamNameRequired">output param name required</li>
+            <li *ngIf="formGroup.errors.duplicateParamExisting">output param name already used</li>
+        </ul>
+
         <div class="content-wrapper" [formGroup]="formGroup">
             <div #dynamicInner></div>
         </div>
@@ -28,13 +35,7 @@
 
     <div class="footer">
 
-        <div class="spacer">
-
-            <div class="status-message">
-                {{ statusMessage$|async }}
-            </div>
-
-        </div>
+        <div class="spacer"></div>
 
         <div class="control secondary"
             *ngIf="(currentStep$|async)?.taskCreationStep === TaskCreationStep.ConfigureFunctionImplementation">

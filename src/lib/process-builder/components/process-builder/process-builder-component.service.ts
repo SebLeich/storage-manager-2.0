@@ -30,15 +30,10 @@ export class ProcessBuilderComponentService {
           functionIdentifier: functionIdentifier
         } as ITaskCreationFormGroupValue;
 
-        return combineLatest([
-          of(taskCreationPayload),
-          this._dialogService.configTaskCreation({
-            taskCreationFormGroupValue: taskCreationFormGroupValue,
-            taskCreationPayload: taskCreationPayload
-          })
-        ]).pipe(
-          map(([taskCreationPayload, taskCreationFormGroupValue]: [ITaskCreationPayload, ITaskCreationFormGroupValue]) => ({ taskCreationPayload, taskCreationFormGroupValue }))
-        );
+        return this._dialogService.configTaskCreation({
+          taskCreationFormGroupValue: taskCreationFormGroupValue,
+          taskCreationPayload: taskCreationPayload
+        });
       })
     );
 
@@ -89,7 +84,10 @@ export class ProcessBuilderComponentService {
     this._bpmnJsService.removeOutgoingDataObjectReferences(element);
     this._bpmnJsService.removeOutgoingGateways(element);
     this._bpmnJsService.modelingModule.removeElements([element]);
-    if (func?.customImplementation) this._store.dispatch(removeIFunction(func));
+    if (func?.customImplementation){
+      this._store.dispatch(removeIFunction(func));
+    }
+    
     this._bpmnJsService.saveCurrentBpmnModel();
   }
 }

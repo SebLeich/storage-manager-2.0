@@ -75,6 +75,8 @@
     </p>
     <p class="comment">
                     <code><a href="../interfaces/IEmbeddedView.html" target="_self" >IEmbeddedView</a></code>
+                    <code><a href="https://angular.io/api/core/OnDestroy" target="_blank" >OnDestroy</a></code>
+                    <code><a href="https://angular.io/api/core/AfterViewInit" target="_blank" >AfterViewInit</a></code>
     </p>
 
 
@@ -83,6 +85,10 @@
     <table class="table table-sm table-hover metadata">
         <tbody>
 
+            <tr>
+                <td class="col-md-3">changeDetection</td>
+                <td class="col-md-9"><code>ChangeDetectionStrategy.OnPush</code></td>
+            </tr>
 
 
 
@@ -147,7 +153,7 @@
                             </li>
                             <li>
                                     <span class="modifier">Private</span>
-                                <a href="#activeFunctionWrappers" >activeFunctionWrappers</a>
+                                <a href="#_subscriptions" >_subscriptions</a>
                             </li>
                             <li>
                                     <span class="modifier">Public</span>
@@ -195,11 +201,24 @@
                             </li>
                             <li>
                                     <span class="modifier">Public</span>
+                                <a href="#ngAfterViewInit" >ngAfterViewInit</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Public</span>
+                                <a href="#ngOnDestroy" >ngOnDestroy</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Public</span>
                                 <a href="#removeFunction" >removeFunction</a>
                             </li>
                             <li>
                                     <span class="modifier">Public</span>
+                                    <span class="modifier">Async</span>
                                 <a href="#selectFunction" >selectFunction</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Public</span>
+                                <a href="#setOutputParamName" >setOutputParamName</a>
                             </li>
                             <li>
                                     <span class="modifier">Public</span>
@@ -251,12 +270,12 @@
             <tbody>
                 <tr>
                     <td class="col-md-4">
-<code>constructor(_store: Store<fromIFunctionState.State>, _controlContainer: <a href="https://angular.io/api/forms/ControlContainer" target="_blank">ControlContainer</a>)</code>
+<code>constructor(_store: Store, _controlContainer: <a href="https://angular.io/api/forms/ControlContainer" target="_blank">ControlContainer</a>, elementRef: <a href="https://angular.io/api/core/ElementRef" target="_blank">ElementRef</a>, _changeDetectorRef: <a href="https://angular.io/api/core/ChangeDetectorRef" target="_blank">ChangeDetectorRef</a>)</code>
                     </td>
                 </tr>
                         <tr>
                             <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="80" class="link-to-prism">src/lib/process-builder/components/embedded/embedded-function-selection/embedded-function-selection.component.ts:80</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="82" class="link-to-prism">src/lib/process-builder/components/embedded/embedded-function-selection/embedded-function-selection.component.ts:82</a></div>
                             </td>
                         </tr>
 
@@ -277,7 +296,7 @@
                                                         <td>_store</td>
                                                   
                                                         <td>
-                                                                    <code>Store&lt;fromIFunctionState.State&gt;</code>
+                                                                    <code>Store</code>
                                                         </td>
                                                   
                                                     <td>
@@ -290,6 +309,30 @@
                                                   
                                                         <td>
                                                                         <code><a href="https://angular.io/api/forms/ControlContainer" target="_blank" >ControlContainer</a></code>
+                                                        </td>
+                                                  
+                                                    <td>
+                                                            No
+                                                    </td>
+                                                    
+                                                </tr>
+                                                <tr>
+                                                        <td>elementRef</td>
+                                                  
+                                                        <td>
+                                                                        <code><a href="https://angular.io/api/core/ElementRef" target="_blank" >ElementRef</a></code>
+                                                        </td>
+                                                  
+                                                    <td>
+                                                            No
+                                                    </td>
+                                                    
+                                                </tr>
+                                                <tr>
+                                                        <td>_changeDetectorRef</td>
+                                                  
+                                                        <td>
+                                                                        <code><a href="https://angular.io/api/core/ChangeDetectorRef" target="_blank" >ChangeDetectorRef</a></code>
                                                         </td>
                                                   
                                                     <td>
@@ -324,7 +367,7 @@
                 </tr>
                         <tr>
                             <td class="col-md-2" colspan="2">
-                                    <div class="io-line">Defined in <a href="" data-line="25" class="link-to-prism">src/lib/process-builder/components/embedded/embedded-function-selection/embedded-function-selection.component.ts:25</a></div>
+                                    <div class="io-line">Defined in <a href="" data-line="27" class="link-to-prism">src/lib/process-builder/components/embedded/embedded-function-selection/embedded-function-selection.component.ts:27</a></div>
                             </td>
                         </tr>
             </tbody>
@@ -360,8 +403,86 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="106"
-                            class="link-to-prism">src/lib/process-builder/components/embedded/embedded-function-selection/embedded-function-selection.component.ts:106</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="135"
+                            class="link-to-prism">src/lib/process-builder/components/embedded/embedded-function-selection/embedded-function-selection.component.ts:135</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="ngAfterViewInit"></a>
+                    <span class="name">
+                        <span class="modifier">Public</span>
+                        <span ><b>ngAfterViewInit</b></span>
+                        <a href="#ngAfterViewInit"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>ngAfterViewInit()</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="90"
+                            class="link-to-prism">src/lib/process-builder/components/embedded/embedded-function-selection/embedded-function-selection.component.ts:90</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="ngOnDestroy"></a>
+                    <span class="name">
+                        <span class="modifier">Public</span>
+                        <span ><b>ngOnDestroy</b></span>
+                        <a href="#ngOnDestroy"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>ngOnDestroy()</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="86"
+                            class="link-to-prism">src/lib/process-builder/components/embedded/embedded-function-selection/embedded-function-selection.component.ts:86</a></div>
                 </td>
             </tr>
 
@@ -392,15 +513,15 @@
             <tr>
                 <td class="col-md-4">
                     <span class="modifier-icon icon ion-ios-reset"></span>
-                    <code>removeFunction(func: <a href="../interfaces/IFunction.html" target="_self">IFunction</a>, evt?: <a href="https://angular.io/api/router/Event" target="_blank">Event</a>)</code>
+                    <code>removeFunction(removedFunction: <a href="../interfaces/IFunction.html" target="_self">IFunction</a>, evt?: <a href="https://angular.io/api/router/Event" target="_blank">Event</a>)</code>
                 </td>
             </tr>
 
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="84"
-                            class="link-to-prism">src/lib/process-builder/components/embedded/embedded-function-selection/embedded-function-selection.component.ts:84</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="94"
+                            class="link-to-prism">src/lib/process-builder/components/embedded/embedded-function-selection/embedded-function-selection.component.ts:94</a></div>
                 </td>
             </tr>
 
@@ -421,7 +542,7 @@
                             </thead>
                             <tbody>
                                 <tr>
-                                    <td>func</td>
+                                    <td>removedFunction</td>
                                     <td>
                                                 <code><a href="../interfaces/IFunction.html" target="_self" >IFunction</a></code>
                                     </td>
@@ -467,6 +588,7 @@
                     <a name="selectFunction"></a>
                     <span class="name">
                         <span class="modifier">Public</span>
+                        <span class="modifier">Async</span>
                         <span ><b>selectFunction</b></span>
                         <a href="#selectFunction"><span class="icon ion-ios-link"></span></a>
                     </span>
@@ -475,15 +597,15 @@
             <tr>
                 <td class="col-md-4">
                     <span class="modifier-icon icon ion-ios-reset"></span>
-                    <code>selectFunction(func: <a href="../interfaces/IFunction.html" target="_self">IFunction</a>)</code>
+                    <code>selectFunction(selectedFunction: <a href="../interfaces/IFunction.html" target="_self">IFunction</a>)</code>
                 </td>
             </tr>
 
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="93"
-                            class="link-to-prism">src/lib/process-builder/components/embedded/embedded-function-selection/embedded-function-selection.component.ts:93</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="103"
+                            class="link-to-prism">src/lib/process-builder/components/embedded/embedded-function-selection/embedded-function-selection.component.ts:103</a></div>
                 </td>
             </tr>
 
@@ -504,9 +626,80 @@
                             </thead>
                             <tbody>
                                 <tr>
-                                    <td>func</td>
+                                    <td>selectedFunction</td>
                                     <td>
                                                 <code><a href="../interfaces/IFunction.html" target="_self" >IFunction</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="setOutputParamName"></a>
+                    <span class="name">
+                        <span class="modifier">Public</span>
+                        <span ><b>setOutputParamName</b></span>
+                        <a href="#setOutputParamName"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>setOutputParamName(event: <a href="https://angular.io/api/router/Event" target="_blank">Event</a>)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="125"
+                            class="link-to-prism">src/lib/process-builder/components/embedded/embedded-function-selection/embedded-function-selection.component.ts:125</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>event</td>
+                                    <td>
+                                                <code><a href="https://angular.io/api/router/Event" target="_blank" >Event</a></code>
                                     </td>
 
                                     <td>
@@ -553,8 +746,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="101"
-                            class="link-to-prism">src/lib/process-builder/components/embedded/embedded-function-selection/embedded-function-selection.component.ts:101</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="120"
+                            class="link-to-prism">src/lib/process-builder/components/embedded/embedded-function-selection/embedded-function-selection.component.ts:120</a></div>
                 </td>
             </tr>
 
@@ -649,9 +842,9 @@
                 <tr>
                     <td class="col-md-4">
                         <i>Default value : </i><code>this.filterControl.valueChanges.pipe(startWith(&#x27;&#x27;), map(filter &#x3D;&gt; {
-    const transformed &#x3D; (filter ?? &#x27;&#x27;).trim().toLowerCase().split(&#x27; &#x27;).filter(segment &#x3D;&gt; segment);
-    return transformed;
-  }))</code>
+		const transformed &#x3D; (filter ?? &#x27;&#x27;).trim().toLowerCase().split(&#x27; &#x27;).filter(segment &#x3D;&gt; segment);
+		return transformed;
+	}))</code>
                     </td>
                 </tr>
                     <tr>
@@ -703,32 +896,22 @@
         <tbody>
             <tr>
                 <td class="col-md-4">
-                    <a name="activeFunctionWrappers"></a>
+                    <a name="_subscriptions"></a>
                     <span class="name">
                             <span class="modifier">Private</span>
-                        <span ><b>activeFunctionWrappers</b></span>
-                        <a href="#activeFunctionWrappers"><span class="icon ion-ios-link"></span></a>
+                        <span ><b>_subscriptions</b></span>
+                        <a href="#_subscriptions"><span class="icon ion-ios-link"></span></a>
                     </span>
                 </td>
             </tr>
                 <tr>
                     <td class="col-md-4">
-                        <i>Type : </i>    <code>QueryList&lt;ViewContainerRef&gt;</code>
-
-                    </td>
-                </tr>
-                <tr>
-                    <td class="col-md-4">
-                        <b>Decorators : </b>
-                        <br />
-                        <code>
-                            @ViewChildren(FunctionPreviewComponent, {read: ViewContainerRef})<br />
-                        </code>
+                        <i>Default value : </i><code>new Subscription()</code>
                     </td>
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="27" class="link-to-prism">src/lib/process-builder/components/embedded/embedded-function-selection/embedded-function-selection.component.ts:27</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="82" class="link-to-prism">src/lib/process-builder/components/embedded/embedded-function-selection/embedded-function-selection.component.ts:82</a></div>
                         </td>
                     </tr>
 
@@ -749,7 +932,7 @@
             </tr>
                 <tr>
                     <td class="col-md-4">
-                        <i>Default value : </i><code>this.functions$.pipe(map(funcs &#x3D;&gt; funcs.filter(func &#x3D;&gt; func.customImplementation)))</code>
+                        <i>Default value : </i><code>this.functions$.pipe(map(funcs &#x3D;&gt; funcs.filter(func &#x3D;&gt; func._isImplementation &amp;&amp; func.customImplementation)))</code>
                     </td>
                 </tr>
                     <tr>
@@ -802,29 +985,29 @@
                 <tr>
                     <td class="col-md-4">
                         <i>Default value : </i><code>combineLatest([this._allFunctions$, this._filter$]).pipe(map(([functions, filter]) &#x3D;&gt; {
-    return functions.filter(func &#x3D;&gt; {
-      if (!func) {
-        return false;
-      }
+		return functions.filter(func &#x3D;&gt; {
+			if (!func) {
+				return false;
+			}
 
-      if (filter.length &gt; 0) {
-        const functionNameSegments &#x3D; func.name.trim().toLowerCase().split(&#x27; &#x27;)
-        const isNotMatchingFilter &#x3D; filter.some(segment &#x3D;&gt; functionNameSegments.every(functionSegment &#x3D;&gt; functionSegment.indexOf(segment) &#x3D;&#x3D;&#x3D; -1));
-        if (isNotMatchingFilter) {
-          return false;
-        }
-      }
+			if (filter.length &gt; 0) {
+				const functionNameSegments &#x3D; func.name.trim().toLowerCase().split(&#x27; &#x27;)
+				const isNotMatchingFilter &#x3D; filter.some(segment &#x3D;&gt; functionNameSegments.every(functionSegment &#x3D;&gt; functionSegment.indexOf(segment) &#x3D;&#x3D;&#x3D; -1));
+				if (isNotMatchingFilter) {
+					return false;
+				}
+			}
 
-      const inputTemplates &#x3D; Array.isArray(func.inputTemplates) ? func.inputTemplates.filter(input &#x3D;&gt; input !&#x3D;&#x3D; &#x27;dynamic&#x27;) : [];
-      const requiredInputTemplates &#x3D; inputTemplates.filter(param &#x3D;&gt; param &amp;&amp; typeof param &#x3D;&#x3D;&#x3D; &#x27;object&#x27; &amp;&amp; !param.optional).map((x) &#x3D;&gt; (x as IInputParam).interface) as string[];
-      if (requiredInputTemplates.length &#x3D;&#x3D;&#x3D; 0) {
-        return true;
-      }
+			const inputTemplates &#x3D; Array.isArray(func.inputTemplates) ? func.inputTemplates.filter(input &#x3D;&gt; input !&#x3D;&#x3D; &#x27;dynamic&#x27;) : [];
+			const requiredInputTemplates &#x3D; inputTemplates.filter(param &#x3D;&gt; param &amp;&amp; typeof param &#x3D;&#x3D;&#x3D; &#x27;object&#x27; &amp;&amp; !param.optional).map((x) &#x3D;&gt; (x as IInputParam).interface) as string[];
+			if (requiredInputTemplates.length &#x3D;&#x3D;&#x3D; 0) {
+				return true;
+			}
 
-      const availableInputParams: ParamCodes[] &#x3D; Array.isArray(this.inputParams) ? this.inputParams : this.inputParams ? [this.inputParams] : [];
-      return true;
-    });
-  }))</code>
+			const availableInputParams: ParamCodes[] &#x3D; Array.isArray(this.inputParams) ? this.inputParams : this.inputParams ? [this.inputParams] : [];
+			return true;
+		});
+	}))</code>
                     </td>
                 </tr>
                     <tr>
@@ -850,7 +1033,7 @@
             </tr>
                 <tr>
                     <td class="col-md-4">
-                        <i>Default value : </i><code>this.functions$.pipe(map(funcs &#x3D;&gt; funcs.filter(func &#x3D;&gt; func.requireCustomImplementation)))</code>
+                        <i>Default value : </i><code>this.functions$.pipe(map(funcs &#x3D;&gt; funcs.filter(func &#x3D;&gt; !func._isImplementation)))</code>
                     </td>
                 </tr>
                     <tr>
@@ -929,14 +1112,14 @@
                 <tr>
                     <td class="col-md-4">
                         <i>Default value : </i><code>defer(() &#x3D;&gt; {
-    const control &#x3D; this.formGroup.controls.functionIdentifier as FormControl;
-    return control
-      .valueChanges
-      .pipe(
-        startWith(control.value),
-        switchMap((functionIdentifier) &#x3D;&gt; this._store.select(selectIFunction(functionIdentifier as number)))
-      );
-  })</code>
+		const control &#x3D; this.formGroup.controls.functionIdentifier as FormControl;
+		return control
+			.valueChanges
+			.pipe(
+				startWith(control.value),
+				switchMap((functionIdentifier) &#x3D;&gt; this._store.select(selectIFunction(functionIdentifier as number)))
+			);
+	})</code>
                     </td>
                 </tr>
                     <tr>
@@ -981,124 +1164,153 @@
 
 
     <div class="tab-pane fade  tab-source-code" id="c-source">
-        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { Component, ElementRef, Input, QueryList, ViewChild, ViewChildren, ViewContainerRef } from &#x27;@angular/core&#x27;;
+        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, Input, OnDestroy, ViewChild } from &#x27;@angular/core&#x27;;
 import { ParamCodes } from &#x27;src/config/param-codes&#x27;;
 import { IEmbeddedView } from &#x27;src/lib/process-builder/classes/embedded-view&#x27;;
 import { IInputParam, IFunction } from &#x27;@process-builder/interfaces&#x27;;
 import { Store } from &#x27;@ngrx/store&#x27;;
 import { selectIFunction, selectIFunctions } from &#x27;src/lib/process-builder/store/selectors/function.selector&#x27;;
-import { FunctionPreviewComponent } from &#x27;../../previews/function-preview/function-preview.component&#x27;;
 import { ControlContainer, FormControl } from &#x27;@angular/forms&#x27;;
-import { defer, map, startWith, switchMap } from &#x27;rxjs&#x27;;
-import * as fromIFunctionState from &#x27;src/lib/process-builder/store/reducers/function.reducer&#x27;;
+import { Subscription, defer, map, startWith, switchMap, timer } from &#x27;rxjs&#x27;;
 import { removeIFunction } from &#x27;src/lib/process-builder/store/actions/function.actions&#x27;;
 import { combineLatest } from &#x27;rxjs/internal/observable/combineLatest&#x27;;
-import { TaskCreationFormGroup } from &#x27;src/lib/process-builder/interfaces/task-creation-form-group-value.interface&#x27;;
+import { ITaskCreationFormGroupValue, TaskCreationFormGroup } from &#x27;src/lib/process-builder/interfaces/task-creation-form-group-value.interface&#x27;;
 import { showAnimation } from &#x27;src/lib/shared/animations/show&#x27;;
-import { showListAnimation } from &#x27;src/lib/shared/animations/show-list&#x27;;
+import { showListAnimation } from &#x27;src/lib/shared/animations/show-list-slow&#x27;;
+import { ProcessBuilderRepository } from &#x27;@/lib/core/process-builder-repository&#x27;;
+import { selectIInterface } from &#x27;@/lib/process-builder/store/selectors&#x27;;
+import { selectSnapshot } from &#x27;@/lib/process-builder/globals/select-snapshot&#x27;;
 
 @Component({
-  selector: &#x27;app-embedded-function-selection&#x27;,
-  templateUrl: &#x27;./embedded-function-selection.component.html&#x27;,
-  styleUrls: [&#x27;./embedded-function-selection.component.scss&#x27;],
-  animations: [showAnimation, showListAnimation]
+	selector: &#x27;app-embedded-function-selection&#x27;,
+	templateUrl: &#x27;./embedded-function-selection.component.html&#x27;,
+	styleUrls: [&#x27;./embedded-function-selection.component.scss&#x27;],
+	changeDetection: ChangeDetectionStrategy.OnPush,
+	animations: [showAnimation, showListAnimation],
 })
-export class EmbeddedFunctionSelectionComponent implements IEmbeddedView {
+export class EmbeddedFunctionSelectionComponent implements IEmbeddedView, OnDestroy, AfterViewInit {
 
-  @Input() public inputParams!: ParamCodes | ParamCodes[] | null;
+	@Input() public inputParams!: ParamCodes | ParamCodes[] | null;
+	@ViewChild(&#x27;searchInput&#x27;, { static: true, read: ElementRef }) private _searchInput!: ElementRef&lt;HTMLInputElement&gt;;
 
-  @ViewChildren(FunctionPreviewComponent, { read: ViewContainerRef }) private activeFunctionWrappers!: QueryList&lt;ViewContainerRef&gt;;
-  @ViewChild(&#x27;searchInput&#x27;, { static: true, read: ElementRef }) private _searchInput!: ElementRef&lt;HTMLInputElement&gt;;
+	public filterControl &#x3D; new FormControl&lt;string&gt;(&#x27;&#x27;);
+	private _filter$ &#x3D; this.filterControl.valueChanges.pipe(startWith(&#x27;&#x27;), map(filter &#x3D;&gt; {
+		const transformed &#x3D; (filter ?? &#x27;&#x27;).trim().toLowerCase().split(&#x27; &#x27;).filter(segment &#x3D;&gt; segment);
+		return transformed;
+	}));
 
-  public filterControl &#x3D; new FormControl&lt;string&gt;(&#x27;&#x27;);
-  private _filter$ &#x3D; this.filterControl.valueChanges.pipe(startWith(&#x27;&#x27;), map(filter &#x3D;&gt; {
-    const transformed &#x3D; (filter ?? &#x27;&#x27;).trim().toLowerCase().split(&#x27; &#x27;).filter(segment &#x3D;&gt; segment);
-    return transformed;
-  }));
+	public get formGroup(): TaskCreationFormGroup {
+		return this._controlContainer.control as TaskCreationFormGroup;
+	}
 
-  public get formGroup(): TaskCreationFormGroup {
-    return this._controlContainer.control as TaskCreationFormGroup;
-  }
+	public searchinputExpanded &#x3D; false;
 
-  public searchinputExpanded &#x3D; false;
+	private _allFunctions$ &#x3D; this._store.select(selectIFunctions());
+	public functions$ &#x3D; combineLatest([this._allFunctions$, this._filter$]).pipe(map(([functions, filter]) &#x3D;&gt; {
+		return functions.filter(func &#x3D;&gt; {
+			if (!func) {
+				return false;
+			}
 
-  private _allFunctions$ &#x3D; this._store.select(selectIFunctions());
-  public functions$ &#x3D; combineLatest([this._allFunctions$, this._filter$]).pipe(map(([functions, filter]) &#x3D;&gt; {
-    return functions.filter(func &#x3D;&gt; {
-      if (!func) {
-        return false;
-      }
+			if (filter.length &gt; 0) {
+				const functionNameSegments &#x3D; func.name.trim().toLowerCase().split(&#x27; &#x27;)
+				const isNotMatchingFilter &#x3D; filter.some(segment &#x3D;&gt; functionNameSegments.every(functionSegment &#x3D;&gt; functionSegment.indexOf(segment) &#x3D;&#x3D;&#x3D; -1));
+				if (isNotMatchingFilter) {
+					return false;
+				}
+			}
 
-      if (filter.length &gt; 0) {
-        const functionNameSegments &#x3D; func.name.trim().toLowerCase().split(&#x27; &#x27;)
-        const isNotMatchingFilter &#x3D; filter.some(segment &#x3D;&gt; functionNameSegments.every(functionSegment &#x3D;&gt; functionSegment.indexOf(segment) &#x3D;&#x3D;&#x3D; -1));
-        if (isNotMatchingFilter) {
-          return false;
-        }
-      }
+			const inputTemplates &#x3D; Array.isArray(func.inputTemplates) ? func.inputTemplates.filter(input &#x3D;&gt; input !&#x3D;&#x3D; &#x27;dynamic&#x27;) : [];
+			const requiredInputTemplates &#x3D; inputTemplates.filter(param &#x3D;&gt; param &amp;&amp; typeof param &#x3D;&#x3D;&#x3D; &#x27;object&#x27; &amp;&amp; !param.optional).map((x) &#x3D;&gt; (x as IInputParam).interface) as string[];
+			if (requiredInputTemplates.length &#x3D;&#x3D;&#x3D; 0) {
+				return true;
+			}
 
-      const inputTemplates &#x3D; Array.isArray(func.inputTemplates) ? func.inputTemplates.filter(input &#x3D;&gt; input !&#x3D;&#x3D; &#x27;dynamic&#x27;) : [];
-      const requiredInputTemplates &#x3D; inputTemplates.filter(param &#x3D;&gt; param &amp;&amp; typeof param &#x3D;&#x3D;&#x3D; &#x27;object&#x27; &amp;&amp; !param.optional).map((x) &#x3D;&gt; (x as IInputParam).interface) as string[];
-      if (requiredInputTemplates.length &#x3D;&#x3D;&#x3D; 0) {
-        return true;
-      }
+			const availableInputParams: ParamCodes[] &#x3D; Array.isArray(this.inputParams) ? this.inputParams : this.inputParams ? [this.inputParams] : [];
+			return true;
+		});
+	}));
 
-      const availableInputParams: ParamCodes[] &#x3D; Array.isArray(this.inputParams) ? this.inputParams : this.inputParams ? [this.inputParams] : [];
-      return true;
-    });
-  }));
+	public functionTemplates$ &#x3D; this.functions$.pipe(map(funcs &#x3D;&gt; funcs.filter(func &#x3D;&gt; !func._isImplementation)));
+	public customFunctions$ &#x3D; this.functions$.pipe(map(funcs &#x3D;&gt; funcs.filter(func &#x3D;&gt; func._isImplementation &amp;&amp; func.customImplementation)));
 
-  public functionTemplates$ &#x3D; this.functions$.pipe(map(funcs &#x3D;&gt; funcs.filter(func &#x3D;&gt; func.requireCustomImplementation)));
-  public customFunctions$ &#x3D; this.functions$.pipe(map(funcs &#x3D;&gt; funcs.filter(func &#x3D;&gt; func.customImplementation)));
+	public selectedFunction$ &#x3D; defer(() &#x3D;&gt; {
+		const control &#x3D; this.formGroup.controls.functionIdentifier as FormControl;
+		return control
+			.valueChanges
+			.pipe(
+				startWith(control.value),
+				switchMap((functionIdentifier) &#x3D;&gt; this._store.select(selectIFunction(functionIdentifier as number)))
+			);
+	});
+	public requiresCustomOutputParamName$ &#x3D; this.selectedFunction$.pipe(map(selectedFunction &#x3D;&gt; !selectedFunction?.requireCustomImplementation &amp;&amp; !selectedFunction?.customImplementation &amp;&amp; typeof selectedFunction?.outputTemplate &#x3D;&#x3D;&#x3D; &#x27;string&#x27;));
 
-  public selectedFunction$ &#x3D; defer(() &#x3D;&gt; {
-    const control &#x3D; this.formGroup.controls.functionIdentifier as FormControl;
-    return control
-      .valueChanges
-      .pipe(
-        startWith(control.value),
-        switchMap((functionIdentifier) &#x3D;&gt; this._store.select(selectIFunction(functionIdentifier as number)))
-      );
-  });
-  public requiresCustomOutputParamName$ &#x3D; this.selectedFunction$.pipe(map(selectedFunction &#x3D;&gt; !selectedFunction?.requireCustomImplementation &amp;&amp; !selectedFunction?.customImplementation &amp;&amp; typeof selectedFunction?.outputTemplate &#x3D;&#x3D;&#x3D; &#x27;string&#x27;));
+	private _subscriptions &#x3D; new Subscription();
 
-  constructor(private _store: Store&lt;fromIFunctionState.State&gt;, private _controlContainer: ControlContainer) { }
+	constructor(private _store: Store, private _controlContainer: ControlContainer, private elementRef: ElementRef, private _changeDetectorRef: ChangeDetectorRef) { }
 
-  public removeFunction(func: IFunction, evt?: Event) {
-    if (evt) {
-      evt.stopPropagation();
-      evt.preventDefault();
-    }
+	public ngOnDestroy(): void {
+		this._subscriptions.unsubscribe();
+	}
 
-    this._store.dispatch(removeIFunction(func));
-  }
+	public ngAfterViewInit(): void {
+		this._subscriptions.add(timer(200).subscribe(() &#x3D;&gt; this._scrollToActiveFunction()));
+	}
 
-  public selectFunction(func: IFunction) {
-    const functionIdentifier &#x3D; this.formGroup.controls.functionIdentifier?.value &#x3D;&#x3D;&#x3D; func.identifier ? null : func.identifier;
-    this.formGroup.controls.functionIdentifier?.setValue(functionIdentifier);
-    this.formGroup.patchValue({
-      functionIdentifier: functionIdentifier
-    });
-  }
+	public removeFunction(removedFunction: IFunction, evt?: Event) {
+		if (evt) {
+			evt.stopPropagation();
+			evt.preventDefault();
+		}
 
-  public toggleSearchInput(expand?: boolean) {
-    this.searchinputExpanded &#x3D; typeof expand &#x3D;&#x3D;&#x3D; &#x27;boolean&#x27; ? expand : !this.searchinputExpanded;
-    this._searchInput.nativeElement[this.searchinputExpanded ? &#x27;focus&#x27; : &#x27;blur&#x27;]();
-  }
+		this._store.dispatch(removeIFunction(removedFunction));
+	}
 
-  private _scrollToActiveFunction() {
-    const ref &#x3D; this.activeFunctionWrappers.find(x &#x3D;&gt; (x.element.nativeElement as HTMLDivElement).hasAttribute(&#x27;active&#x27;));
-    if (ref) {
-      ref.element.nativeElement.scrollIntoView({ behavior: &#x27;smooth&#x27; });
-    }
-  }
+	public async selectFunction(selectedFunction: IFunction) {
+		const functionIdentifier &#x3D; this.formGroup.controls.functionIdentifier?.value &#x3D;&#x3D;&#x3D; selectedFunction.identifier ? null : selectedFunction.identifier;
+		const patchValue: Partial&lt;ITaskCreationFormGroupValue&gt; &#x3D; {
+			functionIdentifier: functionIdentifier,
+			outputParamInterface: selectedFunction.outputTemplate ?? null,
+		};
+
+		if (!selectedFunction._isImplementation &amp;&amp; selectedFunction.outputTemplate &amp;&amp; this.formGroup.controls.outputParamName?.pristine) {
+			const template &#x3D; await selectSnapshot(this._store.select(selectIInterface(selectedFunction.outputTemplate)));
+			patchValue.outputParamName &#x3D; template?.name ?? &#x27;&#x27;;
+			patchValue.outputParamNormalizedName &#x3D; template?.normalizedName ?? &#x27;&#x27;;
+		}
+
+		this.formGroup.patchValue(patchValue);
+		this._changeDetectorRef.detectChanges();
+	}
+
+	public toggleSearchInput(expand?: boolean) {
+		this.searchinputExpanded &#x3D; typeof expand &#x3D;&#x3D;&#x3D; &#x27;boolean&#x27; ? expand : !this.searchinputExpanded;
+		this._searchInput.nativeElement[this.searchinputExpanded ? &#x27;focus&#x27; : &#x27;blur&#x27;]();
+	}
+
+	public setOutputParamName(event: Event) {
+		const outputParamName &#x3D; (event.target as HTMLInputElement).value;
+		const normalizedName &#x3D; ProcessBuilderRepository.normalizeName(outputParamName);
+
+		this.formGroup.patchValue({
+			outputParamName: outputParamName,
+			outputParamNormalizedName: normalizedName,
+		});
+	}
+
+	private _scrollToActiveFunction() {
+		const ref &#x3D; (this.elementRef.nativeElement as HTMLElement).querySelector(&#x27;.function-wrapper.active&#x27;);
+		if (ref) {
+			ref.scrollIntoView({ behavior: &#x27;smooth&#x27; });
+		}
+	}
 
 }
 </code></pre>
     </div>
 
     <div class="tab-pane fade " id="c-templateData">
-        <pre class="line-numbers"><code class="language-html">&lt;div class&#x3D;&quot;body&quot;&gt;
+        <pre class="line-numbers"><code class="language-html">&lt;div class&#x3D;&quot;body&quot; @show&gt;
 
     &lt;div class&#x3D;&quot;search-wrapper&quot; [class.expanded]&#x3D;&quot;searchinputExpanded&quot;&gt;
         &lt;input #searchInput [formControl]&#x3D;&quot;filterControl&quot; class&#x3D;&quot;search-input&quot; type&#x3D;&quot;text&quot;
@@ -1108,57 +1320,25 @@ export class EmbeddedFunctionSelectionComponent implements IEmbeddedView {
 
     &lt;div class&#x3D;&quot;content&quot;&gt;
 
-        &lt;div class&#x3D;&quot;section-headline&quot;&gt;Your implementations&lt;/div&gt;
-        &lt;div class&#x3D;&quot;grid&quot; *ngIf&#x3D;&quot;(customFunctions$|async)?.length; else noFunctions&quot;&gt;
-
-            &lt;div class&#x3D;&quot;function-wrapper&quot; [@showList]&#x3D;&quot;(customFunctions$|async)?.length&quot; *ngFor&#x3D;&quot;let func of (customFunctions$|async)&quot; (click)&#x3D;&quot;selectFunction(func)&quot; [ngClass]&#x3D;&quot;{ &#x27;active&#x27;: func.identifier &#x3D;&#x3D;&#x3D; formGroup.controls.functionIdentifier!.value }&quot;&gt;
-
-                &lt;div class&#x3D;&quot;preview&quot;&gt;
-                    &lt;app-function-preview [func]&#x3D;&quot;func&quot;&gt;&lt;/app-function-preview&gt;
-                &lt;/div&gt;
-
-                &lt;div class&#x3D;&quot;control-wrapper&quot;&gt;
-
-                    &lt;div class&#x3D;&quot;control accent-2&quot;&gt;
-                        {{ func.identifier &#x3D;&#x3D;&#x3D; formGroup.controls.functionIdentifier!.value? &#x27;unselect&#x27;: &#x27;select&#x27; }}
+        &lt;ng-container *ngIf&#x3D;&quot;(functionTemplates$|async)?.length&quot;&gt;
+            &lt;div class&#x3D;&quot;section-headline&quot;&gt;Templates&lt;/div&gt;
+            &lt;div class&#x3D;&quot;grid&quot;&gt;
+                &lt;div class&#x3D;&quot;function-wrapper&quot; [@showList]&#x3D;&quot;(functionTemplates$|async)?.length&quot; *ngFor&#x3D;&quot;let func of (functionTemplates$|async)&quot; (click)&#x3D;&quot;selectFunction(func)&quot; [ngClass]&#x3D;&quot;{ &#x27;active&#x27;: func.identifier &#x3D;&#x3D;&#x3D; formGroup.controls.functionIdentifier!.value }&quot;&gt;
+                    &lt;div class&#x3D;&quot;preview&quot;&gt;
+                        &lt;app-function-preview [func]&#x3D;&quot;func&quot;&gt;&lt;/app-function-preview&gt;
                     &lt;/div&gt;
-
-                    &lt;div *ngIf&#x3D;&quot;func.customImplementation&quot; class&#x3D;&quot;control danger&quot;
-                        (click)&#x3D;&quot;removeFunction(func, $event)&quot;&gt;
-                        remove
+                    &lt;div class&#x3D;&quot;control-wrapper&quot;&gt;
+                        &lt;div class&#x3D;&quot;control accent-2&quot;&gt;
+                            {{ func.identifier &#x3D;&#x3D;&#x3D; formGroup.controls.functionIdentifier!.value? &#x27;unselect&#x27;: &#x27;select&#x27; }}
+                        &lt;/div&gt;
+                        &lt;div *ngIf&#x3D;&quot;func.customImplementation&quot; class&#x3D;&quot;control danger&quot;
+                            (click)&#x3D;&quot;removeFunction(func, $event)&quot;&gt;
+                            remove
+                        &lt;/div&gt;
                     &lt;/div&gt;
-
                 &lt;/div&gt;
-
             &lt;/div&gt;
-
-        &lt;/div&gt;
-
-        &lt;div class&#x3D;&quot;section-headline&quot;&gt;Templates&lt;/div&gt;
-        &lt;div class&#x3D;&quot;grid&quot; *ngIf&#x3D;&quot;(functionTemplates$|async)?.length; else noFunctions&quot;&gt;
-
-            &lt;div class&#x3D;&quot;function-wrapper&quot; [@showList]&#x3D;&quot;(functionTemplates$|async)?.length&quot; *ngFor&#x3D;&quot;let func of (functionTemplates$|async)&quot; (click)&#x3D;&quot;selectFunction(func)&quot; [ngClass]&#x3D;&quot;{ &#x27;active&#x27;: func.identifier &#x3D;&#x3D;&#x3D; formGroup.controls.functionIdentifier!.value }&quot;&gt;
-
-                &lt;div class&#x3D;&quot;preview&quot;&gt;
-                    &lt;app-function-preview [func]&#x3D;&quot;func&quot;&gt;&lt;/app-function-preview&gt;
-                &lt;/div&gt;
-
-                &lt;div class&#x3D;&quot;control-wrapper&quot;&gt;
-
-                    &lt;div class&#x3D;&quot;control accent-2&quot;&gt;
-                        {{ func.identifier &#x3D;&#x3D;&#x3D; formGroup.controls.functionIdentifier!.value? &#x27;unselect&#x27;: &#x27;select&#x27; }}
-                    &lt;/div&gt;
-
-                    &lt;div *ngIf&#x3D;&quot;func.customImplementation&quot; class&#x3D;&quot;control danger&quot;
-                        (click)&#x3D;&quot;removeFunction(func, $event)&quot;&gt;
-                        remove
-                    &lt;/div&gt;
-
-                &lt;/div&gt;
-
-            &lt;/div&gt;
-
-        &lt;/div&gt;
+        &lt;/ng-container&gt;
 
         &lt;div class&#x3D;&quot;section-headline&quot;&gt;All functions&lt;/div&gt;
         &lt;div class&#x3D;&quot;grid&quot; *ngIf&#x3D;&quot;(functions$|async)?.length; else noFunctions&quot;&gt;
@@ -1190,9 +1370,8 @@ export class EmbeddedFunctionSelectionComponent implements IEmbeddedView {
 
     &lt;div class&#x3D;&quot;output-name-wrapper&quot; *ngIf&#x3D;&quot;requiresCustomOutputParamName$|async&quot;&gt;
         &lt;div class&#x3D;&quot;label&quot;&gt;please enter a custom output parameter name&lt;/div&gt;
-        &lt;input [formControl]&#x3D;&quot;formGroup.controls.outputParamName!&quot; type&#x3D;&quot;text&quot; /&gt;
+        &lt;input [value]&#x3D;&quot;formGroup.controls.outputParamName?.value ?? &#x27;&#x27;&quot; (input)&#x3D;&quot;setOutputParamName($event)&quot; type&#x3D;&quot;text&quot; placeholder&#x3D;&quot;set output param name&quot; /&gt;
     &lt;/div&gt;
-
 &lt;/div&gt;
 
 &lt;ng-template #noFunctions&gt;
@@ -1210,133 +1389,134 @@ export class EmbeddedFunctionSelectionComponent implements IEmbeddedView {
                     <code>./embedded-function-selection.component.scss</code>
                 </p>
                 <pre class="line-numbers"><code class="language-scss">.body {
-  position: relative;
-  height: 100%;
-  overflow: hidden;
-  display: flex;
-  flex-direction: column;
-}
+	position: relative;
+	height: 100%;
+	overflow: hidden;
+	display: flex;
+	flex-direction: column;
 
-.content {
-  padding: 1rem;
-  overflow-y: scroll;
-  flex: 1;
-}
+	.search-wrapper {
+		background-color: white;
+		padding: 0.5rem;
+		position: absolute;
+		top: 2px;
+		right: 10px;
+		cursor: pointer;
+		display: flex;
+		z-index: 1;
+		border-radius: 10px;
+		opacity: 0.5;
 
-.section-headline {
-  margin: 1rem 0.5rem 0.5rem 0.5rem;
-  font-weight: 100;
-  font-size: 1.2rem;
+		.search-input {
+			width: 0px;
+			padding: 0px;
+			margin: 0px;
+			border: none;
+			margin-right: 2px;
+		}
+
+		&amp;.expanded {
+			opacity: 1;
+
+			.search-input {
+				width: 200px;
+				padding: 5px;
+				margin: 0px;
+				border: none;
+			}
+		}
+	}
+
+	.content {
+		padding: 1rem;
+		overflow-y: scroll;
+		flex: 1;
+
+		.section-headline {
+			margin: 1rem 0.5rem 0.5rem 0.5rem;
+			font-weight: 100;
+			font-size: 1.2rem;
+		}
+	}
+
+	.output-name-wrapper {
+		background-color: rgba(255, 255, 255, 0.75);
+		text-align: center;
+		border-top: 1px solid #e9e9e9;
+		display: flex;
+		flex-direction: column;
+
+		.label {
+			box-sizing: border-box;
+			padding: 0.5rem 0.5rem 0.2rem 0.5rem;
+			font-weight: 100;
+			user-select: none;
+		}
+
+		input {
+			background-color: transparent;
+			outline: none;
+			border: none;
+			text-align: center;
+			color: black;
+			box-sizing: border-box;
+			font-size: 1.2rem;
+			line-height: 1.2rem;
+			display: block;
+			padding: 0.5rem;
+			background-color: #eff8ff;
+			margin: 0px 0.5rem 0.5rem;
+			border-radius: 3px;
+		}
+	}
 }
 
 .grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(380px, 1fr));
-  gap: 0.6rem;
-}
-
-.search-wrapper {
-  background-color: white;
-  padding: 0.5rem;
-  position: absolute;
-  top: 2px;
-  right: 10px;
-  cursor: pointer;
-  display: flex;
-  z-index: 1;
-  border-radius: 10px;
-  opacity: 0.5;
-
-  .search-input {
-    width: 0px;
-    padding: 0px;
-    margin: 0px;
-    border: none;
-    margin-right: 2px;
-  }
-}
-
-.search-wrapper.expanded {
-  opacity: 1;
-
-  .search-input {
-    width: 200px;
-    padding: 5px;
-    margin: 0px;
-    border: none;
-  }
+	display: grid;
+	grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+	gap: 0.6rem;
 }
 
 .search-input {
-  flex: 1;
-  width: auto;
-  transition: width 0.5s;
+	flex: 1;
+	width: auto;
+	transition: width 0.5s;
 }
 
 .function-wrapper {
-  padding: 1rem;
-  border-radius: 3px;
-  background-color: white;
-  box-shadow: 0 0 4px #8484844d;
-  display: flex;
-  flex-direction: column;
-  transition: 0.1s ease-in;
-  min-height: 10rem;
-  border: 3px solid white;
+	padding: 1rem;
+	border-radius: 3px;
+	background-color: white;
+	box-shadow: 0 0 4px #8484844d;
+	display: flex;
+	flex-direction: column;
+	transition: 0.1s ease-in;
+	min-height: 10rem;
+	border: 3px solid white;
 }
 
 .function-wrapper.active {
-  transform: scale(1.01);
-  border-color: gold;
+	transform: scale(1.01);
+	border-color: gold;
 }
 
 .preview {
-  padding-bottom: 0.2rem;
-  margin-bottom: 0.5rem;
-  flex: 1;
+	padding-bottom: 0.2rem;
+	margin-bottom: 0.5rem;
+	flex: 1;
 }
 
 .no-function-found-hint {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-weight: 100;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	font-weight: 100;
 }
 
-.control-wrapper &gt; * {
-  display: inline-block;
-  margin-right: 0.5rem;
-}
-
-.output-name-wrapper {
-  background-color: rgba(255, 255, 255, 0.75);
-  text-align: center;
-  border-top: 1px solid #e9e9e9;
-  display: flex;
-  flex-direction: column;
-
-  .label {
-    box-sizing: border-box;
-    padding: 0.5rem 0.5rem 0.2rem 0.5rem;
-    font-weight: 100;
-    user-select: none;
-  }
-
-  input {
-    background-color: transparent;
-    outline: none;
-    border: none;
-    text-align: center;
-    color: black;
-    width: 100%;
-    padding: 0px 0.5rem 0.5rem 0px;
-    box-sizing: border-box;
-    font-size: 1.2rem;
-    line-height: 1.2rem;
-    display: block;
-  }
-}
-</code></pre>
+.control-wrapper&gt;* {
+	display: inline-block;
+	margin-right: 0.5rem;
+}</code></pre>
     </div>
 
     <div class="tab-pane fade " id="c-tree">
@@ -1364,8 +1544,8 @@ export class EmbeddedFunctionSelectionComponent implements IEmbeddedView {
 <script src="../js/libs/htmlparser.js"></script>
 <script src="../js/libs/deep-iterator.js"></script>
 <script>
-        var COMPONENT_TEMPLATE = '<div><div class="body">    <div class="search-wrapper" [class.expanded]="searchinputExpanded">        <input #searchInput [formControl]="filterControl" class="search-input" type="text"            (blur)="toggleSearchInput(false)" />        <mat-icon (click)="toggleSearchInput()">search</mat-icon>    </div>    <div class="content">        <div class="section-headline">Your implementations</div>        <div class="grid" *ngIf="(customFunctions$|async)?.length; else noFunctions">            <div class="function-wrapper" [@showList]="(customFunctions$|async)?.length" *ngFor="let func of (customFunctions$|async)" (click)="selectFunction(func)" [ngClass]="{ \'active\': func.identifier === formGroup.controls.functionIdentifier!.value }">                <div class="preview">                    <app-function-preview [func]="func"></app-function-preview>                </div>                <div class="control-wrapper">                    <div class="control accent-2">                        {{ func.identifier === formGroup.controls.functionIdentifier!.value? \'unselect\': \'select\' }}                    </div>                    <div *ngIf="func.customImplementation" class="control danger"                        (click)="removeFunction(func, $event)">                        remove                    </div>                </div>            </div>        </div>        <div class="section-headline">Templates</div>        <div class="grid" *ngIf="(functionTemplates$|async)?.length; else noFunctions">            <div class="function-wrapper" [@showList]="(functionTemplates$|async)?.length" *ngFor="let func of (functionTemplates$|async)" (click)="selectFunction(func)" [ngClass]="{ \'active\': func.identifier === formGroup.controls.functionIdentifier!.value }">                <div class="preview">                    <app-function-preview [func]="func"></app-function-preview>                </div>                <div class="control-wrapper">                    <div class="control accent-2">                        {{ func.identifier === formGroup.controls.functionIdentifier!.value? \'unselect\': \'select\' }}                    </div>                    <div *ngIf="func.customImplementation" class="control danger"                        (click)="removeFunction(func, $event)">                        remove                    </div>                </div>            </div>        </div>        <div class="section-headline">All functions</div>        <div class="grid" *ngIf="(functions$|async)?.length; else noFunctions">            <div class="function-wrapper" [@showList]="(functions$|async)?.length" *ngFor="let func of (functions$|async)" (click)="selectFunction(func)" [ngClass]="{ \'active\': func.identifier === formGroup.controls.functionIdentifier!.value }">                <div class="preview">                    <app-function-preview [func]="func"></app-function-preview>                </div>                <div class="control-wrapper">                    <div class="control accent-2">                        {{ func.identifier === formGroup.controls.functionIdentifier!.value? \'unselect\': \'select\' }}                    </div>                    <div *ngIf="func.customImplementation" class="control danger"                        (click)="removeFunction(func, $event)">                        remove                    </div>                </div>            </div>        </div>    </div>    <div class="output-name-wrapper" *ngIf="requiresCustomOutputParamName$|async">        <div class="label">please enter a custom output parameter name</div>        <input [formControl]="formGroup.controls.outputParamName!" type="text" />    </div></div><ng-template #noFunctions>    <div class="no-function-found-hint">        no functions found    </div></ng-template></div>'
-    var COMPONENTS = [{'name': 'AboutComponent', 'selector': 'app-about'},{'name': 'AccessTokenInputComponent', 'selector': 'app-access-token-input'},{'name': 'ApiCallConfiguratorComponent', 'selector': 'app-api-call-configurator'},{'name': 'ApiCallConfiguratorDialogComponent', 'selector': 'app-api-call-configurator-dialog'},{'name': 'ApiConfigurationPreviewComponent', 'selector': 'app-api-configuration-preview'},{'name': 'ApiLoginTestComponent', 'selector': 'app-api-login-test'},{'name': 'AppComponent', 'selector': 'app-root'},{'name': 'CalculationComponent', 'selector': 'app-calculation'},{'name': 'CalculationContextOverviewComponent', 'selector': 'app-calculation-context-overview'},{'name': 'CodeEditorComponent', 'selector': 'app-code-editor'},{'name': 'ConfirmationComponent', 'selector': 'app-confirmation'},{'name': 'ContainerPreviewComponent', 'selector': 'app-container-preview'},{'name': 'EditDataDialogComponent', 'selector': 'app-edit-data-dialog'},{'name': 'EmbeddedConfigureErrorGatewayEntranceConnectionComponent', 'selector': 'app-embedded-configure-error-gateway-entrance-connection'},{'name': 'EmbeddedFunctionImplementationComponent', 'selector': 'app-embedded-function-implementation'},{'name': 'EmbeddedFunctionInputSelectionComponent', 'selector': 'app-embedded-function-input-selection'},{'name': 'EmbeddedFunctionSelectionComponent', 'selector': 'app-embedded-function-selection'},{'name': 'EmbeddedInputOutputMappingComponent', 'selector': 'app-embedded-input-output-mapping'},{'name': 'EmbeddedInputOutputMappingTableRowComponent', 'selector': 'app-embedded-input-output-mapping-table-row'},{'name': 'EmbeddedOutputParamConfigurationComponent', 'selector': 'app-embedded-output-param-configuration'},{'name': 'EmbeddedParamEditorComponent', 'selector': 'app-embedded-param-editor'},{'name': 'EmbeddedStaticOutputDefinitionComponent', 'selector': 'app-embedded-static-output-definition'},{'name': 'EndpointInputComponent', 'selector': 'app-endpoint-input'},{'name': 'ErrorComponent', 'selector': 'app-error'},{'name': 'FunctionPreviewComponent', 'selector': 'app-function-preview'},{'name': 'GoodPreviewComponent', 'selector': 'app-good-preview'},{'name': 'GoodsPanelComponent', 'selector': 'app-goods-panel'},{'name': 'GroupsFormComponent', 'selector': 'app-groups-form'},{'name': 'GroupsPanelComponent', 'selector': 'app-groups-panel'},{'name': 'LocalDataComponent', 'selector': 'app-local-data'},{'name': 'MethodQuickInteractionComponent', 'selector': 'app-method-quick-interaction'},{'name': 'NavbarComponent', 'selector': 'app-navbar'},{'name': 'NoSolutionDialogComponent', 'selector': 'app-no-solution-dialog'},{'name': 'OrdersFormComponent', 'selector': 'app-orders-form'},{'name': 'ParamEditorComponent', 'selector': 'app-param-editor'},{'name': 'ParamMemberPathPreviewComponent', 'selector': 'app-param-member-path-preview'},{'name': 'ParamMemberPreviewComponent', 'selector': 'app-param-member-preview'},{'name': 'ParamPreviewComponent', 'selector': 'app-param-preview'},{'name': 'PipelineActionPreviewComponent', 'selector': 'app-pipeline-action-preview'},{'name': 'PipeRunnerComponent', 'selector': 'app-pipe-runner'},{'name': 'ProcessBuilderComponent', 'selector': 'app-process-builder'},{'name': 'ProcessBuilderWrapperComponent', 'selector': 'app-process-builder-wrapper'},{'name': 'ProductFormComponent', 'selector': 'app-products-form'},{'name': 'SceneVisualizationComponent', 'selector': 'app-scene-visualization'},{'name': 'SelectApiAuthorizationComponent', 'selector': 'app-select-api-authorization'},{'name': 'SelectGroupComponent', 'selector': 'app-select-group'},{'name': 'SelectProductComponent', 'selector': 'app-select-product'},{'name': 'SelectUnitComponent', 'selector': 'app-select-unit'},{'name': 'SolutionAnimationComponent', 'selector': 'app-solution-animation'},{'name': 'SolutionPreviewComponent', 'selector': 'app-solution-preview'},{'name': 'SolutionPreviewRenderingComponent', 'selector': 'app-solution-preview-rendering'},{'name': 'SolutionValidationComponent', 'selector': 'app-solution-validation'},{'name': 'SolutionVisualizationDialogComponent', 'selector': 'app-solution-visualization-dialog'},{'name': 'TaskCreationComponent', 'selector': 'app-task-creation'},{'name': 'UserInputComponent', 'selector': 'app-user-input'},{'name': 'UsernamePasswordCombinationComponent', 'selector': 'app-username-password-combination'},{'name': 'VisualizerComponent', 'selector': 'app-visualizer'},{'name': 'WidgetComponent', 'selector': 'app-widget'}];
+        var COMPONENT_TEMPLATE = '<div><div class="body" @show>    <div class="search-wrapper" [class.expanded]="searchinputExpanded">        <input #searchInput [formControl]="filterControl" class="search-input" type="text"            (blur)="toggleSearchInput(false)" />        <mat-icon (click)="toggleSearchInput()">search</mat-icon>    </div>    <div class="content">        <ng-container *ngIf="(functionTemplates$|async)?.length">            <div class="section-headline">Templates</div>            <div class="grid">                <div class="function-wrapper" [@showList]="(functionTemplates$|async)?.length" *ngFor="let func of (functionTemplates$|async)" (click)="selectFunction(func)" [ngClass]="{ \'active\': func.identifier === formGroup.controls.functionIdentifier!.value }">                    <div class="preview">                        <app-function-preview [func]="func"></app-function-preview>                    </div>                    <div class="control-wrapper">                        <div class="control accent-2">                            {{ func.identifier === formGroup.controls.functionIdentifier!.value? \'unselect\': \'select\' }}                        </div>                        <div *ngIf="func.customImplementation" class="control danger"                            (click)="removeFunction(func, $event)">                            remove                        </div>                    </div>                </div>            </div>        </ng-container>        <div class="section-headline">All functions</div>        <div class="grid" *ngIf="(functions$|async)?.length; else noFunctions">            <div class="function-wrapper" [@showList]="(functions$|async)?.length" *ngFor="let func of (functions$|async)" (click)="selectFunction(func)" [ngClass]="{ \'active\': func.identifier === formGroup.controls.functionIdentifier!.value }">                <div class="preview">                    <app-function-preview [func]="func"></app-function-preview>                </div>                <div class="control-wrapper">                    <div class="control accent-2">                        {{ func.identifier === formGroup.controls.functionIdentifier!.value? \'unselect\': \'select\' }}                    </div>                    <div *ngIf="func.customImplementation" class="control danger"                        (click)="removeFunction(func, $event)">                        remove                    </div>                </div>            </div>        </div>    </div>    <div class="output-name-wrapper" *ngIf="requiresCustomOutputParamName$|async">        <div class="label">please enter a custom output parameter name</div>        <input [value]="formGroup.controls.outputParamName?.value ?? \'\'" (input)="setOutputParamName($event)" type="text" placeholder="set output param name" />    </div></div><ng-template #noFunctions>    <div class="no-function-found-hint">        no functions found    </div></ng-template></div>'
+    var COMPONENTS = [{'name': 'AboutComponent', 'selector': 'app-about'},{'name': 'AccessTokenInputComponent', 'selector': 'app-access-token-input'},{'name': 'ApiCallConfiguratorComponent', 'selector': 'app-api-call-configurator'},{'name': 'ApiCallConfiguratorDialogComponent', 'selector': 'app-api-call-configurator-dialog'},{'name': 'ApiConfigurationPreviewComponent', 'selector': 'app-api-configuration-preview'},{'name': 'ApiLoginTestComponent', 'selector': 'app-api-login-test'},{'name': 'AppComponent', 'selector': 'app-root'},{'name': 'CalculationComponent', 'selector': 'app-calculation'},{'name': 'CalculationContextOverviewComponent', 'selector': 'app-calculation-context-overview'},{'name': 'CodeEditorComponent', 'selector': 'app-code-editor'},{'name': 'ConfirmationComponent', 'selector': 'app-confirmation'},{'name': 'ConsoleComponent', 'selector': 'app-console'},{'name': 'ContainerPreviewComponent', 'selector': 'app-container-preview'},{'name': 'EditDataDialogComponent', 'selector': 'app-edit-data-dialog'},{'name': 'EmbeddedConfigureErrorGatewayEntranceConnectionComponent', 'selector': 'app-embedded-configure-error-gateway-entrance-connection'},{'name': 'EmbeddedFunctionImplementationComponent', 'selector': 'app-embedded-function-implementation'},{'name': 'EmbeddedFunctionSelectionComponent', 'selector': 'app-embedded-function-selection'},{'name': 'EmbeddedInputOutputMappingComponent', 'selector': 'app-embedded-input-output-mapping'},{'name': 'EmbeddedInputOutputMappingTableRowComponent', 'selector': 'app-embedded-input-output-mapping-table-row'},{'name': 'EmbeddedParamEditorComponent', 'selector': 'app-embedded-param-editor'},{'name': 'EndpointInputComponent', 'selector': 'app-endpoint-input'},{'name': 'ErrorComponent', 'selector': 'app-error'},{'name': 'FunctionOutputPreviewComponent', 'selector': 'app-function-output-preview'},{'name': 'FunctionPreviewComponent', 'selector': 'app-function-preview'},{'name': 'GoodPreviewComponent', 'selector': 'app-good-preview'},{'name': 'GoodsPanelComponent', 'selector': 'app-goods-panel'},{'name': 'GroupsFormComponent', 'selector': 'app-groups-form'},{'name': 'GroupsPanelComponent', 'selector': 'app-groups-panel'},{'name': 'LocalDataComponent', 'selector': 'app-local-data'},{'name': 'MethodQuickInteractionComponent', 'selector': 'app-method-quick-interaction'},{'name': 'NavbarComponent', 'selector': 'app-navbar'},{'name': 'NoSolutionDialogComponent', 'selector': 'app-no-solution-dialog'},{'name': 'OrdersFormComponent', 'selector': 'app-orders-form'},{'name': 'ParamEditorComponent', 'selector': 'app-param-editor'},{'name': 'ParamMemberPathPreviewComponent', 'selector': 'app-param-member-path-preview'},{'name': 'ParamMemberPreviewComponent', 'selector': 'app-param-member-preview'},{'name': 'ParamPreviewComponent', 'selector': 'app-param-preview'},{'name': 'PipelineActionPreviewComponent', 'selector': 'app-pipeline-action-preview'},{'name': 'PipeRunnerComponent', 'selector': 'app-pipe-runner'},{'name': 'PipeRunnerOptionsBarComponent', 'selector': 'app-pipe-runner-options-bar'},{'name': 'ProcessBuilderComponent', 'selector': 'app-process-builder'},{'name': 'ProcessBuilderWrapperComponent', 'selector': 'app-process-builder-wrapper'},{'name': 'ProductFormComponent', 'selector': 'app-products-form'},{'name': 'SceneVisualizationComponent', 'selector': 'app-scene-visualization'},{'name': 'SelectApiAuthorizationComponent', 'selector': 'app-select-api-authorization'},{'name': 'SelectGroupComponent', 'selector': 'app-select-group'},{'name': 'SelectPipelineComponent', 'selector': 'app-select-pipeline'},{'name': 'SelectProductComponent', 'selector': 'app-select-product'},{'name': 'SelectUnitComponent', 'selector': 'app-select-unit'},{'name': 'SolutionAnimationComponent', 'selector': 'app-solution-animation'},{'name': 'SolutionPreviewComponent', 'selector': 'app-solution-preview'},{'name': 'SolutionPreviewRenderingComponent', 'selector': 'app-solution-preview-rendering'},{'name': 'SolutionValidationComponent', 'selector': 'app-solution-validation'},{'name': 'SolutionVisualizationDialogComponent', 'selector': 'app-solution-visualization-dialog'},{'name': 'TaskCreationComponent', 'selector': 'app-task-creation'},{'name': 'UserInputComponent', 'selector': 'app-user-input'},{'name': 'UsernamePasswordCombinationComponent', 'selector': 'app-username-password-combination'},{'name': 'VisualizerComponent', 'selector': 'app-visualizer'},{'name': 'WidgetComponent', 'selector': 'app-widget'}];
     var DIRECTIVES = [{'name': 'AnimatedCounterDirective', 'selector': '[appAnimatedCounter]'}];
     var ACTUAL_COMPONENT = {'name': 'EmbeddedFunctionSelectionComponent'};
 </script>

@@ -15,7 +15,7 @@ export class EventC2MProcessor implements IC2MProcessor {
       return;
     }
     
-    const finalizesFlow = taskCreationFormGroupValue?.isProcessOutput;
+    const finalizesFlow = false;
 
     const resultingEndEvent = taskCreationPayload.configureActivity?.outgoing?.find(outgoing => outgoing.target.type === 'bpmn:EndEvent')?.target;
     if (finalizesFlow && !resultingEndEvent) {

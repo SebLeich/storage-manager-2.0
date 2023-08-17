@@ -69,12 +69,14 @@
 			border: none;
 			text-align: center;
 			color: black;
-			width: 100%;
-			padding: 0px 0.5rem 0.5rem 0px;
 			box-sizing: border-box;
 			font-size: 1.2rem;
 			line-height: 1.2rem;
 			display: block;
+			padding: 0.5rem;
+			background-color: #eff8ff;
+			margin: 0px 0.5rem 0.5rem;
+			border-radius: 3px;
 		}
 	}
 }

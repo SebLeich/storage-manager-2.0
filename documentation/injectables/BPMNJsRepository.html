@@ -69,6 +69,41 @@
     <h3 id="index">Index</h3>
     <table class="table table-sm table-bordered index-table">
         <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <h6><b>Properties</b></h6>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <ul class="index-list">
+                            <li>
+                                    <span class="modifier">Static</span>
+                                <a href="#getActivityFunctionId" >getActivityFunctionId</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Static</span>
+                                <a href="#getDataParamId" >getDataParamId</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Static</span>
+                                <a href="#getSequenceFlowType" >getSequenceFlowType</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Static</span>
+                                <a href="#setActivityFunctionId" >setActivityFunctionId</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Static</span>
+                                <a href="#setDataParamId" >setDataParamId</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Static</span>
+                                <a href="#setSequenceFlowType" >setSequenceFlowType</a>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
 
                 <tr>
                     <td class="col-md-4">
@@ -157,7 +192,7 @@
                 </tr>
                         <tr>
                             <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="20" class="link-to-prism">src/lib/core/bpmn-js.repository.ts:20</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="21" class="link-to-prism">src/lib/core/bpmn-js.repository.ts:21</a></div>
                             </td>
                         </tr>
 
@@ -215,15 +250,15 @@
             <tr>
                 <td class="col-md-4">
                     <span class="modifier-icon icon ion-ios-reset"></span>
-                    <code>appendOutputParam(bpmnJS: <a href="../interfaces/IBpmnJS.html" target="_self">IBpmnJS</a>, element: <a href="../interfaces/IElement.html" target="_self">IElement</a>, param: <a href="../interfaces/IParam.html" target="_self">IParam | null | undefined</a>, preventDublet, expectedInterface?: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
+                    <code>appendOutputParam(bpmnJS: <a href="../interfaces/IBpmnJS.html" target="_self">IBpmnJS</a>, element: <a href="../interfaces/IElement.html" target="_self">IElement</a>, parameterIdentifier: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank">number</a>, parameterName: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, parameterInterface: string | null, parameterIsProcessOutput: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/boolean" target="_blank">boolean</a>, preventDublet, expectedInterface?: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
                 </td>
             </tr>
 
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="24"
-                            class="link-to-prism">src/lib/core/bpmn-js.repository.ts:24</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="33"
+                            class="link-to-prism">src/lib/core/bpmn-js.repository.ts:33</a></div>
                 </td>
             </tr>
 
@@ -273,9 +308,51 @@
 
                                 </tr>
                                 <tr>
-                                    <td>param</td>
+                                    <td>parameterIdentifier</td>
                                     <td>
-                                                <code><a href="../interfaces/IParam.html" target="_self" >IParam | null | undefined</a></code>
+                                                <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+                                    <td>
+                                    </td>
+
+                                </tr>
+                                <tr>
+                                    <td>parameterName</td>
+                                    <td>
+                                                <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+                                    <td>
+                                    </td>
+
+                                </tr>
+                                <tr>
+                                    <td>parameterInterface</td>
+                                    <td>
+                                            <code>string | null</code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+                                    <td>
+                                    </td>
+
+                                </tr>
+                                <tr>
+                                    <td>parameterIsProcessOutput</td>
+                                    <td>
+                                                <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/boolean" target="_blank" >boolean</a></code>
                                     </td>
 
                                     <td>
@@ -352,8 +429,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="53"
-                            class="link-to-prism">src/lib/core/bpmn-js.repository.ts:53</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="55"
+                            class="link-to-prism">src/lib/core/bpmn-js.repository.ts:55</a></div>
                 </td>
             </tr>
 
@@ -423,8 +500,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="58"
-                            class="link-to-prism">src/lib/core/bpmn-js.repository.ts:58</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="60"
+                            class="link-to-prism">src/lib/core/bpmn-js.repository.ts:60</a></div>
                 </td>
             </tr>
 
@@ -505,15 +582,15 @@
             <tr>
                 <td class="col-md-4">
                     <span class="modifier-icon icon ion-ios-reset"></span>
-                    <code>getAvailableInputParams(element: <a href="../interfaces/IElement.html" target="_self">IElement</a>)</code>
+                    <code>getAvailableInputParams(element: <a href="../interfaces/IElement.html" target="_self">IElement | undefined</a>)</code>
                 </td>
             </tr>
 
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="73"
-                            class="link-to-prism">src/lib/core/bpmn-js.repository.ts:73</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="75"
+                            class="link-to-prism">src/lib/core/bpmn-js.repository.ts:75</a></div>
                 </td>
             </tr>
 
@@ -536,7 +613,7 @@
                                 <tr>
                                     <td>element</td>
                                     <td>
-                                                <code><a href="../interfaces/IElement.html" target="_self" >IElement</a></code>
+                                                <code><a href="../interfaces/IElement.html" target="_self" >IElement | undefined</a></code>
                                     </td>
 
                                     <td>
@@ -583,8 +660,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="77"
-                            class="link-to-prism">src/lib/core/bpmn-js.repository.ts:77</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="85"
+                            class="link-to-prism">src/lib/core/bpmn-js.repository.ts:85</a></div>
                 </td>
             </tr>
 
@@ -622,7 +699,7 @@
                     <div>
                     </div>
                     <div class="io-description">
-                        <b>Returns : </b>    <code>{}</code>
+                        <b>Returns : </b>        <code><a href="../interfaces/IElement.html" target="_self" >IElement[]</a></code>
 
                     </div>
                     <div class="io-description">
@@ -654,8 +731,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="219"
-                            class="link-to-prism">src/lib/core/bpmn-js.repository.ts:219</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="231"
+                            class="link-to-prism">src/lib/core/bpmn-js.repository.ts:231</a></div>
                 </td>
             </tr>
 
@@ -725,8 +802,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="86"
-                            class="link-to-prism">src/lib/core/bpmn-js.repository.ts:86</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="98"
+                            class="link-to-prism">src/lib/core/bpmn-js.repository.ts:98</a></div>
                 </td>
             </tr>
 
@@ -808,8 +885,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="95"
-                            class="link-to-prism">src/lib/core/bpmn-js.repository.ts:95</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="107"
+                            class="link-to-prism">src/lib/core/bpmn-js.repository.ts:107</a></div>
                 </td>
             </tr>
 
@@ -879,8 +956,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="103"
-                            class="link-to-prism">src/lib/core/bpmn-js.repository.ts:103</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="115"
+                            class="link-to-prism">src/lib/core/bpmn-js.repository.ts:115</a></div>
                 </td>
             </tr>
 
@@ -982,8 +1059,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="223"
-                            class="link-to-prism">src/lib/core/bpmn-js.repository.ts:223</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="235"
+                            class="link-to-prism">src/lib/core/bpmn-js.repository.ts:235</a></div>
                 </td>
             </tr>
 
@@ -1053,8 +1130,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="113"
-                            class="link-to-prism">src/lib/core/bpmn-js.repository.ts:113</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="125"
+                            class="link-to-prism">src/lib/core/bpmn-js.repository.ts:125</a></div>
                 </td>
             </tr>
 
@@ -1148,8 +1225,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="123"
-                            class="link-to-prism">src/lib/core/bpmn-js.repository.ts:123</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="135"
+                            class="link-to-prism">src/lib/core/bpmn-js.repository.ts:135</a></div>
                 </td>
             </tr>
 
@@ -1255,8 +1332,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="139"
-                            class="link-to-prism">src/lib/core/bpmn-js.repository.ts:139</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="151"
+                            class="link-to-prism">src/lib/core/bpmn-js.repository.ts:151</a></div>
                 </td>
             </tr>
 
@@ -1372,8 +1449,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="152"
-                            class="link-to-prism">src/lib/core/bpmn-js.repository.ts:152</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="164"
+                            class="link-to-prism">src/lib/core/bpmn-js.repository.ts:164</a></div>
                 </td>
             </tr>
 
@@ -1422,6 +1499,168 @@
         </tbody>
     </table>
 </section>
+            <section>
+    
+    <h3 id="inputs">
+        Properties
+    </h3>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="getActivityFunctionId"></a>
+                    <span class="name">
+                            <span class="modifier">Static</span>
+                        <span ><b>getActivityFunctionId</b></span>
+                        <a href="#getActivityFunctionId"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>() &#x3D;&gt; {...}</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="25" class="link-to-prism">src/lib/core/bpmn-js.repository.ts:25</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="getDataParamId"></a>
+                    <span class="name">
+                            <span class="modifier">Static</span>
+                        <span ><b>getDataParamId</b></span>
+                        <a href="#getDataParamId"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>() &#x3D;&gt; {...}</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="26" class="link-to-prism">src/lib/core/bpmn-js.repository.ts:26</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="getSequenceFlowType"></a>
+                    <span class="name">
+                            <span class="modifier">Static</span>
+                        <span ><b>getSequenceFlowType</b></span>
+                        <a href="#getSequenceFlowType"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>() &#x3D;&gt; {...}</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="27" class="link-to-prism">src/lib/core/bpmn-js.repository.ts:27</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="setActivityFunctionId"></a>
+                    <span class="name">
+                            <span class="modifier">Static</span>
+                        <span ><b>setActivityFunctionId</b></span>
+                        <a href="#setActivityFunctionId"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>() &#x3D;&gt; {...}</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="29" class="link-to-prism">src/lib/core/bpmn-js.repository.ts:29</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="setDataParamId"></a>
+                    <span class="name">
+                            <span class="modifier">Static</span>
+                        <span ><b>setDataParamId</b></span>
+                        <a href="#setDataParamId"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>() &#x3D;&gt; {...}</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="30" class="link-to-prism">src/lib/core/bpmn-js.repository.ts:30</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="setSequenceFlowType"></a>
+                    <span class="name">
+                            <span class="modifier">Static</span>
+                        <span ><b>setSequenceFlowType</b></span>
+                        <a href="#setSequenceFlowType"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>() &#x3D;&gt; {...}</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="31" class="link-to-prism">src/lib/core/bpmn-js.repository.ts:31</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+</section>
 
     </div>
 
@@ -1444,36 +1683,38 @@ import { ValidationWarning } from &quot;../process-builder/globals/validation-wa
 import { IExtensionElement } from &quot;../bpmn-io/interfaces/extension-element.interface&quot;;
 import { SebleichProcessBuilderExtensionType } from &quot;../process-builder/globals/sebleich-process-builder-extension.type&quot;;
 import { IConnector } from &quot;../bpmn-io/interfaces/connector.interface&quot;;
+import { GatewayType } from &quot;../process-builder/types/gateway.type&quot;;
 
 @Injectable()
 export class BPMNJsRepository {
 
     constructor(@Inject(PROCESS_BUILDER_CONFIG_TOKEN) private _config: IProcessBuilderConfig) { }
 
-    public static appendOutputParam(bpmnJS: IBpmnJS, element: IElement, param: IParam | null | undefined, preventDublet &#x3D; true, expectedInterface?: string) {
-        if (!param) {
-            return null;
-        }
+    public static getActivityFunctionId &#x3D; (activity: IElement) &#x3D;&gt; BPMNJsRepository.getSLPBExtension(activity.businessObject, &#x27;ActivityExtension&#x27;, (ext) &#x3D;&gt; ext.activityFunctionId) as number | undefined;
+    public static getDataParamId &#x3D; (activity: IElement) &#x3D;&gt; BPMNJsRepository.getSLPBExtension(activity.businessObject, &#x27;DataObjectExtension&#x27;, (ext) &#x3D;&gt; ext.dataParamId) as number | undefined;
+    public static getSequenceFlowType &#x3D; (activity: IConnector) &#x3D;&gt; BPMNJsRepository.getSLPBExtension(activity.businessObject, &#x27;SequenceFlowExtension&#x27;, (ext) &#x3D;&gt; ext.sequenceFlowType) as &#x27;success&#x27; | &#x27;error&#x27; | undefined;
 
-        let createdDataOutputElement: IElement | undefined,
-            existingElement &#x3D; element.outgoing.find(x &#x3D;&gt; x.type &#x3D;&#x3D;&#x3D; shapeTypes.DataOutputAssociation)?.target;
+    public static setActivityFunctionId &#x3D; (bpmnJs: IBpmnJS, element: IElement, arg: number | IFunction | undefined | null) &#x3D;&gt; BPMNJsRepository.updateBpmnElementSLPBExtension(bpmnJs, element.businessObject, &#x27;ActivityExtension&#x27;, (ext) &#x3D;&gt; ext.activityFunctionId &#x3D; typeof arg &#x3D;&#x3D;&#x3D; &#x27;number&#x27; ? arg : arg?.identifier);
+    public static setDataParamId &#x3D; (bpmnJs: IBpmnJS, element: IElement, arg: number | IParam | undefined | null) &#x3D;&gt; BPMNJsRepository.updateBpmnElementSLPBExtension(bpmnJs, element.businessObject, &#x27;DataObjectExtension&#x27;, (ext) &#x3D;&gt; ext.dataParamId &#x3D; typeof arg &#x3D;&#x3D;&#x3D; &#x27;number&#x27; ? arg : arg?.identifier);
+    public static setSequenceFlowType &#x3D; (bpmnJs: IBpmnJS, connector: IConnector, entranceGatewayType: GatewayType) &#x3D;&gt; BPMNJsRepository.updateBpmnElementSLPBExtension(bpmnJs, connector.businessObject, &#x27;SequenceFlowExtension&#x27;, (ext) &#x3D;&gt; ext.sequenceFlowType &#x3D; entranceGatewayType &#x3D;&#x3D;&#x3D; &#x27;Success&#x27; ? &#x27;success&#x27; : &#x27;error&#x27;);
+
+    public static appendOutputParam(bpmnJS: IBpmnJS, element: IElement, parameterIdentifier: number, parameterName: string, parameterInterface: string | null, parameterIsProcessOutput: boolean, preventDublet &#x3D; true, expectedInterface?: string) {
+        let createdDataOutputElement: IElement | undefined;
+        const existingElement &#x3D; element.outgoing.find(x &#x3D;&gt; x.type &#x3D;&#x3D;&#x3D; shapeTypes.DataOutputAssociation)?.target;
 
         if (!preventDublet || !existingElement) {
             createdDataOutputElement &#x3D; getModelingModule(bpmnJS).appendShape(element, {
                 type: shapeTypes.DataObjectReference
             }, { x: element.x + 50, y: element.y - 60 });
 
-            BPMNJsRepository.updateBpmnElementSLPBExtension(bpmnJS, createdDataOutputElement.businessObject, &#x27;DataObjectExtension&#x27;, (ext) &#x3D;&gt; ext.outputParam &#x3D; param.identifier);
-            BPMNJsRepository.updateBpmnElementSLPBExtension(bpmnJS, createdDataOutputElement.businessObject, &#x27;DataObjectExtension&#x27;, (ext) &#x3D;&gt; ext.matchesProcessOutputInterface &#x3D; param.interface &#x3D;&#x3D;&#x3D; expectedInterface);
-            BPMNJsRepository.updateBpmnElementSLPBExtension(bpmnJS, createdDataOutputElement.businessObject, &#x27;DataObjectExtension&#x27;, (ext) &#x3D;&gt; ext.isProcessOutput &#x3D; param.isProcessOutput);
+            BPMNJsRepository.setDataParamId(bpmnJS, createdDataOutputElement, parameterIdentifier);
+            BPMNJsRepository.updateBpmnElementSLPBExtension(bpmnJS, createdDataOutputElement.businessObject, &#x27;DataObjectExtension&#x27;, (ext) &#x3D;&gt; ext.matchesProcessOutputInterface &#x3D; parameterInterface &#x3D;&#x3D;&#x3D; expectedInterface);
+            BPMNJsRepository.updateBpmnElementSLPBExtension(bpmnJS, createdDataOutputElement.businessObject, &#x27;DataObjectExtension&#x27;, (ext) &#x3D;&gt; ext.isProcessOutput &#x3D; parameterIsProcessOutput);
         }
 
-        const referencingDataRepresentations &#x3D; getElementRegistryModule(bpmnJS)
-            .filter(element &#x3D;&gt; element.type &#x3D;&#x3D;&#x3D; shapeTypes.DataOutputAssociation &amp;&amp; BPMNJsRepository.sLPBExtensionSetted((element as IConnector).target.businessObject, &#x27;DataObjectExtension&#x27;, (ext) &#x3D;&gt; ext.outputParam &#x3D;&#x3D;&#x3D; param.identifier))
-            .map(connector &#x3D;&gt; (connector as IConnector).target);
-
-        for (let referencingDataRepresentation of referencingDataRepresentations) {
-            getModelingModule(bpmnJS).updateLabel(referencingDataRepresentation, param.name);
+        const referencingDataRepresentations &#x3D; getElementRegistryModule(bpmnJS).filter(element &#x3D;&gt; element.type &#x3D;&#x3D;&#x3D; shapeTypes.DataObjectReference &amp;&amp; BPMNJsRepository.getDataParamId(element as IElement) &#x3D;&#x3D;&#x3D; parameterIdentifier);
+        for (const referencingDataRepresentation of referencingDataRepresentations) {
+            getModelingModule(bpmnJS).updateLabel(referencingDataRepresentation, parameterName ?? &#x27;no param name&#x27;);
         }
 
         return { createdDataOutputElement };
@@ -1499,17 +1740,27 @@ export class BPMNJsRepository {
         }
     }
 
-    public static getAvailableInputParams(element: IElement) {
-        return this.getAvailableInputParamsIElements(element).map(x &#x3D;&gt; BPMNJsRepository.getSLPBExtension(x.businessObject, &#x27;DataObjectExtension&#x27;, (ext) &#x3D;&gt; ext.outputParam)) as ParamCodes[];
+    public static getAvailableInputParams(element: IElement | undefined) {
+        if(!element) {
+            return [];
+        }
+
+        const availableInputParamsIElements &#x3D; this.getAvailableInputParamsIElements(element);
+        const availableInputParams &#x3D; availableInputParamsIElements.map((element) &#x3D;&gt; BPMNJsRepository.getDataParamId(element)) as ParamCodes[];
+        return availableInputParams;
     }
 
-    public static getAvailableInputParamsIElements(element: IElement) {
+    public static getAvailableInputParamsIElements(element: IElement): IElement[] {
         const anchestors: IElement[] &#x3D; [];
         this.fillAnchestors(element, anchestors);
 
-        const tasks &#x3D; anchestors.filter(x &#x3D;&gt; x.type &#x3D;&#x3D;&#x3D; shapeTypes.Task);
-        const outputParams &#x3D; tasks.flatMap(x &#x3D;&gt; x.outgoing).filter(x &#x3D;&gt; x.type &#x3D;&#x3D;&#x3D; shapeTypes.DataOutputAssociation).map(x &#x3D;&gt; x.target);
-        return outputParams.filter(x &#x3D;&gt; BPMNJsRepository.sLPBExtensionSetted(x.businessObject, &#x27;DataObjectExtension&#x27;, (ext) &#x3D;&gt; &#x27;outputParam&#x27; in ext)) as IElement[];
+        const precedingTasks &#x3D; anchestors.filter((anchestor) &#x3D;&gt; anchestor.type &#x3D;&#x3D;&#x3D; shapeTypes.Task);
+        const precedingTasksOutgoingConnectors &#x3D; precedingTasks.flatMap((taskElement) &#x3D;&gt; taskElement.outgoing);
+        const precedingTasksOutgoingDataOutputAssociations &#x3D; precedingTasksOutgoingConnectors.filter((outgoingConnector) &#x3D;&gt; outgoingConnector.type &#x3D;&#x3D;&#x3D; shapeTypes.DataOutputAssociation);
+        const precedingDataObjectReferences &#x3D; precedingTasksOutgoingDataOutputAssociations.map((outgoingDataOutputAssociation) &#x3D;&gt; outgoingDataOutputAssociation.target);
+        const precedingDataObjectReferencesWithParamId &#x3D; precedingDataObjectReferences.filter((dataObjectReference) &#x3D;&gt; typeof BPMNJsRepository.getDataParamId(dataObjectReference) &#x3D;&#x3D;&#x3D; &#x27;number&#x27;);
+
+        return precedingDataObjectReferencesWithParamId;
     }
 
     public static getExtensionElement(element: IBusinessObject, type: string): undefined | IExtensionElement {

@@ -90,6 +90,12 @@
                         <td class="col-md-4">
                             <ul class="index-list">
                                 <li>
+                                        <a href="#_isImplementation" 
+>
+                                            _isImplementation
+                                        </a>
+                                </li>
+                                <li>
                                             <span class="modifier">Optional</span>
                                         <a href="#customImplementation" 
 >
@@ -133,6 +139,33 @@
 
             <section>
                 <h3 id="inputs">Properties</h3>
+                    <table class="table table-sm table-bordered">
+                        <tbody>
+                                <tr>
+                                    <td class="col-md-4">
+                                        <a name="_isImplementation"></a>
+                                        <span class="name "><b>_isImplementation</b>
+                                            <a href="#_isImplementation">
+                                                <span class="icon ion-ios-link"></span>
+                                            </a>
+                                        </span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="col-md-4">
+                                        <code>_isImplementation:     <code></code>
+</code>
+                                    </td>
+                                </tr>
+
+
+
+
+
+
+
+                        </tbody>
+                    </table>
                     <table class="table table-sm table-bordered">
                         <tbody>
                                 <tr>
@@ -327,6 +360,7 @@ export interface IFunction extends IFunctionTemplate {
     requireDataMapping?: boolean;
     inputs: number | number[] | null;
     output: number | null;
+    _isImplementation: true;
 }
 
 export const FUNCTIONS_CONFIG_TOKEN: InjectionToken&lt;IFunction[]&gt; &#x3D; new InjectionToken&lt;IFunction[]&gt;(&quot;FUNCTION_CONFIG&quot;);

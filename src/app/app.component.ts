@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { NavigationEnd, NavigationSkipped, NavigationStart, Router } from '@angular/router';
 import { Store } from '@ngrx/store';
-import { BehaviorSubject, filter, map, shareReplay } from 'rxjs';
+import { filter, map, shareReplay } from 'rxjs';
 import { selectGlobalProcedureProgress, selectHasDeterminingProcedures, selectHasPendingProcedures } from '@procedure';
 
 @Component({

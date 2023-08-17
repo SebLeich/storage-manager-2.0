@@ -1,1 +1,0 @@
-export type MethodEvaluationResultType = 'string' | 'object' | 'number' | 'bigint' | 'boolean' | 'array' | 'null' | 'undefined' | 'symbol' | 'function';

@@ -58,7 +58,7 @@
             <h3>File</h3>
         </p>
         <p class="comment">
-            <code>src/lib/pipe-runner/components/pipe-runner/pipe-runner.service.ts</code>
+            <code>src/lib/pipe-runner/components/pipe-runner/services/pipe-runner.service.ts</code>
         </p>
 
 
@@ -83,10 +83,6 @@
                             </li>
                             <li>
                                     <span class="modifier">Public</span>
-                                <a href="#consoleOutput" >consoleOutput</a>
-                            </li>
-                            <li>
-                                    <span class="modifier">Public</span>
                                 <a href="#httpClient" >httpClient</a>
                             </li>
                             <li>
@@ -95,7 +91,7 @@
                             </li>
                             <li>
                                     <span class="modifier">Public</span>
-                                <a href="#pipeline$" >pipeline$</a>
+                                <a href="#pipelineId$" >pipelineId$</a>
                             </li>
                             <li>
                                     <span class="modifier">Public</span>
@@ -107,7 +103,15 @@
                             </li>
                             <li>
                                     <span class="modifier">Public</span>
+                                <a href="#selectedPipelineId$" >selectedPipelineId$</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Public</span>
                                 <a href="#solution$" >solution$</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Public</span>
+                                <a href="#status" >status</a>
                             </li>
                             <li>
                                     <span class="modifier">Public</span>
@@ -158,12 +162,12 @@
             <tbody>
                 <tr>
                     <td class="col-md-4">
-<code>constructor(_router: <a href="https://angular.io/api/router/Router" target="_blank">Router</a>, _route: <a href="https://angular.io/api/router/ActivatedRoute" target="_blank">ActivatedRoute</a>, _store: Store, httpClient: <a href="https://angular.io/api/common/http/HttpClient" target="_blank">HttpClient</a>, _environmentInjector: EnvironmentInjector, _snackBar: MatSnackBar)</code>
+<code>constructor(_route: <a href="https://angular.io/api/router/ActivatedRoute" target="_blank">ActivatedRoute</a>, _store: Store, httpClient: <a href="https://angular.io/api/common/http/HttpClient" target="_blank">HttpClient</a>, _snackBar: MatSnackBar)</code>
                     </td>
                 </tr>
                         <tr>
                             <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="102" class="link-to-prism">src/lib/pipe-runner/components/pipe-runner/pipe-runner.service.ts:102</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="95" class="link-to-prism">src/lib/pipe-runner/components/pipe-runner/services/pipe-runner.service.ts:95</a></div>
                             </td>
                         </tr>
 
@@ -180,18 +184,6 @@
                                             </tr>
                                         </thead>
                                         <tbody>
-                                                <tr>
-                                                        <td>_router</td>
-                                                  
-                                                        <td>
-                                                                        <code><a href="https://angular.io/api/router/Router" target="_blank" >Router</a></code>
-                                                        </td>
-                                                  
-                                                    <td>
-                                                            No
-                                                    </td>
-                                                    
-                                                </tr>
                                                 <tr>
                                                         <td>_route</td>
                                                   
@@ -221,18 +213,6 @@
                                                   
                                                         <td>
                                                                         <code><a href="https://angular.io/api/common/http/HttpClient" target="_blank" >HttpClient</a></code>
-                                                        </td>
-                                                  
-                                                    <td>
-                                                            No
-                                                    </td>
-                                                    
-                                                </tr>
-                                                <tr>
-                                                        <td>_environmentInjector</td>
-                                                  
-                                                        <td>
-                                                                    <code>EnvironmentInjector</code>
                                                         </td>
                                                   
                                                     <td>
@@ -282,15 +262,15 @@
             <tr>
                 <td class="col-md-4">
                     <span class="modifier-icon icon ion-ios-reset"></span>
-                    <code>renameCurrentPipeline(updatedName: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
+                    <code>renameCurrentPipeline(updatedName: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, sink?: <a href="../interfaces/ISink.html" target="_self">ISink</a>, channel?: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
                 </td>
             </tr>
 
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="106"
-                            class="link-to-prism">src/lib/pipe-runner/components/pipe-runner/pipe-runner.service.ts:106</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="99"
+                            class="link-to-prism">src/lib/pipe-runner/components/pipe-runner/services/pipe-runner.service.ts:99</a></div>
                 </td>
             </tr>
 
@@ -318,6 +298,30 @@
 
                                     <td>
                                         No
+                                    </td>
+
+
+                                </tr>
+                                <tr>
+                                    <td>sink</td>
+                                    <td>
+                                                <code><a href="../interfaces/ISink.html" target="_self" >ISink</a></code>
+                                    </td>
+
+                                    <td>
+                                        Yes
+                                    </td>
+
+
+                                </tr>
+                                <tr>
+                                    <td>channel</td>
+                                    <td>
+                                                <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                    </td>
+
+                                    <td>
+                                        Yes
                                     </td>
 
 
@@ -354,15 +358,15 @@
             <tr>
                 <td class="col-md-4">
                     <span class="modifier-icon icon ion-ios-reset"></span>
-                    <code>run()</code>
+                    <code>run(sink?: <a href="../interfaces/ISink.html" target="_self">ISink</a>, channel?: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
                 </td>
             </tr>
 
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="120"
-                            class="link-to-prism">src/lib/pipe-runner/components/pipe-runner/pipe-runner.service.ts:120</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="111"
+                            class="link-to-prism">src/lib/pipe-runner/components/pipe-runner/services/pipe-runner.service.ts:111</a></div>
                 </td>
             </tr>
 
@@ -371,8 +375,52 @@
                 <td class="col-md-4">
 
                     <div class="io-description">
+                        <b>Parameters :</b>
+                        
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>sink</td>
+                                    <td>
+                                                <code><a href="../interfaces/ISink.html" target="_self" >ISink</a></code>
+                                    </td>
+
+                                    <td>
+                                        Yes
+                                    </td>
+
+
+                                </tr>
+                                <tr>
+                                    <td>channel</td>
+                                    <td>
+                                                <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                    </td>
+
+                                    <td>
+                                        Yes
+                                    </td>
+
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
                         <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
 
+                    </div>
+                    <div class="io-description">
+                        
                     </div>
                 </td>
             </tr>
@@ -401,8 +449,8 @@
 
             <tr>
                 <td class="col-md-4">
-                    <div class="io-line">Defined in <a href="" data-line="217"
-                            class="link-to-prism">src/lib/pipe-runner/components/pipe-runner/pipe-runner.service.ts:217</a></div>
+                    <div class="io-line">Defined in <a href="" data-line="202"
+                            class="link-to-prism">src/lib/pipe-runner/components/pipe-runner/services/pipe-runner.service.ts:202</a></div>
                 </td>
             </tr>
 
@@ -470,66 +518,36 @@
             </tr>
                 <tr>
                     <td class="col-md-4">
-                        <i>Default value : </i><code>this.pipeline$.pipe(
-    rxjs.switchMap(pipeline &#x3D;&gt; {
-      if (!pipeline) {
-        return rxjs.NEVER;
-      }
-      return this._store.select(selectPipelineActionByPipelineName(pipeline.name));
-    }),
-    rxjs.map(actions &#x3D;&gt; {
+                        <i>Type : </i>    <code>Observable&lt;IPipelineAction[]&gt;</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>this.selectedPipeline$.pipe(
+    switchMap((pipeline: IPipeline | null) &#x3D;&gt; pipeline ? this._store.select(selectPipelineActionByPipelineName(pipeline.id)) : rxjs.NEVER),
+    map(actions &#x3D;&gt; {
       const initialAction &#x3D; actions.find(actions &#x3D;&gt; actions?.isPipelineStart), sortedActions &#x3D; [initialAction];
       let currentActions &#x3D; [initialAction];
 
       while (currentActions.length &gt; 0) {
         const successors &#x3D; actions.filter(action &#x3D;&gt; currentActions
-          .flatMap(action &#x3D;&gt; {
-            const successors &#x3D; [action?.onSuccess, action?.onError];
-            return successors;
-          })
-          .filter(identifier &#x3D;&gt; {
-            return !!identifier;
-          })
+          .flatMap(action &#x3D;&gt; [action?.onSuccess, action?.onError])
+          .filter(identifier &#x3D;&gt; !!identifier)
           .indexOf(action?.identifier) &gt; -1);
 
         sortedActions.push(...successors);
         currentActions &#x3D; successors;
       }
 
-      return sortedActions.filter(action &#x3D;&gt; action);
+      return sortedActions.filter(action &#x3D;&gt; action) as IPipelineAction[];
     })
   )</code>
                     </td>
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="39" class="link-to-prism">src/lib/pipe-runner/components/pipe-runner/pipe-runner.service.ts:39</a></div>
-                        </td>
-                    </tr>
-
-
-        </tbody>
-    </table>
-    <table class="table table-sm table-bordered">
-        <tbody>
-            <tr>
-                <td class="col-md-4">
-                    <a name="consoleOutput"></a>
-                    <span class="name">
-                            <span class="modifier">Public</span>
-                        <span ><b>consoleOutput</b></span>
-                        <a href="#consoleOutput"><span class="icon ion-ios-link"></span></a>
-                    </span>
-                </td>
-            </tr>
-                <tr>
-                    <td class="col-md-4">
-                        <i>Default value : </i><code>new EventEmitter&lt;{ message: string, class: string }&gt;()</code>
-                    </td>
-                </tr>
-                    <tr>
-                        <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="27" class="link-to-prism">src/lib/pipe-runner/components/pipe-runner/pipe-runner.service.ts:27</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="40" class="link-to-prism">src/lib/pipe-runner/components/pipe-runner/services/pipe-runner.service.ts:40</a></div>
                         </td>
                     </tr>
 
@@ -556,7 +574,7 @@
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="104" class="link-to-prism">src/lib/pipe-runner/components/pipe-runner/pipe-runner.service.ts:104</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="97" class="link-to-prism">src/lib/pipe-runner/components/pipe-runner/services/pipe-runner.service.ts:97</a></div>
                         </td>
                     </tr>
 
@@ -578,12 +596,12 @@
                 <tr>
                     <td class="col-md-4">
                         <i>Default value : </i><code>this._store.select(selectIParams()).pipe(
-    rxjs.shareReplay(1),
-    rxjs.map(inputParams &#x3D;&gt; inputParams ?? []),
+    shareReplay(1),
+    map(inputParams &#x3D;&gt; inputParams ?? []),
     mapIParamsInterfaces(this._store),
-    rxjs.map(inputs &#x3D;&gt; {
+    map(inputs &#x3D;&gt; {
       return inputs.reduce((prev, curr) &#x3D;&gt; {
-        if(curr.normalizedName){
+        if (curr.normalizedName) {
           if (curr.defaultValue) {
             prev[curr.normalizedName] &#x3D; curr.defaultValue;
           } else {
@@ -600,7 +618,7 @@
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="84" class="link-to-prism">src/lib/pipe-runner/components/pipe-runner/pipe-runner.service.ts:84</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="75" class="link-to-prism">src/lib/pipe-runner/components/pipe-runner/services/pipe-runner.service.ts:75</a></div>
                         </td>
                     </tr>
 
@@ -611,22 +629,22 @@
         <tbody>
             <tr>
                 <td class="col-md-4">
-                    <a name="pipeline$"></a>
+                    <a name="pipelineId$"></a>
                     <span class="name">
                             <span class="modifier">Public</span>
-                        <span ><b>pipeline$</b></span>
-                        <a href="#pipeline$"><span class="icon ion-ios-link"></span></a>
+                        <span ><b>pipelineId$</b></span>
+                        <a href="#pipelineId$"><span class="icon ion-ios-link"></span></a>
                     </span>
                 </td>
             </tr>
                 <tr>
                     <td class="col-md-4">
-                        <i>Default value : </i><code>this.selectedPipeline$.pipe(rxjs.switchMap(pipeline &#x3D;&gt; this._store.select(selectPipelineByName(pipeline))))</code>
+                        <i>Default value : </i><code>this.selectedPipeline$.pipe(map((pipeline: IPipeline | null) &#x3D;&gt; pipeline?.id))</code>
                     </td>
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="30" class="link-to-prism">src/lib/pipe-runner/components/pipe-runner/pipe-runner.service.ts:30</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="33" class="link-to-prism">src/lib/pipe-runner/components/pipe-runner/services/pipe-runner.service.ts:33</a></div>
                         </td>
                     </tr>
 
@@ -647,12 +665,12 @@
             </tr>
                 <tr>
                     <td class="col-md-4">
-                        <i>Default value : </i><code>this.pipeline$.pipe(rxjs.map(pipeline &#x3D;&gt; pipeline?.name))</code>
+                        <i>Default value : </i><code>this.selectedPipeline$.pipe(map((pipeline: IPipeline | null) &#x3D;&gt; pipeline?.name))</code>
                     </td>
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="31" class="link-to-prism">src/lib/pipe-runner/components/pipe-runner/pipe-runner.service.ts:31</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="34" class="link-to-prism">src/lib/pipe-runner/components/pipe-runner/services/pipe-runner.service.ts:34</a></div>
                         </td>
                     </tr>
 
@@ -673,12 +691,38 @@
             </tr>
                 <tr>
                     <td class="col-md-4">
-                        <i>Default value : </i><code>this._route.queryParams.pipe(rxjs.map(queryParam &#x3D;&gt; queryParam.pipeline), rxjs.filter(pipeline &#x3D;&gt; !!pipeline))</code>
+                        <i>Default value : </i><code>this.selectedPipelineId$.pipe(switchMap((pipeline) &#x3D;&gt; this._store.select(selectPipelineById(pipeline))))</code>
                     </td>
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="29" class="link-to-prism">src/lib/pipe-runner/components/pipe-runner/pipe-runner.service.ts:29</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="32" class="link-to-prism">src/lib/pipe-runner/components/pipe-runner/services/pipe-runner.service.ts:32</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="selectedPipelineId$"></a>
+                    <span class="name">
+                            <span class="modifier">Public</span>
+                        <span ><b>selectedPipelineId$</b></span>
+                        <a href="#selectedPipelineId$"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>this._route.queryParams.pipe(map((queryParam) &#x3D;&gt; (queryParam.pipeline ?? null) as string | null), filter(pipeline &#x3D;&gt; pipeline ? true : false))</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="31" class="link-to-prism">src/lib/pipe-runner/components/pipe-runner/services/pipe-runner.service.ts:31</a></div>
                         </td>
                     </tr>
 
@@ -699,18 +743,42 @@
             </tr>
                 <tr>
                     <td class="col-md-4">
-                        <i>Default value : </i><code>this.pipeline$.pipe(
-    rxjs.map(pipeline &#x3D;&gt; {
-      return pipeline?.solutionReference;
-    }),
-    rxjs.filter(solutionReference &#x3D;&gt; !!solutionReference),
-    rxjs.switchMap(solutionReference &#x3D;&gt; this._store.select(selectSolutionById(solutionReference ?? null)))
+                        <i>Default value : </i><code>this.selectedPipeline$.pipe(
+    map(pipeline &#x3D;&gt; pipeline?.solutionReference),
+    filter(solutionReference &#x3D;&gt; !!solutionReference),
+    switchMap(solutionReference &#x3D;&gt; this._store.select(selectSolutionById(solutionReference ?? null)))
   )</code>
                     </td>
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="32" class="link-to-prism">src/lib/pipe-runner/components/pipe-runner/pipe-runner.service.ts:32</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="35" class="link-to-prism">src/lib/pipe-runner/components/pipe-runner/services/pipe-runner.service.ts:35</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="status"></a>
+                    <span class="name">
+                            <span class="modifier">Public</span>
+                        <span ><b>status</b></span>
+                        <a href="#status"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>toSignal(this.status$)</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="95" class="link-to-prism">src/lib/pipe-runner/components/pipe-runner/services/pipe-runner.service.ts:95</a></div>
                         </td>
                     </tr>
 
@@ -732,8 +800,8 @@
                 <tr>
                     <td class="col-md-4">
                         <i>Default value : </i><code>this.actions$.pipe(
-    rxjs.switchMap((actions) &#x3D;&gt; this._store.select(selectPipelineActionStates(actions.map(action &#x3D;&gt; action?.identifier).filter(action &#x3D;&gt; action ? true : false) as string[]))),
-    rxjs.map(states &#x3D;&gt; {
+    switchMap((actions) &#x3D;&gt; this._store.select(selectPipelineActionStates(actions.map(action &#x3D;&gt; action?.identifier).filter(action &#x3D;&gt; action ? true : false) as string[]))),
+    map(states &#x3D;&gt; {
       if (states.every(status &#x3D;&gt; status.status &#x3D;&#x3D;&#x3D; &#x27;INITIALIZED&#x27;)) {
         return &#x27;Ready for run&#x27;;
       }
@@ -751,7 +819,7 @@
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="68" class="link-to-prism">src/lib/pipe-runner/components/pipe-runner/pipe-runner.service.ts:68</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="59" class="link-to-prism">src/lib/pipe-runner/components/pipe-runner/services/pipe-runner.service.ts:59</a></div>
                         </td>
                     </tr>
 
@@ -765,75 +833,66 @@
 
     <div class="tab-pane fade  tab-source-code" id="c-source">
         <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { ProcessBuilderRepository } from &#x27;@/lib/core/process-builder-repository&#x27;;
+import IPipeline from &#x27;@/lib/pipeline-store/interfaces/pipeline.interface&#x27;;
 import { mapIParamsInterfaces } from &#x27;@/lib/process-builder/extensions/rxjs/map-params-interfaces.rxjs&#x27;;
 import { selectIParams } from &#x27;@/lib/process-builder/store/selectors&#x27;;
+import { ISink } from &#x27;@/lib/shared/interfaces/sink.interface&#x27;;
 import { AllInOneRowSolver, StartLeftBottomSolver, SuperFloSolver } from &#x27;@/lib/storage-manager/solvers&#x27;;
 import { HttpClient } from &#x27;@angular/common/http&#x27;;
-import { EnvironmentInjector, EventEmitter, Injectable } from &#x27;@angular/core&#x27;;
+import { Injectable } from &#x27;@angular/core&#x27;;
+import { toSignal } from &#x27;@angular/core/rxjs-interop&#x27;;
 import { MatSnackBar } from &#x27;@angular/material/snack-bar&#x27;;
-import { ActivatedRoute, Router } from &#x27;@angular/router&#x27;;
+import { ActivatedRoute } from &#x27;@angular/router&#x27;;
 import { Store } from &#x27;@ngrx/store&#x27;;
 import { ISolutionWrapper } from &#x27;@smgr/interfaces&#x27;;
 import { addGroups, addSolution, selectSolutionById, setCurrentSolution } from &#x27;@smgr/store&#x27;;
 import moment from &#x27;moment&#x27;;
 import * as rxjs from &#x27;rxjs&#x27;;
+import { filter, map, Observable, shareReplay, switchMap } from &#x27;rxjs&#x27;;
 import { highlightSolutionNavItem } from &#x27;src/app/store/actions/application.actions&#x27;;
 import { IPipelineAction } from &#x27;src/lib/pipeline-store/interfaces/pipeline-action.interface&#x27;;
 import { updateIPipelineActionStatus, updateIPipelineActionStatuses } from &#x27;src/lib/pipeline-store/store/actions/pipeline-action-status.action&#x27;;
 import { setIPipelineActionSolution } from &#x27;src/lib/pipeline-store/store/actions/pipeline-action.actions&#x27;;
-import { renameIPipeline, setIPipelineSolutionReference } from &#x27;src/lib/pipeline-store/store/actions/pipeline.actions&#x27;;
+import { renamePipelineById, setPipelineSolutionReference } from &#x27;src/lib/pipeline-store/store/actions/pipeline.actions&#x27;;
 import { selectPipelineActionStates } from &#x27;src/lib/pipeline-store/store/selectors/pipeline-action-status.selectors&#x27;;
 import { selectPipelineActionAndSuccessors, selectPipelineActionByPipelineName } from &#x27;src/lib/pipeline-store/store/selectors/pipeline-action.selectors&#x27;;
-import { selectPipelineByName } from &#x27;src/lib/pipeline-store/store/selectors/pipeline.selectors&#x27;;
+import { selectPipelineById } from &#x27;src/lib/pipeline-store/store/selectors/pipeline.selectors&#x27;;
 import { selectSnapshot } from &#x27;src/lib/process-builder/globals/select-snapshot&#x27;;
 
 @Injectable()
 export class PipeRunnerService {
 
-  public consoleOutput &#x3D; new EventEmitter&lt;{ message: string, class: string }&gt;();
-
-  public selectedPipeline$ &#x3D; this._route.queryParams.pipe(rxjs.map(queryParam &#x3D;&gt; queryParam.pipeline), rxjs.filter(pipeline &#x3D;&gt; !!pipeline));
-  public pipeline$ &#x3D; this.selectedPipeline$.pipe(rxjs.switchMap(pipeline &#x3D;&gt; this._store.select(selectPipelineByName(pipeline))));
-  public pipelineName$ &#x3D; this.pipeline$.pipe(rxjs.map(pipeline &#x3D;&gt; pipeline?.name));
-  public solution$ &#x3D; this.pipeline$.pipe(
-    rxjs.map(pipeline &#x3D;&gt; {
-      return pipeline?.solutionReference;
-    }),
-    rxjs.filter(solutionReference &#x3D;&gt; !!solutionReference),
-    rxjs.switchMap(solutionReference &#x3D;&gt; this._store.select(selectSolutionById(solutionReference ?? null)))
+  public selectedPipelineId$ &#x3D; this._route.queryParams.pipe(map((queryParam) &#x3D;&gt; (queryParam.pipeline ?? null) as string | null), filter(pipeline &#x3D;&gt; pipeline ? true : false));
+  public selectedPipeline$ &#x3D; this.selectedPipelineId$.pipe(switchMap((pipeline) &#x3D;&gt; this._store.select(selectPipelineById(pipeline))));
+  public pipelineId$ &#x3D; this.selectedPipeline$.pipe(map((pipeline: IPipeline | null) &#x3D;&gt; pipeline?.id));
+  public pipelineName$ &#x3D; this.selectedPipeline$.pipe(map((pipeline: IPipeline | null) &#x3D;&gt; pipeline?.name));
+  public solution$ &#x3D; this.selectedPipeline$.pipe(
+    map(pipeline &#x3D;&gt; pipeline?.solutionReference),
+    filter(solutionReference &#x3D;&gt; !!solutionReference),
+    switchMap(solutionReference &#x3D;&gt; this._store.select(selectSolutionById(solutionReference ?? null)))
   );
-  public actions$ &#x3D; this.pipeline$.pipe(
-    rxjs.switchMap(pipeline &#x3D;&gt; {
-      if (!pipeline) {
-        return rxjs.NEVER;
-      }
-      return this._store.select(selectPipelineActionByPipelineName(pipeline.name));
-    }),
-    rxjs.map(actions &#x3D;&gt; {
+  public actions$: Observable&lt;IPipelineAction[]&gt; &#x3D; this.selectedPipeline$.pipe(
+    switchMap((pipeline: IPipeline | null) &#x3D;&gt; pipeline ? this._store.select(selectPipelineActionByPipelineName(pipeline.id)) : rxjs.NEVER),
+    map(actions &#x3D;&gt; {
       const initialAction &#x3D; actions.find(actions &#x3D;&gt; actions?.isPipelineStart), sortedActions &#x3D; [initialAction];
       let currentActions &#x3D; [initialAction];
 
       while (currentActions.length &gt; 0) {
         const successors &#x3D; actions.filter(action &#x3D;&gt; currentActions
-          .flatMap(action &#x3D;&gt; {
-            const successors &#x3D; [action?.onSuccess, action?.onError];
-            return successors;
-          })
-          .filter(identifier &#x3D;&gt; {
-            return !!identifier;
-          })
+          .flatMap(action &#x3D;&gt; [action?.onSuccess, action?.onError])
+          .filter(identifier &#x3D;&gt; !!identifier)
           .indexOf(action?.identifier) &gt; -1);
 
         sortedActions.push(...successors);
         currentActions &#x3D; successors;
       }
 
-      return sortedActions.filter(action &#x3D;&gt; action);
+      return sortedActions.filter(action &#x3D;&gt; action) as IPipelineAction[];
     })
   );
   public status$ &#x3D; this.actions$.pipe(
-    rxjs.switchMap((actions) &#x3D;&gt; this._store.select(selectPipelineActionStates(actions.map(action &#x3D;&gt; action?.identifier).filter(action &#x3D;&gt; action ? true : false) as string[]))),
-    rxjs.map(states &#x3D;&gt; {
+    switchMap((actions) &#x3D;&gt; this._store.select(selectPipelineActionStates(actions.map(action &#x3D;&gt; action?.identifier).filter(action &#x3D;&gt; action ? true : false) as string[]))),
+    map(states &#x3D;&gt; {
       if (states.every(status &#x3D;&gt; status.status &#x3D;&#x3D;&#x3D; &#x27;INITIALIZED&#x27;)) {
         return &#x27;Ready for run&#x27;;
       }
@@ -848,12 +907,12 @@ export class PipeRunnerService {
     rxjs.distinctUntilChanged((prev, curr) &#x3D;&gt; prev &#x3D;&#x3D;&#x3D; curr)
   );
   public inputParams$ &#x3D; this._store.select(selectIParams()).pipe(
-    rxjs.shareReplay(1),
-    rxjs.map(inputParams &#x3D;&gt; inputParams ?? []),
+    shareReplay(1),
+    map(inputParams &#x3D;&gt; inputParams ?? []),
     mapIParamsInterfaces(this._store),
-    rxjs.map(inputs &#x3D;&gt; {
+    map(inputs &#x3D;&gt; {
       return inputs.reduce((prev, curr) &#x3D;&gt; {
-        if(curr.normalizedName){
+        if (curr.normalizedName) {
           if (curr.defaultValue) {
             prev[curr.normalizedName] &#x3D; curr.defaultValue;
           } else {
@@ -867,24 +926,27 @@ export class PipeRunnerService {
     })
   );
 
-  constructor(private _router: Router, private _route: ActivatedRoute, private _store: Store, public httpClient: HttpClient, private _environmentInjector: EnvironmentInjector, private _snackBar: MatSnackBar) { }
+  public status &#x3D; toSignal(this.status$);
 
-  public async renameCurrentPipeline(updatedName: string) {
-    const currentPipelineName &#x3D; await selectSnapshot(this.pipelineName$);
-    if (typeof currentPipelineName &#x3D;&#x3D;&#x3D; &#x27;string&#x27; &amp;&amp; updatedName !&#x3D;&#x3D; currentPipelineName) {
-      this._store.dispatch(renameIPipeline(currentPipelineName, updatedName));
-      this._router.navigate([&#x27;/pipe-runner&#x27;], {
-        relativeTo: this._route,
-        queryParams: {
-          pipeline: updatedName
-        }
-      });
+  constructor(private _route: ActivatedRoute, private _store: Store, public httpClient: HttpClient, private _snackBar: MatSnackBar) { }
+
+  public async renameCurrentPipeline(updatedName: string, sink?: ISink, channel?: string) {
+    const currentPipelineId &#x3D; await selectSnapshot(this.pipelineId$), outdatedPipelineName &#x3D; await selectSnapshot(this.pipelineName$);
+    if (typeof currentPipelineId &#x3D;&#x3D;&#x3D; &#x27;string&#x27; &amp;&amp; updatedName !&#x3D;&#x3D; outdatedPipelineName) {
+      this._store.dispatch(renamePipelineById(currentPipelineId, updatedName));
       this._snackBar.open(&#x60;the pipe was successfully renamed to ${updatedName}&#x60;, &#x27;ok&#x27;, { duration: 2000 });
+
+      if (sink) {
+        sink.log({ message: &#x60;renamed pipeline &quot;${updatedName}&quot; (former name: ${outdatedPipelineName})&#x60;, level: &#x27;success&#x27;, channel });
+      }
     }
   }
 
-  public async run() {
-    this.consoleOutput.emit({ message: &#x60;--------------- new run ---------------&#x60;, class: &#x27;default&#x27; });
+  public async run(sink?: ISink, channel?: string) {
+    if (sink) {
+      sink.log({ message: &#x60;--------------- new run ---------------&#x60;, level: &#x27;prioritized&#x27;, channel });
+    }
+
     const actions &#x3D; (await selectSnapshot(this.actions$)).filter(action &#x3D;&gt; action ? true : false) as IPipelineAction[],
       injector: { [key: string]: unknown } &#x3D; {},
       params &#x3D; await rxjs.firstValueFrom(this.inputParams$);
@@ -898,24 +960,13 @@ export class PipeRunnerService {
       this._store.dispatch(updateIPipelineActionStatus(currentAction.identifier, &#x27;RUNNING&#x27;));
 
       try {
-        const console &#x3D; {
-          log: (...args: (string|number|object)[]) &#x3D;&gt; {
-            args.forEach(arg &#x3D;&gt; {
-              const stringified &#x3D; typeof arg &#x3D;&#x3D;&#x3D; &#x27;object&#x27;? JSON.stringify(arg): arg.toString();
-              this.consoleOutput.next({
-                message: &#x60;${moment().format(&#x27;HH:mm:ss&#x27;)}: ${stringified}&#x60;,
-                class: &#x27;default&#x27;
-              });
-            });
-          }
-        }
         const solvers &#x3D; [StartLeftBottomSolver, AllInOneRowSolver, SuperFloSolver];
         const rxjsElements &#x3D; Object.keys(rxjs) as (keyof typeof rxjs)[];
         const mainMethodStart &#x3D; currentAction?.executableCode?.indexOf(&#x27;async () &#x3D;&gt; {&#x27;) ?? 0;
         const executableCode &#x3D; currentAction?.executableCode?.substring(mainMethodStart) ?? undefined;
         const executableFunction &#x3D; new Function(&#x27;console&#x27;, &#x27;httpClient&#x27;, ...solvers.map(solver &#x3D;&gt; new solver().constructor.name), ...rxjsElements, ...paramNames, executableCode ? &#x60;return ${executableCode};&#x60; : &#x27;return undefined;&#x27;);
         const result &#x3D; await executableFunction(
-          console,
+          sink,
           this.httpClient,
           ...solvers,
           ...rxjsElements.map(element &#x3D;&gt; rxjs[element]),
@@ -926,18 +977,17 @@ export class PipeRunnerService {
           injector[currentAction.ouputParamName] &#x3D; result;
         }
 
-        if (currentAction!.outputMatchesPipelineOutput) {
+        if (currentAction.outputMatchesPipelineOutput) {
           solutionWrapper &#x3D; result as ISolutionWrapper;
-          this._store.dispatch(setIPipelineActionSolution(currentAction!.identifier, solutionWrapper!));
-          this._store.dispatch(addSolution({ solution: (solutionWrapper as ISolutionWrapper)!.solution }));
+          this._store.dispatch(setIPipelineActionSolution(currentAction.identifier, solutionWrapper));
+          this._store.dispatch(addSolution({ solution: (solutionWrapper as ISolutionWrapper).solution }));
         }
 
         const representation &#x3D; typeof solutionWrapper &#x3D;&#x3D;&#x3D; &#x27;object&#x27; ? JSON.stringify(result) : result;
-        this.consoleOutput.emit({
-          message: &#x60;${moment().format(&#x27;HH:mm:ss&#x27;)}: ${representation}&#x60;,
-          class: &#x27;default&#x27;
-        });
-        this._store.dispatch(updateIPipelineActionStatus(currentAction!.identifier, &#x27;SUCCEEDED&#x27;));
+        this._store.dispatch(updateIPipelineActionStatus(currentAction.identifier, &#x27;SUCCEEDED&#x27;));
+        if (sink) {
+          sink.log({ message: &#x60;${moment().format(&#x27;HH:mm:ss&#x27;)}: ${representation}&#x60;, level: &#x27;info&#x27;, channel, messageObject: result &amp;&amp; typeof result &#x3D;&#x3D;&#x3D; &#x27;object&#x27;? result: undefined });
+        }
 
         const skippedAction &#x3D; actions.find(action &#x3D;&gt; action.identifier &#x3D;&#x3D;&#x3D; currentAction?.onError);
         if (skippedAction) {
@@ -948,10 +998,9 @@ export class PipeRunnerService {
         currentAction &#x3D; actions.find(action &#x3D;&gt; action.identifier &#x3D;&#x3D;&#x3D; currentAction?.onSuccess);
       } catch (error) {
 
-        this.consoleOutput.emit({
-          message: &#x60;${moment().format(&#x27;HH:mm:ss&#x27;)}: ${error}&#x60;,
-          class: &#x27;error&#x27;
-        });
+        if (sink) {
+          sink.log({ message: &#x60;${moment().format(&#x27;HH:mm:ss&#x27;)}: ${error}&#x60;, level: &#x27;error&#x27;, channel });
+        }
 
         if (!currentAction) {
           throw (&#x27;action not defined&#x27;);
@@ -972,6 +1021,10 @@ export class PipeRunnerService {
       }
     }
 
+    if (sink) {
+      sink.log({ message: &#x60;--------------- finished ---------------&#x60;, level: &#x27;prioritized&#x27;, channel });
+    }
+
     if (!solutionWrapper) {
       throw (&#x27;no solution found!&#x27;);
     }
@@ -984,9 +1037,9 @@ export class PipeRunnerService {
     this._store.dispatch(setCurrentSolution({ solution: solutionWrapper.solution }));
     this._store.dispatch(addGroups({ groups: (solutionWrapper as ISolutionWrapper).groups }));
 
-    const pipeName &#x3D; await rxjs.firstValueFrom(this.pipelineName$);
-    if (pipeName) {
-      this._store.dispatch(setIPipelineSolutionReference(pipeName, solutionWrapper.solution.id));
+    const pipelineIdentifier &#x3D; await selectSnapshot(this.pipelineId$);
+    if (pipelineIdentifier) {
+      this._store.dispatch(setPipelineSolutionReference(pipelineIdentifier, solutionWrapper.solution.id));
     }
   }
 }

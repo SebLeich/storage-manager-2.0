@@ -72,24 +72,27 @@ export class BPMNJsRepository {
         }
     }
 
-    public static getAvailableInputParams(element: IElement) {
+    public static getAvailableInputParams(element: IElement | undefined) {
+        if(!element) {
+            return [];
+        }
+
         const availableInputParamsIElements = this.getAvailableInputParamsIElements(element);
         const availableInputParams = availableInputParamsIElements.map((element) => BPMNJsRepository.getDataParamId(element)) as ParamCodes[];
         return availableInputParams;
     }
 
-    public static getAvailableInputParamsIElements(element: IElement) {
+    public static getAvailableInputParamsIElements(element: IElement): IElement[] {
         const anchestors: IElement[] = [];
         this.fillAnchestors(element, anchestors);
 
-        const outputParams = anchestors
-            .filter((anchestor) => anchestor.type === shapeTypes.Task)
-            .flatMap((taskElement) => taskElement.outgoing)
-            .filter((outgoingConnector) => outgoingConnector.type === shapeTypes.DataOutputAssociation)
-            .map((outgoingDataOutputAssociation) => outgoingDataOutputAssociation.target)
-            .filter((dataObjectReference) => typeof BPMNJsRepository.getDataParamId(dataObjectReference) === 'number');
+        const precedingTasks = anchestors.filter((anchestor) => anchestor.type === shapeTypes.Task);
+        const precedingTasksOutgoingConnectors = precedingTasks.flatMap((taskElement) => taskElement.outgoing);
+        const precedingTasksOutgoingDataOutputAssociations = precedingTasksOutgoingConnectors.filter((outgoingConnector) => outgoingConnector.type === shapeTypes.DataOutputAssociation);
+        const precedingDataObjectReferences = precedingTasksOutgoingDataOutputAssociations.map((outgoingDataOutputAssociation) => outgoingDataOutputAssociation.target);
+        const precedingDataObjectReferencesWithParamId = precedingDataObjectReferences.filter((dataObjectReference) => typeof BPMNJsRepository.getDataParamId(dataObjectReference) === 'number');
 
-        return outputParams;
+        return precedingDataObjectReferencesWithParamId;
     }
 
     public static getExtensionElement(element: IBusinessObject, type: string): undefined | IExtensionElement {

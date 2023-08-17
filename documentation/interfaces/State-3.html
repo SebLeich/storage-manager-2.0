@@ -65,7 +65,7 @@
             <h3>File</h3>
         </p>
         <p class="comment">
-            <code>src/lib/pipeline-store/store/reducers/pipeline-action.reducer.ts</code>
+            <code>src/lib/pipeline-store/store/reducers/pipeline-action-status.reducer.ts</code>
         </p>
 
 
@@ -146,21 +146,23 @@
     <div class="tab-pane fade  tab-source-code" id="c-source">
         <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { createEntityAdapter, EntityAdapter, EntityState } from &quot;@ngrx/entity&quot;;
 import { createReducer, on } from &quot;@ngrx/store&quot;;
-import { IPipelineAction } from &quot;src/lib/pipeline-store/interfaces/pipeline-action.interface&quot;;
-import { addIPipelineAction, addIPipelineActions, setIPipelineActionSolution } from &quot;../actions/pipeline-action.actions&quot;;
-import { removeIPipeline, renameIPipeline } from &quot;../actions/pipeline.actions&quot;;
+import moment from &quot;moment&quot;;
+import { IPipelineActionStatusInformation } from &quot;../../interfaces/pipeline-action-status.interface&quot;;
+import { updateIPipelineActionStatus, updateIPipelineActionStatuses } from &quot;../actions/pipeline-action-status.action&quot;;
+import { addIPipelineActions } from &quot;../actions/pipeline-action.actions&quot;;
+import { removePipeline } from &quot;../actions/pipeline.actions&quot;;
 
-export const featureKey &#x3D; &#x27;pipelineAction&#x27;;
+export const featureKey &#x3D; &#x27;pipelineActionStatus&#x27;;
 
-export interface State extends EntityState&lt;IPipelineAction&gt; {
+export interface State extends EntityState&lt;IPipelineActionStatusInformation&gt; {
     ids: string[];
 }
 
-export const adapter: EntityAdapter&lt;IPipelineAction&gt; &#x3D; createEntityAdapter&lt;IPipelineAction&gt;(
+export const adapter: EntityAdapter&lt;IPipelineActionStatusInformation&gt; &#x3D; createEntityAdapter&lt;IPipelineActionStatusInformation&gt;(
     {
-        selectId: (pipeline) &#x3D;&gt; pipeline.identifier,
-        sortComparer: (action1, action2) &#x3D;&gt; {
-            return action1.name &gt; action2.name ? 1 : -1;
+        selectId: (pipeline) &#x3D;&gt; pipeline.pipelineAction,
+        sortComparer: (pipeline1, pipeline2) &#x3D;&gt; {
+            return pipeline1.pipelineAction &gt; pipeline2.pipelineAction ? 1 : -1;
         }
     }
 );
@@ -172,41 +174,43 @@ export const initialState: State &#x3D; adapter.getInitialState({
 
 export const reducer &#x3D; createReducer(
     initialState,
-    on(addIPipelineAction, (state, { pipelineAction }) &#x3D;&gt; {
-        return adapter.addOne(
-            { ...pipelineAction },
-            state
-        );
-    }),
+
     on(addIPipelineActions, (state, { pipelineActions }) &#x3D;&gt; {
         return adapter.addMany(
-            pipelineActions,
+            pipelineActions.map(pipelineAction &#x3D;&gt; ({ &#x27;pipelineAction&#x27;: pipelineAction.identifier, &#x27;status&#x27;: &#x27;INITIALIZED&#x27;, &#x27;statusTimestamp&#x27;: moment().format() } as IPipelineActionStatusInformation)),
             state
         );
     }),
-    on(removeIPipeline, (state, { pipeline }) &#x3D;&gt; {
-        const effectedPipelineActions &#x3D; Object.values(state.entities).filter(action &#x3D;&gt; action?.pipeline &#x3D;&#x3D;&#x3D; pipeline.name) as IPipelineAction[];
-        return adapter.removeMany(effectedPipelineActions.map(action &#x3D;&gt; action.identifier), state);
+
+    on(removePipeline, (state, { pipeline }) &#x3D;&gt; {
+        const effectedPipelineActions &#x3D; Object.values(state.entities).filter(action &#x3D;&gt; action?.pipeline &#x3D;&#x3D;&#x3D; pipeline.id) as IPipelineActionStatusInformation[];
+        return adapter.removeMany(effectedPipelineActions.map(action &#x3D;&gt; action.pipelineAction), state);
     }),
-    on(renameIPipeline, (state, { pipelineName, updatedName }) &#x3D;&gt; {
-        const effectedPipelineActions &#x3D; Object.values(state.entities).filter(action &#x3D;&gt; action?.pipeline &#x3D;&#x3D;&#x3D; pipelineName) as IPipelineAction[];
-        return adapter.updateMany(effectedPipelineActions.map(action &#x3D;&gt; {
-            return {
+
+    on(updateIPipelineActionStatus, (state, { pipelineActionStatus, pipelineName }) &#x3D;&gt; {
+        return adapter.updateOne(
+            {
+                id: pipelineName,
+                changes: {
+                    status: pipelineActionStatus,
+                    statusTimestamp: moment().format(),
+                }
+            },
+            state
+        );
+    }),
+
+    on(updateIPipelineActionStatuses, (state, { pipelineActions, pipelineActionStatus }) &#x3D;&gt; {
+        return adapter.updateMany(
+            pipelineActions.map(action &#x3D;&gt; ({
                 id: action.identifier,
                 changes: {
-                    pipeline: updatedName
+                    status: pipelineActionStatus
                 }
-            }
-        }), state)
-    }),
-    on(setIPipelineActionSolution, (state, { pipelineActionIdentifier, solutionReference }) &#x3D;&gt; {
-        return adapter.updateOne({
-            id: pipelineActionIdentifier,
-            changes: {
-                solutionReference: solutionReference
-            }
-        }, state);
-    }),
+            })),
+            state
+        );
+    })
 )
 </code></pre>
     </div>

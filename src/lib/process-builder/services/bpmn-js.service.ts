@@ -201,13 +201,6 @@ export class BpmnJsService {
   public static elementDeletionRequested$ = new Subject<IElement>();
   public static elementEndEventCreationRequested = new Subject<IElement>();
 
-  /**
-   * @deprecated
-   */
-  public get bpmnJs(){
-    return this._bpmnJs;
-  }
-
   constructor(
     @Inject(PROCESS_BUILDER_CONFIG_TOKEN) private _config: IProcessBuilderConfig,
     @Inject(BPMN_JS) private _bpmnJs: IBpmnJS,
@@ -355,12 +348,13 @@ export class BpmnJsService {
 
   public async saveCurrentBpmnModel(showHintAfterAction?: boolean | { successMessage: string }) {
     this._isSaving.next(true);
-    await selectSnapshot(timer(0));
-    const result: { xml: string } = await this.bpmnJs.saveXML();
-    const viewbox = getCanvasModule(this.bpmnJs).viewbox();
+    const result: { xml: string } = await this._bpmnJs.saveXML();
+    const viewbox = getCanvasModule(this._bpmnJs).viewbox();
     this._store.dispatch(updateCurrentIBpmnJSModel({ xml: result.xml, viewbox: viewbox }));
+
     this._containsChanges.next(false);
     this._isSaving.next(false);
+    
     if (showHintAfterAction) {
       this._snackBar.open(typeof showHintAfterAction === 'object' && showHintAfterAction.successMessage ? showHintAfterAction.successMessage : 'model saved successfully', 'ok', { duration: 2000 });
     }

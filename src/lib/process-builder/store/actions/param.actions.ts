@@ -32,5 +32,5 @@ export const upsertIParams = createAction(
 
 export const removeIParam = createAction(
   '[IParam] Remove IParams',
-  (param: IParam|number) => ({ param })
+  (param: IParam|number|null) => ({ param })
 );

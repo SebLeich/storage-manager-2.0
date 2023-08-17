@@ -1,6 +1,6 @@
 {
   "name": "storage-manager",
-  "version": "0.5.0",
+  "version": "0.6.0",
   "scripts": {
     "compodoc": "npx compodoc -p tsconfig.doc.json",
     "ng": "ng",

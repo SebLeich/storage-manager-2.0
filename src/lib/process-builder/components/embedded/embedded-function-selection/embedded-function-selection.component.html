@@ -8,57 +8,25 @@
 
     <div class="content">
 
-        <div class="section-headline">Your implementations</div>
-        <div class="grid" *ngIf="(customFunctions$|async)?.length; else noFunctions">
-
-            <div class="function-wrapper" [@showList]="(customFunctions$|async)?.length" *ngFor="let func of (customFunctions$|async)" (click)="selectFunction(func)" [ngClass]="{ 'active': func.identifier === formGroup.controls.functionIdentifier!.value }">
-
-                <div class="preview">
-                    <app-function-preview [func]="func"></app-function-preview>
-                </div>
-
-                <div class="control-wrapper">
-
-                    <div class="control accent-2">
-                        {{ func.identifier === formGroup.controls.functionIdentifier!.value? 'unselect': 'select' }}
+        <ng-container *ngIf="(functionTemplates$|async)?.length">
+            <div class="section-headline">Templates</div>
+            <div class="grid">
+                <div class="function-wrapper" [@showList]="(functionTemplates$|async)?.length" *ngFor="let func of (functionTemplates$|async)" (click)="selectFunction(func)" [ngClass]="{ 'active': func.identifier === formGroup.controls.functionIdentifier!.value }">
+                    <div class="preview">
+                        <app-function-preview [func]="func"></app-function-preview>
                     </div>
-
-                    <div *ngIf="func.customImplementation" class="control danger"
-                        (click)="removeFunction(func, $event)">
-                        remove
+                    <div class="control-wrapper">
+                        <div class="control accent-2">
+                            {{ func.identifier === formGroup.controls.functionIdentifier!.value? 'unselect': 'select' }}
+                        </div>
+                        <div *ngIf="func.customImplementation" class="control danger"
+                            (click)="removeFunction(func, $event)">
+                            remove
+                        </div>
                     </div>
-
                 </div>
-
             </div>
-
-        </div>
-
-        <div class="section-headline">Templates</div>
-        <div class="grid" *ngIf="(functionTemplates$|async)?.length; else noFunctions">
-
-            <div class="function-wrapper" [@showList]="(functionTemplates$|async)?.length" *ngFor="let func of (functionTemplates$|async)" (click)="selectFunction(func)" [ngClass]="{ 'active': func.identifier === formGroup.controls.functionIdentifier!.value }">
-
-                <div class="preview">
-                    <app-function-preview [func]="func"></app-function-preview>
-                </div>
-
-                <div class="control-wrapper">
-
-                    <div class="control accent-2">
-                        {{ func.identifier === formGroup.controls.functionIdentifier!.value? 'unselect': 'select' }}
-                    </div>
-
-                    <div *ngIf="func.customImplementation" class="control danger"
-                        (click)="removeFunction(func, $event)">
-                        remove
-                    </div>
-
-                </div>
-
-            </div>
-
-        </div>
+        </ng-container>
 
         <div class="section-headline">All functions</div>
         <div class="grid" *ngIf="(functions$|async)?.length; else noFunctions">
@@ -90,9 +58,8 @@
 
     <div class="output-name-wrapper" *ngIf="requiresCustomOutputParamName$|async">
         <div class="label">please enter a custom output parameter name</div>
-        <input [formControl]="formGroup.controls.outputParamName!" type="text" />
+        <input [value]="formGroup.controls.outputParamName?.value ?? ''" (input)="setOutputParamName($event)" type="text" placeholder="set output param name" />
     </div>
-
 </div>
 
 <ng-template #noFunctions>

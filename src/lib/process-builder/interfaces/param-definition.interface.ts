@@ -1,5 +1,7 @@
+import { ParamType } from "../types/param.type";
+
 export interface IParamDefinition {
-    type: 'number' | 'string' | 'boolean' | 'object' | 'array' | 'symbol' | 'undefined' | 'function' | 'bigint';
+    type: ParamType;
     name: string;
     normalizedName: string;
     typeDef: null | IParamDefinition | IParamDefinition[];

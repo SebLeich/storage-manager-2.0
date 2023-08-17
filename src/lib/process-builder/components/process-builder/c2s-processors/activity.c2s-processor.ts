@@ -1,5 +1,4 @@
 import { ITaskCreationFormGroupValue } from "@/lib/process-builder/interfaces/task-creation-form-group-value.interface";
-import { ITaskCreationPayload } from "@/lib/process-builder/interfaces/task-creation-payload.interface";
 import { Inject, Injectable } from "@angular/core";
 import { selectSnapshot } from "@/lib/process-builder/globals/select-snapshot";
 import { Store } from "@ngrx/store";
@@ -9,6 +8,8 @@ import { CodemirrorRepository } from "@/lib/core/codemirror.repository";
 import { ProcessBuilderRepository } from "@/lib/core/process-builder-repository";
 import { upsertIFunction } from "@/lib/process-builder/store";
 import { IC2SProcessor } from "../interfaces/c2s-processor.interface";
+import { ITaskCreationOutput } from "../../dialog/task-creation/interfaces/task-creation-output.interface";
+import { FunctionOutputService } from "../services/function-output.service";
 
 /**
  * that processor applies changes provided by a task creation form group value to the state
@@ -16,55 +17,56 @@ import { IC2SProcessor } from "../interfaces/c2s-processor.interface";
 @Injectable()
 export class ActivityC2SProcessor implements IC2SProcessor {
 
-  constructor(
-    @Inject(PROCESS_BUILDER_CONFIG_TOKEN) private _config: IProcessBuilderConfig,
-    private _store: Store,
-  ) { }
+  private readonly _functionOutputService = new FunctionOutputService(this._store);
 
-  public async processConfiguration({ taskCreationPayload, taskCreationFormGroupValue }: { taskCreationPayload?: ITaskCreationPayload, taskCreationFormGroupValue?: ITaskCreationFormGroupValue }) {
+  constructor(@Inject(PROCESS_BUILDER_CONFIG_TOKEN) private _config: IProcessBuilderConfig, private _store: Store) { }
+
+  public async processConfiguration({ taskCreationPayload, formValue, selectedFunction, methodEvaluation }: ITaskCreationOutput) {
     const configureActivity = taskCreationPayload?.configureActivity;
-    if (!configureActivity || !taskCreationFormGroupValue) {
+    if (!configureActivity || !formValue) {
       return;
     }
 
-    let functionObject = await selectSnapshot(this._store.select(selectIFunction(taskCreationFormGroupValue.functionIdentifier)));
+    let functionObject = await selectSnapshot(this._store.select(selectIFunction(formValue.functionIdentifier)));
     if (!functionObject) {
       functionObject = {
-        identifier: taskCreationFormGroupValue.functionIdentifier,
+        identifier: formValue.functionIdentifier,
         _isImplementation: true,
-        requireCustomImplementation: taskCreationFormGroupValue.requireCustomImplementation ?? false,
+        requireCustomImplementation: selectedFunction.requireCustomImplementation ?? false,
         requireDynamicInput: false,
       } as IFunction;
     }
 
+    const { outputParamIdentifier } = await this._functionOutputService.detectFunctionOutput(functionObject, methodEvaluation);
+
     functionObject = {
       ...functionObject,
-      canFail: taskCreationFormGroupValue.canFail ?? false,
-      name: taskCreationFormGroupValue.name ?? this._config.defaultFunctionName,
-      normalizedName: taskCreationFormGroupValue.normalizedName ?? ProcessBuilderRepository.normalizeName(taskCreationFormGroupValue.name ?? undefined),
-      finalizesFlow: taskCreationFormGroupValue.isProcessOutput ?? false,
-      customImplementation: taskCreationFormGroupValue.implementation?.text ?? undefined,
-      output: taskCreationFormGroupValue.outputParamIdentifier,
+      canFail: formValue.functionCanFail ?? false,
+      name: formValue.functionName ?? this._config.defaultFunctionName,
+      normalizedName: formValue.functionNormalizedName ?? ProcessBuilderRepository.normalizeName(formValue.functionName ?? undefined),
+      finalizesFlow: false,
+      customImplementation: formValue.functionImplementation?.text ?? undefined,
+      output: outputParamIdentifier
     };
 
-    await this._applyFunctionConfiguration(taskCreationFormGroupValue, functionObject);
+    await this._applyFunctionConfiguration(formValue, functionObject);
   }
 
   private async _applyFunctionConfiguration(taskCreationData: ITaskCreationFormGroupValue, referencedFunction: IFunction) {
     const inputParams = await this._extractInputParams(taskCreationData, referencedFunction);
     const functionIdentifier = referencedFunction.requireCustomImplementation ? await selectSnapshot(this._store.select(selectNextFunctionIdentifier())) : referencedFunction.identifier;
     const updatedFunction = {
-      customImplementation: taskCreationData.implementation?.text ?? undefined,
-      canFail: taskCreationData.canFail ?? false,
-      name: taskCreationData.name ?? this._config.defaultFunctionName,
+      customImplementation: taskCreationData.functionImplementation?.text ?? undefined,
+      canFail: taskCreationData.functionCanFail ?? false,
+      name: taskCreationData.functionName ?? this._config.defaultFunctionName,
       identifier: functionIdentifier,
-      normalizedName: taskCreationData.normalizedName ?? ProcessBuilderRepository.normalizeName(taskCreationData.name ?? undefined),
+      normalizedName: taskCreationData.functionNormalizedName ?? ProcessBuilderRepository.normalizeName(taskCreationData.functionName ?? undefined),
       output: referencedFunction.output,
       implementation: referencedFunction.implementation,
       inputTemplates: inputParams,
       requireCustomImplementation: false,
       requireDynamicInput: false,
-      finalizesFlow: taskCreationData.isProcessOutput ?? false,
+      finalizesFlow: false,
       requireStaticOutputDefinition: referencedFunction.requireStaticOutputDefinition,
       _isImplementation: true
     } as IFunction;
@@ -74,12 +76,12 @@ export class ActivityC2SProcessor implements IC2SProcessor {
 
   private async _extractInputParams(taskCreationData: ITaskCreationFormGroupValue, referencedFunction: IFunction): Promise<IInputParam[]> {
     const inputParams: IInputParam[] = [];
-    if (referencedFunction.inputTemplates === 'dynamic' && typeof taskCreationData.interface === 'string') {
-      inputParams.push({ optional: false, interface: taskCreationData.interface, name: taskCreationData.normalizedName, type: 'object' });
+    if (referencedFunction.inputTemplates === 'dynamic' && typeof taskCreationData.outputParamInterface === 'string') {
+      inputParams.push({ optional: false, interface: taskCreationData.outputParamInterface, name: taskCreationData.functionNormalizedName, type: 'object' });
     }
     else if (referencedFunction.requireCustomImplementation || referencedFunction.customImplementation) {
-      const usedInputParams: { varName: string, propertyName: string | null }[] = taskCreationData.implementation
-        ? CodemirrorRepository.getUsedInputParams(undefined, taskCreationData.implementation.text)
+      const usedInputParams: { varName: string, propertyName: string | null }[] = taskCreationData.functionImplementation
+        ? CodemirrorRepository.getUsedInputParams(undefined, taskCreationData.functionImplementation.text)
         : [];
 
       const usedInputParamEntities = await selectSnapshot(

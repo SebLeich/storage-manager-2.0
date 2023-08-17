@@ -78,6 +78,7 @@
                     <td class="col-md-4">
                         <ul class="index-list">
                             <li>
+                                    <span class="modifier">Public</span>
                                 <a href="#loadParams$" >loadParams$</a>
                             </li>
                         </ul>
@@ -166,6 +167,7 @@
                 <td class="col-md-4">
                     <a name="loadParams$"></a>
                     <span class="name">
+                            <span class="modifier">Public</span>
                         <span ><b>loadParams$</b></span>
                         <a href="#loadParams$"><span class="icon ion-ios-link"></span></a>
                     </span>
@@ -198,10 +200,10 @@
 
 
     <div class="tab-pane fade  tab-source-code" id="c-source">
-        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { ApplicationRef, Inject, Injectable, Optional } from &#x27;@angular/core&#x27;;
+        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { Inject, Injectable, Optional } from &#x27;@angular/core&#x27;;
 import { Actions, createEffect, ofType } from &#x27;@ngrx/effects&#x27;;
 import { of } from &#x27;rxjs&#x27;;
-import { finalize, mergeMap } from &#x27;rxjs/operators&#x27;;
+import { mergeMap } from &#x27;rxjs/operators&#x27;;
 import { FUNCTIONS_CONFIG_TOKEN, IFunction } from &#x27;../../interfaces/function.interface&#x27;;
 import { addIFunctions, loadIFunctions } from &#x27;../actions/function.actions&#x27;;
 
@@ -210,7 +212,7 @@ import { addIFunctions, loadIFunctions } from &#x27;../actions/function.actions&
 @Injectable()
 export class IFunctionEffects {
 
-  loadParams$ &#x3D; createEffect(() &#x3D;&gt;
+  public loadParams$ &#x3D; createEffect(() &#x3D;&gt;
     this._actions$.pipe(
       ofType(loadIFunctions),
       mergeMap(
