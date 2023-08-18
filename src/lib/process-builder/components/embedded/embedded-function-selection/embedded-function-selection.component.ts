@@ -8,14 +8,11 @@ import { ControlContainer, FormControl } from '@angular/forms';
 import { Subscription, defer, map, startWith, switchMap, timer } from 'rxjs';
 import { removeIFunction } from 'src/lib/process-builder/store/actions/function.actions';
 import { combineLatest } from 'rxjs/internal/observable/combineLatest';
-import { ITaskCreationFormGroupValue, TaskCreationFormGroup } from 'src/lib/process-builder/interfaces/task-creation-form-group-value.interface';
+import { TaskCreationFormGroup } from 'src/lib/process-builder/interfaces/task-creation-form-group-value.interface';
 import { showAnimation } from 'src/lib/shared/animations/show';
 import { showListAnimation } from 'src/lib/shared/animations/show-list-slow';
 import { ProcessBuilderRepository } from '@/lib/core/process-builder-repository';
-import { selectIInterface } from '@/lib/process-builder/store/selectors';
-import { selectSnapshot } from '@/lib/process-builder/globals/select-snapshot';
-import defaultImplementation from '@/lib/process-builder/globals/default-implementation';
-import { CodemirrorRepository } from '@/lib/core/codemirror.repository';
+import { FunctionFormGroupService } from '@/lib/process-builder/services/function-form-group.service';
 
 @Component({
 	selector: 'app-embedded-function-selection',
@@ -103,25 +100,9 @@ export class EmbeddedFunctionSelectionComponent implements IEmbeddedView, OnDest
 	}
 
 	public async selectFunction(selectedFunction: IFunction) {
-		const functionIdentifier = this.formGroup.controls.functionIdentifier?.value === selectedFunction.identifier ? null : selectedFunction.identifier;
-		const implementation = selectedFunction.requireCustomImplementation? CodemirrorRepository.stringToTextLeaf(selectedFunction.implementation ?? defaultImplementation) : null;
-		const patchValue: Partial<ITaskCreationFormGroupValue> = {
-			functionIdentifier: functionIdentifier,
-			outputParamInterface: selectedFunction.outputTemplate ?? null,
-			functionName: selectedFunction.name,
-			functionNormalizedName: selectedFunction.normalizedName,
-			functionCanFail: selectedFunction.canFail,
-			functionImplementation: implementation,
-		};
-
-		if (!selectedFunction._isImplementation && selectedFunction.outputTemplate && this.formGroup.controls.outputParamName?.pristine) {
-			const template = await selectSnapshot(this._store.select(selectIInterface(selectedFunction.outputTemplate)));
-			patchValue.outputParamName = template?.name ?? '';
-			patchValue.outputParamNormalizedName = template?.normalizedName ?? '';
-		}
-
+		const patchValue = await new FunctionFormGroupService(this._store).getFunctionFormGroupValue(selectedFunction, !this.formGroup.controls.outputParamName?.pristine);
 		this.formGroup.patchValue(patchValue);
-		this._changeDetectorRef.detectChanges();
+		this._changeDetectorRef.markForCheck();
 	}
 
 	public toggleSearchInput(expand?: boolean) {

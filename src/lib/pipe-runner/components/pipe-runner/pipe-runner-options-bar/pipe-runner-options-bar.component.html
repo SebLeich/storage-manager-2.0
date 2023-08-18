@@ -1,5 +1,5 @@
-<div class="body">
-    <button mat-icon-button [disabled]="!!selectedPipeline" (click)="designPipeline.emit()" matTooltip="design pipeline"
+<div class="body" [class.collapsed]="isMinimized">
+    <button mat-icon-button [disabled]="!selectedPipeline" (click)="designPipeline.emit()" matTooltip="design pipeline"
         matTooltipPosition="right">
         <mat-icon>hub</mat-icon>
     </button>
@@ -19,5 +19,9 @@
     <button mat-icon-button [disabled]="solution? false: true" (click)="openVisualization.emit()"
         matTooltip="open visualization" matTooltipPosition="right">
         <mat-icon>view_in_ar</mat-icon>
+    </button>
+    <div class="spacer"></div>
+    <button mat-icon-button (click)="viewModeToggle.emit()" matTooltip="minimize" matTooltipPosition="right">
+        <mat-icon>{{ isMinimized? 'fullscreen': 'minimize' }}</mat-icon>
     </button>
 </div>

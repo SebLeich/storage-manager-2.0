@@ -1,18 +1,18 @@
 import { Injectable } from '@angular/core';
 import { BpmnJsService } from '../../services/bpmn-js.service';
 import { DialogService } from '../../services/dialog.service';
-import { combineLatest, map, of, switchMap, tap } from 'rxjs';
+import { switchMap, tap } from 'rxjs';
 import { BPMNJsRepository } from 'src/lib/core/bpmn-js.repository';
 import { TaskCreationStep } from '../../globals/task-creation-step';
-import { ITaskCreationPayload } from '../../interfaces/task-creation-payload.interface';
 import { selectSnapshot } from '../../globals/select-snapshot';
 import { Store } from '@ngrx/store';
 import { removeIFunction, setIFunctionsCanFailFlag } from '@process-builder/actions';
 import shapeTypes from 'src/lib/bpmn-io/shape-types';
 import { IElement } from 'src/lib/bpmn-io/interfaces/element.interface';
 import { ConfirmationService } from 'src/lib/confirmation/services/confirmation.service';
-import { ITaskCreationFormGroupValue } from '../../interfaces/task-creation-form-group-value.interface';
 import { selectIFunction, selectIFunctions } from '@process-builder/selectors';
+import { IConnector } from '@/lib/bpmn-io/interfaces/connector.interface';
+import { FunctionFormGroupService } from '../../services/function-form-group.service';
 
 @Injectable()
 export class ProcessBuilderComponentService {
@@ -20,18 +20,21 @@ export class ProcessBuilderComponentService {
 	public taskEditingDialogResultReceived$ = this._bpmnJsService.bufferedTaskEditingEvents$
 		.pipe(
 			tap(() => (document.activeElement as HTMLElement)?.blur()),
-			switchMap((events) => {
+			switchMap(async (events) => {
 				const functionSelectionConfig = events.find(event => event.taskCreationStep === TaskCreationStep.ConfigureFunctionSelection);
 				const functionIdentifier = BPMNJsRepository.getSLPBExtension<number>(functionSelectionConfig?.element?.businessObject, 'ActivityExtension', (ext) => ext.activityFunctionId) ?? null;
-				const taskCreationPayload = {
-					configureActivity: events.find(event => event.taskCreationStep === TaskCreationStep.ConfigureFunctionSelection)?.element,
-					configureIncomingErrorGatewaySequenceFlow: events.find(event => event.taskCreationStep === TaskCreationStep.ConfigureErrorGatewayEntranceConnection)?.element
-				} as ITaskCreationPayload,
-					taskCreationFormGroupValue = {
-						functionIdentifier: functionIdentifier
-					} as ITaskCreationFormGroupValue;
+				const selectedFunction = await selectSnapshot(this._store.select(selectIFunction(functionIdentifier)));
+				const formValue = await new FunctionFormGroupService(this._store).getFunctionFormGroupValue(selectedFunction, false);
 
-				return this._dialogService.configTaskCreation({ taskCreationFormGroupValue, taskCreationPayload });
+				return { events, formValue, functionSelectionConfig, selectedFunction };
+			}),
+			switchMap(({ events, formValue }) => {
+				const taskCreationPayload = {
+					configureActivity: events.find(event => event.taskCreationStep === TaskCreationStep.ConfigureFunctionSelection)?.element as IElement ?? null,
+					configureIncomingErrorGatewaySequenceFlow: events.find(event => event.taskCreationStep === TaskCreationStep.ConfigureErrorGatewayEntranceConnection)?.element as IConnector ?? undefined
+				};
+
+				return this._dialogService.configTaskCreation({ taskCreationFormGroupValue: formValue, taskCreationPayload });
 			})
 		);
 

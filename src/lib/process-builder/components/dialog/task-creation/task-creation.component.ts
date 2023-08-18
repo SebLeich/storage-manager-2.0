@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component, Inject, OnDestroy, OnInit, ViewChil
 import { toObservable } from '@angular/core/rxjs-interop';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { Store } from '@ngrx/store';
-import { combineLatest, NEVER, Observable, Subscription } from 'rxjs';
+import { combineLatest, concat, NEVER, Observable, Subscription } from 'rxjs';
 import { ITaskCreationConfig } from 'src/lib/process-builder/interfaces/task-creation-config.interface';
 import { TaskCreationStep } from 'src/lib/process-builder/globals/task-creation-step';
 import { selectIFunction } from '@process-builder/selectors';
@@ -10,7 +10,7 @@ import { CodemirrorRepository } from 'src/lib/core/codemirror.repository';
 import { MethodEvaluationStatus } from 'src/lib/process-builder/globals/method-evaluation-status';
 import { FormControl, FormGroup } from '@angular/forms';
 import { IProcessBuilderConfig, PROCESS_BUILDER_CONFIG_TOKEN } from 'src/lib/process-builder/interfaces/process-builder-config.interface';
-import { debounceTime, distinctUntilChanged, filter, map, startWith, switchMap } from 'rxjs/operators';
+import { debounceTime, distinctUntilChanged, filter, map, share, startWith, switchMap, take } from 'rxjs/operators';
 import STEP_REGISTRY from './constants/step-registry.constant';
 import { functionSelectedValidator } from './validators/function-exists-when-required.validator';
 import { implementationExistsWhenRequiredValidator } from './validators/implementation-exists-when-required.validator';
@@ -20,6 +20,9 @@ import { ParameterService } from '@/lib/process-builder/services/parameter.servi
 import { outputNameValidator } from './validators/output-name.validator';
 import { ITaskCreationInput } from './interfaces/task-creation-input.interface';
 import { selectSnapshot } from '@/lib/process-builder/globals/select-snapshot';
+import { ITextLeaf } from '@/lib/process-builder/interfaces/text-leaf.interface';
+import { IEvaluationResultProvider } from './interfaces/evalution-result-provider.interface';
+import { IMethodEvaluationResult } from '@/lib/process-builder/interfaces';
 
 @Component({
 	selector: 'app-task-creation',
@@ -29,7 +32,7 @@ import { selectSnapshot } from '@/lib/process-builder/globals/select-snapshot';
 	animations: [showAnimation],
 	changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class TaskCreationComponent implements OnDestroy, OnInit {
+export class TaskCreationComponent implements IEvaluationResultProvider, OnDestroy, OnInit {
 	@ViewChild('dynamicInner', { static: true, read: ViewContainerRef })
 	private dynamicInner!: ViewContainerRef;
 
@@ -46,22 +49,17 @@ export class TaskCreationComponent implements OnDestroy, OnInit {
 		outputParamType: new FormControl(this.data.taskCreationFormGroupValue.outputParamType),
 		outputParamValue: new FormControl(this.data.taskCreationFormGroupValue.outputParamValue),
 	}, {
-		asyncValidators: [outputNameValidator(this._store), implementationExistsWhenRequiredValidator(this._store)],
+		asyncValidators: [outputNameValidator(this._store, this), implementationExistsWhenRequiredValidator(this._store)],
 		validators: [functionSelectedValidator(this.data?.taskCreationPayload?.configureActivity ? true : false)]
 	});
 
-	public customEvaluationResult$ = this.formGroup.controls
-		.functionImplementation
-		.valueChanges
-		.pipe(
-			debounceTime(500),
-			switchMap(async (implementation) => {
-				const inputParams = BPMNJsRepository.getAvailableInputParams(this.data.taskCreationPayload.configureActivity);
-				const { injector, mappedParameters } = await this._parameterService.parameterToInjector(inputParams);
-
-				return CodemirrorRepository.evaluateCustomMethod(undefined, implementation?.text ?? [], injector, mappedParameters);
-			})
-		);
+	public customEvaluationResult$ = concat(
+		this.formGroup.controls.functionImplementation.valueChanges.pipe(take(1)),
+		this.formGroup.controls.functionImplementation.valueChanges.pipe(debounceTime(1000)),
+	).pipe(
+		switchMap(async (implementation) => await this.getEvaluationResult(implementation)),
+		share()
+	) as Observable<IMethodEvaluationResult>;
 
 	public unableToDetermineOutputParam$ = this.customEvaluationResult$.pipe(
 		map(evaluationResult => {
@@ -72,16 +70,6 @@ export class TaskCreationComponent implements OnDestroy, OnInit {
 		}),
 		startWith(false)
 	);
-
-	public usedInputParams$ = this.formGroup.controls.functionImplementation.valueChanges
-		.pipe(debounceTime(2000), map(implementation => {
-			if (!implementation) {
-				return null;
-			}
-			return CodemirrorRepository.getUsedInputParams(undefined, implementation.text ?? undefined)
-				.map((x) => x.propertyName)
-				.filter((x, index, array) => array.indexOf(x) === index);
-		}));
 
 	public currentStepIndex = signal(0);
 
@@ -156,7 +144,7 @@ export class TaskCreationComponent implements OnDestroy, OnInit {
 		private _store: Store
 	) { }
 
-	public abort = () => this._ref.close();
+	public abort = () => this._ref.close({ taskCreationPayload: this.data.taskCreationPayload });
 	public finish = () => this._onClose();
 	public nextStep = () => this.setStep(this.currentStepIndex() + 1);
 	public previousStep = () => this.setStep(this.currentStepIndex() - 1);
@@ -166,13 +154,6 @@ export class TaskCreationComponent implements OnDestroy, OnInit {
 	public ngOnInit(): void {
 		this.setStep(0);
 
-		this._subscription.add(this.formGroup.controls.functionIdentifier?.valueChanges.subscribe(
-			(functionIdentifier: number | null) => {
-				if (typeof functionIdentifier !== 'number') {
-					return;
-				}
-			}
-		));
 		this._subscription.add(this.currentStep$.subscribe((step) => this._renderStep(step)));
 		this._subscription.add(this.stepToNextStep$.subscribe((stepIndex: number) => this.setStep(stepIndex + 1)));
 	}
@@ -181,15 +162,24 @@ export class TaskCreationComponent implements OnDestroy, OnInit {
 
 	public TaskCreationStep = TaskCreationStep;
 
+	public async getEvaluationResult(implementation: ITextLeaf | null = this.formGroup.controls.functionImplementation?.value ?? null) {
+		const inputParams = BPMNJsRepository.getAvailableInputParams(this.data.taskCreationPayload.configureActivity);
+		const { injector, mappedParameters } = await this._parameterService.parameterToInjector(inputParams);
+
+		return CodemirrorRepository.evaluateCustomMethod(undefined, implementation?.text ?? [], injector, mappedParameters);
+	}
+
 	private async _onClose() {
 		this.isBlocked = true;
 		this._ref.disableClose = true;
 
 		const inputParams = BPMNJsRepository.getAvailableInputParams(this.data.taskCreationPayload.configureActivity);
-		const { injector, mappedParameters } = await this._parameterService.parameterToInjector(inputParams);
-		const methodEvaluation = CodemirrorRepository.evaluateCustomMethod(undefined, this.formGroup.value.functionImplementation?.text ?? [], injector, mappedParameters),
+		const { injector, mappedParameters } = await this._parameterService.parameterToInjector(inputParams),
 			taskCreationPayload = this.data.taskCreationPayload,
 			selectedFunction = await selectSnapshot(this._store.select(selectIFunction(this.formGroup.value.functionIdentifier)));
+
+		const implementation = selectedFunction?.requireCustomImplementation? this.formGroup.value.functionImplementation?.text ?? []: selectedFunction?.implementation;
+		const methodEvaluation = CodemirrorRepository.evaluateCustomMethod(undefined, implementation, injector, mappedParameters)
 
 		this.isBlocked = false;
 		this._ref.disableClose = false;

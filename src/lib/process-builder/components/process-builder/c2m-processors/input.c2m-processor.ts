@@ -1,4 +1,3 @@
-import { IInputParam } from "@/lib/process-builder/interfaces";
 import { Injectable } from "@angular/core";
 import { IC2MProcessor } from "../interfaces/c2m-processor.interface";
 import { BpmnJsService } from "@/lib/process-builder/services/bpmn-js.service";

@@ -48,6 +48,8 @@ export class PipeRunnerComponent implements OnInit {
   public pipelineControl = new FormControl();
   public pipelines$ = this._store.select(selectPipelines);
 
+  public hideActions = false;
+
   public initializationDate = new Date();
   public scene = new ThreeJS.Scene();
   public meshRegistry = [];
@@ -104,6 +106,7 @@ export class PipeRunnerComponent implements OnInit {
   }
 
   public openVisualization = () => this._router.navigate(['/visualizer']);
+  public toggleViewMode = () => this.hideActions = !this.hideActions;
 
   private async _updateScene(solution: ISolution | undefined | null) {
     if (!solution) {

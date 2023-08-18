@@ -39,19 +39,19 @@ export class CodemirrorRepository {
         }
 
         const tree = syntaxTree(state),
-            mainMethod = this.getMainMethod(tree, state, text);
-            
+            mainMethod = this.getMainMethod(tree, state, text),
+            inputParamCandidates = this.findAllChildrenOfType(tree, 'VariableName')
+                .map((node) => state?.sliceDoc(node.from, node.to))
+                .filter((name) => typeof name === 'string') as string[];
+
         if (!mainMethod.node) {
-            return { status: MethodEvaluationStatus.NoMainMethodFound, valueIsDefinite: false };
+            return { status: MethodEvaluationStatus.NoMainMethodFound, valueIsDefinite: false, inputParamCandidates };
         }
 
         const arrowFunction = mainMethod.node.getChild('ArrowFunction');
         const block = arrowFunction ? arrowFunction.getChild('Block') : mainMethod.node.getChild('Block');
         const returnStatement = block?.getChild('ReturnStatement') ?? undefined;
-        const inputParamCandidates = this.findAllChildrenOfType(tree, 'VariableName')
-            .map((node) => state?.sliceDoc(node.from, node.to))
-            .filter((name) => typeof name === 'string') as string[];
-        
+
         if (returnStatement) {
             const result = this.getEvaluationResult(state, returnStatement, block as SyntaxNode, injector, injectorDef);
             if (result) {
@@ -182,7 +182,7 @@ export class CodemirrorRepository {
                 const parsedValue = JSON.parse(representation);
                 return { status: MethodEvaluationStatus.ReturnValueFound, detectedValue: parsedValue, valueIsDefinite: true, type: 'object' };
             } catch (e) {
-                return { status: MethodEvaluationStatus.ReturnValueFound, valueIsDefinite: false };
+                return { status: MethodEvaluationStatus.ReturnValueFound, valueIsDefinite: false, type: 'object' };
             }
         }
 
@@ -303,60 +303,6 @@ export class CodemirrorRepository {
 
         return { 'node': functions.length > 0 ? functions[functions.length - 1] : null, 'tree': tree };
 
-    }
-
-    static getUsedInputParams(state?: EditorState, text?: string[] | string): { varName: string, propertyName: string | null }[] {
-
-        const output: { varName: string, propertyName: string | null }[] = [];
-        const convertedText = text ? Array.isArray(text) ? text.join('\n') : text : (state?.doc as unknown as ITextLeaf).text.join('\n');
-
-        if (!state) {
-            if (!text) throw ('no state and no text passed');
-
-            state = EditorState.create({
-                doc: convertedText,
-                extensions: [
-                    javascript()
-                ]
-            });
-        }
-
-        const tree = syntaxTree(state);
-        const mainMethod = this.getMainMethod(tree, state, text);
-        if (!mainMethod.node) return [];
-
-        const arrowFunction = mainMethod.node.getChild('ArrowFunction');
-        const block = arrowFunction ? arrowFunction.getChild('Block') : mainMethod.node.getChild('Block');
-        const candidates = this.getMemberExpressionContainingCandidates(block);
-
-        for (const candidate of candidates) {
-
-            let statement: SyntaxNode | null = candidate;
-            while (statement && statement.type.name !== 'MemberExpression') {
-                const result = this.iterateToMemberStatementNode(statement);
-                statement = result[0] ?? null;
-                candidates.push(...result.slice(1));
-            }
-
-            const variableNameNode = this.extractMemberExpressionVariableNameNode(statement);
-            if (variableNameNode == null) continue;
-
-            const varNodeName = convertedText.slice(variableNameNode.from, variableNameNode.to);
-
-            if (varNodeName === 'console') {
-                if (statement.nextSibling) candidates.push(statement.nextSibling);
-                continue;
-            }
-
-            const propertyNameNode = variableNameNode.nextSibling?.nextSibling;
-
-            output.push({
-                'varName': varNodeName,
-                'propertyName': convertedText?.slice(propertyNameNode?.from, propertyNameNode?.to) ?? null
-            });
-        }
-
-        return output;
     }
 
     static getMemberExpressionContainingCandidates(blockNode: SyntaxNode | null): SyntaxNode[] {

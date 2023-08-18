@@ -1,13 +1,12 @@
 import { AfterContentInit, ChangeDetectionStrategy, Component, Inject, Input, OnDestroy, OnInit } from '@angular/core';
-import { defer, from, NEVER, startWith, Subscription } from 'rxjs';
+import { concat, defer, from, Observable, of, startWith, Subscription } from 'rxjs';
 import { IEmbeddedView } from 'src/lib/process-builder/classes/embedded-view';
 import { MethodEvaluationStatus } from 'src/lib/process-builder/globals/method-evaluation-status';
-import { debounceTime, map, switchMap } from 'rxjs/operators';
-import { ControlContainer, FormControl, UntypedFormControl } from '@angular/forms';
+import { debounceTime, map, share, switchMap, take } from 'rxjs/operators';
+import { ControlContainer, FormControl } from '@angular/forms';
 import { ProcessBuilderService } from 'src/lib/process-builder/services/process-builder.service';
 import { TaskCreationFormGroup } from 'src/lib/process-builder/interfaces/task-creation-form-group-value.interface';
 import { IProcessBuilderConfig, PROCESS_BUILDER_CONFIG_TOKEN } from 'src/lib/process-builder/interfaces/process-builder-config.interface';
-import { CodemirrorRepository } from 'src/lib/core/codemirror.repository';
 import { ParameterService } from '@/lib/process-builder/services/parameter.service';
 import { Store } from '@ngrx/store';
 import { selectIFunction, selectIInterface, selectIInterfaces } from '@/lib/process-builder/store/selectors';
@@ -16,6 +15,8 @@ import { ProcessBuilderRepository } from '@/lib/core/process-builder-repository'
 import { ParamType } from '@/lib/process-builder/types/param.type';
 import { FunctionOutputService } from '../../process-builder/services/function-output.service';
 import { IFunction, IMethodEvaluationResult } from '@/lib/process-builder/interfaces';
+import { CodemirrorRepository } from '@/lib/core/codemirror.repository';
+import { ITextLeaf } from '@/lib/process-builder/interfaces/text-leaf.interface';
 
 @Component({
 	selector: 'app-embedded-function-implementation',
@@ -29,21 +30,15 @@ export class EmbeddedFunctionImplementationComponent implements IEmbeddedView, A
 
 	public injectorDef$ = defer(() => from(this._parameterService.parameterToInjector(this.inputParams)));
 	public injector$ = this.injectorDef$.pipe(map((def) => def.injector));
-	public implementationChanged$ = defer(() => this.formGroup.controls.functionImplementation?.valueChanges ?? NEVER);
-	public methodEvaluationStatus$ = defer(
-		() => this.implementationChanged$.pipe(
-			startWith(this.formGroup.controls.functionImplementation?.value),
-			debounceTime(300),
-			switchMap(async (implementation) => {
-				const injector = await this._parameterService.parameterToInjector(this.inputParams),
-					code = implementation?.text;
+	public customEvaluationResult$ = concat(
+		of(this.formGroup.controls.functionImplementation?.value),
+		(this.formGroup.controls.functionImplementation as FormControl).valueChanges.pipe(debounceTime(1000)),
+	).pipe(
+		switchMap(async (implementation) => await this._getEvaluationResult(implementation)),
+		share()
+	) as Observable<IMethodEvaluationResult>;
 
-				return CodemirrorRepository.evaluateCustomMethod(undefined, code, injector.injector, injector.mappedParameters);
-			})
-		)
-
-	);
-	public returnValueStatus$ = defer(() => this.methodEvaluationStatus$.pipe(map((status) => status?.status), startWith(MethodEvaluationStatus.Initial)));
+	public returnValueStatus$ = defer(() => this.customEvaluationResult$.pipe(map((status) => status?.status), startWith(MethodEvaluationStatus.Initial)));
 	public templates$ = this._store.select(selectIInterfaces());
 
 	private _functionOutputService = new FunctionOutputService(this._store);
@@ -58,7 +53,7 @@ export class EmbeddedFunctionImplementationComponent implements IEmbeddedView, A
 
 	public ngOnInit(): void {
 		this._subscriptions.add(this.returnValueStatus$.subscribe((status) => this._verifyOutputParamNameControl(status)));
-		this._subscriptions.add(this.methodEvaluationStatus$.subscribe(async (status) => await this._verifyOutput(status.type ?? null, status.interface, status.paramName ?? '', status)));
+		this._subscriptions.add(this.customEvaluationResult$.subscribe(async (status) => await this._verifyOutput(status.type ?? null, status.interface, status.paramName ?? '', status)));
 		this._subscriptions.add(this.formGroup.controls.functionName?.valueChanges.subscribe((value) => this._normalizeFunctionName(value)));
 		this._subscriptions.add(this.formGroup.controls.outputParamName?.valueChanges.subscribe((value) => this._normalizeOutputParamName(value)));
 	}
@@ -78,7 +73,7 @@ export class EmbeddedFunctionImplementationComponent implements IEmbeddedView, A
 
 	private async _verifyOutput(type: ParamType | null, templateIdentifier: string | null | undefined, paramName: string, status: IMethodEvaluationResult): Promise<void> {
 		let outputParamName: string;
-		this.formGroup.controls.outputParamType!.setValue(type);
+		(this.formGroup.controls.outputParamType as FormControl).setValue(type);
 
 		if (type !== 'object') {
 			this.formGroup.controls.outputParamInterface?.setValue(null);
@@ -88,7 +83,7 @@ export class EmbeddedFunctionImplementationComponent implements IEmbeddedView, A
 		else {
 			if (!templateIdentifier) {
 				this.formGroup.controls.outputParamInterface?.setValue(null);
-				this.formGroup.controls.outputParamInterface?.disable();
+				this.formGroup.controls.outputParamInterface?.enable();
 				return;
 			}
 
@@ -124,6 +119,11 @@ export class EmbeddedFunctionImplementationComponent implements IEmbeddedView, A
 		}
 
 
+	}
+
+	private async _getEvaluationResult(implementation: ITextLeaf | null = this.formGroup.controls.functionImplementation?.value ?? null) {
+		const { injector, mappedParameters } = await this._parameterService.parameterToInjector(this.inputParams);
+		return CodemirrorRepository.evaluateCustomMethod(undefined, implementation?.text ?? [], injector, mappedParameters);
 	}
 
 	private _verifyOutputParamNameControl(status: MethodEvaluationStatus) {

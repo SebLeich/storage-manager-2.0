@@ -2,8 +2,8 @@ import { ITaskCreationFormGroupValue } from "@/lib/process-builder/interfaces/ta
 import { Inject, Injectable } from "@angular/core";
 import { selectSnapshot } from "@/lib/process-builder/globals/select-snapshot";
 import { Store } from "@ngrx/store";
-import { selectIParamsByNormalizedName } from "@/lib/process-builder/store/selectors";
-import { IFunction, IInputParam, IProcessBuilderConfig, PROCESS_BUILDER_CONFIG_TOKEN } from "@/lib/process-builder/interfaces";
+import { selectIParam, selectIParamsByNormalizedName } from "@/lib/process-builder/store/selectors";
+import { IFunction, IInputParam, IParam, IProcessBuilderConfig, PROCESS_BUILDER_CONFIG_TOKEN } from "@/lib/process-builder/interfaces";
 import { CodemirrorRepository } from "@/lib/core/codemirror.repository";
 import { ProcessBuilderRepository } from "@/lib/core/process-builder-repository";
 import { upsertIFunction } from "@/lib/process-builder/store";
@@ -30,9 +30,18 @@ export class ActivityC2SProcessor implements IC2SProcessor {
       return;
     }
 
-    const { functionIdentifier } = await this._functionService.detectFunction(selectedFunction),
+    const { functionIdentifier,  } = await this._functionService.detectFunction(selectedFunction),
       { outputParamIdentifier } = await this._functionOutputService.detectFunctionOutput(selectedFunction, methodEvaluation),
-      inputParams = await this._extractInputParams(formValue, selectedFunction);
+      usedParams = Array.isArray(methodEvaluation.inputParamCandidates)? await selectSnapshot(this._store.select(selectIParamsByNormalizedName(methodEvaluation.inputParamCandidates))): [];
+
+    const inputParams = usedParams.map((usedParam: IParam) => {
+      return {
+        optional: false,
+        interface: typeof usedParam.interface === 'number' ? usedParam.interface : undefined,
+        name: usedParam.normalizedName,
+        type: 'object'
+      } as IInputParam
+    });
 
     const functionObject: IFunction = {
       ...selectedFunction,
@@ -52,38 +61,5 @@ export class ActivityC2SProcessor implements IC2SProcessor {
     this._store.dispatch(upsertIFunction(functionObject));
 
     c2SOutput.functionIdentifier = functionIdentifier;
-  }
-
-  private async _extractInputParams(taskCreationData: ITaskCreationFormGroupValue, referencedFunction: IFunction): Promise<IInputParam[]> {
-    const inputParams: IInputParam[] = [];
-    if (referencedFunction.inputTemplates === 'dynamic' && typeof taskCreationData.outputParamInterface === 'string') {
-      inputParams.push({ optional: false, interface: taskCreationData.outputParamInterface, name: taskCreationData.functionNormalizedName, type: 'object' });
-    }
-    else if (referencedFunction.requireCustomImplementation || referencedFunction.customImplementation) {
-      const usedInputParams: { varName: string, propertyName: string | null }[] = taskCreationData.functionImplementation
-        ? CodemirrorRepository.getUsedInputParams(undefined, taskCreationData.functionImplementation.text)
-        : [];
-
-      const usedInputParamEntities = await selectSnapshot(
-        this._store.select(
-          selectIParamsByNormalizedName(
-            usedInputParams.filter(
-              usedInputParam => usedInputParam.varName === 'injector'
-                && typeof usedInputParam.propertyName === 'string'
-            ).map(usedInputParam => usedInputParam.propertyName) as string[]
-          )
-        )
-      );
-
-      inputParams.push(...usedInputParamEntities.map((usedInputParamEntity) => {
-        return {
-          optional: false,
-          interface: typeof usedInputParamEntity.interface === 'number' ? usedInputParamEntity.interface : undefined,
-          name: usedInputParamEntity.normalizedName,
-          type: 'object'
-        } as IInputParam
-      }));
-    }
-    return inputParams;
   }
 }

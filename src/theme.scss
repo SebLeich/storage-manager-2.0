@@ -70,19 +70,21 @@ body {
 	padding: 0px 1rem;
 	box-sizing: border-box;
 	background-color: #fafafa;
-}
+	/** background: linear-gradient(131deg, #0c105b 10%, #2c3290 45%, #3b419b 55%, #1b2174 100%); */
 
-.dialog-navbar>.icon {
-	margin-right: 0.5rem;
-	font-size: 1.5rem;
-	color: rgb(65, 65, 65);
-	height: auto;
-	width: auto;
-}
+	.icon {
+		margin-right: 0.5rem;
+		font-size: 1.5rem;
+		color: rgb(65, 65, 65);
+		height: auto;
+		width: auto;
+		/** color: rgb(255 255 255 / 50%); */
+	}
 
-.dialog-navbar .text {
-	font-size: 1.4rem;
-	flex: 1;
+	.text {
+		font-size: 1.4rem;
+		flex: 1;
+	}
 }
 
 .dialog-body {

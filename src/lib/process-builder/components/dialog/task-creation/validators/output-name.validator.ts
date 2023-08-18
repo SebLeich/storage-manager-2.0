@@ -4,8 +4,10 @@ import { AbstractControl } from "@angular/forms";
 import { Store } from "@ngrx/store";
 import { TaskCreationFormGroup } from "src/lib/process-builder/interfaces/task-creation-form-group-value.interface";
 import { FunctionOutputService } from "../../../process-builder/services/function-output.service";
+import { IEvaluationResultProvider } from "../interfaces/evalution-result-provider.interface";
 
-export const outputNameValidator = (store: Store) => async (control: AbstractControl) => {
+export const outputNameValidator = (store: Store, evaluationResultProvider: IEvaluationResultProvider) => async (control: AbstractControl) =>
+{
     const functionOutputService = new FunctionOutputService(store),
         formValue = (control as TaskCreationFormGroup).value;
 
@@ -14,7 +16,8 @@ export const outputNameValidator = (store: Store) => async (control: AbstractCon
         return null;
     }
 
-    const { hasOutput, outputParamIdentifier } = await functionOutputService.detectFunctionOutput(selectedFunction);
+    const methodEvaluation = await evaluationResultProvider.getEvaluationResult(formValue.functionImplementation ?? null);
+    const { hasOutput, outputParamIdentifier } = await functionOutputService.detectFunctionOutput(selectedFunction, methodEvaluation);
     if (hasOutput && !formValue.outputParamName) {
         return { outputParamNameRequired: true };
     }
