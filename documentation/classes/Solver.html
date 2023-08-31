@@ -1,0 +1,673 @@
+<!doctype html>
+<html class="no-js" lang="">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="x-ua-compatible" content="ie=edge">
+        <title>storage-manager documentation</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <link rel="icon" type="image/x-icon" href="../images/favicon.ico">
+	   <link rel="stylesheet" href="../styles/style.css">
+        <link rel="stylesheet" href="../styles/dark.css">
+    </head>
+    <body>
+
+        <div class="navbar navbar-default navbar-fixed-top visible-xs">
+            <a href="../" class="navbar-brand">storage-manager documentation</a>
+            <button type="button" class="btn btn-default btn-menu ion-ios-menu" id="btn-menu"></button>
+        </div>
+
+        <div class="xs-menu menu" id="mobile-menu">
+                <div id="book-search-input" role="search"><input type="text" placeholder="Type to search"></div>            <compodoc-menu></compodoc-menu>
+        </div>
+
+        <div class="container-fluid main">
+           <div class="row main">
+               <div class="hidden-xs menu">
+                   <compodoc-menu mode="normal"></compodoc-menu>
+               </div>
+               <!-- START CONTENT -->
+               <div class="content class">
+                   <div class="content-data">
+
+
+
+
+
+
+
+
+
+
+
+
+<ol class="breadcrumb">
+  <li>Classes</li>
+  <li >Solver</li>
+</ol>
+
+<ul class="nav nav-tabs" role="tablist">
+        <li class="active">
+            <a href="#info" role="tab" id="info-tab" data-toggle="tab" data-link="info">Info</a>
+        </li>
+        <li >
+            <a href="#source" role="tab" id="source-tab" data-toggle="tab" data-link="source">Source</a>
+        </li>
+</ul>
+
+<div class="tab-content">
+    <div class="tab-pane fade active in" id="c-info">
+        <p class="comment">
+            <h3>File</h3>
+        </p>
+        <p class="comment">
+            <code>src/lib/storage-manager/solvers/solver.ts</code>
+        </p>
+
+
+
+
+
+
+            <section>
+    <h3 id="index">Index</h3>
+    <table class="table table-sm table-bordered index-table">
+        <tbody>
+
+                <tr>
+                    <td class="col-md-4">
+                        <h6><b>Methods</b></h6>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <ul class="index-list">
+                            <li>
+                                    <span class="modifier">Private</span>
+                                <a href="#_unusedDimensionsShare4Points" >_unusedDimensionsShare4Points</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Protected</span>
+                                <a href="#canPlaceOrderIntoSpace" >canPlaceOrderIntoSpace</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Protected</span>
+                                <a href="#combineSpaces" >combineSpaces</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Protected</span>
+                                <a href="#getCombinableSpacePairs" >getCombinableSpacePairs</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Protected</span>
+                                <a href="#putOrderAndCreateIVirtualDimensions" >putOrderAndCreateIVirtualDimensions</a>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+
+
+
+
+
+        </tbody>
+    </table>
+</section>
+
+
+
+            <section>
+    
+    <h3 id="methods">
+        Methods
+    </h3>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="_unusedDimensionsShare4Points"></a>
+                    <span class="name">
+                        <span class="modifier">Private</span>
+                        <span ><b>_unusedDimensionsShare4Points</b></span>
+                        <a href="#_unusedDimensionsShare4Points"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>_unusedDimensionsShare4Points(dim1: <a href="../interfaces/IVirtualDimension.html" target="_self">IVirtualDimension</a>, dim2: <a href="../interfaces/IVirtualDimension.html" target="_self">IVirtualDimension</a>)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="55"
+                            class="link-to-prism">src/lib/storage-manager/solvers/solver.ts:55</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>dim1</td>
+                                    <td>
+                                                <code><a href="../interfaces/IVirtualDimension.html" target="_self" >IVirtualDimension</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                                <tr>
+                                    <td>dim2</td>
+                                    <td>
+                                                <code><a href="../interfaces/IVirtualDimension.html" target="_self" >IVirtualDimension</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/boolean" target="_blank" >boolean</a></code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="canPlaceOrderIntoSpace"></a>
+                    <span class="name">
+                        <span class="modifier">Protected</span>
+                        <span ><b>canPlaceOrderIntoSpace</b></span>
+                        <a href="#canPlaceOrderIntoSpace"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>canPlaceOrderIntoSpace(order: <a href="../interfaces/IOrder.html" target="_self">IOrder</a>, space: <a href="../interfaces/ISpace.html" target="_self">ISpace</a>)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="8"
+                            class="link-to-prism">src/lib/storage-manager/solvers/solver.ts:8</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>order</td>
+                                    <td>
+                                                <code><a href="../interfaces/IOrder.html" target="_self" >IOrder</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                                <tr>
+                                    <td>space</td>
+                                    <td>
+                                                <code><a href="../interfaces/ISpace.html" target="_self" >ISpace</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>    <code>literal type</code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="combineSpaces"></a>
+                    <span class="name">
+                        <span class="modifier">Protected</span>
+                        <span ><b>combineSpaces</b></span>
+                        <a href="#combineSpaces"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>combineSpaces(virtualDimensions: <a href="../interfaces/IVirtualDimension.html" target="_self">IVirtualDimension[]</a>)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="15"
+                            class="link-to-prism">src/lib/storage-manager/solvers/solver.ts:15</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>virtualDimensions</td>
+                                    <td>
+                                                <code><a href="../interfaces/IVirtualDimension.html" target="_self" >IVirtualDimension[]</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="../interfaces/IVirtualDimension.html" target="_self" >IVirtualDimension</a></code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="getCombinableSpacePairs"></a>
+                    <span class="name">
+                        <span class="modifier">Protected</span>
+                        <span ><b>getCombinableSpacePairs</b></span>
+                        <a href="#getCombinableSpacePairs"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>getCombinableSpacePairs(unusedDimensions: <a href="../interfaces/IVirtualDimension.html" target="_self">IVirtualDimension[]</a>, returnFirstOnly: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/boolean" target="_blank">boolean</a>)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="26"
+                            class="link-to-prism">src/lib/storage-manager/solvers/solver.ts:26</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                    <td>Default value</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>unusedDimensions</td>
+                                    <td>
+                                                <code><a href="../interfaces/IVirtualDimension.html" target="_self" >IVirtualDimension[]</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+                                    <td>
+                                    </td>
+
+                                </tr>
+                                <tr>
+                                    <td>returnFirstOnly</td>
+                                    <td>
+                                                <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/boolean" target="_blank" >boolean</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+                                    <td>
+                                        <code>false</code>
+                                    </td>
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>    <code>[][]</code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="putOrderAndCreateIVirtualDimensions"></a>
+                    <span class="name">
+                        <span class="modifier">Protected</span>
+                        <span ><b>putOrderAndCreateIVirtualDimensions</b></span>
+                        <a href="#putOrderAndCreateIVirtualDimensions"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>putOrderAndCreateIVirtualDimensions(order: <a href="../interfaces/IOrder.html" target="_self">IOrder</a>, virtualDimension: <a href="../interfaces/IVirtualDimension.html" target="_self">IVirtualDimension</a>)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="38"
+                            class="link-to-prism">src/lib/storage-manager/solvers/solver.ts:38</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>order</td>
+                                    <td>
+                                                <code><a href="../interfaces/IOrder.html" target="_self" >IOrder</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                                <tr>
+                                    <td>virtualDimension</td>
+                                    <td>
+                                                <code><a href="../interfaces/IVirtualDimension.html" target="_self" >IVirtualDimension</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="../interfaces/IVirtualDimension.html" target="_self" >IVirtualDimension[]</a></code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</section>
+
+
+
+
+
+    </div>
+
+
+    <div class="tab-pane fade  tab-source-code" id="c-source">
+        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { v4 as generateGuid } from &#x27;uuid&#x27;;
+import { IOrder, ISpace } from &quot;@smgr/interfaces&quot;;
+import { IVirtualDimension } from &#x27;src/app/interfaces/i-virtual-dimension.interface&#x27;;
+import calculateDimension from &#x27;src/app/methods/calculate-dimension.shared-method&#x27;;
+
+export class Solver {
+
+    protected canPlaceOrderIntoSpace(order: IOrder, space: ISpace): { notTurned: boolean, turned: boolean } {
+        return {
+            notTurned: space.width &gt;&#x3D; order.width &amp;&amp; space.length &gt;&#x3D; order.length &amp;&amp; space.height &gt;&#x3D; order.height,
+            turned: space.width &gt;&#x3D; order.length &amp;&amp; space.length &gt;&#x3D; order.width &amp;&amp; space.height &gt;&#x3D; order.height,
+        };
+    }
+
+    protected combineSpaces(virtualDimensions: IVirtualDimension[]): IVirtualDimension {
+        const xCoord &#x3D; Math.min(...virtualDimensions.map(dimension &#x3D;&gt; dimension.xCoord));
+        const yCoord &#x3D; Math.min(...virtualDimensions.map(dimension &#x3D;&gt; dimension.yCoord));
+        const zCoord &#x3D; Math.min(...virtualDimensions.map(dimension &#x3D;&gt; dimension.zCoord));
+        const rCoord &#x3D; Math.max(...virtualDimensions.map(dimension &#x3D;&gt; dimension.rCoord));
+        const tCoord &#x3D; Math.max(...virtualDimensions.map(dimension &#x3D;&gt; dimension.tCoord));
+        const fCoord &#x3D; Math.max(...virtualDimensions.map(dimension &#x3D;&gt; dimension.fCoord));
+        const dimension &#x3D; calculateDimension(xCoord, yCoord, zCoord, rCoord - xCoord, tCoord - yCoord, fCoord - zCoord);
+        return { ...dimension, id: generateGuid() } as IVirtualDimension;
+    }
+
+    protected getCombinableSpacePairs(unusedDimensions: IVirtualDimension[], returnFirstOnly: boolean &#x3D; false): IVirtualDimension[][] {
+        let output &#x3D; [];
+        for (let unusedDimension of unusedDimensions) {
+            let result &#x3D; [unusedDimension, ...unusedDimensions.filter((x: IVirtualDimension) &#x3D;&gt; x &#x3D;&#x3D;&#x3D; unusedDimension ? false : this._unusedDimensionsShare4Points(unusedDimension, x))];
+            if (result.length &gt; 1) {
+                output.push(result);
+                if (returnFirstOnly) break;
+            }
+        }
+        return output;
+    }
+
+    protected putOrderAndCreateIVirtualDimensions(order: IOrder, virtualDimension: IVirtualDimension): IVirtualDimension[] {
+        let virtualDimensions: IVirtualDimension[] &#x3D; [];
+        if (order.height &lt; virtualDimension.height) {
+            const above &#x3D; calculateDimension(virtualDimension.xCoord, virtualDimension.yCoord, virtualDimension.zCoord, order.width, virtualDimension.height - order.height, order.length);
+            virtualDimensions.push(above as IVirtualDimension);
+        }
+        if (order.width &lt; virtualDimension.width) {
+            const next &#x3D; calculateDimension(virtualDimension.xCoord + order.width, virtualDimension.yCoord, virtualDimension.zCoord, virtualDimension.width - order.width, virtualDimension.height, order.length);
+            virtualDimensions.push(next as IVirtualDimension);
+        }
+        if (order.length &lt; virtualDimension.length) {
+            const infront &#x3D; calculateDimension(virtualDimension.xCoord, virtualDimension.yCoord, virtualDimension.zCoord + order.length, virtualDimension.width, virtualDimension.height, virtualDimension.length - order.length);
+            virtualDimensions.push(infront as IVirtualDimension);
+        }
+        return virtualDimensions;
+    }
+
+    private _unusedDimensionsShare4Points(dim1: IVirtualDimension, dim2: IVirtualDimension): boolean {
+        let result &#x3D; dim1.points.filter(p1 &#x3D;&gt; dim2.points.findIndex(p2 &#x3D;&gt; p1.xCoord &#x3D;&#x3D;&#x3D; p2.xCoord &amp;&amp; p1.yCoord &#x3D;&#x3D;&#x3D; p2.yCoord &amp;&amp; p1.zCoord &#x3D;&#x3D;&#x3D; p2.zCoord) &gt; -1);
+        return result.length &#x3D;&#x3D;&#x3D; 4;
+    }
+
+}</code></pre>
+    </div>
+</div>
+
+
+
+
+
+
+
+
+
+                   </div><div class="search-results">
+    <div class="has-results">
+        <h1 class="search-results-title"><span class='search-results-count'></span> results matching "<span class='search-query'></span>"</h1>
+        <ul class="search-results-list"></ul>
+    </div>
+    <div class="no-results">
+        <h1 class="search-results-title">No results matching "<span class='search-query'></span>"</h1>
+    </div>
+</div>
+</div>
+               <!-- END CONTENT -->
+           </div>
+       </div>
+
+          <label class="dark-mode-switch">
+               <input type="checkbox">
+               <span class="slider">
+                    <svg class="slider-icon" viewBox="0 0 24 24" fill="none" height="20" stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" width="20" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"></path>
+                    </svg>
+               </span>
+          </label>
+
+       <script>
+            var COMPODOC_CURRENT_PAGE_DEPTH = 1;
+            var COMPODOC_CURRENT_PAGE_CONTEXT = 'class';
+            var COMPODOC_CURRENT_PAGE_URL = 'Solver.html';
+            var MAX_SEARCH_RESULTS = 15;
+       </script>
+
+       <script src="../js/libs/custom-elements.min.js"></script>
+       <script src="../js/libs/lit-html.js"></script>
+
+       <script src="../js/menu-wc.js" defer></script>
+       <script nomodule src="../js/menu-wc_es5.js" defer></script>
+
+       <script src="../js/libs/bootstrap-native.js"></script>
+
+       <script src="../js/libs/es6-shim.min.js"></script>
+       <script src="../js/libs/EventDispatcher.js"></script>
+       <script src="../js/libs/promise.min.js"></script>
+       <script src="../js/libs/zepto.min.js"></script>
+
+       <script src="../js/compodoc.js"></script>
+
+       <script src="../js/tabs.js"></script>
+       <script src="../js/menu.js"></script>
+       <script src="../js/libs/clipboard.min.js"></script>
+       <script src="../js/libs/prism.js"></script>
+       <script src="../js/sourceCode.js"></script>
+          <script src="../js/search/search.js"></script>
+          <script src="../js/search/lunr.min.js"></script>
+          <script src="../js/search/search-lunr.js"></script>
+          <script src="../js/search/search_index.js"></script>
+       <script src="../js/lazy-load-graphs.js"></script>
+
+
+    </body>
+</html>

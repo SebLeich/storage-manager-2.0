@@ -1,14 +1,13 @@
 import { createFeatureSelector, createSelector } from '@ngrx/store';
-import { IFunction } from '../../globals/i-function';
-import { IParam } from '../../globals/i-param';
+import { IFunction, IParam } from '@process-builder/interfaces';
 import * as fromIFunction from '../reducers/function.reducer';
 
-export const selectIFunctionState = createFeatureSelector<fromIFunction.State>(
+export const functionState = createFeatureSelector<fromIFunction.State>(
     fromIFunction.featureKey
 );
 
-export const selectIFunction = (arg: number | null | undefined | (() => number | null | undefined)) => createSelector(
-    selectIFunctionState,
+export const selectFunction = (arg: number | null | undefined | (() => number | null | undefined)) => createSelector(
+    functionState,
     (state: fromIFunction.State) => {
         if (!state || !state.entities || typeof arg === 'undefined') {
             return null;
@@ -19,8 +18,8 @@ export const selectIFunction = (arg: number | null | undefined | (() => number |
     }
 );
 
-export const selectIFunctions = (ids?: number[]) => createSelector(
-    selectIFunctionState,
+export const selectFunctions = (ids?: number[]) => createSelector(
+    functionState,
     (state: fromIFunction.State) => {
         if (!state || !state.entities) return [];
         let funcs = Object.values(state.entities);
@@ -29,15 +28,15 @@ export const selectIFunctions = (ids?: number[]) => createSelector(
     }
 );
 
-export const selectIFunctionsByOutputParam = (arg: IParam | number) => createSelector(
-    selectIFunctionState,
+export const selectFunctionsByOutputParam = (arg: IParam | number) => createSelector(
+    functionState,
     (state: fromIFunction.State) => {
         if (!state || !state.entities) return [];
-        return Object.values(state.entities).filter(x => x && x.output && x.output.param === (typeof arg === 'number' ? arg : arg.identifier)) as IFunction[];
+        return Object.values(state.entities).filter(x => x && x.output === (typeof arg === 'number' ? arg : arg.identifier)) as IFunction[];
     }
 );
 
-export const selectNextId = () => createSelector(
-    selectIFunctionState,
+export const selectNextFunctionIdentifier = () => createSelector(
+    functionState,
     (state: fromIFunction.State) => (state && state.entities ? Math.max(...Object.values(state.entities).filter(x => x ? true : false).map(x => (x as IFunction).identifier), -1) : -1) + 1
 );

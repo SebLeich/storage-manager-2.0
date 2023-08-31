@@ -1,0 +1,41 @@
+<div class="body" [ngClass]="{
+    'is-providing-output': isSelectedOutput$|async
+}" (click)="trySetOutput()">
+
+    <div class="content">
+
+        <div class="action-name">
+            {{ (pipelineAction$|async)?.name }}
+        </div>
+
+        <mat-icon class="icon pending" *ngIf="(actionStatus$|async)?.status === 'INITIALIZED'"
+            matTooltip="The action has been initiated but has not been executed yet.">more_horiz</mat-icon>
+
+        <mat-icon class="icon success" *ngIf="(actionStatus$|async)?.status === 'SUCCEEDED'"
+            matTooltip="That action was executed successfully.">done</mat-icon>
+
+        <mat-spinner *ngIf="(actionStatus$|async)?.status === 'RUNNING'" diameter="20"
+            matTooltip="Running ..."></mat-spinner>
+
+        <mat-icon class="icon danger" *ngIf="(actionStatus$|async)?.status === 'FAILED'"
+            matTooltip="The execution of that action was unsuccessful.">clear</mat-icon>
+
+        <mat-icon class="icon pending" *ngIf="(actionStatus$|async)?.status === 'SKIPPED'"
+            matTooltip="The execution of that action was omitted or bypassed.">shortcut</mat-icon>
+
+    </div>
+
+    <div class="process-output-hint" *ngIf="providesOutput$|async">
+        <span *ngIf="(actionStatus$|async)?.status === 'INITIALIZED'">
+            That action may provide a process output.
+        </span>
+        <span *ngIf="isSelectedOutput$|async; else outputMatchesPipelineOutput">
+            The solution is currently selected: {{solutionDescription$|async}}
+        </span>
+    </div>
+
+</div>
+
+<ng-template #outputMatchesPipelineOutput>
+    <span>The output can be used for visualization</span>
+</ng-template>

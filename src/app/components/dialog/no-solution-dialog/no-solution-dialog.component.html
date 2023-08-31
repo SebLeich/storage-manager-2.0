@@ -23,6 +23,22 @@
 
         <div class="suggeston-wrapper">
 
+            <div class="suggestion use-data-pipeline" (click)="gotoPipeRunner()">
+
+                <div class="headline">
+                    use pipeline
+                </div>
+
+                <div class="sub-title">
+                    use one of your pipelines to calculate a solution
+                </div>
+
+                <div class="footer">
+                    <mat-icon>adb</mat-icon>
+                </div>
+
+            </div>
+
             <div class="suggestion data-pipeline" (click)="gotoPipelineDesigner()">
 
                 <div class="headline">
@@ -30,7 +46,7 @@
                 </div>
 
                 <div class="sub-title">
-                    design a flow to import data and calculate solution
+                    design a flow to provide your solutions
                 </div>
 
                 <div class="footer">
@@ -39,7 +55,7 @@
 
             </div>
 
-            <div class="suggestion static-orders" (click)="gotoOrders()">
+            <div class="suggestion static-orders" (click)="gotoLocalDataConfigurator()">
 
                 <div class="headline">
                     use static orders

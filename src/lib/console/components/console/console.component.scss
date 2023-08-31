@@ -1,0 +1,85 @@
+.body {
+  background-color: #424242;
+  color: white;
+  font-family: monospace;
+  border-radius: 2px;
+  display: flex;
+  flex-direction: column;
+  padding: 0.5rem;
+  box-sizing: border-box;
+  flex: 1;
+  overflow: hidden;
+  height: 100%;
+
+  .control-bar {
+    display: flex;
+    align-items: center;
+
+    button.deactivated {
+      opacity: .2;
+    }
+
+    .filter-input {
+      background-color: #ffffff21;
+      outline: none;
+      border: none;
+      text-align: center;
+      color: white;
+      padding: 0.5rem;
+      border-radius: 3px;
+    }
+  }
+
+  .content {
+    flex: 1;
+    overflow-y: scroll;
+    padding: 0.5rem;
+
+    .section {
+      display: flex;
+      overflow: hidden;
+      margin-bottom: 1rem;
+      word-wrap: break-word;
+      cursor: pointer;
+
+      > mat-icon.invisible {
+        visibility: hidden;
+      }
+
+      .text-content {
+        flex: 1;
+        overflow: hidden;
+
+        &.collapsed {
+          display: -webkit-box;
+          -webkit-line-clamp: 3;
+          -webkit-box-orient: vertical;
+        }
+
+        &.level-info {
+          color: rgb(255, 255, 255);
+        }
+
+        &.level-prioritized {
+          color: rgb(51, 133, 227);
+        }
+
+        &.level-success {
+          color: rgb(166, 227, 51);
+        }
+
+        &.level-error {
+          color: rgb(232, 79, 79);
+        }
+
+        &.level-warning {
+          color: rgb(225, 199, 50);
+        }
+
+        pre {
+          margin: 0px;
+        }
+      }
+    }
+  }
+}

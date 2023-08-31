@@ -3,8 +3,8 @@ import { ControlContainer, FormArray, FormControl, FormGroup } from '@angular/fo
 import { SortDirection } from '@angular/material/sort';
 import { Store } from '@ngrx/store';
 import { Subscription } from 'rxjs';
-import { IOrder } from 'src/app/interfaces/i-order.interface';
-import { removeOrder } from 'src/app/store/actions/i-order.actions';
+import { IOrder } from '@smgr/interfaces';
+import { removeOrder } from '@smgr/store';
 import { fadeInAnimation } from 'src/lib/shared/animations/fade-in.animation';
 
 @Component({

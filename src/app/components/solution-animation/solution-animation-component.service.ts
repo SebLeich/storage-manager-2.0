@@ -1,24 +1,23 @@
-import { Inject, Injectable, OnDestroy, OnInit } from "@angular/core";
+import { Injectable, OnDestroy } from "@angular/core";
 import { Store } from "@ngrx/store";
 import { BehaviorSubject, combineLatest, Subscription, timer } from "rxjs";
 import { filter, map, takeUntil, tap } from "rxjs/operators";
-import { selectCurrentSolutionSteps } from "src/app/store/selectors/i-solution.selectors";
-import { IStep } from "src/app/interfaces/i-step.interface";
+import { IStep } from "@smgr/interfaces";
 import { selectSnapshot } from "src/lib/process-builder/globals/select-snapshot";
-import { IVisualizerContextService, VISUALIZER_CONTEXT } from "src/app/interfaces/i-visualizer-context.service";
+import { selectCurrentSolutionSteps } from "@smgr/store";
 
 @Injectable()
-export class SolutionAnimationComponentService implements OnDestroy, OnInit {
+export class SolutionAnimationComponentService implements OnDestroy {
 
-    private _animationRunning = new BehaviorSubject<boolean>(false);
-    private _stepIndex = new BehaviorSubject<number>(0);
-    private _animationSpeed = new BehaviorSubject<number>(2);
+    private _animationRunning$$ = new BehaviorSubject<boolean>(false);
+    private _stepIndex$$ = new BehaviorSubject<number>(0);
+    private _animationSpeed$$ = new BehaviorSubject<number>(2);
 
-    animationRunning$ = this._animationRunning.asObservable();
-    animationSpeed$ = this._animationSpeed.asObservable();
-    stepIndex$ = this._stepIndex.asObservable();
+    public animationRunning$ = this._animationRunning$$.asObservable();
+    public animationSpeed$ = this._animationSpeed$$.asObservable();
+    public stepIndex$ = this._stepIndex$$.asObservable();
 
-    currentStep$ = combineLatest([this._store.select(selectCurrentSolutionSteps), this.stepIndex$]).pipe(map(([steps, index]: [IStep[] | null, number]) => {
+    public currentStep$ = combineLatest([this._store.select(selectCurrentSolutionSteps), this.stepIndex$]).pipe(map(([steps, index]: [IStep[] | null, number]) => {
         if (!Array.isArray(steps)) {
             return;
         }
@@ -27,16 +26,13 @@ export class SolutionAnimationComponentService implements OnDestroy, OnInit {
 
     private _subscriptions = new Subscription();
 
-    constructor(
-        @Inject(VISUALIZER_CONTEXT) private _visualizerComponentService: IVisualizerContextService,
-        private _store: Store,
-    ) { }
-
-    public ngOnDestroy(): void {
-        this._subscriptions.unsubscribe();
+    constructor(private _store: Store) {
+        this.subscribeAnimationIndicators();
     }
 
-    public ngOnInit(): void {
+    public ngOnDestroy = () => this._subscriptions.unsubscribe();
+
+    private subscribeAnimationIndicators(): void {
         this._subscriptions.add(
             combineLatest([this.animationRunning$, this.stepIndex$, this._store.select(selectCurrentSolutionSteps)])
                 .pipe(
@@ -49,35 +45,33 @@ export class SolutionAnimationComponentService implements OnDestroy, OnInit {
         );
     }
 
-    setAnimationSpeed(value: number) {
-        if (value > 0 && value < 60) this._animationSpeed.next(value);
+    public setAnimationSpeed(value: number) {
+        if (value > 0 && value < 60) this._animationSpeed$$.next(value);
     }
 
-    async startAnimation() {
+    public async startAnimation() {
         const currentSteps = await selectSnapshot(this._store.select(selectCurrentSolutionSteps));
         if (!currentSteps || currentSteps.length === 0) {
             return;
         }
 
         //this._visualizerComponentService.clearScene();
-        this._animationRunning.next(true);
+        this._animationRunning$$.next(true);
 
         this._subscriptions.add(
-            timer(0, this._animationSpeed.value * 1000).pipe(
-                takeUntil(this._animationRunning.pipe(filter(x => x === false))),
+            timer(0, this._animationSpeed$$.value * 1000).pipe(
+                takeUntil(this._animationRunning$$.pipe(filter(x => x === false))),
                 tap((index: number) => {
                     if (typeof currentSteps[index] === 'undefined') {
-                        this._animationRunning.next(false);
+                        this._animationRunning$$.next(false);
                     }
                 })
             ).subscribe((index) => {
-                this._stepIndex.next(index);
+                this._stepIndex$$.next(index);
             })
         );
     }
 
-    stopAnimation() {
-        this._animationRunning.next(false);
-    }
+    public stopAnimation = () => this._animationRunning$$.next(false);
 
 }

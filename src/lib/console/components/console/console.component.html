@@ -1,0 +1,27 @@
+<div class="body" [formGroup]="formGroup">
+
+    <div class="control-bar">
+        <button mat-icon-button [matTooltip]="infosEnabled()? 'click to hide infos': 'click to show infos'"
+            [class.deactivated]="infosEnabled()? false: true" (click)="toggleInfoLevel()">
+            <mat-icon>info</mat-icon>
+        </button>
+        <span class="spacer"></span>
+        <input type="text" class="filter-input" placeholder="search" formControlName="search" />
+    </div>
+
+    <div class="content" [@showList]="messages().length" [@.disabled]="animationDisabled">
+        <div *ngFor="let message of messages()" class="section" (click)="toggleMessage(message.id)">
+            <mat-icon [class.invisible]="!message.messageObject && message.message.length < 250">
+                {{message.expanded? 'expand_more': 'chevron_right'}}
+            </mat-icon>
+            <div class="text-content level-{{message.level}}" [class.collapsed]="!message.expanded">
+                <pre *ngIf="message.messageObject; else messageStringContent">{{message.messageObject | json}}</pre>
+            </div>
+
+            <ng-template #messageStringContent>
+                {{message.message}}
+            </ng-template>
+        </div>
+    </div>
+
+</div>

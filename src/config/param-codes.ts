@@ -3,5 +3,6 @@ export enum ParamCodes {
     ToUpperCaseResult = 1,
     UserNumberInput = 2,
     UserDateInput = 3,
-    ExemplarySolution = 4
+    ExemplarySolutionWrapper = 4,
+    ExemplarySolutionWrapper2 = 5,
 }

@@ -1,40 +1,39 @@
-import { Component, HostListener, OnInit } from '@angular/core';
+import { Component, HostListener } from '@angular/core';
 import { Router } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { BehaviorSubject, map } from 'rxjs';
-
-import * as fromISolutionState from 'src/app/store/reducers/i-solution.reducers';
-import { selectSolutions } from 'src/app/store/selectors/i-solution.selectors';
 import { environment } from 'src/environments/environment';
+import { selectSolutionNavItemHighlighted } from 'src/app/store/selectors/application.selectors';
+import { resetSolutionNavItem } from 'src/app/store/actions/application.actions';
+import { selectSolutions } from '@smgr/store';
 
 @Component({
   selector: 'app-navbar',
   templateUrl: './navbar.component.html',
   styleUrls: ['./navbar.component.scss'],
 })
-export class NavbarComponent implements OnInit {
-  currentApplicationVersion = (environment as any).appVersion;
-
-  solutionCount$ = this._solutionStore
-    .select(selectSolutions)
-    .pipe(map((solutions) => solutions?.length ?? 0));
+export class NavbarComponent {
+  public currentApplicationVersion = (environment as any).appVersion;
+  public solutionCount$ = this._store.select(selectSolutions).pipe(map((solutions) => solutions?.length ?? 0));
+  public solutionNavItemHighlighted$ = this._store.select(selectSolutionNavItemHighlighted);
 
   private _limitedHeight = new BehaviorSubject<boolean>(false);
-  limitedHeight$ = this._limitedHeight.asObservable();
+  public limitedHeight$ = this._limitedHeight.asObservable();
+  public location = location;
 
-  constructor(
-    public router: Router,
-    private _solutionStore: Store<fromISolutionState.State>
-  ) { }
-
-  ngOnInit(): void { }
+  constructor(private _router: Router, private _store: Store) { }
 
   @HostListener('window:resize', ['$event'])
-  onResize(event: Event) {
+  private _() {
     this.validateClient();
   }
 
-  validateClient() {
+  public gotoVisualizer(){
+    this._store.dispatch(resetSolutionNavItem());
+    this._router.navigate(['/visualizer']);
+  }
+
+  public validateClient() {
     this._limitedHeight.next(window.innerHeight <= 500);
   }
 }

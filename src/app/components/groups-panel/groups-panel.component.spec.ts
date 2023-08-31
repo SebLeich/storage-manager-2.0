@@ -1,11 +1,8 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { AppRoutingModule } from 'src/app/app-routing.module';
 import { AppModule } from 'src/app/app.module';
 import defaultImportsConstant from 'src/app/default-imports.constant';
-import { IGroup } from 'src/app/interfaces/i-group.interface';
-
+import { IGroup } from '@smgr/interfaces';
 import { GroupsPanelComponent } from './groups-panel.component';
-
 import { v4 as generateGuid } from 'uuid';
 import calculateRandomColorSharedMethod from 'src/app/methods/calculate-random-color.shared-method';
 import { By } from '@angular/platform-browser';
@@ -26,8 +23,7 @@ describe('GroupsPanelComponent', () => {
       declarations: [ GroupsPanelComponent ],
       imports: [
         ...defaultImportsConstant,
-        AppModule,
-        AppRoutingModule
+        AppModule
       ]
     })
     .compileComponents();

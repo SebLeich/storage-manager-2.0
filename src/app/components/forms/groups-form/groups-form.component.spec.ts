@@ -2,10 +2,9 @@ import { DebugElement } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ControlContainer, FormArray, FormControl, FormGroup } from '@angular/forms';
 import { By } from '@angular/platform-browser';
-import { AppRoutingModule } from 'src/app/app-routing.module';
 import { AppModule } from 'src/app/app.module';
 import defaultImportsConstant from 'src/app/default-imports.constant';
-import { IGroup } from 'src/app/interfaces/i-group.interface';
+import { IGroup } from '@smgr/interfaces';
 import { ControlsOf } from 'src/lib/shared/globals/controls-of.type';
 
 import { GroupsFormComponent } from './groups-form.component';
@@ -26,8 +25,7 @@ describe('GroupsFormComponent', () => {
       imports: [
         ...defaultImportsConstant,
 
-        AppModule,
-        AppRoutingModule
+        AppModule
       ],
       providers: [
         {

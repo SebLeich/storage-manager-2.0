@@ -6,19 +6,18 @@ import { TaskCreationStep } from '../globals/task-creation-step';
 })
 export class TaskCreationStepPipe implements PipeTransform {
 
-  config: string[] = [];
+  public config = {
+    [TaskCreationStep.ConfigureErrorGatewayEntranceConnection]: 'error input: event type',
+    [TaskCreationStep.ConfigureFunctionSelection]: 'select function',
+    [TaskCreationStep.ConfigureFunctionImplementation]: 'implementation',
+    [TaskCreationStep.ConfigureFunctionOutput]: 'output structure',
+    [TaskCreationStep.ConfigureFunctionInput]: 'select input',
+    [TaskCreationStep.ConfigureInputOutputMapping]: 'data mapping',
+    [TaskCreationStep.ConfigureStaticOutput]: 'static output'
+  };
 
-  constructor(){
-    this.config[TaskCreationStep.ConfigureErrorGatewayEntranceConnection] = 'error input: event type';
-    this.config[TaskCreationStep.ConfigureFunctionSelection] = 'select function';
-    this.config[TaskCreationStep.ConfigureFunctionImplementation] = 'implementation';
-    this.config[TaskCreationStep.ConfigureFunctionOutput] = 'output structure';
-    this.config[TaskCreationStep.ConfigureFunctionInput] = 'select input';
-    this.config[TaskCreationStep.ConfigureInputOutputMapping] = 'data mapping';
-  }
-
-  transform(value: TaskCreationStep): string {
-    return this.config[value];
+  public transform(value: TaskCreationStep): string {
+    return this.config[value as keyof typeof this.config];
   }
 
 }

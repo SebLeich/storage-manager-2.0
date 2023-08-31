@@ -1,16 +1,13 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { Store } from '@ngrx/store';
-import { AppRoutingModule } from 'src/app/app-routing.module';
 import { AppModule } from 'src/app/app.module';
 import defaultImports from 'src/app/default-imports.constant';
-import { ISolution } from 'src/app/interfaces/i-solution.interface';
-import { addSolution, setCurrentSolution } from 'src/app/store/actions/i-solution.actions';
+import { IGood, ISolution } from '@smgr/interfaces';
+import { addSolution, setCurrentSolution } from '@smgr/store';
 import { v4 as generateGuid } from 'uuid';
-
 import { SolutionPreviewComponent } from './solution-preview.component';
 import moment from 'moment';
-import { IGood } from 'src/app/interfaces/i-good.interface';
 import { VISUALIZER_CONTEXT } from 'src/app/interfaces/i-visualizer-context.service';
 
 describe('SolutionPreviewComponent', () => {
@@ -32,8 +29,7 @@ describe('SolutionPreviewComponent', () => {
       imports: [
         ...defaultImports,
 
-        AppModule,
-        AppRoutingModule
+        AppModule
       ],
       providers: [
         { provide: VISUALIZER_CONTEXT, useValue: {} }
@@ -60,7 +56,7 @@ describe('SolutionPreviewComponent', () => {
     store.dispatch(setCurrentSolution({ solution: solution }));
     fixture.detectChanges();
 
-    expect((solutionHeadline.nativeElement as HTMLDivElement).innerHTML).toContain(solution.description!);
+    expect((solutionHeadline.nativeElement as HTMLDivElement).innerHTML).toContain(solution.description as string);
   });
 
   it('should display solution calculation date', () => {

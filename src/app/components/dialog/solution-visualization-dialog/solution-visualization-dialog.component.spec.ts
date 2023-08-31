@@ -1,10 +1,8 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { AppRoutingModule } from 'src/app/app-routing.module';
 import { AppModule } from 'src/app/app.module';
 import defaultImportsConstant from 'src/app/default-imports.constant';
-import { ISolution } from 'src/app/interfaces/i-solution.interface';
-
+import { ISolution } from '@smgr/interfaces';
 import { SolutionVisualizationDialogComponent } from './solution-visualization-dialog.component';
 
 describe('SolutionVisualizationDialogComponent', () => {
@@ -17,8 +15,7 @@ describe('SolutionVisualizationDialogComponent', () => {
       imports: [
         ...defaultImportsConstant,
 
-        AppModule,
-        AppRoutingModule
+        AppModule
       ],
       providers: [
         {

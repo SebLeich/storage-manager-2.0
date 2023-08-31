@@ -1,10 +1,10 @@
-@import 'src/lib/sass/gradients';
+@import 'src/lib/scss/stretched-element';
+@import 'src/lib/scss/gradients';
 
 .body {
+    @include stretched-element;
     display: flex;
     flex-direction: column;
-    height: 100%;
-    width: 100%;
 }
 
 .general-data-row {
@@ -27,8 +27,7 @@
 }
 
 .no-solutions-hint {
-    height: 100%;
-    width: 100%;
+    @include stretched-element;
     display: flex;
     align-items: center;
     justify-content: center;

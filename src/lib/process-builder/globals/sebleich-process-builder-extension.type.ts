@@ -1,0 +1,1 @@
+export type SebleichProcessBuilderExtensionType = "ActivityExtension" | "GatewayExtension" | "SequenceFlowExtension" | "DataObjectExtension";

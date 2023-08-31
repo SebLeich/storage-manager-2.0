@@ -1,5 +1,4 @@
 import { TestBed } from '@angular/core/testing';
-import { AppRoutingModule } from '../app-routing.module';
 import { AppModule } from '../app.module';
 import defaultImportsConstant from '../default-imports.constant';
 
@@ -13,8 +12,7 @@ describe('SolutionValidationService', () => {
       imports: [
         ...defaultImportsConstant,
 
-        AppModule,
-        AppRoutingModule
+        AppModule
       ],
       providers: [
         SolutionValidationService

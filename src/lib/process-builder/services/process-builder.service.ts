@@ -1,23 +1,20 @@
 import { Inject, Injectable, Optional } from '@angular/core';
 import { ReplaySubject } from 'rxjs';
 import { map, take } from 'rxjs/operators';
-import { IProcessBuilderConfig, PROCESS_BUILDER_CONFIG_TOKEN } from '../globals/i-process-builder-config';
+import { IProcessBuilderConfig, PROCESS_BUILDER_CONFIG_TOKEN } from '../interfaces/process-builder-config.interface';
 import { Store } from '@ngrx/store';
-import { selectIFunctions } from '../store/selectors/function.selector';
+import { selectFunctions } from '../store/selectors/function.selector';
 import { selectCurrentIBpmnJSModelGuid, selectIBpmnJSModels } from '../store/selectors/bpmn-js-model.selectors';
 import { createIBpmnJsModel, setCurrentIBpmnJSModel } from '../store/actions/bpmn-js-model.actions';
 import { selectSnapshot } from '../globals/select-snapshot';
 import { selectCurrentParamOutput, selectIParams } from '../store/selectors/param.selectors';
-import { IInputParam } from '../globals/i-input-param';
-import { IParam } from '../globals/i-param';
+import { IParam } from '../interfaces/param.interface';
 import { selectIInterface } from '../store/selectors/interface.selectors';
-import { IElement } from 'src/lib/bpmn-io/interfaces/element.interface';
-import shapeTypes from 'src/lib/bpmn-io/shape-types';
 
 @Injectable()
 export class ProcessBuilderService {
 
-  public funcs$ = this._store.select(selectIFunctions());
+  public funcs$ = this._store.select(selectFunctions());
   public models$ = this._store.select(selectIBpmnJSModels());
   public params$ = this._store.select(selectIParams());
 
@@ -26,10 +23,7 @@ export class ProcessBuilderService {
   private _config = new ReplaySubject<IProcessBuilderConfig>(1);
   public config$ = this._config.asObservable();
 
-  constructor(
-    @Optional() @Inject(PROCESS_BUILDER_CONFIG_TOKEN) private config: IProcessBuilderConfig,
-    private _store: Store
-  ) {
+  constructor(@Optional() @Inject(PROCESS_BUILDER_CONFIG_TOKEN) private config: IProcessBuilderConfig, private _store: Store) {
     if (!this.config) {
       config = this.defaultConfig;
     }
@@ -39,7 +33,6 @@ export class ProcessBuilderService {
   public createBpmnJsModel() {
     this._store.dispatch(createIBpmnJsModel());
   }
-
 
   public async mapNavigationPathPropertyMetadata(navigationPath: string, inputParams: IParam[]) {
     let injectorDeepPathArray = navigationPath.split('.');
@@ -65,7 +58,7 @@ export class ProcessBuilderService {
       }
 
       const childPropertyName = injectorDeepPathArray[currentIndex];
-      const childProperty = metaData.interface.typeDef.find(param => (typeof param.normalizedName === 'undefined'? param.name : param.normalizedName) === childPropertyName);
+      const childProperty = metaData.interface.typeDef.find(param => (typeof param.normalizedName === 'undefined' ? param.name : param.normalizedName) === childPropertyName);
 
       if (!childProperty) {
         return { warning: `deep path: ${navigationPath}, navigation property not found on interface ${metaData.interface.normalizedName}` };
@@ -84,6 +77,7 @@ export class ProcessBuilderService {
     localStorage.removeItem('funcs');
     localStorage.removeItem('models');
     localStorage.removeItem('params');
+    localStorage.removeItem('ifaces');
     this._reloadLocation();
   }
 
@@ -103,38 +97,8 @@ export class ProcessBuilderService {
     this._store.dispatch(setCurrentIBpmnJSModel(bpmnJsModels[nextIndex]));
   }
 
-  public toggleEvents = () => this._config.pipe(take(1)).subscribe((value) => {
-    value.hideEvents = value.hideEvents ? false : true;
-    this.setConfig(value);
-  });
-
-  public toggleGateways = () => this._config.pipe(take(1)).subscribe((value) => {
-    value.hideGateways = value.hideGateways ? false : true;
-    this.setConfig(value);
-  });
-
-  public editable$ = this._config.pipe(map(x => x.editable));
-  public hideEvents$ = this._config.pipe(map(x => x.hideEvents));
-  public hideTasks$ = this._config.pipe(map(x => x.hideTasks));
-  public hideGateways$ = this._config.pipe(map(x => x.hideGateways));
-  public hideSubProcesses$ = this._config.pipe(map(x => x.hideSubProcesses));
-  public hideDataObjectReferences$ = this._config.pipe(map(x => x.hideDataObjectReferences));
-  public hideDatabases$ = this._config.pipe(map(x => x.hideDatabases));
-  public hidePools$ = this._config.pipe(map(x => x.hidePools));
-  public hideGroups$ = this._config.pipe(map(x => x.hideGroups));
-
   public get defaultConfig(): IProcessBuilderConfig {
-    return {
-      'editable': true,
-      'hideDataObjectReferences': false,
-      'hideDatabases': false,
-      'hideEvents': false,
-      'hideGateways': false,
-      'hideGroups': false,
-      'hidePools': false,
-      'hideSubProcesses': false,
-      'hideTasks': false
-    } as IProcessBuilderConfig;
+    return { } as IProcessBuilderConfig;
   }
 
   private _reloadLocation() {

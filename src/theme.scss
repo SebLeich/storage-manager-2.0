@@ -1,0 +1,147 @@
+@import "@angular/material/theming";
+@import "src/lib/scss/button";
+@import "src/lib/scss/gradients";
+
+// Include the common styles for Angular Material. We include this here so that you only
+// have to load a single css file for Angular Material in your app.
+// Be sure that you only ever include this mixin once!
+@include mat-core();
+
+// Define the palettes for your theme using the Material Design palettes available in palette.scss
+// (imported above). For each palette, you can optionally specify a default, lighter, and darker
+// hue. Available color palettes: https://material.io/design/color/
+$storage-manager-primary: mat-palette($mat-indigo);
+$storage-manager-accent: mat-palette($mat-cyan, 700);
+
+// The warn palette is optional (defaults to red).
+$storage-manager-warn: mat-palette($mat-red);
+
+// Create the theme object. A theme consists of configurations for individual
+// theming systems such as "color" or "typography".
+$storage-manager-theme: mat-light-theme((color: (primary: $storage-manager-primary,
+				accent: $storage-manager-accent,
+				warn: $storage-manager-warn,
+			),
+		));
+
+// Include theme styles for core and each component used in your app.
+// Alternatively, you can import and @include the theme mixins for each component
+// that you are using.
+@include angular-material-theme($storage-manager-theme);
+
+@import "bebas-neue.css";
+
+html,
+body {
+    height: -webkit-fill-available;
+    width: -webkit-fill-available;
+}
+
+body {
+	margin: 0;
+	font-family: Roboto, "Helvetica Neue", sans-serif;
+}
+
+.width {
+	width: 100%;
+}
+
+.spacer {
+	flex: 1;
+	overflow: hidden;
+}
+
+.cm-editor {
+	height: 100% !important;
+}
+
+.CodeMirror-hints {
+	z-index: 1000 !important;
+}
+
+.no-padding-dialog>.mat-dialog-container {
+	padding: 0px;
+}
+
+.dialog-navbar {
+	height: 64px;
+	display: flex;
+	align-items: center;
+	padding: 0px 1rem;
+	box-sizing: border-box;
+	background-color: #fafafa;
+	/** background: linear-gradient(131deg, #0c105b 10%, #2c3290 45%, #3b419b 55%, #1b2174 100%); */
+
+	.icon {
+		margin-right: 0.5rem;
+		font-size: 1.5rem;
+		color: rgb(65, 65, 65);
+		height: auto;
+		width: auto;
+		/** color: rgb(255 255 255 / 50%); */
+	}
+
+	.text {
+		font-size: 1.4rem;
+		flex: 1;
+	}
+}
+
+.dialog-body {
+	flex: 1;
+	overflow-y: auto;
+}
+
+.mat-menu-content {
+	padding: 0px !important;
+}
+
+.smgr-menu .mat-mdc-menu-item {
+	min-height: unset;
+	padding: 0.25rem 0.9rem;
+}
+
+.control.primary {
+	@include default-button;
+}
+
+.control.accent {
+	@include secondary-button;
+}
+
+.control.accent-2 {
+	@include secondary-button-2;
+}
+
+.control.danger {
+	@include button;
+	@include gradient-red;
+}
+
+.control.disabled {
+	pointer-events: none;
+	opacity: 0.5;
+}
+
+.mdc-tooltip__surface {
+	font-weight: 100 !important;
+	font-size: 0.8rem !important;
+	line-height: 1rem !important;
+}
+
+.mat-form-field-outline-white-bg .mat-mdc-text-field-wrapper {
+	background-color: white;
+	border-radius: 5px;
+}
+
+.mat-form-field-outline-lightblue-bg .mat-mdc-text-field-wrapper {
+	background-color: rgb(245, 250, 255);
+	border-radius: 5px;
+}
+
+.custom-validation-error-list {
+	background-color: #ffe4e4;
+	color: #902626;
+	margin: 0px;
+	padding: 0.5rem 4rem;
+}

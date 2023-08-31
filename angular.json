@@ -34,8 +34,7 @@
               "src/assets"
             ],
             "styles": [
-              "src/custom-theme.scss",
-              "src/custom-theme.sass",
+              "src/theme.scss",
               "src/styles.css",
               "./node_modules/bpmn-js/dist/assets/diagram-js.css",
               "./node_modules/bpmn-js/dist/assets/bpmn-font/css/bpmn.css",
@@ -122,26 +121,13 @@
               "src/assets"
             ],
             "styles": [
-              "src/custom-theme.scss",
-              "src/custom-theme.sass",
+              "src/theme.scss",
               "src/styles.css",
               "./node_modules/bpmn-js/dist/assets/diagram-js.css",
               "./node_modules/bpmn-js/dist/assets/bpmn-font/css/bpmn.css",
               "./node_modules/jsoneditor/dist/jsoneditor.min.css"
             ],
             "scripts": []
-          }
-        },
-        "e2e": {
-          "builder": "@angular-devkit/build-angular:protractor",
-          "options": {
-            "protractorConfig": "e2e/protractor.conf.js",
-            "devServerTarget": "storage-manager:serve"
-          },
-          "configurations": {
-            "production": {
-              "devServerTarget": "storage-manager:serve:production"
-            }
           }
         },
         "deploy": {
@@ -155,6 +141,51 @@
               "src/**/*.html"
             ]
           }
+        },
+        "cypress-run": {
+          "builder": "@cypress/schematic:cypress",
+          "options": {
+            "devServerTarget": "storage-manager:serve"
+          },
+          "configurations": {
+            "production": {
+              "devServerTarget": "storage-manager:serve:production"
+            }
+          }
+        },
+        "cypress-open": {
+          "builder": "@cypress/schematic:cypress",
+          "options": {
+            "watch": true,
+            "headless": false
+          }
+        },
+        "ct": {
+          "builder": "@cypress/schematic:cypress",
+          "options": {
+            "devServerTarget": "storage-manager:serve",
+            "watch": true,
+            "headless": false,
+            "testingType": "component"
+          },
+          "configurations": {
+            "development": {
+              "devServerTarget": "storage-manager:serve:development"
+            }
+          }
+        },
+        "e2e": {
+          "builder": "@cypress/schematic:cypress",
+          "options": {
+            "devServerTarget": "storage-manager:serve",
+            "watch": true,
+            "headless": false
+          },
+          "configurations": {
+            "production": {
+              "devServerTarget": "storage-manager:serve:production"
+            }
+          }
         }
       }
     }
@@ -162,7 +193,8 @@
   "cli": {
     "analytics": false,
     "schematicCollections": [
-      "@angular-eslint/schematics"
+      "@angular-eslint/schematics",
+      "@schematics/angular"
     ]
   }
 }

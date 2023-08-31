@@ -1,6 +1,6 @@
 import { animate, query, stagger, style, transition, trigger } from "@angular/animations";
 
-export const widgetFadeInAnimation = trigger('widgetFadeIn', [
+const bottomUpFadeInAnimation = trigger('bottomUpFadeIn', [
     transition(':enter', [
         query('.widget', style({
             opacity: 0,
@@ -14,3 +14,4 @@ export const widgetFadeInAnimation = trigger('widgetFadeIn', [
         ]))
     ])
 ]);
+export default bottomUpFadeInAnimation;

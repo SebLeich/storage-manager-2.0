@@ -2,40 +2,39 @@ import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { Store } from '@ngrx/store';
 import { BehaviorSubject, of, ReplaySubject, Subscription } from 'rxjs';
-import { EmbeddedView } from 'src/lib/process-builder/globals/i-embedded-view';
-import { IParamDefinition } from 'src/lib/process-builder/globals/i-param-definition';
-import { selectIFunction } from 'src/lib/process-builder/store/selectors/function.selector';
+import { IEmbeddedView } from 'src/lib/process-builder/classes/embedded-view';
+import { IParamDefinition } from 'src/lib/process-builder/interfaces/param-definition.interface';
+import { selectFunction } from 'src/lib/process-builder/store/selectors/function.selector';
 import { filter, map, switchMap } from 'rxjs/operators';
 import { selectIInterface } from 'src/lib/process-builder/store/selectors/interface.selectors';
-import { IParamMember } from 'src/lib/process-builder/globals/i-param-member';
-import { ITaskCreationFormGroup } from 'src/lib/process-builder/interfaces/i-task-creation.interface';
-import { IParam } from 'src/lib/process-builder/globals/i-param';
+import { IParamMember } from 'src/lib/process-builder/interfaces/param-member.interface';
+import { TaskCreationFormGroup } from 'src/lib/process-builder/interfaces/task-creation-form-group-value.interface';
 
 @Component({
-  selector: '[app-embedded-input-output-mapping]',
+  selector: 'app-embedded-input-output-mapping',
   templateUrl: './embedded-input-output-mapping.component.html',
   styleUrls: ['./embedded-input-output-mapping.component.scss']
 })
-export class EmbeddedInputOutputMappingComponent extends EmbeddedView implements OnDestroy, OnInit {
+export class EmbeddedInputOutputMappingComponent implements IEmbeddedView, OnDestroy, OnInit {
 
   @Input() public inputParams!: number | number[] | null;
 
   public formGroup = new FormGroup({
     'functionIdentifier': new FormControl(null),
     'outputParamValue': new FormControl(null)
-  }) as FormGroup<Partial<ITaskCreationFormGroup>>;
+  }) as TaskCreationFormGroup;
 
   public outputParamName$ = this._store
-    .select(selectIFunction(() => this.formGroup.controls['functionIdentifier']!.value))
+    .select(selectFunction(() => this.formGroup.controls['functionIdentifier']!.value))
     .pipe(
       filter(func => !!func),
       switchMap((func) => {
-        if (typeof func!.output?.interface === 'number') {
+        if (typeof func!.outputTemplate === 'number') {
           return this._store
-            .select(selectIInterface(func!.output!.interface))
+            .select(selectIInterface(func!.outputTemplate))
             .pipe(map(iface => iface?.name));
         }
-        return of(`param ${func!.output!.param}`);
+        return of(`param ${func!.output}`);
       })
     );
 
@@ -47,9 +46,7 @@ export class EmbeddedInputOutputMappingComponent extends EmbeddedView implements
 
   private _subscriptions: Subscription = new Subscription();
 
-  constructor(private _store: Store) {
-    super();
-  }
+  constructor(private _store: Store) { }
 
   public menuOpened() {
     this._setAvailableTypes();
@@ -63,7 +60,7 @@ export class EmbeddedInputOutputMappingComponent extends EmbeddedView implements
     this._subscriptions.add(...[
       this.formGroup.controls.outputParamValue!
         .valueChanges
-        .subscribe((val: IParam | IParamDefinition[] | null | undefined) => {
+        .subscribe((val: IParamDefinition | IParamDefinition[] | null | undefined) => {
           this._params.next(val ? Array.isArray(val) ? val : [val] : []);
         })
     ]);

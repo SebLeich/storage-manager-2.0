@@ -3,14 +3,10 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ControlContainer, FormControl, FormGroup } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { Store } from '@ngrx/store';
-import { isEqual } from 'lodash';
-import { AppRoutingModule } from 'src/app/app-routing.module';
+import { IContainer, IGood, ISolution } from '@smgr/interfaces';
 import { AppModule } from 'src/app/app.module';
 import defaultImportsConstant from 'src/app/default-imports.constant';
-import { IContainer } from 'src/app/interfaces/i-container.interface';
-import { IGood } from 'src/app/interfaces/i-good.interface';
-import { ISolution } from 'src/app/interfaces/i-solution.interface';
-import { addSolutions } from 'src/app/store/actions/i-solution.actions';
+import { addSolutions } from 'src/lib/storage-manager/store/actions/solution.actions';
 
 import { CalculationContextOverviewComponent } from './calculation-context-overview.component';
 
@@ -25,8 +21,7 @@ describe('CalculationContextOverviewComponent', () => {
       imports: [
         ...defaultImportsConstant,
 
-        AppModule,
-        AppRoutingModule
+        AppModule
       ],
       providers: [
         {
@@ -53,7 +48,7 @@ describe('CalculationContextOverviewComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  describe('should display available solutions correctly', () => {
+  describe('Solutions Overview', () => {
 
     const solutions: ISolution[] = [
       {
@@ -105,11 +100,11 @@ describe('CalculationContextOverviewComponent', () => {
 
       const inputElements: HTMLInputElement[] = headlineInputs.map(element => (element.nativeElement as HTMLInputElement));
       const inputTexts = inputElements.map(element => element.value).sort();
-      const solutionDescriptions = solutions.map(solution => solution.description).sort();
+      const solutionDescriptions = solutions.map(solution => solution.description).sort() as string[];
 
       expect(inputElements.some(element => element.readOnly)).toBeFalsy();
       expect(inputElements.some(element => element.disabled)).toBeFalsy();
-      expect(isEqual(inputTexts, solutionDescriptions)).toBeTruthy();
+      expect(inputTexts).toEqual(solutionDescriptions);
     });
 
     it('should display calculation source title for all solutions within sub title', () => {

@@ -1,0 +1,1 @@
+export type LogLevel = 'info' | 'warning' | 'error' | 'success' | 'prioritized';

@@ -1,0 +1,16 @@
+.body {
+    margin-bottom: 0.5rem;
+    display: flex;
+    align-items: center;
+
+    * {
+        margin-right: 0.5rem;
+    }
+}
+
+@media screen and (min-width: 800px) {
+    .body.collapsed {
+        flex-direction: column;
+        padding: 0.5rem 0px 0.5rem 0.5rem;
+    }
+}

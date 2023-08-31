@@ -1,152 +1,140 @@
 {
-    "constant": false,
-    "defaultValue": null,
-    "interface": null,
-    "name": "unnamed param",
-    "normalizedName": "unnamedParam",
-    "nullable": false,
-    "optional": false,
-    "type": "object",
-    "typeDef": [
+  "name": "unnamed param",
+  "normalizedName": "unnamedParam",
+  "nullable": false,
+  "optional": false,
+  "constant": false,
+  "defaultValue": null,
+  "type": "object",
+  "interface": null,
+  "typeDef": [
+    {
+      "defaultValue": "ab34762f-ccd1-4258-b3e1-69558728e6b4",
+      "name": "id",
+      "interface": null,
+      "constant": null,
+      "nullable": null,
+      "optional": null,
+      "type": "string",
+      "typeDef": null,
+      "normalizedName": "id"
+    },
+    {
+      "defaultValue": {
+        "height": 1700,
+        "width": 2100,
+        "length": 3000,
+        "goods": [{ "id": "good1", "turningAllowed": true }]
+      },
+      "name": "container",
+      "interface": null,
+      "constant": null,
+      "nullable": null,
+      "optional": null,
+      "type": "object",
+      "typeDef": [
         {
-            "constant": null,
-            "defaultValue": "ab34762f-ccd1-4258-b3e1-69558728e6b4",
-            "interface": null,
-            "name": "id",
-            "normalizedName": "id",
-            "nullable": null,
-            "optional": null,
-            "type": "string",
-            "typeDef": null
+          "defaultValue": 1700,
+          "name": "height",
+          "interface": null,
+          "constant": null,
+          "nullable": null,
+          "optional": null,
+          "type": "number",
+          "typeDef": null,
+          "normalizedName": "height"
         },
         {
-            "constant": null,
-            "defaultValue": {
-                "height": 1700,
-                "width": 2100,
-                "length": 3000,
-                "goods": [
-                    {
-                        "id": "good1",
-                        "turningAllowed": true
-                    }
-                ]
-            },
-            "interface": null,
-            "name": "container",
-            "normalizedName": "container",
-            "nullable": null,
-            "optional": null,
-            "type": "object",
-            "typeDef": [
-                {
-                    "constant": null,
-                    "defaultValue": 1700,
-                    "interface": null,
-                    "name": "height",
-                    "normalizedName": "height",
-                    "nullable": null,
-                    "optional": null,
-                    "type": "number",
-                    "typeDef": null
-                },
-                {
-                    "constant": null,
-                    "defaultValue": 2100,
-                    "interface": null,
-                    "name": "width",
-                    "normalizedName": "width",
-                    "nullable": null,
-                    "optional": null,
-                    "type": "number",
-                    "typeDef": null
-                },
-                {
-                    "constant": null,
-                    "defaultValue": 3000,
-                    "interface": null,
-                    "name": "length",
-                    "normalizedName": "length",
-                    "nullable": null,
-                    "optional": null,
-                    "type": "number",
-                    "typeDef": null
-                },
-                {
-                    "constant": null,
-                    "defaultValue": [
-                        {
-                            "id": "good1",
-                            "turningAllowed": true
-                        }
-                    ],
-                    "interface": null,
-                    "name": "goods",
-                    "normalizedName": "goods",
-                    "nullable": null,
-                    "optional": null,
-                    "type": "array",
-                    "typeDef": {
-                        "constant": false,
-                        "defaultValue": null,
-                        "interface": null,
-                        "name": "unnamed param",
-                        "normalizedName": "unnamedParam",
-                        "nullable": false,
-                        "optional": false,
-                        "type": "object",
-                        "typeDef": [
-                            {
-                                "constant": null,
-                                "defaultValue": "good1",
-                                "interface": null,
-                                "name": "id",
-                                "normalizedName": "id",
-                                "nullable": null,
-                                "optional": null,
-                                "type": "string",
-                                "typeDef": null
-                            },
-                            {
-                                "constant": null,
-                                "defaultValue": true,
-                                "interface": null,
-                                "name": "turningAllowed",
-                                "normalizedName": "turningallowed",
-                                "nullable": null,
-                                "optional": null,
-                                "type": "boolean",
-                                "typeDef": null
-                            }
-                        ]
-                    }
-                }
-            ]
+          "defaultValue": 2100,
+          "name": "width",
+          "interface": null,
+          "constant": null,
+          "nullable": null,
+          "optional": null,
+          "type": "number",
+          "typeDef": null,
+          "normalizedName": "width"
         },
         {
-            "constant": null,
-            "defaultValue": {
-                "title": "algorithm1"
-            },
-            "interface": null,
-            "name": "calculationSource",
-            "normalizedName": "calculationsource",
-            "nullable": null,
-            "optional": null,
+          "defaultValue": 3000,
+          "name": "length",
+          "interface": null,
+          "constant": null,
+          "nullable": null,
+          "optional": null,
+          "type": "number",
+          "typeDef": null,
+          "normalizedName": "length"
+        },
+        {
+          "defaultValue": [{ "id": "good1", "turningAllowed": true }],
+          "name": "goods",
+          "interface": null,
+          "constant": null,
+          "nullable": null,
+          "optional": null,
+          "type": "array",
+          "typeDef": {
+            "name": "unnamed param",
+            "normalizedName": "unnamedParam",
+            "nullable": false,
+            "optional": false,
+            "constant": false,
+            "defaultValue": null,
             "type": "object",
+            "interface": null,
             "typeDef": [
-                {
-                    "constant": null,
-                    "defaultValue": "algorithm1",
-                    "interface": null,
-                    "name": "title",
-                    "normalizedName": "title",
-                    "nullable": null,
-                    "optional": null,
-                    "type": "string",
-                    "typeDef": null
-                }
+              {
+                "defaultValue": "good1",
+                "name": "id",
+                "interface": null,
+                "constant": null,
+                "nullable": null,
+                "optional": null,
+                "type": "string",
+                "typeDef": null,
+                "normalizedName": "id"
+              },
+              {
+                "defaultValue": true,
+                "name": "turningAllowed",
+                "interface": null,
+                "constant": null,
+                "nullable": null,
+                "optional": null,
+                "type": "boolean",
+                "typeDef": null,
+                "normalizedName": "turningallowed"
+              }
             ]
+          },
+          "normalizedName": "goods"
         }
-    ]
+      ],
+      "normalizedName": "container"
+    },
+    {
+      "defaultValue": { "title": "algorithm1" },
+      "name": "calculationSource",
+      "interface": null,
+      "constant": null,
+      "nullable": null,
+      "optional": null,
+      "type": "object",
+      "typeDef": [
+        {
+          "defaultValue": "algorithm1",
+          "name": "title",
+          "interface": null,
+          "constant": null,
+          "nullable": null,
+          "optional": null,
+          "type": "string",
+          "typeDef": null,
+          "normalizedName": "title"
+        }
+      ],
+      "normalizedName": "calculationsource"
+    }
+  ]
 }

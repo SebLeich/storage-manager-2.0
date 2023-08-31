@@ -1,5 +1,5 @@
 import { createAction } from '@ngrx/store';
-import { IFunction } from '../../globals/i-function';
+import { IFunction } from '../../interfaces/function.interface';
 
 export const loadIFunctions = createAction(
   '[IFunction] Load IFunctions'
@@ -17,8 +17,13 @@ export const addIFunctions = createAction(
 
 export const removeIFunction = createAction(
   '[IFunction] Remove IFunction',
-  (func: IFunction | number) => ({ func })
+  (func: IFunction ) => ({ func })
 );
+
+export const setIFunctionsCanFailFlag = createAction(
+  '[IFunction] Set IFunctions CanFail Flag',
+  (args: { funcs: number[], canFail: boolean }) => args
+)
 
 export const updateIFunction = createAction(
   '[IFunction] Update IFunction',

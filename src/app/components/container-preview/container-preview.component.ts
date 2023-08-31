@@ -1,6 +1,6 @@
 import { Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
 import { ChartConfiguration } from 'chart.js';
-import { IContainer } from 'src/app/interfaces/i-container.interface';
+import { IContainer } from '@smgr/interfaces';
 
 @Component({
   selector: 'app-container-preview',
@@ -59,7 +59,7 @@ export class ContainerPreviewComponent implements OnChanges, OnInit {
 
   private _calculateUsedSpace() {
     if (!this.container || !Array.isArray(this.container.goods)) return;
-    let used = this.container.goods.reduce((x, curr) => x += (curr.length * curr.width * curr.height), 0);
+    let used = this.container.goods.reduce((agg, curr) => agg += (curr.length * curr.width * curr.height), 0);
     let total = this.container.height * this.container.length * this.container.width;
     this.datasets = [...this.datasets.map(dataset => {
       dataset.data = [used, total - used];

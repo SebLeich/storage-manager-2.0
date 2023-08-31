@@ -1,428 +1,269 @@
-import { Component, Inject, OnDestroy, OnInit, Type, ViewChild, ViewContainerRef } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Inject, OnDestroy, OnInit, ViewChild, ViewContainerRef, signal } from '@angular/core';
+import { toObservable } from '@angular/core/rxjs-interop';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { Store } from '@ngrx/store';
-import { BehaviorSubject, combineLatest, interval, Observable, of, Subject, Subscription } from 'rxjs';
-import { IElement } from 'src/lib/bpmn-io/interfaces/element.interface';
-import { BPMNJsRepository } from 'src/lib/core/bpmn-js.repository';
-import { EmbeddedView } from 'src/lib/process-builder/globals/i-embedded-view';
-import { ITaskCreationConfig } from 'src/lib/process-builder/interfaces/i-task-creation-config.interface';
+import { combineLatest, concat, NEVER, Observable, Subscription } from 'rxjs';
+import { ITaskCreationConfig } from 'src/lib/process-builder/interfaces/task-creation-config.interface';
 import { TaskCreationStep } from 'src/lib/process-builder/globals/task-creation-step';
-import { EmbeddedConfigureErrorGatewayEntranceConnectionComponent } from '../../embedded/embedded-configure-error-gateway-entrance-connection/embedded-configure-error-gateway-entrance-connection.component';
-import { EmbeddedFunctionImplementationComponent } from '../../embedded/embedded-function-implementation/embedded-function-implementation.component';
-import { EmbeddedFunctionSelectionComponent } from '../../embedded/embedded-function-selection/embedded-function-selection.component';
-import { ITaskCreationComponentInput } from '../../../interfaces/i-task-creation-component-input.interface';
-
-import { selectIFunction } from 'src/lib/process-builder/store/selectors/function.selector';
-import { IEmbeddedFunctionImplementationData } from '../../../interfaces/i-embedded-function-implementation-output.interface';
-import { IFunction } from 'src/lib/process-builder/globals/i-function';
-import { selectIParam } from 'src/lib/process-builder/store/selectors/param.selectors';
-import { IParam } from 'src/lib/process-builder/globals/i-param';
-import { ProcessBuilderRepository } from 'src/lib/core/process-builder-repository';
-import { EmbeddedParamEditorComponent } from '../../embedded/embedded-param-editor/embedded-param-editor.component';
+import { selectFunction } from '@process-builder/selectors';
 import { CodemirrorRepository } from 'src/lib/core/codemirror.repository';
 import { MethodEvaluationStatus } from 'src/lib/process-builder/globals/method-evaluation-status';
-import { UntypedFormBuilder, UntypedFormControl, UntypedFormGroup } from '@angular/forms';
-import { IProcessBuilderConfig, PROCESS_BUILDER_CONFIG_TOKEN } from 'src/lib/process-builder/globals/i-process-builder-config';
-import { IConnector } from 'src/lib/bpmn-io/interfaces/connector.interface';
-import { EmbeddedFunctionInputSelectionComponent } from '../../embedded/embedded-function-input-selection/embedded-function-input-selection.component';
-import { debounceTime, filter, map, shareReplay, switchMap, take } from 'rxjs/operators';
-import { EmbeddedInputOutputMappingComponent } from '../../embedded/embedded-input-output-mapping/embedded-input-output-mapping.component';
-import { selectIInterface } from 'src/lib/process-builder/store/selectors/interface.selectors';
-import { IInterface } from 'src/lib/process-builder/interfaces/i-interface.interface';
-import { injectValues } from 'src/lib/process-builder/store/selectors/injection-context.selectors';
-import { selectSnapshot } from 'src/lib/process-builder/globals/select-snapshot';
+import { FormControl, FormGroup } from '@angular/forms';
+import { IProcessBuilderConfig, PROCESS_BUILDER_CONFIG_TOKEN } from 'src/lib/process-builder/interfaces/process-builder-config.interface';
+import { debounceTime, distinctUntilChanged, filter, map, share, startWith, switchMap, take } from 'rxjs/operators';
+import STEP_REGISTRY from './constants/step-registry.constant';
+import { functionSelectedValidator } from './validators/function-exists-when-required.validator';
+import { implementationExistsWhenRequiredValidator } from './validators/implementation-exists-when-required.validator';
+import { showAnimation } from '@/lib/shared/animations/show';
+import { BPMNJsRepository } from '@/lib/core/bpmn-js.repository';
+import { ParameterService } from '@/lib/process-builder/services/parameter.service';
+import { outputNameValidator } from './validators/output-name.validator';
+import { ITaskCreationInput } from './interfaces/task-creation-input.interface';
+import { selectSnapshot } from '@/lib/process-builder/globals/select-snapshot';
+import { ITextLeaf } from '@/lib/process-builder/interfaces/text-leaf.interface';
+import { IEvaluationResultProvider } from './interfaces/evalution-result-provider.interface';
+import { IMethodEvaluationResult } from '@/lib/process-builder/interfaces';
 
 @Component({
-  selector: 'app-task-creation',
-  templateUrl: './task-creation.component.html',
-  styleUrls: ['./task-creation.component.sass'],
+	selector: 'app-task-creation',
+	templateUrl: './task-creation.component.html',
+	styleUrls: ['./task-creation.component.scss'],
+	providers: [ParameterService],
+	animations: [showAnimation],
+	changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class TaskCreationComponent implements OnDestroy, OnInit {
-  @ViewChild('dynamicInner', { static: true, read: ViewContainerRef })
-  private dynamicInner!: ViewContainerRef;
+export class TaskCreationComponent implements IEvaluationResultProvider, OnDestroy, OnInit {
+	@ViewChild('dynamicInner', { static: true, read: ViewContainerRef })
+	private dynamicInner!: ViewContainerRef;
 
-  public stepRegistry: {
-    type: Type<EmbeddedView>;
-    provideInputParams?: (component: EmbeddedView, element: IElement) => void;
-    autoChangeTabOnValueEmission?: boolean;
-  }[] = [];
+	public formGroup = new FormGroup({
+		entranceGatewayType: new FormControl(this.data.taskCreationFormGroupValue.entranceGatewayType),
+		functionCanFail: new FormControl(this.data.taskCreationFormGroupValue.functionCanFail),
+		functionIdentifier: new FormControl(this.data.taskCreationFormGroupValue.functionIdentifier),
+		functionImplementation: new FormControl(this.data.taskCreationFormGroupValue.functionImplementation),
+		functionName: new FormControl(this.data.taskCreationFormGroupValue.functionName),
+		functionNormalizedName: new FormControl(this.data.taskCreationFormGroupValue.functionNormalizedName),
+		outputParamInterface: new FormControl(this.data.taskCreationFormGroupValue.outputParamInterface),
+		outputParamName: new FormControl(this.data.taskCreationFormGroupValue.outputParamName),
+		outputParamNormalizedName: new FormControl(this.data.taskCreationFormGroupValue.outputParamNormalizedName),
+		outputParamType: new FormControl(this.data.taskCreationFormGroupValue.outputParamType),
+		outputParamValue: new FormControl(this.data.taskCreationFormGroupValue.outputParamValue),
+	}, {
+		asyncValidators: [outputNameValidator(this._store, this), implementationExistsWhenRequiredValidator(this._store)],
+		validators: [functionSelectedValidator(this.data?.taskCreationPayload?.configureActivity ? true : false)]
+	});
 
-  private _currentStepIndex: BehaviorSubject<number> =
-    new BehaviorSubject<number>(0);
-  public currentStepIndex$ = this._currentStepIndex.asObservable();
+	public customEvaluationResult$ = concat(
+		this.formGroup.controls.functionImplementation.valueChanges.pipe(take(1)),
+		this.formGroup.controls.functionImplementation.valueChanges.pipe(debounceTime(1000)),
+	).pipe(
+		switchMap(async (implementation) => await this.getEvaluationResult(implementation)),
+		share()
+	) as Observable<IMethodEvaluationResult>;
 
-  private _configureGateway = new BehaviorSubject<IConnector | null>(null);
-  private _customImplementation = new BehaviorSubject<IElement | null>(null);
-  private _hasOutputParam = new BehaviorSubject<boolean>(false);
-  private _hasDynamicInputParam = new BehaviorSubject<IElement | null | undefined>(null);
-  private _hasDynamicOutputParam = new BehaviorSubject<IElement | null | undefined>(null);
-  private _hasDataMapping = new BehaviorSubject<IElement | null | undefined>(null);
+	public unableToDetermineOutputParam$ = this.customEvaluationResult$.pipe(
+		map(evaluationResult => {
+			if (evaluationResult && evaluationResult.status === MethodEvaluationStatus.ReturnValueFound && !evaluationResult.type) {
+				return true;
+			}
+			return false;
+		}),
+		startWith(false)
+	);
 
-  public hasOutputParam$ = this._hasOutputParam.asObservable();
-  public steps$ = combineLatest([
-    this._configureGateway.asObservable(),
-    this._customImplementation.asObservable(),
-    this._hasDynamicInputParam.asObservable(),
-    this._hasDynamicOutputParam.asObservable(),
-    this._hasDataMapping.asObservable(),
-  ]).pipe(
-    map(
-      ([
-        gatewayConfig,
-        customImplementation,
-        hasDynamicInputParam,
-        dynamicOutputParam,
-        dataMapping,
-      ]) => {
-        let availableSteps: ITaskCreationConfig[] = [];
-        if (gatewayConfig) {
-          availableSteps.push({
-            taskCreationStep:
-              TaskCreationStep.ConfigureErrorGatewayEntranceConnection,
-            element: gatewayConfig,
-          } as ITaskCreationConfig);
-        }
-        if (!!this.data?.data?.taskCreationPayload?.configureActivity) {
-          availableSteps.push({
-            taskCreationStep: TaskCreationStep.ConfigureFunctionSelection,
-            element: this.data.data.taskCreationPayload.configureActivity,
-          } as ITaskCreationConfig);
-        }
-        if (hasDynamicInputParam) {
-          availableSteps.push({
-            taskCreationStep: TaskCreationStep.ConfigureFunctionInput,
-            element: hasDynamicInputParam,
-          } as ITaskCreationConfig);
-        }
-        if (customImplementation) {
-          availableSteps.push({
-            taskCreationStep: TaskCreationStep.ConfigureFunctionImplementation,
-            element: customImplementation,
-          } as ITaskCreationConfig);
-        }
-        if (dataMapping) {
-          availableSteps.push({
-            taskCreationStep: TaskCreationStep.ConfigureInputOutputMapping,
-            element: dataMapping,
-          } as ITaskCreationConfig);
-        }
-        if (customImplementation || dynamicOutputParam) {
-          availableSteps.push({
-            taskCreationStep: TaskCreationStep.ConfigureFunctionOutput,
-            element: dynamicOutputParam,
-          } as ITaskCreationConfig);
-        }
-        return availableSteps;
-      }
-    ),
-    shareReplay(1)
-  ) as Observable<ITaskCreationConfig[]>;
+	public currentStepIndex = signal(0);
 
-  currentStep$ = combineLatest([this.steps$, this.currentStepIndex$]).pipe(
-    map(([steps, index]) => steps[index])
-  );
-  canAnalyzeCustomImplementation$ = this.currentStep$.pipe(
-    filter((x) => (x ? true : false)),
-    map(
-      (x) =>
-        x.taskCreationStep ===
-        TaskCreationStep.ConfigureFunctionImplementation ||
-        x.taskCreationStep === TaskCreationStep.ConfigureFunctionOutput
-    )
-  );
+	public selectedFunction$ = this.formGroup.controls.functionIdentifier.valueChanges
+		.pipe(
+			startWith(this.formGroup.controls.functionIdentifier.value),
+			switchMap(functionIdentifier => this._store.select(selectFunction(functionIdentifier))),
+		);
 
-  func$: Observable<IFunction | null | undefined> = this._store.select(
-    selectIFunction(() => this.functionIdentifierControl.value)
-  );
+	public hasCustomImplementation$ = this.selectedFunction$
+		.pipe(map((selectedFunction) => selectedFunction?.requireCustomImplementation ?? false), distinctUntilChanged());
 
-  private _statusMessage: Subject<string> = new Subject<string>();
-  statusMessage$ = combineLatest([
-    this._statusMessage.asObservable(),
-    this._statusMessage.pipe(switchMap(() => interval(1000))),
-  ]).pipe(
-    map(([val, time]: [string, number]) => {
-      return time < 5 ? val : null;
-    })
-  );
+	public hasDynamicInputParameters$ = this.selectedFunction$
+		.pipe(
+			map(selectedFunction => selectedFunction?.inputTemplates === 'dynamic' && !(selectedFunction.requireCustomImplementation || selectedFunction.customImplementation) ? true : false),
+			distinctUntilChanged()
+		);
 
-  formGroup!: UntypedFormGroup;
+	public hasDynamicOutputParameters$ = this.selectedFunction$.pipe(
+		map((selectedFunction) =>
+			selectedFunction?.outputTemplate === 'dynamic' ? true : false
+		),
+		distinctUntilChanged()
+	);
+	public hasDataMapping$ = this.selectedFunction$.pipe(
+		map((selectedFunction) => selectedFunction?.requireDataMapping ?? false),
+		distinctUntilChanged()
+	);
+	public hasStaticOutputDefinition$ = this.selectedFunction$.pipe(
+		map((selectedFunction) => {
+			const outp = selectedFunction?.requireStaticOutputDefinition ?? false;
+			return outp;
+		}),
+		distinctUntilChanged()
+	);
+	public steps$ = combineLatest([this.hasCustomImplementation$, this.hasDynamicInputParameters$, this.hasDataMapping$, this.hasStaticOutputDefinition$]).pipe(
+		map(
+			([hasCustomImplementation, hasDynamicInputParameters, hasDataMapping, hasStaticOutputDefinition]) =>
+				this._getSteps([
+					hasDynamicInputParameters,
+					hasCustomImplementation,
+					hasDataMapping,
+					hasStaticOutputDefinition,
+				])
+		)
+	);
+	public currentStep$ = combineLatest([this.steps$, toObservable(this.currentStepIndex)]).pipe(
+		map(([steps, index]) => steps[index]),
+		filter((step) => (step ? true : false)),
+		distinctUntilChanged(
+			(prev, curr) => prev.taskCreationStep === curr.taskCreationStep
+		)
+	);
+	public hasPreviousStep$ = toObservable(this.currentStepIndex).pipe(map((index) => index > 0));
+	public hasNextStep$ = combineLatest([this.steps$, toObservable(this.currentStepIndex)]).pipe(map(([steps, index]) => index < steps.length - 1));
+	public canAnalyzeCustomImplementation$ = this.currentStep$.pipe(
+		filter((x) => (x ? true : false)),
+		map((x) => x.taskCreationStep === TaskCreationStep.ConfigureFunctionImplementation || x.taskCreationStep === TaskCreationStep.ConfigureFunctionOutput)
+	);
+	public stepToNextStep$: Observable<number> = this.currentStep$.pipe(switchMap(step => step?.autoProceed$ ?? NEVER)) as Observable<number>;
+	public formInvalid$ = this.formGroup.statusChanges.pipe(startWith(this.formGroup.status), map((status) => status === 'INVALID'));
 
-  private _subscriptions = new Subscription();
+	public isBlocked = false;
 
-  constructor(
-    @Inject(PROCESS_BUILDER_CONFIG_TOKEN) public config: IProcessBuilderConfig,
-    @Inject(MAT_DIALOG_DATA) public data: ITaskCreationComponentInput,
-    private _ref: MatDialogRef<TaskCreationComponent>,
-    private _store: Store,
-    private _formBuilder: UntypedFormBuilder
-  ) {
-    this.formGroup = this._formBuilder.group({
-      functionIdentifier: null,
-      canFail: false,
-      interface: null,
-      implementation: null,
-      requireCustomImplementation: null,
-      name: config.defaultFunctionName,
-      normalizedName: ProcessBuilderRepository.normalizeName(
-        config.defaultFunctionName
-      ),
-      outputParamName: config.dynamicParamDefaultNaming,
-      normalizedOutputParamName: ProcessBuilderRepository.normalizeName(
-        config.dynamicParamDefaultNaming
-      ),
-      outputParamValue: null,
-      entranceGatewayType: null,
-      inputParam: null,
-      isProcessOutput: null,
-    });
-    this.formGroup.patchValue(this.data.data.taskCreationData);
-  }
+	private _subscription = new Subscription();
 
-  public abort = () => this._ref.close();
-  public finish = () => this._ref.close(this.formGroup.value);
+	constructor(
+		@Inject(PROCESS_BUILDER_CONFIG_TOKEN) public config: IProcessBuilderConfig,
+		@Inject(MAT_DIALOG_DATA) public data: ITaskCreationInput,
+		private _parameterService: ParameterService,
+		private _ref: MatDialogRef<TaskCreationComponent>,
+		private _store: Store
+	) { }
 
-  public ngOnDestroy = () => this._subscriptions.unsubscribe();
+	public abort = () => this._ref.close({ taskCreationPayload: this.data.taskCreationPayload });
+	public finish = () => this._onClose();
+	public nextStep = () => this.setStep(this.currentStepIndex() + 1);
+	public previousStep = () => this.setStep(this.currentStepIndex() - 1);
 
-  public ngOnInit(): void {
-    this.stepRegistry[
-      TaskCreationStep.ConfigureErrorGatewayEntranceConnection
-    ] = {
-      type: EmbeddedConfigureErrorGatewayEntranceConnectionComponent,
-    };
-    this.stepRegistry[TaskCreationStep.ConfigureFunctionSelection] = {
-      type: EmbeddedFunctionSelectionComponent,
-      provideInputParams: (arg: EmbeddedView, element: IElement) => {
-        const component = arg as EmbeddedFunctionSelectionComponent;
-        component.inputParams = BPMNJsRepository.getAvailableInputParams(element);
-      },
-    };
-    this.stepRegistry[TaskCreationStep.ConfigureFunctionImplementation] = {
-      type: EmbeddedFunctionImplementationComponent,
-      provideInputParams(arg, element) {
-        const component = arg as EmbeddedFunctionImplementationComponent;
-        component.inputParams = BPMNJsRepository.getAvailableInputParams(element);
-      },
-    };
-    this.stepRegistry[TaskCreationStep.ConfigureFunctionOutput] = {
-      type: EmbeddedParamEditorComponent,
-    };
-    this.stepRegistry[TaskCreationStep.ConfigureInputOutputMapping] = {
-      type: EmbeddedInputOutputMappingComponent,
-      provideInputParams: (arg: EmbeddedView, element: IElement) => {
-        const component = arg as EmbeddedInputOutputMappingComponent;
-        component.inputParams =
-          BPMNJsRepository.getAvailableInputParams(element);
-      },
-    };
-    this.stepRegistry[TaskCreationStep.ConfigureFunctionInput] = {
-      type: EmbeddedFunctionInputSelectionComponent,
-      provideInputParams: (arg: EmbeddedView, element: IElement) => {
-        let component = arg as EmbeddedFunctionInputSelectionComponent;
-        let availableInputParams = BPMNJsRepository.getAvailableInputParams(element);
-        component.setInputParams(availableInputParams);
-      },
-    };
-    this._configureGateway.next(
-      this.data.data?.taskCreationPayload
-        ?.configureIncomingErrorGatewaySequenceFlow ?? null
-    );
-    this.validateFunctionSelection();
-    this.setStep(0);
+	public ngOnDestroy = () => this._subscription.unsubscribe();
 
-    this._subscriptions.add(
-      ...[
-        this.formGroup.controls['implementation'].valueChanges
-          .pipe(debounceTime(2000))
-          .subscribe(() => {
-            let value = this.formGroup.controls['implementation'].value;
-            let evaluationResult = CodemirrorRepository.evaluateCustomMethod(
-              undefined,
-              value
-            );
-            let inputs = CodemirrorRepository.getUsedInputParams(
-              undefined,
-              value
-            )
-              .map((x) => x.propertyName)
-              .filter((x, index, array) => array.indexOf(x) === index);
-            this._hasOutputParam.next(
-              evaluationResult.status ===
-              MethodEvaluationStatus.ReturnValueFound
-            );
-            this._statusMessage.next(
-              `input params: ${inputs.length === 0 ? '-' : inputs.join(', ')}`
-            );
-          }),
-        this.functionIdentifierControl.valueChanges.subscribe(
-          (functionIdentifier: number | null) => {
-            if (typeof functionIdentifier !== 'number') return;
-            this.validateFunctionSelection();
-          }
-        ),
-      ]
-    );
-  }
+	public ngOnInit(): void {
+		this.setStep(0);
 
-  public setStep(index: number) {
-    this.steps$.pipe(take(1)).subscribe((steps: ITaskCreationConfig[]) => {
-      this.dynamicInner.clear();
-      this._currentStepIndex.next(index);
-      if (!steps[index]) return;
-      let step = steps[index];
-      if (!this.stepRegistry[step.taskCreationStep]) {
-        debugger;
-        throw 'unregistered step';
-      }
-      let component = this.dynamicInner.createComponent(
-        this.stepRegistry[step.taskCreationStep].type
-      );
-      if (
-        typeof this.stepRegistry[step.taskCreationStep].provideInputParams ===
-        'function'
-      )
-        this.stepRegistry[step.taskCreationStep].provideInputParams!(
-          component.instance,
-          step.element
-        );
+		this._subscription.add(this.currentStep$.subscribe((step) => this._renderStep(step)));
+		this._subscription.add(this.stepToNextStep$.subscribe((stepIndex: number) => this.setStep(stepIndex + 1)));
+	}
 
-      component.instance.formGroup = this.formGroup;
-    });
-  }
+	public setStep = (index: number) => this.currentStepIndex.set(index);
 
-  public async testImplementation() {
-    const injector = await selectSnapshot(this._store.select(injectValues));
-    let customImplementation = this.formGroup.controls['implementation']?.value;
-    if (customImplementation) {
-      const result = ProcessBuilderRepository.executeUserMethodAndReturnResponse(customImplementation, injector);
-      result.subscribe({
-        next: (result: any) => {
-          let parsed: string =
-            typeof result === 'object'
-              ? JSON.stringify(result)
-              : typeof result === 'number'
-                ? result.toString()
-                : result;
-          this._statusMessage.next(`succeeded! received: ${parsed}`);
-          this.formGroup.controls['outputParamValue'].setValue(
-            ProcessBuilderRepository.extractObjectTypeDefinition(result)
-          );
-        },
-      });
-      return;
-    } else if (typeof this.functionIdentifierControl.value === 'number') {
-      this._store
-        .select(selectIFunction(this.functionIdentifierControl.value))
-        .pipe(take(1))
-        .subscribe((func: IFunction | null | undefined) => {
-          if (func && typeof func.pseudoImplementation === 'function') {
-            func
-              .pseudoImplementation()
-              .then((result: object) => {
-                this.formGroup.controls['outputParamValue'].setValue(
-                  ProcessBuilderRepository.extractObjectTypeDefinition(result)
-                );
-              })
-              .catch((reason: string) => alert(reason));
-          }
-        });
-    }
-  }
+	public TaskCreationStep = TaskCreationStep;
 
-  validateFunctionSelection() {
-    this._store
-      .select(selectIFunction(this.functionIdentifierControl.value))
-      .pipe(
-        take(1),
-        filter((x) => (x ? true : false)),
-        switchMap((fun: IFunction | null | undefined) =>
-          combineLatest([
-            of(fun),
-            this._store.select(selectIParam(fun?.output?.param)),
-            this._store.select(selectIInterface(fun?.output?.interface)),
-          ])
-        )
-      )
-      .subscribe(
-        ([fun, outputParam, outputParamInterface]: [
-          IFunction | null | undefined,
-          IParam | null | undefined,
-          IInterface | null | undefined
-        ]) => {
-          if (!fun) {
-            return;
-          }
-          const inputParams =
-            fun.useDynamicInputParams && fun.inputParams
-              ? Array.isArray(fun.inputParams)
-                ? [...fun.inputParams]
-                : [fun.inputParams]
-              : [];
-          let outputParamValue =
-            fun.output?.param === 'dynamic' && outputParamInterface
-              ? outputParamInterface.typeDef
-              : outputParam?.typeDef;
-          this.formGroup.patchValue({
-            canFail: fun?.canFail,
-            implementation: fun?.customImplementation,
-            requireCustomImplementation: fun?.requireCustomImplementation,
-            name: fun?.name,
-            normalizedName: fun?.normalizedName,
-            normalizedOutputParamName: outputParam?.normalizedName,
-            outputParamName: outputParam?.name,
-            outputParamValue: outputParamValue,
-            entranceGatewayType: null,
-            inputParam: inputParams.length === 1 ? inputParams[0].param : null,
-          } as IEmbeddedFunctionImplementationData);
-          let hasCustomImplementation =
-            (this.requireCustomImplementationControl.value ||
-              this.implementationControl.value) &&
-              this.data.data.taskCreationPayload.configureActivity
-              ? true
-              : false;
-          this._customImplementation.next(
-            hasCustomImplementation
-              ? this.data.data.taskCreationPayload.configureActivity ?? null
-              : null
-          );
-          this._hasDynamicInputParam.next(
-            (fun?.useDynamicInputParams &&
-              !(fun.requireCustomImplementation || fun.customImplementation)) ??
-              false
-              ? this.data.data.taskCreationPayload.configureActivity
-              : null
-          );
-          this._hasDynamicOutputParam.next(
-            fun?.output?.param === 'dynamic' ?? false
-              ? this.data.data.taskCreationPayload.configureActivity
-              : null
-          );
-          this._hasDataMapping.next(
-            fun?.requireDataMapping ?? false
-              ? this.data.data.taskCreationPayload.configureActivity
-              : null
-          );
-        }
-      );
-  }
+	public async getEvaluationResult(implementation: ITextLeaf | null = this.formGroup.controls.functionImplementation?.value ?? null) {
+		const inputParams = BPMNJsRepository.getAvailableInputParams(this.data.taskCreationPayload.configureActivity);
+		const { injector, mappedParameters } = await this._parameterService.parameterToInjector(inputParams);
 
-  TaskCreationStep = TaskCreationStep;
+		return CodemirrorRepository.evaluateCustomMethod(undefined, implementation?.text ?? [], injector, mappedParameters);
+	}
 
-  get functionIdentifierControl(): UntypedFormControl {
-    return this.formGroup.controls['functionIdentifier'] as UntypedFormControl;
-  }
-  get implementationControl(): UntypedFormControl {
-    return this.formGroup.controls['implementation'] as UntypedFormControl;
-  }
-  get requireCustomImplementationControl(): UntypedFormControl {
-    return this.formGroup.controls[
-      'requireCustomImplementation'
-    ] as UntypedFormControl;
-  }
+	private async _onClose() {
+		this.isBlocked = true;
+		this._ref.disableClose = true;
 
-  get finished() {
-    return !this.unfinished;
-  }
-  get unfinished() {
-    return false;
-  }
+		const inputParams = BPMNJsRepository.getAvailableInputParams(this.data.taskCreationPayload.configureActivity);
+		const { injector, mappedParameters } = await this._parameterService.parameterToInjector(inputParams),
+			taskCreationPayload = this.data.taskCreationPayload,
+			selectedFunction = await selectSnapshot(this._store.select(selectFunction(this.formGroup.value.functionIdentifier)));
+
+		const implementation = selectedFunction?.requireCustomImplementation? this.formGroup.value.functionImplementation?.text ?? []: selectedFunction?.implementation;
+		const methodEvaluation = CodemirrorRepository.evaluateCustomMethod(undefined, implementation, injector, mappedParameters)
+
+		this.isBlocked = false;
+		this._ref.disableClose = false;
+
+		this._ref.close({ formValue: this._formValue, initialFormValue: this.data.taskCreationFormGroupValue, selectedFunction, taskCreationPayload, methodEvaluation });
+	}
+
+	private get _formValue() {
+		return this.formGroup.getRawValue();
+	}
+
+	private _renderStep(step: ITaskCreationConfig) {
+		this.dynamicInner.clear();
+		const stepConfiguration = STEP_REGISTRY.get(step.taskCreationStep);
+		if (!stepConfiguration) {
+			throw `no config found for step ${step.taskCreationStep}`;
+		}
+
+		const component = this.dynamicInner.createComponent(stepConfiguration.type);
+		if (typeof stepConfiguration.provideInputParams === 'function') {
+			stepConfiguration.provideInputParams(component.instance, step.element);
+		}
+	}
+
+	private _getSteps([hasDynamicInputParam, hasCustomImplementation, hasDataMapping, hasStaticOutputDefinition]: boolean[]) {
+		const availableSteps: ITaskCreationConfig[] = [];
+		if (this.data) {
+			const gateway = this.data?.taskCreationPayload?.configureIncomingErrorGatewaySequenceFlow;
+			if (gateway) {
+				availableSteps.push({
+					taskCreationStep: TaskCreationStep.ConfigureErrorGatewayEntranceConnection,
+					element: gateway,
+					autoProceed$: this.formGroup.controls.entranceGatewayType?.valueChanges.pipe(
+						switchMap(() => this.steps$),
+						filter((steps) => steps.length > 1),
+						map((steps) => {
+							const index = steps.findIndex(
+								(step) =>
+									step.taskCreationStep ===
+									TaskCreationStep.ConfigureErrorGatewayEntranceConnection
+							);
+							return index;
+						})
+					),
+				} as ITaskCreationConfig);
+			}
+
+			const activity = this.data?.taskCreationPayload?.configureActivity;
+			if (activity) {
+				availableSteps.push({
+					taskCreationStep: TaskCreationStep.ConfigureFunctionSelection,
+					element: activity,
+				});
+
+				if (hasDynamicInputParam) {
+					availableSteps.push({
+						taskCreationStep: TaskCreationStep.ConfigureFunctionInput,
+						element: activity,
+					});
+				}
+
+				if (hasCustomImplementation) {
+					availableSteps.push({
+						taskCreationStep: TaskCreationStep.ConfigureFunctionImplementation,
+						element: activity,
+					});
+				}
+
+				if (hasDataMapping) {
+					availableSteps.push({
+						taskCreationStep: TaskCreationStep.ConfigureInputOutputMapping,
+						element: activity,
+					});
+				}
+
+				if (hasStaticOutputDefinition) {
+					const step = {
+						taskCreationStep: TaskCreationStep.ConfigureStaticOutput,
+						element: activity,
+					}
+					availableSteps.push(step);
+				}
+			}
+		}
+		return availableSteps;
+	}
 }

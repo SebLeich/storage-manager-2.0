@@ -1,0 +1,31 @@
+@import "src/lib/scss/stretched-element";
+
+::ng-deep .djs-palette-entries {
+    .group[data-group="create"] {
+        display: none;
+    }
+}
+
+::ng-deep .djs-context-pad {
+    .entry[data-action="append"] {
+        display: none;
+    }
+}
+
+.PB_diagram-body {
+    @include stretched-element;
+    display: flex;
+
+    .diagram-wrapper {
+        flex: 1;
+    }
+
+    .info {
+        width: 200px;
+        border-left: 2px solid #f2f2f2;
+        padding: 0.5rem 1rem;
+        box-sizing: border-box;
+        overflow-y: scroll;
+        display: none;
+    }
+}

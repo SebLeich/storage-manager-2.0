@@ -1,38 +1,56 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input, OnChanges, OnDestroy, SimpleChanges } from '@angular/core';
+import { IFunction } from '@process-builder/interfaces';
+import { forkJoin, map, of, ReplaySubject, switchMap } from 'rxjs';
 import { Store } from '@ngrx/store';
-import { IFunction } from '../../../globals/i-function';
-import { IInputParam } from '../../../globals/i-input-param';
-import { updateIFunction } from '../../../store/actions/function.actions';
+import { selectIInterface, selectIParam } from '@process-builder/selectors';
 
 @Component({
   selector: 'app-function-preview',
   templateUrl: './function-preview.component.html',
-  styleUrls: ['./function-preview.component.sass']
+  styleUrls: ['./function-preview.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class FunctionPreviewComponent implements OnInit {
+export class FunctionPreviewComponent implements OnChanges, OnDestroy {
 
-  @Input() public func?: IFunction;
+  @Input() public func: IFunction | undefined;
+  private _currentFunc$$ = new ReplaySubject<IFunction | undefined>(1);
 
-  public inputParams: IInputParam[] = [];
-  public finalizesFlowMessage = 'final function';
+  public inputs$ = this._currentFunc$$.pipe(
+    switchMap(func => {
+      let inputParams = func?.inputTemplates ?? [];
+      if (!Array.isArray(inputParams)) {
+        inputParams = [inputParams];
+      }
 
-  constructor(
-    private _store: Store
-  ) { }
+      return forkJoin(inputParams.map(inputParam => inputParam === 'dynamic' ? of(inputParam) : this._store.select(selectIInterface(inputParam.interface))));
+    }),
+    map(inputs => inputs.map(input => typeof input === 'string' ? input : input?.name))
+  );
 
-  public isNumber = (arg: any) => typeof arg === 'number';
+  public output$ = this._currentFunc$$.pipe(
+    switchMap(func => {
+      const useInterface = typeof func?.outputTemplate === 'string';
+      if (useInterface) {
+        return func.outputTemplate === 'dynamic' ? of('dynamic') : this._store.select(selectIInterface(func.outputTemplate));
+      }
 
-  public ngOnInit(): void {
-    this.inputParams = this.func? Array.isArray(this.func.inputParams) ? this.func.inputParams : typeof this.func.inputParams === 'number' ? [this.func.inputParams] : [] : [];
+      return this._store.select(selectIParam(func?.output));
+    }),
+    map(output => typeof output === 'string' ? output : output?.name)
+  );
+
+  constructor(private _store: Store) { }
+
+  public ngOnDestroy(): void {
+    this._currentFunc$$.complete();
   }
 
-  public updateFunctionDescription(description: string) {
-    if(!this.func){
-      return;
+  public ngOnChanges(simpleChanges: SimpleChanges): void {
+    if (simpleChanges['func']) {
+      this._currentFunc$$.next(simpleChanges['func'].currentValue);
     }
-    let updatedFun = Object.assign({}, this.func);
-    updatedFun.description = description;
-    this._store.dispatch(updateIFunction(updatedFun));
   }
+
+  public customImplementationRequiredText = 'JS code required';
 
 }

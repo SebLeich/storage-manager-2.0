@@ -4,8 +4,7 @@
 ![](https://img.shields.io/badge/Three.js-000000.svg?style=for-the-badge&logo=threedotjs&logoColor=white)
 ![](https://img.shields.io/badge/Chart.js-FF6384.svg?style=for-the-badge&logo=chartdotjs&logoColor=white)
 ![](https://img.shields.io/badge/Jasmine-8A4182.svg?style=for-the-badge&logo=Jasmine&logoColor=white)
-![](https://img.shields.io/badge/Protractor-ED163A.svg?style=for-the-badge&logo=Protractor&logoColor=white)
-![](https://img.shields.io/badge/Selenium-43B02A.svg?style=for-the-badge&logo=Selenium&logoColor=white)
+![](https://img.shields.io/badge/Cypress.svg?style=for-the-badge&logo=Cypress&logoColor=white)
 
 
 # Storage Manager 2.0

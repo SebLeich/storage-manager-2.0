@@ -1,10 +1,9 @@
 import { createEntityAdapter, EntityAdapter, EntityState, Update } from '@ngrx/entity';
 import { createReducer, on } from '@ngrx/store';
-import { IFunction } from '../../globals/i-function';
-import { addIFunction, addIFunctions, removeIFunction, updateIFunction, updateIFunctionOutputParam, upsertIFunction, upsertIFunctions } from '../actions/function.actions';
+import { IFunction } from '@process-builder/interfaces';
+import { addIFunction, addIFunctions, removeIFunction, setIFunctionsCanFailFlag, updateIFunction, updateIFunctionOutputParam, upsertIFunction, upsertIFunctions } from '../actions/function.actions';
 
-
-export const featureKey = 'Func';
+export const featureKey = 'function';
 
 function sort(a: IFunction, b: IFunction) {
   return a.identifier > b.identifier ? 1 : -1;
@@ -42,21 +41,31 @@ export const reducer = createReducer(
     return adapter.removeOne(key, state);
   }),
 
+  on(setIFunctionsCanFailFlag, (state: State, { funcs, canFail }) => {
+    const effectedFuncs = Object.values(state.entities).filter(func => funcs.indexOf(func!.identifier) > -1);
+    return adapter.updateMany(effectedFuncs.map(func => ({
+      id: func!.identifier,
+      changes: {
+        canFail: canFail
+      }
+    })), state);
+  }),
+
   on(updateIFunction, (state: State, { func }) => {
     const update: Update<IFunction> = {
       id: func.identifier,
       changes: {
         canFail: func.canFail,
         description: func.description,
-        inputParams: func.inputParams,
+        //inputParams: func.inputParams,
         name: func.name,
         normalizedName: func.normalizedName,
         output: func.output,
         customImplementation: func.customImplementation,
-        pseudoImplementation: func.pseudoImplementation,
+        implementation: func.implementation,
         requireCustomImplementation: func.requireCustomImplementation,
         requireDynamicInput: func.requireDynamicInput,
-        useDynamicInputParams: func.useDynamicInputParams
+        //useDynamicInputParams: func.useDynamicInputParams
       }
     }
     return adapter.updateOne(update, state);
@@ -65,7 +74,7 @@ export const reducer = createReducer(
   on(updateIFunctionOutputParam, (state: State, { identifier, outputParam }) => {
     let update: Update<IFunction> = {
       id: identifier,
-      changes: { output: { 'param': outputParam } }
+      changes: { output: outputParam }
     }
     return adapter.updateOne(update, state);
   }),

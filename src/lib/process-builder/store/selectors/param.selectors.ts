@@ -1,26 +1,23 @@
 import { createFeatureSelector, createSelector } from '@ngrx/store';
-import { IParam } from '../../globals/i-param';
+import { IParam } from '../../interfaces/param.interface';
 import * as fromIParam from '../reducers/param.reducer';
 
 export const selectIParamState = createFeatureSelector<fromIParam.State>(
   fromIParam.featureKey
 );
 
-export const selectIParam = (
-  arg:
-    | number
-    | 'dynamic'
-    | undefined
-    | null
-    | (() => number | 'dynamic' | null | undefined)
-) =>
-  createSelector(selectIParamState, (state: fromIParam.State) => {
-    if (!state || !state.entities || !arg || arg === 'dynamic') return null;
-    const code = typeof arg === 'function' ? arg() : arg;
-    if (typeof code !== 'number') return null;
-    
-    return state.entities[code];
-  });
+export const selectIParam = (arg: | number | 'dynamic' | undefined | null | (() => number | 'dynamic' | null | undefined)) => createSelector(selectIParamState, (state: fromIParam.State) => {
+  if (!state || !state.entities || !arg || arg === 'dynamic') {
+    return null;
+  }
+
+  const code = typeof arg === 'function' ? arg() : arg;
+  if (typeof code !== 'number') {
+    return null;
+  }
+
+  return state.entities[code] ?? null;
+});
 
 export const selectIParams = (arg?: number[] | (() => number[])) => createSelector(selectIParamState, (state: fromIParam.State) => {
   if (!state || !state.entities) {
@@ -35,6 +32,8 @@ export const selectIParams = (arg?: number[] | (() => number[])) => createSelect
   return params as IParam[];
 });
 
+export const selectIParamByNormalizedName = (name: string) => createSelector(selectIParamState, (state: fromIParam.State) => Object.values(state.entities).find((x) => x?.normalizedName === name) as IParam);
+
 export const selectIParamsByNormalizedName = (
   names: string[] | null | undefined
 ) =>
@@ -45,18 +44,10 @@ export const selectIParamsByNormalizedName = (
     ) as IParam[];
   });
 
-export const selectNextId = () =>
+export const selectNextParameterIdentifier = () =>
   createSelector(
     selectIParamState,
-    (state: fromIParam.State) =>
-      (state && state.entities
-        ? Math.max(
-          ...Object.values(state.entities)
-            .filter((x) => (x ? true : false))
-            .map((x) => (x as IParam).identifier),
-          -1
-        )
-        : -1) + 1
+    (state: fromIParam.State) => Math.max(...state.ids, 1) + 1
   );
 
 export const selectCurrentParamOutput = createSelector(

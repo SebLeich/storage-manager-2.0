@@ -1,5 +1,5 @@
 import { createAction } from '@ngrx/store';
-import { IInterface } from '../../interfaces/i-interface.interface';
+import { IInterface } from '../../interfaces/interface.interface';
 
 export const addIInterface = createAction(
   '[IInterface] Add IInterface',
@@ -32,5 +32,5 @@ export const upsertIInterfaces = createAction(
 
 export const removeIInterface = createAction(
   '[IInterface] Remove IInterfaces',
-  (iface: IInterface|number) => ({ iface })
+  (iface: IInterface | string) => ({ iface })
 );

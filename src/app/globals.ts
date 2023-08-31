@@ -42,7 +42,7 @@ export function compare(a: number | string, b: number | string, isAsc: boolean =
 
 export const nameOf = <T>(name: Extract<keyof T, string>): string => name;
 
-export const nextUnitSize = [
+export const units = [
     { unit: 'mm', next: 10, threshold: 100 },
     { unit: 'cm', next: 100, threshold: 100 },
     { unit: 'm', next: 1000, threshold: 1000 },

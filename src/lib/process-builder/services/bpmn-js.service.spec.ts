@@ -1,6 +1,6 @@
 import { TestBed } from '@angular/core/testing';
 import defaultImportsConstant from 'src/app/default-imports.constant';
-import { PROCESS_BUILDER_CONFIG_TOKEN } from '../globals/i-process-builder-config';
+import { PROCESS_BUILDER_CONFIG_TOKEN } from '../interfaces/process-builder-config.interface';
 import { ProcessBuilderModule } from '../process-builder.module';
 
 import { BpmnJsService } from './bpmn-js.service';

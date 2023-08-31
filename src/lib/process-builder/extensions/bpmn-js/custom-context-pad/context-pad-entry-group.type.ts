@@ -1,0 +1,1 @@
+export type ContextPadEntryGroup = 'model' | 'edit' | 'tools';

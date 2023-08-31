@@ -5,18 +5,15 @@ import { BehaviorSubject, Subscription, timer } from 'rxjs';
 import { delay, filter, map, scan, startWith, switchMap, take } from 'rxjs/operators';
 import { selectedGoodEdgeColor } from 'src/app/globals';
 import { NoSolutionDialogComponent } from '../../dialog/no-solution-dialog/no-solution-dialog.component';
-import { selectCurrentSolution, selectSolutions } from 'src/app/store/selectors/i-solution.selectors';
 import { fadeInAnimation } from 'src/lib/shared/animations/fade-in.animation';
 import { selectSnapshot } from 'src/lib/process-builder/globals/select-snapshot';
-import { setCurrentSolution } from 'src/app/store/actions/i-solution.actions';
-import { VisualizationService } from 'src/app/services/visualization.service';
-
 import * as ThreeJS from 'three';
-
-import { ISolution } from 'src/app/interfaces/i-solution.interface';
-import { SceneVisualizationComponent } from '../../scene-visualization/scene-visualization.component';
+import { ISolution } from '@smgr/interfaces';
 import { VisualizerComponentService } from './visualizer-component.service';
 import { IVisualizerContextService, VISUALIZER_CONTEXT } from 'src/app/interfaces/i-visualizer-context.service';
+import { VisualizationService } from 'src/lib/visualization/services/visualization.service';
+import { SceneVisualizationComponent } from 'src/lib/visualization/components/scene-visualization/scene-visualization.component';
+import { selectCurrentSolution, setCurrentSolution, selectSolutions } from '@smgr/store';
 
 @Component({
   selector: 'app-visualizer',

@@ -1,7 +1,4 @@
-import { ICalculationAttributes } from "./i-calculation-context.interface";
-import { IGroup } from "./i-group.interface";
-import { IOrder } from "./i-order.interface";
-import { IProduct } from "./i-product.interface";
+import { ICalculationAttributes, IGroup, IOrder, IProduct } from "@smgr/interfaces";
 
 export interface ICalculationAttributesVariables extends ICalculationAttributes {
     groups: IGroup[];

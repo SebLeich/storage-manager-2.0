@@ -1,0 +1,60 @@
+<div class="body">
+    <div class="content">
+
+        <div class="actions" [class.collapsed]="hideActions">
+            <div class="header">
+                <div class="pipeline-name">
+                    <app-select-pipeline [formControl]="pipelineControl" [pipelines]="pipelines$|async"
+                        [currentPipeName]="(pipeRunnerService.pipelineName$|async) ?? null"
+                        (currentPipelineRenamed)="renameCurrentPipeline($event)" [displayPrefix]="false">
+                    </app-select-pipeline>
+                </div>
+            </div>
+            <div class="control-wrapper">
+                <app-pipe-runner-options-bar 
+                    [actions]="(pipeRunnerService.actions$|async) ?? undefined"
+                    [selectedPipeline]="(pipeRunnerService.selectedPipeline$|async) ?? undefined"
+                    [solution]="(pipeRunnerService.solution$|async) ?? undefined" (designPipeline)="designPipeline()"
+                    [isMinimized]="hideActions"
+                    (openVisualization)="openVisualization()"
+                    (runPipeline)="runPipeline()"
+                    (viewModeToggle)="toggleViewMode()"
+                ></app-pipe-runner-options-bar>
+            </div>
+
+            <ng-container *ngIf="!hideActions">
+                <ng-container *ngIf="pipeRunnerService.actions$|async as pipelineActions; else noActions">
+                    <ng-container *ngIf="pipelineActions.length; else noActions">
+                        <div [@showList]="pipelineActions.length" class="actions-wrapper">
+                            <div *ngFor="let pipelineAction of pipelineActions" class="action-wrapper">
+                                <app-pipeline-action-preview [pipelineAction]="pipelineAction!"
+                                    (setOutput)="pipeRunnerService.setOutput($event)"></app-pipeline-action-preview>
+                            </div>
+                        </div>
+                    </ng-container>
+                </ng-container>
+            </ng-container>
+
+        </div>
+
+        <mat-tab-group class="auto-size-tab-group" #tabGroup>
+            <mat-tab label="console output">
+                <app-console [startDate]="initializationDate" [channels]="'pipe-runner'"
+                    [animationDisabled]="isRunning"></app-console>
+            </mat-tab>
+            <mat-tab label="visualization" #visualizationTab [disabled]="!scene">
+                <div class="visualization">
+                    <app-scene-visualization *ngIf="visualizationTabRendered$|async" @show
+                        [scene]="scene"></app-scene-visualization>
+                </div>
+            </mat-tab>
+        </mat-tab-group>
+    </div>
+
+</div>
+
+<ng-template #noActions>
+    <div class="no-actions-hint">
+        no actions found
+    </div>
+</ng-template>

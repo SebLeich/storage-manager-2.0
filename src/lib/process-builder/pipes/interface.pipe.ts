@@ -10,16 +10,17 @@ import { selectIInterface } from '../store/selectors/interface.selectors';
 })
 export class InterfacePipe implements PipeTransform {
 
-  notFoundResult = 'not found';
-  emptyResult = 'no value';
+  private _notFoundResult = 'not found';
+  private _emptyResult = 'no value';
 
-  constructor(private _store: Store<State>){
+  constructor(private _store: Store<State>) { }
 
-  }
+  public transform(value: string | null | undefined): Observable<string> {
+    if (typeof value !== 'string') {
+      return of(this._emptyResult);
+    }
 
-  transform(value: number | null | undefined): Observable<string> {
-    if(typeof value !== 'number') return of(this.emptyResult);
-    return this._store.select(selectIInterface(value)).pipe(map(x => x? x.name: this.notFoundResult));
+    return this._store.select(selectIInterface(value)).pipe(map(iFace => iFace ? iFace.name : this._notFoundResult));
   }
 
 }

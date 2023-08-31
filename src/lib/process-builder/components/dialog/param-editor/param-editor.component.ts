@@ -4,10 +4,10 @@ import { Store } from '@ngrx/store';
 import JSONEditor from 'jsoneditor';
 import { combineLatest, ReplaySubject, Subject, Subscription } from 'rxjs';
 import { ProcessBuilderRepository } from 'src/lib/core/process-builder-repository';
-import { IParam } from 'src/lib/process-builder/globals/i-param';
-import { IProcessBuilderConfig, PROCESS_BUILDER_CONFIG_TOKEN, } from 'src/lib/process-builder/globals/i-process-builder-config';
+import { IParam } from 'src/lib/process-builder/interfaces/param.interface';
+import { IProcessBuilderConfig, PROCESS_BUILDER_CONFIG_TOKEN, } from 'src/lib/process-builder/interfaces/process-builder-config.interface';
 import { updateIParam } from 'src/lib/process-builder/store/actions/param.actions';
-import { IFunction } from 'src/lib/process-builder/globals/i-function';
+import { IFunction } from 'src/lib/process-builder/interfaces/function.interface';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { debounceTime } from 'rxjs/operators';
 import { ParamEditorComponentService } from './service/param-editor-component.service';
@@ -17,26 +17,26 @@ import { injectValues } from 'src/lib/process-builder/store/selectors/injection-
 @Component({
   selector: 'app-param-editor',
   templateUrl: './param-editor.component.html',
-  styleUrls: ['./param-editor.component.sass'],
+  styleUrls: ['./param-editor.component.scss'],
   providers: [ParamEditorComponentService],
 })
 export class ParamEditorComponent implements OnInit, OnDestroy {
   @ViewChild('parameterBody', { static: true, read: ElementRef })
   private set parameterBody(body: ElementRef<HTMLDivElement>) {
-    this._paramBody.next(body);
-    this._editor.next(
+    this._paramBody$$.next(body);
+    this._editor$$.next(
       new JSONEditor(body.nativeElement, {
         onChangeJSON: (value: object) => {
-          return this._jsonChanged.next(value);
+          return this._jsonChanged$$.next(value);
         },
       })
     );
   }
-  private _paramBody = new ReplaySubject<ElementRef<HTMLDivElement>>(1);
-  private _editor = new ReplaySubject<JSONEditor>(1);
-  private _jsonChanged = new Subject<object>();
+  private _paramBody$$ = new ReplaySubject<ElementRef<HTMLDivElement>>(1);
+  private _editor$$ = new ReplaySubject<JSONEditor>(1);
+  private _jsonChanged$$ = new Subject<object>();
 
-  public jsonChanged$ = this._jsonChanged.pipe(debounceTime(500));
+  public jsonChanged$ = this._jsonChanged$$.pipe(debounceTime(500));
   public selectedIndex: number = 0;
 
   private _subscriptions: Subscription = new Subscription();
@@ -65,8 +65,9 @@ export class ParamEditorComponent implements OnInit, OnDestroy {
         duration: 2000,
       });
       this.selectedIndex = 0;
-    } else if (typeof func.pseudoImplementation === 'function') {
-      let result = func.pseudoImplementation();
+    } else if (typeof func.implementation === 'function') {
+      // @ts-ignore
+      let result = func.implementation();
       console.log(result);
     }
   }
@@ -74,7 +75,7 @@ export class ParamEditorComponent implements OnInit, OnDestroy {
   public async close() {
     const formGroup = await selectSnapshot(this.paramEditorComponentService.formGroup$);
     if (formGroup.dirty) {
-      const editor = await selectSnapshot(this._editor);
+      const editor = await selectSnapshot(this._editor$$);
       const parsedValue = ProcessBuilderRepository.extractObjectTypeDefinition(
         editor.get()
       );
@@ -98,7 +99,7 @@ export class ParamEditorComponent implements OnInit, OnDestroy {
     this._subscriptions.add(this.paramEditorComponentService.availableInputParams$.subscribe((iParams) => this.paramEditorComponentService.updateInjector(iParams)));
     this._subscriptions.add(
       combineLatest([
-        this._editor,
+        this._editor$$,
         this.paramEditorComponentService.paramObjectPseudoObject$,
       ]).subscribe(([editor, pseudoObject]: [JSONEditor, object]) => {
         editor.set(pseudoObject);

@@ -2,7 +2,7 @@ import { Inject, Injectable, Optional } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { of } from 'rxjs';
 import { mergeMap } from 'rxjs/operators';
-import { IParam, PARAMS_CONFIG_TOKEN } from '../../globals/i-param';
+import { IParam, PARAMS_CONFIG_TOKEN } from '../../interfaces/param.interface';
 import { addIParams, loadIParams } from '../actions/param.actions';
 
 

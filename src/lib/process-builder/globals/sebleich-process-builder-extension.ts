@@ -27,11 +27,21 @@ export const sebleichProcessBuilderExtension = {
                 }
             ]
         }, {
+            "name": "SequenceFlowExtension",
+            "superClass": ["Element"],
+            "properties": [
+                {
+                    "name": "sequenceFlowType",
+                    "isAttr": true,
+                    "type": "String"
+                }
+            ]
+        }, {
             "name": "DataObjectExtension",
             "superClass": ["Element"],
             "properties": [
                 {
-                    "name": "outputParam",
+                    "name": "dataParamId",
                     "isAttr": true,
                     "type": "Integer"
                 }, {

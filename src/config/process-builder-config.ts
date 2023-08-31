@@ -1,16 +1,7 @@
-import { IProcessBuilderConfig } from "src/lib/process-builder/globals/i-process-builder-config";
+import { IProcessBuilderConfig } from "src/lib/process-builder/interfaces/process-builder-config.interface";
 import { InterfaceCodes } from "./interface-codes";
 
 export default {
-    editable: true,
-    hideDataObjectReferences: false,
-    hideDatabases: true,
-    hideEvents: false,
-    hideGateways: false,
-    hideGroups: true,
-    hidePools: true,
-    hideSubProcesses: true,
-    hideTasks: false,
     statusConfig: {
         initialStatus: 'initial',
         finalStatus: 'final'
@@ -22,5 +13,5 @@ export default {
     },
     dynamicParamDefaultNaming: 'unnamed param',
     defaultFunctionName: 'unnamed function',
-    expectInterface: InterfaceCodes.Solution
+    expectInterface: InterfaceCodes.SolutionWrapper
 } as IProcessBuilderConfig;

@@ -1,0 +1,1 @@
+export type PipelineActionStatus = 'RUNNING' | 'SKIPPED' | 'SUCCEEDED' | 'FAILED' | 'INITIALIZED';

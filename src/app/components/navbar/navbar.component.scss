@@ -16,33 +16,37 @@
 
 .option-wrapper {
   overflow: hidden;
-}
 
-.option-wrapper.disabled {
-  opacity: 0.2;
-  pointer-events: none;
-}
+  &.disabled {
+    opacity: 0.2;
+    pointer-events: none;
+  }
 
-.option {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  height: 80px;
-  width: 80px;
-  cursor: pointer;
-  transition: all 0.2s;
-  overflow: hidden;
-  -webkit-user-select: none;
-  user-select: none;
-  border-left: 3px solid transparent;
-  box-sizing: border-box;
-  padding-right: 5px;
-}
+  .option {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 80px;
+    width: 80px;
+    cursor: pointer;
+    transition: all 0.2s;
+    overflow: hidden;
+    -webkit-user-select: none;
+    user-select: none;
+    border-left: 3px solid transparent;
+    box-sizing: border-box;
+    padding-right: 5px;
 
-.option.active {
-  background: linear-gradient(135deg, #0078d4, #0078d4bd, #0078d4);
-  border-color: #ffffff75;
+    &.highlighted {
+      animation: blinking 1s infinite;
+    }
+
+    &.active {
+      background: linear-gradient(135deg, #0078d4, #0078d4bd, #0078d4);
+      border-color: #ffffff75;
+    }
+  }
 }
 
 .option:hover {
@@ -64,6 +68,7 @@
 .option .text {
   font-size: 0.6rem;
   font-weight: 100;
+  margin-top: 0.25rem;
 }
 
 .version {
@@ -120,5 +125,11 @@
 
   .version {
     display: none;
+  }
+}
+
+@keyframes blinking {
+  50% {
+    background-color: rgba(255, 217, 0, 0.638);
   }
 }

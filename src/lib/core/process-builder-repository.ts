@@ -1,18 +1,24 @@
 import { Observable, ReplaySubject } from "rxjs";
-import { IInterface } from "../process-builder/interfaces/i-interface.interface";
-import { IParam } from "../process-builder/globals/i-param";
-import { IParamDefinition } from "../process-builder/globals/i-param-definition";
+import { IInterface, IParamDefinition, IParam } from "@process-builder/interfaces";
+import { ParamType } from "../process-builder/types/param.type";
 
 export class ProcessBuilderRepository {
 
-    static createPseudoObjectFromIParam(arg: IParam | null | undefined, parent: any = null, config: {
+    /**
+     * @deprecated
+     * @param arg 
+     * @param parent 
+     * @param config 
+     * @returns 
+     */
+    public static createPseudoObjectFromIParam(arg: IParamDefinition | null | undefined, parent: any = null, config: {
         string: () => string | undefined,
         boolean: () => boolean | undefined,
         number: () => number | undefined,
         object: () => object,
         array: () => any[],
         bigint: () => bigint | undefined,
-        function: () => Function | undefined,
+        function: () => (() => unknown) | undefined,
         symbol: () => symbol | undefined,
         undefined: () => undefined
     } = {
@@ -29,8 +35,6 @@ export class ProcessBuilderRepository {
 
         if (!arg) return {};
 
-        let index = 0;
-
         try {
 
             let defaultValue = arg.type === 'array' ? [] : arg.type === 'object' ? {} : arg.defaultValue;
@@ -41,34 +45,30 @@ export class ProcessBuilderRepository {
             else if (parent && typeof parent === 'object') parent[arg.name] = defaultValue;
 
             if (arg.typeDef) {
-                let typeDefArray = Array.isArray(arg.typeDef) ? arg.typeDef : [arg.typeDef];
+                const typeDefArray = Array.isArray(arg.typeDef) ? arg.typeDef : [arg.typeDef];
 
-                for (let def of typeDefArray) {
-
+                for (const def of typeDefArray) {
                     this.createPseudoObjectFromIParamDefinition(def, defaultValue);
-
                 }
             }
-
-            index++;
 
             return defaultValue;
 
         } catch (e) {
-            debugger;
+            console.error(e);
             return {};
         }
 
     }
 
-    static createPseudoObjectFromIParamDefinition(arg: IParam | IParamDefinition | null | undefined, parent: any = null, config: {
+    public static createPseudoObjectFromIParamDefinition(arg: IParam | IParamDefinition | null | undefined, parent: any = null, config: {
         string: () => string | undefined,
         boolean: () => boolean | undefined,
         number: () => number | undefined,
         object: () => object,
         array: () => any[],
         bigint: () => bigint | undefined,
-        function: () => Function | undefined,
+        function: () => (() => any) | undefined,
         symbol: () => symbol | undefined,
         undefined: () => undefined
     } = {
@@ -101,33 +101,29 @@ export class ProcessBuilderRepository {
             else if (parent && typeof parent === 'object') parent[arg.name] = defaultValue;
 
             if (arg.typeDef) {
-                let typeDefArray = Array.isArray(arg.typeDef) ? arg.typeDef : [arg.typeDef];
-
-                for (let def of typeDefArray) {
-
+                const typeDefArray = Array.isArray(arg.typeDef) ? arg.typeDef : [arg.typeDef];
+                for (const def of typeDefArray) {
                     this.createPseudoObjectFromIParamDefinition(def, defaultValue);
-
                 }
             }
 
             index++;
-
-        } catch (e) {
-            debugger;
-        } finally {
             return parent ?? defaultValue;
+        } catch (e) {
+            console.error(e);
+            return defaultValue;
         }
 
     }
 
-    static createPseudoObjectFromIInterface(arg: IInterface | undefined, parent: any = null, config: {
+    public static createPseudoObjectFromIInterface(arg: IInterface | undefined, parent: any = null, config: {
         string: () => string | undefined,
         boolean: () => boolean | undefined,
         number: () => number | undefined,
         object: () => object,
         array: () => any[],
         bigint: () => bigint | undefined,
-        function: () => Function | undefined,
+        function: () => (() => any) | undefined,
         symbol: () => symbol | undefined,
         undefined: () => undefined
     } = {
@@ -144,7 +140,7 @@ export class ProcessBuilderRepository {
 
         if (!arg) return {};
 
-        let index = 0;
+        let dummyObject = {};
 
         try {
 
@@ -162,57 +158,64 @@ export class ProcessBuilderRepository {
 
                 for (let def of typeDefArray) {
 
-                    this.createPseudoObjectFromIParamDefinition(def, defaultValue);
+                    this.createPseudoObjectFromIParamDefinition(def, dummyObject);
 
                 }
             }
-
-            index++;
-
-            return parent ?? defaultValue;
-
         } catch (e) {
             debugger;
         } finally {
-            return {};
+            return dummyObject;
         }
 
     }
 
-    static extractObjectTypeDefinition(arg: object | string | number | null | undefined, isRoot: boolean = true, defaultParamName: string = 'unnamed param', isNullable: boolean = false, isOptional: boolean = false, isConstant: boolean = false): IParamDefinition | IParamDefinition[] {
+    public static extractObjectTypeDefinition(arg: any, isRoot = true, defaultParamName = 'unnamed param', isNullable = false, isOptional = false, isConstant = false): IParamDefinition | IParamDefinition[] {
 
-        let rootDef: IParamDefinition = {
+        const rootDef: IParamDefinition = {
             'name': defaultParamName,
             'normalizedName': this.normalizeName(defaultParamName),
             'nullable': isNullable,
             'optional': isOptional,
             'constant': isConstant,
-            'defaultValue': typeof arg === 'object' ? null : arg,
-            'type': typeof arg,
+            'defaultValue': !isConstant && typeof arg === 'object' ? null : arg,
+            'type': Array.isArray(arg) ? 'array' : (typeof arg) as ParamType,
             'interface': null,
             'typeDef': []
         };
-        if (typeof arg !== 'object') return rootDef;
+
+        if (typeof arg !== 'object') {
+            return rootDef;
+        }
+
+        if (rootDef.type === 'array') {
+            const typeDef = this.extractObjectTypeDefinition((arg as object[])[0], false);
+            return {
+                ...rootDef,
+                typeDef: [{
+                    typeDef: typeDef
+                } as IParamDefinition]
+            }
+        }
 
         let typeDef: IParamDefinition[] | IParamDefinition = [];
-
         if (typeof arg === 'object') {
 
             try {
 
-                for (let entry of Object.entries(arg as object)) {
+                for (const entry of Object.entries(arg as object)) {
 
-                    let def = this._getDefinitionForMember(entry);
+                    const def = this._getDefinitionForMember(entry);
                     if (def.type === 'object') {
                         if (entry[1]) {
                             def.typeDef = this.extractObjectTypeDefinition(entry[1], false);
                         }
                     } else if (def.type === 'array') {
-                        let pseudoObject: any = {};
+                        const pseudoObject: any = {};
                         def.defaultValue = def.defaultValue.slice(0, 10);
                         (entry[1] as object[]).forEach(obj => {
 
-                            for (let subEntry of Object.entries(obj)) {
+                            for (const subEntry of Object.entries(obj)) {
                                 if (pseudoObject[subEntry[0]]) continue;
 
                                 pseudoObject[subEntry[0]] = subEntry[1];
@@ -226,7 +229,7 @@ export class ProcessBuilderRepository {
                 }
 
             } catch (e) {
-                debugger;
+                console.error(e);
             }
 
         } else {
@@ -242,7 +245,7 @@ export class ProcessBuilderRepository {
 
     }
 
-    static normalizeName(text?: string | null): string {
+    public static normalizeName(text?: string | null): string {
         if (typeof text !== 'string') {
             return '';
         }
@@ -250,19 +253,19 @@ export class ProcessBuilderRepository {
         return text.substr(0, 1).toLowerCase() + text.substr(1);
     }
 
-    static executeUserMethodAndReturnResponse(doc: string[], injector: any): Observable<any> {
+    public static executeUserMethodAndReturnResponse(doc: string[], injector: any): Observable<any> {
 
         let subject = new ReplaySubject<any>(1);
         let jsText = doc.join('\n');
 
-        let main: (injector: any) => any | Promise<any> = eval(jsText);
-        if (this._returnsPromise(main)) (main(injector) as Promise<any>)
+        let mainMethod: (injector: any) => any | Promise<any> = eval(jsText);
+        if (this._returnsPromise(mainMethod)) (mainMethod(injector) as Promise<any>)
             .then((result: any) => subject.next(result))
             .catch((error: any) => subject.error(error))
             .finally(() => subject.complete());
         else {
             try {
-                subject.next(main(injector));
+                subject.next(mainMethod(injector));
             } catch (e) {
                 subject.error(e);
             } finally {
@@ -273,7 +276,7 @@ export class ProcessBuilderRepository {
         return subject.asObservable();
     }
 
-    static async calculateCustomImplementationOutput(arg: string[] | string | null | undefined | (() => string[] | string | null | undefined), injector: object) {
+    public static async calculateCustomImplementationOutput(arg: string[] | string | null | undefined | (() => string[] | string | null | undefined), injector: object) {
         let customImplementation = typeof arg === 'function' ? arg() : arg;
         if (Array.isArray(customImplementation)) {
             customImplementation = customImplementation.join('\n');
@@ -289,7 +292,7 @@ export class ProcessBuilderRepository {
     }
 
     private static _getDefinitionForMember(entry: [key: string, value: any]): IParamDefinition {
-        let type = typeof entry[1];
+        const type = typeof entry[1] as ParamType;
         return {
             defaultValue: entry[1],
             name: entry[0],
@@ -312,7 +315,7 @@ export class ProcessBuilderRepository {
         'bigint': () => BigInt(Math.floor(Math.random() * 11)),
         'symbol': () => Symbol('foo'),
         'undefined': () => undefined,
-        'function': () => () => { }
+        'function': () => () => { /** my method */ }
     };
 
     private static _isPromise = (p: any) => typeof p === 'object' && typeof p.then === 'function';

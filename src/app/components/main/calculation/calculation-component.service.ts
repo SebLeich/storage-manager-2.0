@@ -2,17 +2,14 @@ import { Injectable } from "@angular/core";
 import { Router } from "@angular/router";
 import { Store } from "@ngrx/store";
 import { Algorithm, algorithms } from "src/app/globals";
-import { ISolution } from "src/app/interfaces/i-solution.interface";
-import { AllInOneRowSolver } from "src/app/solvers/all-in-one-row";
-import { StartLeftBottomSolver } from "src/app/solvers/start-left-bottom";
-import { SuperFloSolver } from "src/app/solvers/super-flo";
+import { ISolution } from "@smgr/interfaces";
+import { AllInOneRowSolver } from "src/lib/storage-manager/solvers/all-in-one-row.solver";
+import { StartLeftBottomSolver, SuperFloSolver } from "@smgr/solvers";
 import { AlgorithmCalculationStatus } from "./enumerations/algorithm-calculation-status.enum";
 import { CalculationError } from "./enumerations/calculation-error";
 import { IAlgorithmStatusWrapper } from "./interfaces/i-algorithm-calculation-status-wrapper.interface";
-
-import { setCurrentSolution, updateAlgorithmSolution } from "src/app/store/actions/i-solution.actions";
 import { selectSnapshot } from "src/lib/process-builder/globals/select-snapshot";
-import { selectSolutions } from "src/app/store/selectors/i-solution.selectors";
+import { setCurrentSolution, selectCalculationAttributesValid, selectGroups, selectContainerHeight, selectContainerWidth, selectSolutions, selectOrders, updateAlgorithmSolution } from "@smgr/store";
 
 @Injectable()
 export class CalculationComponentService {
@@ -31,31 +28,37 @@ export class CalculationComponentService {
         wrapper.status = AlgorithmCalculationStatus.PrepareCalculation;
 
         let result: ISolution | undefined;
+        const calculationAttributesValid = await selectSnapshot(this._store.select(selectCalculationAttributesValid));
+        if (!calculationAttributesValid) {
+            this._calculationCallback.error({
+                wrapper: wrapper,
+                errorCode: CalculationError.AlgorithmNotImplemented
+            });
+            return;
+        }
+
+        const containerHeight = await selectSnapshot(this._store.select(selectContainerHeight));
+        const containerWidth = await selectSnapshot(this._store.select(selectContainerWidth));
+        const groups = (await selectSnapshot(this._store.select(selectGroups)));
+        const orders = await selectSnapshot(this._store.select(selectOrders));
 
         switch (wrapper.algorithm.code) {
 
             case Algorithm.AllInOneRow:
                 wrapper.status = AlgorithmCalculationStatus.Calculating;
-                result = await new AllInOneRowSolver(wrapper.solutionDescription, this._store).solve();
+                result = await new AllInOneRowSolver(wrapper.solutionDescription).solve(containerHeight, containerWidth, groups, orders);
                 break;
 
             case Algorithm.StartLeftBottom:
                 wrapper.status = AlgorithmCalculationStatus.Calculating;
-                result = await new StartLeftBottomSolver(wrapper.solutionDescription, this._store).solve();
+                result = await new StartLeftBottomSolver(wrapper.solutionDescription).solve(containerHeight, containerWidth, groups, orders);
                 break;
 
             case Algorithm.SuperFlo:
                 wrapper.status = AlgorithmCalculationStatus.Calculating;
-                result = await new SuperFloSolver(wrapper.solutionDescription, this._store).solve();
+                result = await new SuperFloSolver(wrapper.solutionDescription).solve(containerHeight, containerWidth, groups, orders);
                 break;
 
-        }
-
-        if (!result) {
-            this._calculationCallback.error({
-                wrapper: wrapper,
-                errorCode: CalculationError.AlgorithmNotImplemented
-            });
         }
 
         this._calculationCallback.next([wrapper, result!]);

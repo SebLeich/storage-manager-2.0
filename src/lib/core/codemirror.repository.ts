@@ -3,13 +3,27 @@ import { syntaxTree } from "@codemirror/language";
 import { EditorState } from "@codemirror/state";
 import { MethodEvaluationStatus } from "../process-builder/globals/method-evaluation-status";
 import { Tree, SyntaxNode } from 'node_modules/@lezer/common/dist/tree';
-import { IMethodEvaluationResult } from "../process-builder/interfaces/i-method-evaluation-result.interface";
+import { IMethodEvaluationResult } from "../process-builder/interfaces/method-evaluation-result.interface";
 import { ISyntaxNodeResponse } from "./interfaces/syntax-node-response.interface";
+import { ITextLeaf } from "../process-builder/interfaces/text-leaf.interface";
+import { IParamDefinition } from "../process-builder/interfaces";
+import { NodeType } from "./types/node-type.type";
 
 export class CodemirrorRepository {
 
-    static evaluateCustomMethod(state?: EditorState, text?: string[] | string, injector?: any): IMethodEvaluationResult {
+    public static stringToTextLeaf(text: string[] | string | null | undefined): ITextLeaf {
+        const convertedText = Array.isArray(text) ? text.join('\n') : text ?? '';
+        const state = EditorState.create({
+            doc: convertedText,
+            extensions: [
+                javascript()
+            ]
+        });
 
+        return state.doc as unknown as ITextLeaf;
+    }
+
+    public static evaluateCustomMethod(state?: EditorState, text?: string[] | string, injector: { [key: string]: number | string | object } = {}, injectorDef: IParamDefinition[] = []): IMethodEvaluationResult {
         const convertedText = Array.isArray(text) ? text.join('\n') : text;
         if (!state) {
             if (!text) {
@@ -24,61 +38,129 @@ export class CodemirrorRepository {
             });
         }
 
-        const tree = syntaxTree(state);
-        const mainMethod = this.getMainMethod(tree, state, text);
+        const tree = syntaxTree(state),
+            mainMethod = this.getMainMethod(tree, state, text),
+            inputParamCandidates = this.findAllChildrenOfType(tree, 'VariableName')
+                .map((node) => state?.sliceDoc(node.from, node.to))
+                .filter((name) => typeof name === 'string') as string[];
+
         if (!mainMethod.node) {
-            return { status: MethodEvaluationStatus.NoMainMethodFound, valueIsDefinite: false };
+            return { status: MethodEvaluationStatus.NoMainMethodFound, valueIsDefinite: false, inputParamCandidates };
         }
 
         const arrowFunction = mainMethod.node.getChild('ArrowFunction');
         const block = arrowFunction ? arrowFunction.getChild('Block') : mainMethod.node.getChild('Block');
         const returnStatement = block?.getChild('ReturnStatement') ?? undefined;
+
         if (returnStatement) {
-            const result = this.getEvaluationResult(state, returnStatement, block!, injector);
+            const result = this.getEvaluationResult(state, returnStatement, block as SyntaxNode, injector, injectorDef);
             if (result) {
-                return result;
+                return { ...result, inputParamCandidates };
             }
         }
 
-        return { status: MethodEvaluationStatus.NoReturnValue, valueIsDefinite: false };
+        return { status: MethodEvaluationStatus.NoReturnValue, valueIsDefinite: false, inputParamCandidates };
     }
 
-    static getEvaluationResult(state: EditorState, parent: SyntaxNode, block: SyntaxNode, injector: any): IMethodEvaluationResult {
+    public static findAllChildrenOfType(tree: Tree, nodeTypeFilter?: NodeType | NodeType[]) {
+        if (nodeTypeFilter && !Array.isArray(nodeTypeFilter)) {
+            nodeTypeFilter = [nodeTypeFilter];
+        }
+
+        const output: SyntaxNode[] = [];
+
+        tree.iterate({
+            enter: (node) => {
+                if ((nodeTypeFilter as NodeType[]).indexOf(node.type.name as NodeType) > -1) {
+                    output.push(node.node);
+                }
+            }
+        });
+
+        return output;
+    }
+
+    private static getEvaluationResult(state: EditorState, parent: SyntaxNode, block: SyntaxNode, injector: unknown, injectorDef: IParamDefinition[]): IMethodEvaluationResult {
         const memberExpression = parent.getChild('MemberExpression');
         if (memberExpression) {
             const representation = state.sliceDoc(memberExpression?.from, memberExpression?.to);
-            const navigationPath = representation.split('.');
-            let dependsOnInjector = navigationPath[0] === 'injector';
+            const navigationPath = representation.split('.').map(segment => segment.trim().replace('\n', ''));
+            const dependsOnInjector = navigationPath[0] === 'injector';
             if (!dependsOnInjector) {
-                const variableValue = this.resolveVariableValue(state, block!, representation);
+                const variableValue = this.resolveVariableValue(state, block, representation);
                 if (variableValue) {
-                    let result = this.getEvaluationResult(state, variableValue, block, injector);
-                    result.valueIsDefinite = false;
+                    const result = { ...this.getEvaluationResult(state, variableValue, block, injector, injectorDef), valueIsDefinite: false };
                     return result;
                 }
             }
-            return { status: MethodEvaluationStatus.ReturnValueFound, injectorNavigationPath: representation, type: 'member', valueIsDefinite: false };
+
+            let index = 0;
+            let currentPathSegment = navigationPath[index],
+                injectorDefEntry = injectorDef.find(definitionElement => definitionElement.normalizedName === currentPathSegment);
+
+            while (currentPathSegment && injectorDefEntry) {
+                index++;
+                currentPathSegment = navigationPath[index];
+
+                if (currentPathSegment) {
+                    injectorDefEntry = (injectorDefEntry.typeDef as IParamDefinition[]).find((definitionElement) => (definitionElement.normalizedName ?? definitionElement.name) === currentPathSegment);
+                }
+            }
+
+            const paramName = navigationPath[navigationPath.length - 1];
+            return { status: MethodEvaluationStatus.ReturnValueFound, injectorNavigationPath: representation, type: injectorDefEntry?.type, valueIsDefinite: false, interface: injectorDefEntry?.interface ?? undefined, paramName: paramName };
         }
 
         const variableExpression = parent.getChild('VariableName');
         if (variableExpression) {
             const representation = state.sliceDoc(variableExpression?.from, variableExpression?.to);
             if (representation === 'undefined') {
-                return { status: MethodEvaluationStatus.ReturnValueFound, detectedValue: undefined, type: 'undefined', valueIsDefinite: true };
+                return { status: MethodEvaluationStatus.ReturnValueFound, detectedValue: undefined, type: undefined, valueIsDefinite: true };
             }
 
-            let dependsOnInjector = representation === 'injector';
-            if (!dependsOnInjector) {
-                const variableValue = this.resolveVariableValue(state, block!, representation);
-                if (variableValue) {
-                    let result = this.getEvaluationResult(state, variableValue, block, injector);
-                    result.valueIsDefinite = false;
-                    return result;
-                }
-
-                return { status: MethodEvaluationStatus.ReturnValueFound, valueIsDefinite: false };
+            const variableValue = this.resolveVariableValue(state, block, representation);
+            if (variableValue) {
+                const result = { ...this.getEvaluationResult(state, variableValue, block, injector, injectorDef), valueIsDefinite: false };
+                return result;
             }
-            return { status: MethodEvaluationStatus.ReturnValueFound, injectorNavigationPath: representation, type: 'variable', valueIsDefinite: true, detectedValue: injector };
+
+            const injectorDefEntry = injectorDef.find(definitionElement => definitionElement.normalizedName === representation);
+            if (injectorDefEntry) {
+                return { status: MethodEvaluationStatus.ReturnValueFound, injectorNavigationPath: representation, type: injectorDefEntry?.type, valueIsDefinite: false, interface: injectorDefEntry?.interface ?? undefined, paramName: representation };
+            }
+
+            return { status: MethodEvaluationStatus.ReturnValueFound, valueIsDefinite: false };
+        }
+
+        const variableDeclaration = parent.getChild('VariableDeclaration');
+        if (variableDeclaration) {
+            const representation = state.sliceDoc(variableDeclaration?.from, variableDeclaration?.to);
+
+            const equals = variableDeclaration.getChild('Equals');
+            if (!equals) {
+                return { status: MethodEvaluationStatus.ReturnValueFound, valueIsDefinite: false, variableDeclaration: representation };
+            }
+
+            const result = { ...this.getEvaluationResult(state, equals.nextSibling as SyntaxNode, block, injector, injectorDef), valueIsDefinite: false };
+            return result;
+        }
+
+        const unaryExpression = parent.getChild('UnaryExpression');
+        if (unaryExpression) {
+            const representation = state.sliceDoc(unaryExpression?.from, unaryExpression?.to);
+            return { status: MethodEvaluationStatus.ReturnValueFound, valueIsDefinite: false, unaryExpression: representation };
+        }
+
+        const binaryExpression = parent.getChild('BinaryExpression');
+        if (binaryExpression) {
+            const result = this.evaluateBinaryExpression(state, binaryExpression, block, injector, injectorDef);
+            return result;
+        }
+
+        const callExpression = parent.getChild('CallExpression');
+        if (callExpression) {
+            const representation = state.sliceDoc(callExpression?.from, callExpression?.to);
+            return { status: MethodEvaluationStatus.ReturnValueFound, valueIsDefinite: false, unaryExpression: representation };
         }
 
         const stringExpression = parent.getChild('String');
@@ -96,7 +178,12 @@ export class CodemirrorRepository {
         const objectExpression = parent.getChild('ObjectExpression');
         if (objectExpression) {
             const representation = state.sliceDoc(objectExpression?.from, objectExpression?.to);
-            return { status: MethodEvaluationStatus.ReturnValueFound, detectedValue: JSON.parse(representation), type: 'object', valueIsDefinite: false };
+            try {
+                const parsedValue = JSON.parse(representation);
+                return { status: MethodEvaluationStatus.ReturnValueFound, detectedValue: parsedValue, valueIsDefinite: true, type: 'object' };
+            } catch (e) {
+                return { status: MethodEvaluationStatus.ReturnValueFound, valueIsDefinite: false, type: 'object' };
+            }
         }
 
         const booleanLiteral = parent.getChild('BooleanLiteral');
@@ -113,15 +200,90 @@ export class CodemirrorRepository {
 
         const nullExpression = parent.getChild('null');
         if (nullExpression) {
-            return { status: MethodEvaluationStatus.ReturnValueFound, detectedValue: null, type: 'null', valueIsDefinite: true };
+            return { status: MethodEvaluationStatus.ReturnValueFound, detectedValue: null, type: undefined, valueIsDefinite: true };
         }
 
         return { status: MethodEvaluationStatus.NoReturnValue, valueIsDefinite: false };
     }
 
+    static isNumeric(state: EditorState, node: SyntaxNode | null, block: SyntaxNode, injector: unknown, injectorDef: IParamDefinition[]) {
+        if (!node) {
+            return false;
+        }
+
+        if (node.type.name === 'Number') {
+            return true;
+        }
+
+        if (node.type.name === 'VariableName') {
+            const evaluation = CodemirrorRepository.evaluateVariable(state, node, block, injector, injectorDef);
+            return evaluation.type === 'number';
+        }
+
+        return false;
+    }
+
+    static isBoolean(state: EditorState, node: SyntaxNode, block: SyntaxNode, injector: unknown, injectorDef: IParamDefinition[]) {
+        if (node.type.name === 'Boolean') {
+            return true;
+        }
+
+        if (node.type.name === 'VariableName') {
+            const evaluation = CodemirrorRepository.evaluateVariable(state, node, block, injector, injectorDef);
+            return evaluation.type === 'number';
+        }
+
+        return false;
+    }
+
+    static evaluateVariable(state: EditorState, variableExpression: SyntaxNode, block: SyntaxNode, injector: unknown, injectorDef: IParamDefinition[]) {
+        const representation = state.sliceDoc(variableExpression?.from, variableExpression?.to);
+        if (representation === 'undefined') {
+            return { status: MethodEvaluationStatus.ReturnValueFound, detectedValue: undefined, type: 'undefined', valueIsDefinite: true };
+        }
+
+        const variableValue = this.resolveVariableValue(state, block, representation);
+        if (variableValue) {
+            const result = { ...this.getEvaluationResult(state, variableValue, block, injector, injectorDef), valueIsDefinite: false };
+            return result;
+        }
+
+        const injectorDefEntry = injectorDef.find(definitionElement => definitionElement.normalizedName === representation);
+        if (injectorDefEntry) {
+            return { status: MethodEvaluationStatus.ReturnValueFound, injectorNavigationPath: representation, type: injectorDefEntry?.type, valueIsDefinite: false, interface: injectorDefEntry?.interface ?? undefined, paramName: representation };
+        }
+
+        return { status: MethodEvaluationStatus.ReturnValueFound, valueIsDefinite: false };
+    }
+
+    static evaluateBinaryExpression(state: EditorState, binaryExpression: SyntaxNode, block: SyntaxNode, injector: unknown, injectorDef: IParamDefinition[]): IMethodEvaluationResult {
+        const representation = state.sliceDoc(binaryExpression?.from, binaryExpression?.to);
+
+        let currentChild = binaryExpression.firstChild;
+        let allNumericTypes = true;
+
+        while (currentChild && allNumericTypes) {
+            if (currentChild?.type?.name === 'BinaryExpression') {
+                allNumericTypes = CodemirrorRepository.evaluateBinaryExpression(state, currentChild as SyntaxNode, block, injector, injectorDef).type === 'number';
+                currentChild = currentChild.nextSibling;
+                continue;
+            }
+
+            if (currentChild?.type?.name === "ArithOp") {
+                currentChild = currentChild.nextSibling;
+                continue;
+            }
+
+            allNumericTypes = CodemirrorRepository.isNumeric(state, currentChild as SyntaxNode, block, injector, injectorDef);
+            currentChild = currentChild.nextSibling;
+        }
+
+        return { status: MethodEvaluationStatus.ReturnValueFound, valueIsDefinite: false, unaryExpression: representation, type: (allNumericTypes ? 'number' : 'string') };
+    }
+
     static getMainMethod(tree?: Tree, state?: EditorState, text?: string[] | string): ISyntaxNodeResponse {
 
-        let convertedText = Array.isArray(text) ? text.join('\n') : text;
+        const convertedText = Array.isArray(text) ? text.join('\n') : text;
 
         if (!state) {
             if (!text) throw ('no state and no text passed');
@@ -136,71 +298,15 @@ export class CodemirrorRepository {
 
         if (!tree) tree = syntaxTree(state);
 
-        let node = tree.resolveInner(0);
-        let functions = [...node.getChildren("ExpressionStatement")];
+        const node = tree.resolveInner(0);
+        const functions = [...node.getChildren("ExpressionStatement")];
 
         return { 'node': functions.length > 0 ? functions[functions.length - 1] : null, 'tree': tree };
 
     }
 
-    static getUsedInputParams(state?: EditorState, text?: string[] | string): { varName: string, propertyName: string | null }[] {
-
-        let output: { varName: string, propertyName: string | null }[] = [];
-
-        let convertedText = text ? Array.isArray(text) ? text.join('\n') : text : (state?.doc as any).text.join('\n');
-
-        if (!state) {
-            if (!text) throw ('no state and no text passed');
-
-            state = EditorState.create({
-                doc: convertedText,
-                extensions: [
-                    javascript()
-                ]
-            });
-        }
-
-        let tree = syntaxTree(state);
-        let mainMethod = this.getMainMethod(tree, state, text);
-        if (!mainMethod.node) return [];
-
-        let arrowFunction = mainMethod.node.getChild('ArrowFunction');
-        let block = arrowFunction ? arrowFunction.getChild('Block') : mainMethod.node.getChild('Block');
-
-        let candidates = this.getMemberExpressionContainingCandidates(block);
-
-        for (let candidate of candidates) {
-
-            let statement: SyntaxNode | null = candidate;
-            while (statement && statement.type.name !== 'MemberExpression') {
-                let result = this.iterateToMemberStatementNode(statement);
-                statement = result[0] ?? null;
-                candidates.push(...result.slice(1));
-            }
-
-            let variableNameNode = this.extractMemberExpressionVariableNameNode(statement);
-            if (variableNameNode == null) continue;
-
-            var varNodeName = convertedText!.slice(variableNameNode.from, variableNameNode.to);
-
-            if (varNodeName === 'console') {
-                if (statement.nextSibling) candidates.push(statement.nextSibling);
-                continue;
-            }
-
-            let propertyNameNode = variableNameNode.nextSibling?.nextSibling;
-
-            output.push({
-                'varName': varNodeName,
-                'propertyName': convertedText?.slice(propertyNameNode?.from, propertyNameNode?.to) ?? null
-            });
-        }
-
-        return output;
-    }
-
     static getMemberExpressionContainingCandidates(blockNode: SyntaxNode | null): SyntaxNode[] {
-        let candidates = blockNode ? [
+        const candidates = blockNode ? [
             ...blockNode.getChildren('ExpressionStatement'),
             ...blockNode.getChildren('VariableDeclaration'),
             ...blockNode.getChildren('ObjectExpression')

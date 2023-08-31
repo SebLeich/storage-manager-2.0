@@ -2,12 +2,9 @@ import { Component } from '@angular/core';
 import { filter, map } from 'rxjs/operators';
 import { showAnimation } from 'src/lib/shared/animations/show';
 import { Store } from '@ngrx/store';
-import { selectCurrentSolution, selectCurrentSolutionGoods, selectHasMultipleSolutions, selectSolutions } from 'src/app/store/selectors/i-solution.selectors';
-import { downloadCurrentSolution, setNextSolution } from 'src/app/store/actions/i-solution.actions';
 import { SolutionValidationService } from 'src/app/services/solution-validation.service';
-import { IGroup } from 'src/app/interfaces/i-group.interface';
-import { selectGroups } from 'src/app/store/selectors/i-group.selectors';
-import { updateGroup } from 'src/app/store/actions/i-group.actions';
+import { IGroup } from '@smgr/interfaces';
+import { downloadCurrentSolution, selectCurrentSolution, selectCurrentSolutionGoods, selectGroups, selectHasMultipleSolutions, selectSolutions, setNextSolution, updateGroup } from '@smgr/store';
 
 @Component({
   selector: 'app-solution-preview',

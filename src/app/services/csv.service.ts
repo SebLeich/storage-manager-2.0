@@ -1,18 +1,12 @@
 import { Injectable } from '@angular/core';
 import { nameOf } from '../globals';
-
 import { v4 as generateGuid } from 'uuid';
-
-import { IOrder } from '../interfaces/i-order.interface';
+import { IGroup, IOrder, IProduct } from '@smgr/interfaces';
 import { Store } from '@ngrx/store';
-import { selectOrders } from '../store/selectors/i-order.selectors';
-import { IGroup } from '../interfaces/i-group.interface';
-import { selectCalculationAttributesValid, selectContainerHeight, selectContainerWidth, selectUnit } from '../store/selectors/i-calculation-attribute.selectors';
-import { selectGroups } from '../store/selectors/i-group.selectors';
-import { IProduct } from '../interfaces/i-product.interface';
 import { selectSnapshot } from 'src/lib/process-builder/globals/select-snapshot';
 import { ICalculationAttributesVariables } from '../interfaces/i-calculation-context-variables.interface';
 import calculateRandomColorSharedMethod from '../methods/calculate-random-color.shared-method';
+import { selectCalculationAttributesValid, selectContainerHeight, selectContainerWidth, selectGroups, selectOrders, selectUnit } from '@smgr/store';
 
 @Injectable({
   providedIn: 'root'

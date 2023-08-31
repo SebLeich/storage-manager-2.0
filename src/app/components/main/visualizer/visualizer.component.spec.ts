@@ -1,12 +1,10 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { Store } from '@ngrx/store';
-import { AppRoutingModule } from 'src/app/app-routing.module';
 import { AppModule } from 'src/app/app.module';
 import defaultImportsConstant from 'src/app/default-imports.constant';
 import { VISUALIZER_CONTEXT } from 'src/app/interfaces/i-visualizer-context.service';
-import { setExemplarySolution } from 'src/app/store/actions/i-solution.actions';
+import { setExemplarySolution } from '@smgr/store';
 import { VisualizerComponentService } from './visualizer-component.service';
-
 import { VisualizerComponent } from './visualizer.component';
 import { DebugElement } from '@angular/core';
 import { By } from '@angular/platform-browser';
@@ -22,8 +20,7 @@ describe('VisualizerComponent', () => {
       imports: [
         ...defaultImportsConstant,
 
-        AppModule,
-        AppRoutingModule
+        AppModule
       ],
       providers: [
         { provide: VISUALIZER_CONTEXT, useClass: VisualizerComponentService }

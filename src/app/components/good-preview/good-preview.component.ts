@@ -1,17 +1,12 @@
-import { Component, Input } from '@angular/core';
-import { IGood } from 'src/app/interfaces/i-good.interface';
+import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
+import { IGood } from '@smgr/interfaces';
 
 @Component({
   selector: 'app-good-preview',
   templateUrl: './good-preview.component.html',
-  styleUrls: ['./good-preview.component.css']
+  styleUrls: ['./good-preview.component.css'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class GoodPreviewComponent {
-
-  @Input() good!: IGood;
-
-  columns: string[] = [];
-
-  constructor() { }
-
+  @Input() public good!: IGood;
 }

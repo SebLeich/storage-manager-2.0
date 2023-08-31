@@ -1,4 +1,3 @@
-/* To learn more about this file see: https://angular.io/config/tsconfig. */
 {
   "angularCompilerOptions": {
     "strictTemplates": true
@@ -18,18 +17,28 @@
     "moduleResolution": "node",
     "importHelpers": true,
     "target": "ES2022",
-    "module": "es2020",
-    "lib": [
-      "es2020",
-      "dom"
-    ],
-    "types": [
-      "node",
-      "jasmine"
-    ],
-    "typeRoots": [
-      "../node_modules/@types"
-    ],
-    "useDefineForClassFields": false
-  }
+    "module": "ES2022",
+    "lib": ["ES2022", "dom"],
+    "useDefineForClassFields": false,
+    "paths": {
+      "@/*": ["src/*"],
+      "@bpmn-io/events": ["./src/lib/bpmn-io/interfaces/events"],
+      "@bpmn-io/modules": ["./src/lib/bpmn-io/interfaces/modules"],
+      "@main-components": ["./src/app/components/main"],
+      "@process-builder/actions": ["./src/lib/process-builder/store/actions"],
+      "@process-builder/injection": ["./src/lib/process-builder/injection-token"],
+      "@process-builder/interfaces": ["./src/lib/process-builder/interfaces"],
+      "@process-builder/store": ["./src/lib/process-builder/store"],
+      "@process-builder/selectors": ["./src/lib/process-builder/store/selectors"],
+      "@procedure": ["./src/lib/procedure-store"],
+      "@smgr/components": ["./src/app/components"],
+      "@smgr/components/select": [
+        "./src/lib/storage-manager/components/select"
+      ],
+      "@smgr/interfaces": ["./src/lib/storage-manager/interfaces"],
+      "@smgr/solvers": ["./src/lib/storage-manager/solvers"],
+      "@smgr/store": ["./src/lib/storage-manager/store"]
+    }
+  },
+  "exclude": ["./cypress.config.ts", "../*/cypress/**/*"],
 }

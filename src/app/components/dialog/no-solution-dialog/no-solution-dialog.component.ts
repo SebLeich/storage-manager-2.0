@@ -3,17 +3,13 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
 import { Store } from '@ngrx/store';
-import { ISolution } from 'src/app/interfaces/i-solution.interface';
-import { setExemplaryInputData } from 'src/app/store/actions/i-calculation-attribute.actions';
-import { setCurrentSolution, setExemplarySolution } from 'src/app/store/actions/i-solution.actions';
-
-import * as fromICalculationAttributesState from 'src/app/store/reducers/i-calculation-attribute.reducers';
-import * as fromISolutionState from 'src/app/store/reducers/i-solution.reducers';
+import { ISolution } from '@smgr/interfaces';
+import { calculationAttributeState, setCurrentSolution, setExemplarySolution, setExemplaryInputData, solutionState } from '@smgr/store';
 
 @Component({
   selector: 'app-no-solution-dialog',
   templateUrl: './no-solution-dialog.component.html',
-  styleUrls: ['./no-solution-dialog.component.css']
+  styleUrls: ['./no-solution-dialog.component.scss']
 })
 export class NoSolutionDialogComponent implements OnInit {
 
@@ -26,23 +22,28 @@ export class NoSolutionDialogComponent implements OnInit {
     private _ref: MatDialogRef<NoSolutionDialogComponent>,
     private _router: Router,
     private _snackBar: MatSnackBar,
-    private _calculationAttributesStore: Store<fromICalculationAttributesState.State>,
-    private _solutionStore: Store<fromISolutionState.State>,
+    private _calculationAttributesStore: Store<calculationAttributeState.State>,
+    private _solutionStore: Store<solutionState.State>,
   ) { }
 
-  close = () => this._ref.close();
+  public close = () => this._ref.close();
 
-  gotoOrders() {
+  public gotoLocalDataConfigurator() {
     this._ref.close();
     this._router.navigate(['/local-data']);
   }
 
-  gotoPipelineDesigner() {
+  public gotoPipelineDesigner() {
     this._ref.close();
     this._router.navigate(['/data-pipeline-designer']);
   }
 
-  ngOnInit(): void {
+  public gotoPipeRunner(){
+    this._ref.close();
+    this._router.navigate(['/pipe-runner']);
+  }
+
+  public ngOnInit(): void {
     this.canClose = this.data?.closeControlEnabled ?? false;
   }
 

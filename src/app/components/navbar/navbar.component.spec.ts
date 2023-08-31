@@ -1,11 +1,12 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
-import { Store } from '@ngrx/store';
+import { Store, StoreModule } from '@ngrx/store';
 import defaultImportsConstant from 'src/app/default-imports.constant';
-import { addSolution } from 'src/app/store/actions/i-solution.actions';
 import exampleSolution from 'src/config/example-solution';
+import { addSolution } from 'src/lib/storage-manager/store/actions/solution.actions';
 
 import { NavbarComponent } from './navbar.component';
+import { featureKey, reducer } from 'src/app/store/reducers/application.reducer';
 
 describe('NavbarComponent', () => {
   let component: NavbarComponent;
@@ -14,6 +15,7 @@ describe('NavbarComponent', () => {
   const items = [
     { title: 'routing', disabled: true },
     { title: 'pipeline', disabled: false },
+    { title: 'run pipe', disabled: false },
     { title: 'local data', disabled: false },
     { title: 'calculation', disabled: false },
     { title: 'visualization', disabled: true },
@@ -24,7 +26,9 @@ describe('NavbarComponent', () => {
     await TestBed.configureTestingModule({
       declarations: [ NavbarComponent ],
       imports: [
-        ...defaultImportsConstant
+        ...defaultImportsConstant,
+
+        StoreModule.forFeature(featureKey, reducer ),
       ]
     })
     .compileComponents();

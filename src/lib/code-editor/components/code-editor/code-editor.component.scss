@@ -1,0 +1,10 @@
+@import 'src/lib/scss/stretched-element';
+
+:host {
+    flex: 1;
+}
+
+.body {
+    @include stretched-element;
+    background-color: white;
+}

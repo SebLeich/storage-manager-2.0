@@ -1,4 +1,4 @@
-import { IDynamicInputParamsConfig } from '../globals/i-dynamic-input-params-config';
+import { IDynamicInputParamsConfig } from '../interfaces/dynamic-input-params-config.interface';
 import { DynamicInputParamsPipe } from './dynamic-input-params.pipe';
 
 describe('DynamicInputParamsPipe', () => {

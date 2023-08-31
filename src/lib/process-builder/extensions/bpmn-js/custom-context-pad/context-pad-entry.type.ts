@@ -1,0 +1,1 @@
+export type ContextPadEntryTypes = 'delete' | 'append.end-event' | 'append.append-task' | 'append.gateway' | 'append.intermediate-event' | 'append.text-annotation' | 'connect' | 'replace' | 'append.exclusive-gateway';

@@ -1,0 +1,1704 @@
+<!doctype html>
+<html class="no-js" lang="">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="x-ua-compatible" content="ie=edge">
+        <title>storage-manager documentation</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <link rel="icon" type="image/x-icon" href="../images/favicon.ico">
+	   <link rel="stylesheet" href="../styles/style.css">
+        <link rel="stylesheet" href="../styles/dark.css">
+    </head>
+    <body>
+
+        <div class="navbar navbar-default navbar-fixed-top visible-xs">
+            <a href="../" class="navbar-brand">storage-manager documentation</a>
+            <button type="button" class="btn btn-default btn-menu ion-ios-menu" id="btn-menu"></button>
+        </div>
+
+        <div class="xs-menu menu" id="mobile-menu">
+                <div id="book-search-input" role="search"><input type="text" placeholder="Type to search"></div>            <compodoc-menu></compodoc-menu>
+        </div>
+
+        <div class="container-fluid main">
+           <div class="row main">
+               <div class="hidden-xs menu">
+                   <compodoc-menu mode="normal"></compodoc-menu>
+               </div>
+               <!-- START CONTENT -->
+               <div class="content component">
+                   <div class="content-data">
+
+
+
+
+<ol class="breadcrumb">
+  <li>Components</li>
+  <li
+  >
+  LocalDataComponent</li>
+</ol>
+
+<ul class="nav nav-tabs" role="tablist">
+        <li class="active">
+            <a href="#info" role="tab" id="info-tab" data-toggle="tab" data-link="info">Info</a>
+        </li>
+        <li >
+            <a href="#source" role="tab" id="source-tab" data-toggle="tab" data-link="source">Source</a>
+        </li>
+        <li >
+            <a href="#templateData" role="tab" id="templateData-tab" data-toggle="tab" data-link="template">Template</a>
+        </li>
+        <li >
+            <a href="#styleData" role="tab" id="styleData-tab" data-toggle="tab" data-link="style">Styles</a>
+        </li>
+        <li >
+            <a href="#tree" role="tab" id="tree-tab" data-toggle="tab" data-link="dom-tree">DOM Tree</a>
+        </li>
+</ul>
+
+<div class="tab-content">
+    <div class="tab-pane fade active in" id="c-info"><p class="comment">
+    <h3>File</h3>
+</p>
+<p class="comment">
+    <code>src/app/components/main/local-data/local-data.component.ts</code>
+</p>
+
+
+
+
+    <p class="comment">
+        <h3>Implements</h3>
+    </p>
+    <p class="comment">
+                    <code><a href="https://angular.io/api/core/OnDestroy" target="_blank" >OnDestroy</a></code>
+                    <code><a href="https://angular.io/api/core/OnInit" target="_blank" >OnInit</a></code>
+    </p>
+
+
+<section>
+    <h3>Metadata</h3>
+    <table class="table table-sm table-hover metadata">
+        <tbody>
+
+
+
+
+
+
+
+
+
+
+
+            <tr>
+                <td class="col-md-3">selector</td>
+                <td class="col-md-9"><code>app-local-data</code></td>
+            </tr>
+
+            <tr>
+                <td class="col-md-3">styleUrls</td>
+                <td class="col-md-9"><code>./local-data.component.css</code></td>
+            </tr>
+
+
+
+            <tr>
+                <td class="col-md-3">templateUrl</td>
+                <td class="col-md-9"><code>./local-data.component.html</code></td>
+            </tr>
+
+
+
+
+
+
+
+
+        </tbody>
+    </table>
+</section>
+
+    <section>
+    <h3 id="index">Index</h3>
+    <table class="table table-sm table-bordered index-table">
+        <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <h6><b>Properties</b></h6>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <ul class="index-list">
+                            <li>
+                                    <span class="modifier">Private</span>
+                                <a href="#_subscription" >_subscription</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Public</span>
+                                <a href="#calculationContextValid$" >calculationContextValid$</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Public</span>
+                                <a href="#formGroup" >formGroup</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Public</span>
+                                <a href="#groups$" >groups$</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Public</span>
+                                <a href="#noGroupsOrProducts$" >noGroupsOrProducts$</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Public</span>
+                                <a href="#noOrdersAvailable$" >noOrdersAvailable$</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Public</span>
+                                <a href="#orders$" >orders$</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Public</span>
+                                <a href="#products$" >products$</a>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="col-md-4">
+                        <h6><b>Methods</b></h6>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <ul class="index-list">
+                            <li>
+                                    <span class="modifier">Public</span>
+                                <a href="#addGroup" >addGroup</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Public</span>
+                                <a href="#addOrder" >addOrder</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Public</span>
+                                    <span class="modifier">Async</span>
+                                <a href="#addProduct" >addProduct</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Public</span>
+                                <a href="#clearGroups" >clearGroups</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Public</span>
+                                <a href="#clearOrders" >clearOrders</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Public</span>
+                                <a href="#ngOnDestroy" >ngOnDestroy</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Public</span>
+                                <a href="#ngOnInit" >ngOnInit</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                <a href="#patchContainerHeight" >patchContainerHeight</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                <a href="#patchContainerWidth" >patchContainerWidth</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                    <span class="modifier">Async</span>
+                                <a href="#patchFormArray" >patchFormArray</a>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+
+
+
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <h6><b>Accessors</b></h6>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="col-md-4">
+                            <ul class="index-list">
+                                <li>
+                                    <a href="#calculationContextControl" >calculationContextControl</a>
+                                </li>
+                                <li>
+                                    <a href="#groupsControl" >groupsControl</a>
+                                </li>
+                                <li>
+                                    <a href="#ordersControl" >ordersControl</a>
+                                </li>
+                                <li>
+                                    <a href="#productsControl" >productsControl</a>
+                                </li>
+                            </ul>
+                        </td>
+                    </tr>
+        </tbody>
+    </table>
+</section>
+
+    <section>
+    <h3 id="constructor">Constructor</h3>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+<code>constructor(_formBuilder: <a href="https://angular.io/api/forms/FormBuilder" target="_blank">FormBuilder</a>, _store: Store, _changeDetectorRef: <a href="https://angular.io/api/core/ChangeDetectorRef" target="_blank">ChangeDetectorRef</a>)</code>
+                    </td>
+                </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="43" class="link-to-prism">src/app/components/main/local-data/local-data.component.ts:43</a></div>
+                            </td>
+                        </tr>
+
+                <tr>
+                    <td class="col-md-4">
+                            <div>
+                                    <b>Parameters :</b>
+                                    <table class="params">
+                                        <thead>
+                                            <tr>
+                                                <td>Name</td>
+                                                    <td>Type</td>
+                                                <td>Optional</td>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                                <tr>
+                                                        <td>_formBuilder</td>
+                                                  
+                                                        <td>
+                                                                        <code><a href="https://angular.io/api/forms/FormBuilder" target="_blank" >FormBuilder</a></code>
+                                                        </td>
+                                                  
+                                                    <td>
+                                                            No
+                                                    </td>
+                                                    
+                                                </tr>
+                                                <tr>
+                                                        <td>_store</td>
+                                                  
+                                                        <td>
+                                                                    <code>Store</code>
+                                                        </td>
+                                                  
+                                                    <td>
+                                                            No
+                                                    </td>
+                                                    
+                                                </tr>
+                                                <tr>
+                                                        <td>_changeDetectorRef</td>
+                                                  
+                                                        <td>
+                                                                        <code><a href="https://angular.io/api/core/ChangeDetectorRef" target="_blank" >ChangeDetectorRef</a></code>
+                                                        </td>
+                                                  
+                                                    <td>
+                                                            No
+                                                    </td>
+                                                    
+                                                </tr>
+                                        </tbody>
+                                    </table>
+                            </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+</section>
+
+
+
+
+
+    <section>
+    
+    <h3 id="methods">
+        Methods
+    </h3>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="addGroup"></a>
+                    <span class="name">
+                        <span class="modifier">Public</span>
+                        <span ><b>addGroup</b></span>
+                        <a href="#addGroup"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>addGroup()</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="47"
+                            class="link-to-prism">src/app/components/main/local-data/local-data.component.ts:47</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="addOrder"></a>
+                    <span class="name">
+                        <span class="modifier">Public</span>
+                        <span ><b>addOrder</b></span>
+                        <a href="#addOrder"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>addOrder(event: MouseEvent, product: <a href="../interfaces/IProduct.html" target="_self">IProduct</a>, group: <a href="../interfaces/IGroup.html" target="_self">IGroup</a>)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="59"
+                            class="link-to-prism">src/app/components/main/local-data/local-data.component.ts:59</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>event</td>
+                                    <td>
+                                            <code>MouseEvent</code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                                <tr>
+                                    <td>product</td>
+                                    <td>
+                                                <code><a href="../interfaces/IProduct.html" target="_self" >IProduct</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                                <tr>
+                                    <td>group</td>
+                                    <td>
+                                                <code><a href="../interfaces/IGroup.html" target="_self" >IGroup</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="addProduct"></a>
+                    <span class="name">
+                        <span class="modifier">Public</span>
+                        <span class="modifier">Async</span>
+                        <span ><b>addProduct</b></span>
+                        <a href="#addProduct"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>addProduct()</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="90"
+                            class="link-to-prism">src/app/components/main/local-data/local-data.component.ts:90</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
+
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="clearGroups"></a>
+                    <span class="name">
+                        <span class="modifier">Public</span>
+                        <span ><b>clearGroups</b></span>
+                        <a href="#clearGroups"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>clearGroups()</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="103"
+                            class="link-to-prism">src/app/components/main/local-data/local-data.component.ts:103</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="clearOrders"></a>
+                    <span class="name">
+                        <span class="modifier">Public</span>
+                        <span ><b>clearOrders</b></span>
+                        <a href="#clearOrders"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>clearOrders()</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="107"
+                            class="link-to-prism">src/app/components/main/local-data/local-data.component.ts:107</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="ngOnDestroy"></a>
+                    <span class="name">
+                        <span class="modifier">Public</span>
+                        <span ><b>ngOnDestroy</b></span>
+                        <a href="#ngOnDestroy"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>ngOnDestroy()</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="111"
+                            class="link-to-prism">src/app/components/main/local-data/local-data.component.ts:111</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="ngOnInit"></a>
+                    <span class="name">
+                        <span class="modifier">Public</span>
+                        <span ><b>ngOnInit</b></span>
+                        <a href="#ngOnInit"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>ngOnInit()</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="115"
+                            class="link-to-prism">src/app/components/main/local-data/local-data.component.ts:115</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="patchContainerHeight"></a>
+                    <span class="name">
+                        <span class="modifier">Private</span>
+                        <span ><b>patchContainerHeight</b></span>
+                        <a href="#patchContainerHeight"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>patchContainerHeight(containerHeight: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank">number</a>)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="125"
+                            class="link-to-prism">src/app/components/main/local-data/local-data.component.ts:125</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>containerHeight</td>
+                                    <td>
+                                                <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="patchContainerWidth"></a>
+                    <span class="name">
+                        <span class="modifier">Private</span>
+                        <span ><b>patchContainerWidth</b></span>
+                        <a href="#patchContainerWidth"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>patchContainerWidth(containerWidth: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank">number</a>)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="131"
+                            class="link-to-prism">src/app/components/main/local-data/local-data.component.ts:131</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>containerWidth</td>
+                                    <td>
+                                                <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="patchFormArray"></a>
+                    <span class="name">
+                        <span class="modifier">Private</span>
+                        <span class="modifier">Async</span>
+                        <span ><b>patchFormArray</b></span>
+                        <a href="#patchFormArray"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>patchFormArray(formArray: FormArray<FormGroup>, values: <a href="../interfaces/IIdentifiable.html" target="_self">IIdentifiable[]</a>, type: "group" | "order" | "product")</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="137"
+                            class="link-to-prism">src/app/components/main/local-data/local-data.component.ts:137</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>formArray</td>
+                                    <td>
+                                            <code>FormArray&lt;FormGroup&gt;</code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                                <tr>
+                                    <td>values</td>
+                                    <td>
+                                                <code><a href="../interfaces/IIdentifiable.html" target="_self" >IIdentifiable[]</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                                <tr>
+                                    <td>type</td>
+                                    <td>
+                                            <code>&quot;group&quot; | &quot;order&quot; | &quot;product&quot;</code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</section>
+    <section>
+    
+    <h3 id="inputs">
+        Properties
+    </h3>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="_subscription"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                        <span ><b>_subscription</b></span>
+                        <a href="#_subscription"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>new Subscription()</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="43" class="link-to-prism">src/app/components/main/local-data/local-data.component.ts:43</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="calculationContextValid$"></a>
+                    <span class="name">
+                            <span class="modifier">Public</span>
+                        <span ><b>calculationContextValid$</b></span>
+                        <a href="#calculationContextValid$"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>this._store.select(selectCalculationContextValid)</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="28" class="link-to-prism">src/app/components/main/local-data/local-data.component.ts:28</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="formGroup"></a>
+                    <span class="name">
+                            <span class="modifier">Public</span>
+                        <span ><b>formGroup</b></span>
+                        <a href="#formGroup"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>this._formBuilder.group({
+    orders: this._formBuilder.array&lt;IOrder&gt;([], { updateOn: &#x27;blur&#x27; }),
+    groups: this._formBuilder.array&lt;IGroup&gt;([], { updateOn: &#x27;blur&#x27; }),
+    products: this._formBuilder.array&lt;IProduct&gt;([], { updateOn: &#x27;blur&#x27; }),
+    calculationContext: this._formBuilder.group({
+      containerHeight: this._formBuilder.control&lt;number&gt;(1000, { updateOn: &#x27;blur&#x27; }),
+      containerWidth: this._formBuilder.control&lt;number&gt;(1000, { updateOn: &#x27;blur&#x27; }),
+      unit: this._formBuilder.control&lt;Unit&gt;(&#x27;mm&#x27;),
+    })
+  })</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="32" class="link-to-prism">src/app/components/main/local-data/local-data.component.ts:32</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="groups$"></a>
+                    <span class="name">
+                            <span class="modifier">Public</span>
+                        <span ><b>groups$</b></span>
+                        <a href="#groups$"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="../interfaces/IGroup.html" target="_self" >Observable&lt;IGroup[]&gt;</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>this._store.select(selectGroups)</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="24" class="link-to-prism">src/app/components/main/local-data/local-data.component.ts:24</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="noGroupsOrProducts$"></a>
+                    <span class="name">
+                            <span class="modifier">Public</span>
+                        <span ><b>noGroupsOrProducts$</b></span>
+                        <a href="#noGroupsOrProducts$"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>combineLatest([this.groups$, this.products$]).pipe(map(([groups, products]) &#x3D;&gt; groups.length &#x3D;&#x3D;&#x3D; 0 || products.length &#x3D;&#x3D;&#x3D; 0))</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="29" class="link-to-prism">src/app/components/main/local-data/local-data.component.ts:29</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="noOrdersAvailable$"></a>
+                    <span class="name">
+                            <span class="modifier">Public</span>
+                        <span ><b>noOrdersAvailable$</b></span>
+                        <a href="#noOrdersAvailable$"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>this.orders$.pipe(map(orders &#x3D;&gt; orders.length &#x3D;&#x3D;&#x3D; 0))</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="30" class="link-to-prism">src/app/components/main/local-data/local-data.component.ts:30</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="orders$"></a>
+                    <span class="name">
+                            <span class="modifier">Public</span>
+                        <span ><b>orders$</b></span>
+                        <a href="#orders$"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="../interfaces/IOrder.html" target="_self" >Observable&lt;IOrder[]&gt;</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>this._store.select(selectOrders)</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="25" class="link-to-prism">src/app/components/main/local-data/local-data.component.ts:25</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="products$"></a>
+                    <span class="name">
+                            <span class="modifier">Public</span>
+                        <span ><b>products$</b></span>
+                        <a href="#products$"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="../interfaces/IProduct.html" target="_self" >Observable&lt;IProduct[]&gt;</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>this._store.select(selectProducts)</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="26" class="link-to-prism">src/app/components/main/local-data/local-data.component.ts:26</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+</section>
+
+    <section>
+    <h3 id="accessors">
+        Accessors
+    </h3>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="calculationContextControl"></a>
+                        <span class="name"><b>calculationContextControl</b><a href="#calculationContextControl"><span class="icon ion-ios-link"></span></a></span>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="col-md-4">
+                        <span class="accessor"><b>get</b><code>calculationContextControl()</code></span>
+                    </td>
+                </tr>
+                            <tr>
+                                <td class="col-md-4">
+                                    <div class="io-line">Defined in <a href="" data-line="203" class="link-to-prism">src/app/components/main/local-data/local-data.component.ts:203</a></div>
+                                </td>
+                            </tr>
+
+            </tbody>
+        </table>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="groupsControl"></a>
+                        <span class="name"><b>groupsControl</b><a href="#groupsControl"><span class="icon ion-ios-link"></span></a></span>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="col-md-4">
+                        <span class="accessor"><b>get</b><code>groupsControl()</code></span>
+                    </td>
+                </tr>
+                            <tr>
+                                <td class="col-md-4">
+                                    <div class="io-line">Defined in <a href="" data-line="207" class="link-to-prism">src/app/components/main/local-data/local-data.component.ts:207</a></div>
+                                </td>
+                            </tr>
+
+            </tbody>
+        </table>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="ordersControl"></a>
+                        <span class="name"><b>ordersControl</b><a href="#ordersControl"><span class="icon ion-ios-link"></span></a></span>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="col-md-4">
+                        <span class="accessor"><b>get</b><code>ordersControl()</code></span>
+                    </td>
+                </tr>
+                            <tr>
+                                <td class="col-md-4">
+                                    <div class="io-line">Defined in <a href="" data-line="211" class="link-to-prism">src/app/components/main/local-data/local-data.component.ts:211</a></div>
+                                </td>
+                            </tr>
+
+            </tbody>
+        </table>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="productsControl"></a>
+                        <span class="name"><b>productsControl</b><a href="#productsControl"><span class="icon ion-ios-link"></span></a></span>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="col-md-4">
+                        <span class="accessor"><b>get</b><code>productsControl()</code></span>
+                    </td>
+                </tr>
+                            <tr>
+                                <td class="col-md-4">
+                                    <div class="io-line">Defined in <a href="" data-line="215" class="link-to-prism">src/app/components/main/local-data/local-data.component.ts:215</a></div>
+                                </td>
+                            </tr>
+
+            </tbody>
+        </table>
+</section>
+</div>
+
+
+    <div class="tab-pane fade  tab-source-code" id="c-source">
+        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { ChangeDetectorRef, Component, OnDestroy, OnInit } from &#x27;@angular/core&#x27;;
+import { FormArray, FormBuilder, FormGroup } from &#x27;@angular/forms&#x27;;
+import { Store } from &#x27;@ngrx/store&#x27;;
+import { combineLatest, map, Observable, pairwise, startWith, Subscription } from &#x27;rxjs&#x27;;
+import { IIdentifiable, IGroup, IOrder, IProduct } from &#x27;@smgr/interfaces&#x27;;
+import calculateRandomColorSharedMethod from &#x27;src/app/methods/calculate-random-color.shared-method&#x27;;
+import { showAnimation } from &#x27;src/lib/shared/animations/show&#x27;;
+import { v4 as generateGuid } from &#x27;uuid&#x27;;
+import * as lodash from &#x27;lodash&#x27;;
+import { ControlsOf } from &#x27;src/lib/shared/globals/controls-of.type&#x27;;
+import { selectSnapshot } from &#x27;src/lib/process-builder/globals/select-snapshot&#x27;;
+import bottomUpFadeIn from &#x27;src/lib/shared/animations/bottom-up-fade.animation&#x27;;
+import { Unit } from &#x27;src/app/types/unit.type&#x27;;
+import { addGroup, addOrder, addProduct, clearOrders, selectGroups, selectCalculationContextValid, selectContainerHeight, selectContainerWidth, selectNextProductDescription, selectOrders, selectProductByDescription, selectProducts, setContainerHeight, setContainerWidth, updateGroup, updateOrder, updateProduct, updateProductByDescription, updateOrdersByDescription } from &#x27;@smgr/store&#x27;;
+
+@Component({
+  selector: &#x27;app-local-data&#x27;,
+  templateUrl: &#x27;./local-data.component.html&#x27;,
+  styleUrls: [&#x27;./local-data.component.css&#x27;],
+  animations: [showAnimation, bottomUpFadeIn]
+})
+export class LocalDataComponent implements OnDestroy, OnInit {
+
+  public groups$: Observable&lt;IGroup[]&gt; &#x3D; this._store.select(selectGroups);
+  public orders$: Observable&lt;IOrder[]&gt; &#x3D; this._store.select(selectOrders);
+  public products$: Observable&lt;IProduct[]&gt; &#x3D; this._store.select(selectProducts);
+
+  public calculationContextValid$ &#x3D; this._store.select(selectCalculationContextValid);
+  public noGroupsOrProducts$ &#x3D; combineLatest([this.groups$, this.products$]).pipe(map(([groups, products]) &#x3D;&gt; groups.length &#x3D;&#x3D;&#x3D; 0 || products.length &#x3D;&#x3D;&#x3D; 0));
+  public noOrdersAvailable$ &#x3D; this.orders$.pipe(map(orders &#x3D;&gt; orders.length &#x3D;&#x3D;&#x3D; 0));
+
+  public formGroup &#x3D; this._formBuilder.group({
+    orders: this._formBuilder.array&lt;IOrder&gt;([], { updateOn: &#x27;blur&#x27; }),
+    groups: this._formBuilder.array&lt;IGroup&gt;([], { updateOn: &#x27;blur&#x27; }),
+    products: this._formBuilder.array&lt;IProduct&gt;([], { updateOn: &#x27;blur&#x27; }),
+    calculationContext: this._formBuilder.group({
+      containerHeight: this._formBuilder.control&lt;number&gt;(1000, { updateOn: &#x27;blur&#x27; }),
+      containerWidth: this._formBuilder.control&lt;number&gt;(1000, { updateOn: &#x27;blur&#x27; }),
+      unit: this._formBuilder.control&lt;Unit&gt;(&#x27;mm&#x27;),
+    })
+  });
+
+  private _subscription &#x3D; new Subscription();
+
+  constructor(private _formBuilder: FormBuilder, private _store: Store, private _changeDetectorRef: ChangeDetectorRef) { }
+
+  public addGroup() {
+    const sequenceNumber &#x3D; Math.max(...(this.groupsControl.value as IGroup[]).map(order &#x3D;&gt; order.sequenceNumber), 0) + 1;
+    this._store.dispatch(addGroup({
+      group: {
+        id: generateGuid(),
+        color: calculateRandomColorSharedMethod(),
+        desc: &#x60;group ${sequenceNumber}&#x60;,
+        sequenceNumber: sequenceNumber
+      }
+    }));
+  }
+
+  public addOrder(event: MouseEvent, product: IProduct, group: IGroup) {
+    if (event) {
+      event.stopPropagation();
+    }
+    const existingOrderFormGroup &#x3D; this.ordersControl
+      .controls
+      .find(control &#x3D;&gt; control.value.description &#x3D;&#x3D;&#x3D; product.description &amp;&amp; control.value.group &#x3D;&#x3D;&#x3D; group.id);
+
+    if (existingOrderFormGroup) {
+      const quantity &#x3D; existingOrderFormGroup.controls[&#x27;quantity&#x27;].value;
+      existingOrderFormGroup.controls[&#x27;quantity&#x27;].setValue(quantity + 1);
+      return;
+    }
+
+    const index &#x3D; Math.max(...(this.ordersControl.value as IOrder[]).map(order &#x3D;&gt; order.index), 0) + 1;
+    this._store.dispatch(addOrder({
+      order: {
+        id: generateGuid(),
+        index: index,
+        description: product.description,
+        group: group.id,
+        height: product.height,
+        width: product.width,
+        length: product.length,
+        quantity: 1,
+        stackingAllowed: false,
+        turningAllowed: true,
+      } as IOrder
+    }));
+  }
+
+  public async addProduct() {
+    const productDescription &#x3D; await selectSnapshot(this._store.select(selectNextProductDescription()));
+    this._store.dispatch(addProduct({
+      product: {
+        id: generateGuid(),
+        description: productDescription,
+        height: 1000,
+        length: 1000,
+        width: 1000,
+      } as IProduct
+    }));
+  }
+
+  public clearGroups() {
+    this.groupsControl.clear();
+  }
+
+  public clearOrders() {
+    this._store.dispatch(clearOrders());
+  }
+
+  public ngOnDestroy(): void {
+    this._subscription.unsubscribe();
+  }
+
+  public ngOnInit(): void {
+    this._subscription.add(this.calculationContextControl.controls[&#x27;containerHeight&#x27;].valueChanges.subscribe((containerHeight) &#x3D;&gt; this._store.dispatch(setContainerHeight({ height: (containerHeight! &lt; 1 ? 1000 : containerHeight)! }))));
+    this._subscription.add(this.calculationContextControl.controls[&#x27;containerWidth&#x27;].valueChanges.subscribe((containerWidth) &#x3D;&gt; this._store.dispatch(setContainerWidth({ width: (containerWidth! &lt; 1 ? 1000 : containerWidth)! }))));
+    this._subscription.add(this._store.select(selectContainerHeight).subscribe(containerHeight &#x3D;&gt; this.patchContainerHeight(containerHeight)));
+    this._subscription.add(this._store.select(selectContainerWidth).subscribe(containerWidth &#x3D;&gt; this.patchContainerWidth(containerWidth)));
+    this._subscription.add(this._store.select(selectGroups).subscribe(async groups &#x3D;&gt; await this.patchFormArray(this.groupsControl, groups, &#x27;group&#x27;)));
+    this._subscription.add(this._store.select(selectOrders).subscribe(async orders &#x3D;&gt; await this.patchFormArray(this.ordersControl, orders, &#x27;order&#x27;)));
+    this._subscription.add(this._store.select(selectProducts).subscribe(async products &#x3D;&gt; await this.patchFormArray(this.productsControl, products, &#x27;product&#x27;)));
+  }
+
+  private patchContainerHeight(containerHeight: number) {
+    if (this.calculationContextControl.controls[&#x27;containerHeight&#x27;].value !&#x3D;&#x3D; containerHeight) {
+      this.calculationContextControl.controls[&#x27;containerHeight&#x27;].setValue(containerHeight);
+    }
+  }
+
+  private patchContainerWidth(containerWidth: number) {
+    if (this.calculationContextControl.controls[&#x27;containerWidth&#x27;].value !&#x3D;&#x3D; containerWidth) {
+      this.calculationContextControl.controls[&#x27;containerWidth&#x27;].setValue(containerWidth);
+    }
+  }
+
+  private async patchFormArray(formArray: FormArray&lt;FormGroup&gt;, values: IIdentifiable[], type: &#x27;group&#x27; | &#x27;order&#x27; | &#x27;product&#x27;) {
+
+    const actionMap &#x3D; {
+      group: async ([previousValue, currentValue]: IGroup[]) &#x3D;&gt; {
+        this._store.dispatch(updateGroup({ group: currentValue }));
+      },
+      order: async ([previousValue, currentValue]: IOrder[]) &#x3D;&gt; {
+        let value &#x3D; { ...currentValue };
+        if (previousValue.description !&#x3D;&#x3D; currentValue.description) {
+          const product &#x3D; await selectSnapshot(this._store.select(selectProductByDescription(currentValue.description!)));
+          if (!!product) {
+            value.height &#x3D; product.height;
+            value.width &#x3D; product.width;
+            value.length &#x3D; product.length;
+          }
+        }
+        this._store.dispatch(updateOrder({ order: value }));
+        this._store.dispatch(updateProductByDescription({ previousDescription: previousValue.description!, currentValues: currentValue as IProduct }));
+      },
+      product: async ([previousValue, currentValue]: IProduct[]) &#x3D;&gt; {
+        this._store.dispatch(updateProduct({ product: currentValue }));
+        this._store.dispatch(updateOrdersByDescription({
+          previousDescription: previousValue.description!,
+          currentValues: {
+            description: currentValue.description,
+            height: currentValue.height,
+            length: currentValue.length,
+            width: currentValue.width
+          }
+        }));
+      },
+    }
+
+    for (let value of values) {
+      let formGroup &#x3D; formArray.controls.find(control &#x3D;&gt; control.value.id &#x3D;&#x3D;&#x3D; value.id);
+      if (formGroup) {
+        if (!lodash.isEqual(formGroup.value, value)) {
+          formGroup.patchValue(value, { emitEvent: false });
+        }
+        continue;
+      }
+      formGroup &#x3D; this._formBuilder.group(value, { updateOn: &#x27;blur&#x27; }) as any;
+      formArray.push(formGroup!);
+      this._subscription.add(
+        formGroup!.valueChanges
+          .pipe(startWith(formGroup?.value ?? null), pairwise())
+          .subscribe(async (args) &#x3D;&gt; {
+            await actionMap[type](args as any);
+          })
+      );
+    }
+
+    let toRemove &#x3D; formArray.controls
+      .map((control, index) &#x3D;&gt; {
+        return { control, index };
+      })
+      .filter((entry) &#x3D;&gt; values.map(value &#x3D;&gt; value.id).indexOf(entry.control.value.id) &#x3D;&#x3D;&#x3D; -1)
+      .sort((entryA, entryB) &#x3D;&gt; entryA.index &lt; entryB.index ? 1 : -1);
+
+    while (toRemove.length &gt; 0) {
+      formArray.removeAt(toRemove[0].index);
+      toRemove &#x3D; toRemove.slice(1);
+    }
+
+  }
+
+  private get calculationContextControl() {
+    return this.formGroup.controls[&#x27;calculationContext&#x27;];
+  }
+
+  private get groupsControl(): FormArray {
+    return this.formGroup.controls[&#x27;groups&#x27;] as FormArray;
+  }
+
+  private get ordersControl(): FormArray&lt;FormGroup&lt;ControlsOf&lt;IOrder&gt;&gt;&gt; {
+    return this.formGroup.controls[&#x27;orders&#x27;] as FormArray;
+  }
+
+  private get productsControl(): FormArray&lt;FormGroup&lt;ControlsOf&lt;IProduct&gt;&gt;&gt; {
+    return this.formGroup.controls[&#x27;products&#x27;] as FormArray;
+  }
+
+}
+</code></pre>
+    </div>
+
+    <div class="tab-pane fade " id="c-templateData">
+        <pre class="line-numbers"><code class="language-html">&lt;div class&#x3D;&quot;body main-component-body&quot;&gt;
+
+    &lt;div @bottomUpFadeIn class&#x3D;&quot;content&quot; [formGroup]&#x3D;&quot;formGroup&quot;&gt;
+
+        &lt;app-widget class&#x3D;&quot;widget orders-widget&quot; headline&#x3D;&quot;orders&quot;&gt;
+            &lt;div class&#x3D;&quot;headline-controls-wrapper&quot;&gt;
+                &lt;mat-icon id&#x3D;&quot;add-order-menu-trigger&quot; class&#x3D;&quot;primary&quot; [class.disabled]&#x3D;&quot;noGroupsOrProducts$|async&quot; [matMenuTriggerFor]&#x3D;&quot;selectOrderProductMenu&quot; matTooltip&#x3D;&quot;add order&quot;&gt;add
+                &lt;/mat-icon&gt;
+                &lt;mat-icon id&#x3D;&quot;clear-orders&quot; class&#x3D;&quot;danger&quot; [class.disabled]&#x3D;&quot;noOrdersAvailable$|async&quot; matTooltip&#x3D;&quot;clear orders&quot; (click)&#x3D;&quot;clearOrders()&quot;&gt;delete_outline&lt;/mat-icon&gt;
+            &lt;/div&gt;
+            &lt;app-orders-form class&#x3D;&quot;widget-content&quot; formArrayName&#x3D;&quot;orders&quot;&gt;&lt;/app-orders-form&gt;
+        &lt;/app-widget&gt;
+
+        &lt;app-widget class&#x3D;&quot;widget groups-widget&quot; headline&#x3D;&quot;groups&quot;&gt;
+            &lt;div class&#x3D;&quot;headline-controls-wrapper&quot;&gt;
+                &lt;mat-icon  id&#x3D;&quot;add-group-trigger&quot; class&#x3D;&quot;primary&quot; (click)&#x3D;&quot;addGroup()&quot; matTooltip&#x3D;&quot;add group&quot;&gt;add
+                &lt;/mat-icon&gt;
+                &lt;mat-icon class&#x3D;&quot;danger&quot; matTooltip&#x3D;&quot;clear groups&quot; (click)&#x3D;&quot;clearGroups()&quot;&gt;delete_outline&lt;/mat-icon&gt;
+            &lt;/div&gt;
+            &lt;app-groups-form class&#x3D;&quot;widget-content&quot; formArrayName&#x3D;&quot;groups&quot;&gt;&lt;/app-groups-form&gt;
+        &lt;/app-widget&gt;
+
+        &lt;app-widget class&#x3D;&quot;widget products-widget&quot; headline&#x3D;&quot;products&quot;&gt;
+            &lt;div class&#x3D;&quot;headline-controls-wrapper&quot;&gt;
+                &lt;mat-icon id&#x3D;&quot;add-product-trigger&quot; class&#x3D;&quot;primary&quot; (click)&#x3D;&quot;addProduct()&quot; matTooltip&#x3D;&quot;add product&quot;&gt;add
+                &lt;/mat-icon&gt;
+            &lt;/div&gt;
+            &lt;app-products-form class&#x3D;&quot;widget-content&quot; formArrayName&#x3D;&quot;products&quot;&gt;&lt;/app-products-form&gt;
+        &lt;/app-widget&gt;
+
+        &lt;app-widget class&#x3D;&quot;widget solutions-widget&quot; headline&#x3D;&quot;context and solutions&quot;&gt;
+            &lt;div class&#x3D;&quot;headline-controls-wrapper&quot;&gt;
+                &lt;mat-icon id&#x3D;&quot;calculation-control&quot; [class.disabled]&#x3D;&quot;!(calculationContextValid$|async)&quot; [matMenuTriggerFor]&#x3D;&quot;selectCalculationSourceMenu&quot; class&#x3D;&quot;primary&quot;&gt;rocket_launch&lt;/mat-icon&gt;
+            &lt;/div&gt;
+            &lt;app-calculation-context-overview class&#x3D;&quot;widget-content&quot; formGroupName&#x3D;&quot;calculationContext&quot;&gt;&lt;/app-calculation-context-overview&gt;
+        &lt;/app-widget&gt;
+
+    &lt;/div&gt;
+
+&lt;/div&gt;
+
+&lt;mat-menu #selectOrderProductMenu&#x3D;&quot;matMenu&quot;&gt;
+    &lt;button mat-menu-item *ngFor&#x3D;&quot;let product of (products$|async)&quot; [matMenuTriggerFor]&#x3D;&quot;selectOrderGroupMenu&quot;
+        [matMenuTriggerData]&#x3D;&quot;{ product: product }&quot; (click)&#x3D;&quot;$event.stopPropagation()&quot;&gt;{{product.description}}&lt;/button&gt;
+&lt;/mat-menu&gt;
+
+&lt;mat-menu #selectOrderGroupMenu&#x3D;&quot;matMenu&quot;&gt;
+    &lt;ng-template matMenuContent let-product&#x3D;&quot;product&quot;&gt;
+        &lt;button mat-menu-item *ngFor&#x3D;&quot;let group of (groups$|async)&quot;
+            (click)&#x3D;&quot;addOrder($event, product, group)&quot;&gt;{{group.desc}}&lt;/button&gt;
+    &lt;/ng-template&gt;
+&lt;/mat-menu&gt;
+
+&lt;mat-menu #selectCalculationSourceMenu&#x3D;&quot;matMenu&quot;&gt;
+    &lt;button mat-menu-item&gt;coming soon ;)&lt;/button&gt;
+&lt;/mat-menu&gt;</code></pre>
+    </div>
+
+    <div class="tab-pane fade " id="c-styleData">
+                <p class="comment">
+                    <code>./local-data.component.css</code>
+                </p>
+                <pre class="line-numbers"><code class="language-scss">.body {
+    padding: 1rem;
+    overflow-y: auto;
+    box-sizing: border-box;
+}
+
+.content {
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-column-gap: 0.5rem;
+    grid-row-gap: 0.5rem;
+}
+
+.widget {
+    background-color: white;
+    height: 100%;
+    border-radius: 4px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    min-height: 300px;
+    box-shadow: 0px 3px 1px -2px rgb(0 0 0 / 20%), 0px 2px 2px 0px rgb(0 0 0 / 14%), 0px 1px 5px 0px rgb(0 0 0 / 12%);
+}
+
+.orders-widget {
+    min-height: 460px;
+}
+
+.solutions-widget {
+    min-height: 400px;
+}
+
+.groups-widget {
+    min-height: 400px;
+}
+
+.products-widget {
+    min-height: 400px;
+}
+
+@media screen and (min-width: 1000px) {
+
+    .content {
+        grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr;
+    }
+
+    .orders-widget {
+        grid-column: 1 / span 4;
+    }
+    
+    .solutions-widget {
+        grid-column: 4 / span 3;
+    }
+    
+    .groups-widget {
+        grid-column: 5 / span 2;
+    }
+    
+    .products-widget {
+        grid-column: 1 / span 3;
+    }
+
+}</code></pre>
+    </div>
+
+    <div class="tab-pane fade " id="c-tree">
+        <div id="tree-container"></div>
+        <div class="tree-legend">
+            <div class="title">
+                <b>Legend</b>
+            </div>
+            <div>
+                <div class="color htmlelement"></div><span>Html element</span>
+            </div>
+            <div>
+                <div class="color component"></div><span>Component</span>
+            </div>
+            <div>
+                <div class="color directive"></div><span>Html element with directive</span>
+            </div>
+        </div>
+    </div>
+
+    
+</div>
+
+<script src="../js/libs/vis.min.js"></script>
+<script src="../js/libs/htmlparser.js"></script>
+<script src="../js/libs/deep-iterator.js"></script>
+<script>
+        var COMPONENT_TEMPLATE = '<div><div class="body main-component-body">    <div @bottomUpFadeIn class="content" [formGroup]="formGroup">        <app-widget class="widget orders-widget" headline="orders">            <div class="headline-controls-wrapper">                <mat-icon id="add-order-menu-trigger" class="primary" [class.disabled]="noGroupsOrProducts$|async" [matMenuTriggerFor]="selectOrderProductMenu" matTooltip="add order">add                </mat-icon>                <mat-icon id="clear-orders" class="danger" [class.disabled]="noOrdersAvailable$|async" matTooltip="clear orders" (click)="clearOrders()">delete_outline</mat-icon>            </div>            <app-orders-form class="widget-content" formArrayName="orders"></app-orders-form>        </app-widget>        <app-widget class="widget groups-widget" headline="groups">            <div class="headline-controls-wrapper">                <mat-icon  id="add-group-trigger" class="primary" (click)="addGroup()" matTooltip="add group">add                </mat-icon>                <mat-icon class="danger" matTooltip="clear groups" (click)="clearGroups()">delete_outline</mat-icon>            </div>            <app-groups-form class="widget-content" formArrayName="groups"></app-groups-form>        </app-widget>        <app-widget class="widget products-widget" headline="products">            <div class="headline-controls-wrapper">                <mat-icon id="add-product-trigger" class="primary" (click)="addProduct()" matTooltip="add product">add                </mat-icon>            </div>            <app-products-form class="widget-content" formArrayName="products"></app-products-form>        </app-widget>        <app-widget class="widget solutions-widget" headline="context and solutions">            <div class="headline-controls-wrapper">                <mat-icon id="calculation-control" [class.disabled]="!(calculationContextValid$|async)" [matMenuTriggerFor]="selectCalculationSourceMenu" class="primary">rocket_launch</mat-icon>            </div>            <app-calculation-context-overview class="widget-content" formGroupName="calculationContext"></app-calculation-context-overview>        </app-widget>    </div></div><mat-menu #selectOrderProductMenu="matMenu">    <button mat-menu-item *ngFor="let product of (products$|async)" [matMenuTriggerFor]="selectOrderGroupMenu"        [matMenuTriggerData]="{ product: product }" (click)="$event.stopPropagation()">{{product.description}}</button></mat-menu><mat-menu #selectOrderGroupMenu="matMenu">    <ng-template matMenuContent let-product="product">        <button mat-menu-item *ngFor="let group of (groups$|async)"            (click)="addOrder($event, product, group)">{{group.desc}}</button>    </ng-template></mat-menu><mat-menu #selectCalculationSourceMenu="matMenu">    <button mat-menu-item>coming soon ;)</button></mat-menu></div>'
+    var COMPONENTS = [{'name': 'AboutComponent', 'selector': 'app-about'},{'name': 'AccessTokenInputComponent', 'selector': 'app-access-token-input'},{'name': 'ApiCallConfiguratorComponent', 'selector': 'app-api-call-configurator'},{'name': 'ApiCallConfiguratorDialogComponent', 'selector': 'app-api-call-configurator-dialog'},{'name': 'ApiConfigurationPreviewComponent', 'selector': 'app-api-configuration-preview'},{'name': 'ApiLoginTestComponent', 'selector': 'app-api-login-test'},{'name': 'AppComponent', 'selector': 'app-root'},{'name': 'CalculationComponent', 'selector': 'app-calculation'},{'name': 'CalculationContextOverviewComponent', 'selector': 'app-calculation-context-overview'},{'name': 'CodeEditorComponent', 'selector': 'app-code-editor'},{'name': 'ConfirmationComponent', 'selector': 'app-confirmation'},{'name': 'ConsoleComponent', 'selector': 'app-console'},{'name': 'ContainerPreviewComponent', 'selector': 'app-container-preview'},{'name': 'EditDataDialogComponent', 'selector': 'app-edit-data-dialog'},{'name': 'EmbeddedConfigureErrorGatewayEntranceConnectionComponent', 'selector': 'app-embedded-configure-error-gateway-entrance-connection'},{'name': 'EmbeddedFunctionImplementationComponent', 'selector': 'app-embedded-function-implementation'},{'name': 'EmbeddedFunctionSelectionComponent', 'selector': 'app-embedded-function-selection'},{'name': 'EmbeddedInputOutputMappingComponent', 'selector': 'app-embedded-input-output-mapping'},{'name': 'EmbeddedInputOutputMappingTableRowComponent', 'selector': 'app-embedded-input-output-mapping-table-row'},{'name': 'EmbeddedParamEditorComponent', 'selector': 'app-embedded-param-editor'},{'name': 'EndpointInputComponent', 'selector': 'app-endpoint-input'},{'name': 'ErrorComponent', 'selector': 'app-error'},{'name': 'FunctionOutputPreviewComponent', 'selector': 'app-function-output-preview'},{'name': 'FunctionPreviewComponent', 'selector': 'app-function-preview'},{'name': 'GoodPreviewComponent', 'selector': 'app-good-preview'},{'name': 'GoodsPanelComponent', 'selector': 'app-goods-panel'},{'name': 'GroupsFormComponent', 'selector': 'app-groups-form'},{'name': 'GroupsPanelComponent', 'selector': 'app-groups-panel'},{'name': 'LocalDataComponent', 'selector': 'app-local-data'},{'name': 'MethodQuickInteractionComponent', 'selector': 'app-method-quick-interaction'},{'name': 'NavbarComponent', 'selector': 'app-navbar'},{'name': 'NoSolutionDialogComponent', 'selector': 'app-no-solution-dialog'},{'name': 'OrdersFormComponent', 'selector': 'app-orders-form'},{'name': 'ParamEditorComponent', 'selector': 'app-param-editor'},{'name': 'ParamMemberPathPreviewComponent', 'selector': 'app-param-member-path-preview'},{'name': 'ParamMemberPreviewComponent', 'selector': 'app-param-member-preview'},{'name': 'ParamPreviewComponent', 'selector': 'app-param-preview'},{'name': 'PipelineActionPreviewComponent', 'selector': 'app-pipeline-action-preview'},{'name': 'PipeRunnerComponent', 'selector': 'app-pipe-runner'},{'name': 'PipeRunnerOptionsBarComponent', 'selector': 'app-pipe-runner-options-bar'},{'name': 'ProcessBuilderComponent', 'selector': 'app-process-builder'},{'name': 'ProcessBuilderWrapperComponent', 'selector': 'app-process-builder-wrapper'},{'name': 'ProductFormComponent', 'selector': 'app-products-form'},{'name': 'SceneVisualizationComponent', 'selector': 'app-scene-visualization'},{'name': 'SelectApiAuthorizationComponent', 'selector': 'app-select-api-authorization'},{'name': 'SelectGroupComponent', 'selector': 'app-select-group'},{'name': 'SelectPipelineComponent', 'selector': 'app-select-pipeline'},{'name': 'SelectProductComponent', 'selector': 'app-select-product'},{'name': 'SelectUnitComponent', 'selector': 'app-select-unit'},{'name': 'SolutionAnimationComponent', 'selector': 'app-solution-animation'},{'name': 'SolutionPreviewComponent', 'selector': 'app-solution-preview'},{'name': 'SolutionPreviewRenderingComponent', 'selector': 'app-solution-preview-rendering'},{'name': 'SolutionValidationComponent', 'selector': 'app-solution-validation'},{'name': 'SolutionVisualizationDialogComponent', 'selector': 'app-solution-visualization-dialog'},{'name': 'TaskCreationComponent', 'selector': 'app-task-creation'},{'name': 'UserInputComponent', 'selector': 'app-user-input'},{'name': 'UsernamePasswordCombinationComponent', 'selector': 'app-username-password-combination'},{'name': 'VisualizerComponent', 'selector': 'app-visualizer'},{'name': 'WidgetComponent', 'selector': 'app-widget'}];
+    var DIRECTIVES = [{'name': 'AnimatedCounterDirective', 'selector': '[appAnimatedCounter]'}];
+    var ACTUAL_COMPONENT = {'name': 'LocalDataComponent'};
+</script>
+<script src="../js/tree.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                   </div><div class="search-results">
+    <div class="has-results">
+        <h1 class="search-results-title"><span class='search-results-count'></span> results matching "<span class='search-query'></span>"</h1>
+        <ul class="search-results-list"></ul>
+    </div>
+    <div class="no-results">
+        <h1 class="search-results-title">No results matching "<span class='search-query'></span>"</h1>
+    </div>
+</div>
+</div>
+               <!-- END CONTENT -->
+           </div>
+       </div>
+
+          <label class="dark-mode-switch">
+               <input type="checkbox">
+               <span class="slider">
+                    <svg class="slider-icon" viewBox="0 0 24 24" fill="none" height="20" stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" width="20" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"></path>
+                    </svg>
+               </span>
+          </label>
+
+       <script>
+            var COMPODOC_CURRENT_PAGE_DEPTH = 1;
+            var COMPODOC_CURRENT_PAGE_CONTEXT = 'component';
+            var COMPODOC_CURRENT_PAGE_URL = 'LocalDataComponent.html';
+            var MAX_SEARCH_RESULTS = 15;
+       </script>
+
+       <script src="../js/libs/custom-elements.min.js"></script>
+       <script src="../js/libs/lit-html.js"></script>
+
+       <script src="../js/menu-wc.js" defer></script>
+       <script nomodule src="../js/menu-wc_es5.js" defer></script>
+
+       <script src="../js/libs/bootstrap-native.js"></script>
+
+       <script src="../js/libs/es6-shim.min.js"></script>
+       <script src="../js/libs/EventDispatcher.js"></script>
+       <script src="../js/libs/promise.min.js"></script>
+       <script src="../js/libs/zepto.min.js"></script>
+
+       <script src="../js/compodoc.js"></script>
+
+       <script src="../js/tabs.js"></script>
+       <script src="../js/menu.js"></script>
+       <script src="../js/libs/clipboard.min.js"></script>
+       <script src="../js/libs/prism.js"></script>
+       <script src="../js/sourceCode.js"></script>
+          <script src="../js/search/search.js"></script>
+          <script src="../js/search/lunr.min.js"></script>
+          <script src="../js/search/search-lunr.js"></script>
+          <script src="../js/search/search_index.js"></script>
+       <script src="../js/lazy-load-graphs.js"></script>
+
+
+    </body>
+</html>

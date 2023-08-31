@@ -2,13 +2,12 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { DebugElement } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { Store } from '@ngrx/store';
-import { AppRoutingModule } from 'src/app/app-routing.module';
 import { AppModule } from 'src/app/app.module';
 import defaultImportsConstant from 'src/app/default-imports.constant';
 import processBuilderConfig from 'src/config/process-builder-config';
 import { IElement } from 'src/lib/bpmn-io/interfaces/element.interface';
-import { IFunction } from 'src/lib/process-builder/globals/i-function';
-import { PROCESS_BUILDER_CONFIG_TOKEN } from 'src/lib/process-builder/globals/i-process-builder-config';
+import { IFunction } from 'src/lib/process-builder/interfaces/function.interface';
+import { PROCESS_BUILDER_CONFIG_TOKEN } from 'src/lib/process-builder/interfaces/process-builder-config.interface';
 import { selectSnapshot } from 'src/lib/process-builder/globals/select-snapshot';
 import { TaskCreationStep } from 'src/lib/process-builder/globals/task-creation-step';
 import { TaskCreationStepPipe } from 'src/lib/process-builder/pipes/task-creation-step.pipe';
@@ -18,30 +17,30 @@ import { addIFunctions } from 'src/lib/process-builder/store/actions/function.ac
 import { TaskCreationComponent } from './task-creation.component';
 import { ExemplaryBpmnModel } from './test/exemplary-bpmn-model';
 import { By } from '@angular/platform-browser';
-import { ITaskCreationPayload } from 'src/lib/process-builder/interfaces/i-task-creation-payload.interface';
+import { ITaskCreationPayload } from 'src/lib/process-builder/interfaces/task-creation-payload.interface';
+import { ProcessBuilderModule } from 'src/lib/process-builder/process-builder.module';
 
 describe('TaskCreationComponent', () => {
   let component: TaskCreationComponent;
   let fixture: ComponentFixture<TaskCreationComponent>;
   let debugElement: DebugElement;
-  let exemplaryBpmnModel = new ExemplaryBpmnModel();
+  const exemplaryBpmnModel = new ExemplaryBpmnModel();
   let bpmnJsService: BpmnJsService;
   const diagramWrapper = document.createElement('div');
-  let taskCreationPayload: ITaskCreationPayload = {
-    configureIncomingErrorGatewaySequenceFlow: {},
-    configureActivity: {},
-  } as ITaskCreationPayload;
+  const taskCreationPayload: ITaskCreationPayload = {} as ITaskCreationPayload;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       declarations: [TaskCreationComponent, TaskCreationStepPipe],
-      imports: [...defaultImportsConstant, AppModule, AppRoutingModule],
+      imports: [...defaultImportsConstant, AppModule, ProcessBuilderModule],
       providers: [
         BpmnJsService,
         {
           provide: MatDialogRef,
           useValue: {
-            close: () => { },
+            close: () => {
+              return;
+            },
           },
         },
         {
@@ -51,10 +50,8 @@ describe('TaskCreationComponent', () => {
         {
           provide: MAT_DIALOG_DATA,
           useValue: {
-            data: {
-              taskCreationData: {},
-              taskCreationPayload: taskCreationPayload,
-            },
+            taskCreationFormGroupValue: {},
+            taskCreationPayload: taskCreationPayload,
           },
         },
       ],

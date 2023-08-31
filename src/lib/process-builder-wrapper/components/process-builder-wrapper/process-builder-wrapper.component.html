@@ -32,7 +32,7 @@
         <div class="hint" [ngClass]="(bpmnJsService.validationContainsErrors$|async)? 'error': 'success'"
             (mouseleave)="hideAllHints()">
 
-            <span class="counter">{{(bpmnJsService.validation$|async)?.errors?.length}}</span>
+            <span class="counter">{{(bpmnJsService.validation$|async)?.errors?.length ?? 0}}</span>
             <span class="text">errors</span>
 
         </div>
@@ -49,6 +49,10 @@
         <div class="control-footer-item accent" *ngIf="(bpmnJsService.containsChanges$|async)" @fadeIn
             (click)="bpmnJsService.saveCurrentBpmnModel(true)">
             <mat-icon>save</mat-icon>
+        </div>
+
+        <div class="control-footer-item accent" @fadeIn (click)="compile()">
+            <mat-icon>play_arrow</mat-icon>
         </div>
 
         <div class="control-footer-item accent" matTooltip="more options" [matMenuTriggerFor]="menu">
@@ -68,7 +72,7 @@
                 </span>
             </div>
 
-            <div [@showList]="(bpmnJSModels$|async)?.length" *ngIf="modelsVisible$|async">
+            <div [@showList]="(bpmnJSModels$|async)?.length" *ngIf="modelsVisible()">
 
                 <div class="quick-interaction-wrapper">
 
@@ -89,7 +93,7 @@
                 </span>
             </div>
 
-            <div [@showList]="(funcs$|async)?.length" *ngIf="methodsVisible$|async">
+            <div [@showList]="(funcs$|async)?.length" *ngIf="methodsVisible()">
 
                 <div class="option" *ngFor="let func of (funcs$|async)">
 
@@ -112,7 +116,7 @@
                 </span>
             </div>
 
-            <div [@showList]="(params$|async)?.length" *ngIf="paramsVisible$|async">
+            <div [@showList]="(params$|async)?.length" *ngIf="paramsVisible()">
 
                 <div class="option" *ngFor="let param of (params$|async)">
 
@@ -128,17 +132,12 @@
 
 </div>
 
-<mat-menu #menu="matMenu">
-    <div mat-menu-item>
-        <span class="text">functions ({{(funcs$|async)?.length ?? 0}}) ...</span>
-    </div>
-    <div mat-menu-item class="bordered">
-        <span class="text">params ({{(params$|async)?.length ?? 0}}) ...</span>
+<mat-menu #menu="matMenu" class="smgr-menu">
+    <div mat-menu-item class="inactive" (click)="$event.stopPropagation()">
+        <span class="text" (click)="bpmnJsService.zoomIn()">zoom in</span>
     </div>
     <div mat-menu-item class="inactive" (click)="$event.stopPropagation()">
-        <span class="text">zoom</span>
-        <mat-icon class="interactable-icon" (click)="bpmnJsService.zoomIn()">add_circle_outline</mat-icon>
-        <mat-icon class="interactable-icon" (click)="bpmnJsService.zoomOut()">remove_circle_outline</mat-icon>
+        <span class="text" (click)="bpmnJsService.zoomOut()">zoom out</span>
     </div>
     <div mat-menu-item [disabled]="!(bpmnJsService.containsChanges$|async)"
         (click)="bpmnJsService.saveCurrentBpmnModel(true)">
@@ -149,7 +148,6 @@
     </div>
     <div mat-menu-item (click)="processBuilderService.resetLocalState()">
         <span class="text">reset environment</span>
-        <mat-icon class="icon">delete_forever</mat-icon>
     </div>
 </mat-menu>
 

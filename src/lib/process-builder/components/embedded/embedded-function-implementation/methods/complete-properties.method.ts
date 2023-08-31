@@ -1,4 +1,6 @@
-export default (from: number, object: { type: string, apply?: string }) => {
+import { CompletionResult } from "@codemirror/autocomplete";
+
+export default (from: number, object: { [name: string]: { type: string, apply?: string } }) => {
     let options = [];
     for (let name in object) {
         if (!(object as any)[name]) continue;
@@ -13,5 +15,5 @@ export default (from: number, object: { type: string, apply?: string }) => {
         from,
         options,
         validFor: /^[\w$]*$/
-    }
+    } as CompletionResult
 }

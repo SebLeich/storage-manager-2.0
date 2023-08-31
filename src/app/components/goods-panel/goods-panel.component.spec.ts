@@ -1,12 +1,10 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { DebugElement } from '@angular/core';
-import { AppRoutingModule } from 'src/app/app-routing.module';
 import { AppModule } from 'src/app/app.module';
 import defaultImportsConstant from 'src/app/default-imports.constant';
-
 import { GoodsPanelComponent } from './goods-panel.component';
 import { By } from '@angular/platform-browser';
-import { IGood } from 'src/app/interfaces/i-good.interface';
+import { IGood } from '@smgr/interfaces';
 
 describe('GoodsPanelComponent', () => {
   let component: GoodsPanelComponent;
@@ -19,8 +17,7 @@ describe('GoodsPanelComponent', () => {
       imports: [
         ...defaultImportsConstant,
 
-        AppModule,
-        AppRoutingModule
+        AppModule
       ]
     })
       .compileComponents();

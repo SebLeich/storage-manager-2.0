@@ -1,13 +1,13 @@
-import { Component, Input, OnInit } from '@angular/core';
-import { IParam } from 'src/lib/process-builder/globals/i-param';
+import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
+import { IParam } from '@process-builder/interfaces';
 
 @Component({
   selector: 'app-param-preview',
   templateUrl: './param-preview.component.html',
-  styleUrls: ['./param-preview.component.sass']
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ParamPreviewComponent {
 
-  @Input() param?: IParam;
+  @Input() public param?: IParam;
 
 }

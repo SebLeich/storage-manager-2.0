@@ -3,9 +3,8 @@ import { ControlContainer, FormGroup } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { Store } from '@ngrx/store';
 import { map } from 'rxjs';
-import { ISolution } from 'src/app/interfaces/i-solution.interface';
-import { removeSolution, updateSolution } from 'src/app/store/actions/i-solution.actions';
-import { selectSolutions } from 'src/app/store/selectors/i-solution.selectors';
+import { ISolution } from '@smgr/interfaces';
+import { removeSolution, selectSolutions, updateSolution } from '@smgr/store';
 import { SolutionVisualizationDialogComponent } from '../dialog/solution-visualization-dialog/solution-visualization-dialog.component';
 
 @Component({

@@ -1,8 +1,8 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
+import { IContainer } from '@smgr/interfaces';
 import { AppModule } from 'src/app/app.module';
 import defaultImportsConstant from 'src/app/default-imports.constant';
-import { IContainer } from 'src/app/interfaces/i-container.interface';
 import { PrettyLengthPipe } from 'src/app/pipes/pretty-length.pipe';
 import { PrettyVolumePipe } from 'src/app/pipes/pretty-volume.pipe';
 

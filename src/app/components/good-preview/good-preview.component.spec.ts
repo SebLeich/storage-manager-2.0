@@ -1,5 +1,4 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-
 import { GoodPreviewComponent } from './good-preview.component';
 
 describe('GoodPreviewComponent', () => {

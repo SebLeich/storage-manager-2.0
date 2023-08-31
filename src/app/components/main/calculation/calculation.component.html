@@ -1,6 +1,6 @@
 <div class="body">
 
-    <div class="content" @widgetFadeIn>
+    <div class="content" @bottomUpFadeIn>
 
         <div class="widget algorithm-overview" (click)="configureAPICall()">
 
@@ -54,8 +54,7 @@
                 <mat-form-field class="width">
 
                     <mat-label>solution description</mat-label>
-                    <input type="text" #input [value]="wrapper.solutionDescription"
-                        (keyup)="wrapper.solutionDescription = input.value" matInput  />
+                    <input type="text" #input [value]="wrapper.solutionDescription" (keyup)="wrapper.solutionDescription = input.value" matInput  />
 
                 </mat-form-field>
 

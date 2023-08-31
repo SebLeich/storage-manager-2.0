@@ -1,11 +1,11 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { IGood } from 'src/app/interfaces/i-good.interface';
-import { SceneVisualizationComponentService } from '../scene-visualization/scene-visualization-component.service';
+import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from '@angular/core';
+import { IGood } from '@smgr/interfaces';
 
 @Component({
   selector: 'app-goods-panel',
   templateUrl: './goods-panel.component.html',
-  styleUrls: ['./goods-panel.component.css']
+  styleUrls: ['./goods-panel.component.css'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class GoodsPanelComponent {
 

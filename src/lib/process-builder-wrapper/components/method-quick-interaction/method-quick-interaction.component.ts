@@ -1,7 +1,9 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
 import { FormControl, UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Store } from '@ngrx/store';
+import { BPMN_JS } from '@process-builder/injection';
+import { IBpmnJS } from '@process-builder/interfaces';
 import { Subscription } from 'rxjs';
 import { debounceTime } from 'rxjs/operators';
 import { IElement } from 'src/lib/bpmn-io/interfaces/element.interface';
@@ -28,6 +30,7 @@ export class MethodQuickInteractionComponent implements OnDestroy, OnInit {
   private _subscriptions: Subscription = new Subscription();
 
   constructor(
+    @Inject(BPMN_JS) private _bpmnJs: IBpmnJS,
     private _store: Store,
     private _formBuilder: UntypedFormBuilder,
     public bpmnJsService: BpmnJsService,
@@ -48,7 +51,7 @@ export class MethodQuickInteractionComponent implements OnDestroy, OnInit {
     this._store.dispatch(createIBpmnJsModel());
   }
 
-  public hideAllHints = () => BPMNJsRepository.clearAllTooltips(this.bpmnJsService.bpmnJs);
+  public hideAllHints = () => BPMNJsRepository.clearAllTooltips(this._bpmnJs);
   public ngOnDestroy = () => this._subscriptions.unsubscribe();
 
   public ngOnInit(): void {
@@ -65,7 +68,7 @@ export class MethodQuickInteractionComponent implements OnDestroy, OnInit {
   }
 
   public async saveCurrentBpmnModel() {
-    const result: { xml: string } = await this.bpmnJsService.bpmnJs.saveXML();
+    const result: { xml: string } = await this._bpmnJs.saveXML();
     this._store.dispatch(updateCurrentIBpmnJSModel({ xml: result.xml }));
     this._snackBar.open('model saved', 'ok', { duration: 2000 });
     this.bpmnJsService.markAsUnchanged();

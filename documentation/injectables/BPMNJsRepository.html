@@ -1,0 +1,1983 @@
+<!doctype html>
+<html class="no-js" lang="">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="x-ua-compatible" content="ie=edge">
+        <title>storage-manager documentation</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <link rel="icon" type="image/x-icon" href="../images/favicon.ico">
+	   <link rel="stylesheet" href="../styles/style.css">
+        <link rel="stylesheet" href="../styles/dark.css">
+    </head>
+    <body>
+
+        <div class="navbar navbar-default navbar-fixed-top visible-xs">
+            <a href="../" class="navbar-brand">storage-manager documentation</a>
+            <button type="button" class="btn btn-default btn-menu ion-ios-menu" id="btn-menu"></button>
+        </div>
+
+        <div class="xs-menu menu" id="mobile-menu">
+                <div id="book-search-input" role="search"><input type="text" placeholder="Type to search"></div>            <compodoc-menu></compodoc-menu>
+        </div>
+
+        <div class="container-fluid main">
+           <div class="row main">
+               <div class="hidden-xs menu">
+                   <compodoc-menu mode="normal"></compodoc-menu>
+               </div>
+               <!-- START CONTENT -->
+               <div class="content injectable">
+                   <div class="content-data">
+
+
+
+
+
+
+
+
+<ol class="breadcrumb">
+  <li>Injectables</li>
+  <li >BPMNJsRepository</li>
+</ol>
+
+<ul class="nav nav-tabs" role="tablist">
+        <li class="active">
+            <a href="#info" role="tab" id="info-tab" data-toggle="tab" data-link="info">Info</a>
+        </li>
+        <li >
+            <a href="#source" role="tab" id="source-tab" data-toggle="tab" data-link="source">Source</a>
+        </li>
+</ul>
+
+<div class="tab-content">
+    <div class="tab-pane fade active in" id="c-info">
+        <p class="comment">
+            <h3>File</h3>
+        </p>
+        <p class="comment">
+            <code>src/lib/core/bpmn-js.repository.ts</code>
+        </p>
+
+
+
+
+
+            <section>
+    <h3 id="index">Index</h3>
+    <table class="table table-sm table-bordered index-table">
+        <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <h6><b>Properties</b></h6>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <ul class="index-list">
+                            <li>
+                                    <span class="modifier">Static</span>
+                                <a href="#getActivityFunctionId" >getActivityFunctionId</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Static</span>
+                                <a href="#getDataParamId" >getDataParamId</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Static</span>
+                                <a href="#getSequenceFlowType" >getSequenceFlowType</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Static</span>
+                                <a href="#setActivityFunctionId" >setActivityFunctionId</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Static</span>
+                                <a href="#setDataParamId" >setDataParamId</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Static</span>
+                                <a href="#setSequenceFlowType" >setSequenceFlowType</a>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="col-md-4">
+                        <h6><b>Methods</b></h6>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <ul class="index-list">
+                            <li>
+                                    <span class="modifier">Static</span>
+                                <a href="#appendOutputParam" >appendOutputParam</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Static</span>
+                                <a href="#clearAllTooltips" >clearAllTooltips</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Static</span>
+                                <a href="#fillAnchestors" >fillAnchestors</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Static</span>
+                                <a href="#getAvailableInputParams" >getAvailableInputParams</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Static</span>
+                                <a href="#getAvailableInputParamsIElements" >getAvailableInputParamsIElements</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Static</span>
+                                <a href="#getEndEvents" >getEndEvents</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Static</span>
+                                <a href="#getExtensionElement" >getExtensionElement</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Static</span>
+                                <a href="#getNextNodes" >getNextNodes</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Static</span>
+                                <a href="#getSLPBExtension" >getSLPBExtension</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Static</span>
+                                <a href="#getStartEvents" >getStartEvents</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Static</span>
+                                <a href="#sLPBExtensionSetted" >sLPBExtensionSetted</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Static</span>
+                                <a href="#updateBpmnElementSLPBExtension" >updateBpmnElementSLPBExtension</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Public</span>
+                                <a href="#validateErrorGateway" >validateErrorGateway</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Static</span>
+                                <a href="#validateProcess" >validateProcess</a>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+
+
+
+
+
+        </tbody>
+    </table>
+</section>
+
+            <section>
+    <h3 id="constructor">Constructor</h3>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+<code>constructor(_config: <a href="../interfaces/IProcessBuilderConfig.html" target="_self">IProcessBuilderConfig</a>)</code>
+                    </td>
+                </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="21" class="link-to-prism">src/lib/core/bpmn-js.repository.ts:21</a></div>
+                            </td>
+                        </tr>
+
+                <tr>
+                    <td class="col-md-4">
+                            <div>
+                                    <b>Parameters :</b>
+                                    <table class="params">
+                                        <thead>
+                                            <tr>
+                                                <td>Name</td>
+                                                    <td>Type</td>
+                                                <td>Optional</td>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                                <tr>
+                                                        <td>_config</td>
+                                                  
+                                                        <td>
+                                                                        <code><a href="../interfaces/IProcessBuilderConfig.html" target="_self" >IProcessBuilderConfig</a></code>
+                                                        </td>
+                                                  
+                                                    <td>
+                                                            No
+                                                    </td>
+                                                    
+                                                </tr>
+                                        </tbody>
+                                    </table>
+                            </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+</section>
+
+            <section>
+    
+    <h3 id="methods">
+        Methods
+    </h3>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="appendOutputParam"></a>
+                    <span class="name">
+                        <span class="modifier">Static</span>
+                        <span ><b>appendOutputParam</b></span>
+                        <a href="#appendOutputParam"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>appendOutputParam(bpmnJS: <a href="../interfaces/IBpmnJS.html" target="_self">IBpmnJS</a>, element: <a href="../interfaces/IElement.html" target="_self">IElement</a>, parameterIdentifier: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank">number</a>, parameterName: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, parameterInterface: string | null, parameterIsProcessOutput: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/boolean" target="_blank">boolean</a>, preventDublet, expectedInterface?: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="33"
+                            class="link-to-prism">src/lib/core/bpmn-js.repository.ts:33</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                    <td>Default value</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>bpmnJS</td>
+                                    <td>
+                                                <code><a href="../interfaces/IBpmnJS.html" target="_self" >IBpmnJS</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+                                    <td>
+                                    </td>
+
+                                </tr>
+                                <tr>
+                                    <td>element</td>
+                                    <td>
+                                                <code><a href="../interfaces/IElement.html" target="_self" >IElement</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+                                    <td>
+                                    </td>
+
+                                </tr>
+                                <tr>
+                                    <td>parameterIdentifier</td>
+                                    <td>
+                                                <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+                                    <td>
+                                    </td>
+
+                                </tr>
+                                <tr>
+                                    <td>parameterName</td>
+                                    <td>
+                                                <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+                                    <td>
+                                    </td>
+
+                                </tr>
+                                <tr>
+                                    <td>parameterInterface</td>
+                                    <td>
+                                            <code>string | null</code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+                                    <td>
+                                    </td>
+
+                                </tr>
+                                <tr>
+                                    <td>parameterIsProcessOutput</td>
+                                    <td>
+                                                <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/boolean" target="_blank" >boolean</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+                                    <td>
+                                    </td>
+
+                                </tr>
+                                <tr>
+                                    <td>preventDublet</td>
+                                    <td>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+                                    <td>
+                                        <code>true</code>
+                                    </td>
+
+                                </tr>
+                                <tr>
+                                    <td>expectedInterface</td>
+                                    <td>
+                                                <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                    </td>
+
+                                    <td>
+                                        Yes
+                                    </td>
+
+                                    <td>
+                                    </td>
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>    <code>{ createdDataOutputElement: any; }</code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="clearAllTooltips"></a>
+                    <span class="name">
+                        <span class="modifier">Static</span>
+                        <span ><b>clearAllTooltips</b></span>
+                        <a href="#clearAllTooltips"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>clearAllTooltips(bpmnJS: <a href="../interfaces/IBpmnJS.html" target="_self">IBpmnJS</a>)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="55"
+                            class="link-to-prism">src/lib/core/bpmn-js.repository.ts:55</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>bpmnJS</td>
+                                    <td>
+                                                <code><a href="../interfaces/IBpmnJS.html" target="_self" >IBpmnJS</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="fillAnchestors"></a>
+                    <span class="name">
+                        <span class="modifier">Static</span>
+                        <span ><b>fillAnchestors</b></span>
+                        <a href="#fillAnchestors"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>fillAnchestors(element: <a href="../interfaces/IElement.html" target="_self">IElement</a>, anchestors: <a href="../interfaces/IElement.html" target="_self">IElement[]</a>)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="60"
+                            class="link-to-prism">src/lib/core/bpmn-js.repository.ts:60</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                    <td>Default value</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>element</td>
+                                    <td>
+                                                <code><a href="../interfaces/IElement.html" target="_self" >IElement</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+                                    <td>
+                                    </td>
+
+                                </tr>
+                                <tr>
+                                    <td>anchestors</td>
+                                    <td>
+                                                <code><a href="../interfaces/IElement.html" target="_self" >IElement[]</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+                                    <td>
+                                        <code>[]</code>
+                                    </td>
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="getAvailableInputParams"></a>
+                    <span class="name">
+                        <span class="modifier">Static</span>
+                        <span ><b>getAvailableInputParams</b></span>
+                        <a href="#getAvailableInputParams"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>getAvailableInputParams(element: <a href="../interfaces/IElement.html" target="_self">IElement | undefined</a>)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="75"
+                            class="link-to-prism">src/lib/core/bpmn-js.repository.ts:75</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>element</td>
+                                    <td>
+                                                <code><a href="../interfaces/IElement.html" target="_self" >IElement | undefined</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>    <code>{}</code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="getAvailableInputParamsIElements"></a>
+                    <span class="name">
+                        <span class="modifier">Static</span>
+                        <span ><b>getAvailableInputParamsIElements</b></span>
+                        <a href="#getAvailableInputParamsIElements"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>getAvailableInputParamsIElements(element: <a href="../interfaces/IElement.html" target="_self">IElement</a>)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="85"
+                            class="link-to-prism">src/lib/core/bpmn-js.repository.ts:85</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>element</td>
+                                    <td>
+                                                <code><a href="../interfaces/IElement.html" target="_self" >IElement</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="../interfaces/IElement.html" target="_self" >IElement[]</a></code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="getEndEvents"></a>
+                    <span class="name">
+                        <span class="modifier">Static</span>
+                        <span ><b>getEndEvents</b></span>
+                        <a href="#getEndEvents"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>getEndEvents(elementRegistry: <a href="../interfaces/IElementRegistryModule.html" target="_self">IElementRegistryModule</a>)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="231"
+                            class="link-to-prism">src/lib/core/bpmn-js.repository.ts:231</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>elementRegistry</td>
+                                    <td>
+                                                <code><a href="../interfaces/IElementRegistryModule.html" target="_self" >IElementRegistryModule</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="getExtensionElement"></a>
+                    <span class="name">
+                        <span class="modifier">Static</span>
+                        <span ><b>getExtensionElement</b></span>
+                        <a href="#getExtensionElement"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>getExtensionElement(element: <a href="../interfaces/IBusinessObject.html" target="_self">IBusinessObject</a>, type: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="98"
+                            class="link-to-prism">src/lib/core/bpmn-js.repository.ts:98</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>element</td>
+                                    <td>
+                                                <code><a href="../interfaces/IBusinessObject.html" target="_self" >IBusinessObject</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                                <tr>
+                                    <td>type</td>
+                                    <td>
+                                                <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="../interfaces/IExtensionElement.html" target="_self" >undefined | IExtensionElement</a></code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="getNextNodes"></a>
+                    <span class="name">
+                        <span class="modifier">Static</span>
+                        <span ><b>getNextNodes</b></span>
+                        <a href="#getNextNodes"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>getNextNodes(currentNode: <a href="../interfaces/IElement.html" target="_self">IElement | null | undefined</a>)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="107"
+                            class="link-to-prism">src/lib/core/bpmn-js.repository.ts:107</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>currentNode</td>
+                                    <td>
+                                                <code><a href="../interfaces/IElement.html" target="_self" >IElement | null | undefined</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="../interfaces/IElement.html" target="_self" >IElement[]</a></code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="getSLPBExtension"></a>
+                    <span class="name">
+                        <span class="modifier">Static</span>
+                        <span ><b>getSLPBExtension</b></span>
+                        <a href="#getSLPBExtension"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>getSLPBExtension(businessObject: <a href="../interfaces/IBusinessObject.html" target="_self">IBusinessObject | undefined</a>, type: <a href="../undefineds/SebleichProcessBuilderExtensionType.html" target="_self">SebleichProcessBuilderExtensionType</a>, provider: (extensions: <a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank">any</a>) => void)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="115"
+                            class="link-to-prism">src/lib/core/bpmn-js.repository.ts:115</a></div>
+                </td>
+            </tr>
+
+            <tr>
+                <td class="col-md-4">
+                    <b>Type parameters :</b>
+                    <ul class="type-parameters">
+                        <li>T</li>
+                    </ul>
+                </td>
+            </tr>
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>businessObject</td>
+                                    <td>
+                                                <code><a href="../interfaces/IBusinessObject.html" target="_self" >IBusinessObject | undefined</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                                <tr>
+                                    <td>type</td>
+                                    <td>
+                                                <code><a href="../miscellaneous/typealiases.html#SebleichProcessBuilderExtensionType" target="_self" >SebleichProcessBuilderExtensionType</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                                <tr>
+                                    <td>provider</td>
+                                    <td>
+                                                <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/function" target="_blank" >function</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>    <code>T</code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="getStartEvents"></a>
+                    <span class="name">
+                        <span class="modifier">Static</span>
+                        <span ><b>getStartEvents</b></span>
+                        <a href="#getStartEvents"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>getStartEvents(elementRegistry: <a href="../interfaces/IElementRegistryModule.html" target="_self">IElementRegistryModule</a>)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="235"
+                            class="link-to-prism">src/lib/core/bpmn-js.repository.ts:235</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>elementRegistry</td>
+                                    <td>
+                                                <code><a href="../interfaces/IElementRegistryModule.html" target="_self" >IElementRegistryModule</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>    <code>{}</code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="sLPBExtensionSetted"></a>
+                    <span class="name">
+                        <span class="modifier">Static</span>
+                        <span ><b>sLPBExtensionSetted</b></span>
+                        <a href="#sLPBExtensionSetted"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>sLPBExtensionSetted(businessObject: <a href="../interfaces/IBusinessObject.html" target="_self">IBusinessObject | undefined</a>, type: <a href="../undefineds/SebleichProcessBuilderExtensionType.html" target="_self">SebleichProcessBuilderExtensionType</a>, condition: (extensions: <a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank">any</a>) => void)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="125"
+                            class="link-to-prism">src/lib/core/bpmn-js.repository.ts:125</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>businessObject</td>
+                                    <td>
+                                                <code><a href="../interfaces/IBusinessObject.html" target="_self" >IBusinessObject | undefined</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                                <tr>
+                                    <td>type</td>
+                                    <td>
+                                                <code><a href="../miscellaneous/typealiases.html#SebleichProcessBuilderExtensionType" target="_self" >SebleichProcessBuilderExtensionType</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                                <tr>
+                                    <td>condition</td>
+                                    <td>
+                                                <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/function" target="_blank" >function</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/boolean" target="_blank" >boolean</a></code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="updateBpmnElementSLPBExtension"></a>
+                    <span class="name">
+                        <span class="modifier">Static</span>
+                        <span ><b>updateBpmnElementSLPBExtension</b></span>
+                        <a href="#updateBpmnElementSLPBExtension"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>updateBpmnElementSLPBExtension(bpmnJS: <a href="../interfaces/IBpmnJS.html" target="_self">IBpmnJS</a>, businessObject: <a href="../interfaces/IBusinessObject.html" target="_self">IBusinessObject</a>, type: <a href="../undefineds/SebleichProcessBuilderExtensionType.html" target="_self">SebleichProcessBuilderExtensionType</a>, setter: (extension: <a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank">any</a>) => void)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="135"
+                            class="link-to-prism">src/lib/core/bpmn-js.repository.ts:135</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>bpmnJS</td>
+                                    <td>
+                                                <code><a href="../interfaces/IBpmnJS.html" target="_self" >IBpmnJS</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                                <tr>
+                                    <td>businessObject</td>
+                                    <td>
+                                                <code><a href="../interfaces/IBusinessObject.html" target="_self" >IBusinessObject</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                                <tr>
+                                    <td>type</td>
+                                    <td>
+                                                <code><a href="../miscellaneous/typealiases.html#SebleichProcessBuilderExtensionType" target="_self" >SebleichProcessBuilderExtensionType</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                                <tr>
+                                    <td>setter</td>
+                                    <td>
+                                                <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/function" target="_blank" >function</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="validateErrorGateway"></a>
+                    <span class="name">
+                        <span class="modifier">Public</span>
+                        <span ><b>validateErrorGateway</b></span>
+                        <a href="#validateErrorGateway"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>validateErrorGateway(bpmnJS: <a href="../interfaces/IBpmnJS.html" target="_self">IBpmnJS</a>, element: <a href="../interfaces/IElement.html" target="_self">IElement</a>, func: <a href="../interfaces/IFunction.html" target="_self">IFunction</a>, gatewayName: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="151"
+                            class="link-to-prism">src/lib/core/bpmn-js.repository.ts:151</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                    <td>Default value</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>bpmnJS</td>
+                                    <td>
+                                                <code><a href="../interfaces/IBpmnJS.html" target="_self" >IBpmnJS</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+                                    <td>
+                                    </td>
+
+                                </tr>
+                                <tr>
+                                    <td>element</td>
+                                    <td>
+                                                <code><a href="../interfaces/IElement.html" target="_self" >IElement</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+                                    <td>
+                                    </td>
+
+                                </tr>
+                                <tr>
+                                    <td>func</td>
+                                    <td>
+                                                <code><a href="../interfaces/IFunction.html" target="_self" >IFunction</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+                                    <td>
+                                    </td>
+
+                                </tr>
+                                <tr>
+                                    <td>gatewayName</td>
+                                    <td>
+                                                <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+                                    <td>
+                                        <code>this._config.errorGatewayConfig.gatewayName</code>
+                                    </td>
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="validateProcess"></a>
+                    <span class="name">
+                        <span class="modifier">Static</span>
+                        <span ><b>validateProcess</b></span>
+                        <a href="#validateProcess"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>validateProcess(bpmnJS: <a href="../interfaces/IBpmnJS.html" target="_self">IBpmnJS</a>)</code>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-line">Defined in <a href="" data-line="164"
+                            class="link-to-prism">src/lib/core/bpmn-js.repository.ts:164</a></div>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                    <div class="io-description">
+                        <b>Parameters :</b>
+                        
+                        <table class="params">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Type</td>
+                                    <td>Optional</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>bpmnJS</td>
+                                    <td>
+                                                <code><a href="../interfaces/IBpmnJS.html" target="_self" >IBpmnJS</a></code>
+                                    </td>
+
+                                    <td>
+                                        No
+                                    </td>
+
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                    </div>
+                    <div class="io-description">
+                        <b>Returns : </b>        <code><a href="../interfaces/IProcessValidationResult.html" target="_self" >IProcessValidationResult</a></code>
+
+                    </div>
+                    <div class="io-description">
+                        
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</section>
+            <section>
+    
+    <h3 id="inputs">
+        Properties
+    </h3>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="getActivityFunctionId"></a>
+                    <span class="name">
+                            <span class="modifier">Static</span>
+                        <span ><b>getActivityFunctionId</b></span>
+                        <a href="#getActivityFunctionId"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>() &#x3D;&gt; {...}</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="25" class="link-to-prism">src/lib/core/bpmn-js.repository.ts:25</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="getDataParamId"></a>
+                    <span class="name">
+                            <span class="modifier">Static</span>
+                        <span ><b>getDataParamId</b></span>
+                        <a href="#getDataParamId"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>() &#x3D;&gt; {...}</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="26" class="link-to-prism">src/lib/core/bpmn-js.repository.ts:26</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="getSequenceFlowType"></a>
+                    <span class="name">
+                            <span class="modifier">Static</span>
+                        <span ><b>getSequenceFlowType</b></span>
+                        <a href="#getSequenceFlowType"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>() &#x3D;&gt; {...}</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="27" class="link-to-prism">src/lib/core/bpmn-js.repository.ts:27</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="setActivityFunctionId"></a>
+                    <span class="name">
+                            <span class="modifier">Static</span>
+                        <span ><b>setActivityFunctionId</b></span>
+                        <a href="#setActivityFunctionId"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>() &#x3D;&gt; {...}</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="29" class="link-to-prism">src/lib/core/bpmn-js.repository.ts:29</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="setDataParamId"></a>
+                    <span class="name">
+                            <span class="modifier">Static</span>
+                        <span ><b>setDataParamId</b></span>
+                        <a href="#setDataParamId"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>() &#x3D;&gt; {...}</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="30" class="link-to-prism">src/lib/core/bpmn-js.repository.ts:30</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="setSequenceFlowType"></a>
+                    <span class="name">
+                            <span class="modifier">Static</span>
+                        <span ><b>setSequenceFlowType</b></span>
+                        <a href="#setSequenceFlowType"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>() &#x3D;&gt; {...}</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="31" class="link-to-prism">src/lib/core/bpmn-js.repository.ts:31</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+</section>
+
+    </div>
+
+
+    <div class="tab-pane fade  tab-source-code" id="c-source">
+        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { Inject, Injectable } from &quot;@angular/core&quot;;
+import { ParamCodes } from &quot;src/config/param-codes&quot;;
+import { getElementRegistryModule, getModelingModule, getTooltipModule } from &quot;../bpmn-io/bpmn-modules&quot;;
+import { IElementRegistryModule } from &#x27;@bpmn-io/modules&#x27;;
+import { IBusinessObject } from &quot;../bpmn-io/interfaces/business-object.interface&quot;;
+import { IElement } from &quot;../bpmn-io/interfaces/element.interface&quot;;
+import shapeTypes from &quot;../bpmn-io/shape-types&quot;;
+import { IProcessValidationResult } from &quot;../process-builder/interfaces/validation-result.interface&quot;;
+import { IBpmnJS } from &quot;../process-builder/interfaces/bpmn-js.interface&quot;;
+import { IFunction, IParam } from &quot;@process-builder/interfaces&quot;;
+import { IProcessBuilderConfig, PROCESS_BUILDER_CONFIG_TOKEN } from &quot;../process-builder/interfaces/process-builder-config.interface&quot;;
+import { sebleichProcessBuilderExtension } from &quot;../process-builder/globals/sebleich-process-builder-extension&quot;;
+import { ValidationError } from &quot;../process-builder/globals/validation-error&quot;;
+import { ValidationWarning } from &quot;../process-builder/globals/validation-warning&quot;;
+import { IExtensionElement } from &quot;../bpmn-io/interfaces/extension-element.interface&quot;;
+import { SebleichProcessBuilderExtensionType } from &quot;../process-builder/globals/sebleich-process-builder-extension.type&quot;;
+import { IConnector } from &quot;../bpmn-io/interfaces/connector.interface&quot;;
+import { GatewayType } from &quot;../process-builder/types/gateway.type&quot;;
+
+@Injectable()
+export class BPMNJsRepository {
+
+    constructor(@Inject(PROCESS_BUILDER_CONFIG_TOKEN) private _config: IProcessBuilderConfig) { }
+
+    public static getActivityFunctionId &#x3D; (activity: IElement) &#x3D;&gt; BPMNJsRepository.getSLPBExtension(activity.businessObject, &#x27;ActivityExtension&#x27;, (ext) &#x3D;&gt; ext.activityFunctionId) as number | undefined;
+    public static getDataParamId &#x3D; (activity: IElement) &#x3D;&gt; BPMNJsRepository.getSLPBExtension(activity.businessObject, &#x27;DataObjectExtension&#x27;, (ext) &#x3D;&gt; ext.dataParamId) as number | undefined;
+    public static getSequenceFlowType &#x3D; (activity: IConnector) &#x3D;&gt; BPMNJsRepository.getSLPBExtension(activity.businessObject, &#x27;SequenceFlowExtension&#x27;, (ext) &#x3D;&gt; ext.sequenceFlowType) as &#x27;success&#x27; | &#x27;error&#x27; | undefined;
+
+    public static setActivityFunctionId &#x3D; (bpmnJs: IBpmnJS, element: IElement, arg: number | IFunction | undefined | null) &#x3D;&gt; BPMNJsRepository.updateBpmnElementSLPBExtension(bpmnJs, element.businessObject, &#x27;ActivityExtension&#x27;, (ext) &#x3D;&gt; ext.activityFunctionId &#x3D; typeof arg &#x3D;&#x3D;&#x3D; &#x27;number&#x27; ? arg : arg?.identifier);
+    public static setDataParamId &#x3D; (bpmnJs: IBpmnJS, element: IElement, arg: number | IParam | undefined | null) &#x3D;&gt; BPMNJsRepository.updateBpmnElementSLPBExtension(bpmnJs, element.businessObject, &#x27;DataObjectExtension&#x27;, (ext) &#x3D;&gt; ext.dataParamId &#x3D; typeof arg &#x3D;&#x3D;&#x3D; &#x27;number&#x27; ? arg : arg?.identifier);
+    public static setSequenceFlowType &#x3D; (bpmnJs: IBpmnJS, connector: IConnector, entranceGatewayType: GatewayType) &#x3D;&gt; BPMNJsRepository.updateBpmnElementSLPBExtension(bpmnJs, connector.businessObject, &#x27;SequenceFlowExtension&#x27;, (ext) &#x3D;&gt; ext.sequenceFlowType &#x3D; entranceGatewayType &#x3D;&#x3D;&#x3D; &#x27;Success&#x27; ? &#x27;success&#x27; : &#x27;error&#x27;);
+
+    public static appendOutputParam(bpmnJS: IBpmnJS, element: IElement, parameterIdentifier: number, parameterName: string, parameterInterface: string | null, parameterIsProcessOutput: boolean, preventDublet &#x3D; true, expectedInterface?: string) {
+        let createdDataOutputElement: IElement | undefined;
+        const existingElement &#x3D; element.outgoing.find(x &#x3D;&gt; x.type &#x3D;&#x3D;&#x3D; shapeTypes.DataOutputAssociation)?.target;
+
+        if (!preventDublet || !existingElement) {
+            createdDataOutputElement &#x3D; getModelingModule(bpmnJS).appendShape(element, {
+                type: shapeTypes.DataObjectReference
+            }, { x: element.x + 50, y: element.y - 60 });
+
+            BPMNJsRepository.setDataParamId(bpmnJS, createdDataOutputElement, parameterIdentifier);
+            BPMNJsRepository.updateBpmnElementSLPBExtension(bpmnJS, createdDataOutputElement.businessObject, &#x27;DataObjectExtension&#x27;, (ext) &#x3D;&gt; ext.matchesProcessOutputInterface &#x3D; parameterInterface &#x3D;&#x3D;&#x3D; expectedInterface);
+            BPMNJsRepository.updateBpmnElementSLPBExtension(bpmnJS, createdDataOutputElement.businessObject, &#x27;DataObjectExtension&#x27;, (ext) &#x3D;&gt; ext.isProcessOutput &#x3D; parameterIsProcessOutput);
+        }
+
+        const referencingDataRepresentations &#x3D; getElementRegistryModule(bpmnJS).filter(element &#x3D;&gt; element.type &#x3D;&#x3D;&#x3D; shapeTypes.DataObjectReference &amp;&amp; BPMNJsRepository.getDataParamId(element as IElement) &#x3D;&#x3D;&#x3D; parameterIdentifier);
+        for (const referencingDataRepresentation of referencingDataRepresentations) {
+            getModelingModule(bpmnJS).updateLabel(referencingDataRepresentation, parameterName ?? &#x27;no param name&#x27;);
+        }
+
+        return { createdDataOutputElement };
+    }
+
+    public static clearAllTooltips(bpmnJS: IBpmnJS) {
+        const tooltipModule &#x3D; getTooltipModule(bpmnJS);
+        Object.values(tooltipModule._tooltips).forEach(x &#x3D;&gt; tooltipModule.remove(x));
+    }
+
+    public static fillAnchestors(element: IElement, anchestors: IElement[] &#x3D; []) {
+        let index &#x3D; 0;
+        if (!element || !Array.isArray(element.incoming) || element.incoming.length &#x3D;&#x3D;&#x3D; 0) {
+            return;
+        }
+
+        const notPassed &#x3D; element.incoming.map(x &#x3D;&gt; x.source).filter(x &#x3D;&gt; anchestors.indexOf(x) &#x3D;&#x3D;&#x3D; -1);
+        while (index &lt; notPassed.length) {
+            const el &#x3D; notPassed[index];
+            anchestors.push(el);
+            this.fillAnchestors(el, anchestors);
+            index++;
+        }
+    }
+
+    public static getAvailableInputParams(element: IElement | undefined) {
+        if(!element) {
+            return [];
+        }
+
+        const availableInputParamsIElements &#x3D; this.getAvailableInputParamsIElements(element);
+        const availableInputParams &#x3D; availableInputParamsIElements.map((element) &#x3D;&gt; BPMNJsRepository.getDataParamId(element)) as ParamCodes[];
+        return availableInputParams;
+    }
+
+    public static getAvailableInputParamsIElements(element: IElement): IElement[] {
+        const anchestors: IElement[] &#x3D; [];
+        this.fillAnchestors(element, anchestors);
+
+        const precedingTasks &#x3D; anchestors.filter((anchestor) &#x3D;&gt; anchestor.type &#x3D;&#x3D;&#x3D; shapeTypes.Task);
+        const precedingTasksOutgoingConnectors &#x3D; precedingTasks.flatMap((taskElement) &#x3D;&gt; taskElement.outgoing);
+        const precedingTasksOutgoingDataOutputAssociations &#x3D; precedingTasksOutgoingConnectors.filter((outgoingConnector) &#x3D;&gt; outgoingConnector.type &#x3D;&#x3D;&#x3D; shapeTypes.DataOutputAssociation);
+        const precedingDataObjectReferences &#x3D; precedingTasksOutgoingDataOutputAssociations.map((outgoingDataOutputAssociation) &#x3D;&gt; outgoingDataOutputAssociation.target);
+        const precedingDataObjectReferencesWithParamId &#x3D; precedingDataObjectReferences.filter((dataObjectReference) &#x3D;&gt; typeof BPMNJsRepository.getDataParamId(dataObjectReference) &#x3D;&#x3D;&#x3D; &#x27;number&#x27;);
+
+        return precedingDataObjectReferencesWithParamId;
+    }
+
+    public static getExtensionElement(element: IBusinessObject, type: string): undefined | IExtensionElement {
+        if (!element.extensionElements || !Array.isArray(element.extensionElements.values)) {
+            return undefined;
+        }
+
+        const filteredExtensionElements &#x3D; element.extensionElements.values.find((value: any) &#x3D;&gt; value.$instanceOf(type));
+        return filteredExtensionElements;
+    }
+
+    public static getNextNodes(currentNode: IElement | null | undefined): IElement[] {
+        if (!currentNode) {
+            return [];
+        }
+
+        return currentNode.outgoing.filter(x &#x3D;&gt; x.type &#x3D;&#x3D;&#x3D; shapeTypes.SequenceFlow).map(x &#x3D;&gt; x.target);
+    }
+
+    public static getSLPBExtension&lt;T&gt;(businessObject: IBusinessObject | undefined, type: SebleichProcessBuilderExtensionType, provider: (extensions: any) &#x3D;&gt; T) {
+        if (!businessObject) {
+            return undefined;
+        }
+
+        const prefix &#x3D; sebleichProcessBuilderExtension.prefix;
+        const extension &#x3D; BPMNJsRepository.getExtensionElement(businessObject, &#x60;${prefix}:${type}&#x60;);
+        return extension ? provider(extension) : undefined;
+    }
+
+    public static sLPBExtensionSetted(businessObject: IBusinessObject | undefined, type: SebleichProcessBuilderExtensionType, condition: (extensions: any) &#x3D;&gt; boolean) {
+        if (!businessObject) {
+            return false;
+        }
+
+        const extension &#x3D; BPMNJsRepository.getExtensionElement(businessObject, &#x60;${sebleichProcessBuilderExtension.prefix}:${type}&#x60;);
+        const result &#x3D; extension ? condition(extension) : false;
+        return result;
+    }
+
+    public static updateBpmnElementSLPBExtension(bpmnJS: IBpmnJS, businessObject: IBusinessObject, type: SebleichProcessBuilderExtensionType, setter: (extension: any) &#x3D;&gt; void) {
+        let extensionElements &#x3D; businessObject.extensionElements;
+        if (!extensionElements) {
+            extensionElements &#x3D; bpmnJS._moddle.create(&#x27;bpmn:ExtensionElements&#x27;);
+            businessObject.extensionElements &#x3D; extensionElements;
+        }
+
+        let activityExtension &#x3D; BPMNJsRepository.getExtensionElement(businessObject, &#x60;${sebleichProcessBuilderExtension.prefix}:${type}&#x60;);
+        if (!activityExtension) {
+            activityExtension &#x3D; bpmnJS._moddle.create(&#x60;${sebleichProcessBuilderExtension.prefix}:${type}&#x60;);
+            extensionElements.get(&#x27;values&#x27;).push(activityExtension);
+        }
+
+        setter(activityExtension as any);
+    }
+
+    public validateErrorGateway(bpmnJS: IBpmnJS, element: IElement, func: IFunction, gatewayName: string &#x3D; this._config.errorGatewayConfig.gatewayName) {
+        let gatewayShape: IElement | undefined &#x3D; element.outgoing.find(sequenceFlow &#x3D;&gt; sequenceFlow.type &#x3D;&#x3D;&#x3D; shapeTypes.SequenceFlow &amp;&amp; sequenceFlow.target?.type &#x3D;&#x3D;&#x3D; shapeTypes.ExclusiveGateway)?.target;
+        const modelingModule &#x3D; getModelingModule(bpmnJS);
+        if (func.canFail &amp;&amp; !gatewayShape) {
+            gatewayShape &#x3D; modelingModule.appendShape(element, {
+                type: shapeTypes.ExclusiveGateway
+            }, { x: element.x + 200, y: element.y + 40 });
+            modelingModule.updateLabel(gatewayShape, gatewayName);
+        } else if (!func.canFail &amp;&amp; gatewayShape) {
+            modelingModule.removeElements([gatewayShape]);
+        }
+    }
+
+    public static validateProcess(bpmnJS: IBpmnJS): IProcessValidationResult {
+        const errors: { error: ValidationError, element?: IElement }[] &#x3D; [], warnings: { warning: ValidationWarning, element?: IElement }[] &#x3D; [];
+        const elementRegistry &#x3D; getElementRegistryModule(bpmnJS);
+
+        const startEvents &#x3D; this.getStartEvents(elementRegistry), endEvents &#x3D; this.getEndEvents(elementRegistry);
+        if (startEvents.length &#x3D;&#x3D;&#x3D; 0) {
+            errors.push({ error: ValidationError.NoStartEvent });
+        }
+        else if (startEvents.length &gt; 1) {
+            startEvents.forEach(x &#x3D;&gt; errors.push({ error: ValidationError.MultipleStartEvents, element: x }));
+        }
+
+        const fullPath: IElement[] &#x3D; [];
+        for (const startEvent of startEvents) {
+
+            if (startEvent.incoming.filter(x &#x3D;&gt; x.type &#x3D;&#x3D;&#x3D; shapeTypes.SequenceFlow).length &gt; 0) {
+                errors.push({ element: startEvent, error: ValidationError.StartEventWithIncomingSequenceFlow });
+            }
+
+            let cursor: IElement | null &#x3D; startEvent, stack: IElement[] &#x3D; [];
+            const path: IElement[] &#x3D; [];
+            while (cursor) {
+
+                const outputParams &#x3D; cursor.outgoing.filter(x &#x3D;&gt; x.type &#x3D;&#x3D;&#x3D; shapeTypes.DataOutputAssociation).map(x &#x3D;&gt; x.target);
+                const unusedOutputParams &#x3D; outputParams.filter(x &#x3D;&gt; x.outgoing.filter(x &#x3D;&gt; x.type &#x3D;&#x3D;&#x3D; shapeTypes.DataInputAssociation).length &#x3D;&#x3D;&#x3D; 0);
+                unusedOutputParams.forEach(x &#x3D;&gt; warnings.push({ &#x27;element&#x27;: x, &#x27;warning&#x27;: ValidationWarning.UnusedOutputParam }));
+
+                const response: IElement[] &#x3D; this.getNextNodes(cursor);
+                path.push(cursor);
+
+                if ((cursor.type !&#x3D;&#x3D; shapeTypes.ExclusiveGateway || cursor.type !&#x3D;&#x3D; shapeTypes.ExclusiveGateway) &amp;&amp; response.length &gt; 1) {
+                    errors.push({ element: cursor, error: ValidationError.MultipleOutgoingSequenceFlowsFromNoneGatewayShape });
+                }
+
+                if (response.length &#x3D;&#x3D;&#x3D; 0) {
+
+                    if (cursor.type !&#x3D;&#x3D; shapeTypes.EndEvent) errors.push({ error: ValidationError.SequenceEndWithoutEndEvent, element: cursor });
+
+                } else {
+
+                    stack &#x3D; [...stack, ...response];
+
+                }
+
+                cursor &#x3D; stack[0];
+                stack.splice(0, 1);
+                while (cursor &amp;&amp; path.indexOf(cursor) &gt; -1) {
+                    warnings.push({ element: cursor, warning: ValidationWarning.CyclicAccess });
+                    cursor &#x3D; stack[0];
+                }
+
+            }
+
+            fullPath.push(...path);
+
+        }
+
+        const unreachableElements &#x3D; elementRegistry.getAll().filter(x &#x3D;&gt; (x.type &#x3D;&#x3D;&#x3D; shapeTypes.ExclusiveGateway || x.type &#x3D;&#x3D;&#x3D; shapeTypes.ParallelGateway || x.type &#x3D;&#x3D;&#x3D; shapeTypes.Task) &amp;&amp; fullPath.indexOf(x) &#x3D;&#x3D;&#x3D; -1);
+        unreachableElements.forEach(x &#x3D;&gt; warnings.push({ element: x, warning: ValidationWarning.UnreachableElement }));
+
+        if (endEvents.length &#x3D;&#x3D;&#x3D; 0) {
+            warnings.push({ warning: ValidationWarning.NoEndEvent });
+        }
+
+        return { warnings: warnings, errors: errors };
+    }
+
+    public static getEndEvents(elementRegistry: IElementRegistryModule) {
+        return elementRegistry.filter(x &#x3D;&gt; x.type &#x3D;&#x3D;&#x3D; shapeTypes.EndEvent);
+    }
+
+    public static getStartEvents(elementRegistry: IElementRegistryModule) {
+        return elementRegistry.filter(x &#x3D;&gt; x.type &#x3D;&#x3D;&#x3D; shapeTypes.StartEvent) as IElement[];
+    }
+
+}
+</code></pre>
+    </div>
+
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+                   </div><div class="search-results">
+    <div class="has-results">
+        <h1 class="search-results-title"><span class='search-results-count'></span> results matching "<span class='search-query'></span>"</h1>
+        <ul class="search-results-list"></ul>
+    </div>
+    <div class="no-results">
+        <h1 class="search-results-title">No results matching "<span class='search-query'></span>"</h1>
+    </div>
+</div>
+</div>
+               <!-- END CONTENT -->
+           </div>
+       </div>
+
+          <label class="dark-mode-switch">
+               <input type="checkbox">
+               <span class="slider">
+                    <svg class="slider-icon" viewBox="0 0 24 24" fill="none" height="20" stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" width="20" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"></path>
+                    </svg>
+               </span>
+          </label>
+
+       <script>
+            var COMPODOC_CURRENT_PAGE_DEPTH = 1;
+            var COMPODOC_CURRENT_PAGE_CONTEXT = 'injectable';
+            var COMPODOC_CURRENT_PAGE_URL = 'BPMNJsRepository.html';
+            var MAX_SEARCH_RESULTS = 15;
+       </script>
+
+       <script src="../js/libs/custom-elements.min.js"></script>
+       <script src="../js/libs/lit-html.js"></script>
+
+       <script src="../js/menu-wc.js" defer></script>
+       <script nomodule src="../js/menu-wc_es5.js" defer></script>
+
+       <script src="../js/libs/bootstrap-native.js"></script>
+
+       <script src="../js/libs/es6-shim.min.js"></script>
+       <script src="../js/libs/EventDispatcher.js"></script>
+       <script src="../js/libs/promise.min.js"></script>
+       <script src="../js/libs/zepto.min.js"></script>
+
+       <script src="../js/compodoc.js"></script>
+
+       <script src="../js/tabs.js"></script>
+       <script src="../js/menu.js"></script>
+       <script src="../js/libs/clipboard.min.js"></script>
+       <script src="../js/libs/prism.js"></script>
+       <script src="../js/sourceCode.js"></script>
+          <script src="../js/search/search.js"></script>
+          <script src="../js/search/lunr.min.js"></script>
+          <script src="../js/search/search-lunr.js"></script>
+          <script src="../js/search/search_index.js"></script>
+       <script src="../js/lazy-load-graphs.js"></script>
+
+
+    </body>
+</html>

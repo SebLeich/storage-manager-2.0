@@ -1,64 +1,91 @@
-<div class="body" [class.limited-height]="(limitedHeight$|async)">
+<div class="body" [class.limited-height]="limitedHeight$ | async">
+  <a class="option-wrapper disabled">
+    <div
+      class="option"
+      routerLink="route-planning"
+      [class.active]="location.pathname === '/route-planning'"
+    >
+      <mat-icon class="icon">map</mat-icon>
+      <div class="text">routing</div>
+    </div>
+  </a>
 
-   <div class="option-wrapper disabled">
+  <a class="option-wrapper">
+    <div
+      class="option"
+      routerLink="data-pipeline-designer"
+      [class.active]="location.pathname === '/data-pipeline-designer'"
+    >
+      <mat-icon class="icon">hub</mat-icon>
+      <div class="text">pipeline</div>
+    </div>
+  </a>
 
-      <div class="option" routerLink="route-planning" [class.active]="router.url === '/route-planning'">
+  <a class="option-wrapper">
+    <div
+      class="option"
+      routerLink="pipe-runner"
+      [class.active]="location.pathname === '/pipe-runner'"
+    >
+      <mat-icon class="icon">play_arrow</mat-icon>
+      <div class="text">run pipe</div>
+    </div>
+  </a>
 
-         <mat-icon class="icon">map</mat-icon>
-         <div class="text">routing</div>
-   
-      </div>
-   </div>
+  <a class="option-wrapper">
+    <div
+      class="option"
+      routerLink="local-data"
+      [class.active]="location.pathname === '/local-data'"
+    >
+      <mat-icon class="icon">web_stories</mat-icon>
+      <div class="text">local data</div>
+    </div>
+  </a>
 
-   <div class="option-wrapper">
-      <div class="option" routerLink="data-pipeline-designer" [class.active]="router.url === '/data-pipeline-designer'">
+  <a class="option-wrapper">
+    <div
+      class="option"
+      routerLink="calculation"
+      [class.active]="location.pathname === '/calculation'"
+    >
+      <mat-icon class="icon">rocket_launch</mat-icon>
+      <div class="text">calculation</div>
+    </div>
+  </a>
 
-         <mat-icon class="icon">hub</mat-icon>
-         <div class="text">pipeline</div>
-   
-      </div>
-   </div>
-   
-   <div class="option-wrapper">
-      <div class="option" routerLink="local-data" [class.active]="router.url === '/local-data'">
+  <a
+    id="visualization-option-wrapper"
+    class="option-wrapper"
+    [class.disabled]="(solutionCount$ | async) === 0"
+  >
+    <div
+      class="option"
+      (click)="gotoVisualizer()"
+      [ngClass]="{
+        active: location.pathname === '/visualizer',
+        highlighted: solutionNavItemHighlighted$ | async
+      }"
+    >
+      <mat-icon class="icon">view_in_ar</mat-icon>
+      <div class="text">visualization</div>
+    </div>
+  </a>
 
-         <mat-icon class="icon">web_stories</mat-icon>
-         <div class="text">local data</div>
-   
-      </div>
-   </div>
+  <div class="spacer"></div>
 
-   <div class="option-wrapper">
-      <div class="option" routerLink="calculation" [class.active]="router.url === '/calculation'">
+  <a class="option-wrapper">
+    <div
+      class="option"
+      routerLink="about"
+      [class.active]="location.pathname === '/about'"
+    >
+      <mat-icon class="icon">help</mat-icon>
+      <div class="text">about</div>
+    </div>
+  </a>
 
-         <mat-icon class="icon">rocket_launch</mat-icon>
-         <div class="text">calculation</div>
-   
-      </div>
-   </div>
-
-   <div id="visualization-option-wrapper" class="option-wrapper" [class.disabled]="(solutionCount$|async) === 0">
-      <div class="option" routerLink="visualizer" [class.active]="router.url === '/visualizer'">
-
-         <mat-icon class="icon">view_in_ar</mat-icon>
-         <div class="text">visualization</div>
-   
-      </div>
-   </div>
-
-   <div class="spacer"></div>
-
-   <div class="option-wrapper">
-      <div class="option" routerLink="about" [class.active]="router.url === '/about'">
-
-         <mat-icon class="icon">help</mat-icon>
-         <div class="text">about</div>
-   
-      </div>
-   </div>
-
-   <div class="version">
-      version {{currentApplicationVersion ?? 'local dev'}}
-   </div>
-
+  <div class="version">
+    version {{ currentApplicationVersion ?? "local dev" }}
+  </div>
 </div>

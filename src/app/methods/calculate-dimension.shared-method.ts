@@ -1,4 +1,4 @@
-import { IDimension } from "../interfaces/i-dimension.interface";
+import { IDimension } from "../../lib/storage-manager/interfaces/dimension.interface";
 
 export default function(xCoord: number, yCoord: number, zCoord: number, width: number, height: number, length: number): Partial<IDimension> {
     const rCoord = xCoord + width;

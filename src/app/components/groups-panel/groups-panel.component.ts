@@ -1,10 +1,11 @@
-import { Component, Input, Output, EventEmitter } from '@angular/core';
-import { IGroup } from 'src/app/interfaces/i-group.interface';
+import { Component, Input, Output, EventEmitter, ChangeDetectionStrategy } from '@angular/core';
+import { IGroup } from '@smgr/interfaces';
 
 @Component({
   selector: 'app-groups-panel',
   templateUrl: './groups-panel.component.html',
-  styleUrls: ['./groups-panel.component.css']
+  styleUrls: ['./groups-panel.component.css'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class GroupsPanelComponent {
 
@@ -12,9 +13,7 @@ export class GroupsPanelComponent {
 
   @Output() public groupColorChanged = new EventEmitter<{ group: IGroup, color: string }>();
 
-  columns: string[] = ['desc', 'color'];
-
-  constructor() { }
+  public columns: string[] = ['desc', 'color'];
 
   public setGroupColor(event: InputEvent, group: IGroup) {
     this.groupColorChanged.emit({ group: group, color: (event.target as HTMLInputElement).value });

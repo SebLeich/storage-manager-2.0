@@ -1,6 +1,6 @@
 import { InjectionToken } from "@angular/core";
+import { IGood } from "@smgr/interfaces";
 import { Observable } from "rxjs";
-import { IGood } from "./i-good.interface";
 
 export interface IVisualizerContextService {
     hoveredGood$: Observable<IGood | null>;

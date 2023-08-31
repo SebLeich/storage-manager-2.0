@@ -1,0 +1,1 @@
+export type ContextPaletteEntryType = 'hand-tool' | 'create.task' | 'create.start-event' | 'create.exclusive-gateway' | 'lasso-tool' | 'space-tool' | 'create.end-event' | 'global-connect-tool';

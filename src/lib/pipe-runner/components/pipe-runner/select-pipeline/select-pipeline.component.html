@@ -1,0 +1,21 @@
+<ng-container *ngIf="pipelines?.length; else noPipeline">
+  <span class="prefix" *ngIf="displayPrefix">{{ prefix }}</span>
+  <mat-form-field class="width" (click)="touched()">
+    <mat-label class="label">current pipeline</mat-label>
+    <mat-select [formControl]="control">
+      <mat-select-trigger>
+        <div #element class="editable-select-trigger" contenteditable (click)="$event.stopPropagation()"
+          (keydown.enter)="blurElement(element, $event)" (keydown)="$event.stopPropagation()"
+          (focusout)="renameCurrentPipeline(element.innerText)" (change)="changed(control.value)">
+          {{ currentPipeName ?? "no name" }}
+        </div>
+      </mat-select-trigger>
+      <mat-option *ngFor="let pipeline of pipelines" [value]="pipeline.id">
+        {{ pipeline.name }}
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
+</ng-container>
+<ng-template #noPipeline>
+  <div class="no-pipeline-hint">No pipelines to run</div>
+</ng-template>

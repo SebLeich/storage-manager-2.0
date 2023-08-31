@@ -1,4 +1,4 @@
-<div class="body">
+<div class="body" [class.blocked]="isBlocked">
 
     <div class="dialog-navbar">
 
@@ -14,13 +14,20 @@
 
     <div class="dialog-body">
 
-        <mat-tab-group mat-align-tabs="start" (selectedIndexChange)="setStep($event)" [selectedIndex]="currentStepIndex$|async">
-
-            <mat-tab [label]=(tab.taskCreationStep|taskCreationStep) *ngFor="let tab of (steps$|async)" [disabled]="(tab.disabled$|async) ?? false"></mat-tab>
-
+        <mat-tab-group mat-align-tabs="start" (selectedIndexChange)="setStep($event)"
+            [selectedIndex]="currentStepIndex()">
+            <mat-tab *ngFor="let tab of (steps$|async)" [label]=(tab.taskCreationStep|taskCreationStep)
+                [disabled]="(tab.disabled$|async) ?? false"></mat-tab>
         </mat-tab-group>
 
-        <div class="content-wrapper">
+        <ul *ngIf="formGroup.errors? true: false" class="custom-validation-error-list">
+            <li *ngIf="formGroup.errors?.noFunctionSelected">no function selected</li>
+            <li *ngIf="formGroup.errors?.implementationExistsWhenRequiredValidator">please provide an implementation</li>
+            <li *ngIf="formGroup.errors?.outputParamNameRequired">output param name required</li>
+            <li *ngIf="formGroup.errors?.duplicateParamExisting">output param name already used</li>
+        </ul>
+
+        <div class="content-wrapper" [formGroup]="formGroup">
             <div #dynamicInner></div>
         </div>
 
@@ -28,26 +35,29 @@
 
     <div class="footer">
 
-        <div class="spacer">
+        <div class="spacer"></div>
 
-            <div class="status-message">
-                {{statusMessage$|async}}
-            </div>
-
-        </div>
-
-        <div class="control secondary" *ngIf="(currentStep$|async)?.taskCreationStep === TaskCreationStep.ConfigureFunctionImplementation">
+        <div class="control secondary"
+            *ngIf="(currentStep$|async)?.taskCreationStep === TaskCreationStep.ConfigureFunctionImplementation">
             Help
         </div>
 
-        <div class="control secondary" *ngIf="canAnalyzeCustomImplementation$|async" (click)="testImplementation()">
-            {{(func$|async)?.pseudoImplementationComputationName ?? 'Execute'}}
+        <div (click)="previousStep()" class="control secondary" *ngIf="hasPreviousStep$|async">
+            Previous
         </div>
 
-        <div class="control primary" [ngClass]="{ 'disabled': unfinished }" (click)="finish()">
+        <div (click)="nextStep()" class="control secondary" *ngIf="hasNextStep$|async">
+            Next
+        </div>
+
+        <div class="control primary" [ngClass]="{ 'disabled': (formInvalid$|async) }" (click)="finish()">
             Finish
         </div>
 
+    </div>
+
+    <div *ngIf="isBlocked" @show class="overlay">
+        <mat-spinner [diameter]="60"></mat-spinner>
     </div>
 
 </div>

@@ -1,241 +1,148 @@
-import { AfterViewInit, ChangeDetectorRef, Component, ElementRef, Inject, Input, OnDestroy, ViewChild } from '@angular/core';
-import { BehaviorSubject, ReplaySubject, Subscription } from 'rxjs';
-import { ProcessBuilderRepository } from 'src/lib/core/process-builder-repository';
-import { EmbeddedView } from 'src/lib/process-builder/globals/i-embedded-view';
-import { syntaxTree } from "@codemirror/language";
-import { autocompletion, CompletionContext } from "@codemirror/autocomplete";
-import { EditorState, Text } from '@codemirror/state';
-import { basicSetup, EditorView } from '@codemirror/basic-setup';
-import { esLint, javascript } from '@codemirror/lang-javascript';
-import { CodemirrorRepository } from 'src/lib/core/codemirror.repository';
+import { AfterContentInit, ChangeDetectionStrategy, Component, Inject, Input, OnDestroy, OnInit } from '@angular/core';
+import { concat, defer, from, Observable, of, startWith, Subscription } from 'rxjs';
+import { IEmbeddedView } from 'src/lib/process-builder/classes/embedded-view';
 import { MethodEvaluationStatus } from 'src/lib/process-builder/globals/method-evaluation-status';
-import { IProcessBuilderConfig, PROCESS_BUILDER_CONFIG_TOKEN } from 'src/lib/process-builder/globals/i-process-builder-config';
-import { linter, lintGutter } from '@codemirror/lint';
-// @ts-ignore
-import Linter from "eslint4b-prebuilt";
-import defaultImplementation from 'src/lib/process-builder/globals/default-implementation';
-import { debounceTime, map, shareReplay, tap } from 'rxjs/operators';
-import { FormControl, FormGroup, UntypedFormControl } from '@angular/forms';
-import { Store } from '@ngrx/store';
-import { injectValues } from 'src/lib/process-builder/store/selectors/injection-context.selectors';
-import { combineLatest } from 'rxjs';
-import { selectIParams } from 'src/lib/process-builder/store/selectors/param.selectors';
-import { mapIParamsInterfaces } from 'src/lib/process-builder/extensions/rxjs/map-i-params-interfaces.rxjs';
-import { ITaskCreationFormGroup } from 'src/lib/process-builder/interfaces/i-task-creation.interface';
-import completePropertyAfter from './constants/complete-property-after.contant';
-import doNotCompleteAfter from './constants/do-not-complete-after.constant';
-import completeProperties from './methods/complete-properties.method';
-import byStringMethods from './methods/by-string.methods';
+import { debounceTime, map, share, switchMap, take } from 'rxjs/operators';
+import { ControlContainer, FormControl } from '@angular/forms';
 import { ProcessBuilderService } from 'src/lib/process-builder/services/process-builder.service';
-import globalsInjector from './constants/globals-injector.constant';
-import { selectSnapshot } from 'src/lib/process-builder/globals/select-snapshot';
-import { IInterface } from 'src/lib/process-builder/interfaces/i-interface.interface';
+import { TaskCreationFormGroup } from 'src/lib/process-builder/interfaces/task-creation-form-group-value.interface';
+import { IProcessBuilderConfig, PROCESS_BUILDER_CONFIG_TOKEN } from 'src/lib/process-builder/interfaces/process-builder-config.interface';
+import { ParameterService } from '@/lib/process-builder/services/parameter.service';
+import { Store } from '@ngrx/store';
+import { selectFunction, selectIInterface, selectIInterfaces } from '@/lib/process-builder/store/selectors';
+import { selectSnapshot } from '@/lib/process-builder/globals/select-snapshot';
+import { ProcessBuilderRepository } from '@/lib/core/process-builder-repository';
+import { ParamType } from '@/lib/process-builder/types/param.type';
+import { FunctionOutputService } from '../../process-builder/services/function-output.service';
+import { IFunction, IMethodEvaluationResult } from '@/lib/process-builder/interfaces';
+import { CodemirrorRepository } from '@/lib/core/codemirror.repository';
+import { ITextLeaf } from '@/lib/process-builder/interfaces/text-leaf.interface';
 
 @Component({
-  selector: 'app-embedded-function-implementation',
-  templateUrl: './embedded-function-implementation.component.html',
-  styleUrls: ['./embedded-function-implementation.component.scss'],
-  providers: [
-    ProcessBuilderService
-  ]
+	selector: 'app-embedded-function-implementation',
+	templateUrl: './embedded-function-implementation.component.html',
+	styleUrls: ['./embedded-function-implementation.component.scss'],
+	providers: [ProcessBuilderService, ParameterService],
+	changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class EmbeddedFunctionImplementationComponent extends EmbeddedView implements AfterViewInit, OnDestroy {
+export class EmbeddedFunctionImplementationComponent implements IEmbeddedView, AfterContentInit, OnDestroy, OnInit {
+	@Input() public inputParams!: number[];
 
-  @Input() public inputParams!: number[];
+	public injectorDef$ = defer(() => from(this._parameterService.parameterToInjector(this.inputParams)));
+	public injector$ = this.injectorDef$.pipe(map((def) => def.injector));
+	public customEvaluationResult$ = concat(
+		of(this.formGroup.controls.functionImplementation?.value),
+		(this.formGroup.controls.functionImplementation as FormControl).valueChanges.pipe(debounceTime(1000)),
+	).pipe(
+		switchMap(async (implementation) => await this._getEvaluationResult(implementation)),
+		share()
+	) as Observable<IMethodEvaluationResult>;
 
-  @ViewChild('codeBody', { static: true, read: ElementRef }) codeBody!: ElementRef<HTMLDivElement>;
-  public codeMirror!: EditorView;
+	public returnValueStatus$ = defer(() => this.customEvaluationResult$.pipe(map((status) => status?.status), startWith(MethodEvaluationStatus.Initial)));
+	public templates$ = this._store.select(selectIInterfaces());
 
-  public inputParams$ = this._store.select(selectIParams(this.inputParams)).pipe(shareReplay());
+	private _functionOutputService = new FunctionOutputService(this._store);
+	private _subscriptions = new Subscription();
 
-  public varNameInjector: any = {
-    'var1': { type: 'variable' },
-    'var2': { type: 'variable' }
-  };
+	constructor(
+		@Inject(PROCESS_BUILDER_CONFIG_TOKEN) public config: IProcessBuilderConfig,
+		private _parameterService: ParameterService,
+		private _controlContainer: ControlContainer,
+		private _store: Store,
+	) { }
 
-  public formGroup = new FormGroup({
-    'implementation': new FormControl<string[] | null>(null),
-    'canFail': new FormControl<boolean>(false),
-    'outputParamName': new FormControl<string>('output param'),
-    'normalizedOutputParamName': new FormControl<string>('outputParam'),
-    'name': new FormControl<string>('custom method'),
-    'normalizedName': new FormControl<string>('customMethod'),
-    'interface': new FormControl<number | null>(null),
-  }) as FormGroup<Partial<ITaskCreationFormGroup>>;
+	public ngOnInit(): void {
+		this._subscriptions.add(this.returnValueStatus$.subscribe((status) => this._verifyOutputParamNameControl(status)));
+		this._subscriptions.add(this.customEvaluationResult$.subscribe(async (status) => await this._verifyOutput(status.type ?? null, status.interface, status.paramName ?? '', status)));
+		this._subscriptions.add(this.formGroup.controls.functionName?.valueChanges.subscribe((value) => this._normalizeFunctionName(value)));
+		this._subscriptions.add(this.formGroup.controls.outputParamName?.valueChanges.subscribe((value) => this._normalizeOutputParamName(value)));
+	}
 
-  private _implementationChanged = new ReplaySubject<Text>(1);
-  public implementationChanged$ = this._implementationChanged.asObservable();
+	public ngAfterContentInit = () => this.formGroup.controls.outputParamInterface?.disable();
+	public ngOnDestroy = () => this._subscriptions.unsubscribe();
 
-  private _returnValueStatus: BehaviorSubject<MethodEvaluationStatus> = new BehaviorSubject<MethodEvaluationStatus>(MethodEvaluationStatus.Initial);
-  public returnValueStatus$ = this._returnValueStatus.asObservable();
+	public MethodEvaluationStatus = MethodEvaluationStatus;
 
-  private _injector: any = { injector: {} };
-  private _subscriptions = new Subscription();
+	public get formGroup(): TaskCreationFormGroup {
+		return this._controlContainer.control as TaskCreationFormGroup;
+	}
 
-  constructor(
-    @Inject(PROCESS_BUILDER_CONFIG_TOKEN) public config: IProcessBuilderConfig,
-    private _processBuilderService: ProcessBuilderService,
-    private _store: Store,
-    private _changeDetectorRef: ChangeDetectorRef
-  ) {
-    super();
-  }
+	public get functionCanFailControl(): FormControl<boolean> {
+		return this.formGroup.controls.functionCanFail as FormControl<boolean>;
+	}
 
-  public blockTabPressEvent(event: KeyboardEvent) {
-    if (event.key === 'Tab') {
-      event.stopPropagation();
-      event.preventDefault();
-    }
-  }
+	private async _verifyOutput(type: ParamType | null, templateIdentifier: string | null | undefined, paramName: string, status: IMethodEvaluationResult): Promise<void> {
+		let outputParamName: string;
+		(this.formGroup.controls.outputParamType as FormControl).setValue(type);
 
-  public ngAfterViewInit(): void {
-    this._autoNormalizeNames();
-    this._handleImplementationChanges();
+		if (type !== 'object') {
+			this.formGroup.controls.outputParamInterface?.setValue(null);
+			this.formGroup.controls.outputParamInterface?.disable();
+			outputParamName = paramName;
+		}
+		else {
+			if (!templateIdentifier) {
+				this.formGroup.controls.outputParamInterface?.setValue(null);
+				this.formGroup.controls.outputParamInterface?.enable();
+				return;
+			}
 
-    this._subscriptions.add(...[
-      this.returnValueStatus$.subscribe((status) => {
-        this.formGroup.controls.outputParamName![status === MethodEvaluationStatus.ReturnValueFound ? 'enable' : 'disable']();
-      }),
-      combineLatest([this._store.select(injectValues), this.inputParams$.pipe(
-        mapIParamsInterfaces(this._store)
-      )])
-        .subscribe(([injector, inputParams]) => {
-          let injectorObject = { injector: { ...injector } };
-          inputParams.forEach(param => {
-            if (param.defaultValue) {
-              injectorObject.injector[param.normalizedName] = param.defaultValue;
-            } else {
-              const dummyValue = ProcessBuilderRepository.createPseudoObjectFromIParam(param);
-              injectorObject.injector[param.normalizedName] = dummyValue;
-            }
-          });
-          this._injector = injectorObject;
-        })
-    ]);
+			const template = await selectSnapshot(this._store.select(selectIInterface(templateIdentifier)));
+			if (!template) {
+				this.formGroup.controls.outputParamInterface?.setValue(null);
+				this.formGroup.controls.outputParamInterface?.disable();
+				return;
+			}
 
-    this.codeMirror = new EditorView({
-      state: this.state(),
-      parent: this.codeBody.nativeElement
-    });
-    this._implementationChanged.next(this.codeMirror.state.doc);
+			this.formGroup.controls.outputParamInterface?.setValue(template.identifier);
+			this.formGroup.controls.outputParamInterface?.enable();
+			outputParamName = template.name;
+		}
 
-    this._changeDetectorRef.detectChanges();
-  }
+		const selectedFunction = await selectSnapshot(this._store.select(selectFunction(this.formGroup.controls.functionIdentifier?.value))) as IFunction;
+		const { outputParamObject } = await this._functionOutputService.detectFunctionOutput(selectedFunction, status);
+		if (outputParamObject) {
+			return;
+		}
 
-  public ngOnDestroy = () => this._subscriptions.unsubscribe();
+		const normalizedOutputParamName = ProcessBuilderRepository.normalizeName(outputParamName);
+		if (this.formGroup.controls.outputParamName?.pristine) {
+			this.formGroup.controls.outputParamName.setValue(outputParamName);
+			(this.formGroup.controls.outputParamNormalizedName as FormControl).setValue(normalizedOutputParamName);
+		}
 
-  public complete = (context: CompletionContext) => {
-    const nodeBefore = syntaxTree(context.state).resolveInner(context.pos, -1);
-    if (completePropertyAfter.includes(nodeBefore.name) && nodeBefore.parent?.name === "MemberExpression") {
-      let object = nodeBefore.parent.getChild("Expression");
-      if (object?.name === 'VariableName' || object?.name === 'MemberExpression') {
-        const variableName = context.state.sliceDoc(object.from, object.to),
-          injectedValue = byStringMethods(this._injector, variableName);
-        if (typeof injectedValue === "object") {
-          const from = /\./.test(nodeBefore.name) ? nodeBefore.to : nodeBefore.from;
-          return completeProperties(from, injectedValue as any);
-        }
-      }
-    } else if (nodeBefore.name == "VariableName") {
-      return completeProperties(nodeBefore.from, globalsInjector as any);
-    } else if (/*context.explicit && */!doNotCompleteAfter.includes(nodeBefore.name)) {
-      return completeProperties(context.pos, this._injector as any);
-    }
-    return null
-  }
+		if (this.formGroup.controls.functionName?.pristine) {
+			const functionName = `provide ${outputParamName}`;
+			const normalizedName = ProcessBuilderRepository.normalizeName(functionName);
+			this.formGroup.controls.functionName.setValue(functionName);
+			(this.formGroup.controls.functionNormalizedName as FormControl).setValue(normalizedName);
+		}
 
-  public state = () => {
-    const implementation = this.formGroup.controls.implementation!.value;
-    return EditorState.create({
-      doc: Array.isArray(implementation) ? implementation.join('\n') : defaultImplementation,
-      extensions: [
-        basicSetup,
-        autocompletion({ override: [this.complete] }),
-        javascript(),
-        EditorView.updateListener.of((evt) => {
-          if (evt.docChanged) {
-            this._implementationChanged.next(this.codeMirror.state.doc);
-          }
-        }),
-        linter(esLint(new Linter())),
-        lintGutter()
-      ]
-    });
-  };
 
-  public MethodEvaluationStatus = MethodEvaluationStatus;
+	}
 
-  public get canFailControl(): UntypedFormControl {
-    return this.formGroup.controls['canFail'] as FormControl<boolean>;
-  }
+	private async _getEvaluationResult(implementation: ITextLeaf | null = this.formGroup.controls.functionImplementation?.value ?? null) {
+		const { injector, mappedParameters } = await this._parameterService.parameterToInjector(this.inputParams);
+		return CodemirrorRepository.evaluateCustomMethod(undefined, implementation?.text ?? [], injector, mappedParameters);
+	}
 
-  public get normalizedNameControl() {
-    return this.formGroup.controls['normalizedName'] as FormControl<string>;
-  }
+	private _verifyOutputParamNameControl(status: MethodEvaluationStatus) {
+		const control = this.formGroup.controls.outputParamName;
+		if (!control) {
+			return;
+		}
 
-  public get normalizedOutputParamNameControl() {
-    return this.formGroup.controls['normalizedOutputParamName'];
-  }
+		control[status === MethodEvaluationStatus.ReturnValueFound ? 'enable' : 'disable']();
+	}
 
-  private _autoNormalizeNames() {
-    this._subscriptions.add(...[
-      this.formGroup.controls.name!
-        .valueChanges
-        .pipe(
-          debounceTime(200),
-          map((name) => ProcessBuilderRepository.normalizeName(name))
-        )
-        .subscribe((normalizedName) => this.normalizedNameControl.setValue(normalizedName)),
-      this.formGroup.controls.outputParamName!
-        .valueChanges
-        .pipe(
-          debounceTime(200),
-          map((name) => ProcessBuilderRepository.normalizeName(name))
-        )
-        .subscribe((normalizedName) => this.normalizedOutputParamNameControl!.setValue(normalizedName)),
-    ]);
-  }
+	private _normalizeFunctionName(functionName: string) {
+		const normalizedName = ProcessBuilderRepository.normalizeName(functionName);
+		this.formGroup.controls.functionNormalizedName?.setValue(normalizedName);
+	}
 
-  private async _evaluateImplementation(implementation: string[] | null) {
-    const evaluationResult = CodemirrorRepository.evaluateCustomMethod(this.codeMirror.state, implementation ?? undefined);
-    this._returnValueStatus.next(evaluationResult.status);
-
-    if (evaluationResult?.injectorNavigationPath) {
-      const inputParams = await selectSnapshot(this.inputParams$);
-      const result = await this._processBuilderService.mapNavigationPathPropertyMetadata(evaluationResult.injectorNavigationPath, inputParams);
-
-      if ((result as any)?.interface) {
-        let iFace: IInterface = (result as any).interface;
-        this.formGroup.controls.interface!.setValue(iFace.identifier);
-
-        if (this.formGroup.controls.outputParamName?.pristine) {
-          this.formGroup.controls.outputParamName!.setValue(iFace.normalizedName);
-        }
-
-        if (this.formGroup.controls.name?.pristine) {
-          this.formGroup.controls.name!.setValue(`provide ${iFace.normalizedName}`);
-        }
-      }
-    }
-  }
-
-  private _handleImplementationChanges() {
-    this._subscriptions.add(...[
-      this.implementationChanged$
-        .pipe(
-          tap(() => this._returnValueStatus.next(MethodEvaluationStatus.Calculating)),
-          debounceTime(500)
-        )
-        .subscribe((implementation) => {
-          this.formGroup.controls.implementation!.setValue((implementation as any)?.text);
-        }),
-
-      this.formGroup.controls.implementation!
-        .valueChanges
-        .subscribe(async (implementation) => {
-          await this._evaluateImplementation(implementation);
-        })
-    ]);
-  }
+	private _normalizeOutputParamName(outputParamName: string) {
+		const normalizedName = ProcessBuilderRepository.normalizeName(outputParamName);
+		this.formGroup.controls.outputParamNormalizedName?.setValue(normalizedName);
+	}
 
 }

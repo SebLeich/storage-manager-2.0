@@ -1,5 +1,5 @@
 import { createAction } from '@ngrx/store';
-import { IBpmnJSModel } from '../../interfaces/i-bpmn-js-model.interface';
+import { IBpmnJSModel } from '../../interfaces/bpmn-js-model.interface';
 
 export const addIBpmnJSModel = createAction(
   '[IBpmnJSModel] Add IBpmnJSModel',

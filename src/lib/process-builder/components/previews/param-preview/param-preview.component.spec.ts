@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import defaultImportsConstant from 'src/app/default-imports.constant';
-import { IParam } from 'src/lib/process-builder/globals/i-param';
+import { IParam } from 'src/lib/process-builder/interfaces/param.interface';
 import { v4 as generateGuid } from 'uuid';
 
 import { ParamPreviewComponent } from './param-preview.component';
@@ -20,7 +20,6 @@ describe('ParamPreviewComponent', () => {
 
     fixture = TestBed.createComponent(ParamPreviewComponent);
     component = fixture.componentInstance;
-    fixture.detectChanges();
   });
 
   it('should create', () => {
@@ -28,12 +27,11 @@ describe('ParamPreviewComponent', () => {
   });
 
   it('should display param name', () => {
-    const param: IParam = {
-      'name': generateGuid()
-    } as IParam;
+    const param: IParam = { name: generateGuid() } as IParam;
     component.param = param;
     fixture.detectChanges();
 
-    expect((fixture.debugElement.nativeElement as HTMLElement).innerHTML).toContain(param.name);
+    const componentText = (fixture.debugElement.nativeElement as HTMLElement).innerText;
+    expect(componentText).toContain(param.name);
   });
 });

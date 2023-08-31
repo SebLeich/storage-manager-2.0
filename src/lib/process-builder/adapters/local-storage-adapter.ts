@@ -1,15 +1,11 @@
 import { ApplicationRef, Injector } from "@angular/core";
-import { selectIParams } from "../store/selectors/param.selectors";
-import { IParam } from "../globals/i-param";
-import { selectIFunctions } from "../store/selectors/function.selector";
-import { IFunction } from "../globals/i-function";
 import { upsertIFunctions } from "../store/actions/function.actions";
 import { upsertIParams } from "../store/actions/param.actions";
 import { selectCurrentIBpmnJSModelGuid, selectIBpmnJSModels } from "../store/selectors/bpmn-js-model.selectors";
-import { IBpmnJSModel } from "../interfaces/i-bpmn-js-model.interface";
+import { IBpmnJSModel } from "../interfaces/bpmn-js-model.interface";
 import { setCurrentIBpmnJSModel, upsertIBpmnJSModels } from "../store/actions/bpmn-js-model.actions";
-import { selectIInterfaces } from "../store/selectors/interface.selectors";
-import { IInterface } from "../interfaces/i-interface.interface";
+import { selectIInterfaces, selectFunctions, selectIParams } from "@process-builder/selectors";
+import { IFunction, IInterface, IParam } from "@process-builder/interfaces";
 import { upsertIInterfaces } from "../store/actions/interface.actions";
 import { Store } from "@ngrx/store";
 
@@ -21,7 +17,7 @@ export const localStorageAdapter = (injector: Injector) => {
         localStorage.setItem('params', JSON.stringify(params));
     });
 
-    store.select(selectIFunctions()).subscribe((funcs: IFunction[]) => {
+    store.select(selectFunctions()).subscribe((funcs: IFunction[]) => {
         localStorage.setItem('funcs', JSON.stringify(funcs));
     });
 
