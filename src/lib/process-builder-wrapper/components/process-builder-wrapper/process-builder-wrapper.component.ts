@@ -12,7 +12,7 @@ import { ProcessBuilderService } from 'src/lib/process-builder/services/process-
 import { removeIBpmnJSModel, setCurrentIBpmnJSModel, updateCurrentIBpmnJSModel } from 'src/lib/process-builder/store/actions/bpmn-js-model.actions';
 import { removeIFunction } from 'src/lib/process-builder/store/actions/function.actions';
 import { selectCurrentIBpmnJSModel, selectCurrentIBpmnJSModelGuid, selectIBpmnJSModels } from 'src/lib/process-builder/store/selectors/bpmn-js-model.selectors';
-import { selectIFunctions, selectIParams } from '@process-builder/selectors';
+import { selectFunctions, selectIParams } from '@process-builder/selectors';
 import { fadeInAnimation } from 'src/lib/shared/animations/fade-in.animation';
 import { showListAnimation } from 'src/lib/shared/animations/show-list';
 import { BPMN_JS } from '@process-builder/injection';
@@ -26,7 +26,7 @@ import { BPMN_JS } from '@process-builder/injection';
 export class ProcessBuilderWrapperComponent {
 
   public bpmnJSModels$ = this._store.select(selectIBpmnJSModels());
-  public funcs$ = this._store.select(selectIFunctions());
+  public funcs$ = this._store.select(selectFunctions());
   public params$ = this._store.select(selectIParams());
   public currentBpmnJSModel$ = this._store.select(selectCurrentIBpmnJSModel);
   public hasCurrentBpmnJSModel$ = this.currentBpmnJSModel$.pipe(map(currentBpmnJSModel => !!currentBpmnJSModel));
@@ -91,7 +91,7 @@ export class ProcessBuilderWrapperComponent {
   public toggleParams = () => this.paramsVisible.set(!this.paramsVisible());
 
   public async logFunctions() {
-    const funcs = await selectSnapshot(this._store.select(selectIFunctions()));
+    const funcs = await selectSnapshot(this._store.select(selectFunctions()));
     console.log(funcs);
   }
 

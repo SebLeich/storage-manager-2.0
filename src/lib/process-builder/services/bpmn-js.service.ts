@@ -24,7 +24,7 @@ import { TaskEditingStatus } from '../types/task-editing-status.type';
 import shapeTypes from 'src/lib/bpmn-io/shape-types';
 import { IElement } from 'src/lib/bpmn-io/interfaces/element.interface';
 import IPipeline from 'src/lib/pipeline-store/interfaces/pipeline.interface';
-import { selectIFunction, selectIParam } from '@process-builder/selectors';
+import { selectFunction, selectIParam } from '@process-builder/selectors';
 import { IConnector } from 'src/lib/bpmn-io/interfaces/connector.interface';
 import { IPipelineAction } from 'src/lib/pipeline-store/interfaces/pipeline-action.interface';
 import { ConfirmationService } from 'src/lib/confirmation/services/confirmation.service';
@@ -299,7 +299,7 @@ export class BpmnJsService {
   private async _buildPipelineAction(index: number, pipeline: IPipeline, cursor: IElement): Promise<{ action: IPipelineAction, activityIdentifier: number }> {
     const identifier = generateGuid(),
       activityIdentifier: number = BPMNJsRepository.getSLPBExtension(cursor.businessObject, 'ActivityExtension', (ext => ext.activityFunctionId)),
-      func = await selectSnapshot(this._store.select(selectIFunction(activityIdentifier))),
+      func = await selectSnapshot(this._store.select(selectFunction(activityIdentifier))),
       outputParam = typeof func?.output === 'number' ? await selectSnapshot(this._store.select(selectIParam(func.output))) : undefined,
       executableCode = func?.customImplementation ? func.customImplementation.join('\n') : func?.implementation;
 

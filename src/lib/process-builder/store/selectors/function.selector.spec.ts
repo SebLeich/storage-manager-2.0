@@ -6,9 +6,9 @@ import { isEqual } from 'lodash';
 import defaultImportsConstant from 'src/app/default-imports.constant';
 import { IFunction } from '../../interfaces/function.interface';
 import { addIFunctions } from '../actions/function.actions';
-import { selectIFunction, selectIFunctions, selectNextFunctionIdentifier } from './function.selector';
+import { selectFunction, selectFunctions, selectNextFunctionIdentifier } from './function.selector';
 
-describe('IFunction Selectors', () => {
+describe('Function Selectors', () => {
 
   let store: Store;
 
@@ -27,6 +27,7 @@ describe('IFunction Selectors', () => {
         ...defaultImportsConstant
       ]
     });
+    
     store = TestBed.inject(Store);
     store.dispatch(addIFunctions(Object.values(funcs)));
   });
@@ -34,25 +35,29 @@ describe('IFunction Selectors', () => {
   Object.values(funcs).forEach(func => {
 
     it(`should select the function with the correct identifier ${func.identifier}`, async () => {
-      const selectionResult = await selectSnapshot(store.select(selectIFunction(func.identifier)));
+      const selectionResult = await selectSnapshot(store.select(selectFunction(func.identifier)));
+
       expect(selectionResult).toBeTruthy();
-      expect(selectionResult!.normalizedName).toBe(func.normalizedName);
+      expect((selectionResult as IFunction).normalizedName).toBe(func.normalizedName);
     });
 
   });
 
   it(`should select all functions`, async () => {
-    const selectionResult = await selectSnapshot(store.select(selectIFunctions()));
+    const selectionResult = await selectSnapshot(store.select(selectFunctions()));
+
     expect(selectionResult).toBeTruthy();
     expect(selectionResult.length).toBe(Object.values(funcs).length);
 
     const sortedA = selectionResult.sort((a, b) => a.identifier > b.identifier ? 1 : -1), sortedB = Object.values(funcs).sort((a, b) => a.identifier > b.identifier ? 1 : -1);
+
     expect(isEqual(sortedA, sortedB)).toBeTrue();
   });
 
   const correctNextId = Math.max(...Object.values(funcs).map(func => func.identifier)) + 1;
   it(`should select the next correct id: ${correctNextId}`, async () => {
     const selectionResult = await selectSnapshot(store.select(selectNextFunctionIdentifier()));
+
     expect(selectionResult).toBeTruthy();
     expect(selectionResult).toBe(correctNextId);
   });

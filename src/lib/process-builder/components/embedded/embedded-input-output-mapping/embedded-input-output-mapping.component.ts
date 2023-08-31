@@ -4,7 +4,7 @@ import { Store } from '@ngrx/store';
 import { BehaviorSubject, of, ReplaySubject, Subscription } from 'rxjs';
 import { IEmbeddedView } from 'src/lib/process-builder/classes/embedded-view';
 import { IParamDefinition } from 'src/lib/process-builder/interfaces/param-definition.interface';
-import { selectIFunction } from 'src/lib/process-builder/store/selectors/function.selector';
+import { selectFunction } from 'src/lib/process-builder/store/selectors/function.selector';
 import { filter, map, switchMap } from 'rxjs/operators';
 import { selectIInterface } from 'src/lib/process-builder/store/selectors/interface.selectors';
 import { IParamMember } from 'src/lib/process-builder/interfaces/param-member.interface';
@@ -25,7 +25,7 @@ export class EmbeddedInputOutputMappingComponent implements IEmbeddedView, OnDes
   }) as TaskCreationFormGroup;
 
   public outputParamName$ = this._store
-    .select(selectIFunction(() => this.formGroup.controls['functionIdentifier']!.value))
+    .select(selectFunction(() => this.formGroup.controls['functionIdentifier']!.value))
     .pipe(
       filter(func => !!func),
       switchMap((func) => {

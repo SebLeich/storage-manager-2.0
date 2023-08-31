@@ -9,7 +9,7 @@ import { TaskCreationFormGroup } from 'src/lib/process-builder/interfaces/task-c
 import { IProcessBuilderConfig, PROCESS_BUILDER_CONFIG_TOKEN } from 'src/lib/process-builder/interfaces/process-builder-config.interface';
 import { ParameterService } from '@/lib/process-builder/services/parameter.service';
 import { Store } from '@ngrx/store';
-import { selectIFunction, selectIInterface, selectIInterfaces } from '@/lib/process-builder/store/selectors';
+import { selectFunction, selectIInterface, selectIInterfaces } from '@/lib/process-builder/store/selectors';
 import { selectSnapshot } from '@/lib/process-builder/globals/select-snapshot';
 import { ProcessBuilderRepository } from '@/lib/core/process-builder-repository';
 import { ParamType } from '@/lib/process-builder/types/param.type';
@@ -99,7 +99,7 @@ export class EmbeddedFunctionImplementationComponent implements IEmbeddedView, A
 			outputParamName = template.name;
 		}
 
-		const selectedFunction = await selectSnapshot(this._store.select(selectIFunction(this.formGroup.controls.functionIdentifier?.value))) as IFunction;
+		const selectedFunction = await selectSnapshot(this._store.select(selectFunction(this.formGroup.controls.functionIdentifier?.value))) as IFunction;
 		const { outputParamObject } = await this._functionOutputService.detectFunctionOutput(selectedFunction, status);
 		if (outputParamObject) {
 			return;

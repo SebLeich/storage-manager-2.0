@@ -6,7 +6,7 @@ import { BpmnJsService } from "@/lib/process-builder/services/bpmn-js.service";
 import { Inject, Injectable } from "@angular/core";
 import { selectSnapshot } from "@/lib/process-builder/globals/select-snapshot";
 import { Store } from "@ngrx/store";
-import { selectIFunction } from "@/lib/process-builder/store/selectors";
+import { selectFunction } from "@/lib/process-builder/store/selectors";
 import { IBpmnJS } from "@/lib/process-builder/interfaces";
 import { BPMN_JS } from "@/lib/process-builder/injection-token";
 import shapeTypes from "@/lib/bpmn-io/shape-types";
@@ -42,7 +42,7 @@ export class ActivityC2MProcessor implements IC2MProcessor {
         return;
       }
 
-      const referencedFunction = await selectSnapshot(this._store.select(selectIFunction(activityFunctionId)));
+      const referencedFunction = await selectSnapshot(this._store.select(selectFunction(activityFunctionId)));
       if (!referencedFunction) {
         const dialogConfig = {
           data: {
@@ -60,7 +60,7 @@ export class ActivityC2MProcessor implements IC2MProcessor {
       return;
     }
 
-    const referencedFunction = await selectSnapshot(this._store.select(selectIFunction(c2SOutput.functionIdentifier)));
+    const referencedFunction = await selectSnapshot(this._store.select(selectFunction(c2SOutput.functionIdentifier)));
     if (!referencedFunction) {
       this._bpmnJsService.modelingModule.removeElements([configureActivity]);
       return;

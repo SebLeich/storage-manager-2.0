@@ -11,7 +11,7 @@ import processBuilderConfig from "@/config/process-builder-config";
 import INITIAL_STATE from "../testing/inititial-state.constant";
 import { selectSnapshot } from "@/lib/process-builder/globals/select-snapshot";
 import { Store } from "@ngrx/store";
-import { selectIFunction } from "@/lib/process-builder/store/selectors";
+import { selectFunction } from "@/lib/process-builder/store/selectors";
 import MOCK_FUNCTION_Return1 from "../testing/function-return-1.constant";
 import { ITaskCreationPayload } from "@/lib/process-builder/interfaces/task-creation-payload.interface";
 import ACTIVITY_FACTORY from "../../../../testing/activity-factory.constant";
@@ -51,13 +51,13 @@ describe('ActivityC2MProcessor', () => {
 
     it('should apply no changes when no task creation payload is passed', async () => {
         await processor.processConfiguration({ taskCreationPayload: undefined });
-        const updatedFunction = await selectSnapshot(store.select(selectIFunction(MOCK_FUNCTION_Return1.identifier)));
+        const updatedFunction = await selectSnapshot(store.select(selectFunction(MOCK_FUNCTION_Return1.identifier)));
         expect(updatedFunction).toEqual(MOCK_FUNCTION_Return1);
     });
 
     it('should apply no changes when no activity is passed in the task creation payload', async () => {
         await processor.processConfiguration({ taskCreationPayload: { configureActivity: undefined } as ITaskCreationPayload });
-        const updatedFunction = await selectSnapshot(store.select(selectIFunction(MOCK_FUNCTION_Return1.identifier)));
+        const updatedFunction = await selectSnapshot(store.select(selectFunction(MOCK_FUNCTION_Return1.identifier)));
         expect(updatedFunction).toEqual(MOCK_FUNCTION_Return1);
     });
 

@@ -5,7 +5,7 @@ import { Store } from '@ngrx/store';
 import { combineLatest, concat, NEVER, Observable, Subscription } from 'rxjs';
 import { ITaskCreationConfig } from 'src/lib/process-builder/interfaces/task-creation-config.interface';
 import { TaskCreationStep } from 'src/lib/process-builder/globals/task-creation-step';
-import { selectIFunction } from '@process-builder/selectors';
+import { selectFunction } from '@process-builder/selectors';
 import { CodemirrorRepository } from 'src/lib/core/codemirror.repository';
 import { MethodEvaluationStatus } from 'src/lib/process-builder/globals/method-evaluation-status';
 import { FormControl, FormGroup } from '@angular/forms';
@@ -76,7 +76,7 @@ export class TaskCreationComponent implements IEvaluationResultProvider, OnDestr
 	public selectedFunction$ = this.formGroup.controls.functionIdentifier.valueChanges
 		.pipe(
 			startWith(this.formGroup.controls.functionIdentifier.value),
-			switchMap(functionIdentifier => this._store.select(selectIFunction(functionIdentifier))),
+			switchMap(functionIdentifier => this._store.select(selectFunction(functionIdentifier))),
 		);
 
 	public hasCustomImplementation$ = this.selectedFunction$
@@ -176,7 +176,7 @@ export class TaskCreationComponent implements IEvaluationResultProvider, OnDestr
 		const inputParams = BPMNJsRepository.getAvailableInputParams(this.data.taskCreationPayload.configureActivity);
 		const { injector, mappedParameters } = await this._parameterService.parameterToInjector(inputParams),
 			taskCreationPayload = this.data.taskCreationPayload,
-			selectedFunction = await selectSnapshot(this._store.select(selectIFunction(this.formGroup.value.functionIdentifier)));
+			selectedFunction = await selectSnapshot(this._store.select(selectFunction(this.formGroup.value.functionIdentifier)));
 
 		const implementation = selectedFunction?.requireCustomImplementation? this.formGroup.value.functionImplementation?.text ?? []: selectedFunction?.implementation;
 		const methodEvaluation = CodemirrorRepository.evaluateCustomMethod(undefined, implementation, injector, mappedParameters)

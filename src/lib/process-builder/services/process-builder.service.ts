@@ -3,7 +3,7 @@ import { ReplaySubject } from 'rxjs';
 import { map, take } from 'rxjs/operators';
 import { IProcessBuilderConfig, PROCESS_BUILDER_CONFIG_TOKEN } from '../interfaces/process-builder-config.interface';
 import { Store } from '@ngrx/store';
-import { selectIFunctions } from '../store/selectors/function.selector';
+import { selectFunctions } from '../store/selectors/function.selector';
 import { selectCurrentIBpmnJSModelGuid, selectIBpmnJSModels } from '../store/selectors/bpmn-js-model.selectors';
 import { createIBpmnJsModel, setCurrentIBpmnJSModel } from '../store/actions/bpmn-js-model.actions';
 import { selectSnapshot } from '../globals/select-snapshot';
@@ -14,7 +14,7 @@ import { selectIInterface } from '../store/selectors/interface.selectors';
 @Injectable()
 export class ProcessBuilderService {
 
-  public funcs$ = this._store.select(selectIFunctions());
+  public funcs$ = this._store.select(selectFunctions());
   public models$ = this._store.select(selectIBpmnJSModels());
   public params$ = this._store.select(selectIParams());
 

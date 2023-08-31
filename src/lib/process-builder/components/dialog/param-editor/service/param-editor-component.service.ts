@@ -9,7 +9,7 @@ import { selectIParam, selectIParams } from 'src/lib/process-builder/store/selec
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { IParamEditorComponentInputData } from '../../../../interfaces/param-editor-component-input-data.interface';
 import { IParam } from 'src/lib/process-builder/interfaces/param.interface';
-import { selectIFunctionsByOutputParam } from 'src/lib/process-builder/store/selectors/function.selector';
+import { selectFunctionsByOutputParam } from 'src/lib/process-builder/store/selectors/function.selector';
 import { BPMNJsRepository } from 'src/lib/core/bpmn-js.repository';
 import { ProcessBuilderRepository } from 'src/lib/core/process-builder-repository';
 import { mapIParamInterfaces } from '@/lib/process-builder/extensions/rxjs/map-param-interfaces.rxjs';
@@ -68,7 +68,7 @@ export class ParamEditorComponentService {
     switchMap((param) => {
       if (!param) return of([]);
       return inject(Store<fromIFunction.State>).select(
-        selectIFunctionsByOutputParam(param)
+        selectFunctionsByOutputParam(param)
       );
     })
   );

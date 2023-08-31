@@ -10,6 +10,9 @@ import { removeIFunction, setIFunctionsCanFailFlag } from '@process-builder/acti
 import shapeTypes from 'src/lib/bpmn-io/shape-types';
 import { IElement } from 'src/lib/bpmn-io/interfaces/element.interface';
 import { FunctionFormGroupService } from '../../services/function-form-group.service';
+import { selectFunction, selectFunctions } from '../../store/selectors';
+import { IConnector } from '@/lib/bpmn-io/interfaces/connector.interface';
+import { ConfirmationService } from '@/lib/confirmation/services/confirmation.service';
 
 @Injectable()
 export class ProcessBuilderComponentService {
@@ -20,7 +23,7 @@ export class ProcessBuilderComponentService {
 			switchMap(async (events) => {
 				const functionSelectionConfig = events.find(event => event.taskCreationStep === TaskCreationStep.ConfigureFunctionSelection);
 				const functionIdentifier = BPMNJsRepository.getSLPBExtension<number>(functionSelectionConfig?.element?.businessObject, 'ActivityExtension', (ext) => ext.activityFunctionId) ?? null;
-				const selectedFunction = await selectSnapshot(this._store.select(selectIFunction(functionIdentifier)));
+				const selectedFunction = await selectSnapshot(this._store.select(selectFunction(functionIdentifier)));
 				const formValue = await new FunctionFormGroupService(this._store).getFunctionFormGroupValue(selectedFunction, false);
 
 				return { events, formValue, functionSelectionConfig, selectedFunction };
@@ -49,7 +52,7 @@ export class ProcessBuilderComponentService {
 			.map(incoming => incoming.source);
 
 		const referencedFunctionIdentifiers = comingFromActivities.map(activity => BPMNJsRepository.getSLPBExtension(activity.businessObject, 'ActivityExtension', (ext) => ext.activityFunctionId));
-		const referencedFunctions = await selectSnapshot(this._store.select(selectIFunctions(referencedFunctionIdentifiers)));
+		const referencedFunctions = await selectSnapshot(this._store.select(selectFunctions(referencedFunctionIdentifiers)));
 
 		const result = await this._confirmationService.requestConfirmation(
 			`${referencedFunctions.length === 1 ? 'One method' : referencedFunctions.length + ' methods'} will be changed`,
@@ -68,7 +71,7 @@ export class ProcessBuilderComponentService {
 
 	public async tryDeleteFunction(element: IElement) {
 		const referencedFunctionIdentifier = BPMNJsRepository.getSLPBExtension(element.businessObject, 'ActivityExtension', (ext) => ext.activityFunctionId);
-		const func = await selectSnapshot(this._store.select(selectIFunction(referencedFunctionIdentifier)));
+		const func = await selectSnapshot(this._store.select(selectFunction(referencedFunctionIdentifier)));
 
 		const result = func?.customImplementation ? await this._confirmationService.requestConfirmation(
 			`${func.normalizedName} will be deleted`,

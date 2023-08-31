@@ -3,7 +3,7 @@ import { ParamCodes } from 'src/config/param-codes';
 import { IEmbeddedView } from 'src/lib/process-builder/classes/embedded-view';
 import { IInputParam, IFunction } from '@process-builder/interfaces';
 import { Store } from '@ngrx/store';
-import { selectIFunction, selectIFunctions } from 'src/lib/process-builder/store/selectors/function.selector';
+import { selectFunction, selectFunctions } from 'src/lib/process-builder/store/selectors/function.selector';
 import { ControlContainer, FormControl } from '@angular/forms';
 import { Subscription, defer, map, startWith, switchMap, timer } from 'rxjs';
 import { removeIFunction } from 'src/lib/process-builder/store/actions/function.actions';
@@ -38,7 +38,7 @@ export class EmbeddedFunctionSelectionComponent implements IEmbeddedView, OnDest
 
 	public searchinputExpanded = false;
 
-	private _allFunctions$ = this._store.select(selectIFunctions());
+	private _allFunctions$ = this._store.select(selectFunctions());
 	public functions$ = combineLatest([this._allFunctions$, this._filter$]).pipe(map(([functions, filter]) => {
 		return functions.filter(func => {
 			if (!func) {
@@ -73,7 +73,7 @@ export class EmbeddedFunctionSelectionComponent implements IEmbeddedView, OnDest
 			.valueChanges
 			.pipe(
 				startWith(control.value),
-				switchMap((functionIdentifier) => this._store.select(selectIFunction(functionIdentifier as number)))
+				switchMap((functionIdentifier) => this._store.select(selectFunction(functionIdentifier as number)))
 			);
 	});
 	public requiresCustomOutputParamName$ = this.selectedFunction$.pipe(map(selectedFunction => !selectedFunction?.requireCustomImplementation && !selectedFunction?.customImplementation && typeof selectedFunction?.outputTemplate === 'string'));

@@ -1,5 +1,5 @@
 import { selectSnapshot } from "@/lib/process-builder/globals/select-snapshot";
-import { selectIFunction, selectIParams } from "@/lib/process-builder/store/selectors";
+import { selectFunction, selectIParams } from "@/lib/process-builder/store/selectors";
 import { AbstractControl } from "@angular/forms";
 import { Store } from "@ngrx/store";
 import { TaskCreationFormGroup } from "src/lib/process-builder/interfaces/task-creation-form-group-value.interface";
@@ -11,7 +11,7 @@ export const outputNameValidator = (store: Store, evaluationResultProvider: IEva
     const functionOutputService = new FunctionOutputService(store),
         formValue = (control as TaskCreationFormGroup).value;
 
-    const selectedFunction = await selectSnapshot(store.select(selectIFunction(formValue.functionIdentifier)));
+    const selectedFunction = await selectSnapshot(store.select(selectFunction(formValue.functionIdentifier)));
     if(!selectedFunction){
         return null;
     }

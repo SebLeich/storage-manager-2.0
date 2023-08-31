@@ -3,7 +3,7 @@ import { Store } from '@ngrx/store';
 import { IFunction, IParam } from '../interfaces';
 import { ITaskCreationFormGroupValue } from '../interfaces/task-creation-form-group-value.interface';
 import { selectSnapshot } from '../globals/select-snapshot';
-import { selectIFunction, selectIInterface, selectIParam } from '../store/selectors';
+import { selectFunction, selectIInterface, selectIParam } from '../store/selectors';
 import { CodemirrorRepository } from '@/lib/core/codemirror.repository';
 import defaultImplementation from '../globals/default-implementation';
 
@@ -18,7 +18,7 @@ export class FunctionFormGroupService {
       return formGroupValue;
     }
 
-    const selectedFunction = typeof arg === 'number'? await selectSnapshot(this._store.select(selectIFunction(arg))) : arg;
+    const selectedFunction = typeof arg === 'number'? await selectSnapshot(this._store.select(selectFunction(arg))) : arg;
     if(!selectedFunction){
       return formGroupValue;
     }

@@ -3,7 +3,7 @@ import { IC2MProcessor } from "../interfaces/c2m-processor.interface";
 import { BpmnJsService } from "@/lib/process-builder/services/bpmn-js.service";
 import { Store } from "@ngrx/store";
 import { selectSnapshot } from "@/lib/process-builder/globals/select-snapshot";
-import { selectIFunction, selectIParamByNormalizedName } from "@/lib/process-builder/store/selectors";
+import { selectFunction, selectIParamByNormalizedName } from "@/lib/process-builder/store/selectors";
 import shapeTypes from "@/lib/bpmn-io/shape-types";
 import { BPMNJsRepository } from "@/lib/core/bpmn-js.repository";
 import { IElement } from "@/lib/bpmn-io/interfaces/element.interface";
@@ -21,7 +21,7 @@ export class InputC2MProcessor implements IC2MProcessor {
             return;
         }
 
-        const referencedFunction = await selectSnapshot(this._store.select(selectIFunction(c2SOutput.functionIdentifier)));
+        const referencedFunction = await selectSnapshot(this._store.select(selectFunction(c2SOutput.functionIdentifier)));
         if(!referencedFunction) {
             return;
         }
