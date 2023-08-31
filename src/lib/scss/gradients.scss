@@ -21,3 +21,7 @@
 @mixin gradient-red() {
     background: linear-gradient(135deg, #e22500, #e22500bf, #e22500);
 }
+
+@mixin gradient-orange() {
+    background: linear-gradient(135deg, #e28b00, #e28b00d7, #e28b00);
+}

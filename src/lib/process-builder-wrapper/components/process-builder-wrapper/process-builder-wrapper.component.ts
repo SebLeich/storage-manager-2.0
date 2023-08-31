@@ -20,7 +20,7 @@ import { BPMN_JS } from '@process-builder/injection';
 @Component({
   selector: 'app-process-builder-wrapper',
   templateUrl: './process-builder-wrapper.component.html',
-  styleUrls: ['./process-builder-wrapper.component.sass'],
+  styleUrls: ['./process-builder-wrapper.component.scss'],
   animations: [fadeInAnimation, showListAnimation]
 })
 export class ProcessBuilderWrapperComponent {
@@ -29,6 +29,7 @@ export class ProcessBuilderWrapperComponent {
   public funcs$ = this._store.select(selectFunctions());
   public params$ = this._store.select(selectIParams());
   public currentBpmnJSModel$ = this._store.select(selectCurrentIBpmnJSModel);
+  public currentBpmnJSModelDescription$ = this.currentBpmnJSModel$.pipe(map(currentBpmnJSModel => currentBpmnJSModel?.description));
   public hasCurrentBpmnJSModel$ = this.currentBpmnJSModel$.pipe(map(currentBpmnJSModel => !!currentBpmnJSModel));
   public currentBpmnJSModelGuid$ = this._store.select(selectCurrentIBpmnJSModelGuid);
 
@@ -80,6 +81,10 @@ export class ProcessBuilderWrapperComponent {
 
   public async renameCurrentModel(updatedName: string) {
     this._store.dispatch(updateCurrentIBpmnJSModel({ name: updatedName }));
+  }
+
+  public saveDescription(updatedDescription: string) {
+    this._store.dispatch(updateCurrentIBpmnJSModel({ description: updatedDescription }));
   }
 
   public setModel(bpmnJSModel: IBpmnJSModel) {

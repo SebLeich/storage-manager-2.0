@@ -1,6 +1,11 @@
 <div class="body">
 
     <div class="process-builder-wrapper">
+
+        <div class="description-wrapper">
+            <app-markdown-editor [value]="currentBpmnJSModelDescription$|async" [configuration]="{ noBorder: true, emitOn: ['blur', 'enter'] }" (valueChanged)="saveDescription($event)"></app-markdown-editor>
+        </div>
+
         <app-process-builder *ngIf="hasCurrentBpmnJSModel$|async; else noBpmnModelSetted" @fadeIn></app-process-builder>
     </div>
 
@@ -139,7 +144,7 @@
     <div mat-menu-item class="inactive" (click)="$event.stopPropagation()">
         <span class="text" (click)="bpmnJsService.zoomOut()">zoom out</span>
     </div>
-    <div mat-menu-item [disabled]="!(bpmnJsService.containsChanges$|async)"
+    <div mat-menu-item [disabled]="(bpmnJsService.containsChanges$|async)? false: true"
         (click)="bpmnJsService.saveCurrentBpmnModel(true)">
         <span class="text">save model</span>
     </div>

@@ -1,0 +1,26 @@
+:host {
+    height: 100%;
+    width: 100%;
+    display: flex;
+}
+
+::ng-deep quill-editor {
+    flex: 1;
+    padding: 4px;
+    display: flex !important;
+    flex-direction: column;
+
+    .ql-container {
+        overflow-y: auto;
+    }
+
+    &.no-border {
+        .ql-toolbar {
+            border: none;
+        }
+
+        .ql-container {
+            border: none;
+        }
+    }
+}

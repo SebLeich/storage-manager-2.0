@@ -12,6 +12,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { MarkdownEditorModule } from '../markdown-editor/markdown-editor.module';
 
 
 
@@ -34,6 +35,7 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
     ReactiveFormsModule,
 
     ProcessBuilderModule,
+    MarkdownEditorModule,
 
     RouterModule.forChild([
       { path: '**', component: ProcessBuilderWrapperComponent }
