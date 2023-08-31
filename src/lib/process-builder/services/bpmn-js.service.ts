@@ -52,6 +52,7 @@ export class BpmnJsService {
   }));
 
   public directEditingEventFired$ = new Observable<IDirectEditingEvent>((subscriber) => this.eventBusModule.on('directEditing.activate', (evt) => {
+    this.directEditingModule.cancel();
     subscriber.next(evt);
   }));
 
@@ -126,10 +127,8 @@ export class BpmnJsService {
     ),
   );
 
-  public dataObjectReferenceEditingEventFired$ = merge(
-    this.directEditingEventFired$.pipe(
-      filter(event => event?.active?.element?.type === shapeTypes.DataObjectReference)
-    )
+  public dataObjectReferenceEditingEventFired$ = this.directEditingEventFired$.pipe(
+    filter(event => event?.active?.element?.type === shapeTypes.DataObjectReference)
   );
 
   public bufferedTaskEditingEvents$ = this.taskEditingEventFired$.pipe(

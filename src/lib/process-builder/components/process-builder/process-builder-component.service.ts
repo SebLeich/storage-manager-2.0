@@ -9,9 +9,6 @@ import { Store } from '@ngrx/store';
 import { removeIFunction, setIFunctionsCanFailFlag } from '@process-builder/actions';
 import shapeTypes from 'src/lib/bpmn-io/shape-types';
 import { IElement } from 'src/lib/bpmn-io/interfaces/element.interface';
-import { ConfirmationService } from 'src/lib/confirmation/services/confirmation.service';
-import { selectIFunction, selectIFunctions } from '@process-builder/selectors';
-import { IConnector } from '@/lib/bpmn-io/interfaces/connector.interface';
 import { FunctionFormGroupService } from '../../services/function-form-group.service';
 
 @Injectable()
