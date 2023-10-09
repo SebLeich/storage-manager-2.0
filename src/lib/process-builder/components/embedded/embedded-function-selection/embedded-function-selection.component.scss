@@ -1,3 +1,5 @@
+@import "src/lib/scss/info-theme";
+
 :host {
 	display: flex;
 	height: 100%;
@@ -9,6 +11,11 @@
 	overflow: hidden;
 	display: flex;
 	flex-direction: column;
+
+	.info-theme {
+        padding: 2rem;
+        @include info-theme;
+    }
 
 	.search-wrapper {
 		background-color: white;
@@ -82,7 +89,7 @@
 				}
 
 				&.inputs-unavailable {
-					background: repeating-linear-gradient(60deg, #ffffff, rgba(255, 169, 169, 0.1607843137) 10px, rgba(255, 169, 169, 0.1490196078) 10px, #ffffff 280px);
+					background: repeating-linear-gradient(60deg, #ffe4e4 20px, #ffe1d6 40px, #ffebe4 80px, #ffe6e6 280px);
 					border-color: #b54a4a;
 				}
 
@@ -133,7 +140,6 @@
 	&.expanded {
 		max-width: 660px;
 		width: 40%;
-		transition: width .5s ease-out;
 	}
 
 	::ng-deep quill-editor {

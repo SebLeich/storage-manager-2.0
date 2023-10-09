@@ -35,4 +35,9 @@
             border: none;
         }
     }
+
+    &.disabled {
+        user-select: none;
+        pointer-events: none;
+    }
 }

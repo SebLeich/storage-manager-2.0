@@ -5,7 +5,7 @@ import { IInputParam, IFunction } from '@process-builder/interfaces';
 import { Store } from '@ngrx/store';
 import { selectFunction, selectFunctions } from 'src/lib/process-builder/store/selectors/function.selector';
 import { ControlContainer, FormControl } from '@angular/forms';
-import { Subscription, defer, map, startWith, switchMap, timer } from 'rxjs';
+import { Subscription, catchError, defer, firstValueFrom, map, of, startWith, switchMap, timer } from 'rxjs';
 import { removeIFunction } from 'src/lib/process-builder/store/actions/function.actions';
 import { combineLatest } from 'rxjs/internal/observable/combineLatest';
 import { TaskCreationFormGroup } from 'src/lib/process-builder/interfaces/task-creation-form-group-value.interface';
@@ -17,6 +17,7 @@ import defaultImplementation from '@/lib/process-builder/globals/default-impleme
 import { CodemirrorRepository } from '@/lib/core/codemirror.repository';
 import { selectSnapshot } from '@/lib/process-builder/globals/select-snapshot';
 import { selectIParams } from '@/lib/process-builder/store/selectors';
+import { HttpClient } from '@angular/common/http';
 
 @Component({
 	selector: 'app-embedded-function-selection',
@@ -65,11 +66,11 @@ export class EmbeddedFunctionSelectionComponent implements IEmbeddedView, OnDest
 			.map(func => {
 				const inputTemplates = Array.isArray(func.inputTemplates) ? func.inputTemplates.filter(input => input !== 'dynamic') : [];
 				const requiredInputs: IInputParam[] = inputTemplates.filter(param => typeof param === 'object' && !param.optional) as IInputParam[];
-				const inputsAvailable = requiredInputs.length === 0? true: requiredInputs.every(requiredInput => availableInputParams.some(param => {
-					if(requiredInput.type === 'object' && requiredInput.interface){
+				const inputsAvailable = requiredInputs.length === 0 ? true : requiredInputs.every(requiredInput => availableInputParams.some(param => {
+					if (requiredInput.type === 'object' && requiredInput.interface) {
 						return requiredInput.interface === param.interface;
 					}
-	
+
 					return param.type === requiredInput.type;
 				}));
 
@@ -97,17 +98,21 @@ export class EmbeddedFunctionSelectionComponent implements IEmbeddedView, OnDest
 
 	private _subscriptions = new Subscription();
 
-	constructor(private _store: Store, private _controlContainer: ControlContainer, private elementRef: ElementRef, private _changeDetectorRef: ChangeDetectorRef) { }
+	constructor(private _store: Store, private _controlContainer: ControlContainer, private elementRef: ElementRef, private _changeDetectorRef: ChangeDetectorRef, private _httpClient: HttpClient) { }
 
-	public displayHint(func: IFunction, event?: MouseEvent){
-		if(event){
+	public async displayHint(func: IFunction, event?: MouseEvent) {
+		if (event) {
 			event.stopPropagation();
 			event.preventDefault();
 		}
 
-		this.hintControl.setValue(func.description ?? '');
-
 		this.hintVisible.set(true);
+
+		if (func.htmlDetailsHref) {
+			const result = await firstValueFrom(this._httpClient.get<string>(func.htmlDetailsHref, { responseType: 'text/html' as any }).pipe(catchError(() => of('<iframe src="https://giphy.com/embed/8L0Pky6C83SzkzU55a" width="480" height="480" frameBorder="0" class="giphy-embed" allowFullScreen></iframe><p><a href="https://giphy.com/gifs/mini-italia-8L0Pky6C83SzkzU55a">via GIPHY</a></p>'))));
+			this.hintControl.setValue(result);
+		}
+		else this.hintControl.setValue(null);
 	}
 
 	public ngOnDestroy(): void {
@@ -141,6 +146,8 @@ export class EmbeddedFunctionSelectionComponent implements IEmbeddedView, OnDest
 		}
 		else this.formGroup.patchValue(patchValue);
 
+		this.hintVisible.set(false);
+		
 		this._changeDetectorRef.markForCheck();
 	}
 

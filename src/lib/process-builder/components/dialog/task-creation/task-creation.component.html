@@ -1,4 +1,4 @@
-<div class="body" [class.blocked]="isBlocked">
+<div class="body" [class.blocked]="isBlocked()" [class.fullscreen]="isFullscreen()">
 
     <div class="dialog-navbar">
 
@@ -6,6 +6,9 @@
         <div class="text">
             Modify task
         </div>
+        <button mat-icon-button (click)="toggleFullscreen()">
+            <mat-icon>{{isFullscreen()? 'fullscreen_exit': 'fullscreen'}}</mat-icon>
+        </button>
         <button mat-icon-button color="warn" (click)="abort()">
             <mat-icon>clear</mat-icon>
         </button>
@@ -22,7 +25,8 @@
 
         <ul *ngIf="formGroup.errors? true: false" class="custom-validation-error-list">
             <li *ngIf="formGroup.errors?.noFunctionSelected">no function selected</li>
-            <li *ngIf="formGroup.errors?.implementationExistsWhenRequiredValidator">please provide an implementation</li>
+            <li *ngIf="formGroup.errors?.implementationExistsWhenRequiredValidator">please provide an implementation
+            </li>
             <li *ngIf="formGroup.errors?.outputParamNameRequired">output param name required</li>
             <li *ngIf="formGroup.errors?.duplicateParamExisting">output param name already used</li>
         </ul>
@@ -56,7 +60,7 @@
 
     </div>
 
-    <div *ngIf="isBlocked" @show class="overlay">
+    <div *ngIf="isBlocked()" @show class="overlay">
         <mat-spinner [diameter]="60"></mat-spinner>
     </div>
 

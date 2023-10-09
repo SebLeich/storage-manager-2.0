@@ -1,6 +1,7 @@
 <quill-editor
   [ngClass]="{
     'no-border': configuration.noBorder,
+    'disabled': formControl.disabled,
 }"
   (onEditorCreated)="onQuillEditorCreated($event)"
   [modules]="{

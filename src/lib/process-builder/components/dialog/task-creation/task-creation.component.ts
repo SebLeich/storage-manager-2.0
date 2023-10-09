@@ -133,7 +133,8 @@ export class TaskCreationComponent implements IEvaluationResultProvider, OnDestr
 	public stepToNextStep$: Observable<number> = this.currentStep$.pipe(switchMap(step => step?.autoProceed$ ?? NEVER)) as Observable<number>;
 	public formInvalid$ = this.formGroup.statusChanges.pipe(startWith(this.formGroup.status), map((status) => status === 'INVALID'));
 
-	public isBlocked = false;
+	public isBlocked = signal(false);
+	public isFullscreen = signal(false);
 
 	private _subscription = new Subscription();
 
@@ -170,8 +171,13 @@ export class TaskCreationComponent implements IEvaluationResultProvider, OnDestr
 		return CodemirrorRepository.evaluateCustomMethod(undefined, implementation?.text ?? [], injector, mappedParameters);
 	}
 
+	public toggleFullscreen(){
+		const isFullscreen = this.isFullscreen();
+		this.isFullscreen.set(!isFullscreen);
+	}
+
 	private async _onClose() {
-		this.isBlocked = true;
+		this.isBlocked.set(true);
 		this._ref.disableClose = true;
 
 		const taskCreationPayload = this.data.taskCreationPayload;
@@ -188,7 +194,7 @@ export class TaskCreationComponent implements IEvaluationResultProvider, OnDestr
 			methodEvaluation = CodemirrorRepository.evaluateCustomMethod(undefined, implementation, injector, mappedParameters);
 		}
 
-		this.isBlocked = false;
+		this.isBlocked.set(false);
 		this._ref.disableClose = false;
 
 		this._ref.close({ formValue: this._formValue, initialFormValue: this.data.taskCreationFormGroupValue, selectedFunction, taskCreationPayload, methodEvaluation });
