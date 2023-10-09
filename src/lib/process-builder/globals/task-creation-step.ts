@@ -5,5 +5,5 @@ export enum TaskCreationStep {
     ConfigureFunctionOutput = 3,
     ConfigureFunctionInput = 4,
     ConfigureInputOutputMapping = 5,
-    ConfigureStaticOutput = 6
+    ConfigureStaticOutput = 6,
 }

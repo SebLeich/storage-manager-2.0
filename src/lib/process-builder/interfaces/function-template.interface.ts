@@ -12,4 +12,6 @@ export interface IFunctionTemplate {
     finalizesFlow?: boolean;
     inputTemplates: (IInputParam | 'dynamic')[] | null | 'dynamic';
     outputTemplate: string | null;
+    outputTemplateIsArray: boolean;
+    htmlDetailsHref?: string;
 }

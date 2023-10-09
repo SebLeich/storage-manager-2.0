@@ -12,7 +12,8 @@ export class PredefinedFunctionTemplates {
             payload: undefined,
             outputTemplate: 'dynamic',
             requireCustomImplementation: true,
-            requireStaticOutputDefinition: false
+            requireStaticOutputDefinition: false,
+            outputTemplateIsArray: false,
         } as IFunctionTemplate;
     }
 
@@ -25,7 +26,8 @@ export class PredefinedFunctionTemplates {
                 {
                     type: 'number',
                     name: 'delay',
-                    default: 1000
+                    default: 1000,
+                    optional: true,
                 }
             ],
             name: name,
@@ -57,7 +59,6 @@ export class PredefinedFunctionTemplates {
             ],
             name: name,
             implementation: `async () => {
-                let contentToDownload!: object, fileName!: string;
                 const content = JSON.stringify(contentToDownload);
                 const element = document.createElement('a');
                 element.setAttribute('href', 'data:text/json;charset=UTF-8,' + encodeURIComponent(content));
@@ -66,11 +67,12 @@ export class PredefinedFunctionTemplates {
                 document.body.appendChild(element);
                 element.click();
                 document.body.removeChild(element);
-                return new Promise<void>((resolve => resolve()));
+                return new Promise((resolve => resolve()));
             }`,
             outputTemplate: null,
             requireCustomImplementation: false,
-            requireStaticOutputDefinition: false
+            requireStaticOutputDefinition: false,
+            htmlDetailsHref: 'http://localhost:3000/function-details/2',
         } as IFunctionTemplate;
     }
 
@@ -83,7 +85,8 @@ export class PredefinedFunctionTemplates {
             name: name,
             outputTemplate: 'dynamic',
             requireCustomImplementation: true,
-            requireStaticOutputDefinition: true
+            requireStaticOutputDefinition: true,
+            outputTemplateIsArray: false,
         }
     }
 

@@ -1,6 +1,11 @@
-.body {
-	position: relative;
+:host {
+	display: flex;
 	height: 100%;
+}
+
+.body {
+	flex: 1;
+	position: relative;
 	overflow: hidden;
 	display: flex;
 	flex-direction: column;
@@ -23,6 +28,8 @@
 			margin: 0px;
 			border: none;
 			margin-right: 2px;
+			flex: 1;
+			transition: width 0.5s;
 		}
 
 		&.expanded {
@@ -43,9 +50,47 @@
 		flex: 1;
 
 		.section-headline {
-			margin: 1rem 0.5rem 0.5rem 0.5rem;
-			font-weight: 100;
+			margin: 2rem 0.5rem 0.5rem 1rem;
 			font-size: 1.2rem;
+			font-weight: 500;
+		}
+
+		.grid {
+			display: grid;
+			grid-template-columns: repeat(auto-fit, 350px);
+			gap: 0.6rem;
+
+			.function-wrapper {
+				padding: 1.5rem;
+				border-radius: 3px;
+				background-color: white;
+				box-shadow: 0 0 4px #8484844d;
+				display: flex;
+				flex-direction: column;
+				transition: 0.1s ease-in;
+				min-height: 10rem;
+				border: 3px solid white;
+				user-select: none;
+				position: relative;
+
+				.help-icon {
+					position: absolute;
+					right: 1rem;
+					top: 1rem;
+					color: #23232385;
+					cursor: pointer;
+				}
+
+				&.inputs-unavailable {
+					background: repeating-linear-gradient(60deg, #ffffff, rgba(255, 169, 169, 0.1607843137) 10px, rgba(255, 169, 169, 0.1490196078) 10px, #ffffff 280px);
+					border-color: #b54a4a;
+				}
+
+				&.active {
+					transform: scale(1.01);
+					border-color: gold;
+				}
+			}
 		}
 	}
 
@@ -81,33 +126,19 @@
 	}
 }
 
-.grid {
-	display: grid;
-	grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-	gap: 0.6rem;
-}
-
-.search-input {
-	flex: 1;
-	width: auto;
-	transition: width 0.5s;
-}
-
-.function-wrapper {
-	padding: 1rem;
-	border-radius: 3px;
+.explanation {
 	background-color: white;
-	box-shadow: 0 0 4px #8484844d;
-	display: flex;
-	flex-direction: column;
-	transition: 0.1s ease-in;
-	min-height: 10rem;
-	border: 3px solid white;
-}
+	width: 0px;
 
-.function-wrapper.active {
-	transform: scale(1.01);
-	border-color: gold;
+	&.expanded {
+		max-width: 660px;
+		width: 40%;
+		transition: width .5s ease-out;
+	}
+
+	::ng-deep quill-editor {
+		padding: 0px !important;
+	}
 }
 
 .preview {

@@ -1,5 +1,5 @@
-import { Inject, Injectable } from "@angular/core";
-import { IParam, IProcessBuilderConfig, PROCESS_BUILDER_CONFIG_TOKEN } from "@/lib/process-builder/interfaces";
+import { Injectable } from "@angular/core";
+import { IParam } from "@/lib/process-builder/interfaces";
 import { Store } from "@ngrx/store";
 import { removeIParam, upsertIParam } from "@/lib/process-builder/store";
 import { IC2SProcessor } from "../interfaces/c2s-processor.interface";
@@ -12,7 +12,7 @@ export class OutputC2SProcessor implements IC2SProcessor {
 
     private readonly _functionOutputService = new FunctionOutputService(this._store);
 
-    constructor(@Inject(PROCESS_BUILDER_CONFIG_TOKEN) private _config: IProcessBuilderConfig, private _store: Store){ }
+    constructor(private _store: Store){ }
 
     public async processConfiguration({ formValue, taskCreationPayload, selectedFunction, methodEvaluation }: ITaskCreationOutput) {
         const configureActivity = taskCreationPayload.configureActivity;
@@ -34,8 +34,7 @@ export class OutputC2SProcessor implements IC2SProcessor {
             outputParam = {
                 _isIParam: true,
                 identifier: outputParamIdentifier,
-                optional: null,
-                nullable: null,
+                isCollection: formValue.outputIsArray,
                 constant: null,
                 typeDef: null,
                 defaultValue: null,
@@ -50,6 +49,20 @@ export class OutputC2SProcessor implements IC2SProcessor {
             normalizedName: formValue.outputParamNormalizedName,
             type: outputParamType as ParamType,
             defaultValue:  methodEvaluation?.detectedValue ?? null,
+        }
+
+        if(formValue.outputIsArray){
+            outputParam = {
+                ...outputParam,
+                interface: null,
+                type: 'array',
+                typeDef: [
+                    {
+                        ...outputParam,
+                        interface: outputParam.interface
+                    }
+                ]
+            }
         }
 
         this._store.dispatch(upsertIParam(outputParam));

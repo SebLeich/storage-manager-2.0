@@ -9,6 +9,18 @@
     padding: 4px;
     display: flex !important;
     flex-direction: column;
+    overflow: hidden;
+
+    .ql-toolbar {
+        overflow: hidden;
+        white-space: nowrap;
+        display: flex;
+        width: 100%;
+
+        .ql-formats {
+            display: flex !important;
+        }
+    }
 
     .ql-container {
         overflow-y: auto;

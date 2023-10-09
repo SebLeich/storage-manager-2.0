@@ -19,7 +19,7 @@
                         <div class="control accent-2">
                             {{ func.identifier === formGroup.controls.functionIdentifier!.value? 'unselect': 'select' }}
                         </div>
-                        <div *ngIf="func.customImplementation" class="control danger"
+                        <div *ngIf="func._isImplementation ?? false" class="control danger"
                             (click)="removeFunction(func, $event)">
                             remove
                         </div>
@@ -29,30 +29,27 @@
         </ng-container>
 
         <div class="section-headline">All functions</div>
-        <div class="grid" *ngIf="(functions$|async)?.length; else noFunctions">
+        <ng-container *ngLet="(filteredFunctions$|async) as filteredFunctions">
 
-            <div class="function-wrapper" [@showList]="(functions$|async)?.length" *ngFor="let func of (functions$|async)" (click)="selectFunction(func)" [ngClass]="{ 'active': func.identifier === formGroup.controls.functionIdentifier!.value }">
-
-                <div class="preview">
-                    <app-function-preview [func]="func"></app-function-preview>
-                </div>
-
-                <div class="control-wrapper">
-
-                    <div class="control accent-2">
-                        {{ func.identifier === formGroup.controls.functionIdentifier!.value? 'unselect': 'select' }}
+            <div class="grid" *ngIf="filteredFunctions?.length; else noFunctions">
+                <div class="function-wrapper" [@showList]="filteredFunctions?.length" *ngFor="let func of filteredFunctions" (click)="selectFunction(func)" [ngClass]="{ 'active': func.identifier === formGroup.controls.functionIdentifier!.value, 'inputs-unavailable': !func.inputsAvailable }">
+                    <div class="preview">
+                        <app-function-preview [func]="func" [inputsMissing]="!func.inputsAvailable"></app-function-preview>
+                        <mat-icon *ngIf="func?.htmlDetailsHref" class="help-icon" (click)="displayHint(func, $event)">help</mat-icon>
                     </div>
-
-                    <div *ngIf="func.customImplementation" class="control danger"
-                        (click)="removeFunction(func, $event)">
-                        remove
+    
+                    <div class="control-wrapper">
+                        <div class="control accent-2">
+                            {{ func.identifier === formGroup.controls.functionIdentifier!.value? 'unselect': 'select' }}
+                        </div>
+                        <div *ngIf="func._isImplementation ?? false" class="control danger"
+                            (click)="removeFunction(func, $event)">
+                            remove
+                        </div>
                     </div>
-
                 </div>
-
             </div>
-
-        </div>
+        </ng-container>
 
     </div>
 
@@ -61,6 +58,13 @@
         <input [value]="formGroup.controls.outputParamName?.value ?? ''" (input)="setOutputParamName($event)" type="text" placeholder="set output param name" />
     </div>
 </div>
+
+<div class="explanation" [class.expanded]="hintVisible()">
+
+    <app-markdown-editor [formControl]="hintControl"></app-markdown-editor>
+
+</div>
+
 
 <ng-template #noFunctions>
 

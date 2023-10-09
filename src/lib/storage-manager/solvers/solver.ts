@@ -1,7 +1,7 @@
 import { v4 as generateGuid } from 'uuid';
 import { IOrder, ISpace } from "@smgr/interfaces";
-import { IVirtualDimension } from 'src/app/interfaces/i-virtual-dimension.interface';
 import calculateDimension from 'src/app/methods/calculate-dimension.shared-method';
+import { IVirtualDimension } from '../interfaces/virtual-dimension.interface';
 
 export class Solver {
 
@@ -23,20 +23,21 @@ export class Solver {
         return { ...dimension, id: generateGuid() } as IVirtualDimension;
     }
 
-    protected getCombinableSpacePairs(unusedDimensions: IVirtualDimension[], returnFirstOnly: boolean = false): IVirtualDimension[][] {
-        let output = [];
-        for (let unusedDimension of unusedDimensions) {
-            let result = [unusedDimension, ...unusedDimensions.filter((x: IVirtualDimension) => x === unusedDimension ? false : this._unusedDimensionsShare4Points(unusedDimension, x))];
+    protected getCombinableSpacePairs(unusedDimensions: IVirtualDimension[], returnFirstOnly = false): IVirtualDimension[][] {
+        const output = [];
+        for (const unusedDimension of unusedDimensions) {
+            const result = [unusedDimension, ...unusedDimensions.filter((x: IVirtualDimension) => x === unusedDimension ? false : this._unusedDimensionsShare4Points(unusedDimension, x))];
             if (result.length > 1) {
                 output.push(result);
                 if (returnFirstOnly) break;
             }
         }
+
         return output;
     }
 
     protected putOrderAndCreateIVirtualDimensions(order: IOrder, virtualDimension: IVirtualDimension): IVirtualDimension[] {
-        let virtualDimensions: IVirtualDimension[] = [];
+        const virtualDimensions: IVirtualDimension[] = [];
         if (order.height < virtualDimension.height) {
             const above = calculateDimension(virtualDimension.xCoord, virtualDimension.yCoord, virtualDimension.zCoord, order.width, virtualDimension.height - order.height, order.length);
             virtualDimensions.push(above as IVirtualDimension);
@@ -53,7 +54,7 @@ export class Solver {
     }
 
     private _unusedDimensionsShare4Points(dim1: IVirtualDimension, dim2: IVirtualDimension): boolean {
-        let result = dim1.points.filter(p1 => dim2.points.findIndex(p2 => p1.xCoord === p2.xCoord && p1.yCoord === p2.yCoord && p1.zCoord === p2.zCoord) > -1);
+        const result = dim1.points.filter(p1 => dim2.points.findIndex(p2 => p1.xCoord === p2.xCoord && p1.yCoord === p2.yCoord && p1.zCoord === p2.zCoord) > -1);
         return result.length === 4;
     }
 

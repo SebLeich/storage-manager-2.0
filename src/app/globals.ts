@@ -31,7 +31,7 @@ export const algorithms = [
     }
 ]
 
-export function compare(a: number | string, b: number | string, isAsc: boolean = true) {
+export function compare(a: number | string, b: number | string, isAsc = true) {
     if (!a) a = '';
     if (!b) b = '';
     if (typeof (a) === 'string') a = a.trim().toLocaleLowerCase();

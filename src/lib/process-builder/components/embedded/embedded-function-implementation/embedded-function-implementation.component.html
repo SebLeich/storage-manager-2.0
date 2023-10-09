@@ -30,9 +30,14 @@
             </mat-select>
         </mat-form-field>
 
-        <mat-slide-toggle formControlName="functionCanFail">
-            {{functionCanFailControl.value? 'can fail': 'can not fail'}}
-        </mat-slide-toggle>
+        <div class="toggle-wrapper">
+            <mat-slide-toggle formControlName="functionCanFail">
+                {{functionCanFailControl.value? 'can fail': 'can not fail'}}
+            </mat-slide-toggle>
+            <mat-slide-toggle formControlName="outputIsArray">
+                {{outputIsArrayControl.value? 'returns collection': 'returns single instance'}}
+            </mat-slide-toggle>
+        </div>
 
         <div class="loading-wrapper">
             <mat-spinner *ngIf="(returnValueStatus$|async) === MethodEvaluationStatus.Calculating"

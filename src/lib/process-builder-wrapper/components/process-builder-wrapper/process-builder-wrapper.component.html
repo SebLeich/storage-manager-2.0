@@ -3,7 +3,7 @@
     <div class="process-builder-wrapper">
 
         <div class="description-wrapper">
-            <app-markdown-editor [value]="currentBpmnJSModelDescription$|async" [configuration]="{ noBorder: true, emitOn: ['blur', 'enter'] }" (valueChanged)="saveDescription($event)"></app-markdown-editor>
+            <app-markdown-editor [value]="currentBpmnJSModelDescription$|async" [configuration]="{ noBorder: true, emitOn: ['blur', 'enter'], emitEvenIfPristine: false }" (valueChanged)="saveDescription($event)"></app-markdown-editor>
         </div>
 
         <app-process-builder *ngIf="hasCurrentBpmnJSModel$|async; else noBpmnModelSetted" @fadeIn></app-process-builder>

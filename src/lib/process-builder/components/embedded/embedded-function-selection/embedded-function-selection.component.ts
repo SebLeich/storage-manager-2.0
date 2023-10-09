@@ -1,4 +1,4 @@
-import { AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, Input, OnDestroy, ViewChild } from '@angular/core';
+import { AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, Input, OnDestroy, ViewChild, signal } from '@angular/core';
 import { ParamCodes } from 'src/config/param-codes';
 import { IEmbeddedView } from 'src/lib/process-builder/classes/embedded-view';
 import { IInputParam, IFunction } from '@process-builder/interfaces';
@@ -13,6 +13,10 @@ import { showAnimation } from 'src/lib/shared/animations/show';
 import { showListAnimation } from 'src/lib/shared/animations/show-list-slow';
 import { ProcessBuilderRepository } from '@/lib/core/process-builder-repository';
 import { FunctionFormGroupService } from '@/lib/process-builder/services/function-form-group.service';
+import defaultImplementation from '@/lib/process-builder/globals/default-implementation';
+import { CodemirrorRepository } from '@/lib/core/codemirror.repository';
+import { selectSnapshot } from '@/lib/process-builder/globals/select-snapshot';
+import { selectIParams } from '@/lib/process-builder/store/selectors';
 
 @Component({
 	selector: 'app-embedded-function-selection',
@@ -27,6 +31,7 @@ export class EmbeddedFunctionSelectionComponent implements IEmbeddedView, OnDest
 	@ViewChild('searchInput', { static: true, read: ElementRef }) private _searchInput!: ElementRef<HTMLInputElement>;
 
 	public filterControl = new FormControl<string>('');
+	public hintControl = new FormControl<string>({ disabled: true, value: '' });
 	private _filter$ = this.filterControl.valueChanges.pipe(startWith(''), map(filter => {
 		const transformed = (filter ?? '').trim().toLowerCase().split(' ').filter(segment => segment);
 		return transformed;
@@ -39,30 +44,40 @@ export class EmbeddedFunctionSelectionComponent implements IEmbeddedView, OnDest
 	public searchinputExpanded = false;
 
 	private _allFunctions$ = this._store.select(selectFunctions());
-	public functions$ = combineLatest([this._allFunctions$, this._filter$]).pipe(map(([functions, filter]) => {
-		return functions.filter(func => {
-			if (!func) {
-				return false;
-			}
+	public filteredFunctions$ = combineLatest([this._allFunctions$, this._filter$]).pipe(switchMap(async ([functions, filter]) => {
+		const availableInputParamIds = Array.isArray(this.inputParams) ? this.inputParams : this.inputParams ? [this.inputParams] : [];
+		const availableInputParams = await selectSnapshot(this._store.select(selectIParams(availableInputParamIds)));
 
-			if (filter.length > 0) {
-				const functionNameSegments = func.name.trim().toLowerCase().split(' ')
-				const isNotMatchingFilter = filter.some(segment => functionNameSegments.every(functionSegment => functionSegment.indexOf(segment) === -1));
-				if (isNotMatchingFilter) {
-					return false;
+		return functions
+			.filter(func => {
+				if (!func) return false;
+
+				if (filter.length > 0) {
+					const functionNameSegments = func.name.trim().toLowerCase().split(' ')
+					const isNotMatchingFilter = filter.some(segment => functionNameSegments.every(functionSegment => functionSegment.indexOf(segment) === -1));
+					if (isNotMatchingFilter) {
+						return false;
+					}
 				}
-			}
 
-			const inputTemplates = Array.isArray(func.inputTemplates) ? func.inputTemplates.filter(input => input !== 'dynamic') : [];
-			const requiredInputTemplates = inputTemplates.filter(param => param && typeof param === 'object' && !param.optional).map((x) => (x as IInputParam).interface) as string[];
-			if (requiredInputTemplates.length === 0) {
 				return true;
-			}
+			})
+			.map(func => {
+				const inputTemplates = Array.isArray(func.inputTemplates) ? func.inputTemplates.filter(input => input !== 'dynamic') : [];
+				const requiredInputs: IInputParam[] = inputTemplates.filter(param => typeof param === 'object' && !param.optional) as IInputParam[];
+				const inputsAvailable = requiredInputs.length === 0? true: requiredInputs.every(requiredInput => availableInputParams.some(param => {
+					if(requiredInput.type === 'object' && requiredInput.interface){
+						return requiredInput.interface === param.interface;
+					}
+	
+					return param.type === requiredInput.type;
+				}));
 
-			const availableInputParams: ParamCodes[] = Array.isArray(this.inputParams) ? this.inputParams : this.inputParams ? [this.inputParams] : [];
-			return true;
-		});
+				return { ...func, inputsAvailable };
+			});
 	}));
+
+	public functions$ = this.filteredFunctions$.pipe(map(functions => functions.filter(func => func.inputsAvailable)));
 
 	public functionTemplates$ = this.functions$.pipe(map(funcs => funcs.filter(func => !func._isImplementation)));
 	public customFunctions$ = this.functions$.pipe(map(funcs => funcs.filter(func => func._isImplementation && func.customImplementation)));
@@ -78,9 +93,22 @@ export class EmbeddedFunctionSelectionComponent implements IEmbeddedView, OnDest
 	});
 	public requiresCustomOutputParamName$ = this.selectedFunction$.pipe(map(selectedFunction => !selectedFunction?.requireCustomImplementation && !selectedFunction?.customImplementation && typeof selectedFunction?.outputTemplate === 'string'));
 
+	public hintVisible = signal(false);
+
 	private _subscriptions = new Subscription();
 
 	constructor(private _store: Store, private _controlContainer: ControlContainer, private elementRef: ElementRef, private _changeDetectorRef: ChangeDetectorRef) { }
+
+	public displayHint(func: IFunction, event?: MouseEvent){
+		if(event){
+			event.stopPropagation();
+			event.preventDefault();
+		}
+
+		this.hintControl.setValue(func.description ?? '');
+
+		this.hintVisible.set(true);
+	}
 
 	public ngOnDestroy(): void {
 		this._subscriptions.unsubscribe();
@@ -101,7 +129,18 @@ export class EmbeddedFunctionSelectionComponent implements IEmbeddedView, OnDest
 
 	public async selectFunction(selectedFunction: IFunction) {
 		const patchValue = await new FunctionFormGroupService(this._store).getFunctionFormGroupValue(selectedFunction, !this.formGroup.controls.outputParamName?.pristine);
-		this.formGroup.patchValue(patchValue);
+		if (patchValue.functionIdentifier === this.formGroup.controls.functionIdentifier?.value) {
+			this.formGroup.patchValue({
+				functionIdentifier: null,
+				functionCanFail: false,
+				functionImplementation: CodemirrorRepository.stringToTextLeaf(defaultImplementation),
+				functionFinalizesFlow: false,
+				functionName: '',
+				functionNormalizedName: '',
+			});
+		}
+		else this.formGroup.patchValue(patchValue);
+
 		this._changeDetectorRef.markForCheck();
 	}
 

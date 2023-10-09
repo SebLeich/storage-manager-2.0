@@ -8,32 +8,42 @@
                     {{ customImplementationRequiredText }}
                 </div>
             </ng-container>
+
+            <div *ngIf="inputsMissing" class="tag danger">At least one input missing</div>
         </div>
         <div class="io-wrapper">
-            <div class="input" [class.no-value]="!(inputs$|async)?.length" matTooltip="function inputs"
-                matTooltipPosition="before">
-                <mat-icon>login</mat-icon>
-                <ng-container *ngIf="!(inputs$|async)?.length; else inputParamPreview">
-                    requires no inputs
-                </ng-container>
-            </div>
-            <div class="output" [class.no-value]="(output$ | async) ? false : true" matTooltip="function output"
-                matTooltipPosition="before">
-                <mat-icon>logout</mat-icon>
-                {{ (output$ | async) ?? "no output" }}
-            </div>
+
+            <ng-container *ngLet="(func|inputParam|async) as inputParams">
+
+                <div class="input" [class.no-value]="!inputParams" matTooltip="function inputs"
+                    matTooltipPosition="before">
+                    <mat-icon>login</mat-icon>
+                    <ng-container *ngIf="!inputParams; else inputParamPreview">
+                        requires no inputs
+                    </ng-container>
+                </div>
+
+                <ng-template #inputParamPreview>
+                    <div class="input-param-list">
+                        <app-comma-separated-list tagClassList="input-param"
+                            [items]="inputParams ?? undefined"></app-comma-separated-list>
+                    </div>
+                </ng-template>
+
+            </ng-container>
+
+            <ng-container *ngLet="(func|outputParam|async) as outputParam">
+                <div class="output" [class.no-value]="outputParam ? false : true" matTooltip="function output"
+                    matTooltipPosition="before">
+                    <mat-icon>logout</mat-icon>
+                    <span>{{ outputParam ?? "no output" }}</span>
+                </div>
+            </ng-container>
+
         </div>
     </div>
 </div>
 
-<ng-template #inputParamPreview>
-    <div class="input-param-list">
-        <div class="input-param" *ngFor="let param of inputs$|async">
-            {{ param }}
-        </div>
-    </div>
-</ng-template>
-
 <ng-template #canFailHint>
-    <div *ngIf="func?.canFail" class="tag can-fail-hint">May fail</div>
+    <div *ngIf="func?.canFail" class="tag danger">May fail</div>
 </ng-template>

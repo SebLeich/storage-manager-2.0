@@ -18,6 +18,7 @@ export interface ITaskCreationFormGroupValue {
     outputParamValue: IParam | IParamDefinition[] | null;
     outputParamType: ParamType | null;
     outputParamInterface: string | null;
+    outputIsArray: boolean;
 }
 
 export type TaskCreationFormGroup = FormGroup<{ [key in keyof ITaskCreationFormGroupValue]?: FormControl<ITaskCreationFormGroupValue[key]> }>; 

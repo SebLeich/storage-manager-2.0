@@ -1,9 +1,9 @@
-<div class="body" [class.limited-height]="limitedHeight$ | async">
+<div class="body" [class.limited-height]="limitedHeight()">
   <a class="option-wrapper disabled">
     <div
       class="option"
       routerLink="route-planning"
-      [class.active]="location.pathname === baseHref + '/route-planning'"
+      [class.active]="(pathname$ | async) === baseHref + '/route-planning'"
     >
       <mat-icon class="icon">map</mat-icon>
       <div class="text">routing</div>
@@ -14,7 +14,7 @@
     <div
       class="option"
       routerLink="data-pipeline-designer"
-      [class.active]="location.pathname === baseHref + 'data-pipeline-designer'"
+      [class.active]="(pathname$ | async) === baseHref + 'data-pipeline-designer'"
     >
       <mat-icon class="icon">hub</mat-icon>
       <div class="text">pipeline</div>
@@ -25,7 +25,7 @@
     <div
       class="option"
       routerLink="pipe-runner"
-      [class.active]="location.pathname === baseHref + 'pipe-runner'"
+      [class.active]="(pathname$ | async) === baseHref + 'pipe-runner'"
     >
       <mat-icon class="icon">play_arrow</mat-icon>
       <div class="text">run pipe</div>
@@ -36,7 +36,7 @@
     <div
       class="option"
       routerLink="local-data"
-      [class.active]="location.pathname === baseHref + 'local-data'"
+      [class.active]="(pathname$ | async) === baseHref + 'local-data'"
     >
       <mat-icon class="icon">web_stories</mat-icon>
       <div class="text">local data</div>
@@ -47,7 +47,7 @@
     <div
       class="option"
       routerLink="calculation"
-      [class.active]="location.pathname === baseHref + 'calculation'"
+      [class.active]="(pathname$ | async) === baseHref + 'calculation'"
     >
       <mat-icon class="icon">rocket_launch</mat-icon>
       <div class="text">calculation</div>
@@ -63,7 +63,7 @@
       class="option"
       (click)="gotoVisualizer()"
       [ngClass]="{
-        active: location.pathname === baseHref + 'visualizer',
+        active: (pathname$ | async) === baseHref + 'visualizer',
         highlighted: solutionNavItemHighlighted$ | async
       }"
     >
@@ -78,7 +78,7 @@
     <div
       class="option"
       routerLink="about"
-      [class.active]="location.pathname === '/about'"
+      [class.active]="(pathname$ | async) === '/about'"
     >
       <mat-icon class="icon">help</mat-icon>
       <div class="text">about</div>

@@ -50,8 +50,7 @@ export class ParamEditorComponentService {
         interface: null,
         constant: null,
         isProcessOutput: undefined,
-        nullable: null,
-        optional: null,
+        isCollection: false,
       })
     ),
     distinctUntilChanged(),
@@ -91,9 +90,9 @@ export class ParamEditorComponentService {
   ) { }
 
   public updateInjector(iParams: IParam[]): void {
-    for (let param of iParams) {
+    for (const param of iParams) {
       const value = ProcessBuilderRepository.createPseudoObjectFromIParamDefinition(param!.defaultValue), interfaceObject = ProcessBuilderRepository.createPseudoObjectFromIParamDefinition(param!.defaultValue);
-      this._store.dispatch(upsertProvider(param!.normalizedName, value, interfaceObject));
+      this._store.dispatch(upsertProvider(param.normalizedName, value, interfaceObject));
     }
   }
 }

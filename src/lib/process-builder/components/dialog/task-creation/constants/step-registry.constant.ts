@@ -8,6 +8,7 @@ import { EmbeddedConfigureErrorGatewayEntranceConnectionComponent } from "../../
 import { EmbeddedFunctionImplementationComponent } from "../../../embedded/embedded-function-implementation/embedded-function-implementation.component";
 import { EmbeddedFunctionSelectionComponent } from "../../../embedded/embedded-function-selection/embedded-function-selection.component";
 import { EmbeddedInputOutputMappingComponent } from "../../../embedded/embedded-input-output-mapping/embedded-input-output-mapping.component";
+import { EmbeddedInputParamSelectionComponent } from '../../../embedded/embedded-input-param-selection/embedded-input-param-selection.component';
 
 export default new Map<TaskCreationStep, {
     type: Type<IEmbeddedView>;
@@ -38,6 +39,13 @@ export default new Map<TaskCreationStep, {
         type: EmbeddedInputOutputMappingComponent,
         provideInputParams: (arg: IEmbeddedView, element: IElement) => {
             const component = arg as EmbeddedInputOutputMappingComponent;
+            component.inputParams = BPMNJsRepository.getAvailableInputParams(element);
+        },
+    }],
+    [TaskCreationStep.ConfigureFunctionInput, {
+        type: EmbeddedInputParamSelectionComponent,
+        provideInputParams: (arg: IEmbeddedView, element: IElement) => {
+            const component = arg as EmbeddedInputParamSelectionComponent;
             component.inputParams = BPMNJsRepository.getAvailableInputParams(element);
         },
     }],

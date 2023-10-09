@@ -1,8 +1,8 @@
 @import "src/lib/scss/button";
 
 .body {
-	width: min(80vw, 1200px);
-	height: 80vh;
+	width: min(80vw, 1470px);
+	height: 90vh;
 	overflow: hidden;
 	box-sizing: border-box;
 	display: flex;
@@ -34,7 +34,7 @@
 			box-sizing: border-box;
 			flex: 1;
 			overflow-y: auto;
-			background-color: #f8f8f8;
+			background: repeating-linear-gradient(45deg, #f6f6f6, #dfdfdf 100px, #e8e8e8 500px, #f6f6f6 900px);
 		}
 	}
 

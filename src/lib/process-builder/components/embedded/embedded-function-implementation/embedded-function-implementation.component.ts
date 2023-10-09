@@ -2,7 +2,7 @@ import { AfterContentInit, ChangeDetectionStrategy, Component, Inject, Input, On
 import { concat, defer, from, Observable, of, startWith, Subscription } from 'rxjs';
 import { IEmbeddedView } from 'src/lib/process-builder/classes/embedded-view';
 import { MethodEvaluationStatus } from 'src/lib/process-builder/globals/method-evaluation-status';
-import { debounceTime, map, share, switchMap, take } from 'rxjs/operators';
+import { debounceTime, map, share, switchMap } from 'rxjs/operators';
 import { ControlContainer, FormControl } from '@angular/forms';
 import { ProcessBuilderService } from 'src/lib/process-builder/services/process-builder.service';
 import { TaskCreationFormGroup } from 'src/lib/process-builder/interfaces/task-creation-form-group-value.interface';
@@ -71,11 +71,26 @@ export class EmbeddedFunctionImplementationComponent implements IEmbeddedView, A
 		return this.formGroup.controls.functionCanFail as FormControl<boolean>;
 	}
 
+	public get outputIsArrayControl(): FormControl<boolean> {
+		return this.formGroup.controls.outputIsArray as FormControl<boolean>;
+	}
+
 	private async _verifyOutput(type: ParamType | null, templateIdentifier: string | null | undefined, paramName: string, status: IMethodEvaluationResult): Promise<void> {
 		let outputParamName: string;
 		(this.formGroup.controls.outputParamType as FormControl).setValue(type);
 
-		if (type !== 'object') {
+		if(type == null)
+		{
+			this.formGroup.controls.outputIsArray?.disable();
+			this.formGroup.controls.outputIsArray?.setValue(false);
+		}
+		else this.formGroup.controls.outputIsArray?.enable();
+
+		if(type === 'array'){
+			this.formGroup.controls.outputIsArray?.setValue(true);
+		}
+
+		if (type !== 'object' && !status?.unaryExpression) {
 			this.formGroup.controls.outputParamInterface?.setValue(null);
 			this.formGroup.controls.outputParamInterface?.disable();
 			outputParamName = paramName;

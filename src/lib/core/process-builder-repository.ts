@@ -1,6 +1,6 @@
-import { Observable, ReplaySubject } from "rxjs";
-import { IInterface, IParamDefinition, IParam } from "@process-builder/interfaces";
+import { IParamDefinition, IParam } from "@process-builder/interfaces";
 import { ParamType } from "../process-builder/types/param.type";
+import { camelCase } from "lodash";
 
 export class ProcessBuilderRepository {
 
@@ -61,6 +61,13 @@ export class ProcessBuilderRepository {
 
     }
 
+    /**
+     * @deprecated
+     * @param arg 
+     * @param parent 
+     * @param config 
+     * @returns 
+     */
     public static createPseudoObjectFromIParamDefinition(arg: IParam | IParamDefinition | null | undefined, parent: any = null, config: {
         string: () => string | undefined,
         boolean: () => boolean | undefined,
@@ -116,61 +123,14 @@ export class ProcessBuilderRepository {
 
     }
 
-    public static createPseudoObjectFromIInterface(arg: IInterface | undefined, parent: any = null, config: {
-        string: () => string | undefined,
-        boolean: () => boolean | undefined,
-        number: () => number | undefined,
-        object: () => object,
-        array: () => any[],
-        bigint: () => bigint | undefined,
-        function: () => (() => any) | undefined,
-        symbol: () => symbol | undefined,
-        undefined: () => undefined
-    } = {
-            string: () => undefined,
-            boolean: () => undefined,
-            number: () => undefined,
-            object: () => { return {} },
-            array: () => [],
-            function: () => undefined,
-            symbol: () => undefined,
-            bigint: () => undefined,
-            undefined: () => undefined
-        }): object {
-
-        if (!arg) return {};
-
-        let dummyObject = {};
-
-        try {
-
-            let defaultValue = {};
-
-            if (Array.isArray(parent)) {
-                parent.push(defaultValue);
-            }
-            else if (parent && typeof parent === 'object') {
-                parent[arg.name] = defaultValue;
-            }
-
-            if (arg.typeDef) {
-                let typeDefArray = Array.isArray(arg.typeDef) ? arg.typeDef : [arg.typeDef];
-
-                for (let def of typeDefArray) {
-
-                    this.createPseudoObjectFromIParamDefinition(def, dummyObject);
-
-                }
-            }
-        } catch (e) {
-            debugger;
-        } finally {
-            return dummyObject;
-        }
-
-    }
-
-    public static extractObjectTypeDefinition(arg: any, isRoot = true, defaultParamName = 'unnamed param', isNullable = false, isOptional = false, isConstant = false): IParamDefinition | IParamDefinition[] {
+    /**
+     * @deprecated
+     * @param arg 
+     * @param parent 
+     * @param config 
+     * @returns 
+     */
+    public static extractObjectTypeDefinition(arg: any, isRoot = true, defaultParamName = 'unnamed param', isNullable = false, isOptional = false, isConstant = false, isCollection = false): IParamDefinition | IParamDefinition[] {
 
         const rootDef: IParamDefinition = {
             'name': defaultParamName,
@@ -181,7 +141,8 @@ export class ProcessBuilderRepository {
             'defaultValue': !isConstant && typeof arg === 'object' ? null : arg,
             'type': Array.isArray(arg) ? 'array' : (typeof arg) as ParamType,
             'interface': null,
-            'typeDef': []
+            'typeDef': [],
+            isCollection
         };
 
         if (typeof arg !== 'object') {
@@ -246,34 +207,7 @@ export class ProcessBuilderRepository {
     }
 
     public static normalizeName(text?: string | null): string {
-        if (typeof text !== 'string') {
-            return '';
-        }
-        text = text.toLowerCase().replace(/[\(\)-_?:*%!;¿\s.]+(.)?/g, (_, c) => c ? c.toUpperCase() : '');
-        return text.substr(0, 1).toLowerCase() + text.substr(1);
-    }
-
-    public static executeUserMethodAndReturnResponse(doc: string[], injector: any): Observable<any> {
-
-        let subject = new ReplaySubject<any>(1);
-        let jsText = doc.join('\n');
-
-        let mainMethod: (injector: any) => any | Promise<any> = eval(jsText);
-        if (this._returnsPromise(mainMethod)) (mainMethod(injector) as Promise<any>)
-            .then((result: any) => subject.next(result))
-            .catch((error: any) => subject.error(error))
-            .finally(() => subject.complete());
-        else {
-            try {
-                subject.next(mainMethod(injector));
-            } catch (e) {
-                subject.error(e);
-            } finally {
-                subject.complete();
-            }
-        }
-
-        return subject.asObservable();
+        return camelCase(text ?? '');
     }
 
     public static async calculateCustomImplementationOutput(arg: string[] | string | null | undefined | (() => string[] | string | null | undefined), injector: object) {
@@ -298,11 +232,10 @@ export class ProcessBuilderRepository {
             name: entry[0],
             interface: null,
             constant: null,
-            nullable: null,
-            optional: null,
             type: type === 'object' && Array.isArray(entry[1]) ? 'array' : type,
             typeDef: null,
-            normalizedName: ProcessBuilderRepository.normalizeName(entry[0])!
+            normalizedName: ProcessBuilderRepository.normalizeName(entry[0])!,
+            isCollection: false,
         };
     }
 
@@ -317,8 +250,5 @@ export class ProcessBuilderRepository {
         'undefined': () => undefined,
         'function': () => () => { /** my method */ }
     };
-
-    private static _isPromise = (p: any) => typeof p === 'object' && typeof p.then === 'function';
-    private static _returnsPromise = (f: any) => f.constructor.name === 'AsyncFunction' || (typeof f === 'function' && this._isPromise(f()));
 
 }

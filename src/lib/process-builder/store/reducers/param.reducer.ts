@@ -31,16 +31,8 @@ export const reducer = createReducer(
 
 	on(addIParam, (state: State, { param }) => {
 		return adapter.addOne({
+			...param,
 			identifier: typeof param.identifier === 'number' ? param.identifier : nextId(state),
-			defaultValue: param.defaultValue,
-			name: param.name,
-			normalizedName: param.normalizedName,
-			constant: param.constant,
-			interface: param.interface,
-			nullable: param.nullable,
-			optional: param.optional,
-			type: param.type,
-			typeDef: param.typeDef,
 			_isIParam: true
 		}, state);
 	}),
@@ -70,34 +62,16 @@ export const reducer = createReducer(
 
 	on(upsertIParam, (state: State, { param }) => {
 		return adapter.upsertOne({
-			_isIParam: true,
-			constant: param.constant,
-			defaultValue: param.defaultValue,
-			identifier: param.identifier,
-			interface: param.interface,
-			name: param.name,
-			normalizedName: param.normalizedName,
-			nullable: param.nullable,
-			optional: param.optional,
-			type: param.type,
-			typeDef: param.typeDef
+			...param,
+			_isIParam: true
 		}, state);
 	}),
 
 	on(upsertIParams, (state: State, { params }) => {
 		return adapter.upsertMany(params.map(param => {
 			return {
-				_isIParam: true,
-				constant: param.constant,
-				defaultValue: param.defaultValue,
-				identifier: param.identifier,
-				interface: param.interface,
-				name: param.name,
-				normalizedName: param.normalizedName,
-				nullable: param.nullable,
-				optional: param.optional,
-				type: param.type,
-				typeDef: param.typeDef
+				...param,
+				_isIParam: true
 			}
 		}), state);
 	}),

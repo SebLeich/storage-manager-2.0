@@ -59,7 +59,13 @@ export class ParameterService {
 		try {
 
 			let defaultValue = arg.type === 'array' ? [] : arg.type === 'object' ? {} : arg.defaultValue;
-			if (!defaultValue) defaultValue = config[arg.type]();
+			if (!defaultValue) {
+				if(typeof config[arg.type] === 'undefined'){
+					debugger;
+				}
+				
+				defaultValue = config[arg.type]();
+			}
 			if (!defaultValue) defaultValue = this._randomValueGenerator[arg.type]();
 
 			if (Array.isArray(parent)) parent.push(defaultValue);

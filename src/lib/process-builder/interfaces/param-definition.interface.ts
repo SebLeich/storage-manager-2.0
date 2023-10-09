@@ -8,6 +8,7 @@ export interface IParamDefinition {
     interface: string | null;
     defaultValue: any | null;
     constant: boolean | null;
-    nullable: boolean | null;
-    optional: boolean | null;
+    isCollection: boolean;
+    nullable?: boolean;
+    optional?: boolean;
 }

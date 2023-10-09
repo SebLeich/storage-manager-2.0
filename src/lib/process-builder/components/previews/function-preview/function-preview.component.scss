@@ -1,98 +1,108 @@
 @import "src/lib/scss/gradients";
 
 .body {
-  height: 100%;
-  cursor: pointer;
+	height: 100%;
+	cursor: default;
 
-  .preview {
-    height: 100%;
-    display: flex;
-    flex-direction: column;
+	.preview {
+		height: 100%;
+		display: flex;
+		flex-direction: column;
 
-    .headline {
-      font-size: 1.2rem;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      text-transform: uppercase;
-      font-weight: 500;
-      color: #6c6c6c;
-    }
+		.headline {
+			font-size: 1.2rem;
+			white-space: nowrap;
+			overflow: hidden;
+			text-overflow: ellipsis;
+			text-transform: uppercase;
+			font-weight: 500;
+			color: #6c6c6c;
+			margin-right: .5rem;
+		}
 
-    .description {
-      font-weight: 100;
-      margin: 0.35rem 0px;
-      font-size: .9rem;
-    }
+		.description {
+			font-weight: 100;
+			margin: 0.35rem 0px;
+			font-size: .8rem;
+		}
 
-    .io-wrapper {
-      flex: 1;
-      display: flex;
+		.io-wrapper {
+			flex: 1;
+			display: flex;
 
-      > * {
-        margin-right: 0.5rem;
-        display: flex;
-        font-size: 0.8rem;
-        align-items: center;
-        color: #494949;
+			>* {
+				margin-right: 0.5rem;
+				display: flex;
+				font-size: 0.8rem;
+				align-items: center;
+				color: #494949;
 
-        &.no-value {
-          opacity: 0.1;
-        }
+				&.no-value {
+					opacity: 0.1;
+				}
 
-        :nth-child(1) {
-          margin-right: 5px;
-        }
+				:nth-child(1) {
+					margin-right: 5px;
+				}
 
-        :nth-child(2) {
-          flex: 1;
-        }
-      }
+				:nth-child(2) {
+					flex: 1;
+					display: contents;
+				}
+			}
 
-      .input {
-        flex: 2;
+			.input {
+				flex: 2;
 
-        mat-icon {
-          color: green;
-        }
-      }
+				mat-icon {
+					color: green;
+					display: contents;
+				}
+			}
 
-      .output {
-        flex: 1;
+			.output {
+				flex: 1;
 
-        mat-icon {
-          color: rgb(255 0 68);
-        }
-      }
-    }
-  }
+				mat-icon {
+					color: rgb(255 0 68);
+					display: contents;
+				}
+			}
+		}
+	}
 }
 
 .tag {
-  margin: 0 0.2rem 0.5rem 0;
-  font-size: 0.7rem;
-  border: 1px solid;
-  padding: 3px 4px 2px 4px;
-  display: inline-block;
-  border-radius: 3px;
-  line-height: 0.7rem;
+	margin: 0 0.2rem 0.5rem 0;
+	font-size: 0.7rem;
+	border: 1px solid;
+	padding: 3px 4px 2px 4px;
+	display: inline-block;
+	border-radius: 3px;
+	line-height: 0.7rem;
 
-  &.custom-implementation-hint {
-    color: rgb(150 53 161);
-  }
+	&.custom-implementation-hint {
+		color: rgb(150 53 161);
+	}
 
-  &.can-fail-hint {
-    color: rgb(200, 89, 89);
-  }
+	&.danger {
+		color: rgb(255 244 244);
+		background-color: rgb(200, 89, 89);
+	}
 }
 
 .input-param-list {
-  .input-param {
-    @include gradient-yellowgreen;
-    padding: 2px 4px;
-    color: white;
-    margin: 2px;
-    display: inline-block;
-    border-radius: 3px;
-  }
+	::ng-deep .input-param {
+		@include gradient-yellowgreen;
+		padding: 2px 4px;
+		color: white;
+		margin: 2px;
+		display: inline-block;
+		border-radius: 3px;
+		font-size: .6rem;
+
+		&.optional {
+			font-style: italic;
+		}
+	}
 }

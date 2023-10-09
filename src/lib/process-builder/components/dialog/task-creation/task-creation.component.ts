@@ -22,7 +22,7 @@ import { ITaskCreationInput } from './interfaces/task-creation-input.interface';
 import { selectSnapshot } from '@/lib/process-builder/globals/select-snapshot';
 import { ITextLeaf } from '@/lib/process-builder/interfaces/text-leaf.interface';
 import { IEvaluationResultProvider } from './interfaces/evalution-result-provider.interface';
-import { IMethodEvaluationResult } from '@/lib/process-builder/interfaces';
+import { IFunction, IMethodEvaluationResult } from '@/lib/process-builder/interfaces';
 
 @Component({
 	selector: 'app-task-creation',
@@ -48,6 +48,7 @@ export class TaskCreationComponent implements IEvaluationResultProvider, OnDestr
 		outputParamNormalizedName: new FormControl(this.data.taskCreationFormGroupValue.outputParamNormalizedName),
 		outputParamType: new FormControl(this.data.taskCreationFormGroupValue.outputParamType),
 		outputParamValue: new FormControl(this.data.taskCreationFormGroupValue.outputParamValue),
+		outputIsArray: new FormControl(this.data.taskCreationFormGroupValue.outputIsArray),
 	}, {
 		asyncValidators: [outputNameValidator(this._store, this), implementationExistsWhenRequiredValidator(this._store)],
 		validators: [functionSelectedValidator(this.data?.taskCreationPayload?.configureActivity ? true : false)]
@@ -82,9 +83,9 @@ export class TaskCreationComponent implements IEvaluationResultProvider, OnDestr
 	public hasCustomImplementation$ = this.selectedFunction$
 		.pipe(map((selectedFunction) => selectedFunction?.requireCustomImplementation ?? false), distinctUntilChanged());
 
-	public hasDynamicInputParameters$ = this.selectedFunction$
+	public hasInputParameters$ = this.selectedFunction$
 		.pipe(
-			map(selectedFunction => selectedFunction?.inputTemplates === 'dynamic' && !(selectedFunction.requireCustomImplementation || selectedFunction.customImplementation) ? true : false),
+			map(selectedFunction => selectedFunction?.inputTemplates? true: false),
 			distinctUntilChanged()
 		);
 
@@ -105,7 +106,7 @@ export class TaskCreationComponent implements IEvaluationResultProvider, OnDestr
 		}),
 		distinctUntilChanged()
 	);
-	public steps$ = combineLatest([this.hasCustomImplementation$, this.hasDynamicInputParameters$, this.hasDataMapping$, this.hasStaticOutputDefinition$]).pipe(
+	public steps$ = combineLatest([this.hasCustomImplementation$, this.hasInputParameters$, this.hasDataMapping$, this.hasStaticOutputDefinition$]).pipe(
 		map(
 			([hasCustomImplementation, hasDynamicInputParameters, hasDataMapping, hasStaticOutputDefinition]) =>
 				this._getSteps([
@@ -173,13 +174,19 @@ export class TaskCreationComponent implements IEvaluationResultProvider, OnDestr
 		this.isBlocked = true;
 		this._ref.disableClose = true;
 
-		const inputParams = BPMNJsRepository.getAvailableInputParams(this.data.taskCreationPayload.configureActivity);
-		const { injector, mappedParameters } = await this._parameterService.parameterToInjector(inputParams),
-			taskCreationPayload = this.data.taskCreationPayload,
-			selectedFunction = await selectSnapshot(this._store.select(selectFunction(this.formGroup.value.functionIdentifier)));
+		const taskCreationPayload = this.data.taskCreationPayload;
+		let selectedFunction: IFunction | null | undefined,
+			methodEvaluation: IMethodEvaluationResult | undefined;
 
-		const implementation = selectedFunction?.requireCustomImplementation? this.formGroup.value.functionImplementation?.text ?? []: selectedFunction?.implementation;
-		const methodEvaluation = CodemirrorRepository.evaluateCustomMethod(undefined, implementation, injector, mappedParameters)
+		if(this.data.taskCreationPayload.configureActivity){
+			const inputParams = BPMNJsRepository.getAvailableInputParams(this.data.taskCreationPayload.configureActivity);
+			const { injector, mappedParameters } = await this._parameterService.parameterToInjector(inputParams);
+
+			selectedFunction = await selectSnapshot(this._store.select(selectFunction(this.formGroup.value.functionIdentifier)));
+	
+			const implementation = selectedFunction?.requireCustomImplementation? this.formGroup.value.functionImplementation?.text ?? []: selectedFunction?.implementation;
+			methodEvaluation = CodemirrorRepository.evaluateCustomMethod(undefined, implementation, injector, mappedParameters);
+		}
 
 		this.isBlocked = false;
 		this._ref.disableClose = false;

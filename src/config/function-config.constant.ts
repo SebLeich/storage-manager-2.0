@@ -88,5 +88,35 @@ export default [
         }`,
         outputTemplate: InterfaceCodes.Solution,
         requireCustomImplementation: false
+    } as IFunctionTemplate,
+    {
+        identifier: 12,
+        canFail: false,
+        description: 'the method extracts the groups of a set of orders',
+        inputTemplates: [
+            { type: 'array', interface: InterfaceCodes.Order, optional: false, name: 'orders' },
+        ],
+        name: 'extract order groups',
+        implementation: `async () => {
+            debugger;
+
+            const generateRandomColor = () => {
+                const letters = '0123456789ABCDEF';
+                let color = '#';
+                for (const i = 0; i < 6; i++) {
+                    color += letters[Math.floor(Math.random() * 16)];
+                }
+                return color;
+            };
+            
+            const output = orders.map(o => o.group)
+                .filter((value, index, self) => self.indexOf(value) === index)
+                .map(group => ({ id: group, color: generateRandomColor() }));
+
+            return output;
+        }`,
+        outputTemplate: InterfaceCodes.Group,
+        requireCustomImplementation: false,
+        outputTemplateIsArray: true,
     } as IFunctionTemplate
 ];

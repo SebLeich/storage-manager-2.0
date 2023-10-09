@@ -3,7 +3,12 @@
     'no-border': configuration.noBorder,
 }"
   (onEditorCreated)="onQuillEditorCreated($event)"
-  [modules]="{ toolbar: toolbar }"
+  [modules]="{
+    toolbar: {
+      container: toolbar.container,
+      handlers: toolbar.handlers
+    }
+  }"
   [formControl]="formControl"
   [format]="configuration.format ?? 'html'"
 ></quill-editor>

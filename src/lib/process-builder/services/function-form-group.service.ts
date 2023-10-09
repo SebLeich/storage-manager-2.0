@@ -40,6 +40,7 @@ export class FunctionFormGroupService {
 			const output = await selectSnapshot(this._store.select(selectIParam(selectedFunction.output)));
 			formGroupValue.outputParamName = (output as IParam).name;
 			formGroupValue.outputParamNormalizedName = (output as IParam).normalizedName;
+      formGroupValue.outputIsArray = (output as IParam).isCollection;
 		}
 
 		return formGroupValue;

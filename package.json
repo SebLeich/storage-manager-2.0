@@ -1,6 +1,6 @@
 {
   "name": "storage-manager",
-  "version": "0.6.1",
+  "version": "0.6.2",
   "scripts": {
     "compodoc": "npx compodoc -p tsconfig.doc.json",
     "ng": "ng",
@@ -51,6 +51,7 @@
     "jsoneditor": "^9.9.2",
     "lodash": "^4.17.21",
     "moment": "^2.29.4",
+    "ng-let": "^16.0.2",
     "ng2-charts": "^4.1.1",
     "ngx-json-viewer": "^3.2.1",
     "ngx-quill": "^21.0.0",

@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild, forwardRef } from '@angular/core';
+import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild, forwardRef } from '@angular/core';
 import { IEditorConfiguration } from '../../interfaces/editor-configuration.interface';
 import { ControlValueAccessor, FormControl, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { Subscription } from 'rxjs';
@@ -10,12 +10,13 @@ import Quill from 'quill';
 	templateUrl: './markdown-editor.component.html',
 	styleUrls: ['./markdown-editor.component.scss'],
 	providers: [{ provide: NG_VALUE_ACCESSOR, useExisting: forwardRef(() => MarkdownEditorComponent), multi: true }],
+	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MarkdownEditorComponent implements ControlValueAccessor, OnDestroy, OnInit {
 	@ViewChild(QuillEditorComponent) public editor: QuillEditorComponent | undefined;
 
 	@Input() public configuration: IEditorConfiguration = {};
-	@Input() public set value(value: string | null | undefined){
+	@Input() public set value(value: string | null | undefined) {
 		this.formControl.setValue(value ?? null);
 	}
 
@@ -25,19 +26,19 @@ export class MarkdownEditorComponent implements ControlValueAccessor, OnDestroy,
 
 	public formControl = new FormControl();
 
+	public toolbarOptions = [
+		['undo', 'redo'],
+		['bold', 'italic', 'underline', 'strike'],
+		[{ 'header': 1 }, { 'header': 2 }],
+		['image'],
+	];
 	public toolbar = {
-		container: [
-			['undo', 'redo'],
-			['bold', 'italic', 'underline', 'strike'],
-			[{ 'header': 1 }, { 'header': 2 }],
-			['image'],
-		],
+		container: this.toolbarOptions,
 		handlers: {
 			'undo': () => this.editor?.quillEditor.history.undo(),
 			'redo': () => this.editor?.quillEditor.history.redo(),
 		}
 	};
-
 
 	private _touched = false;
 	private _onTouched?: () => void;
@@ -86,6 +87,14 @@ export class MarkdownEditorComponent implements ControlValueAccessor, OnDestroy,
 			return;
 		}
 
+		if (this.formControl.pristine && !this.configuration.emitEvenIfPristine) {
+			if (source === 'enter') {
+				(document.activeElement as HTMLElement)?.blur();
+			}
+
+			return;
+		}
+
 		this._onChange?.(value);
 		this.valueChanged.emit(value);
 		if (!this._touched) {
@@ -96,6 +105,8 @@ export class MarkdownEditorComponent implements ControlValueAccessor, OnDestroy,
 		if (source === 'enter') {
 			(document.activeElement as HTMLElement)?.blur();
 		}
+
+		this.formControl.markAsPristine();
 	}
 
 	public writeValue(value: string | null): void {

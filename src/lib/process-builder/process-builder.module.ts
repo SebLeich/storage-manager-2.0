@@ -67,6 +67,11 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import sebleichProcessBuilderExtension from './globals/sebleich-process-builder-extension';
 import { BPMN_JS } from '@process-builder/injection';
 import { FunctionOutputPreviewComponent } from './components/embedded/embedded-function-implementation/components/function-output-preview/function-output-preview.component';
+import { OutputParamPipe } from './pipes/output-param.pipe';
+import { CommaSeparatedListModule } from '../comma-separated-list/comma-separated-list.module';
+import { NgLetModule } from 'ng-let';
+import { EmbeddedInputParamSelectionComponent } from './components/embedded/embedded-input-param-selection/embedded-input-param-selection.component';
+import { MarkdownEditorModule } from '../markdown-editor/markdown-editor.module';
 
 
 @NgModule({
@@ -93,10 +98,13 @@ import { FunctionOutputPreviewComponent } from './components/embedded/embedded-f
     ParamMemberPathPreviewComponent,
     UserInputComponent,
     InputParamPipe,
-    FunctionOutputPreviewComponent
+    FunctionOutputPreviewComponent,
+    OutputParamPipe,
+    EmbeddedInputParamSelectionComponent
   ],
   imports: [
     CommonModule,
+    CommaSeparatedListModule,
     ConfirmationModule,
     FormsModule,
     HttpClientModule,
@@ -113,6 +121,7 @@ import { FunctionOutputPreviewComponent } from './components/embedded/embedded-f
     MatSlideToggleModule,
     MatTooltipModule,
     MatSlideToggleModule,
+    NgLetModule,
     ReactiveFormsModule,
     PipelineStoreModule,
 
@@ -131,7 +140,8 @@ import { FunctionOutputPreviewComponent } from './components/embedded/embedded-f
     StoreModule.forFeature(fromInjectionContext.featureKey, fromInjectionContext.reducer),
 
     ProcedureStoreModule,
-    CodeEditorModule
+    CodeEditorModule,
+    MarkdownEditorModule,
   ],
   exports: [
     ProcessBuilderComponent,
