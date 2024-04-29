@@ -13,6 +13,15 @@ services:
       - frontend
     volumes:
       - /etc/letsencrypt:/etc/letsencrypt
+      - ./var/lib/letsencrypt:/var/lib/letsencrypt
+      - ./var/lib/letsencrypt:/var/log/letsencrypt
+
+  certbot:
+    image: certbot/certbot
+    volumes:
+      - ./etc/letsencrypt:/etc/letsencrypt
+      - ./var/lib/letsencrypt:/var/lib/letsencrypt
+      - ./var/lib/letsencrypt:/var/log/letsencrypt
 
   frontend:
     image: sebleich/storage-manager:latest
