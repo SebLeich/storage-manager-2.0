@@ -1,10 +1,10 @@
-import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
-import { FormControl, UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
+import { ChangeDetectionStrategy, Component, DestroyRef, Inject, OnInit } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { FormControl, UntypedFormBuilder } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Store } from '@ngrx/store';
 import { BPMN_JS } from '@process-builder/injection';
 import { IBpmnJS } from '@process-builder/interfaces';
-import { Subscription } from 'rxjs';
 import { debounceTime } from 'rxjs/operators';
 import { IElement } from 'src/lib/bpmn-io/interfaces/element.interface';
 import { BPMNJsRepository } from 'src/lib/core/bpmn-js.repository';
@@ -17,104 +17,108 @@ import { createIBpmnJsModel, updateCurrentIBpmnJSModel, updateIBpmnJSModel } fro
 import { selectCurrentIBpmnJSModel } from 'src/lib/process-builder/store/selectors/bpmn-js-model.selectors';
 
 @Component({
-  selector: 'app-method-quick-interaction',
-  templateUrl: './method-quick-interaction.component.html',
-  styleUrls: ['./method-quick-interaction.component.css']
+    selector: 'app-method-quick-interaction',
+    templateUrl: './method-quick-interaction.component.html',
+    styleUrls: ['./method-quick-interaction.component.css'],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class MethodQuickInteractionComponent implements OnDestroy, OnInit {
+export class MethodQuickInteractionComponent implements OnInit {
 
-  public currentBpmnJSModel$ = this._store.select(selectCurrentIBpmnJSModel);
+    public currentBpmnJSModel$ = this._store.select(selectCurrentIBpmnJSModel);
 
-  formGroup: UntypedFormGroup;
-
-  private _subscriptions: Subscription = new Subscription();
-
-  constructor(
-    @Inject(BPMN_JS) private _bpmnJs: IBpmnJS,
-    private _store: Store,
-    private _formBuilder: UntypedFormBuilder,
-    public bpmnJsService: BpmnJsService,
-    private _snackBar: MatSnackBar
-  ) {
-    this.formGroup = this._formBuilder.group({
-      name: '',
-      guid: null,
-      created: null,
-      description: null,
-      lastModified: null,
-      viewbox: null,
-      xml: null
+    formGroup = this._formBuilder.group({
+        name: '',
+        guid: null,
+        created: null,
+        description: null,
+        lastModified: null,
+        viewbox: null,
+        xml: null
     });
-  }
 
-  public createBpmnJsModel() {
-    this._store.dispatch(createIBpmnJsModel());
-  }
+    constructor(
+        @Inject(BPMN_JS) private _bpmnJs: IBpmnJS,
+        private _store: Store,
+        private _formBuilder: UntypedFormBuilder,
+        public bpmnJsService: BpmnJsService,
+        private _snackBar: MatSnackBar,
+        private _destroyRef: DestroyRef
+    ) { }
 
-  public hideAllHints = () => BPMNJsRepository.clearAllTooltips(this._bpmnJs);
-  public ngOnDestroy = () => this._subscriptions.unsubscribe();
-
-  public ngOnInit(): void {
-    this._subscriptions.add(...[
-      this.currentBpmnJSModel$.subscribe((model) => {
-        this.formGroup.reset();
-        this.formGroup.patchValue(model as object, { emitEvent: false });
-      }),
-      this.formGroup.valueChanges.pipe(debounceTime(1000)).subscribe((value) => {
-        this._store.dispatch(updateIBpmnJSModel(value));
-        this.formGroup.markAsPristine();
-      })
-    ]);
-  }
-
-  public async saveCurrentBpmnModel() {
-    const result: { xml: string } = await this._bpmnJs.saveXML();
-    this._store.dispatch(updateCurrentIBpmnJSModel({ xml: result.xml }));
-    this._snackBar.open('model saved', 'ok', { duration: 2000 });
-    this.bpmnJsService.markAsUnchanged();
-  }
-
-  public resetState() {
-    localStorage.removeItem('params');
-    localStorage.removeItem('funcs');
-    localStorage.removeItem('models');
-    location.reload();
-  }
-
-  public showError(error: { element?: IElement, error: ValidationError }): void {
-    this.hideAllHints();
-    if (!error?.element) {
-      return;
+    public createBpmnJsModel() {
+        this._store.dispatch(createIBpmnJsModel());
     }
 
-    this.bpmnJsService.tooltipModule.add({
-      position: {
-        x: error.element.x,
-        y: error.element.y + error.element.height + 3
-      },
-      html:
-        `<div style="width: 120px; background: #f44336de; color: white; font-size: .7rem; padding: .2rem .3rem; border-radius: 2px; line-height: .8rem;">${new ValidationErrorPipe().transform(error.error)}</div>`
-    });
-  }
+    public hideAllHints = () => BPMNJsRepository.clearAllTooltips(this._bpmnJs);
 
-  public showWarning(warning: { element?: IElement, warning: ValidationWarning }): void {
-    this.hideAllHints();
-    if (!warning.element) {
-      return;
+    public ngOnInit(): void {
+        this.currentBpmnJSModel$
+            .pipe(takeUntilDestroyed(this._destroyRef))
+            .subscribe((model) => {
+                this.formGroup.reset();
+                this.formGroup.patchValue(model as object, { emitEvent: false });
+            });
+
+        this.formGroup
+            .valueChanges
+            .pipe(
+                takeUntilDestroyed(this._destroyRef),
+                debounceTime(1000)
+            )
+            .subscribe((value) => {
+                this._store.dispatch(updateIBpmnJSModel(value));
+                this.formGroup.markAsPristine();
+            });
     }
 
-    this.bpmnJsService.tooltipModule.add({
-      position: {
-        x: warning.element?.x,
-        y: warning.element?.y + warning.element?.height + 3
-      },
-      html:
-        `<div style="width: 120px; background: #ffb200; color: white; font-size: .7rem; padding: .2rem .3rem; border-radius: 2px; line-height: .8rem;">${new ValidationWarningPipe().transform(warning.warning)}</div>`
-    });
-  }
+    public async saveCurrentBpmnModel() {
+        const result: { xml: string } = await this._bpmnJs.saveXML();
+        this._store.dispatch(updateCurrentIBpmnJSModel({ xml: result.xml }));
+        this._snackBar.open('model saved', 'ok', { duration: 2000 });
+        this.bpmnJsService.markAsUnchanged();
+    }
 
-  get nameControl(): FormControl<string> {
-    return this.formGroup.controls['name'] as FormControl<string>;
-  }
+    public resetState() {
+        localStorage.removeItem('params');
+        localStorage.removeItem('funcs');
+        localStorage.removeItem('models');
+        location.reload();
+    }
+
+    public showError(error: { element?: IElement, error: ValidationError }): void {
+        this.hideAllHints();
+        if (!error?.element) {
+            return;
+        }
+
+        this.bpmnJsService.tooltipModule.add({
+            position: {
+                x: error.element.x,
+                y: error.element.y + error.element.height + 3
+            },
+            html:
+                `<div style="width: 120px; background: #f44336de; color: white; font-size: .7rem; padding: .2rem .3rem; border-radius: 2px; line-height: .8rem;">${new ValidationErrorPipe().transform(error.error)}</div>`
+        });
+    }
+
+    public showWarning(warning: { element?: IElement, warning: ValidationWarning }): void {
+        this.hideAllHints();
+        if (!warning.element) {
+            return;
+        }
+
+        this.bpmnJsService.tooltipModule.add({
+            position: {
+                x: warning.element?.x,
+                y: warning.element?.y + warning.element?.height + 3
+            },
+            html:
+                `<div style="width: 120px; background: #ffb200; color: white; font-size: .7rem; padding: .2rem .3rem; border-radius: 2px; line-height: .8rem;">${new ValidationWarningPipe().transform(warning.warning)}</div>`
+        });
+    }
+
+    get nameControl(): FormControl<string> {
+        return this.formGroup.controls['name'] as FormControl<string>;
+    }
 
 }
