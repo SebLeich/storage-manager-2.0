@@ -1,7 +1,7 @@
 version: "2.4"
 services:
 
-  reverseproxy:
+  nginx:
     build: ./projects/rpx
     container_name: storage-manager-reverseproxy
     command: "/bin/sh -c 'while :; do sleep 6h & wait $${!}; nginx -s reload; done & nginx -g \"daemon off;\"'"
