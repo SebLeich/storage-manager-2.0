@@ -10,6 +10,8 @@ services:
       - docker-service
     depends_on:
       - frontend
+    volumes:
+      - /etc/letsencrypt:/etc/letsencrypt
 
   frontend:
     image: sebleich/storage-manager:latest
