@@ -4,6 +4,7 @@ services:
   reverseproxy:
     build: ./projects/rpx
     container_name: storage-manager-reverseproxy
+    command: "/bin/sh -c 'while :; do sleep 6h & wait $${!}; nginx -s reload; done & nginx -g \"daemon off;\"'"
     ports:
       - "80:80"
       - "443:443"
@@ -12,16 +13,15 @@ services:
     depends_on:
       - frontend
     volumes:
-      - /etc/letsencrypt:/etc/letsencrypt
-      - ./var/lib/letsencrypt:/var/lib/letsencrypt
-      - ./var/lib/letsencrypt:/var/log/letsencrypt
+      - ./data/certbot/conf:/etc/letsencrypt
+      - ./data/certbot/www:/var/www/certbot
 
   certbot:
     image: certbot/certbot
+    entrypoint: "/bin/sh -c 'trap exit TERM; while :; do certbot renew; sleep 12h & wait $${!}; done;'"
     volumes:
-      - ./etc/letsencrypt:/etc/letsencrypt
-      - ./var/lib/letsencrypt:/var/lib/letsencrypt
-      - ./var/lib/letsencrypt:/var/log/letsencrypt
+      - ./data/certbot/conf:/etc/letsencrypt
+      - ./data/certbot/www:/var/www/certbot
 
   frontend:
     image: sebleich/storage-manager:latest
