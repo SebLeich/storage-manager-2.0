@@ -1,23 +1,6 @@
-@use '@angular/material' as mat;
-
 @import "src/lib/scss/button";
 @import "src/lib/scss/gradients";
 @import '~quill/dist/quill.snow.css';
-
-@include mat.core();
-
-$storage-manager-primary: mat.define-palette(mat.$indigo-palette);
-$storage-manager-accent: mat.define-palette(mat.$cyan-palette, 700);
-$storage-manager-warn: mat.define-palette(mat.$red-palette);
-
-$storage-manager-theme: mat.define-light-theme((color: (primary: $storage-manager-primary,
-				accent: $storage-manager-accent,
-				warn: $storage-manager-warn,
-			)
-		));
-
-@include mat.core-theme($storage-manager-theme);
-
 @import "bebas-neue.css";
 
 html,

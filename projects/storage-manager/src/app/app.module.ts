@@ -71,6 +71,7 @@ import { ErrorComponent } from 'src/lib/shared/components/error/error.component'
 import { GoodPreviewComponent, GoodsPanelComponent, GroupsPanelComponent } from '@smgr/components';
 import { AboutComponent, CalculationComponent, LocalDataComponent, VisualizerComponent } from '@main-components';
 import { APP_BASE_HREF, PlatformLocation } from '@angular/common';
+import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 
 const rootReducers: { [key: string]: ActionReducer<any, any> } = {};
 rootReducers[fromApplication.featureKey] = fromApplication.reducer;
@@ -171,7 +172,8 @@ const routes: Routes = [
       provide: APP_BASE_HREF,
       useFactory: (s: PlatformLocation) => s.getBaseHrefFromDOM(),
       deps: [PlatformLocation]
-    }
+    },
+    provideAnimationsAsync()
   ],
   bootstrap: [AppComponent]
 })

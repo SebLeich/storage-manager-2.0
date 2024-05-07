@@ -1,0 +1,6 @@
+{
+    "scripts": {
+        "build": "npm run build --prefix ./projects/storage-manager/",
+        "start": "npm run start --prefix ./projects/storage-manager/"
+    }
+}
