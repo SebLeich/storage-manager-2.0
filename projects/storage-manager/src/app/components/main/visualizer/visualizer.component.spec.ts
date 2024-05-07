@@ -10,50 +10,50 @@ import { DebugElement } from '@angular/core';
 import { By } from '@angular/platform-browser';
 
 describe('VisualizerComponent', () => {
-  let component: VisualizerComponent;
-  let fixture: ComponentFixture<VisualizerComponent>;
-  let debugElement: DebugElement;
+    let component: VisualizerComponent;
+    let fixture: ComponentFixture<VisualizerComponent>;
+    let debugElement: DebugElement;
 
-  beforeEach(async () => {
-    await TestBed.configureTestingModule({
-      declarations: [VisualizerComponent],
-      imports: [
-        ...defaultImportsConstant,
+    beforeEach(async () => {
+        await TestBed.configureTestingModule({
+            declarations: [VisualizerComponent],
+            imports: [
+                ...defaultImportsConstant,
 
-        AppModule
-      ],
-      providers: [
-        { provide: VISUALIZER_CONTEXT, useClass: VisualizerComponentService }
-      ]
-    })
-      .compileComponents();
-  });
+                AppModule
+            ],
+            providers: [
+                { provide: VISUALIZER_CONTEXT, useClass: VisualizerComponentService }
+            ]
+        })
+            .compileComponents();
+    });
 
-  beforeEach(() => {
-    fixture = TestBed.createComponent(VisualizerComponent);
-    component = fixture.componentInstance;
-    debugElement = fixture.debugElement;
-    fixture.detectChanges();
-  });
+    beforeEach(() => {
+        fixture = TestBed.createComponent(VisualizerComponent);
+        component = fixture.componentInstance;
+        debugElement = fixture.debugElement;
+        fixture.detectChanges();
+    });
 
-  it('should create', () => {
-    expect(component).toBeTruthy();
-  });
+    it('should create', () => {
+        expect(component).toBeTruthy();
+    });
 
-  it('should display hint if no solution selected', () => {
-    const noSolutionHint = debugElement.query(By.css('.no-solution-selected-hint'));
-    expect(noSolutionHint).toBeTruthy();
-  });
+    it('should display hint if no solution selected', () => {
+        const noSolutionHint = debugElement.query(By.css('.no-solution-selected-hint'));
+        expect(noSolutionHint).toBeTruthy();
+    });
 
-  it('should display solution if one selected', async () => {
-    const store = TestBed.inject(Store);
-    store.dispatch(setExemplarySolution());
-    fixture.detectChanges();
-    await fixture.whenStable();
+    it('should display solution if one selected', async () => {
+        const store = TestBed.inject(Store);
+        store.dispatch(setExemplarySolution());
+        fixture.detectChanges();
+        await fixture.whenStable();
 
-    fixture.detectChanges();
+        fixture.detectChanges();
 
-    const sceneVisualization = debugElement.query(By.css('app-scene-visualization'));
-    expect(sceneVisualization).toBeTruthy();
-  });
+        const sceneVisualization = debugElement.query(By.css('app-scene-visualization'));
+        expect(sceneVisualization).toBeTruthy();
+    });
 });

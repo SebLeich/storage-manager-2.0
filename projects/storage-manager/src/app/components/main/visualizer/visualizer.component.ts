@@ -7,13 +7,14 @@ import { selectedGoodEdgeColor } from 'src/app/globals';
 import { NoSolutionDialogComponent } from '../../dialog/no-solution-dialog/no-solution-dialog.component';
 import { fadeInAnimation } from 'src/lib/shared/animations/fade-in.animation';
 import { selectSnapshot } from 'src/lib/process-builder/globals/select-snapshot';
-import * as ThreeJS from 'three';
 import { ISolution } from '@smgr/interfaces';
 import { VisualizerComponentService } from './visualizer-component.service';
 import { IVisualizerContextService, VISUALIZER_CONTEXT } from 'src/app/interfaces/i-visualizer-context.service';
 import { VisualizationService } from 'src/lib/visualization/services/visualization.service';
 import { SceneVisualizationComponent } from 'src/lib/visualization/components/scene-visualization/scene-visualization.component';
 import { selectCurrentSolution, setCurrentSolution, selectSolutions } from '@smgr/store';
+
+import * as ThreeJS from 'three';
 
 @Component({
   selector: 'app-visualizer',
