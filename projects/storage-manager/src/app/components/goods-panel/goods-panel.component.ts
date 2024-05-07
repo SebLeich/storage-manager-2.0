@@ -4,7 +4,7 @@ import { IGood } from '@smgr/interfaces';
 @Component({
   selector: 'app-goods-panel',
   templateUrl: './goods-panel.component.html',
-  styleUrls: ['./goods-panel.component.css'],
+  styleUrls: ['./goods-panel.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class GoodsPanelComponent {

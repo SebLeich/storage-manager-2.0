@@ -29,7 +29,7 @@ describe('IParams Selectors', () => {
       ]
     });
     store = TestBed.inject(Store);
-    store.dispatch(addIParams(Object.values(params) as IParam[]));
+    store.dispatch(addIParams(Object.values(params) as any[]));
   });
 
   Object.values(params).forEach(param => {

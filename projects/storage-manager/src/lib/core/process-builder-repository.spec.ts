@@ -7,7 +7,7 @@ import solutionObject from './test/solution-object.test-data.json';
 describe('Test Process Builder Repository', () => {
 
     it('should extract correct pseudo object', () => {
-        const pseudoObject = ProcessBuilderRepository.createPseudoObjectFromIParamDefinition(solutionTypeDef as IParam);
+        const pseudoObject = ProcessBuilderRepository.createPseudoObjectFromIParamDefinition(solutionTypeDef as any);
         expect(pseudoObject).toEqual(solutionObject);
     });
 

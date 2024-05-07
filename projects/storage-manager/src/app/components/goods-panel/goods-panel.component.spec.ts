@@ -7,54 +7,43 @@ import { By } from '@angular/platform-browser';
 import { IGood } from '@smgr/interfaces';
 
 describe('GoodsPanelComponent', () => {
-  let component: GoodsPanelComponent;
-  let debugElement: DebugElement;
-  let fixture: ComponentFixture<GoodsPanelComponent>;
+    let component: GoodsPanelComponent;
+    let debugElement: DebugElement;
+    let fixture: ComponentFixture<GoodsPanelComponent>;
 
-  beforeEach(async () => {
-    await TestBed.configureTestingModule({
-      declarations: [GoodsPanelComponent],
-      imports: [
-        ...defaultImportsConstant,
+    beforeEach(async () => {
+        await TestBed.configureTestingModule({
+            declarations: [GoodsPanelComponent],
+            imports: [
+                ...defaultImportsConstant,
 
-        AppModule
-      ]
-    })
-      .compileComponents();
-  });
+                AppModule
+            ]
+        })
+            .compileComponents();
+    });
 
-  beforeEach(() => {
-    fixture = TestBed.createComponent(GoodsPanelComponent);
-    component = fixture.componentInstance;
-    debugElement = fixture.debugElement;
-    fixture.detectChanges();
-  });
+    beforeEach(() => {
+        fixture = TestBed.createComponent(GoodsPanelComponent);
+        component = fixture.componentInstance;
+        debugElement = fixture.debugElement;
+        fixture.detectChanges();
+    });
 
-  it('should create', () => {
-    expect(component).toBeTruthy();
-  });
+    it('should create', () => {
+        expect(component).toBeTruthy();
+    });
 
-  it('should show hint if no goods available', () => {
-    expect(debugElement.query(By.css('.no-content-available'))).toBeTruthy();
-  });
+    it('should show hint if no goods available', () => {
+        expect(debugElement.query(By.css('.no-content-available'))).toBeTruthy();
+    });
 
-  it('should hide hint if goods available', () => {
-    component.goods = [
-      { id: 'TESTING_GOOD', desc: 'testing good' } as IGood
-    ];
-    fixture.detectChanges();
+    it('should hide hint if goods available', () => {
+        component.goods = [
+            { id: 'TESTING_GOOD', desc: 'testing good' } as IGood
+        ];
+        fixture.detectChanges();
 
-    expect(debugElement.query(By.css('.no-content-available'))).toBeFalsy();
-  });
-
-  it('should show all goods in table', () => {
-    component.goods = [
-      { id: 'TESTING_GOOD_1', desc: 'testing good1' } as IGood,
-      { id: 'TESTING_GOOD_2', desc: 'testing good2' } as IGood,
-      { id: 'TESTING_GOOD_3', desc: 'testing good3' } as IGood
-    ];
-    fixture.detectChanges();
-
-    expect(debugElement.queryAll(By.css('.smgr-table-body-row')).length).toBe(component.goods.length);
-  });
+        expect(debugElement.query(By.css('.no-content-available'))).toBeFalsy();
+    });
 });

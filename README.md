@@ -12,7 +12,7 @@
 
 **[Latest version](https://sebleich.de)**
 
-![Preview of a solution](github/demo.PNG)
+![Preview of a solution](.github/demo.PNG)
 
 ## Overview
 

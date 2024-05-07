@@ -1,5 +1,4 @@
 import { ProcessBuilderRepository } from "@/lib/core/process-builder-repository";
-import { IParam } from "@/lib/process-builder/interfaces";
 
 const mockName = 'solution';
 const MOCK_PARAM_Solution = {
@@ -15,6 +14,6 @@ const MOCK_PARAM_Solution = {
     optional: false,
     type: 'object',
     typeDef: []
-} as IParam;
+} as any;
 
 export default MOCK_PARAM_Solution;

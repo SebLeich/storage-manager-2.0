@@ -4,7 +4,6 @@ import { PROCESS_BUILDER_CONFIG_TOKEN } from 'src/lib/process-builder/interfaces
 
 import { EmbeddedFunctionImplementationComponent } from './embedded-function-implementation.component';
 import { ControlContainer, FormControl, FormGroup, FormGroupDirective } from '@angular/forms';
-import { TaskCreationFormGroup } from 'src/lib/process-builder/interfaces/task-creation-form-group-value.interface';
 import { CodeEditorModule } from '@/lib/code-editor/code-editor.module';
 import { CodemirrorRepository } from '@/lib/core/codemirror.repository';
 
@@ -30,7 +29,7 @@ describe('EmbeddedFunctionImplementationComponent', () => {
                 implementation: new FormControl(null),
                 name: new FormControl(''),
                 outputParamName: new FormControl('')
-              }) as TaskCreationFormGroup
+              })
             } as FormGroupDirective;
             return directive;
           }
@@ -51,7 +50,7 @@ describe('EmbeddedFunctionImplementationComponent', () => {
   });
 
   it('should correctly update interface control', () => {
-    component.formGroup.controls.implementation!.setValue(CodemirrorRepository.stringToTextLeaf([
+    component.formGroup.controls.functionImplementation!.setValue(CodemirrorRepository.stringToTextLeaf([
       'async (injector) => {',
       'return injector.mySolution',
       '}'

@@ -1,5 +1,4 @@
 import { ProcessBuilderRepository } from "@/lib/core/process-builder-repository";
-import { IFunction } from "@/lib/process-builder/interfaces";
 
 const mockName = 'ReturnSolution';
 const MOCK_FUNCTION_ReturnSolution = {
@@ -15,6 +14,6 @@ const MOCK_FUNCTION_ReturnSolution = {
     outputTemplate: null,
     requireStaticOutputDefinition: false,
     _isImplementation: true
-} as IFunction;
+} as any;
 
 export default MOCK_FUNCTION_ReturnSolution;
