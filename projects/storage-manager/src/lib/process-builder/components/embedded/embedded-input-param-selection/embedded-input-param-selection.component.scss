@@ -1,0 +1,8 @@
+@import "src/lib/scss/info-theme";
+
+.body {
+    .info-theme {
+        padding: 2rem;
+        @include info-theme;
+    }
+}

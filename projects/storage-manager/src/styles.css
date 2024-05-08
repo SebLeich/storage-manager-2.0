@@ -1,0 +1,252 @@
+/* You can add global styles to this file, and also import other style files */
+
+.main-component-body {
+    height: -webkit-fill-available;
+    width: -webkit-fill-available;
+    position: relative;
+}
+
+.main-component-headline {
+    font-size: 2rem;
+    line-height: 2rem;
+}
+
+.smgr-table {
+    width: 100%;
+}
+
+.smgr-table .centered-cell {
+    text-align: center;
+}
+
+.smgr-table .shrink-cell {
+    width: 1px;
+}
+
+.smgr-table.small td {
+    font-size: 0.7rem;
+}
+
+.smgr-table .smgr-table-body-row:nth-child(odd) {
+    background-color: rgb(248, 248, 248);
+}
+
+.smgr-table .smgr-table-body-row.hoverable:hover {
+    cursor: pointer;
+    background-color: rgb(255, 249, 231);
+}
+
+.smgr-table input {
+    background-color: transparent;
+    outline: none;
+    border: none;
+}
+
+.smgr-table input:focus {
+    border-bottom: 1px solid blue;
+}
+
+.smgr-table.unsparing tr {
+    height: 60px !important;
+}
+
+.smgr-table input.width {
+    width: 100%;
+}
+
+.smgr-table input[type="number"] {
+    width: 4rem;
+}
+
+.smgr-table tfoot td {
+    border-bottom: none;
+}
+
+.smgr-manual-select-add-input-option {
+    padding: 0px !important;
+    height: auto;
+    width: auto;
+    line-height: initial !important;
+}
+
+.smgr-manual-select-add-input {
+    width: 100%;
+    border: none;
+    padding: 0.5rem;
+    font-size: 1rem;
+    outline: none;
+}
+
+.no-padding-dialog>.mat-dialog-container {
+    padding: 0px;
+}
+
+.dialog-nav-bar {
+    display: flex;
+    align-items: center;
+    padding: .8rem 1rem;
+}
+
+.dialog-nav-bar .icon {
+    margin-right: 1rem;
+    color: #5c5c5c;
+}
+
+.dialog-nav-bar .text {
+    font-size: 1.2rem;
+    margin-right: 1rem;
+    flex: 1;
+}
+
+.dialog-content {
+    overflow-y: auto;
+    max-height: 80vh;
+    padding: 1rem 2rem;
+}
+
+.width {
+    width: 100%;
+}
+
+/* width */
+::-webkit-scrollbar {
+    width: 0.5rem;
+    height: 0.5rem;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+    box-shadow: inset 0 0 5px rgb(218, 218, 218);
+    border-radius: 2px;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+    background: rgb(193 193 193);
+    border-radius: 2px;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+    background: #3b3b3b;
+}
+
+.no-content-available {
+    text-align: center;
+    color: grey;
+    font-weight: 100;
+    font-size: .8rem;
+}
+
+.mat-form-field-outline-no-padding-bottom .mat-mdc-form-field-subscript-wrapper {
+    display: none;
+}
+
+.mat-form-field-outline-no-padding-bottom .mat-mdc-form-field-infix  {
+    padding-top: 18px !important;
+    padding-bottom: 14px !important;
+}
+
+.mat-form-field-no-padding .mat-form-field-wrapper {
+    padding: 0px;
+}
+
+.dropdown-option .mat-option-text {
+    display: flex;
+    align-items: center;
+}
+
+.dropdown-option .mat-option-text .text {
+    flex: 1;
+}
+
+.dropdown-option .mat-option-text .icon {
+    margin: 0px;
+    width: auto;
+    height: auto;
+    cursor: pointer;
+}
+
+.icon.danger {
+    color: rgb(182, 0, 0);
+}
+
+.dropdown-interaction-control {
+    border-top: 1px solid rgb(224, 224, 224);
+    margin: 0px 0.5rem;
+    text-align: center !important;
+    margin-top: 0.5rem;
+}
+
+.editable-select-trigger {
+    padding: 0.5rem;
+    outline: none;
+    margin-right: 0.5rem;
+    cursor: text;
+}
+
+.editable-select-trigger:hover {
+    background-color: rgba(74, 166, 196, 0.056);
+    animation: background-color .5s ease-out;
+}
+
+.mat-menu-item {
+    height: unset !important;
+    line-height: 2rem !important;
+    font-size: .8rem;
+    vertical-align: middle;
+    display: flex !important;
+    align-items: center;
+}
+
+.mat-menu-item .text {
+    flex: 1;
+}
+
+.centered {
+    text-align: center;
+}
+
+.mat-menu-item .icon {
+    margin: 0px 0px 0px .5rem !important;
+    width: auto;
+    height: auto;
+    font-size: 1.2rem;
+    line-height: 1.2rem;
+}
+
+.mat-menu-item .interactable-icon {
+    margin: 0px !important;
+    width: auto;
+    height: auto;
+    font-size: 1.2rem;
+    line-height: 1.2rem;
+}
+
+.mat-menu-item.bordered {
+    border-bottom: 1px solid lightgray;
+}
+
+.mat-menu-item.inactive {
+    cursor: default;
+}
+
+.mat-menu-item.inactive:hover {
+    background-color: unset !important;
+}
+
+.mat-menu-item .interactable-icon {
+    margin-left: .2rem;
+    cursor: pointer;
+}
+
+.mat-menu-item .interactable-icon:hover {
+    opacity: .8;
+}
+
+.z-index-1002 {
+    z-index: 1002 !important;
+}
+
+html, body { height: 100%; }
+body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
