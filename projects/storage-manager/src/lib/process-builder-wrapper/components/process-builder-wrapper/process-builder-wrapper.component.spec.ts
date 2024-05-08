@@ -8,14 +8,31 @@ import { ConfirmationService } from '@/lib/confirmation/services/confirmation.se
 
 import defaultImportsConstant from 'src/app/default-imports.constant';
 import { ProcessBuilderService } from '@/lib/process-builder/services/process-builder.service';
+import { MarkdownEditorComponent } from '@/lib/markdown-editor/components/markdown-editor/markdown-editor.component';
+import { ProcessBuilderComponent } from '@/lib/process-builder/components/process-builder/process-builder.component';
+import { QuillModule } from 'ngx-quill';
 
 
 
 describe('ProcessBuilderWrapperComponent', () => {
     const createComponent = createComponentFactory({
         component: ProcessBuilderWrapperComponent,
+        declarations: [
+            MarkdownEditorComponent,
+            ProcessBuilderComponent
+        ],
         imports: [
-            ...defaultImportsConstant
+            ...defaultImportsConstant,
+
+            QuillModule.forRoot({
+                modules: {
+                    history: {
+                        delay: 2000,
+                        maxStack: 500,
+                        userOnly: true
+                    }
+                }
+            }),
         ],
         providers: [
             BpmnJsService,

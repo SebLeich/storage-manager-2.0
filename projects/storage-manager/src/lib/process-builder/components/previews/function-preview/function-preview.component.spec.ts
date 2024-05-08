@@ -6,15 +6,19 @@ import { InputParamPipe } from '@/lib/process-builder/pipes/input-param.pipe';
 import { OutputParamPipe } from '@/lib/process-builder/pipes/output-param.pipe';
 
 import defaultImportsConstant from 'src/app/default-imports.constant';
+import { NgLetModule } from 'ng-let';
+import { CommaSeparatedListComponent } from '@/lib/comma-separated-list/components/comma-separated-list/comma-separated-list.component';
 
 
 
 describe('FunctionPreviewComponent', () => {
     const createComponent = createComponentFactory({
         component: FunctionPreviewComponent,
-        declarations: [InputParamPipe, OutputParamPipe],
+        declarations: [CommaSeparatedListComponent, InputParamPipe, OutputParamPipe],
         imports: [
-            ...defaultImportsConstant
+            ...defaultImportsConstant,
+
+            NgLetModule
         ]
     });
 

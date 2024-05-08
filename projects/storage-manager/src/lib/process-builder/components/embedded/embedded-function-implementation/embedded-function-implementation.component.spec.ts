@@ -5,12 +5,16 @@ import { CodeEditorModule } from '@/lib/code-editor/code-editor.module';
 import { CodemirrorRepository } from '@/lib/core/codemirror.repository';
 import { StoreModule } from '@ngrx/store';
 import { Spectator, createComponentFactory } from '@ngneat/spectator';
+import { FunctionOutputPreviewComponent } from './components/function-output-preview/function-output-preview.component';
 
 import defaultImportsConstant from 'src/app/default-imports.constant';
+
+
 
 describe('EmbeddedFunctionImplementationComponent', () => {
     const createComponent = createComponentFactory({
         component: EmbeddedFunctionImplementationComponent,
+        declarations: [FunctionOutputPreviewComponent],
         imports: [
             ...defaultImportsConstant,
 

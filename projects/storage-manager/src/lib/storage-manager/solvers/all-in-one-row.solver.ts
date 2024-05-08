@@ -13,7 +13,7 @@ export class AllInOneRowSolver extends Solver implements ISolver {
 
     public solve(containerHeight: number, containerWidth: number, groups: IGroup[], orders: IOrder[]): ISolution {
 
-        const solution = {
+        const solution: ISolution & { groups: IGroup[], algorithm: string } = {
             id: generateGuid(),
             description: this._description,
             container: {
@@ -35,7 +35,8 @@ export class AllInOneRowSolver extends Solver implements ISolver {
                 title: this._description
             },
             steps: []
-        } as ISolution;
+        };
+        
         let currentPosition = { x: 0, y: 0, z: 0 };
         let sequenceNumber = 0;
 
