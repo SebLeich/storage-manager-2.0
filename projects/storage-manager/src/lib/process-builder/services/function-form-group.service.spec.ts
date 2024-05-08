@@ -1,16 +1,21 @@
-import { TestBed } from '@angular/core/testing';
 
+import { StoreModule } from '@ngrx/store';
 import { FunctionFormGroupService } from './function-form-group.service';
+import { SpectatorService, createServiceFactory } from '@ngneat/spectator';
 
 describe('FunctionFormGroupService', () => {
-  let service: FunctionFormGroupService;
+    let spectator: SpectatorService<FunctionFormGroupService>;
 
-  beforeEach(() => {
-    TestBed.configureTestingModule({});
-    service = TestBed.inject(FunctionFormGroupService);
-  });
+    const createService = createServiceFactory({
+        service: FunctionFormGroupService,
+        imports: [
+            StoreModule.forRoot({})
+        ]
+    });
 
-  it('should be created', () => {
-    expect(service).toBeTruthy();
-  });
+    beforeEach(() => spectator = createService());
+
+    it('should be created', () => {
+        expect(spectator.service).toBeTruthy();
+    });
 });

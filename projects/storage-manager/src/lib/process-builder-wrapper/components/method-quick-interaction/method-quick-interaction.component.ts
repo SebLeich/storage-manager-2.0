@@ -26,7 +26,7 @@ export class MethodQuickInteractionComponent implements OnInit {
 
     public currentBpmnJSModel$ = this._store.select(selectCurrentIBpmnJSModel);
 
-    formGroup = this._formBuilder.group({
+    public formGroup = this._formBuilder.group({
         name: '',
         guid: null,
         created: null,

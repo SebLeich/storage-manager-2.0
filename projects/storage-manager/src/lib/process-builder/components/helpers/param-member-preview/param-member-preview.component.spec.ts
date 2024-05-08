@@ -1,9 +1,9 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import defaultImportsConstant from 'src/app/default-imports.constant';
 import { IParamMember } from 'src/lib/process-builder/interfaces/param-member.interface';
-import { ProcessBuilderModule } from 'src/lib/process-builder/process-builder.module';
 
 import { ParamMemberPreviewComponent } from './param-member-preview.component';
+import { ParamMemberPathPreviewComponent } from '../param-member-path-preview/param-member-path-preview.component';
 
 describe('ParamMemberPreviewComponent', () => {
   let component: ParamMemberPreviewComponent;
@@ -11,11 +11,9 @@ describe('ParamMemberPreviewComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ ParamMemberPreviewComponent ],
+      declarations: [ ParamMemberPreviewComponent, ParamMemberPathPreviewComponent ],
       imports: [
-        ...defaultImportsConstant,
-
-        ProcessBuilderModule
+        ...defaultImportsConstant
       ]
     })
     .compileComponents();

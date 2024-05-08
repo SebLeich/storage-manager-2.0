@@ -1,16 +1,21 @@
-import { TestBed } from '@angular/core/testing';
 
+import { StoreModule } from '@ngrx/store';
 import { ParameterService } from './parameter.service';
+import { SpectatorService, createServiceFactory } from '@ngneat/spectator';
 
 describe('ParameterService', () => {
-  let service: ParameterService;
+    let spectator: SpectatorService<ParameterService>;
 
-  beforeEach(() => {
-    TestBed.configureTestingModule({});
-    service = TestBed.inject(ParameterService);
-  });
+    const createService = createServiceFactory({
+        imports: [
+            StoreModule.forRoot({})
+        ],
+        service: ParameterService
+    });
 
-  it('should be created', () => {
-    expect(service).toBeTruthy();
-  });
+    beforeEach(() => spectator = createService());
+
+    it('should be created', () => {
+        expect(spectator.service).toBeTruthy();
+    });
 });

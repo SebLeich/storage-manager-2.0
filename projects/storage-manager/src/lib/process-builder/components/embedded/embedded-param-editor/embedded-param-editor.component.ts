@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, ElementRef, EventEmitter, Inject, OnDestroy, Output, ViewChild } from '@angular/core';
+import { AfterViewInit, ChangeDetectionStrategy, Component, ElementRef, EventEmitter, Inject, OnDestroy, Output, ViewChild } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import JSONEditor from 'jsoneditor';
 import { combineLatest, ReplaySubject, Subscription } from 'rxjs';
@@ -11,7 +11,8 @@ import { TaskCreationFormGroup } from 'src/lib/process-builder/interfaces/task-c
 @Component({
   selector: 'app-embedded-param-editor',
   templateUrl: './embedded-param-editor.component.html',
-  styleUrls: ['./embedded-param-editor.component.scss']
+  styleUrls: ['./embedded-param-editor.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class EmbeddedParamEditorComponent implements IEmbeddedView, AfterViewInit, OnDestroy {
 
@@ -20,8 +21,8 @@ export class EmbeddedParamEditorComponent implements IEmbeddedView, AfterViewIni
   @Output() public jsonChanged = new EventEmitter<object>();
 
   public formGroup = new FormGroup({
-    outputIsProcessOutput: new FormControl<boolean>(false),
     functionName: new FormControl<string>(''),
+    outputIsProcessOutput: new FormControl<boolean>(false),
     outputParamName: new FormControl<string>(''),
   }) as TaskCreationFormGroup;
 

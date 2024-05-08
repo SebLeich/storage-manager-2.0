@@ -1,61 +1,55 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
-import defaultImportsConstant from 'src/app/default-imports.constant';
 import { PROCESS_BUILDER_CONFIG_TOKEN } from 'src/lib/process-builder/interfaces/process-builder-config.interface';
-
 import { EmbeddedFunctionImplementationComponent } from './embedded-function-implementation.component';
-import { ControlContainer, FormControl, FormGroup, FormGroupDirective } from '@angular/forms';
+import { ControlContainer, FormControl, FormGroup } from '@angular/forms';
 import { CodeEditorModule } from '@/lib/code-editor/code-editor.module';
 import { CodemirrorRepository } from '@/lib/core/codemirror.repository';
+import { StoreModule } from '@ngrx/store';
+import { Spectator, createComponentFactory } from '@ngneat/spectator';
+
+import defaultImportsConstant from 'src/app/default-imports.constant';
 
 describe('EmbeddedFunctionImplementationComponent', () => {
-  let component: EmbeddedFunctionImplementationComponent;
-  let fixture: ComponentFixture<EmbeddedFunctionImplementationComponent>;
+    const createComponent = createComponentFactory({
+        component: EmbeddedFunctionImplementationComponent,
+        imports: [
+            ...defaultImportsConstant,
 
-  beforeEach(async () => {
-    await TestBed.configureTestingModule({
-      declarations: [EmbeddedFunctionImplementationComponent],
-      imports: [
-        ...defaultImportsConstant,
+            CodeEditorModule,
+            StoreModule.forRoot({})
+        ],
+        providers: [
+            { provide: PROCESS_BUILDER_CONFIG_TOKEN, useValue: {} },
+            {
+                provide: ControlContainer, useFactory: () => ({
+                    control: new FormGroup({
+                        functionCanFail: new FormControl(),
+                        functionImplementation: new FormControl(null),
+                        functionName: new FormControl(''),
+                        outputIsArray: new FormControl(false),
+                        outputParamName: new FormControl(''),
+                        outputParamInterface: new FormControl(''),
+                        outputParamType: new FormControl(''),
+                    })
+                })
+            }
+        ]
+    });
 
-        CodeEditorModule
-      ],
-      providers: [
-        { provide: PROCESS_BUILDER_CONFIG_TOKEN, useValue: {} },
-        {
-          provide: ControlContainer, useFactory: () => {
-            const directive = {
-              control: new FormGroup({
-                canFail: new FormControl(),
-                implementation: new FormControl(null),
-                name: new FormControl(''),
-                outputParamName: new FormControl('')
-              })
-            } as FormGroupDirective;
-            return directive;
-          }
-        }
-      ]
-    })
-      .compileComponents();
-  });
+    let spectator: Spectator<EmbeddedFunctionImplementationComponent>;
 
-  beforeEach(() => {
-    fixture = TestBed.createComponent(EmbeddedFunctionImplementationComponent);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
-  });
+    beforeEach(() => spectator = createComponent());
 
-  it('should create', () => {
-    expect(component).toBeTruthy();
-  });
+    it('should create', () => {
+        expect(spectator.component).toBeTruthy();
+    });
 
-  it('should correctly update interface control', () => {
-    component.formGroup.controls.functionImplementation!.setValue(CodemirrorRepository.stringToTextLeaf([
-      'async (injector) => {',
-      'return injector.mySolution',
-      '}'
-    ]));
+    it('should correctly update interface control', () => {
+        spectator.component.formGroup.controls.functionImplementation!.setValue(CodemirrorRepository.stringToTextLeaf([
+            'async (injector) => {',
+            'return injector.mySolution',
+            '}'
+        ]));
 
-    expect(component).toBeTruthy();
-  });
+        expect(spectator.component).toBeTruthy();
+    });
 });

@@ -14,7 +14,7 @@ import { selectSnapshot } from '@/lib/process-builder/globals/select-snapshot';
 import { ProcessBuilderRepository } from '@/lib/core/process-builder-repository';
 import { ParamType } from '@/lib/process-builder/types/param.type';
 import { FunctionOutputService } from '../../process-builder/services/function-output.service';
-import { IFunction, IMethodEvaluationResult } from '@/lib/process-builder/interfaces';
+import { IMethodEvaluationResult } from '@/lib/process-builder/interfaces';
 import { CodemirrorRepository } from '@/lib/core/codemirror.repository';
 import { ITextLeaf } from '@/lib/process-builder/interfaces/text-leaf.interface';
 
@@ -114,7 +114,9 @@ export class EmbeddedFunctionImplementationComponent implements IEmbeddedView, A
 			outputParamName = template.name;
 		}
 
-		const selectedFunction = await selectSnapshot(this._store.select(selectFunction(this.formGroup.controls.functionIdentifier?.value))) as IFunction;
+		const selectedFunction = await selectSnapshot(this._store.select(selectFunction(this.formGroup.controls.functionIdentifier?.value)));
+		if(!selectedFunction) return;
+
 		const { outputParamObject } = await this._functionOutputService.detectFunctionOutput(selectedFunction, status);
 		if (outputParamObject) {
 			return;

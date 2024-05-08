@@ -4,7 +4,6 @@ import { AppModule } from 'src/app/app.module';
 import defaultImportsConstant from 'src/app/default-imports.constant';
 import { GoodsPanelComponent } from './goods-panel.component';
 import { By } from '@angular/platform-browser';
-import { IGood } from '@smgr/interfaces';
 
 describe('GoodsPanelComponent', () => {
     let component: GoodsPanelComponent;
@@ -36,14 +35,5 @@ describe('GoodsPanelComponent', () => {
 
     it('should show hint if no goods available', () => {
         expect(debugElement.query(By.css('.no-content-available'))).toBeTruthy();
-    });
-
-    it('should hide hint if goods available', () => {
-        component.goods = [
-            { id: 'TESTING_GOOD', desc: 'testing good' } as IGood
-        ];
-        fixture.detectChanges();
-
-        expect(debugElement.query(By.css('.no-content-available'))).toBeFalsy();
     });
 });

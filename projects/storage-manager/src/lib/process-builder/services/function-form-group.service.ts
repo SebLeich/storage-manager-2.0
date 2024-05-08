@@ -10,39 +10,39 @@ import defaultImplementation from '../globals/default-implementation';
 @Injectable()
 export class FunctionFormGroupService {
 
-  constructor(private _store: Store) { }
+	constructor(private _store: Store) { }
 
-  public async getFunctionFormGroupValue(arg: number | null | undefined | IFunction, overwriteOutputParamName: boolean): Promise<ITaskCreationFormGroupValue> {
-    const formGroupValue: ITaskCreationFormGroupValue = { } as ITaskCreationFormGroupValue;
-    if(arg == null){
-      return formGroupValue;
-    }
+	public async getFunctionFormGroupValue(arg: number | null | undefined | IFunction, overwriteOutputParamName: boolean): Promise<ITaskCreationFormGroupValue> {
+		const formGroupValue: ITaskCreationFormGroupValue = {} as ITaskCreationFormGroupValue;
+		if (arg == null) {
+			return formGroupValue;
+		}
 
-    const selectedFunction = typeof arg === 'number'? await selectSnapshot(this._store.select(selectFunction(arg))) : arg;
-    if(!selectedFunction){
-      return formGroupValue;
-    }
+		const selectedFunction = typeof arg === 'number' ? await selectSnapshot(this._store.select(selectFunction(arg))) : arg;
+		if (!selectedFunction) {
+			return formGroupValue;
+		}
 
-    const implementation = selectedFunction.requireCustomImplementation? CodemirrorRepository.stringToTextLeaf(selectedFunction._isImplementation? selectedFunction.customImplementation: selectedFunction.implementation ?? defaultImplementation) : null;
+		const implementation = selectedFunction.requireCustomImplementation ? CodemirrorRepository.stringToTextLeaf(selectedFunction._isImplementation ? selectedFunction.customImplementation : selectedFunction.implementation ?? defaultImplementation) : null;
 		formGroupValue.functionIdentifier = selectedFunction.identifier;
-    formGroupValue.functionCanFail = selectedFunction.canFail as boolean;
-    formGroupValue.functionName = selectedFunction.name;
-    formGroupValue.functionNormalizedName = selectedFunction.normalizedName as string;
-    formGroupValue.functionImplementation = implementation;
-    formGroupValue.outputParamInterface = selectedFunction.outputTemplate && selectedFunction.outputTemplate !== 'dynamic'? selectedFunction.outputTemplate: null;
+		formGroupValue.functionCanFail = selectedFunction.canFail as boolean;
+		formGroupValue.functionName = selectedFunction.name;
+		formGroupValue.functionNormalizedName = selectedFunction.normalizedName as string;
+		formGroupValue.functionImplementation = implementation;
+		formGroupValue.outputParamInterface = selectedFunction.outputTemplate && selectedFunction.outputTemplate !== 'dynamic' ? selectedFunction.outputTemplate : null;
 
 		if (!selectedFunction._isImplementation && selectedFunction.outputTemplate && overwriteOutputParamName) {
 			const template = await selectSnapshot(this._store.select(selectIInterface(selectedFunction.outputTemplate)));
 			formGroupValue.outputParamName = template?.name ?? '';
 			formGroupValue.outputParamNormalizedName = template?.normalizedName ?? '';
 		}
-		else if(selectedFunction._isImplementation && typeof selectedFunction.output === 'number') {
+		else if (selectedFunction._isImplementation && typeof selectedFunction.output === 'number') {
 			const output = await selectSnapshot(this._store.select(selectIParam(selectedFunction.output)));
 			formGroupValue.outputParamName = (output as IParam).name;
 			formGroupValue.outputParamNormalizedName = (output as IParam).normalizedName;
-      formGroupValue.outputIsArray = (output as IParam).isCollection;
+			formGroupValue.outputIsArray = (output as IParam).isCollection;
 		}
 
 		return formGroupValue;
-  }
+	}
 }

@@ -13,11 +13,14 @@ export class ParamMemberPathPreviewComponent {
     if(typeof path === 'undefined'){
       return;
     }
+
     this._pathSegments.next(this.toPathSegments(path));
   }
+
   private _pathSegments = new ReplaySubject<string[]>(1);
-  pathSegments$ = this._pathSegments.asObservable();
-  segmentCount$ = this.pathSegments$.pipe(map(x => x.length));
+
+  public pathSegments$ = this._pathSegments.asObservable();
+  public segmentCount$ = this.pathSegments$.pipe(map(x => x.length));
 
   constructor() { }
 

@@ -37,6 +37,7 @@
     "@codemirror/lint": "0.20.3",
     "@codemirror/state": "0.20.1",
     "@ctrl/ngx-codemirror": "5.1.1",
+    "@ngneat/spectator": "^18.0.2",
     "@ngrx/effects": "^15.3.0",
     "@ngrx/entity": "^15.3.0",
     "@ngrx/store": "^15.3.0",

@@ -1,18 +1,3 @@
-// @ts-ignore
-import * as BpmnJS from 'bpmn-js/dist/bpmn-modeler.production.min.js';
-
-// @ts-ignore
-import customBPMNJSModule from './extensions/bpmn-js';
-
-// @ts-ignore
-import gridModule from "./extensions/bpmn-js/grid";
-
-// @ts-ignore
-import CliModule from 'bpmn-js-cli';
-
-// @ts-ignore
-import * as tooltips from "diagram-js/lib/features/tooltips";
-
 import { Injector, NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ProcessBuilderComponent } from './components/process-builder/process-builder.component';
@@ -64,14 +49,13 @@ import { InputParamPipe } from './pipes/input-param.pipe';
 import { ProcedureStoreModule } from '../procedure-store/procedure-store.module';
 import { CodeEditorModule } from '../code-editor/code-editor.module';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import sebleichProcessBuilderExtension from './globals/sebleich-process-builder-extension';
-import { BPMN_JS } from '@process-builder/injection';
 import { FunctionOutputPreviewComponent } from './components/embedded/embedded-function-implementation/components/function-output-preview/function-output-preview.component';
 import { OutputParamPipe } from './pipes/output-param.pipe';
 import { CommaSeparatedListModule } from '../comma-separated-list/comma-separated-list.module';
 import { NgLetModule } from 'ng-let';
 import { EmbeddedInputParamSelectionComponent } from './components/embedded/embedded-input-param-selection/embedded-input-param-selection.component';
 import { MarkdownEditorModule } from '../markdown-editor/markdown-editor.module';
+import { BPMN_JS_PROVIDER } from './globals/bpm-js-provider.const';
 
 
 @NgModule({
@@ -154,22 +138,7 @@ import { MarkdownEditorModule } from '../markdown-editor/markdown-editor.module'
     ConfirmationService,
     ParamPipe,
     ProcessBuilderService,
-    {
-      provide: BPMN_JS, useFactory: () => (new BpmnJS({
-        additionalModules: [
-          customBPMNJSModule,
-          gridModule,
-          CliModule,
-          tooltips
-        ],
-        cli: {
-          bindTo: 'cli'
-        },
-        moddleExtensions: {
-          processBuilderExtension: sebleichProcessBuilderExtension
-        }
-      }))
-    }
+    BPMN_JS_PROVIDER()
   ],
 })
 export class ProcessBuilderModule {

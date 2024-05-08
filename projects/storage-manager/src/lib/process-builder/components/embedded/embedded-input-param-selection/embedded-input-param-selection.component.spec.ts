@@ -1,21 +1,40 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
-
 import { EmbeddedInputParamSelectionComponent } from './embedded-input-param-selection.component';
+import { Spectator, createComponentFactory } from '@ngneat/spectator';
+import { PROCESS_BUILDER_CONFIG_TOKEN } from '@/lib/process-builder/interfaces';
+import { ControlContainer, FormControl, FormGroup } from '@angular/forms';
+
+import defaultImportsConstant from '@/app/default-imports.constant';
 
 describe('EmbeddedInputParamSelectionComponent', () => {
-  let component: EmbeddedInputParamSelectionComponent;
-  let fixture: ComponentFixture<EmbeddedInputParamSelectionComponent>;
-
-  beforeEach(() => {
-    TestBed.configureTestingModule({
-      declarations: [EmbeddedInputParamSelectionComponent]
+    const createComponent = createComponentFactory({
+        component: EmbeddedInputParamSelectionComponent,
+        imports: [
+            ...defaultImportsConstant,
+        ],
+        providers: [
+            { provide: PROCESS_BUILDER_CONFIG_TOKEN, useValue: {} },
+            {
+                provide: ControlContainer, useFactory: () => ({
+                    control: new FormGroup({
+                        functionIdentifier: new FormControl(),
+                        functionCanFail: new FormControl(),
+                        functionImplementation: new FormControl(null),
+                        functionName: new FormControl(''),
+                        outputIsArray: new FormControl(false),
+                        outputParamName: new FormControl(''),
+                        outputParamInterface: new FormControl(''),
+                        outputParamType: new FormControl(''),
+                    })
+                })
+            }
+        ]
     });
-    fixture = TestBed.createComponent(EmbeddedInputParamSelectionComponent);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
-  });
 
-  it('should create', () => {
-    expect(component).toBeTruthy();
-  });
+    let spectator: Spectator<EmbeddedInputParamSelectionComponent>;
+
+    beforeEach(() => spectator = createComponent());
+
+    it('should create', () => {
+        expect(spectator.component).toBeTruthy();
+    });
 });

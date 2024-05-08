@@ -2,7 +2,6 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import defaultImportsConstant from 'src/app/default-imports.constant';
 import { PROCESS_BUILDER_CONFIG_TOKEN } from 'src/lib/process-builder/interfaces/process-builder-config.interface';
-import { ProcessBuilderModule } from 'src/lib/process-builder/process-builder.module';
 
 import { ParamEditorComponent } from './param-editor.component';
 
@@ -14,9 +13,7 @@ describe('ParamEditorComponent', () => {
     await TestBed.configureTestingModule({
       declarations: [ ParamEditorComponent ],
       imports: [
-        ...defaultImportsConstant,
-
-        ProcessBuilderModule
+        ...defaultImportsConstant
       ],
       providers: [
         {
