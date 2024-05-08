@@ -12,7 +12,7 @@ export class StartLeftBottomSolver extends Solver implements ISolver {
     }
 
     public solve(containerHeight: number, containerWidth: number, groups: IGroup[], orders: IOrder[]): ISolution {
-        const solution = {
+        const solution: ISolution = {
             id: generateGuid(),
             description: this._description,
             container: {
@@ -32,7 +32,8 @@ export class StartLeftBottomSolver extends Solver implements ISolver {
                 title: this._description
             },
             steps: [],
-        } as ISolution;
+        };
+
         let sequenceNumber = 0, lastGood: IGood | null = null;
 
         for (let group of groups) {
@@ -62,13 +63,22 @@ export class StartLeftBottomSolver extends Solver implements ISolver {
                 }
             }
         }
+
         solution.container!.length = Math.max(...solution.container!.goods.map(x => x.zCoord + x.length), 0);
 
         return solution;
     }
 
     private _getNextPosition(container: IContainer, order: IOrder, lastGood: IGood): { xCoord: number, yCoord: number, zCoord: number, stackedOn: null | string } {
-        if (lastGood.stackingAllowed && lastGood.length >= order.length && lastGood.width >= order.width && container.height >= lastGood.yCoord + order.height + lastGood.height) return { xCoord: lastGood.xCoord, yCoord: lastGood.yCoord + lastGood.height, zCoord: lastGood.zCoord, stackedOn: lastGood.id };
+        if (
+            lastGood.orderGuid === order.id
+            && lastGood.stackingAllowed
+            && lastGood.length >= order.length
+            && lastGood.width >= order.width
+            && container.height >= lastGood.yCoord + order.height + lastGood.height
+        ) {
+            return { xCoord: lastGood.xCoord, yCoord: lastGood.yCoord + lastGood.height, zCoord: lastGood.zCoord, stackedOn: lastGood.id };
+        }
         else {
             if (lastGood.stackedOnGood === null) {
                 let space = {
