@@ -1,0 +1,12 @@
+{
+    "defaults": {
+        "calculatedAt": "Berechnet am {{date}}",
+        "container": "Container",
+        "height": "Höhe",
+        "length": "Länge",
+        "noDescription": "Keine Beschreibung verfügbar",
+        "loadUtilization": "Beladungsauslastung", 
+        "volume": "Volumen",
+        "width": "Breite"
+    }
+}

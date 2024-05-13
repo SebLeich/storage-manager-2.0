@@ -1,0 +1,39 @@
+<div class="body">
+
+    <div class="navbar">
+
+        <img src="/assets/logo.png" class="logo" />
+
+        <span class="label">Storage Manager</span>
+
+        <div class="item-wrapper">
+            @for(item of navbarOptions; track item){
+            <span class="item" [class.active]="item === activeNavItem" (click)="setNavItem(item)">{{item}}</span>
+            }
+        </div>
+
+        <div class="lang-wrapper">
+            <span class="flag-icon fi fi-{{currentLangISO3166$|async}} fis" (click)="setNextLanguage()"></span>
+        </div>
+
+    </div>
+
+    <div class="content">
+
+        <div class="side-nav">
+            <ng-content ngProjectAs="[side-nav]"></ng-content>
+        </div>
+
+        <div class="main-content">
+
+
+
+        </div>
+
+    </div>
+
+    <div class="footer">
+
+    </div>
+
+</div>

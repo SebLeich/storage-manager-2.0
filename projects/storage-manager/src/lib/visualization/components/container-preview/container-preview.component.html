@@ -1,0 +1,48 @@
+<div class="body">
+    <ng-container *ngIf="container; else noContainerAvailable">
+        <div class="description">
+            <div class="text">{{'defaults.container'|translation|async}}</div>
+        </div>
+
+        <div class="property-row">
+            <div class="property">
+                <div class="attribute">{{'defaults.width'|unsafeTranslation|async}}</div>
+                <div class="value">{{ container.width | prettyLength:3:true | async }}</div>
+            </div>
+
+            <div class="property">
+                <div class="attribute">{{'defaults.height'|unsafeTranslation|async}}</div>
+                <div class="value">{{ container.height | prettyLength:3:true | async }}</div>
+            </div>
+
+            <div class="property">
+                <div class="attribute">{{'defaults.length'|unsafeTranslation|async}}</div>
+                <div class="value">{{ container.length | prettyLength:3:true | async }}</div>
+            </div>
+
+            <div class="property">
+                <div class="attribute">{{'defaults.volume'|unsafeTranslation|async}}</div>
+                <div class="value">
+                    {{ container.length * container.height * container.width | prettyVolume: true | async }}
+                </div>
+            </div>
+        </div>
+
+        <div class="chart-wrapper">
+            <div class="chart-inner">
+                <canvas baseChart [datasets]="datasets" [labels]="labels" type="doughnut" [options]="options"></canvas>
+            </div>
+
+            <div class="percentage-wrapper">
+                <div class="percentage">
+                    <span appAnimatedCounter [value]="percentage" [animationDuration]=1000></span>%
+                </div>
+                <div class="text">{{'defaults.loadUtilization'|translation|async}}</div>
+            </div>
+        </div>
+    </ng-container>
+</div>
+
+<ng-template #noContainerAvailable>
+    <div class="no-content-available">no container available</div>
+</ng-template>

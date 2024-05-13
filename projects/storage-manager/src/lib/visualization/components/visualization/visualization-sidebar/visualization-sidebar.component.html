@@ -1,0 +1,13 @@
+<div class="item algorithm">
+
+    <span class="title">{{calculationSourceTitle$|async}}</span>
+
+    <span *ngLet="(calculationDate$|async) ?? '' as calculationDate" class="calculated-at">
+        {{'defaults.calculatedAt'|translation:{date:((calculationDate|date) ?? '')}|async}}
+    </span>
+
+</div>
+
+<div *ngLet="solutionContainer$|async as solutionContainer" class="item description">
+    <app-container-preview [container]="solutionContainer"></app-container-preview>
+</div>

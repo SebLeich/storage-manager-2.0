@@ -1,11 +1,11 @@
-import { AppComponent } from './app.component';
+import { ScaffoldComponent } from './scaffold.component';
 import { Spectator, createComponentFactory } from '@ngneat/spectator';
 
-describe('AppComponent', () => {
-    let spectator: Spectator<AppComponent>;
+describe('ScaffoldComponent', () => {
+    let spectator: Spectator<ScaffoldComponent>;
 
     const createComponent = createComponentFactory({
-        component: AppComponent,
+        component: ScaffoldComponent,
     });
 
     beforeEach(() => spectator = createComponent());

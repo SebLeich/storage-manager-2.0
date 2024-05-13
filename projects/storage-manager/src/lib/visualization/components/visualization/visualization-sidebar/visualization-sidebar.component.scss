@@ -1,0 +1,26 @@
+@import 'colors';
+@import 'line-clamp';
+
+.item {
+    margin: 0px .5rem .25rem;
+    padding: .5rem;
+    border-radius: 3px;
+    background-color: $white;
+
+    &.algorithm {
+        background: linear-gradient(246deg, $shiny-red 0%, $wine-red);
+        color: $white;
+
+        .title {
+            font-family: 'Bebas Neue';
+            font-size: 1.5rem;
+            font-weight: 500;
+            display: block;
+        }
+
+        .calculated-at {
+            display: block;
+            margin-bottom: .5rem
+        }
+    }
+}
