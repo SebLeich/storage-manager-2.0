@@ -1,3 +1,4 @@
+import { fadeInAnimation } from '@/lib/shared/animations/fade-in.animation';
 import { TranslationService } from '@/lib/translation';
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component } from '@angular/core';
 
@@ -5,7 +6,8 @@ import { ChangeDetectionStrategy, ChangeDetectorRef, Component } from '@angular/
     selector: 'app-scaffold',
     templateUrl: './scaffold.component.html',
     styleUrl: './scaffold.component.scss',
-    changeDetection: ChangeDetectionStrategy.OnPush
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    animations: [fadeInAnimation]
 })
 export class ScaffoldComponent {
 

@@ -1,4 +1,10 @@
 <app-scaffold>
-    <app-visualization-sidebar id="side-nav"></app-visualization-sidebar>
-    <app-scene-visualization id="main" [scene]="(scene$ | async)!"></app-scene-visualization>
+    <app-visualization-sidebar id="side-nav" [solutionWrapper]="solutionWrapper$|async"
+        (goodHovered)="sceneVisualization.highlightGood($event)" (groupColorChanged)="updateGroup($event)"></app-visualization-sidebar>
+
+    <app-scene-visualization @fadeIn #sceneVisualization id="main" [scene]="(scene$ | async)!"></app-scene-visualization>
+
+    <app-visualization-footer id="footer" (zoomIn)="sceneVisualization.zoomIn()" (zoomOut)="sceneVisualization.zoomOut()"
+        (moveDown)="sceneVisualization.move(0, 1, 0)" (moveUp)="sceneVisualization.move(0, -1, 0)" (moveLeft)="sceneVisualization.move(1, 0, 0)"
+        (moveRight)="sceneVisualization.move(-1, 0, 0)"></app-visualization-footer>
 </app-scaffold>

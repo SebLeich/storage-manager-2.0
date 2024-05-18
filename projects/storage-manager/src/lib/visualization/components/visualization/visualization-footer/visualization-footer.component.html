@@ -1,0 +1,18 @@
+<mat-icon (click)="zoomIn.emit()">zoom_in</mat-icon>
+<mat-icon (click)="zoomOut.emit()">zoom_out</mat-icon>
+
+<span class="spacer"></span>
+
+<div class="orientation-grid">
+    <mat-icon class="secondary">north_west</mat-icon>
+    <mat-icon (click)="moveUp.emit()">north</mat-icon>
+    <mat-icon class="secondary">north_east</mat-icon>
+    <mat-icon (click)="moveLeft.emit()">arrow_back</mat-icon>
+    <mat-icon>adjust</mat-icon>
+    <mat-icon (click)="moveRight.emit()">arrow_forward</mat-icon>
+    <mat-icon class="secondary">south_west</mat-icon>
+    <mat-icon (click)="moveDown.emit()">south</mat-icon>
+    <mat-icon class="secondary">south_east</mat-icon>
+</div>
+
+<mat-icon>settings</mat-icon>

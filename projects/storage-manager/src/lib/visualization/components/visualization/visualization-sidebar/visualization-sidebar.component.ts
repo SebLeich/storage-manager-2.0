@@ -1,6 +1,6 @@
-import { selectCurrentSolutionCalculationDate, selectCurrentSolutionCalculationSourceTitle, selectCurrentSolutionContainer, selectCurrentSolutionDescription } from '../../../store/visualization.selectors';
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
-import { Store } from '@ngrx/store';
+import { Group } from '@/lib/storage-manager/types/group.type';
+import { SolutionWrapper } from '@/lib/storage-manager/types/solution-wrapper.type';
+import { ChangeDetectionStrategy, Component, EventEmitter, Output, computed, input } from '@angular/core';
 
 @Component({
     selector: 'app-visualization-sidebar',
@@ -9,10 +9,12 @@ import { Store } from '@ngrx/store';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class VisualizationSidebarComponent {
-    private _store = inject(Store);
+    @Output() public goodHovered = new EventEmitter<string>();
+    @Output() public groupColorChanged = new EventEmitter<Group>();
 
-    public calculationSourceTitle$ = this._store.select(selectCurrentSolutionCalculationSourceTitle);
-    public calculationDate$ = this._store.select(selectCurrentSolutionCalculationDate);
-    public solutionDescription$ = this._store.select(selectCurrentSolutionDescription);
-    public solutionContainer$ = this._store.select(selectCurrentSolutionContainer);
+    public solutionWrapper = input<SolutionWrapper | null>(null);
+    public groups = computed(() => this.solutionWrapper()?.groups ?? []);
+    public calculationSourceTitle = computed(() => this.solutionWrapper()?.solution.calculationSource.title ?? null);
+    public calculationDate = computed(() => this.solutionWrapper()?.solution.calculated ?? '');
+    public container = computed(() => this.solutionWrapper()?.solution.container ?? null);
 }

@@ -93,12 +93,11 @@
             border-radius: 1rem;
             display: flex;
             overflow: hidden;
+            background-color: #f8f8f8;
         }
     }
 
     .footer {
         margin-top: .5rem;
-        background-color: $light-slate-grey;
-        height: 2rem;
     }
 }

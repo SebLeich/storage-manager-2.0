@@ -1,17 +1,21 @@
 <div class="item algorithm">
 
-    <span class="title">{{calculationSourceTitle$|async}}</span>
+    <span class="title">{{calculationSourceTitle()}}</span>
 
-    <span *ngLet="(calculationDate$|async) ?? '' as calculationDate" class="calculated-at">
-        {{'defaults.calculatedAt'|translation:{date:((calculationDate|date) ?? '')}|async}}
+    <span *ngLet="calculationDate() as calcDate" class="calculated-at">
+        {{'defaults.calculatedAt'|translation:{date:(calcDate|date) ?? ''}|async}}
     </span>
 
 </div>
 
-<div *ngLet="solutionContainer$|async as solutionContainer" class="item description">
-    <app-container-preview [container]="solutionContainer"></app-container-preview>
+<div *ngLet="container() as container" class="item">
+    <app-container-preview [container]="container"></app-container-preview>
 </div>
 
-<div *ngLet="solutionContainer$|async as solutionContainer" class="item description">
-    <app-solution-validation></app-solution-validation>
+<div class="item">
+    <app-solution-validation (goodHovered)="goodHovered.emit($event)"></app-solution-validation>
+</div>
+
+<div class="item">
+    <app-solution-groups [groups]="groups()" (groupColorChanged)="groupColorChanged.emit($event)"></app-solution-groups>
 </div>

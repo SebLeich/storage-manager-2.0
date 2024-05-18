@@ -58,7 +58,7 @@ export class VisualizerComponent implements AfterViewInit, OnDestroy, OnInit {
   public scene$ = this.currentSolution$.pipe(
     scan(
       (scene: ThreeJS.Scene, solution: ISolution | null) => {
-        this._visualizationService.configureSolutionScene(solution!, scene, 'rgb(238,238,238)')
+        this._visualizationService.configureSolutionScene(solution!, scene, [], 'rgb(238,238,238)')
         return scene;
       },
       new ThreeJS.Scene()

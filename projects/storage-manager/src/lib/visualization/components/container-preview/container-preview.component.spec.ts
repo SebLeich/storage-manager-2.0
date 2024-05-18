@@ -1,8 +1,8 @@
 import { By } from '@angular/platform-browser';
-import { IContainer } from '@smgr/interfaces';
 import { ContainerPreviewComponent } from './container-preview.component';
 import { SharedModule } from '@/lib/shared/shared.module';
 import { Spectator, createComponentFactory } from '@ngneat/spectator';
+import { Container } from '@/lib/storage-manager/types/container.type';
 
 describe('ContainerPreviewComponent', () => {
     let spectator: Spectator<ContainerPreviewComponent>;
@@ -22,7 +22,7 @@ describe('ContainerPreviewComponent', () => {
     });
 
     it('should display container preview and properties in case container is available', () => {
-        spectator.setInput('container', { 'height': 10, 'length': 10, 'width': 10 } as IContainer);
+        spectator.setInput('container', { 'height': 10, 'length': 10, 'width': 10 } as Container);
 
         expect(spectator.fixture.debugElement.queryAll(By.css('.description')).length).toBe(1);
         expect(spectator.fixture.debugElement.queryAll(By.css('.property-row .property')).length).toBe(4);

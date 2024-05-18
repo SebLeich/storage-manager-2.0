@@ -17,6 +17,8 @@ import { ValidationService } from './services/validation/validation.service';
 import { MatIconModule } from '@angular/material/icon';
 import { EffectsModule } from '@ngrx/effects';
 import { VisualizationEffects } from './store/visualization.effects';
+import { VisualizationFooterComponent } from './components/visualization/visualization-footer/visualization-footer.component';
+import { SolutionGroupsComponent } from './components/solution-groups/solution-groups.component';
 
 
 
@@ -24,8 +26,10 @@ import { VisualizationEffects } from './store/visualization.effects';
     declarations: [
         ContainerPreviewComponent,
         SceneVisualizationComponent,
+        SolutionGroupsComponent,
         SolutionValidationComponent,
         VisualizationComponent,
+        VisualizationFooterComponent,
         VisualizationSidebarComponent
     ],
     imports: [

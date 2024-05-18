@@ -8,6 +8,12 @@ export const selectCurrentSolutionWrapper = createSelector(
     (state: State) => state.solutionWrapper
 );
 
+export const selectCurrentSolutionGroups = createSelector(
+    selectCurrentSolutionWrapper,
+    (solutionWrapper) => solutionWrapper?.groups ?? []
+);
+
+
 export const selectCurrentSolution = createSelector(
     selectCurrentSolutionWrapper,
     (solutionWrapper) => solutionWrapper?.solution

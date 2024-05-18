@@ -10,9 +10,10 @@
         },
         "free": "Frei",
         "goods": "Güter",
+        "groups": "Gruppen",
         "height": "Höhe",
         "length": "Länge",
-        "loadUtilization": "Beladungsauslastung",
+        "loadUtilization": "Auslastung",
         "validation": "Validierung",
         "volume": "Volumen",
         "width": "Breite"

@@ -4,7 +4,7 @@
 
         <h3>
             {{'defaults.validation'|translation|async}}
-            ({{'defaults.error.' + (errorCount === 1? 'singluar': 'plural')|unsafeTranslation:{n:errorCount}|async}})
+            ({{'defaults.error.' + (errorCount === 1? 'singular': 'plural')|unsafeTranslation:{n:errorCount}|async}})
         </h3>
 
         <div class="error-wrapper" *ngFor="let error of solutionValidation">

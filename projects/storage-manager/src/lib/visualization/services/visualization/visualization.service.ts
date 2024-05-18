@@ -1,19 +1,15 @@
 import { Injectable } from '@angular/core';
-import { Store } from '@ngrx/store';
-import { IPosition, IPositionedElement, ISolution, ISpace } from '@smgr/interfaces';
+import { IPosition, IPositionedElement, ISpace } from '@smgr/interfaces';
 import { defaultGoodEdgeColor, infinityReplacement } from 'src/app/globals';
 import getContainerPositionSharedMethods from 'src/app/methods/get-container-position.shared-methods';
-import { selectSnapshot } from 'src/lib/process-builder/globals/select-snapshot';
-import { selectGroups } from '@smgr/store';
 import { ArrowHelper, BoxGeometry, Color, EdgesGeometry, GridHelper, LineBasicMaterial, LineSegments, Mesh, MeshBasicMaterial, Scene, Vector3 } from 'three';
 import { Solution } from '@/lib/storage-manager/types/solution.type';
+import { Group } from '@/lib/storage-manager/types/group.type';
 
 @Injectable()
 export class VisualizationService {
 
     static _helperArrowLength = 500;
-
-    constructor(private _store: Store) { }
 
     public static calculateRelativePosition(position: IPositionedElement & ISpace, parent?: IPositionedElement & ISpace): IPositionedElement {
         return {
@@ -23,17 +19,27 @@ export class VisualizationService {
         }
     }
 
-    public async configureSolutionScene(solution: ISolution | Solution, scene: Scene = new Scene(), fillColor: boolean | string = false, addBaseGrid = true, addUnloadingArrow = true) {
+    public async configureSolutionScene(
+        solution: Solution,
+        scene: Scene = new Scene(),
+        groups: Group[],
+        fillColor: boolean | string = false,
+        addBaseGrid = true,
+        addUnloadingArrow = true
+    ) {
         scene.clear();
+
         const goodMeshes: { goodId: string, mesh: Mesh }[] = [];
         if (solution?.container) {
             if (fillColor) {
                 scene.background = new Color(typeof fillColor === 'string' ? fillColor : 'rgb(255,255,255)');
             }
-            const containerPosition = getContainerPositionSharedMethods(solution.container);
-            const containerResult = VisualizationService.generateOutlinedBoxMesh(containerPosition, 'container');
+
+            const containerPosition = getContainerPositionSharedMethods(solution.container),
+                containerResult = VisualizationService.generateOutlinedBoxMesh(containerPosition, 'container');
+
             scene.add(containerResult.edges);
-            const groups = await selectSnapshot(this._store.select(selectGroups));
+
             for (const good of solution.container.goods) {
                 const group = groups.find((group) => group.id === good.group);
                 const goodResult = VisualizationService.generateFilledBoxMesh(getContainerPositionSharedMethods(good), group?.color ?? '#ffffff', 'good', containerPosition);

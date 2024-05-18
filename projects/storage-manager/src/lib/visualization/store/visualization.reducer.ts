@@ -1,5 +1,5 @@
 import { createReducer, on } from "@ngrx/store";
-import { setSolution, setSolutionValidation } from "./visualization.actions";
+import { setSolution, setSolutionValidation, updateGroup } from "./visualization.actions";
 import { SolutionWrapper } from "@/lib/storage-manager/types/solution-wrapper.type";
 import { SolutionValidationErrorWrapper } from "@/lib/shared/types/solution-validation-error-wrapper.type";
 
@@ -18,5 +18,14 @@ export const INITIAL_STATE: State = {
 export const REDUCER = createReducer(
     INITIAL_STATE,
     on(setSolution, (state, { solutionWrapper }) => ({ ...state, solutionWrapper })),
-    on(setSolutionValidation, (state, { validation }) => ({ ...state, validation }))
+    on(setSolutionValidation, (state, { validation }) => ({ ...state, validation })),
+    on(updateGroup, (state, { group }) => {
+        const solutionWrapper = state.solutionWrapper;
+        if (!solutionWrapper) {
+            return state;
+        }
+
+        const groups = solutionWrapper.groups.map(currentGroup => currentGroup.id === group.id ? group : currentGroup);
+        return { ...state, solutionWrapper: { ...solutionWrapper, groups } };
+    })
 );

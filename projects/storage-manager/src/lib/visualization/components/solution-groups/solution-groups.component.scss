@@ -1,0 +1,10 @@
+@import 'input';
+@import 'heading';
+
+h3 {
+    @include heading-3;
+}
+
+input[type="color"] {
+    @include color-picker;
+}

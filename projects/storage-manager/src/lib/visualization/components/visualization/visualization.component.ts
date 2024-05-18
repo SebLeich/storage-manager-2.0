@@ -1,12 +1,14 @@
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { Store } from '@ngrx/store';
-import { setSolution } from '../../store/visualization.actions';
+import { setSolution, updateGroup } from '../../store/visualization.actions';
 import { scan } from 'rxjs';
 import { VisualizationService } from '../../services/visualization/visualization.service';
-import { Solution } from '@/lib/storage-manager/types/solution.type';
-import { selectCurrentSolution } from '../../store/visualization.selectors';
+import { selectCurrentSolutionWrapper } from '../../store/visualization.selectors';
 
 import { Scene } from 'three';
+import { SolutionWrapper } from '@/lib/storage-manager/types/solution-wrapper.type';
+import { Group } from '@/lib/storage-manager/types/group.type';
+import { fadeInAnimation } from '@/lib/shared/animations/fade-in.animation';
 
 
 @Component({
@@ -14,16 +16,17 @@ import { Scene } from 'three';
     templateUrl: './visualization.component.html',
     styleUrl: './visualization.component.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,
-    providers: [VisualizationService]
+    providers: [VisualizationService],
+    animations: [fadeInAnimation]
 })
 export class VisualizationComponent implements OnInit {
-    public solution$ = this._store.select(selectCurrentSolution);
-    public scene$ = this.solution$
+    public solutionWrapper$ = this._store.select(selectCurrentSolutionWrapper);
+    public scene$ = this.solutionWrapper$
         .pipe(
             scan(
-                (scene: Scene, solution: Solution | undefined) => {
-                    if (solution) {
-                        this._visualizationService.configureSolutionScene(solution, scene, 'rgb(238,238,238)');
+                (scene: Scene, solutionWrapper: SolutionWrapper | null) => {
+                    if (solutionWrapper) {
+                        this._visualizationService.configureSolutionScene(solutionWrapper.solution, scene, solutionWrapper.groups, '#f8f8f8');
                     }
 
                     return scene;
@@ -37,6 +40,20 @@ export class VisualizationComponent implements OnInit {
     public ngOnInit(): void {
         this._store.dispatch(setSolution({
             solutionWrapper: {
+                groups: [
+                    {
+                        id: '1',
+                        color: '#ff0000',
+                        desc: 'Group 1',
+                        sequenceNumber: 0
+                    },
+                    {
+                        id: '2',
+                        color: '#00ff00',
+                        desc: 'Group 2',
+                        sequenceNumber: 0
+                    },
+                ],
                 solution: {
                     calculated: new Date().toISOString(),
                     calculationSource: {
@@ -45,6 +62,7 @@ export class VisualizationComponent implements OnInit {
                     container: {
                         goods: [
                             {
+                                group: '1',
                                 xCoord: 0,
                                 yCoord: 0,
                                 zCoord: 0,
@@ -55,6 +73,7 @@ export class VisualizationComponent implements OnInit {
                                 desc: "Good 1"
                             },
                             {
+                                group: '1',
                                 xCoord: 0,
                                 yCoord: 0,
                                 zCoord: 500,
@@ -64,6 +83,7 @@ export class VisualizationComponent implements OnInit {
                                 sequenceNr: 1,
                             },
                             {
+                                group: '2',
                                 xCoord: 0,
                                 yCoord: 0,
                                 zCoord: 1000,
@@ -73,6 +93,7 @@ export class VisualizationComponent implements OnInit {
                                 sequenceNr: 2,
                             },
                             {
+                                group: '2',
                                 xCoord: 0,
                                 yCoord: 0,
                                 zCoord: 1500,
@@ -80,46 +101,6 @@ export class VisualizationComponent implements OnInit {
                                 width: 500,
                                 height: 500,
                                 sequenceNr: 3,
-                            },
-                            {
-                                xCoord: 0,
-                                yCoord: 0,
-                                zCoord: 2000,
-                                length: 500,
-                                width: 500,
-                                height: 500,
-                                sequenceNr: 4,
-                                desc: "Good 5"
-                            },
-                            {
-                                xCoord: 0,
-                                yCoord: 0,
-                                zCoord: 2100,
-                                length: 500,
-                                width: 500,
-                                height: 500,
-                                sequenceNr: 4,
-                                desc: "Good 6"
-                            },
-                            {
-                                xCoord: 0,
-                                yCoord: 0,
-                                zCoord: 2200,
-                                length: 500,
-                                width: 500,
-                                height: 500,
-                                sequenceNr: 4,
-                                desc: "Good 7"
-                            },
-                            {
-                                xCoord: 0,
-                                yCoord: 0,
-                                zCoord: 2650,
-                                length: 500,
-                                width: 500,
-                                height: 500,
-                                sequenceNr: 4,
-                                desc: "Good 8"
                             }
                         ],
                         length: 2000,
@@ -133,6 +114,10 @@ export class VisualizationComponent implements OnInit {
                 }
             } as any
         }));
+    }
+
+    public updateGroup(group: Group) {
+        this._store.dispatch(updateGroup({ group }));
     }
 
 }
