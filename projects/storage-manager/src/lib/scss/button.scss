@@ -1,7 +1,10 @@
+@import 'colors';
+@import 'gradients';
+
 @mixin button() {
     padding: 0.3rem 0.5rem;
     cursor: pointer;
-    color: white;
+    color: $white;
     border-radius: 2px;
     transition: all 0.3s;
     animation: leaves 0.15s ease-out;
@@ -14,19 +17,51 @@
     }
 }
 
+@mixin icon-button {
+    cursor: pointer;
+    border-radius: 2px;
+    transition: all 0.3s;
+    animation: leaves 0.15s ease-out;
+    width: 2rem;
+    font-weight: 200 !important;
+    font-size: 1.2rem;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    &:hover {
+        opacity: 0.8;
+    }
+}
+
 @mixin default-button() {
     @include button;
-    background: linear-gradient(135deg, #0078d4, #0078d4bd, #0078d4);
+    @include gradient-darkblue;
+    color: $white;
+}
+
+@mixin default-icon-button() {
+    @include icon-button;
+    @include gradient-darkblue;
+    color: $white;
 }
 
 @mixin secondary-button() {
     @include button;
-    background: linear-gradient(135deg, #47968a, #47968ad2, #47968a);
+    @include gradient-turqoise;
+    color: $white;
+}
+
+@mixin secondary-icon-button() {
+    @include icon-button;
+    @include gradient-turqoise;
+    color: $white;
 }
 
 @mixin secondary-button-2() {
     @include button;
-    background: linear-gradient(135deg, #444444, #444444c7, #444444);
+    @include gradient-darkgrey;
+    color: $white;
 }
 
 @keyframes leaves {
@@ -34,6 +69,7 @@
         transform: scale(0.8);
         -webkit-transform: scale(0.8);
     }
+
     100% {
         transform: scale(1);
         -webkit-transform: scale(1);

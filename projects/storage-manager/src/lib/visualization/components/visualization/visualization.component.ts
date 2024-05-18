@@ -51,7 +51,13 @@ export class VisualizationComponent implements OnInit {
                         id: '2',
                         color: '#00ff00',
                         desc: 'Group 2',
-                        sequenceNumber: 0
+                        sequenceNumber: 1
+                    },
+                    {
+                        id: '3',
+                        color: '#0000ff',
+                        desc: 'Group 3',
+                        sequenceNumber: 2
                     },
                 ],
                 solution: {
@@ -81,6 +87,7 @@ export class VisualizationComponent implements OnInit {
                                 width: 500,
                                 height: 500,
                                 sequenceNr: 1,
+                                desc: "Good 2"
                             },
                             {
                                 group: '2',
@@ -91,6 +98,7 @@ export class VisualizationComponent implements OnInit {
                                 width: 500,
                                 height: 500,
                                 sequenceNr: 2,
+                                desc: "Good 3"
                             },
                             {
                                 group: '2',
@@ -101,6 +109,40 @@ export class VisualizationComponent implements OnInit {
                                 width: 500,
                                 height: 500,
                                 sequenceNr: 3,
+                                desc: "Good 4"
+                            },
+                            {
+                                group: '2',
+                                xCoord: 0,
+                                yCoord: 0,
+                                zCoord: 2000,
+                                length: 500,
+                                width: 500,
+                                height: 500,
+                                sequenceNr: 4,
+                                desc: "Good 5"
+                            },
+                            {
+                                group: '2',
+                                xCoord: 0,
+                                yCoord: 0,
+                                zCoord: 2200,
+                                length: 500,
+                                width: 500,
+                                height: 500,
+                                sequenceNr: 5,
+                                desc: "Good 6"
+                            },
+                            {
+                                group: '3',
+                                xCoord: 500,
+                                yCoord: 0,
+                                zCoord: 0,
+                                length: 2500,
+                                width: 2500,
+                                height: 2500,
+                                sequenceNr: 6,
+                                desc: "Good 7"
                             }
                         ],
                         length: 2000,
@@ -111,7 +153,10 @@ export class VisualizationComponent implements OnInit {
                         zCoord: 0
                     },
                     description: 'Super Flo Solution'
-                }
+                },
+                calculationSteps: [
+                    { createdPositions: [], messages: [], sequenceNumber: 0, usedPosition: null },
+                ]
             } as any
         }));
     }

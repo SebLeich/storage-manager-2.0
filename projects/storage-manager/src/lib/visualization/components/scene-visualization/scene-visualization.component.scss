@@ -1,15 +1,25 @@
+@import 'colors';
+
 :host {
-  flex: 1;
-  display: flex;
-  overflow: hidden;
+    flex: 1;
+    display: flex;
+    overflow: hidden;
+    position: relative;
 
-  .visualization-wrapper {
-    height: -webkit-fill-available;
-    width: -webkit-fill-available;
-    box-sizing: border-box;
+    .visualization-wrapper {
+        flex: 1;
+        box-sizing: border-box;
 
-    &.cursor-pointer {
-      cursor: pointer;
+        &.cursor-pointer {
+            cursor: pointer;
+        }
     }
-  }
+
+    .overlay {
+        position: absolute;
+        top: 1rem;
+        left: 1rem;
+        background-color: $white;
+        padding: .5rem;
+    }
 }

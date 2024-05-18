@@ -3,7 +3,10 @@
         "appName": "Storage Manager",
         "blocked": "Blocked",
         "calculatedAt": "Calculated at {{date}}",
+        "calculationSteps": "Calculation Steps",
+        "cameraPosition": "Camera Position",
         "container": "Container",
+        "download": "Download",
         "error": {
             "singular": "One error",
             "plural": "{{n}} errors"
@@ -15,8 +18,10 @@
         "length": "Length",
         "loadUtilization": "Load Utilization",
         "validation": "Validation",
+        "viewInformation": "View Information",
         "volume": "Volume",
-        "width": "Width"
+        "width": "Width",
+        "zoomFactor": "Zoom Factor"
     },
     "hints": {
         "noContainer": "No container selected",
@@ -32,6 +37,9 @@
         "5": "The good {{good}} is placed above the container",
         "6": "The good {{good}} is placed behind the container",
         "7": "The good {{good}} is placed in front of the container",
-        "8": "The good {{good}} is overlaping with {{overlapingWith}}"
+        "8": "The good {{good}} is overlaping with {{overlapingWith}}",
+        "9": "The good {{good}} is too long for the container",
+        "10": "The good {{good}} is too wide for the container",
+        "11": "The good {{good}} is too tall for the container"
     }
 }

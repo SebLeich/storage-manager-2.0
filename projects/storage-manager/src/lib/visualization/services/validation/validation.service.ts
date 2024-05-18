@@ -54,6 +54,14 @@ export class ValidationService {
             }
         }
 
+        const goodsLongerThanContainer = solution.container.goods.filter(good => good.length > solution.container!.length),
+            goodsWiderThanContainer = solution.container.goods.filter(good => good.width > solution.container!.width),
+            goodsHigherThanContainer = solution.container.goods.filter(good => good.height > solution.container!.height);
+
+        for(let error of goodsLongerThanContainer) output.push({ error: SolutionValidationError.GoodLongerThanContainer, args: { good: error.desc, id: error.id } });
+        for(let error of goodsWiderThanContainer) output.push({ error: SolutionValidationError.GoodWiderThanContainer, args: { good: error.desc, id: error.id } });
+        for(let error of goodsHigherThanContainer) output.push({ error: SolutionValidationError.GoodHigherThanContainer, args: { good: error.desc, id: error.id } });
+        
         return output;
     }
 

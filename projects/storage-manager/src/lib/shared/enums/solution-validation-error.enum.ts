@@ -7,5 +7,8 @@ export enum SolutionValidationError {
     GoodOutOfContainerYCoord, 
     GoodBeforeContainerZCoord, 
     GoodOutOfContainerZCoord, 
-    GoodOverlap
+    GoodOverlap,
+    GoodLongerThanContainer,
+    GoodWiderThanContainer,
+    GoodHigherThanContainer
 }

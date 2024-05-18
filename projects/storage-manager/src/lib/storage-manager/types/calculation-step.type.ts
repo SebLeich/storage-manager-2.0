@@ -5,5 +5,5 @@ export type CalculationStep = {
     sequenceNumber: number;
     messages: string[];
     createdPositions: UnusedPosition[];
-    usedPosition: UsedPosition;
+    usedPosition: UsedPosition | null;
 }

@@ -3,7 +3,10 @@
         "appName": "Storage Manager",
         "blocked": "Bloqueado",
         "calculatedAt": "Calculado el {{date}}",
+        "calculationSteps": "Pasos de cálculo",
+        "cameraPosition": "Posición de la cámara",
         "container": "Contenedor",
+        "download": "Descargar",
         "error": {
             "singular": "Un error",
             "plural": "{{n}} errores"
@@ -15,8 +18,10 @@
         "length": "Longitud",
         "loadUtilization": "Utilización de carga",
         "validation": "Validación",
+        "viewInformation": "Información de la vista",
         "volume": "Volumen",
-        "width": "Ancho"
+        "width": "Ancho",
+        "zoomFactor": "Factor de zoom"
     },
     "hints": {
         "noContainer": "Ningún contenedor seleccionado",
@@ -32,6 +37,9 @@
         "5": "El bien {{good}} está colocado encima del contenedor",
         "6": "El bien {{good}} está colocado detrás del contenedor",
         "7": "El bien {{good}} está colocado delante del contenedor",
-        "8": "El bien {{good}} se superpone con {{overlapingWith}}"
+        "8": "El bien {{good}} se superpone con {{overlapingWith}}",
+        "9": "El bien {{good}} es demasiado largo para el contenedor",
+        "10": "El bien {{good}} es demasiado ancho para el contenedor",
+        "11": "El bien {{good}} es demasiado alto para el contenedor"
     }
 }

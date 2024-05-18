@@ -1,0 +1,9 @@
+<h3>{{'defaults.viewInformation'|translation|async}}</h3>
+
+<div>
+    {{'defaults.zoomFactor'|translation|async}} {{zoomLevel()|number:'1.2-2'}}
+</div>
+
+<div *ngLet="cameraPosition() as position">
+    {{'defaults.cameraPosition'|translation|async}} ({{position.x|number:'1.0-0'}} | {{position.y|number:'1.0-0'}} | {{position.z|number:'1.0-0'}})
+</div>

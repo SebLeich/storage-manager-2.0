@@ -1,3 +1,10 @@
 <div class="visualization-wrapper" #visualizationWrapper (mousemove)="onMousemove($event)" (click)="onClick($event)"
     [ngClass]="{ 'cursor-pointer': !!(hoveredGood$|async) }">
 </div>
+
+@if(displaySceneInformation()){
+<div class="overlay">
+    <app-scene-information [zoomLevel]="sceneVisualizationComponentService.camera?.zoom ?? 1"
+        [cameraPosition]="sceneVisualizationComponentService.camera?.position ?? { x: 0, y: 0, z: 0 }"></app-scene-information>
+</div>
+}

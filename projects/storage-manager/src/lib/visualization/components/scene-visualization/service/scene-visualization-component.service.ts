@@ -16,6 +16,10 @@ export class SceneVisualizationComponentService {
 
     private _ray = new Raycaster();
 
+    public get camera(): PerspectiveCamera | undefined {
+        return this._camera;
+    }
+
     public getPointedElement(event: MouseEvent, scene: Scene): null | Intersection {
         const meshes = scene.children.filter(child => child instanceof Mesh) as Mesh[];
         const x = (event.offsetX / (event.target as HTMLCanvasElement).offsetWidth) * 2 - 1;

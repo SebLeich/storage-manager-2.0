@@ -3,7 +3,7 @@
     <span class="title">{{calculationSourceTitle()}}</span>
 
     <span *ngLet="calculationDate() as calcDate" class="calculated-at">
-        {{'defaults.calculatedAt'|translation:{date:(calcDate|date) ?? ''}|async}}
+        {{'defaults.calculatedAt'|translation:{date:(calcDate|date:'dd.MM. HH:mm') ?? ''}|async}}
     </span>
 
 </div>
@@ -18,4 +18,8 @@
 
 <div class="item">
     <app-solution-groups [groups]="groups()" (groupColorChanged)="groupColorChanged.emit($event)"></app-solution-groups>
+</div>
+
+<div class="item">
+    <app-calculation-steps [calculationSteps]="calculationSteps()"></app-calculation-steps>
 </div>

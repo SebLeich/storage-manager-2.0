@@ -1,9 +1,11 @@
-<mat-icon (click)="zoomIn.emit()">zoom_in</mat-icon>
-<mat-icon (click)="zoomOut.emit()">zoom_out</mat-icon>
+<mat-icon fontIcon="download" class="button download" [matTooltip]="('defaults.download'|translation|async) ?? ''"></mat-icon>
 
 <span class="spacer"></span>
 
-<div class="orientation-grid">
+<mat-icon (click)="zoomIn.emit()">zoom_in</mat-icon>
+<mat-icon (click)="zoomOut.emit()">zoom_out</mat-icon>
+
+<div class="orientation-grid margin-l">
     <mat-icon class="secondary">north_west</mat-icon>
     <mat-icon (click)="moveUp.emit()">north</mat-icon>
     <mat-icon class="secondary">north_east</mat-icon>
@@ -15,4 +17,4 @@
     <mat-icon class="secondary">south_east</mat-icon>
 </div>
 
-<mat-icon>settings</mat-icon>
+<mat-icon class="margin-l">settings</mat-icon>

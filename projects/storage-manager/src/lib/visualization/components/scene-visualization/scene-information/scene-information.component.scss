@@ -1,0 +1,5 @@
+@import 'heading';
+
+h3 {
+    @include heading-3;
+}

@@ -1,9 +1,18 @@
+@import 'button';
 @import 'colors';
 
 :host {
     display: flex;
     align-items: center;
     height: 100%;
+}
+
+.button {
+    @include default-icon-button;
+}
+
+.margin-l {
+    margin-left: 1rem;
 }
 
 .orientation-grid {

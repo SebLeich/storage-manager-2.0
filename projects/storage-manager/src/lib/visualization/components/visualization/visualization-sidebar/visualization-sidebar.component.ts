@@ -14,6 +14,7 @@ export class VisualizationSidebarComponent {
 
     public solutionWrapper = input<SolutionWrapper | null>(null);
     public groups = computed(() => this.solutionWrapper()?.groups ?? []);
+    public calculationSteps = computed(() => this.solutionWrapper()?.calculationSteps ?? []);
     public calculationSourceTitle = computed(() => this.solutionWrapper()?.solution.calculationSource.title ?? null);
     public calculationDate = computed(() => this.solutionWrapper()?.solution.calculated ?? '');
     public container = computed(() => this.solutionWrapper()?.solution.container ?? null);

@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, DestroyRef, ElementRef, EventEmitter, Inject, Input, OnChanges, OnInit, Optional, Output, SimpleChanges, ViewChild } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, DestroyRef, ElementRef, EventEmitter, Inject, Input, OnChanges, OnInit, Optional, Output, SimpleChanges, ViewChild, input } from '@angular/core';
 import { BehaviorSubject, debounceTime, fromEvent, map, ReplaySubject, switchMap } from 'rxjs';
 import { Mesh, Scene } from 'three';
 import { MeshBasicMaterial } from 'three';
@@ -29,6 +29,8 @@ export class SceneVisualizationComponent implements OnChanges, OnInit {
     @Output() public hoveredGood = new EventEmitter<string | null>();
     @Output() public selectGood = new EventEmitter<string | null>();
 
+    public displaySceneInformation = input<boolean>(true);
+
     public resized$ = fromEvent(window, 'resize').pipe(debounceTime(50));
 
     private _hoveredGoodId = new BehaviorSubject<null | string>(null);
@@ -46,7 +48,8 @@ export class SceneVisualizationComponent implements OnChanges, OnInit {
         @Optional() @Inject(VISUALIZER_CONTEXT) public visualizerComponentService: IVisualizerContextService,
         public sceneVisualizationComponentService: SceneVisualizationComponentService,
         private _store: Store,
-        private _destroyRef: DestroyRef
+        private _destroyRef: DestroyRef,
+        private _changeDetectorRef: ChangeDetectorRef
     ) { }
 
     public async highlightGood(arg: Good | string) {
@@ -72,8 +75,9 @@ export class SceneVisualizationComponent implements OnChanges, OnInit {
         }
     }
 
-    public move(xSteps: number, ySteps: number, zSteps: number){
+    public move(xSteps: number, ySteps: number, zSteps: number): void {
         this.sceneVisualizationComponentService.move(xSteps, ySteps, zSteps);
+        this._changeDetectorRef.markForCheck();
     }
 
     public ngOnChanges(changes: SimpleChanges): void {
@@ -171,10 +175,12 @@ export class SceneVisualizationComponent implements OnChanges, OnInit {
 
     public zoomIn() {
         this.sceneVisualizationComponentService.zoomIn();
+        this._changeDetectorRef. markForCheck();
     }
 
     public zoomOut() {
         this.sceneVisualizationComponentService.zoomOut();
+        this._changeDetectorRef. markForCheck();
     }
 
     private onResize() {

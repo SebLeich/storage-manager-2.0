@@ -19,12 +19,17 @@ import { EffectsModule } from '@ngrx/effects';
 import { VisualizationEffects } from './store/visualization.effects';
 import { VisualizationFooterComponent } from './components/visualization/visualization-footer/visualization-footer.component';
 import { SolutionGroupsComponent } from './components/solution-groups/solution-groups.component';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { CalculationStepsComponent } from './components/calculation-steps/calculation-steps.component';
+import { SceneInformationComponent } from './components/scene-visualization/scene-information/scene-information.component';
 
 
 
 @NgModule({
     declarations: [
+        CalculationStepsComponent,
         ContainerPreviewComponent,
+        SceneInformationComponent,
         SceneVisualizationComponent,
         SolutionGroupsComponent,
         SolutionValidationComponent,
@@ -36,6 +41,7 @@ import { SolutionGroupsComponent } from './components/solution-groups/solution-g
         CommonModule,
         EffectsModule.forFeature([VisualizationEffects]),
         MatIconModule,
+        MatTooltipModule,
         NgChartsModule,
         NgLetModule,
         RouterModule.forChild([
