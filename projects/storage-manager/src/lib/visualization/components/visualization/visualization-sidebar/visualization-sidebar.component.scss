@@ -23,4 +23,10 @@
             margin-bottom: .5rem
         }
     }
+
+    app-solution-validation {
+        max-height: 160px;
+        display: block;
+        overflow: auto;
+    }
 }

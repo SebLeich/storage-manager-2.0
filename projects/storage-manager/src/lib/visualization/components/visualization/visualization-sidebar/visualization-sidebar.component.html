@@ -11,3 +11,7 @@
 <div *ngLet="solutionContainer$|async as solutionContainer" class="item description">
     <app-container-preview [container]="solutionContainer"></app-container-preview>
 </div>
+
+<div *ngLet="solutionContainer$|async as solutionContainer" class="item description">
+    <app-solution-validation></app-solution-validation>
+</div>

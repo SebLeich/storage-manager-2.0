@@ -1,54 +1,22 @@
-import { ISolutionWrapper } from "@/lib/storage-manager/interfaces";
 import { createReducer, on } from "@ngrx/store";
-import { setSolution } from "./visualization.actions";
+import { setSolution, setSolutionValidation } from "./visualization.actions";
+import { SolutionWrapper } from "@/lib/storage-manager/types/solution-wrapper.type";
+import { SolutionValidationErrorWrapper } from "@/lib/shared/types/solution-validation-error-wrapper.type";
 
 export const FEATURE_KEY = 'VISUALIZATION';
 
 export interface State {
-    solutionWrapper: ISolutionWrapper | null;
+    solutionWrapper: SolutionWrapper | null;
+    validation: SolutionValidationErrorWrapper[];
 }
 
 export const INITIAL_STATE: State = {
-    solutionWrapper: {
-        solution: {
-            calculated: new Date().toISOString(),
-            calculationSource: {
-                title: 'Super Flo'
-            },
-            container: {
-                goods: [
-                    {
-                        xCoord: 0,
-                        yCoord: 0,
-                        zCoord: 0,
-                        length: 500,
-                        width: 500,
-                        height: 500,
-                        sequenceNr: 0,
-                    },
-                    {
-                        xCoord: 0,
-                        yCoord: 0,
-                        zCoord: 500,
-                        length: 500,
-                        width: 500,
-                        height: 500,
-                        sequenceNr: 1,
-                    }
-                ],
-                length: 2000,
-                width: 1000,
-                height: 1000,
-                xCoord: 0,
-                yCoord: 0,
-                zCoord: 0
-            },
-            description: 'Super Flo Solution'
-        }
-    } as any
+    solutionWrapper: null,
+    validation: []
 }
 
 export const REDUCER = createReducer(
     INITIAL_STATE,
-    on(setSolution, (state, { solution }) => ({ ...state, solutionWrapper: solution }))
+    on(setSolution, (state, { solutionWrapper }) => ({ ...state, solutionWrapper })),
+    on(setSolutionValidation, (state, { validation }) => ({ ...state, validation }))
 );

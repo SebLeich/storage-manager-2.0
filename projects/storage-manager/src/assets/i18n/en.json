@@ -1,12 +1,36 @@
 {
     "defaults": {
+        "appName": "Storage Manager",
+        "blocked": "Blocked",
         "calculatedAt": "Calculated at {{date}}",
         "container": "Container",
+        "error": {
+            "singular": "One error",
+            "plural": "{{n}} errors"
+        },
+        "free": "Free",
+        "goods": "Goods",
         "height": "Height",
         "length": "Length",
         "loadUtilization": "Load Utilization",
-        "noDescription": "No description available",
+        "validation": "Validation",
         "volume": "Volume",
         "width": "Width"
+    },
+    "hints": {
+        "noContainer": "No container selected",
+        "noDescription": "No description available",
+        "solutionValid": "Solution is valid"
+    },
+    "solutionValidationErrors": {
+        "0": "No solution available",
+        "1": "No container available",
+        "2": "The good {{good}} is placed left of the container",
+        "3": "The good {{good}} is placed right of the container",
+        "4": "The good {{good}} is placed below the container",
+        "5": "The good {{good}} is placed above the container",
+        "6": "The good {{good}} is placed behind the container",
+        "7": "The good {{good}} is placed in front of the container",
+        "8": "The good {{good}} is overlaping with {{overlapingWith}}"
     }
 }

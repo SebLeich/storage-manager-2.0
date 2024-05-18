@@ -1,10 +1,10 @@
+import { VisualizationService } from '@/lib/visualization/services/visualization/visualization.service';
 import { Component, Inject, OnInit } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { ISolution } from '@smgr/interfaces';
 import { setCurrentSolution } from '@smgr/store';
-import { VisualizationService } from 'src/lib/visualization/services/visualization.service';
 
 import * as ThreeJS from 'three';
 

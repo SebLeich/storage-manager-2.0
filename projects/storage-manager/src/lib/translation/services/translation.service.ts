@@ -3,8 +3,10 @@ import { Observable, distinctUntilChanged, filter, map, startWith, switchMap } f
 import { NestedPropertyOf } from '../types/nested-key-of.type';
 import { LoadOptions, TranslocoService } from '@jsverse/transloco';
 
+import * as TDict from 'src/assets/i18n/en.json';
+
 @Injectable()
-export class TranslationService<TDict extends object> {
+export class TranslationService {
 	public languageChanges$ = this._translocoService.langChanges$.pipe(startWith(this._translocoService.getActiveLang()));
 	public afterLanguageChanged$ = this.languageChanges$.pipe(
 		distinctUntilChanged(),
@@ -55,11 +57,11 @@ export class TranslationService<TDict extends object> {
 		return availableLanguages as string[];
 	}
 
-	public translate(dictionaryKey: NestedPropertyOf<TDict>, params?: { [key: string]: string | number }) {
+	public translate(dictionaryKey: NestedPropertyOf<typeof TDict>, params?: { [key: string]: string | number }) {
 		return this._translocoService.translate(dictionaryKey, params);
 	}
 
-	public translateAsync(dictionaryKey: NestedPropertyOf<TDict>, params?: { [key: string]: string | number }): Observable<string> {
+	public translateAsync(dictionaryKey: NestedPropertyOf<typeof TDict>, params?: { [key: string]: string | number }): Observable<string> {
 		return this.afterLanguageChanged$.pipe(
 			map(() => this.translate(dictionaryKey, params))
 		);

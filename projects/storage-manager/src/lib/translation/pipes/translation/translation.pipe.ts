@@ -9,7 +9,7 @@ import * as DICT from 'src/assets/i18n/en.json';
 	name: 'translation',
 })
 export class TranslationPipe implements PipeTransform {
-	constructor(private _translationService: TranslationService<typeof DICT>) { }
+	constructor(private _translationService: TranslationService) { }
 
 	public transform(dictionaryKey: NestedPropertyOf<typeof DICT>, params?: { [key: string]: string }): Observable<string> {
 		return this._translationService

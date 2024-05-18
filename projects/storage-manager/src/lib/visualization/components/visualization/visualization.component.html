@@ -1,3 +1,4 @@
 <app-scaffold>
-    <app-visualization-sidebar side-nav></app-visualization-sidebar>
+    <app-visualization-sidebar id="side-nav"></app-visualization-sidebar>
+    <app-scene-visualization id="main" [scene]="(scene$ | async)!"></app-scene-visualization>
 </app-scaffold>

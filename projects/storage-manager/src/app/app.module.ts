@@ -29,8 +29,6 @@ import { AutomationModule } from 'src/lib/automation/automation.module';
 import { CalculationErrorPipe } from './pipes/calculation-error.pipe';
 import { SolutionAnimationComponent } from './components/solution-animation/solution-animation.component';
 import { NoSolutionDialogComponent } from './components/dialog/no-solution-dialog/no-solution-dialog.component';
-import { SolutionValidationComponent } from './components/solution-validation/solution-validation.component';
-import { SolutionValidationErrorPipe } from './pipes/solution-validation-error.pipe';
 import { PROCESS_BUILDER_CONFIG_TOKEN } from 'src/lib/process-builder/interfaces/process-builder-config.interface';
 import { PARAMS_CONFIG_TOKEN } from 'src/lib/process-builder/interfaces/param.interface';
 import { FUNCTIONS_CONFIG_TOKEN } from 'src/lib/process-builder/interfaces/function.interface';
@@ -90,8 +88,6 @@ const routes: Routes = [
         CalculationErrorPipe,
         SolutionAnimationComponent,
         NoSolutionDialogComponent,
-        SolutionValidationComponent,
-        SolutionValidationErrorPipe,
         LocalDataComponent,
         WidgetComponent,
         OrdersFormComponent,

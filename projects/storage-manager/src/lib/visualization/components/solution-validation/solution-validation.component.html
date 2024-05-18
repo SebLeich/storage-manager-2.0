@@ -1,0 +1,25 @@
+<div class="body" *ngLet="(currentSolutionValidation$|async) as solutionValidation">
+    <ng-container *ngLet="solutionValidation?.length ?? 0 as errorCount">
+        @if(errorCount > 0){
+
+        <h3>
+            {{'defaults.validation'|translation|async}}
+            ({{'defaults.error.' + (errorCount === 1? 'singluar': 'plural')|unsafeTranslation:{n:errorCount}|async}})
+        </h3>
+
+        <div class="error-wrapper" *ngFor="let error of solutionValidation">
+            <div class="error-title">
+                {{('solutionValidationErrors.' + error.error)|unsafeTranslation:error.args|async}}
+            </div>
+            <div class="control">
+                <mat-icon (mouseenter)="hoverError(error)" (mouseleave)="mouseleave()">search</mat-icon>
+            </div>
+        </div>
+        }
+        @else {
+        <div class="no-content-available">
+            {{'hints.solutionValid'|translation|async}}
+        </div>
+        }
+    </ng-container>
+</div>

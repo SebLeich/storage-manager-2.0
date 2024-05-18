@@ -1,6 +1,5 @@
 import { createSelector } from '@ngrx/store';
 import { featureKey, State } from '../reducers/solution.reducers';
-import { SolutionValidationService } from 'src/app/services/solution-validation.service';
 import { ISolution } from '../../interfaces/solution.interface';
 import { IGood } from '../../interfaces/good.interface';
 
@@ -56,17 +55,6 @@ export const selectSolutions = createSelector(
 export const selectHasMultipleSolutions = createSelector(
   solutionsState,
   (state: State) => Object.values(state.entities).length > 1
-);
-
-export const selectCurrentSolutionValidation = createSelector(
-  solutionsState,
-  (state: State) => {
-    const currentSolution = state.entities[state.selectedSolutionId as any] ?? null;
-    if (!currentSolution) {
-      return null;
-    }
-    return SolutionValidationService.validateSolution(currentSolution);
-  }
 );
 
 export const selectCurrentSolutionSteps = createSelector(

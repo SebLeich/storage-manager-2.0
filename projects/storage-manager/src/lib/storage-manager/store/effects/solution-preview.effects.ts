@@ -1,15 +1,16 @@
 import { Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { loadSolutionPreview, upsertSolutionPreview } from '../actions/solution-preview.actions';
-import * as ThreeJS from 'three';
 import { of, switchMap, map, combineLatest } from 'rxjs';
 import { SolutionPreviewStatus } from 'src/app/enumerations/solution-preview-status.enumeration';
 import { Store } from '@ngrx/store';
 import { selectSolutionById } from '../selectors/solution.selectors';
 import { selectGroups } from '../selectors/group.selectors';
 import getContainerPositionSharedMethods from 'src/app/methods/get-container-position.shared-methods';
-import { VisualizationService } from 'src/lib/visualization/services/visualization.service';
 import { ISolutionPreview } from '../../interfaces/solution-preview.interface';
+import { VisualizationService } from '@/lib/visualization/services/visualization/visualization.service';
+
+import * as ThreeJS from 'three';
 
 @Injectable()
 export class ISolutionPreviewEffects {

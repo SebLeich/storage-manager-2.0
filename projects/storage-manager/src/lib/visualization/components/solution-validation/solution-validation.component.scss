@@ -1,0 +1,16 @@
+@import 'error';
+@import 'heading';
+
+h3 {
+    @include heading-3;
+}
+
+.error-wrapper {
+    @include error;
+    margin-bottom: .25rem;
+
+    .control {
+        font-size: 1rem;
+        margin-left: .1rem;
+    }
+}

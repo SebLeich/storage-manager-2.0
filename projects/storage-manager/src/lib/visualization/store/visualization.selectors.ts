@@ -37,3 +37,8 @@ export const selectCurrentSolutionContainer = createSelector(
     selectCurrentSolution,
     (solution) => solution?.container
 );
+
+export const selectCurrentSolutionValidation = createSelector(
+    VISUALIZATION_STATE,
+    (state: State) => state.validation
+);

@@ -1,0 +1,10 @@
+@mixin heading-3 {
+    font-family: 'Bebas Neue';
+    display: flex;
+    align-items: center;
+    margin-bottom: .25rem;
+    font-size: 1.2rem;
+    line-height: 1.2rem;
+    font-weight: 500;
+    margin-right: .5rem;
+}

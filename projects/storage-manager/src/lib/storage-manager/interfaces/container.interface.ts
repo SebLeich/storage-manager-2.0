@@ -4,6 +4,9 @@ import { IGood } from "./good.interface";
 import { IPositionedElement } from "./positioned.interface";
 import { ISpace } from "./space.interface";
 
+/**
+ * @deprecated
+ */
 export interface IContainer extends IPositionedElement, ISpace, IIdentifiable {
     unit: Unit;
     goods: IGood[];

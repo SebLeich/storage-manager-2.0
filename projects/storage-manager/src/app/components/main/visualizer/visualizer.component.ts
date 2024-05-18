@@ -10,11 +10,13 @@ import { selectSnapshot } from 'src/lib/process-builder/globals/select-snapshot'
 import { ISolution } from '@smgr/interfaces';
 import { VisualizerComponentService } from './visualizer-component.service';
 import { IVisualizerContextService, VISUALIZER_CONTEXT } from 'src/app/interfaces/i-visualizer-context.service';
-import { VisualizationService } from 'src/lib/visualization/services/visualization.service';
 import { SceneVisualizationComponent } from 'src/lib/visualization/components/scene-visualization/scene-visualization.component';
 import { selectCurrentSolution, setCurrentSolution, selectSolutions } from '@smgr/store';
+import { VisualizationService } from '@/lib/visualization/services/visualization/visualization.service';
 
 import * as ThreeJS from 'three';
+
+
 
 @Component({
   selector: 'app-visualizer',

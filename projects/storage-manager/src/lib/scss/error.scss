@@ -1,0 +1,13 @@
+@import './colors';
+
+@mixin error {
+    background-color: $red-100;
+    padding: 0.15rem 0.4rem;
+    border-radius: 2px;
+    color: $dark-slate-grey;
+    font-size: 0.7rem;
+    line-height: 0.88rem;
+    display: flex;
+    align-items: center;
+    border: 1px solid $wine-red;
+}

@@ -1,23 +1,17 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { VisualizationSidebarComponent } from './visualization-sidebar.component';
+import { Spectator, createComponentFactory } from '@ngneat/spectator';
 
 describe('VisualizationSidebarComponent', () => {
-  let component: VisualizationSidebarComponent;
-  let fixture: ComponentFixture<VisualizationSidebarComponent>;
+    let spectator: Spectator<VisualizationSidebarComponent>;
 
-  beforeEach(async () => {
-    await TestBed.configureTestingModule({
-      imports: [VisualizationSidebarComponent]
-    })
-    .compileComponents();
-    
-    fixture = TestBed.createComponent(VisualizationSidebarComponent);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
-  });
+    const createComponent = createComponentFactory({
+        component: VisualizationSidebarComponent,
+    });
 
-  it('should create', () => {
-    expect(component).toBeTruthy();
-  });
+    beforeEach(() => spectator = createComponent());
+
+    it('should create', () => {
+        expect(spectator.component).toBeTruthy();
+    });
 });

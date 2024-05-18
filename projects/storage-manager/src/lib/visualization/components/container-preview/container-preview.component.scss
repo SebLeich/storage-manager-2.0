@@ -1,55 +1,41 @@
 @import 'colors';
+@import 'heading';
 
-.property {
-    flex: 1;
-    display: inline-flex;
-    flex-direction: column;
-    align-items: baseline;
-    margin-right: .5rem;
+h3 {
+    @include heading-3;
 }
 
 .property-row {
     display: flex;
     align-items: center;
     margin-bottom: 1rem;
-}
 
-.description {
-    font-family: 'Bebas Neue';
-    display: flex;
-    align-items: center;
-    margin-bottom: .25rem;
-
-    .text {
-        font-size: 1.2rem;
-        line-height: 1.2rem;
-        font-weight: 500;
+    .property {
+        flex: 1;
+        display: inline-flex;
+        flex-direction: column;
+        align-items: baseline;
         margin-right: .5rem;
-    }
-}
 
-.property {
-    .attribute {
-        margin-right: .2rem;
-        font-size: .6rem;
-        line-height: .6rem;
-        font-weight: 100;
-    }
+        .attribute {
+            margin-right: .2rem;
+            font-size: .6rem;
+            line-height: .6rem;
+            font-weight: 100;
+        }
 
-    .value {
-        white-space: nowrap;
-        padding: 0.2rem;
-        background-color: $light-grey;
-        border-radius: 3px;
-        font-family: monospace;
+        .value {
+            white-space: nowrap;
+            padding: 0.2rem;
+            background-color: $light-grey;
+            border-radius: 3px;
+            font-family: monospace;
+        }
     }
-}
-
-.no-container-hint {
-    font-family: monospace;
 }
 
 .chart-wrapper {
+    position: relative;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -83,4 +69,8 @@
             line-height: .5rem;
         }
     }
+}
+
+.no-container-hint {
+    font-family: monospace;
 }

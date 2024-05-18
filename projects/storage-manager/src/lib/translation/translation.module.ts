@@ -20,7 +20,7 @@ export function getPreviouslySelectedLanguage({ cachedLang, browserLang, default
         provideHttpClient(),
         provideTransloco({
             config: {
-                availableLangs: ['de', 'en'],
+                availableLangs: ['de', 'en', 'es'],
                 defaultLang: 'de',
                 prodMode: !isDevMode(),
             },

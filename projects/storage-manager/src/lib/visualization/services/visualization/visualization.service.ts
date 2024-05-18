@@ -6,6 +6,7 @@ import getContainerPositionSharedMethods from 'src/app/methods/get-container-pos
 import { selectSnapshot } from 'src/lib/process-builder/globals/select-snapshot';
 import { selectGroups } from '@smgr/store';
 import { ArrowHelper, BoxGeometry, Color, EdgesGeometry, GridHelper, LineBasicMaterial, LineSegments, Mesh, MeshBasicMaterial, Scene, Vector3 } from 'three';
+import { Solution } from '@/lib/storage-manager/types/solution.type';
 
 @Injectable()
 export class VisualizationService {
@@ -22,7 +23,7 @@ export class VisualizationService {
         }
     }
 
-    public async configureSolutionScene(solution: ISolution, scene: Scene = new Scene(), fillColor: boolean | string = false, addBaseGrid = true, addUnloadingArrow = true) {
+    public async configureSolutionScene(solution: ISolution | Solution, scene: Scene = new Scene(), fillColor: boolean | string = false, addBaseGrid = true, addUnloadingArrow = true) {
         scene.clear();
         const goodMeshes: { goodId: string, mesh: Mesh }[] = [];
         if (solution?.container) {

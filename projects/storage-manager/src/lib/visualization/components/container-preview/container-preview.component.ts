@@ -1,6 +1,8 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, input } from '@angular/core';
 import { ChartConfiguration } from 'chart.js';
-import { IContainer } from '@smgr/interfaces';
+import { TranslationService } from '@/lib/translation';
+import { toSignal } from '@angular/core/rxjs-interop';
+import { Container } from '@/lib/storage-manager/types/container.type';
 
 @Component({
     selector: 'app-container-preview',
@@ -8,20 +10,47 @@ import { IContainer } from '@smgr/interfaces';
     styleUrls: ['./container-preview.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ContainerPreviewComponent implements OnChanges, OnInit {
+export class ContainerPreviewComponent {
+    public container = input<Container | null | undefined>();
+    public goodsCount = computed(() => this.container()?.goods.length ?? 0);
+    public usedSpace = computed(() => {
+        const container = this.container();
+        return (container?.goods ?? []).reduce((agg, curr) => agg += (curr.length * curr.width * curr.height), 0);
+    });
 
-    @Input() public container: IContainer | null | undefined;
+    public totalSpace = computed(() => {
+        const container = this.container();
+        return (container?.height ?? 0) * (container?.length ?? 0) * (container?.width ?? 0);
+    });
 
-    public datasets = [
-        {
-            backgroundColor: ['rgba(101, 166, 90,  0.4)', 'rgba(214, 55, 55,  0.4)'],
+    public datasets = computed(() => {
+        const datasets = [{
+            backgroundColor: ['rgba(101, 166, 90,  0.6)', 'rgba(214, 55, 55,  0.6)'],
             borderColor: ['rgba(101, 166, 90, 1)', 'rgba(214, 55, 55, 1)'],
             data: [0, 0],
             hoverBackgroundColor: ['rgba(101, 166, 90,  0.2)', 'rgba(214, 55, 55,  0.2)'],
             hoverBorderColor: ['rgba(101, 166, 90, .7)', 'rgba(214, 55, 55, .7)'],
-        }
-    ];
-    public labels = ['used', 'unused'];
+        }],
+            used = this.usedSpace(),
+            total = this.totalSpace();
+
+        return [...datasets.map(dataset => ({ ...dataset, data: [used, total - used] }))];
+    });
+
+    public percentage = computed(() => {
+        const used = this.usedSpace(),
+            total = this.totalSpace();
+
+        return ((used / total) * 100);
+    });
+
+    public languageChanged = toSignal(this._translationService.afterLanguageChanged$);
+
+    public labels = computed(() => {
+        const _ = this.languageChanged();
+        return ['blocked', 'free'].map(label => this._translationService.translate(`defaults.${label}` as any));
+    });
+    
     public type = 'doughnut';
     public options: ChartConfiguration['options'] = {
         maintainAspectRatio: false,
@@ -45,36 +74,7 @@ export class ContainerPreviewComponent implements OnChanges, OnInit {
             }
         },
     }
-    public percentage: number = 0;
 
-    constructor(private _changeDetectorRef: ChangeDetectorRef) { }
-
-    public ngOnChanges(changes: SimpleChanges): void {
-        if (changes['container']) {
-            this._calculateUsedSpace();
-        }
-    }
-
-    public ngOnInit(): void {
-        this._calculateUsedSpace();
-    }
-
-    private _calculateUsedSpace() {
-        if (!this.container || !Array.isArray(this.container.goods)) {
-            return;
-        }
-
-        const used = this.container.goods.reduce((agg, curr) => agg += (curr.length * curr.width * curr.height), 0),
-            total = this.container.height * this.container.length * this.container.width;
-
-        this.datasets = [...this.datasets.map(dataset => {
-            dataset.data = [used, total - used];
-            return dataset;
-        })];
-
-        this.percentage = ((used / total) * 100);
-
-        this._changeDetectorRef.markForCheck();
-    }
+    constructor(private _translationService: TranslationService) { }
 
 }

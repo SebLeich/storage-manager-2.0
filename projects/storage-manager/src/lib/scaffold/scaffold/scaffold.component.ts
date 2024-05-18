@@ -11,15 +11,6 @@ export class ScaffoldComponent {
 
     public activeNavItem = 'Visualization';
 
-    public sideNavOptions = [
-        {},
-        {},
-        {},
-        {},
-        {},
-        {},
-    ];
-
     public navbarOptions = [
         'Home',
         'About',
@@ -29,7 +20,7 @@ export class ScaffoldComponent {
 
     public currentLangISO3166$ = this._translationService.currentLanguageCountryISO3166$;
 
-    constructor(private _changeDetectorRef: ChangeDetectorRef, private _translationService: TranslationService<any>) { }
+    constructor(private _changeDetectorRef: ChangeDetectorRef, private _translationService: TranslationService) { }
 
     public setNavItem(navItem: string): void {
         this.activeNavItem = navItem;

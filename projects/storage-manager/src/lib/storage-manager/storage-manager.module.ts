@@ -5,7 +5,6 @@ import * as fromICalculationAttributesState from './store/reducers/calculation-a
 import { ICalculationAttributesEffects } from './store/effects/calculation-attribute.effects';
 
 import * as fromIGroupState from './store/reducers/group.reducers';
-import { IGroupEffects } from './store/effects/group.effects';
 
 import * as fromIOrderState from './store/reducers/order.reducers';
 import { IOrderEffects } from './store/effects/order.effects';
@@ -51,7 +50,7 @@ import { ReactiveFormsModule } from '@angular/forms';
     StoreModule.forFeature(fromISolutionState.featureKey, fromISolutionState.reducer),
     StoreModule.forFeature(fromISolutionPreviewState.solutionPreviewFeatureKey, fromISolutionPreviewState.reducer),
 
-    EffectsModule.forFeature([ICalculationAttributesEffects, IGroupEffects, IOrderEffects, IProductEffects, ISolutionEffects, ISolutionPreviewEffects]),
+    EffectsModule.forFeature([ICalculationAttributesEffects, IOrderEffects, IProductEffects, ISolutionEffects, ISolutionPreviewEffects]),
 
     ProcedureStoreModule
   ],

@@ -4,7 +4,7 @@
 
         <img src="/assets/logo.png" class="logo" />
 
-        <span class="label">Storage Manager</span>
+        <span class="label">{{'defaults.appName'|translation|async}}</span>
 
         <div class="item-wrapper">
             @for(item of navbarOptions; track item){
@@ -21,19 +21,17 @@
     <div class="content">
 
         <div class="side-nav">
-            <ng-content ngProjectAs="[side-nav]"></ng-content>
+            <ng-content select="#side-nav"></ng-content>
         </div>
 
         <div class="main-content">
-
-
-
+            <ng-content select="#main"></ng-content>
         </div>
 
     </div>
 
     <div class="footer">
-
+        <ng-content ngProjectAs="[footer]"></ng-content>
     </div>
 
 </div>

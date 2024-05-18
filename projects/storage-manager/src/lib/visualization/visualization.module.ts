@@ -12,6 +12,11 @@ import { ContainerPreviewComponent } from './components/container-preview/contai
 import { SharedModule } from '../shared/shared.module';
 import { NgChartsModule } from 'ng2-charts';
 import { TranslationModule } from '../translation';
+import { SolutionValidationComponent } from './components/solution-validation/solution-validation.component';
+import { ValidationService } from './services/validation/validation.service';
+import { MatIconModule } from '@angular/material/icon';
+import { EffectsModule } from '@ngrx/effects';
+import { VisualizationEffects } from './store/visualization.effects';
 
 
 
@@ -19,11 +24,14 @@ import { TranslationModule } from '../translation';
     declarations: [
         ContainerPreviewComponent,
         SceneVisualizationComponent,
+        SolutionValidationComponent,
         VisualizationComponent,
         VisualizationSidebarComponent
     ],
     imports: [
         CommonModule,
+        EffectsModule.forFeature([VisualizationEffects]),
+        MatIconModule,
         NgChartsModule,
         NgLetModule,
         RouterModule.forChild([
@@ -40,6 +48,7 @@ import { TranslationModule } from '../translation';
     exports: [
         SceneVisualizationComponent,
         TranslationModule
-    ]
+    ],
+    providers: [ValidationService]
 })
 export class VisualizationModule { }

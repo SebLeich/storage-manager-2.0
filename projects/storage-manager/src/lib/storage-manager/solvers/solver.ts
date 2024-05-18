@@ -1,7 +1,7 @@
 import { v4 as generateGuid } from 'uuid';
 import { IOrder, ISpace } from "@smgr/interfaces";
-import calculateDimension from 'src/app/methods/calculate-dimension.shared-method';
 import { IVirtualDimension } from '../interfaces/virtual-dimension.interface';
+import { ThreeDCalculationService } from '@/lib/shared/services/three-d-calculation.service';
 
 export class Solver {
 
@@ -19,7 +19,7 @@ export class Solver {
         const rCoord = Math.max(...virtualDimensions.map(dimension => dimension.rCoord));
         const tCoord = Math.max(...virtualDimensions.map(dimension => dimension.tCoord));
         const fCoord = Math.max(...virtualDimensions.map(dimension => dimension.fCoord));
-        const dimension = calculateDimension(xCoord, yCoord, zCoord, rCoord - xCoord, tCoord - yCoord, fCoord - zCoord);
+        const dimension = ThreeDCalculationService.calculateSpatialPosition({ xCoord, yCoord, zCoord, width: rCoord - xCoord, height: tCoord - yCoord, length: fCoord - zCoord });
         return { ...dimension, id: generateGuid() } as IVirtualDimension;
     }
 
@@ -39,15 +39,39 @@ export class Solver {
     protected putOrderAndCreateIVirtualDimensions(order: IOrder, virtualDimension: IVirtualDimension): IVirtualDimension[] {
         const virtualDimensions: IVirtualDimension[] = [];
         if (order.height < virtualDimension.height) {
-            const above = calculateDimension(virtualDimension.xCoord, virtualDimension.yCoord, virtualDimension.zCoord, order.width, virtualDimension.height - order.height, order.length);
-            virtualDimensions.push(above as IVirtualDimension);
+            const above = ThreeDCalculationService.calculateSpatialPosition({
+                xCoord: virtualDimension.xCoord,
+                yCoord: virtualDimension.yCoord,
+                zCoord: virtualDimension.zCoord,
+                width: order.width,
+                height: virtualDimension.height - order.height,
+                length: order.length
+            });
+
+            virtualDimensions.push(above);
         }
         if (order.width < virtualDimension.width) {
-            const next = calculateDimension(virtualDimension.xCoord + order.width, virtualDimension.yCoord, virtualDimension.zCoord, virtualDimension.width - order.width, virtualDimension.height, order.length);
+            const next = ThreeDCalculationService.calculateSpatialPosition({
+                xCoord: virtualDimension.xCoord + order.width,
+                yCoord: virtualDimension.yCoord,
+                zCoord: virtualDimension.zCoord,
+                width: virtualDimension.width - order.width,
+                height: virtualDimension.height,
+                length: order.length
+            });
+
             virtualDimensions.push(next as IVirtualDimension);
         }
         if (order.length < virtualDimension.length) {
-            const infront = calculateDimension(virtualDimension.xCoord, virtualDimension.yCoord, virtualDimension.zCoord + order.length, virtualDimension.width, virtualDimension.height, virtualDimension.length - order.length);
+            const infront = ThreeDCalculationService.calculateSpatialPosition({
+                xCoord: virtualDimension.xCoord,
+                yCoord: virtualDimension.yCoord,
+                zCoord: virtualDimension.zCoord + order.length,
+                width: virtualDimension.width,
+                height: virtualDimension.height,
+                length: virtualDimension.length - order.length
+            });
+
             virtualDimensions.push(infront as IVirtualDimension);
         }
         return virtualDimensions;

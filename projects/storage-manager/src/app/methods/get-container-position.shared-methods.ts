@@ -1,19 +1,20 @@
-import { IContainer, IGood, IPosition } from '@smgr/interfaces';
+import { IPosition, IPositionedElement, ISpace } from '@smgr/interfaces';
 import { v4 as generateGuid } from 'uuid';
 
-export default function (container: IContainer | IGood, index: number = 0): IPosition {
+export default function ({ height, length, width, xCoord, yCoord, zCoord }: IPositionedElement & ISpace, index: number = 0, groupRestrictedBy: number | null = null): IPosition {
     return {
         id: generateGuid(),
         index: index,
-        height: container.height,
-        width: container.width,
-        length: container.length,
+        groupRestrictedBy,
+        height: height,
+        width: width,
+        length: length,
         rotated: false,
-        xCoord: container.xCoord,
-        yCoord: container.yCoord,
-        zCoord: container.zCoord,
-        rCoord: container.xCoord + container.width,
-        tCoord: container.yCoord + container.height,
-        fCoord: container.zCoord + container.length,
-    } as IPosition;
+        xCoord: xCoord,
+        yCoord: yCoord,
+        zCoord: zCoord,
+        rCoord: xCoord + width,
+        tCoord: yCoord + height,
+        fCoord: zCoord + length,
+    };
 }

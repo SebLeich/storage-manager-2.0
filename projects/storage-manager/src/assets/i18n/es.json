@@ -1,0 +1,36 @@
+{
+    "defaults": {
+        "appName": "Storage Manager",
+        "blocked": "Bloqueado",
+        "calculatedAt": "Calculado el {{date}}",
+        "container": "Contenedor",
+        "error": {
+            "singular": "Un error",
+            "plural": "{{n}} errores"
+        },
+        "free": "Libre",
+        "goods": "Mercancías",
+        "height": "Altura",
+        "length": "Longitud",
+        "loadUtilization": "Utilización de carga",
+        "validation": "Validación",
+        "volume": "Volumen",
+        "width": "Ancho"
+    },
+    "hints": {
+        "noContainer": "Ningún contenedor seleccionado",
+        "noDescription": "Descripción no disponible",
+        "solutionValid": "La solución es válida"
+    },
+    "solutionValidationErrors": {
+        "0": "No hay solución disponible",
+        "1": "No hay contenedor disponible",
+        "2": "El bien {{good}} está colocado a la izquierda del contenedor",
+        "3": "El bien {{good}} está colocado a la derecha del contenedor",
+        "4": "El bien {{good}} está colocado debajo del contenedor",
+        "5": "El bien {{good}} está colocado encima del contenedor",
+        "6": "El bien {{good}} está colocado detrás del contenedor",
+        "7": "El bien {{good}} está colocado delante del contenedor",
+        "8": "El bien {{good}} se superpone con {{overlapingWith}}"
+    }
+}

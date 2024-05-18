@@ -1,12 +1,36 @@
 {
     "defaults": {
+        "appName": "Storage Manager",
+        "blocked": "Belegt",
         "calculatedAt": "Berechnet am {{date}}",
         "container": "Container",
+        "error": {
+            "singular": "Ein Fehler",
+            "plural": "{{n}} Fehler"
+        },
+        "free": "Frei",
+        "goods": "Güter",
         "height": "Höhe",
         "length": "Länge",
-        "noDescription": "Keine Beschreibung verfügbar",
-        "loadUtilization": "Beladungsauslastung", 
+        "loadUtilization": "Beladungsauslastung",
+        "validation": "Validierung",
         "volume": "Volumen",
         "width": "Breite"
+    },
+    "hints": {
+        "noContainer": "Kein Container ausgewählt",
+        "noDescription": "Keine Beschreibung verfügbar",
+        "solutionValid": "Lösung ist zulässig"
+    },
+    "solutionValidationErrors": {
+        "0": "Keine Lösung verfügbar",
+        "1": "Kein Container verfügbar",
+        "2": "Das Gut {{good}} befindet sich links vom Container",
+        "3": "Das Gut {{good}} befindet sich rechts vom Container",
+        "4": "Das Gut {{good}} befindet sich unterhalb des Containers",
+        "5": "Das Gut {{good}} befindet sich oberhalb des Containers",
+        "6": "Das Gut {{good}} befindet sich hinter dem Container",
+        "7": "Das Gut {{good}} befindet sich vor dem Container",
+        "8": "Das Gut {{good}} überlappt mit {{overlapingWith}}"
     }
 }

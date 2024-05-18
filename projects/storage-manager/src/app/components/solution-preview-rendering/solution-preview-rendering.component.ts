@@ -8,8 +8,8 @@ import { SolutionPreviewStatus } from 'src/app/enumerations/solution-preview-sta
 import { filter, map, switchMap, take } from 'rxjs';
 import { DomSanitizer } from '@angular/platform-browser';
 import { showAnimation } from 'src/lib/shared/animations/show';
-import { VisualizationService } from 'src/lib/visualization/services/visualization.service';
 import { announceSolutionPreview, selectGroups, selectSolutionPreview, upsertSolutionPreview } from '@smgr/store';
+import { VisualizationService } from '@/lib/visualization/services/visualization/visualization.service';
 
 @Component({
   selector: 'app-solution-preview-rendering',

@@ -3,6 +3,9 @@ import { IContainer } from "./container.interface";
 import { IIdentifiable } from "./identifiable.interface";
 import { IStep } from "./step.interface";
 
+/**
+ * @deprecated
+ */
 export interface ISolution extends IIdentifiable {
     container: IContainer;
     steps: IStep[];
