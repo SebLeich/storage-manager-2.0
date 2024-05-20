@@ -3,7 +3,7 @@
         (groupColorChanged)="updateGroup($event)"></app-visualization-sidebar>
 
     <app-scene-visualization @fadeIn #sceneVisualization id="main" [scene]="(scene$ | async)!"
-        [displaySceneInformation]="displaySceneInformation()" [ba]></app-scene-visualization>
+        [displaySceneInformation]="displaySceneInformation()"></app-scene-visualization>
 
     <app-visualization-footer id="footer" (zoomIn)="sceneVisualization.zoomIn()" (zoomOut)="sceneVisualization.zoomOut()"
         (moveDown)="sceneVisualization.move(0, 1, 0)" (moveUp)="sceneVisualization.move(0, -1, 0)" (moveLeft)="sceneVisualization.move(1, 0, 0)"
