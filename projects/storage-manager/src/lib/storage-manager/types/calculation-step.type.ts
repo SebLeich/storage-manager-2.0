@@ -4,6 +4,5 @@ import { UsedPosition } from "./used-position.type";
 export type CalculationStep = {
     sequenceNumber: number;
     messages: string[];
-    createdPositions: UnusedPosition[];
-    usedPosition: UsedPosition | null;
+    positions: (UsedPosition | UnusedPosition)[];
 }

@@ -9,13 +9,15 @@ import { selectCurrentSolutionGoods, selectGroups } from '@smgr/store';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { SceneVisualizationComponentService } from './service/scene-visualization-component.service';
 import { Good } from '@/lib/storage-manager/types/good.type';
+import { showAnimation } from '@/lib/shared/animations/show';
 
 @Component({
     selector: 'app-scene-visualization',
     templateUrl: './scene-visualization.component.html',
     styleUrls: ['./scene-visualization.component.scss'],
     providers: [SceneVisualizationComponentService],
-    changeDetection: ChangeDetectionStrategy.OnPush
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    animations: [showAnimation]
 })
 export class SceneVisualizationComponent implements OnChanges, OnInit {
     @ViewChild('visualizationWrapper', { static: true })
@@ -32,6 +34,13 @@ export class SceneVisualizationComponent implements OnChanges, OnInit {
     public displaySceneInformation = input<boolean>(true);
 
     public resized$ = fromEvent(window, 'resize').pipe(debounceTime(50));
+    public position$ = this.sceneVisualizationComponentService
+        .cameraChanged$
+        .pipe(map((camera) => camera?.position));
+
+    public zoom$ = this.sceneVisualizationComponentService
+        .cameraChanged$
+        .pipe(map((camera) => camera?.zoom));
 
     private _hoveredGoodId = new BehaviorSubject<null | string>(null);
     public hoveredGood$ = this._hoveredGoodId.pipe(
@@ -99,11 +108,10 @@ export class SceneVisualizationComponent implements OnChanges, OnInit {
 
     public tryToRender() {
         if (this.scene && this.visualizerWrapperRef) {
-            const canvas =
-                this.sceneVisualizationComponentService.setScreenDimensions(
-                    this.visualizerWrapperRef.nativeElement.clientHeight,
-                    this.visualizerWrapperRef.nativeElement.clientWidth
-                );
+            const canvas = this.sceneVisualizationComponentService.setScreenDimensions(
+                this.visualizerWrapperRef.nativeElement.clientHeight,
+                this.visualizerWrapperRef.nativeElement.clientWidth
+            );
             this.visualizerWrapperRef.nativeElement.appendChild(canvas);
             this.sceneVisualizationComponentService.renderScene(this.scene);
             this._sceneRendered.next({ canvas: canvas });
@@ -175,12 +183,12 @@ export class SceneVisualizationComponent implements OnChanges, OnInit {
 
     public zoomIn() {
         this.sceneVisualizationComponentService.zoomIn();
-        this._changeDetectorRef. markForCheck();
+        this._changeDetectorRef.markForCheck();
     }
 
     public zoomOut() {
         this.sceneVisualizationComponentService.zoomOut();
-        this._changeDetectorRef. markForCheck();
+        this._changeDetectorRef.markForCheck();
     }
 
     private onResize() {

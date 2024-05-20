@@ -1,14 +1,15 @@
-import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit, signal } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { setSolution, updateGroup } from '../../store/visualization.actions';
-import { scan } from 'rxjs';
+import { combineLatest, scan } from 'rxjs';
 import { VisualizationService } from '../../services/visualization/visualization.service';
 import { selectCurrentSolutionWrapper } from '../../store/visualization.selectors';
-
 import { Scene } from 'three';
 import { SolutionWrapper } from '@/lib/storage-manager/types/solution-wrapper.type';
 import { Group } from '@/lib/storage-manager/types/group.type';
 import { fadeInAnimation } from '@/lib/shared/animations/fade-in.animation';
+import { toObservable } from '@angular/core/rxjs-interop';
+
 
 
 @Component({
@@ -20,13 +21,22 @@ import { fadeInAnimation } from '@/lib/shared/animations/fade-in.animation';
     animations: [fadeInAnimation]
 })
 export class VisualizationComponent implements OnInit {
+    public displaySceneInformation = signal<boolean>(false);
+    public displayBaseGrid = signal<boolean>(true);
+
     public solutionWrapper$ = this._store.select(selectCurrentSolutionWrapper);
-    public scene$ = this.solutionWrapper$
+    public scene$ = combineLatest([this.solutionWrapper$, toObservable(this.displayBaseGrid)])
         .pipe(
             scan(
-                (scene: Scene, solutionWrapper: SolutionWrapper | null) => {
+                (scene: Scene, [solutionWrapper, displayBaseGrid]: [SolutionWrapper | null, boolean]) => {
                     if (solutionWrapper) {
-                        this._visualizationService.configureSolutionScene(solutionWrapper.solution, scene, solutionWrapper.groups, '#f8f8f8');
+                        this._visualizationService.configureSolutionScene(
+                            solutionWrapper.solution,
+                            scene,
+                            solutionWrapper.groups,
+                            '#f8f8f8',
+                            displayBaseGrid
+                        );
                     }
 
                     return scene;
@@ -38,6 +48,7 @@ export class VisualizationComponent implements OnInit {
     constructor(private _store: Store, private _visualizationService: VisualizationService) { }
 
     public ngOnInit(): void {
+        // debugging only
         this._store.dispatch(setSolution({
             solutionWrapper: {
                 groups: [
@@ -112,37 +123,15 @@ export class VisualizationComponent implements OnInit {
                                 desc: "Good 4"
                             },
                             {
-                                group: '2',
-                                xCoord: 0,
-                                yCoord: 0,
-                                zCoord: 2000,
-                                length: 500,
-                                width: 500,
-                                height: 500,
-                                sequenceNr: 4,
-                                desc: "Good 5"
-                            },
-                            {
-                                group: '2',
-                                xCoord: 0,
-                                yCoord: 0,
-                                zCoord: 2200,
-                                length: 500,
-                                width: 500,
-                                height: 500,
-                                sequenceNr: 5,
-                                desc: "Good 6"
-                            },
-                            {
                                 group: '3',
                                 xCoord: 500,
                                 yCoord: 0,
                                 zCoord: 0,
-                                length: 2500,
-                                width: 2500,
-                                height: 2500,
+                                length: 500,
+                                width: 500,
+                                height: 500,
                                 sequenceNr: 6,
-                                desc: "Good 7"
+                                desc: "Good 5"
                             }
                         ],
                         length: 2000,
@@ -155,7 +144,10 @@ export class VisualizationComponent implements OnInit {
                     description: 'Super Flo Solution'
                 },
                 calculationSteps: [
-                    { createdPositions: [], messages: [], sequenceNumber: 0, usedPosition: null },
+                    { sequenceNumber: 0, messages: ['Step 1', 'Calculated'], positions: [] },
+                    { sequenceNumber: 1, messages: ['Step 2'], positions: [] },
+                    { sequenceNumber: 2, messages: ['Step 3'], positions: [] },
+                    { sequenceNumber: 3, messages: ['Step 4'], positions: [] },
                 ]
             } as any
         }));

@@ -41,5 +41,18 @@
         "9": "El bien {{good}} es demasiado largo para el contenedor",
         "10": "El bien {{good}} es demasiado ancho para el contenedor",
         "11": "El bien {{good}} es demasiado alto para el contenedor"
+    },
+    "visualization": {
+        "hideBaseGrid": "Ocultar cuadrícula base",
+        "hideViewInformation": "Ocultar información de la vista",
+        "moveContainerDown": "Mover contenedor hacia abajo",
+        "moveContainerLeft": "Mover contenedor hacia la izquierda",
+        "moveContainerRight": "Mover contenedor hacia la derecha",
+        "moveContainerUp": "Mover contenedor hacia arriba",
+        "moveContainerUpwardLeft": "Mover contenedor hacia arriba a la izquierda",
+        "moveContainerUpwardRight": "Mover contenedor hacia arriba a la derecha",
+        "resetView": "Restablecer vista",
+        "showBaseGrid": "Mostrar cuadrícula base",
+        "showViewInformation": "Mostrar información de la vista"
     }
 }

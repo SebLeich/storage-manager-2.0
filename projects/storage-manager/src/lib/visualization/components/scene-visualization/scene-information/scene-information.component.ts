@@ -4,9 +4,9 @@ import { ChangeDetectionStrategy, Component, input } from '@angular/core';
     selector: 'app-scene-information',
     templateUrl: './scene-information.component.html',
     styleUrl: './scene-information.component.scss',
-    changeDetection: ChangeDetectionStrategy.OnPush
+    changeDetection: ChangeDetectionStrategy.Default
 })
 export class SceneInformationComponent {
-    public zoomLevel = input<number>(1);
-    public cameraPosition = input<{ x: number, y: number, z: number }>({ x: 0, y: 0, z: 0 });
+    public zoomLevel = input<number | null | undefined>(null);
+    public cameraPosition = input<{ x: number, y: number, z: number } | null | undefined>(null);
 }

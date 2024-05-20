@@ -1,14 +1,17 @@
 import { Camera, Intersection, Mesh, PerspectiveCamera, Raycaster, Scene, WebGLRenderer } from 'three';
-import { Injectable } from '@angular/core';
+import { Injectable, signal } from '@angular/core';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
+import { Observable, fromEvent, of, switchMap, map, startWith } from 'rxjs';
+import { toObservable } from '@angular/core/rxjs-interop';
 
 
 
 @Injectable()
 export class SceneVisualizationComponentService {
 
+    private _controls = signal<OrbitControls | undefined>(undefined);
+
     private _camera: PerspectiveCamera | undefined;
-    private _controls: OrbitControls | undefined;
     private _renderer = new WebGLRenderer({
         antialias: true,
         preserveDrawingBuffer: true
@@ -16,8 +19,21 @@ export class SceneVisualizationComponentService {
 
     private _ray = new Raycaster();
 
+    public cameraChanged$: Observable<PerspectiveCamera | undefined> = toObservable(this._controls)
+        .pipe(
+            switchMap(controls => controls ? fromEvent(controls, 'change').pipe(startWith(1)) : of(undefined)),
+            map(() => this._camera)
+        );
+
+    public zoomLevel = signal(1);
+    public cameraPosition = signal({ x: 0, y: 0, z: 0 });
+
     public get camera(): PerspectiveCamera | undefined {
         return this._camera;
+    }
+
+    public get controls(): OrbitControls | undefined {
+        return this._controls();
     }
 
     public getPointedElement(event: MouseEvent, scene: Scene): null | Intersection {
@@ -37,16 +53,17 @@ export class SceneVisualizationComponentService {
     }
 
     public move(xSteps: number, ySteps: number, zSteps: number) {
-        if(!this._camera || !this._controls){
+        if (!this.camera || !this.controls) {
             return;
         }
 
-        const x = this._camera.position.x + (xSteps * 500),
-            y = this._camera.position.y + (ySteps * 500),
-            z = this._camera.position.z + (zSteps * 500);
+        const x = this.camera.position.x + (xSteps * 500),
+            y = this.camera.position.y + (ySteps * 500),
+            z = this.camera.position.z + (zSteps * 500);
 
-        this._camera.position.set(x, y, z);
-        this._controls.update();
+        this.camera.position.set(x, y, z);
+        this.controls.update();
+        this.cameraPosition.set(this.camera.position);
     }
 
     public renderScene(scene: Scene) {
@@ -93,32 +110,45 @@ export class SceneVisualizationComponentService {
             return;
         }
 
-        this._controls = new OrbitControls(this._camera, this._renderer.domElement);
-        this._controls.enableDamping = true;
-        this._controls.dampingFactor = 0.25;
-        this._controls.screenSpacePanning = false;
-        this._controls.minDistance = 5000;
-        this._controls.maxDistance = 50000;
-        this._controls.rotateSpeed = .5;
-        this._controls.update();
+        const controls = new OrbitControls(this._camera, this._renderer.domElement);
+        controls.enableDamping = true;
+        controls.dampingFactor = 0.25;
+        controls.screenSpacePanning = false;
+        controls.minDistance = 5000;
+        controls.maxDistance = 50000;
+        controls.rotateSpeed = .5;
+        controls.enableZoom = true;
+        controls.update();
+
+        this._controls.set(controls);
     }
 
     public zoomIn() {
-        if (!this._camera) {
+        if (!this.camera || !this.controls) {
             return;
         }
 
-        this._camera.zoom += 0.1;
-        this._camera.updateProjectionMatrix();
+        const factor = 0.95;
+        const x = this.camera.position.x * factor,
+            y = this.camera.position.y * factor,
+            z = this.camera.position.z * factor;
+
+        this.camera.position.set(x, y, z);
+        this.camera.updateProjectionMatrix();
     }
 
     public zoomOut() {
-        if (!this._camera) {
+        if (!this.camera || !this.controls) {
             return;
         }
 
-        this._camera.zoom -= 0.1;
-        this._camera.updateProjectionMatrix();
+        const factor = 1.05;
+        const x = this.camera.position.x * factor,
+            y = this.camera.position.y * factor,
+            z = this.camera.position.z * factor;
+
+        this.camera.position.set(x, y, z);
+        this.camera.updateProjectionMatrix();
     }
 
     private _render(scene: Scene) {

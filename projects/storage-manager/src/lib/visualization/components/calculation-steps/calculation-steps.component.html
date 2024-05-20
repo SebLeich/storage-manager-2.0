@@ -1,3 +1,15 @@
 <h3>
     {{'defaults.calculationSteps'|translation|async}} ({{calculationSteps().length}})
 </h3>
+
+<div class="messages-wrapper">
+    @for(message of messages(); track message){
+    <span>{{message}}</span>
+    }
+</div>
+
+<div class="control-wrapper">
+    <mat-icon>chevron_left</mat-icon>
+    <mat-icon (click)="togglePlayStatus()">{{playStatus() !== 'playing'? 'play_arrow': 'pause'}}</mat-icon>
+    <mat-icon>chevron_right</mat-icon>
+</div>

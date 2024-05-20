@@ -41,5 +41,18 @@
         "9": "The good {{good}} is too long for the container",
         "10": "The good {{good}} is too wide for the container",
         "11": "The good {{good}} is too tall for the container"
+    },
+    "visualization": {
+        "hideBaseGrid": "Hide base grid",
+        "hideViewInformation": "Hide view information",
+        "moveContainerDown": "Move container down",
+        "moveContainerLeft": "Move container left",
+        "moveContainerRight": "Move container right",
+        "moveContainerUp": "Move container up",
+        "moveContainerUpwardLeft": "Move container upward to the left",
+        "moveContainerUpwardRight": "Move container upward to the right",
+        "resetView": "Reset view",
+        "sowBaseGrid": "Show base grid",
+        "showViewInformation": "Show view information"
     }
 }

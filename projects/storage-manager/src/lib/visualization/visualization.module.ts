@@ -22,6 +22,7 @@ import { SolutionGroupsComponent } from './components/solution-groups/solution-g
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { CalculationStepsComponent } from './components/calculation-steps/calculation-steps.component';
 import { SceneInformationComponent } from './components/scene-visualization/scene-information/scene-information.component';
+import { MatMenuModule } from '@angular/material/menu';
 
 
 
@@ -41,6 +42,7 @@ import { SceneInformationComponent } from './components/scene-visualization/scen
         CommonModule,
         EffectsModule.forFeature([VisualizationEffects]),
         MatIconModule,
+        MatMenuModule,
         MatTooltipModule,
         NgChartsModule,
         NgLetModule,

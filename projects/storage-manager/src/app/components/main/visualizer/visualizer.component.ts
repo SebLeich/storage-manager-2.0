@@ -18,6 +18,9 @@ import * as ThreeJS from 'three';
 
 
 
+/**
+ * @deprecated
+ */
 @Component({
   selector: 'app-visualizer',
   templateUrl: './visualizer.component.html',

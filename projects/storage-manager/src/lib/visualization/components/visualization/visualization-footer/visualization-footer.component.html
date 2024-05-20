@@ -6,15 +6,23 @@
 <mat-icon (click)="zoomOut.emit()">zoom_out</mat-icon>
 
 <div class="orientation-grid margin-l">
-    <mat-icon class="secondary">north_west</mat-icon>
-    <mat-icon (click)="moveUp.emit()">north</mat-icon>
-    <mat-icon class="secondary">north_east</mat-icon>
-    <mat-icon (click)="moveLeft.emit()">arrow_back</mat-icon>
-    <mat-icon>adjust</mat-icon>
+    <mat-icon class="secondary" [matTooltip]="('visualization.moveContainerUpwardLeft'|translation|async) ?? ''">north_west</mat-icon>
+    <mat-icon (click)="moveUp.emit()" [matTooltip]="('visualization.moveContainerUp'|translation|async) ?? ''">north</mat-icon>
+    <mat-icon class="secondary" [matTooltip]="('visualization.moveContainerUpwardRight'|translation|async) ?? ''">north_east</mat-icon>
+    <mat-icon (click)="moveLeft.emit()" [matTooltip]="('visualization.moveContainerLeft'|translation|async) ?? ''">arrow_back</mat-icon>
+    <mat-icon [matTooltip]="('visualization.resetView'|translation|async) ?? ''">adjust</mat-icon>
     <mat-icon (click)="moveRight.emit()">arrow_forward</mat-icon>
     <mat-icon class="secondary">south_west</mat-icon>
     <mat-icon (click)="moveDown.emit()">south</mat-icon>
     <mat-icon class="secondary">south_east</mat-icon>
 </div>
 
-<mat-icon class="margin-l">settings</mat-icon>
+<mat-icon class="margin-l" [matMenuTriggerFor]="menu">settings</mat-icon>
+
+<mat-menu #menu="matMenu">
+    <button mat-menu-item (click)="toggleViewInformation()">{{'visualization.' + (showViewInformation? 'hideViewInformation':
+        'showViewInformation')|unsafeTranslation|async}}</button>
+
+    <button mat-menu-item (click)="toggleBaseGrid()">{{'visualization.' + (showBaseGrid? 'hideBaseGrid':
+        'showBaseGrid')|unsafeTranslation|async}}</button>
+</mat-menu>

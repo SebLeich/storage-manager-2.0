@@ -41,5 +41,18 @@
         "9": "Das Gut {{good}} ist zu lang für den Container",
         "10": "Das Gut {{good}} ist zu breit für den Container",
         "11": "Das Gut {{good}} ist zu hoch für den Container"
+    },
+    "visualization": {
+        "hideBaseGrid": "Base Grid ausblenden",
+        "hideViewInformation": "Ansichtsinformationen ausblenden",
+        "moveContainerDown": "Container nach unten bewegen",
+        "moveContainerLeft": "Container nach links bewegen",
+        "moveContainerRight": "Container nach rechts bewegen",
+        "moveContainerUp": "Container nach oben bewegen",
+        "moveContainerUpwardLeft": "Container diagonal nach oben links bewegen",
+        "moveContainerUpwardRight": "Container diagonal nach oben rechts bewegen",
+        "resetView": "Ansicht zurücksetzen",
+        "showBaseGrid": "Base Grid anzeigen",
+        "showViewInformation": "Ansichtsinformationen anzeigen"
     }
 }

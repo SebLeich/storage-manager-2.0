@@ -3,8 +3,8 @@
 </div>
 
 @if(displaySceneInformation()){
-<div class="overlay">
-    <app-scene-information [zoomLevel]="sceneVisualizationComponentService.camera?.zoom ?? 1"
-        [cameraPosition]="sceneVisualizationComponentService.camera?.position ?? { x: 0, y: 0, z: 0 }"></app-scene-information>
+<div @show class="overlay">
+    <app-scene-information [zoomLevel]="zoom$|async"
+        [cameraPosition]="position$|async"></app-scene-information>
 </div>
 }
