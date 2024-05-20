@@ -3,13 +3,19 @@
 </h3>
 
 <div class="messages-wrapper">
-    @for(message of messages(); track message){
-    <span>{{message}}</span>
-    }
+    <div class="messages-inner">
+        @for(message of messages(); track message){
+        <span>{{message}}</span><br>
+        }
+    </div>
 </div>
 
 <div class="control-wrapper">
-    <mat-icon>chevron_left</mat-icon>
-    <mat-icon (click)="togglePlayStatus()">{{playStatus() !== 'playing'? 'play_arrow': 'pause'}}</mat-icon>
-    <mat-icon>chevron_right</mat-icon>
+    <mat-icon [matTooltip]="('visualization.fastRewind'|translation|async) ?? ''">fast_rewind</mat-icon>
+    <mat-icon [matTooltip]="('visualization.previousStep'|translation|async) ?? ''" (click)="previousStep.emit()">chevron_left</mat-icon>
+    <mat-icon [matTooltip]="('visualization.' + (playStatus() !== 'playing'? 'playAnimation': 'pauseAnimation')|unsafeTranslation|async) ?? ''"
+        (click)="togglePlayStatus()">{{playStatus() !== 'playing'? 'play_arrow': 'pause'}}</mat-icon>
+    <mat-icon [matTooltip]="('visualization.stopAnimation'|translation|async) ?? ''" (click)="stopAnimation.emit()">stop</mat-icon>
+    <mat-icon [matTooltip]="('visualization.nextStep'|translation|async) ?? ''" (click)="nextStep.emit()">chevron_right</mat-icon>
+    <mat-icon [matTooltip]="('visualization.fastForward'|translation|async) ?? ''">fast_forward</mat-icon>
 </div>

@@ -43,6 +43,8 @@
         "11": "The good {{good}} is too tall for the container"
     },
     "visualization": {
+        "fastForward": "Fast forward (last step)",
+        "fastRewind": "Fast rewind (first step)",
         "hideBaseGrid": "Hide base grid",
         "hideViewInformation": "Hide view information",
         "moveContainerDown": "Move container down",
@@ -51,8 +53,13 @@
         "moveContainerUp": "Move container up",
         "moveContainerUpwardLeft": "Move container upward to the left",
         "moveContainerUpwardRight": "Move container upward to the right",
+        "nextStep": "Next step",
+        "pauseAnimation": "Pause animation",
+        "playAnimation": "Play animation",
+        "previousStep": "Previous step",
         "resetView": "Reset view",
-        "sowBaseGrid": "Show base grid",
-        "showViewInformation": "Show view information"
+        "showBaseGrid": "Show base grid",
+        "showViewInformation": "Show view information",
+        "stopAnimation": "Stop animation"
     }
 }

@@ -1,6 +1,7 @@
 <app-scaffold>
     <app-visualization-sidebar id="side-nav" [solutionWrapper]="solutionWrapper$|async" (goodHovered)="sceneVisualization.highlightGood($event)"
-        (groupColorChanged)="updateGroup($event)"></app-visualization-sidebar>
+        (groupColorChanged)="updateGroup($event)" [currentStepIndex]="animationStepIndex()" (startAnimation)="startAnimation()"
+        (stopAnimation)="stopAnimation()" (nextStep)="nextStep()"></app-visualization-sidebar>
 
     <app-scene-visualization @fadeIn #sceneVisualization id="main" [scene]="(scene$ | async)!"
         [displaySceneInformation]="displaySceneInformation()"></app-scene-visualization>

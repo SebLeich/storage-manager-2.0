@@ -1,13 +1,13 @@
 @import 'colors';
 @import 'heading';
+@import 'line-clamp';
 
 h3 {
     @include heading-3;
 }
 
 .messages-wrapper {
-    display: flex;
-    flex-direction: column;
+    height: 2.5rem;
     background-color: $dark-slate-grey;
     font-family: monospace;
     font-size: .6rem;
@@ -15,9 +15,26 @@ h3 {
     padding: .25rem .5rem;
     color: $white;
     border-radius: 3px;
+    overflow: hidden;
+
+    .messages-inner {
+        min-height: .6rem;
+        @include line-clamp(5);
+    }
 }
 
 .control-wrapper {
+    padding: .5rem;
     display: flex;
     justify-content: center;
+
+    mat-icon {
+        opacity: .5;
+        cursor: pointer;
+
+        &:hover {
+            transform: scale(1.1);
+            opacity: 1;
+        }
+    }
 }

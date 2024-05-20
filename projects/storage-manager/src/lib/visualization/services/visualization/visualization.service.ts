@@ -5,6 +5,12 @@ import getContainerPositionSharedMethods from 'src/app/methods/get-container-pos
 import { ArrowHelper, BoxGeometry, Color, EdgesGeometry, GridHelper, LineBasicMaterial, LineSegments, Mesh, MeshBasicMaterial, Scene, Vector3 } from 'three';
 import { Solution } from '@/lib/storage-manager/types/solution.type';
 import { Group } from '@/lib/storage-manager/types/group.type';
+import { CalculationStep } from '@/lib/storage-manager/types/calculation-step.type';
+import { UsedPosition } from '@/lib/storage-manager/types/used-position.type';
+import { SpatialPositioned } from '@/lib/storage-manager/types/spatial-positioned.type';
+import { Identifiable } from '@/lib/storage-manager/types/identifiable.type';
+import { ThreeDCalculationService } from '@/lib/shared/services/three-d-calculation.service';
+import { Container } from '@/lib/storage-manager/types/container.type';
 
 @Injectable()
 export class VisualizationService {
@@ -62,6 +68,56 @@ export class VisualizationService {
         return { scene, goodMeshes };
     }
 
+    public async configureSolutionStepScene(
+        scene: Scene = new Scene(),
+        container: Container,
+        steps: CalculationStep[] = [],
+        stepIndex: number = 0,
+        fillColor: boolean | string = false,
+        addBaseGrid = true,
+        addUnloadingArrow = true
+    ) {
+        scene.clear();
+
+        if (fillColor) {
+            scene.background = new Color(typeof fillColor === 'string' ? fillColor : 'rgb(255,255,255)');
+        }
+
+        const containerPosition = ThreeDCalculationService.calculateSpatialPosition(container),
+            containerResult = VisualizationService.generateOutlinedBoxMesh({ ...containerPosition, id: 'CT' }, 'container');
+
+        scene.add(containerResult.edges);
+
+        const appliedSteps = steps.slice(0, stepIndex + 1),
+            goodMeshes: { goodId: string, mesh: Mesh }[] = [];
+
+        const usedPositions: UsedPosition[] = appliedSteps
+            .flatMap(step => step.positions)
+            .filter(position => Array.isArray((position as UsedPosition).usedPositions)) as UsedPosition[];
+
+        const usedPositionIndices = usedPositions.flatMap(position => position.usedPositions);
+        const unusedPositions = appliedSteps
+            .flatMap(step => step.positions)
+            .filter(position => !usedPositionIndices.includes(position.index));
+
+        for (const position of unusedPositions) {
+            const spatial = ThreeDCalculationService.calculateSpatialPosition(position);
+            const { edges } = VisualizationService.generateOutlinedBoxMesh({ ...spatial, id: `UUP_${position.index}` }, 'position', containerPosition);
+
+            scene.add(edges);
+        }
+
+        if (addBaseGrid) {
+            scene.add(VisualizationService.getContainerBaseGrid(container.height, container.length));
+        }
+
+        if (addUnloadingArrow) {
+            scene.add(VisualizationService.getContainerUnloadingArrow(container.length));
+        }
+
+        return { scene, goodMeshes };
+    }
+
     public static getContainerUnloadingArrow(containerLength: number, arrowColor = "#e33268") {
         const from = new Vector3(0, 0, (containerLength / 2)),
             to = new Vector3(0, 0, (containerLength / 2) + this._helperArrowLength);
@@ -95,12 +151,18 @@ export class VisualizationService {
         return { mesh, edges };
     }
 
-    public static generateOutlinedBoxMesh(position: IPosition, type: string, relativeToParent?: IPosition, borderColor: string = defaultGoodEdgeColor, borderWidth = 1) {
+    public static generateOutlinedBoxMesh(
+        position: IPosition | SpatialPositioned & Identifiable,
+        type: 'container' | 'position',
+        relativeToParent?: IPosition | SpatialPositioned,
+        borderColor: string = defaultGoodEdgeColor,
+        borderWidth: number = 1
+    ) {
         const geometry = new BoxGeometry(position.width, position.height, position.length === Infinity ? infinityReplacement : position.length);
         const edges = new LineSegments(new EdgesGeometry(geometry), new LineBasicMaterial({ color: borderColor, linewidth: borderWidth }));
         const relativePosition = this.calculateRelativePosition(position, relativeToParent);
         edges.position.set(relativePosition.xCoord, relativePosition.yCoord, relativePosition.zCoord);
-        edges.userData = { type: type, positionId: position.id };
+        edges.userData = { type, positionId: position.id };
 
         return { edges };
     }

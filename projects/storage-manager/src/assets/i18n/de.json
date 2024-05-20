@@ -43,16 +43,23 @@
         "11": "Das Gut {{good}} ist zu hoch für den Container"
     },
     "visualization": {
-        "hideBaseGrid": "Base Grid ausblenden",
+        "fastForward": "Vorwärtsspulen (letzter Schritt)",
+        "fastRewind": "Rückwärtsspulen (erster Schritt)",
+        "hideBaseGrid": "Grid ausblenden",
         "hideViewInformation": "Ansichtsinformationen ausblenden",
         "moveContainerDown": "Container nach unten bewegen",
         "moveContainerLeft": "Container nach links bewegen",
         "moveContainerRight": "Container nach rechts bewegen",
         "moveContainerUp": "Container nach oben bewegen",
-        "moveContainerUpwardLeft": "Container diagonal nach oben links bewegen",
-        "moveContainerUpwardRight": "Container diagonal nach oben rechts bewegen",
+        "moveContainerUpwardLeft": "Container nach oben links bewegen",
+        "moveContainerUpwardRight": "Container nach oben rechts bewegen",
+        "nextStep": "Nächster Schritt",
+        "pauseAnimation": "Animation pausieren",
+        "playAnimation": "Animation abspielen",
+        "previousStep": "Vorheriger Schritt",
         "resetView": "Ansicht zurücksetzen",
-        "showBaseGrid": "Base Grid anzeigen",
-        "showViewInformation": "Ansichtsinformationen anzeigen"
+        "showBaseGrid": "Grid anzeigen",
+        "showViewInformation": "Ansichtsinformationen anzeigen",
+        "stopAnimation": "Animation stoppen"
     }
 }

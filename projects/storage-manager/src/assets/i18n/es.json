@@ -43,6 +43,8 @@
         "11": "El bien {{good}} es demasiado alto para el contenedor"
     },
     "visualization": {
+        "fastForward": "Avance rápido (último paso)",
+        "fastRewind": "Retroceso rápido (primer paso)",
         "hideBaseGrid": "Ocultar cuadrícula base",
         "hideViewInformation": "Ocultar información de la vista",
         "moveContainerDown": "Mover contenedor hacia abajo",
@@ -51,8 +53,13 @@
         "moveContainerUp": "Mover contenedor hacia arriba",
         "moveContainerUpwardLeft": "Mover contenedor hacia arriba a la izquierda",
         "moveContainerUpwardRight": "Mover contenedor hacia arriba a la derecha",
+        "nextStep": "Siguiente paso",
+        "pauseAnimation": "Pausar animación",
+        "playAnimation": "Reproducir animación",
+        "previousStep": "Paso anterior",
         "resetView": "Restablecer vista",
         "showBaseGrid": "Mostrar cuadrícula base",
-        "showViewInformation": "Mostrar información de la vista"
+        "showViewInformation": "Mostrar información de la vista",
+        "stopAnimation": "Detener animación"
     }
 }

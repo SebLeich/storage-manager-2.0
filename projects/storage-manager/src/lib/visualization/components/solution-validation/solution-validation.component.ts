@@ -1,7 +1,5 @@
-import { ChangeDetectionStrategy, Component, EventEmitter, Output } from '@angular/core';
-import { Store } from '@ngrx/store';
+import { ChangeDetectionStrategy, Component, EventEmitter, Output, input } from '@angular/core';
 import { SolutionValidationErrorWrapper } from '@/lib/shared/types/solution-validation-error-wrapper.type';
-import { selectCurrentSolutionValidation } from '../../store/visualization.selectors';
 import { Good } from '@/lib/storage-manager/types/good.type';
 
 @Component({
@@ -15,9 +13,7 @@ export class SolutionValidationComponent {
     @Output() public goodMouseLeave = new EventEmitter<Good>();
     @Output() public reRender = new EventEmitter<void>();
 
-    public currentSolutionValidation$ = this._store.select(selectCurrentSolutionValidation);
-
-    constructor(private _store: Store) { }
+    public validation = input<SolutionValidationErrorWrapper[]>([]);
 
     public hoverError(error: SolutionValidationErrorWrapper) {
         error.args && error.args.id && this.goodHovered.emit(error.args.id);

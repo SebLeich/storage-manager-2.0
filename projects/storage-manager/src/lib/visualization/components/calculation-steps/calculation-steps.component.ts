@@ -8,20 +8,32 @@ import { ChangeDetectionStrategy, Component, EventEmitter, Output, computed, inp
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class CalculationStepsComponent {
+    @Output() public previousStep = new EventEmitter<void>();
     @Output() public nextStep = new EventEmitter<void>();
-    @Output() public startPlaying = new EventEmitter<void>();
-    @Output() public pausePlaying = new EventEmitter<void>();
-    @Output() public stopPlaying = new EventEmitter<void>();
+    @Output() public startAnimation = new EventEmitter<void>();
+    @Output() public pauseAnimation = new EventEmitter<void>();
+    @Output() public stopAnimation = new EventEmitter<void>();
 
     public calculationSteps = input<CalculationStep[]>([]);
-    public currentStepIndex = input<number>(0);
+    public currentStepIndex = input<number | null>(null);
     public playStatus = input<'playing' | 'paused' | 'stopped'>('stopped');
 
-    public currentStep = computed(() => this.calculationSteps()[this.currentStepIndex()]);
-    public messages = computed(() => this.currentStep().messages);
+    public currentStep = computed(() => {
+        const currentStepIndex = this.currentStepIndex();
+        if (currentStepIndex == null) {
+            return null;
+        }
+
+        return this.calculationSteps()[currentStepIndex];
+    });
+
+    public messages = computed(() => {
+        const currentStep = this.currentStep();
+        return currentStep?.messages ?? [];
+    });
 
     public togglePlayStatus(): void {
         const startPlaying = this.playStatus() !== 'playing';
-        this[startPlaying ? 'startPlaying' : 'pausePlaying'].emit();
+        this[startPlaying ? 'startAnimation' : 'pauseAnimation'].emit();
     }
 }

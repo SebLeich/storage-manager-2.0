@@ -1,6 +1,9 @@
 import { IPosition, IPositionedElement, ISpace } from '@smgr/interfaces';
 import { v4 as generateGuid } from 'uuid';
 
+/**
+ * @deprecated
+ */
 export default function ({ height, length, width, xCoord, yCoord, zCoord }: IPositionedElement & ISpace, index: number = 0, groupRestrictedBy: number | null = null): IPosition {
     return {
         id: generateGuid(),

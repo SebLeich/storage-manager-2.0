@@ -12,14 +12,23 @@
     <app-container-preview [container]="container"></app-container-preview>
 </div>
 
-<div class="item">
-    <app-solution-validation (goodHovered)="goodHovered.emit($event)"></app-solution-validation>
-</div>
+<ng-container *ngLet="((currentSolutionValidation$|async) ?? []) as validation">
+    @if(validation.length > 0){
+    <div class="item">
+        <app-solution-validation [validation]="validation" (goodHovered)="goodHovered.emit($event)"></app-solution-validation>
+    </div>
+    }
+</ng-container>
 
 <div class="item">
     <app-solution-groups [groups]="groups()" (groupColorChanged)="groupColorChanged.emit($event)"></app-solution-groups>
 </div>
 
-<div class="item">
-    <app-calculation-steps [calculationSteps]="calculationSteps()"></app-calculation-steps>
-</div>
+<ng-container *ngLet="calculationSteps() as steps">
+    @if(steps.length > 0){
+    <div class="item">
+        <app-calculation-steps [calculationSteps]="steps" [currentStepIndex]="currentStepIndex()" (startAnimation)="startAnimation.emit()"
+            (stopAnimation)="stopAnimation.emit()" (pauseAnimation)="pauseAnimation.emit()" (nextStep)="nextStep.emit()"></app-calculation-steps>
+    </div>
+    }
+</ng-container>
