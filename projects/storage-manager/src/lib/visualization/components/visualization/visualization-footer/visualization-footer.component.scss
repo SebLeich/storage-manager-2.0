@@ -7,12 +7,34 @@
     height: 100%;
 }
 
+.general-options-wrapper {
+    >* {
+        margin-left: 1rem;
+    }
+}
+
 .button {
-    @include default-icon-button;
+    &.download {
+        @include default-icon-button;
+    }
+
+    &.validation {
+        @include purple-icon-button;
+    }
 }
 
 .margin-l {
     margin-left: 1rem;
+}
+
+.control {
+    cursor: pointer;
+    opacity: .5;
+
+    &:hover {
+        opacity: 1;
+        transform: all .5s ease-in-out;
+    }
 }
 
 .orientation-grid {

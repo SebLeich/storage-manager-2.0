@@ -36,6 +36,10 @@ export class SceneVisualizationComponentService {
         return this._controls();
     }
 
+    constructor(){
+        this._initTextures();
+    }
+
     public getPointedElement(event: MouseEvent, scene: Scene): null | Intersection {
         const meshes = scene.children.filter(child => child instanceof Mesh) as Mesh[];
         const x = (event.offsetX / (event.target as HTMLCanvasElement).offsetWidth) * 2 - 1;
@@ -88,6 +92,11 @@ export class SceneVisualizationComponentService {
         this._camera.updateProjectionMatrix();
     }
 
+    public setDefaultCameraPosition(): void {
+        this._camera?.position.set(4300, 215, 3000);
+        this._controls()?.update();
+    }
+
     public setScreenDimensions(height: number, width: number) {
         this.setUpCamera(height, width);
         this._renderer.setSize(width, height);
@@ -98,7 +107,7 @@ export class SceneVisualizationComponentService {
     public setUpCamera(height: number, width: number) {
         if (!this._camera) {
             this._camera = new PerspectiveCamera(20, width / height, 1, 10000000);
-            this._camera.position.set(12000, 5000, 10000);
+            this.setDefaultCameraPosition();
         }
 
         this._camera.aspect = width / height;
@@ -158,6 +167,9 @@ export class SceneVisualizationComponentService {
 
         requestAnimationFrame(() => this._render(scene));
         this._renderer.render(scene, this._camera);
+    }
+
+    private _initTextures(){
     }
 
 }

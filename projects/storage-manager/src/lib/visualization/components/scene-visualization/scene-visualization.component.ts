@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, DestroyRef, ElementRef, EventEmitter, Inject, Input, OnChanges, OnInit, Optional, Output, SimpleChanges, ViewChild, input } from '@angular/core';
-import { BehaviorSubject, debounceTime, fromEvent, map, ReplaySubject, switchMap } from 'rxjs';
-import { Mesh, Scene } from 'three';
+import { BehaviorSubject, debounceTime, firstValueFrom, fromEvent, interval, map, ReplaySubject, switchMap, takeWhile, timer } from 'rxjs';
+import { Box3, LineSegments, Mesh, PerspectiveCamera, Scene, Vector3 } from 'three';
 import { MeshBasicMaterial } from 'three';
 import { Store } from '@ngrx/store';
 import { selectSnapshot } from 'src/lib/process-builder/globals/select-snapshot';
@@ -61,6 +61,15 @@ export class SceneVisualizationComponent implements OnChanges, OnInit {
         private _changeDetectorRef: ChangeDetectorRef
     ) { }
 
+    public autoOptimizeCameraPosition() {
+        const mainObject = this.scene.children.find((candidate) => candidate.userData.type === 'container') as LineSegments;
+        if (!this.sceneVisualizationComponentService.camera || !mainObject) {
+            return;
+        }
+
+        this._optimizeCameraPosition(mainObject, this.sceneVisualizationComponentService.camera);
+    }
+
     public async highlightGood(arg: Good | string) {
         const groups = await selectSnapshot(this._store.select(selectGroups));
         const goodId = typeof arg === 'string' ? arg : arg.id;
@@ -99,23 +108,36 @@ export class SceneVisualizationComponent implements OnChanges, OnInit {
         this.tryToRender();
 
         this._sceneRendered.pipe(takeUntilDestroyed(this._destroyRef), debounceTime(1500)).subscribe((arg) => this.sceneRendered.emit(arg));
-        this.resized$.pipe(takeUntilDestroyed(this._destroyRef)).subscribe(() => this.onResize());
+        this.resized$
+            .pipe(takeUntilDestroyed(this._destroyRef))
+            .subscribe(() => this.onResize());
 
         if (this.visualizerComponentService) {
             this.visualizerComponentService.reRenderingTriggered$.pipe(takeUntilDestroyed(this._destroyRef)).subscribe(() => this.tryToRender());
         }
     }
 
+    public async resetCameraPosition() {
+        this.sceneVisualizationComponentService.setDefaultCameraPosition();
+        await firstValueFrom(timer(50));
+
+        this.autoOptimizeCameraPosition();
+    }
+
     public tryToRender() {
-        if (this.scene && this.visualizerWrapperRef) {
-            const canvas = this.sceneVisualizationComponentService.setScreenDimensions(
-                this.visualizerWrapperRef.nativeElement.clientHeight,
-                this.visualizerWrapperRef.nativeElement.clientWidth
-            );
-            this.visualizerWrapperRef.nativeElement.appendChild(canvas);
-            this.sceneVisualizationComponentService.renderScene(this.scene);
-            this._sceneRendered.next({ canvas: canvas });
+        if (!this.scene || !this.visualizerWrapperRef) {
+            return;
         }
+
+        const canvas = this.sceneVisualizationComponentService.setScreenDimensions(
+            this.visualizerWrapperRef.nativeElement.clientHeight,
+            this.visualizerWrapperRef.nativeElement.clientWidth
+        );
+        
+        this.visualizerWrapperRef.nativeElement.appendChild(canvas);
+        this.sceneVisualizationComponentService.renderScene(this.scene);
+        this._sceneRendered.next({ canvas: canvas });
+        this.autoOptimizeCameraPosition();
     }
 
     public updateSize() {
@@ -155,11 +177,7 @@ export class SceneVisualizationComponent implements OnChanges, OnInit {
             return;
         }
 
-        const hoveredElement =
-            this.sceneVisualizationComponentService.getPointedElement(
-                event,
-                this.scene
-            );
+        const hoveredElement = this.sceneVisualizationComponentService.getPointedElement(event, this.scene);
         if (!hoveredElement || !hoveredElement.object.userData['goodId']) {
             await this.resetGoodColors();
             this._hoveredGoodId.next(null);
@@ -170,6 +188,8 @@ export class SceneVisualizationComponent implements OnChanges, OnInit {
 
             return;
         }
+
+        console.log(hoveredElement);
 
         const goodId = hoveredElement.object.userData['goodId'];
         await this.highlightGood(goodId);
@@ -197,6 +217,57 @@ export class SceneVisualizationComponent implements OnChanges, OnInit {
         }
 
         this.sceneVisualizationComponentService.updateSize(this.visualizerWrapperRef.nativeElement.clientHeight, this.visualizerWrapperRef.nativeElement.clientWidth);
+        this.autoOptimizeCameraPosition();
+    }
+
+    private _optimizeCameraPosition(mainObject: LineSegments, camera: PerspectiveCamera) {
+        const calcPercentage = () => {
+            const box = new Box3().setFromObject(mainObject);
+            const points = [
+                new Vector3(box.min.x, box.min.y, box.min.z),
+                new Vector3(box.min.x, box.min.y, box.max.z),
+                new Vector3(box.min.x, box.max.y, box.min.z),
+                new Vector3(box.min.x, box.max.y, box.max.z),
+                new Vector3(box.max.x, box.min.y, box.min.z),
+                new Vector3(box.max.x, box.min.y, box.max.z),
+                new Vector3(box.max.x, box.max.y, box.min.z),
+                new Vector3(box.max.x, box.max.y, box.max.z)
+            ];
+
+
+            const width = window.innerWidth;
+            const height = window.innerHeight;
+
+            const toScreenPosition = (point: Vector3, camera: PerspectiveCamera) => {
+                const vector = point.clone().project(camera);
+                vector.x = (vector.x + 1) / 2 * width;
+                vector.y = -(vector.y - 1) / 2 * height;
+                return vector;
+            };
+
+            const screenPoints = points.map(point => toScreenPosition(point, camera));
+
+            const minX = Math.min(...screenPoints.map(p => p.x));
+            const maxX = Math.max(...screenPoints.map(p => p.x));
+            const minY = Math.min(...screenPoints.map(p => p.y));
+            const maxY = Math.max(...screenPoints.map(p => p.y));
+
+            const objectScreenWidth = maxX - minX;
+            const objectScreenHeight = maxY - minY;
+
+            const objectScreenArea = objectScreenWidth * objectScreenHeight;
+            const screenArea = width * height;
+
+            return (objectScreenArea / screenArea) * 100;
+        }
+
+        interval(10)
+            .pipe(
+                takeUntilDestroyed(this._destroyRef),
+                map((iteration) => ({ iteration, percentage: calcPercentage() })),
+                takeWhile(({ iteration, percentage }) => iteration < 50 && (percentage < 50 || percentage > 60))
+            )
+            .subscribe(({ percentage }) => percentage < 50 ? this.zoomIn() : this.zoomOut());
     }
 
     private async resetGoodColors() {

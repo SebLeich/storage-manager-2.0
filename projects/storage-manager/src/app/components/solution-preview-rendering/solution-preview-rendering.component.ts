@@ -79,7 +79,7 @@ export class SolutionPreviewRenderingComponent implements OnChanges, OnInit {
     const groups = await selectSnapshot(this._store.select(selectGroups));
     for (let good of this.solution.container!.goods) {
       const group = groups.find((group) => group.id === good.group);
-      const goodResult = VisualizationService.generateFilledBoxMesh(getContainerPositionSharedMethods(good), group?.color ?? '#ffffff', 'good', containerPosition);
+      const goodResult = VisualizationService.generateFilledBoxMesh(getContainerPositionSharedMethods(good), group?.color ?? 'good', containerPosition);
       this.scene.add(goodResult.edges, goodResult.mesh);
     }
   }

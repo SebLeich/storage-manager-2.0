@@ -24,7 +24,7 @@
     animation: leaves 0.15s ease-out;
     width: 2rem;
     font-weight: 200 !important;
-    font-size: 1.2rem;
+    font-size: 1rem;
     display: inline-flex;
     align-items: center;
     justify-content: center;
@@ -61,6 +61,12 @@
 @mixin secondary-button-2() {
     @include button;
     @include gradient-darkgrey;
+    color: $white;
+}
+
+@mixin purple-icon-button() {
+    @include icon-button;
+    @include gradient-purple;
     color: $white;
 }
 

@@ -1,4 +1,5 @@
-import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from '@angular/core';
+import { WallTexture } from '@/lib/storage-manager/types/wall-texture.type';
+import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output, input } from '@angular/core';
 
 @Component({
     selector: 'app-visualization-footer',
@@ -17,9 +18,12 @@ export class VisualizationFooterComponent {
     @Output() public moveUp = new EventEmitter<void>();
     @Output() public moveDown = new EventEmitter<void>();
     @Output() public reset = new EventEmitter<void>();
-
+    @Output() public optimizeCameraPosition = new EventEmitter<void>();
+    @Output() public containerColorChanged = new EventEmitter<WallTexture>();
     @Output() public baseGridToggled = new EventEmitter<boolean>();
     @Output() public viewInformationToggled = new EventEmitter<boolean>();
+
+    public containerColor = input<WallTexture>("black");
 
     public toggleBaseGrid(): void {
         const showBaseGrid = !this.showBaseGrid;

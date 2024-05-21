@@ -31,7 +31,7 @@ export class ISolutionPreviewEffects {
 
             for (let good of solution!.container!.goods) {
               const group = groups.find(group => group.id === good.group);
-              const goodResult = VisualizationService.generateFilledBoxMesh(getContainerPositionSharedMethods(good), group?.color ?? '#ffffff', 'good', containerPosition);
+              const goodResult = VisualizationService.generateFilledBoxMesh(getContainerPositionSharedMethods(good), 'good', containerPosition);
               scene.add(goodResult.edges, goodResult.mesh);
             }
 

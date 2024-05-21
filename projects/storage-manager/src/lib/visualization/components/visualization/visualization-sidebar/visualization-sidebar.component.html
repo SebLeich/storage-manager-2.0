@@ -27,8 +27,10 @@
 <ng-container *ngLet="calculationSteps() as steps">
     @if(steps.length > 0){
     <div class="item">
-        <app-calculation-steps [calculationSteps]="steps" [currentStepIndex]="currentStepIndex()" (startAnimation)="startAnimation.emit()"
-            (stopAnimation)="stopAnimation.emit()" (pauseAnimation)="pauseAnimation.emit()" (nextStep)="nextStep.emit()"></app-calculation-steps>
+        <app-calculation-steps [calculationSteps]="steps" [currentStepIndex]="currentStepIndex()" [intervalSpeed]="intervalSpeed()"
+            (startAnimation)="startAnimation.emit()" (stopAnimation)="stopAnimation.emit()" (pauseAnimation)="pauseAnimation.emit()"
+            (nextStep)="nextStep.emit()" (previousStep)="previousStep.emit()" (fastForward)="fastForward.emit()" (fastRewind)="fastRewind.emit()"
+            (intervalSpeedChange)="intervalSpeedChange.emit($event)" [playStatus]="playStatus()"></app-calculation-steps>
     </div>
     }
 </ng-container>

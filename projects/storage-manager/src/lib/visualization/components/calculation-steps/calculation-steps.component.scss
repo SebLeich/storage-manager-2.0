@@ -2,8 +2,42 @@
 @import 'heading';
 @import 'line-clamp';
 
+:host {
+    display: flex;
+    flex-direction: column;
+}
+
 h3 {
     @include heading-3;
+    display: flex;
+    align-items: center;
+
+    .text {
+        flex: 1;
+    }
+
+    .status-badge {
+        display: block;
+        padding: 0.15rem 0.35rem;
+        font-size: 10px;
+        font-weight: 100;
+        line-height: 10px;
+        font-family: Roboto, sans-serif;
+        color: white;
+        border-radius: 3px;
+
+        &.stopped {
+            background-color: $wine-red;
+        }
+
+        &.playing {
+            background-color: $green-400;
+        }
+
+        &.paused {
+            background-color: $dark-slate-grey;
+        }
+    }
 }
 
 .messages-wrapper {
@@ -21,6 +55,10 @@ h3 {
         min-height: .6rem;
         @include line-clamp(5);
     }
+}
+
+input {
+    margin: 2px 0px;
 }
 
 .control-wrapper {

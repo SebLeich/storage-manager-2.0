@@ -18,9 +18,15 @@ export class VisualizationSidebarComponent {
     @Output() public stopAnimation = new EventEmitter<void>();
     @Output() public pauseAnimation = new EventEmitter<void>();
     @Output() public nextStep = new EventEmitter<void>();
+    @Output() public previousStep = new EventEmitter<void>();
+    @Output() public fastForward = new EventEmitter<void>();
+    @Output() public fastRewind = new EventEmitter<void>();
+    @Output() public intervalSpeedChange = new EventEmitter<number>();
 
     public solutionWrapper = input<SolutionWrapper | null>(null);
     public currentStepIndex = input<number | null>(null);
+    public intervalSpeed = input<number>(0);
+    public playStatus = input<'playing' | 'paused' | 'stopped'>('stopped');
 
     public groups = computed(() => this.solutionWrapper()?.groups ?? []);
     public calculationSteps = computed(() => this.solutionWrapper()?.calculationSteps ?? []);

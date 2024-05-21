@@ -13,9 +13,13 @@ export class CalculationStepsComponent {
     @Output() public startAnimation = new EventEmitter<void>();
     @Output() public pauseAnimation = new EventEmitter<void>();
     @Output() public stopAnimation = new EventEmitter<void>();
+    @Output() public fastForward = new EventEmitter<void>();
+    @Output() public fastRewind = new EventEmitter<void>();
+    @Output() public intervalSpeedChange = new EventEmitter<number>();
 
     public calculationSteps = input<CalculationStep[]>([]);
     public currentStepIndex = input<number | null>(null);
+    public intervalSpeed = input<number>(0);
     public playStatus = input<'playing' | 'paused' | 'stopped'>('stopped');
 
     public currentStep = computed(() => {

@@ -1,6 +1,7 @@
 {
     "defaults": {
         "appName": "Storage Manager",
+        "autoZoom": "Auto Zoom",
         "blocked": "Blocked",
         "calculatedAt": "Calculated at {{date}}",
         "calculationSteps": "Calculation Steps",
@@ -21,7 +22,9 @@
         "viewInformation": "View Information",
         "volume": "Volume",
         "width": "Width",
-        "zoomFactor": "Zoom Factor"
+        "zoomFactor": "Zoom Factor",
+        "zoomIn": "Zoom In",
+        "zoomOut": "Zoom Out"
     },
     "hints": {
         "noContainer": "No container selected",
@@ -43,6 +46,11 @@
         "11": "The good {{good}} is too tall for the container"
     },
     "visualization": {
+        "animationStatus": {
+            "paused": "Paused",
+            "playing": "Playing",
+            "stopped": "Stopped"
+        },
         "fastForward": "Fast forward (last step)",
         "fastRewind": "Fast rewind (first step)",
         "hideBaseGrid": "Hide base grid",

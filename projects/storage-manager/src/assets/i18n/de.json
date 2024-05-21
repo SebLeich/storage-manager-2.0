@@ -1,6 +1,7 @@
 {
     "defaults": {
         "appName": "Storage Manager",
+        "autoZoom": "Auto Zoom",
         "blocked": "Belegt",
         "calculatedAt": "Berechnet am {{date}}",
         "calculationSteps": "Berechnungsschritte",
@@ -21,7 +22,9 @@
         "viewInformation": "Ansichtsinformationen",
         "volume": "Volumen",
         "width": "Breite",
-        "zoomFactor": "Zoom Faktor"
+        "zoomFactor": "Zoom Faktor",
+        "zoomIn": "Hineinzoomen",
+        "zoomOut": "Herauszoomen"
     },
     "hints": {
         "noContainer": "Kein Container ausgewählt",
@@ -43,6 +46,11 @@
         "11": "Das Gut {{good}} ist zu hoch für den Container"
     },
     "visualization": {
+        "animationStatus": {
+            "paused": "Pausiert",
+            "playing": "Wiedergabe",
+            "stopped": "Gestoppt"
+        },
         "fastForward": "Vorwärtsspulen (letzter Schritt)",
         "fastRewind": "Rückwärtsspulen (erster Schritt)",
         "hideBaseGrid": "Grid ausblenden",
