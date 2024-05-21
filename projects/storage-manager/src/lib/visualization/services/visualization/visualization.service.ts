@@ -88,6 +88,7 @@ export class VisualizationService {
     public async configureSolutionStepScene(
         scene: Scene = new Scene(),
         container: Container,
+        groups: Group[],
         steps: CalculationStep[] = [],
         stepIndex: number = 0,
         fillColor: boolean | string = false,
@@ -135,14 +136,15 @@ export class VisualizationService {
 
         for (const position of lastUsedPositions) {
             const spatial = ThreeDCalculationService.calculateSpatialPosition(position),
-                label = `UUP_${position.index}`;
+                label = position.goodDesc,
+                group = groups.find(group => group.id === position.groupId);
 
-            const { edges, mesh } = VisualizationService.generateFilledBoxMesh({ ...spatial, id: label }, 'good', containerPosition);
+            const { edges, mesh } = VisualizationService.generateFilledBoxMesh({ ...spatial, id: `${position.goodId}` }, 'good', containerPosition);
 
             scene.add(edges, mesh);
 
             const relativePosition = VisualizationService.calculateRelativePosition(position, containerPosition);
-            const labels = VisualizationService.getGoodLabels({ ...spatial, desc: label }, relativePosition, {} as any, labelPositions);
+            const labels = VisualizationService.getGoodLabels({ ...spatial, desc: label }, relativePosition, group, labelPositions);
             labels.length > 0 && scene.add(...labels);
         }
 

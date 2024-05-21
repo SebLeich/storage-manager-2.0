@@ -26,7 +26,7 @@ export class VisualizationComponent implements OnInit {
     public intervalSpeed = signal<number>(1000);
     public playStatus = signal<'playing' | 'paused' | 'stopped'>('stopped');
     public labelObjectSites = signal<ObjectSite[]>(['right', 'front']);
-    public wallObjectSites = signal<ObjectSite[]>(['bottom', 'rear', 'left', 'top', 'bottom']);
+    public wallObjectSites = signal<ObjectSite[]>(['bottom', 'rear', 'left', 'bottom']);
     public wallTexture = signal<WallTexture>('yellow');
 
     public solutionWrapper$ = this._store.select(selectCurrentSolutionWrapper);
@@ -57,6 +57,7 @@ export class VisualizationComponent implements OnInit {
                         else this._visualizationService.configureSolutionStepScene(
                             scene,
                             solutionWrapper.solution.container,
+                            solutionWrapper.groups,
                             solutionWrapper.calculationSteps,
                             animationStepIndex,
                             undefined,
@@ -277,7 +278,10 @@ export class VisualizationComponent implements OnInit {
                                 points: [],
                                 rCoord: 500,
                                 tCoord: 500,
-                                usedPositions: []
+                                usedPositions: [],
+                                goodDesc: 'Good 4',
+                                goodId: 4,
+                                groupId: '1'
                             }
                         ]
                     },
@@ -298,7 +302,10 @@ export class VisualizationComponent implements OnInit {
                                 points: [],
                                 rCoord: 500,
                                 tCoord: 500,
-                                usedPositions: []
+                                usedPositions: [],
+                                goodDesc: 'Good 4',
+                                goodId: 4,
+                                groupId: '1'
                             }
                         ]
                     },
@@ -319,7 +326,10 @@ export class VisualizationComponent implements OnInit {
                                 points: [],
                                 rCoord: 500,
                                 tCoord: 500,
-                                usedPositions: []
+                                usedPositions: [],
+                                goodDesc: 'Good 4',
+                                goodId: 4,
+                                groupId: '2'
                             }
                         ]
                     },
@@ -340,7 +350,10 @@ export class VisualizationComponent implements OnInit {
                                 points: [],
                                 rCoord: 500,
                                 tCoord: 500,
-                                usedPositions: []
+                                usedPositions: [],
+                                goodDesc: 'Good 4',
+                                goodId: 4,
+                                groupId: '3'
                             }
                         ]
                     }
