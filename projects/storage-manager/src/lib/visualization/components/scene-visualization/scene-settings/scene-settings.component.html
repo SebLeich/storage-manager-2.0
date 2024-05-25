@@ -1,0 +1,27 @@
+<h3>{{'visualization.sceneSettings'|translation|async}}</h3>
+
+<div class="content">
+
+    <app-input-wrapper [label]="'defaults.containerColor'|translation|async">
+        <select (change)="containerColorChanged.emit($any($event.target).value)" [value]="containerColor()">
+            <option value="black">Black</option>
+            <option value="white">White</option>
+            <option value="red">Red</option>
+            <option value="green">Green</option>
+            <option value="blue">Blue</option>
+            <option value="yellow">Yellow</option>
+        </select>
+    </app-input-wrapper>
+
+    <app-input-wrapper [label]="'defaults.containerColor'|translation|async">
+        <select (change)="containerColorChanged.emit($any($event.target).value)" [value]="containerColor()">
+            <option value="black">Black</option>
+            <option value="white">White</option>
+            <option value="red">Red</option>
+            <option value="green">Green</option>
+            <option value="blue">Blue</option>
+            <option value="yellow">Yellow</option>
+        </select>
+    </app-input-wrapper>
+
+</div>

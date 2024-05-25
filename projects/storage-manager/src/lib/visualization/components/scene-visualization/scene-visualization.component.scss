@@ -3,8 +3,33 @@
 :host {
     flex: 1;
     display: flex;
+}
+
+.body {
+    flex: 1;
+    display: flex;
     overflow: hidden;
     position: relative;
+
+    .fixed-scene-settings {
+        max-width: 300px;
+    }
+
+    &.fixed-scene-settings-left {
+        flex-direction: row;
+    }
+
+    &.fixed-scene-settings-right {
+        flex-direction: row-reverse;
+    }
+
+    &.fixed-scene-settings-top {
+        flex-direction: column;
+    }
+
+    &.fixed-scene-settings-bottom {
+        flex-direction: column-reverse;
+    }
 
     .visualization-wrapper {
         flex: 1;
@@ -17,10 +42,11 @@
     }
 
     .overlay {
-        position: absolute;
+        position: fixed;
         top: 1rem;
         left: 1rem;
         background-color: $white;
+        border-radius: 3px;
         padding: .5rem;
     }
 }

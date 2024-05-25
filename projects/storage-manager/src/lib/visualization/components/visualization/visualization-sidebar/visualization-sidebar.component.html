@@ -2,6 +2,8 @@
 
     <span class="title">{{calculationSourceTitle()}}</span>
 
+    @let calcDate = calculationDate();
+    @let PrintName = 'myName, ' + name + '!';
     <span *ngLet="calculationDate() as calcDate" class="calculated-at">
         {{'defaults.calculatedAt'|translation:{date:(calcDate|date:'dd.MM. HH:mm') ?? ''}|async}}
     </span>

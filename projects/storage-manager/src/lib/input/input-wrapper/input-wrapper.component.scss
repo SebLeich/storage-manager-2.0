@@ -1,0 +1,29 @@
+@import 'colors';
+
+:host {
+    .body {
+        position: relative;
+        overflow: hidden;
+        width: fit-content;
+
+        .label {
+            color: $slate-grey;
+            position: absolute;
+            font-size: 0.5rem;
+            top: .1rem;
+            left: .5rem;
+            line-height: 1rem;
+            cursor: default;
+            pointer-events: none;
+        }
+
+        ::ng-deep {
+            select {
+                min-width: 120px;
+                padding: 1rem .25rem .25rem;
+                background-color: #fafafa;
+                border-radius: 3px;
+            }
+        }
+    }
+}

@@ -1,11 +1,11 @@
-import { SceneInformationComponent } from './scene-information.component';
+import { InputWrapperComponent } from './input-wrapper.component';
 import { Spectator, createComponentFactory } from '@ngneat/spectator';
 
-describe('SceneInformationComponent', () => {
-    let spectator: Spectator<SceneInformationComponent>;
+describe('InputWrapperComponent', () => {
+    let spectator: Spectator<InputWrapperComponent>;
 
     const createComponent = createComponentFactory({
-        component: SceneInformationComponent,
+        component: InputWrapperComponent,
     });
 
     beforeEach(() => spectator = createComponent());

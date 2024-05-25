@@ -7,6 +7,10 @@
         "calculationSteps": "Calculation Steps",
         "cameraPosition": "Camera Position",
         "container": "Container",
+        "containerColor": "Container color",
+        "containerHeight": "Container height",
+        "containerLength": "Container length",
+        "containerWidth": "Container width",
         "download": "Download",
         "error": {
             "singular": "One error",
@@ -54,7 +58,8 @@
         "fastForward": "Fast forward (last step)",
         "fastRewind": "Fast rewind (first step)",
         "hideBaseGrid": "Hide base grid",
-        "hideViewInformation": "Hide view information",
+        "hideSceneSettings": "Hide scene settings",
+        "hideSceneInformation": "Hide scene information",
         "moveContainerDown": "Move container down",
         "moveContainerLeft": "Move container left",
         "moveContainerRight": "Move container right",
@@ -66,8 +71,10 @@
         "playAnimation": "Play animation",
         "previousStep": "Previous step",
         "resetView": "Reset view",
+        "sceneSettings": "Scene settings",
         "showBaseGrid": "Show base grid",
-        "showViewInformation": "Show view information",
+        "showSceneInformation": "Show scene information",
+        "showSceneSettings": "Show scene settings",
         "stopAnimation": "Stop animation"
     }
 }

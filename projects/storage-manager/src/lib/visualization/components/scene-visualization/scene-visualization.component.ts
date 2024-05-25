@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, DestroyRef, ElementRef, EventEmitter, Inject, Input, OnChanges, OnInit, Optional, Output, SimpleChanges, ViewChild, input } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, DestroyRef, ElementRef, EventEmitter, Inject, Input, OnChanges, OnInit, Optional, Output, SimpleChanges, ViewChild, input, signal } from '@angular/core';
 import { BehaviorSubject, debounceTime, firstValueFrom, fromEvent, interval, map, ReplaySubject, switchMap, takeWhile, timer } from 'rxjs';
 import { Box3, LineSegments, Mesh, PerspectiveCamera, Scene, Vector3 } from 'three';
 import { MeshBasicMaterial } from 'three';
@@ -10,6 +10,8 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { SceneVisualizationComponentService } from './service/scene-visualization-component.service';
 import { Good } from '@/lib/storage-manager/types/good.type';
 import { showAnimation } from '@/lib/shared/animations/show';
+import { WallTexture } from '@/lib/storage-manager/types/wall-texture.type';
+import { CdkDrag } from '@angular/cdk/drag-drop';
 
 @Component({
     selector: 'app-scene-visualization',
@@ -20,8 +22,7 @@ import { showAnimation } from '@/lib/shared/animations/show';
     animations: [showAnimation]
 })
 export class SceneVisualizationComponent implements OnChanges, OnInit {
-    @ViewChild('visualizationWrapper', { static: true })
-    public visualizerWrapperRef!: ElementRef<HTMLDivElement>;
+    @ViewChild('visualizationWrapper', { static: true }) public visualizerWrapperRef!: ElementRef<HTMLDivElement>;
 
     @Input() public scene!: Scene;
     @Input() public responsive = true;
@@ -30,8 +31,14 @@ export class SceneVisualizationComponent implements OnChanges, OnInit {
     @Output() public sceneRendered = new EventEmitter<{ canvas: HTMLCanvasElement }>();
     @Output() public hoveredGood = new EventEmitter<string | null>();
     @Output() public selectGood = new EventEmitter<string | null>();
+    @Output() public containerColorChanged = new EventEmitter<WallTexture>();
 
     public displaySceneInformation = input<boolean>(true);
+
+    public displaySceneSettings = input<boolean>(true);
+    public displaySceneSettingsDirection = signal<'top' | 'right' | 'bottom' | 'left' | 'none'>('none');
+
+    public containerColor = input<WallTexture>("black");
 
     public resized$ = fromEvent(window, 'resize').pipe(debounceTime(50));
     public position$ = this.sceneVisualizationComponentService
@@ -93,15 +100,28 @@ export class SceneVisualizationComponent implements OnChanges, OnInit {
         }
     }
 
+    public isFixedSceneSettings(drag: CdkDrag): boolean {
+        const isFixedSceneSettings = drag.element.nativeElement.classList.contains('fixed-scene-settings');
+        return isFixedSceneSettings;
+    }
+
     public move(xSteps: number, ySteps: number, zSteps: number): void {
         this.sceneVisualizationComponentService.move(xSteps, ySteps, zSteps);
         this._changeDetectorRef.markForCheck();
+    }
+
+    public moveSceneSettings(direction: 'top' | 'right' | 'bottom' | 'left' | 'none'): void {
+        this.displaySceneSettingsDirection.set(direction);
     }
 
     public ngOnChanges(changes: SimpleChanges): void {
         if (changes['scene']) {
             this.tryToRender();
         }
+    }
+
+    public test(){
+        this.moveSceneSettings('none');
     }
 
     public ngOnInit(): void {
@@ -133,7 +153,7 @@ export class SceneVisualizationComponent implements OnChanges, OnInit {
             this.visualizerWrapperRef.nativeElement.clientHeight,
             this.visualizerWrapperRef.nativeElement.clientWidth
         );
-        
+
         this.visualizerWrapperRef.nativeElement.appendChild(canvas);
         this.sceneVisualizationComponentService.renderScene(this.scene);
         this._sceneRendered.next({ canvas: canvas });

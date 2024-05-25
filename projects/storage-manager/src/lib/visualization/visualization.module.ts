@@ -23,14 +23,20 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { CalculationStepsComponent } from './components/calculation-steps/calculation-steps.component';
 import { SceneInformationComponent } from './components/scene-visualization/scene-information/scene-information.component';
 import { MatMenuModule } from '@angular/material/menu';
+import { SceneSettingsComponent } from './components/scene-visualization/scene-settings/scene-settings.component';
+import { DragDropModule } from '@angular/cdk/drag-drop';
+import { InputModule } from '../input/input.module';
+import { BoundaryDraggableDirective } from './directives/boundary-draggable.directive';
 
 
 
 @NgModule({
     declarations: [
+        BoundaryDraggableDirective,
         CalculationStepsComponent,
         ContainerPreviewComponent,
         SceneInformationComponent,
+        SceneSettingsComponent,
         SceneVisualizationComponent,
         SolutionGroupsComponent,
         SolutionValidationComponent,
@@ -40,7 +46,9 @@ import { MatMenuModule } from '@angular/material/menu';
     ],
     imports: [
         CommonModule,
+        DragDropModule,
         EffectsModule.forFeature([VisualizationEffects]),
+        InputModule,
         MatIconModule,
         MatMenuModule,
         MatTooltipModule,

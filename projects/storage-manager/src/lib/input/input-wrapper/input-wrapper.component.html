@@ -1,0 +1,8 @@
+<div class="body">
+    @if(label() != null){
+    <span class="label" (click)="labelClicked()">{{label()}}</span>
+    }
+
+    <ng-content></ng-content>
+
+</div>

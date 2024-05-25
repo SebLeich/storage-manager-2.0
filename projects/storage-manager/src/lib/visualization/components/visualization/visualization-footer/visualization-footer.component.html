@@ -3,15 +3,6 @@
     <mat-icon fontIcon="verified" class="button validation" [matTooltip]="('defaults.validation'|translation|async) ?? ''"></mat-icon>
 </div>
 
-<select (change)="containerColorChanged.emit($any($event.target).value)" [value]="containerColor()">
-    <option value="black">Black</option>
-    <option value="white">White</option>
-    <option value="red">Red</option>
-    <option value="green">Green</option>
-    <option value="blue">Blue</option>
-    <option value="yellow">Yellow</option>
-</select>
-
 <span class="spacer"></span>
 
 <mat-icon class="control" [matTooltip]="('defaults.zoomIn'|translation|async)??''" (click)="zoomIn.emit()">zoom_in</mat-icon>
@@ -33,8 +24,11 @@
 <mat-icon class="control margin-l" [matMenuTriggerFor]="menu">settings</mat-icon>
 
 <mat-menu #menu="matMenu">
-    <button mat-menu-item (click)="toggleViewInformation()">{{'visualization.' + (showViewInformation? 'hideViewInformation':
-        'showViewInformation')|unsafeTranslation|async}}</button>
+    <button mat-menu-item (click)="toggleViewInformation()">{{'visualization.' + (showSceneInformation? 'hideSceneInformation':
+        'showSceneInformation')|unsafeTranslation|async}}</button>
+
+    <button mat-menu-item (click)="toggleSceneSettings()">{{'visualization.' + (showSceneSettings? 'hideSceneSettings':
+        'showSceneSettings')|unsafeTranslation|async}}</button>
 
     <button mat-menu-item (click)="toggleBaseGrid()">{{'visualization.' + (showBaseGrid? 'hideBaseGrid':
         'showBaseGrid')|unsafeTranslation|async}}</button>

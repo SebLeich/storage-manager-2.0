@@ -21,6 +21,7 @@ import { WallTexture } from '@/lib/storage-manager/types/wall-texture.type';
 })
 export class VisualizationComponent implements OnInit {
     public displaySceneInformation = signal<boolean>(false);
+    public displaySceneSettings = signal<boolean>(true);
     public displayBaseGrid = signal<boolean>(true);
     public animationStepIndex = signal<number | null>(null);
     public intervalSpeed = signal<number>(1000);

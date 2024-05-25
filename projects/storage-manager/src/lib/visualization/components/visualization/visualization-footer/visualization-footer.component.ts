@@ -9,7 +9,8 @@ import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output, input 
 })
 export class VisualizationFooterComponent {
     @Input() public showBaseGrid: boolean = false;
-    @Input() public showViewInformation: boolean = false;
+    @Input() public showSceneInformation: boolean = false;
+    @Input() public showSceneSettings: boolean = false;
 
     @Output() public zoomIn = new EventEmitter<void>();
     @Output() public zoomOut = new EventEmitter<void>();
@@ -22,6 +23,7 @@ export class VisualizationFooterComponent {
     @Output() public containerColorChanged = new EventEmitter<WallTexture>();
     @Output() public baseGridToggled = new EventEmitter<boolean>();
     @Output() public viewInformationToggled = new EventEmitter<boolean>();
+    @Output() public sceneSettingsToggled = new EventEmitter<boolean>();
 
     public containerColor = input<WallTexture>("black");
 
@@ -31,7 +33,12 @@ export class VisualizationFooterComponent {
     }
 
     public toggleViewInformation(): void {
-        const showViewInformation = !this.showViewInformation;
+        const showViewInformation = !this.showSceneInformation;
         this.viewInformationToggled.emit(showViewInformation);
+    }
+
+    public toggleSceneSettings(): void {
+        const showSceneSettings = !this.showSceneSettings;
+        this.sceneSettingsToggled.emit(showSceneSettings);
     }
 }

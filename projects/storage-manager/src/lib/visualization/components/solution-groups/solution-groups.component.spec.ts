@@ -1,23 +1,16 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
-
 import { SolutionGroupsComponent } from './solution-groups.component';
+import { Spectator, createComponentFactory } from '@ngneat/spectator';
 
 describe('SolutionGroupsComponent', () => {
-  let component: SolutionGroupsComponent;
-  let fixture: ComponentFixture<SolutionGroupsComponent>;
+    let spectator: Spectator<SolutionGroupsComponent>;
 
-  beforeEach(async () => {
-    await TestBed.configureTestingModule({
-      imports: [SolutionGroupsComponent]
-    })
-    .compileComponents();
-    
-    fixture = TestBed.createComponent(SolutionGroupsComponent);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
-  });
+    const createComponent = createComponentFactory({
+        component: SolutionGroupsComponent,
+    });
 
-  it('should create', () => {
-    expect(component).toBeTruthy();
-  });
+    beforeEach(() => spectator = createComponent());
+
+    it('should create', () => {
+        expect(spectator.component).toBeTruthy();
+    });
 });

@@ -1,26 +1,16 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
-import defaultImportsConstant from 'src/app/default-imports.constant';
 import { SceneVisualizationComponent } from './scene-visualization.component';
+import { Spectator, createComponentFactory } from '@ngneat/spectator';
 
 describe('SceneVisualizationComponent', () => {
-  let component: SceneVisualizationComponent;
-  let fixture: ComponentFixture<SceneVisualizationComponent>;
+    let spectator: Spectator<SceneVisualizationComponent>;
 
-  beforeEach(async () => {
-    await TestBed.configureTestingModule({
-      imports: [
-        ...defaultImportsConstant
-      ],
-      declarations: [SceneVisualizationComponent]
-    })
-      .compileComponents();
+    const createComponent = createComponentFactory({
+        component: SceneVisualizationComponent,
+    });
 
-    fixture = TestBed.createComponent(SceneVisualizationComponent);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
-  });
+    beforeEach(() => spectator = createComponent());
 
-  it('should create', () => {
-    expect(component).toBeTruthy();
-  });
+    it('should create', () => {
+        expect(spectator.component).toBeTruthy();
+    });
 });

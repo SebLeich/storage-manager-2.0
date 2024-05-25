@@ -1,10 +1,24 @@
-<div class="visualization-wrapper" #visualizationWrapper (mousemove)="onMousemove($event)" (click)="onClick($event)"
-    [ngClass]="{ 'cursor-pointer': !!(hoveredGood$|async) }">
-</div>
+<div cdkDropListGroup class="body fixed-scene-settings-{{displaySceneSettingsDirection()}}">
+    @if(displaySceneSettings() && displaySceneSettingsDirection() !== 'none'){
+    <div class="fixed-scene-settings" cdkDropList [cdkDropListConnectedTo]="[scene]">
+        <app-scene-settings cdkDrag [containerColor]="containerColor()" (containerColorChanged)="containerColorChanged.emit($event)"></app-scene-settings>
+    </div>
+    }
 
-@if(displaySceneInformation()){
-<div @show class="overlay">
-    <app-scene-information [zoomLevel]="zoom$|async"
-        [cameraPosition]="position$|async"></app-scene-information>
+    <div class="visualization-wrapper" cdkDropList #scene="cdkDropList" #visualizationWrapper (mousemove)="onMousemove($event)"
+        (cdkDropListDropped)="test()" (click)="onClick($event)" [ngClass]="{ 'cursor-pointer': !!(hoveredGood$|async) }">
+    </div>
+
+    @if(displaySceneInformation()){
+    <div @show class="overlay">
+        <app-scene-information [zoomLevel]="zoom$|async" [cameraPosition]="position$|async"></app-scene-information>
+    </div>
+    }
+
+    @if(displaySceneSettings() && displaySceneSettingsDirection() === 'none'){
+    <div @show class="overlay" appBoundaryDraggable (onDroppedEdge)="moveSceneSettings($event)" cdkDragBoundary="app-scene-visualization"
+        [autoRenderEdges]="true">
+        <app-scene-settings [containerColor]="containerColor()" (containerColorChanged)="containerColorChanged.emit($event)"></app-scene-settings>
+    </div>
+    }
 </div>
-}

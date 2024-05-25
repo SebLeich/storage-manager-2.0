@@ -54,7 +54,8 @@
         "fastForward": "Vorwärtsspulen (letzter Schritt)",
         "fastRewind": "Rückwärtsspulen (erster Schritt)",
         "hideBaseGrid": "Grid ausblenden",
-        "hideViewInformation": "Ansichtsinformationen ausblenden",
+        "hideSceneSettings": "Szeneneinstellungen ausblenden",
+        "hideSceneInformation": "Szeneneinstellungen ausblenden",
         "moveContainerDown": "Container nach unten bewegen",
         "moveContainerLeft": "Container nach links bewegen",
         "moveContainerRight": "Container nach rechts bewegen",
@@ -66,8 +67,10 @@
         "playAnimation": "Animation abspielen",
         "previousStep": "Vorheriger Schritt",
         "resetView": "Ansicht zurücksetzen",
+        "sceneSettings": "Szeneneinstellungen",
         "showBaseGrid": "Grid anzeigen",
-        "showViewInformation": "Ansichtsinformationen anzeigen",
+        "showSceneSettings": "Szeneneinstellungen anzeigen",
+        "showSceneInformation": "Szeneninformationen anzeigen",
         "stopAnimation": "Animation stoppen"
     }
 }
