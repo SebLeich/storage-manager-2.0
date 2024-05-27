@@ -1,7 +1,8 @@
 <div cdkDropListGroup class="body fixed-scene-settings-{{displaySceneSettingsDirection()}}">
     @if(displaySceneSettings() && displaySceneSettingsDirection() !== 'none'){
     <div class="fixed-scene-settings" cdkDropList [cdkDropListConnectedTo]="[scene]">
-        <app-scene-settings cdkDrag [containerColor]="containerColor()" (containerColorChanged)="containerColorChanged.emit($event)"></app-scene-settings>
+        <app-scene-settings cdkDrag [containerColor]="containerColor()" [orientation]="orientation()"
+            (containerColorChanged)="containerColorChanged.emit($event)"></app-scene-settings>
     </div>
     }
 
@@ -18,7 +19,8 @@
     @if(displaySceneSettings() && displaySceneSettingsDirection() === 'none'){
     <div @show class="overlay" appBoundaryDraggable (onDroppedEdge)="moveSceneSettings($event)" cdkDragBoundary="app-scene-visualization"
         [autoRenderEdges]="true">
-        <app-scene-settings [containerColor]="containerColor()" (containerColorChanged)="containerColorChanged.emit($event)"></app-scene-settings>
+        <app-scene-settings [containerColor]="containerColor()" [orientation]="orientation()"
+            (containerColorChanged)="containerColorChanged.emit($event)"></app-scene-settings>
     </div>
     }
 </div>

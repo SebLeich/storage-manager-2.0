@@ -12,7 +12,9 @@
     position: relative;
 
     .fixed-scene-settings {
-        max-width: 300px;
+        color: $white;
+        background-color: $dark-slate-grey;
+        border-radius: 3px;
     }
 
     &.fixed-scene-settings-left {

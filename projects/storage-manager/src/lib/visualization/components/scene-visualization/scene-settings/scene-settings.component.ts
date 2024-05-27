@@ -10,5 +10,6 @@ import { ChangeDetectionStrategy, Component, EventEmitter, Output, input } from 
 export class SceneSettingsComponent {
     @Output() public containerColorChanged = new EventEmitter<WallTexture>();
 
+    public orientation = input<'horizontal' | 'vertical'>('vertical');
     public containerColor = input<WallTexture>("black");
 }

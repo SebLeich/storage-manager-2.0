@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, DestroyRef, ElementRef, EventEmitter, Inject, Input, OnChanges, OnInit, Optional, Output, SimpleChanges, ViewChild, input, signal } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, DestroyRef, ElementRef, EventEmitter, Inject, Input, OnChanges, OnInit, Optional, Output, SimpleChanges, ViewChild, computed, input, signal } from '@angular/core';
 import { BehaviorSubject, debounceTime, firstValueFrom, fromEvent, interval, map, ReplaySubject, switchMap, takeWhile, timer } from 'rxjs';
 import { Box3, LineSegments, Mesh, PerspectiveCamera, Scene, Vector3 } from 'three';
 import { MeshBasicMaterial } from 'three';
@@ -37,6 +37,10 @@ export class SceneVisualizationComponent implements OnChanges, OnInit {
 
     public displaySceneSettings = input<boolean>(true);
     public displaySceneSettingsDirection = signal<'top' | 'right' | 'bottom' | 'left' | 'none'>('none');
+    public orientation = computed(() => {
+        const direction = this.displaySceneSettingsDirection();
+        return direction === 'top' || direction === 'bottom' ? 'horizontal' : 'vertical';
+    });
 
     public containerColor = input<WallTexture>("black");
 

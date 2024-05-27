@@ -141,15 +141,6 @@
                 "deploy": {
                     "builder": "angular-cli-ghpages:deploy"
                 },
-                "lint": {
-                    "builder": "@angular-eslint/builder:lint",
-                    "options": {
-                        "lintFilePatterns": [
-                            "src/**/*.ts",
-                            "src/**/*.html"
-                        ]
-                    }
-                },
                 "cypress-run": {
                     "builder": "@cypress/schematic:cypress",
                     "options": {
