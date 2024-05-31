@@ -1,12 +1,24 @@
 {
+    "colors": {
+        "black": "Schwarz",
+        "blue": "Blau",
+        "cyan": "Cyan",
+        "green": "Grün",
+        "magenta": "Magenta",
+        "red": "Rot",
+        "white": "Weiß",
+        "yellow": "Gelb"
+    },
     "defaults": {
         "appName": "Storage Manager",
         "autoZoom": "Auto Zoom",
+        "backgroundColor": "Hintergrundfarbe",
         "blocked": "Belegt",
         "calculatedAt": "Berechnet am {{date}}",
         "calculationSteps": "Berechnungsschritte",
         "cameraPosition": "Kameraposition",
         "container": "Container",
+        "containerColor": "Containerfarbe",
         "download": "Download",
         "error": {
             "singular": "Ein Fehler",
@@ -69,6 +81,7 @@
         "resetView": "Ansicht zurücksetzen",
         "sceneSettings": "Szeneneinstellungen",
         "showBaseGrid": "Grid anzeigen",
+        "showContainerUnloadingArrow": "Container Entladepfeil anzeigen",
         "showSceneSettings": "Szeneneinstellungen anzeigen",
         "showSceneInformation": "Szeneninformationen anzeigen",
         "stopAnimation": "Animation stoppen"

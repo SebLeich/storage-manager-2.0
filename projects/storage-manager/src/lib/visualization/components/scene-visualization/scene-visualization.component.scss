@@ -12,9 +12,17 @@
     position: relative;
 
     .fixed-scene-settings {
+        position: relative;
         color: $white;
         background-color: $dark-slate-grey;
         border-radius: 3px;
+
+        .close-control {
+            cursor: pointer;
+            position: absolute;
+            top: .5rem;
+            right: .5rem;
+        }
     }
 
     &.fixed-scene-settings-left {

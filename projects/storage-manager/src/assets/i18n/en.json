@@ -1,7 +1,18 @@
 {
+    "colors": {
+        "black": "Black",
+        "blue": "Blue",
+        "cyan": "Cyan",
+        "green": "Green",
+        "magenta": "Magenta",
+        "red": "Red",
+        "white": "White",
+        "yellow": "Yellow"
+    },
     "defaults": {
         "appName": "Storage Manager",
         "autoZoom": "Auto Zoom",
+        "backgroundColor": "Background color",
         "blocked": "Blocked",
         "calculatedAt": "Calculated at {{date}}",
         "calculationSteps": "Calculation Steps",
@@ -73,6 +84,7 @@
         "resetView": "Reset view",
         "sceneSettings": "Scene settings",
         "showBaseGrid": "Show base grid",
+        "showContainerUnloadingArrow": "Show container unloading arrow",
         "showSceneInformation": "Show scene information",
         "showSceneSettings": "Show scene settings",
         "stopAnimation": "Stop animation"

@@ -35,6 +35,11 @@
         opacity: 1;
         transform: all .5s ease-in-out;
     }
+
+    &.is-active {
+        opacity: 1;
+        color: $active;
+    }
 }
 
 .orientation-grid {

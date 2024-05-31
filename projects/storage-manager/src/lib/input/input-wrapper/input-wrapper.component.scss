@@ -2,19 +2,24 @@
 
 :host {
     .body {
+        display: flex !important;
+        width: 100% !important;
+        align-items: center;
         position: relative;
         overflow: hidden;
         width: fit-content;
 
-        .label {
-            color: $slate-grey;
-            position: absolute;
-            font-size: 0.5rem;
-            top: .1rem;
-            left: .5rem;
-            line-height: 1rem;
-            cursor: default;
-            pointer-events: none;
+        &:not(.is-checkbox, .is-color) {
+            label {
+                color: $slate-grey;
+                position: absolute;
+                font-size: 0.5rem;
+                top: .1rem;
+                left: .5rem;
+                line-height: 1rem;
+                cursor: default;
+                pointer-events: none;
+            }
         }
 
         ::ng-deep {
@@ -23,6 +28,89 @@
                 padding: 1rem .25rem .25rem;
                 background-color: #fafafa;
                 border-radius: 3px;
+            }
+        }
+
+        &.is-checkbox {
+            cursor: pointer;
+            user-select: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            .switch {
+                position: relative;
+                display: inline-block;
+                width: 2rem;
+                height: calc(1rem + 4px);
+
+                .slider {
+                    display: block;
+                    width: 2rem;
+                    height: calc(1rem + 4px);
+                    position: relative;
+                    cursor: pointer;
+                    top: 0;
+                    left: 0;
+                    right: 0;
+                    bottom: 0;
+                    background-color: #ccc;
+                    transition: 0.4s;
+                    border-radius: 0.2rem;
+                }
+            }
+
+            label {
+                cursor: pointer !important;
+                margin-right: .5rem;
+                flex: 1;
+            }
+
+            ::ng-deep {
+                input {
+                    display: none;
+                    width: 0;
+                    height: 0;
+
+                    &:checked~.switch .slider {
+                        background-color: $active !important;
+
+                        &:before {
+                            -webkit-transform: translateX(calc(1rem - 4px));
+                            -ms-transform: translateX(calc(1rem - 4px));
+                            transform: translateX(calc(1rem - 4px));
+                        }
+                    }
+                }
+            }
+
+            .slider:before {
+                position: absolute;
+                content: "";
+                height: calc(1rem - 4px);
+                width: calc(1rem - 4px);
+                left: 4px;
+                bottom: 4px;
+                background-color: white;
+                transition: 0.2s;
+                border-radius: 0.2rem;
+            }
+        }
+
+        &.is-color {
+            label {
+                flex: 1;
+            }
+
+            ::ng-deep {
+                input {
+                    height: 1.25rem;
+                    width: 2rem;
+                    border: none;
+                    outline: none;
+                    padding: 0px;
+                    background-color: transparent;
+                }
             }
         }
     }

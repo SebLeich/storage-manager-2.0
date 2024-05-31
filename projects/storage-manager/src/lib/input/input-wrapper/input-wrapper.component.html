@@ -1,8 +1,16 @@
-<div class="body">
+<div class="body" [ngClass]="{
+    'is-checkbox': isCheckbox(),
+    'is-color': isColor()
+    }" (click)="onClick($event)">
+
     @if(label() != null){
-    <span class="label" (click)="labelClicked()">{{label()}}</span>
+    <label (click)="labelClicked()">{{label()}}</label>
     }
 
     <ng-content></ng-content>
+
+    <div *ngIf="isCheckbox()" class="switch">
+        <span class="slider"></span>
+    </div>
 
 </div>

@@ -14,5 +14,18 @@
             </select>
         </app-input-wrapper>
 
+        <app-input-wrapper appearance="outline" [isCheckbox]="true" [label]="'visualization.showBaseGrid'|translation|async">
+            <input [value]="showBaseGrid()" (change)="showBaseGridChanged.emit($any($event.target).checked)" type="checkbox" />
+        </app-input-wrapper>
+
+        <app-input-wrapper appearance="outline" [isCheckbox]="true" [label]="'visualization.showContainerUnloadingArrow'|translation|async">
+            <input [value]="showContainerUnloadingArrow()" (change)="showContainerUnloadingArrowChanged.emit($any($event.target).checked)"
+                type="checkbox" />
+        </app-input-wrapper>
+
+        <app-input-wrapper appearance="outline" [isColor]="true" [label]="'defaults.backgroundColor'|translation|async">
+            <input [value]="backgroundColor()" (change)="backgroundColorChanged.emit($any($event.target).value)" type="color" />
+        </app-input-wrapper>
+
     </div>
 </div>

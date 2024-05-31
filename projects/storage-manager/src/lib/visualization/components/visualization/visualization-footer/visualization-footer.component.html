@@ -21,7 +21,7 @@
     <mat-icon class="secondary">south_east</mat-icon>
 </div>
 
-<mat-icon class="control margin-l" [matMenuTriggerFor]="menu">settings</mat-icon>
+<mat-icon class="control margin-l" [class.is-active]="showSceneSettings" (click)="toggleSceneSettings()">settings</mat-icon>
 
 <mat-menu #menu="matMenu">
     <button mat-menu-item (click)="toggleViewInformation()">{{'visualization.' + (showSceneInformation? 'hideSceneInformation':

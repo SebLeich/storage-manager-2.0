@@ -20,9 +20,11 @@ import { WallTexture } from '@/lib/storage-manager/types/wall-texture.type';
     animations: [fadeInAnimation]
 })
 export class VisualizationComponent implements OnInit {
+    public backgroundColor = signal<string>('#ffffff');
     public displaySceneInformation = signal<boolean>(false);
     public displaySceneSettings = signal<boolean>(true);
     public displayBaseGrid = signal<boolean>(true);
+    public displayContainerUnloadingArrow = signal<boolean>(true);
     public animationStepIndex = signal<number | null>(null);
     public intervalSpeed = signal<number>(1000);
     public playStatus = signal<'playing' | 'paused' | 'stopped'>('stopped');
@@ -38,43 +40,44 @@ export class VisualizationComponent implements OnInit {
         toObservable(this.animationStepIndex),
         toObservable(this.labelObjectSites),
         toObservable(this.wallObjectSites),
-        toObservable(this.wallTexture)
-    ])
-        .pipe(
-            scan(
-                (scene: Scene, [solutionWrapper, displayBaseGrid, animationStepIndex, labelObjectSites, wallObjectSites, wallTexture]) => {
-                    if (solutionWrapper) {
-                        if (animationStepIndex === null) this._visualizationService.configureSolutionScene(
-                            solutionWrapper.solution,
-                            scene,
-                            solutionWrapper.groups,
-                            '#f8f8f8',
-                            displayBaseGrid,
-                            true,
-                            labelObjectSites,
-                            wallObjectSites,
-                            wallTexture
-                        );
-                        else this._visualizationService.configureSolutionStepScene(
-                            scene,
-                            solutionWrapper.solution.container,
-                            solutionWrapper.groups,
-                            solutionWrapper.calculationSteps,
-                            animationStepIndex,
-                            undefined,
-                            true,
-                            true,
-                            labelObjectSites,
-                            wallObjectSites,
-                            wallTexture
-                        );
-                    }
+        toObservable(this.wallTexture),
+        toObservable(this.backgroundColor),
+        toObservable(this.displayContainerUnloadingArrow)
+    ]).pipe(
+        scan(
+            (scene: Scene, [solutionWrapper, displayBaseGrid, animationStepIndex, labelObjectSites, wallObjectSites, wallTexture, backgroundColor, displayContainerUnloadingArrow]) => {
+                if (solutionWrapper) {
+                    if (animationStepIndex === null) this._visualizationService.configureSolutionScene(
+                        solutionWrapper.solution,
+                        scene,
+                        solutionWrapper.groups,
+                        backgroundColor,
+                        displayBaseGrid,
+                        displayContainerUnloadingArrow,
+                        labelObjectSites,
+                        wallObjectSites,
+                        wallTexture
+                    );
+                    else this._visualizationService.configureSolutionStepScene(
+                        scene,
+                        solutionWrapper.solution.container,
+                        solutionWrapper.groups,
+                        solutionWrapper.calculationSteps,
+                        animationStepIndex,
+                        backgroundColor,
+                        displayBaseGrid,
+                        displayContainerUnloadingArrow,
+                        labelObjectSites,
+                        wallObjectSites,
+                        wallTexture
+                    );
+                }
 
-                    return scene;
-                },
-                new Scene()
-            )
-        );
+                return scene;
+            },
+            new Scene()
+        )
+    );
 
     private _animationInterval: Subscription | null = null;
 
