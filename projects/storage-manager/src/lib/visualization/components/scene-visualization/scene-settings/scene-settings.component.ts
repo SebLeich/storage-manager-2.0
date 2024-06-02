@@ -9,6 +9,7 @@ import { ChangeDetectionStrategy, Component, EventEmitter, Output, input } from 
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SceneSettingsComponent {
+    @Output() public visibilityChanged = new EventEmitter<boolean>();
     @Output() public containerColorChanged = new EventEmitter<WallTexture>();
     @Output() public showBaseGridChanged = new EventEmitter<boolean>();
     @Output() public showContainerUnloadingArrowChanged = new EventEmitter<boolean>();

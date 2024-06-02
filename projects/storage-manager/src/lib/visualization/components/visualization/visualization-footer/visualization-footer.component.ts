@@ -20,10 +20,10 @@ export class VisualizationFooterComponent {
     @Output() public moveDown = new EventEmitter<void>();
     @Output() public reset = new EventEmitter<void>();
     @Output() public optimizeCameraPosition = new EventEmitter<void>();
-    @Output() public containerColorChanged = new EventEmitter<WallTexture>();
     @Output() public baseGridToggled = new EventEmitter<boolean>();
     @Output() public viewInformationToggled = new EventEmitter<boolean>();
     @Output() public sceneSettingsToggled = new EventEmitter<boolean>();
+    @Output() public downloadSolution = new EventEmitter<'json' | 'xml'>();
 
     public containerColor = input<WallTexture>("black");
 

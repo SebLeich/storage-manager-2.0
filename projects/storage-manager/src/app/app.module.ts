@@ -52,7 +52,7 @@ import { StorageManagerModule } from 'src/lib/storage-manager/storage-manager.mo
 import { RouterModule, Routes } from '@angular/router';
 import { ErrorComponent } from 'src/lib/shared/components/error/error.component';
 import { GoodPreviewComponent, GoodsPanelComponent, GroupsPanelComponent } from '@smgr/components';
-import { AboutComponent, CalculationComponent, LocalDataComponent, VisualizerComponent } from '@main-components';
+import { AboutComponent, CalculationComponent, LocalDataComponent } from '@main-components';
 import { APP_BASE_HREF, PlatformLocation } from '@angular/common';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 
@@ -76,7 +76,6 @@ const routes: Routes = [
     declarations: [
         AppComponent,
         NavbarComponent,
-        VisualizerComponent,
         GoodPreviewComponent,
         EditDataDialogComponent,
         SolutionPreviewComponent,

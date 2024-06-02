@@ -1,5 +1,7 @@
 <div class="general-options-wrapper">
-    <mat-icon fontIcon="download" class="button download" [matTooltip]="('defaults.download'|translation|async) ?? ''"></mat-icon>
+    <mat-icon [matMenuTriggerFor]="downloadMenu" fontIcon="download" class="button download"
+        [matTooltip]="('defaults.download'|translation|async) ?? ''"></mat-icon>
+        
     <mat-icon fontIcon="verified" class="button validation" [matTooltip]="('defaults.validation'|translation|async) ?? ''"></mat-icon>
 </div>
 
@@ -23,13 +25,6 @@
 
 <mat-icon class="control margin-l" [class.is-active]="showSceneSettings" (click)="toggleSceneSettings()">settings</mat-icon>
 
-<mat-menu #menu="matMenu">
-    <button mat-menu-item (click)="toggleViewInformation()">{{'visualization.' + (showSceneInformation? 'hideSceneInformation':
-        'showSceneInformation')|unsafeTranslation|async}}</button>
-
-    <button mat-menu-item (click)="toggleSceneSettings()">{{'visualization.' + (showSceneSettings? 'hideSceneSettings':
-        'showSceneSettings')|unsafeTranslation|async}}</button>
-
-    <button mat-menu-item (click)="toggleBaseGrid()">{{'visualization.' + (showBaseGrid? 'hideBaseGrid':
-        'showBaseGrid')|unsafeTranslation|async}}</button>
+<mat-menu #downloadMenu="matMenu">
+    <button mat-menu-item (click)="downloadSolution.emit('json')">Download JSON</button>
 </mat-menu>

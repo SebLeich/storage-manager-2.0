@@ -1,3 +1,4 @@
+@import 'box-shadow';
 @import 'colors';
 
 :host {
@@ -52,11 +53,15 @@
     }
 
     .overlay {
+        @include box-shadow;
         position: fixed;
         top: 1rem;
         left: 1rem;
-        background-color: $white;
+        background-color: $dark-slate-grey;
+        color: $white;
         border-radius: 3px;
         padding: .5rem;
+        max-height: 200px;
+        overflow-y: auto;
     }
 }

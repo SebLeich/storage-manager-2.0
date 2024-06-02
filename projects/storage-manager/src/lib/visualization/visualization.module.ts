@@ -28,6 +28,7 @@ import { DragDropModule } from '@angular/cdk/drag-drop';
 import { InputModule } from '../input/input.module';
 import { BoundaryDraggableDirective } from './directives/boundary-draggable.directive';
 import { ObjectSiteSelectionComponent } from './components/scene-visualization/scene-settings/object-site-selection/object-site-selection.component';
+import { DownloadModule } from '../download/download.module';
 
 
 
@@ -48,6 +49,7 @@ import { ObjectSiteSelectionComponent } from './components/scene-visualization/s
     ],
     imports: [
         CommonModule,
+        DownloadModule,
         DragDropModule,
         EffectsModule.forFeature([VisualizationEffects]),
         InputModule,

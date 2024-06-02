@@ -2,9 +2,9 @@
     @if(displaySceneSettings() && displaySceneSettingsDirection() !== 'none'){
     <div class="fixed-scene-settings" cdkDropList [cdkDropListConnectedTo]="[scene]">
         <mat-icon class="close-control" (click)="displaySceneInformationChanged.emit(false)">clear</mat-icon>
-        <app-scene-settings cdkDrag [containerColor]="containerColor()" [orientation]="orientation()" [showBaseGrid]="showBaseGrid()"
-            (containerColorChanged)="containerColorChanged.emit($event)" (showBaseGridChanged)="showBaseGridChanged.emit($event)"
-            [showContainerUnloadingArrow]="showContainerUnloadingArrow()"
+        <app-scene-settings cdkDrag (visibilityChanged)="sceneSettingsToggled.emit($event)" [containerColor]="containerColor()"
+            [orientation]="orientation()" [showBaseGrid]="showBaseGrid()" (containerColorChanged)="containerColorChanged.emit($event)"
+            (showBaseGridChanged)="showBaseGridChanged.emit($event)" [showContainerUnloadingArrow]="showContainerUnloadingArrow()"
             (showContainerUnloadingArrowChanged)="showContainerUnloadingArrowChanged.emit($event)" [backgroundColor]="backgroundColor()"
             (backgroundColorChanged)="backgroundColorChanged.emit($event)" [wallObjectSites]="wallObjectSites()"
             (wallObjectSitesChanged)="wallObjectSitesChanged.emit($event)" [showContainerEdges]="showContainerEdges()"
@@ -27,9 +27,9 @@
     @if(displaySceneSettings() && displaySceneSettingsDirection() === 'none'){
     <div @show class="overlay" appBoundaryDraggable (onDroppedEdge)="moveSceneSettings($event)" cdkDragBoundary="app-scene-visualization"
         [autoRenderEdges]="true">
-        <app-scene-settings #sceneSettings [containerColor]="containerColor()" [orientation]="orientation()" [showBaseGrid]="showBaseGrid()"
-            (containerColorChanged)="containerColorChanged.emit($event)" (showBaseGridChanged)="showBaseGridChanged.emit($event)"
-            [showContainerUnloadingArrow]="showContainerUnloadingArrow()"
+        <app-scene-settings #sceneSettings (visibilityChanged)="sceneSettingsToggled.emit($event)" [containerColor]="containerColor()"
+            [orientation]="orientation()" [showBaseGrid]="showBaseGrid()" (containerColorChanged)="containerColorChanged.emit($event)"
+            (showBaseGridChanged)="showBaseGridChanged.emit($event)" [showContainerUnloadingArrow]="showContainerUnloadingArrow()"
             (showContainerUnloadingArrowChanged)="showContainerUnloadingArrowChanged.emit($event)" [backgroundColor]="backgroundColor()"
             (backgroundColorChanged)="backgroundColorChanged.emit($event)" [wallObjectSites]="wallObjectSites()"
             (wallObjectSitesChanged)="wallObjectSitesChanged.emit($event)" [showContainerEdges]="showContainerEdges()"

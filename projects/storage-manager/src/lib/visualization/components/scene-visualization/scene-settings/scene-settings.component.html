@@ -1,6 +1,8 @@
 <div class="body">
     <h3>{{'visualization.sceneSettings'|translation|async}}</h3>
 
+    <mat-icon class="close-control" (click)="visibilityChanged.emit(false)">clear</mat-icon>
+
     <div class="content {{orientation()}}">
 
         @if(orientation() === 'vertical'){

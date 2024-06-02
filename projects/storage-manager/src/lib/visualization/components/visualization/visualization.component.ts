@@ -10,6 +10,7 @@ import { fadeInAnimation } from '@/lib/shared/animations/fade-in.animation';
 import { takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop';
 import { ObjectSite } from '@/lib/storage-manager/types/object-site.type';
 import { WallTexture } from '@/lib/storage-manager/types/wall-texture.type';
+import { DownloadService } from '@/lib/download/services/download/download.service';
 
 @Component({
     selector: 'app-visualization',
@@ -92,8 +93,18 @@ export class VisualizationComponent implements OnInit {
     constructor(
         private _store: Store,
         private _visualizationService: VisualizationService,
-        private _destroyRef: DestroyRef
+        private _destroyRef: DestroyRef,
+        private _downloadService: DownloadService
     ) { }
+
+    public async downloadSolution(format: 'json' | 'xml' = 'json'): Promise<void> {
+        const solutionWrapper = await firstValueFrom(this.solutionWrapper$);
+        if(!solutionWrapper) return;
+
+        if (format === 'json') {
+            this._downloadService.downloadJSONContentsAsFile(solutionWrapper, 'solution.json');
+        }
+    }
 
     public async fastForward(): Promise<void> {
         const solutionWrapper = await firstValueFrom(this.solutionWrapper$);

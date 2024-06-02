@@ -29,6 +29,7 @@ export class SceneVisualizationComponent implements OnChanges, OnInit {
     @Input() public responsive = true;
     @Input() public interactable = true;
 
+    @Output() public sceneSettingsToggled = new EventEmitter<boolean>();
     @Output() public sceneRendered = new EventEmitter<{ canvas: HTMLCanvasElement }>();
     @Output() public hoveredGood = new EventEmitter<string | null>();
     @Output() public selectGood = new EventEmitter<string | null>();
