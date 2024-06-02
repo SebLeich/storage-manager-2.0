@@ -25,6 +25,8 @@ export class VisualizationComponent implements OnInit {
     public displaySceneSettings = signal<boolean>(true);
     public displayBaseGrid = signal<boolean>(true);
     public displayContainerUnloadingArrow = signal<boolean>(true);
+    public displayContainerEdges = signal<boolean>(false);
+    public displayGoodEdges = signal<boolean>(false);
     public animationStepIndex = signal<number | null>(null);
     public intervalSpeed = signal<number>(1000);
     public playStatus = signal<'playing' | 'paused' | 'stopped'>('stopped');
@@ -42,10 +44,12 @@ export class VisualizationComponent implements OnInit {
         toObservable(this.wallObjectSites),
         toObservable(this.wallTexture),
         toObservable(this.backgroundColor),
-        toObservable(this.displayContainerUnloadingArrow)
+        toObservable(this.displayContainerUnloadingArrow),
+        toObservable(this.displayContainerEdges),
+        toObservable(this.displayGoodEdges)
     ]).pipe(
         scan(
-            (scene: Scene, [solutionWrapper, displayBaseGrid, animationStepIndex, labelObjectSites, wallObjectSites, wallTexture, backgroundColor, displayContainerUnloadingArrow]) => {
+            (scene: Scene, [solutionWrapper, displayBaseGrid, animationStepIndex, labelObjectSites, wallObjectSites, wallTexture, backgroundColor, displayContainerUnloadingArrow, displayContainerEdges, displayGoodEdges]) => {
                 if (solutionWrapper) {
                     if (animationStepIndex === null) this._visualizationService.configureSolutionScene(
                         solutionWrapper.solution,
@@ -56,7 +60,9 @@ export class VisualizationComponent implements OnInit {
                         displayContainerUnloadingArrow,
                         labelObjectSites,
                         wallObjectSites,
-                        wallTexture
+                        wallTexture,
+                        displayContainerEdges,
+                        displayGoodEdges
                     );
                     else this._visualizationService.configureSolutionStepScene(
                         scene,
@@ -69,7 +75,9 @@ export class VisualizationComponent implements OnInit {
                         displayContainerUnloadingArrow,
                         labelObjectSites,
                         wallObjectSites,
-                        wallTexture
+                        wallTexture,
+                        displayContainerEdges,
+                        displayGoodEdges
                     );
                 }
 

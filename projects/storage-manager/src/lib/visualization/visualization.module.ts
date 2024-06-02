@@ -27,6 +27,7 @@ import { SceneSettingsComponent } from './components/scene-visualization/scene-s
 import { DragDropModule } from '@angular/cdk/drag-drop';
 import { InputModule } from '../input/input.module';
 import { BoundaryDraggableDirective } from './directives/boundary-draggable.directive';
+import { ObjectSiteSelectionComponent } from './components/scene-visualization/scene-settings/object-site-selection/object-site-selection.component';
 
 
 
@@ -35,6 +36,7 @@ import { BoundaryDraggableDirective } from './directives/boundary-draggable.dire
         BoundaryDraggableDirective,
         CalculationStepsComponent,
         ContainerPreviewComponent,
+        ObjectSiteSelectionComponent,
         SceneInformationComponent,
         SceneSettingsComponent,
         SceneVisualizationComponent,

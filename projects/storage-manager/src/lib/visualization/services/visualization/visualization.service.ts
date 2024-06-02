@@ -3,6 +3,7 @@ import { IPosition } from '@smgr/interfaces';
 import { defaultGoodEdgeColor, infinityReplacement } from 'src/app/globals';
 import getContainerPositionSharedMethods from 'src/app/methods/get-container-position.shared-methods';
 import { ArrowHelper, BoxGeometry, CanvasTexture, Color, DoubleSide, EdgesGeometry, GridHelper, LineBasicMaterial, LineSegments, Mesh, MeshBasicMaterial, PlaneGeometry, Scene, Texture, TextureLoader, Vector3 } from 'three';
+import { RoundedBoxGeometry } from 'three/examples/jsm/geometries/RoundedBoxGeometry';
 import { Solution } from '@/lib/storage-manager/types/solution.type';
 import { Group } from '@/lib/storage-manager/types/group.type';
 import { CalculationStep } from '@/lib/storage-manager/types/calculation-step.type';
@@ -39,7 +40,9 @@ export class VisualizationService {
         addUnloadingArrow = true,
         labelPositions: ObjectSite[] = ['right'],
         wallPositions: ObjectSite[] = ['bottom'],
-        wallTexture: WallTexture = 'yellow'
+        wallTexture: WallTexture = 'yellow',
+        displayContainerEdges = true,
+        displayGoodEdges = true
     ) {
         scene.clear();
 
@@ -49,10 +52,11 @@ export class VisualizationService {
                 scene.background = new Color(typeof fillColor === 'string' ? fillColor : 'rgb(255,255,255)');
             }
 
-            const containerPosition = getContainerPositionSharedMethods(solution.container),
-                { edges } = VisualizationService.generateOutlinedBoxMesh(containerPosition, 'container');
-
-            scene.add(edges);
+            const containerPosition = getContainerPositionSharedMethods(solution.container);
+            if (displayContainerEdges) {
+                const { edges } = VisualizationService.generateOutlinedBoxMesh({ ...containerPosition, id: 'CT' }, 'container');
+                scene.add(edges);
+            }
 
             for (const good of solution.container.goods) {
                 const position = getContainerPositionSharedMethods(good);
@@ -62,7 +66,10 @@ export class VisualizationService {
                 goodResult.mesh.userData['goodId'] = good.id;
                 goodResult.mesh.userData['groupId'] = good.group;
                 goodMeshes.push({ goodId: good.id, mesh: goodResult.mesh });
-                scene.add(goodResult.edges, goodResult.mesh);
+                scene.add(goodResult.mesh);
+                if (displayGoodEdges) {
+                    scene.add(goodResult.edges);
+                }
 
                 const relativePosition = VisualizationService.calculateRelativePosition(position, containerPosition);
                 const labels = VisualizationService.getGoodLabels(good, relativePosition, group, labelPositions);
@@ -76,7 +83,7 @@ export class VisualizationService {
             if (addUnloadingArrow) {
                 scene.add(VisualizationService.getContainerUnloadingArrow(solution.container.length, solution.container.height));
             }
-            
+
             const map = new TextureLoader().load(`assets/textures/container_${wallTexture}.jpg`);
             const walls = VisualizationService.getContainerWalls(containerPosition, map, wallPositions);
             walls.length > 0 && scene.add(...walls);
@@ -96,7 +103,9 @@ export class VisualizationService {
         addUnloadingArrow = true,
         labelPositions: ObjectSite[] = ['right'],
         wallPositions: ObjectSite[] = ['bottom'],
-        wallTexture: WallTexture = 'yellow'
+        wallTexture: WallTexture = 'yellow',
+        displayContainerEdges = true,
+        displayGoodEdges = true
     ) {
         scene.clear();
 
@@ -104,10 +113,11 @@ export class VisualizationService {
             scene.background = new Color(typeof fillColor === 'string' ? fillColor : 'rgb(255,255,255)');
         }
 
-        const containerPosition = ThreeDCalculationService.calculateSpatialPosition(container),
-            containerResult = VisualizationService.generateOutlinedBoxMesh({ ...containerPosition, id: 'CT' }, 'container');
-
-        scene.add(containerResult.edges);
+        const containerPosition = ThreeDCalculationService.calculateSpatialPosition(container);
+        if (displayContainerEdges) {
+            const { edges } = VisualizationService.generateOutlinedBoxMesh({ ...containerPosition, id: 'CT' }, 'container');
+            scene.add(edges);
+        }
 
         const appliedSteps = steps.slice(0, stepIndex),
             lastStep = steps[stepIndex],
@@ -140,8 +150,10 @@ export class VisualizationService {
                 group = groups.find(group => group.id === position.groupId);
 
             const { edges, mesh } = VisualizationService.generateFilledBoxMesh({ ...spatial, id: `${position.goodId}` }, 'good', containerPosition);
-
-            scene.add(edges, mesh);
+            scene.add(mesh);
+            if (displayGoodEdges) {
+                scene.add(edges);
+            }
 
             const relativePosition = VisualizationService.calculateRelativePosition(position, containerPosition);
             const labels = VisualizationService.getGoodLabels({ ...spatial, desc: label }, relativePosition, group, labelPositions);
@@ -294,7 +306,7 @@ export class VisualizationService {
         borderColor: string = defaultGoodEdgeColor,
         borderWidth = 1
     ) {
-        const geometry = new BoxGeometry(position.width, position.height, position.length === Infinity ? infinityReplacement : position.length, 4, 4, 4),
+        const geometry = new RoundedBoxGeometry(position.width, position.height, position.length === Infinity ? infinityReplacement : position.length, 4, 10),
             texture = new TextureLoader().load('assets/textures/cardboard.jpg');
 
         const material = new MeshBasicMaterial({ map: texture });

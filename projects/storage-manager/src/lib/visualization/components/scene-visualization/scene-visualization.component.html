@@ -6,7 +6,11 @@
             (containerColorChanged)="containerColorChanged.emit($event)" (showBaseGridChanged)="showBaseGridChanged.emit($event)"
             [showContainerUnloadingArrow]="showContainerUnloadingArrow()"
             (showContainerUnloadingArrowChanged)="showContainerUnloadingArrowChanged.emit($event)" [backgroundColor]="backgroundColor()"
-            (backgroundColorChanged)="backgroundColorChanged.emit($event)"></app-scene-settings>
+            (backgroundColorChanged)="backgroundColorChanged.emit($event)" [wallObjectSites]="wallObjectSites()"
+            (wallObjectSitesChanged)="wallObjectSitesChanged.emit($event)" [showContainerEdges]="showContainerEdges()"
+            (showContainerEdgesChanged)="showContainerEdgesChanged.emit($event)" [showGoodEdges]="showGoodEdges()"
+            (showGoodEdgesChanged)="showGoodEdgesChanged.emit($event)" [goodLabelObjectSites]="goodLabelObjectSites()"
+            (goodLabelObjectSitesChanged)="goodLabelObjectSitesChanged.emit($event)"></app-scene-settings>
     </div>
     }
 
@@ -23,11 +27,15 @@
     @if(displaySceneSettings() && displaySceneSettingsDirection() === 'none'){
     <div @show class="overlay" appBoundaryDraggable (onDroppedEdge)="moveSceneSettings($event)" cdkDragBoundary="app-scene-visualization"
         [autoRenderEdges]="true">
-        <app-scene-settings [containerColor]="containerColor()" [orientation]="orientation()" [showBaseGrid]="showBaseGrid()"
+        <app-scene-settings #sceneSettings [containerColor]="containerColor()" [orientation]="orientation()" [showBaseGrid]="showBaseGrid()"
             (containerColorChanged)="containerColorChanged.emit($event)" (showBaseGridChanged)="showBaseGridChanged.emit($event)"
             [showContainerUnloadingArrow]="showContainerUnloadingArrow()"
             (showContainerUnloadingArrowChanged)="showContainerUnloadingArrowChanged.emit($event)" [backgroundColor]="backgroundColor()"
-            (backgroundColorChanged)="backgroundColorChanged.emit($event)"></app-scene-settings>
+            (backgroundColorChanged)="backgroundColorChanged.emit($event)" [wallObjectSites]="wallObjectSites()"
+            (wallObjectSitesChanged)="wallObjectSitesChanged.emit($event)" [showContainerEdges]="showContainerEdges()"
+            (showContainerEdgesChanged)="showContainerEdgesChanged.emit($event)" [showGoodEdges]="showGoodEdges()"
+            (showGoodEdgesChanged)="showGoodEdgesChanged.emit($event)" [goodLabelObjectSites]="goodLabelObjectSites()"
+            (goodLabelObjectSitesChanged)="goodLabelObjectSitesChanged.emit($event)"></app-scene-settings>
     </div>
     }
 

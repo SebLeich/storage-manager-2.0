@@ -1,5 +1,6 @@
 @import 'colors';
 @import 'heading';
+@import 'sizing';
 
 .body {
     padding: .5rem;
@@ -13,6 +14,13 @@ h3 {
     cursor: move;
 }
 
+h4 {
+    @include heading-4;
+    margin-top: .5rem;
+    padding-top: 1rem;
+    border-top: 1px solid $slate-grey;
+}
+
 .content {
     app-input-wrapper {
         margin-bottom: .5rem;
@@ -21,13 +29,20 @@ h3 {
         min-width: 200px;
     }
 
+    app-object-site-selection {
+        background-color: $white;
+        display: block;
+        border-radius: $border-radius;
+        margin-bottom: .5rem;
+    }
+
     &.horizontal {
         display: inline-flex;
         flex-direction: row;
         overflow-x: auto;
         width: inherit;
 
-        &>* {
+        & > * {
             margin-right: 0.5rem;
             display: flex;
             align-items: center;

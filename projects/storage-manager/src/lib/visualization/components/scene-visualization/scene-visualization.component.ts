@@ -12,6 +12,7 @@ import { Good } from '@/lib/storage-manager/types/good.type';
 import { showAnimation } from '@/lib/shared/animations/show';
 import { WallTexture } from '@/lib/storage-manager/types/wall-texture.type';
 import { CdkDrag } from '@angular/cdk/drag-drop';
+import { ObjectSite } from '@/lib/storage-manager/types/object-site.type';
 
 @Component({
     selector: 'app-scene-visualization',
@@ -36,13 +37,21 @@ export class SceneVisualizationComponent implements OnChanges, OnInit {
     @Output() public showContainerUnloadingArrowChanged = new EventEmitter<boolean>();
     @Output() public backgroundColorChanged = new EventEmitter<string>();
     @Output() public displaySceneInformationChanged = new EventEmitter<boolean>();
+    @Output() public wallObjectSitesChanged = new EventEmitter<ObjectSite[]>();
+    @Output() public goodLabelObjectSitesChanged = new EventEmitter<ObjectSite[]>();
+    @Output() public showContainerEdgesChanged = new EventEmitter<boolean>();
+    @Output() public showGoodEdgesChanged = new EventEmitter<boolean>();
 
     public displaySceneInformation = input<boolean>(true);
     public backgroundColor = input<string>('#ffffff');
     public showBaseGrid = input<boolean>(false);
     public showContainerUnloadingArrow = input<boolean>(false);
+    public showContainerEdges = input<boolean>(false);
+    public showGoodEdges = input<boolean>(false);
     public displaySceneSettings = input<boolean>(true);
     public displaySceneSettingsDirection = signal<'top' | 'right' | 'bottom' | 'left' | 'none'>('right');
+    public wallObjectSites = input<ObjectSite[]>([]);
+    public goodLabelObjectSites = input<ObjectSite[]>([]);
     public orientation = computed(() => {
         const direction = this.displaySceneSettingsDirection();
         return direction === 'top' || direction === 'bottom' ? 'horizontal' : 'vertical';

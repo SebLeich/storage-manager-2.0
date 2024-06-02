@@ -17,10 +17,12 @@
         "calculatedAt": "Calculated at {{date}}",
         "calculationSteps": "Calculation Steps",
         "cameraPosition": "Camera Position",
+        "clearSelection": "Clear selection",
         "container": "Container",
         "containerColor": "Container color",
         "containerHeight": "Container height",
         "containerLength": "Container length",
+        "containerWalls": "Container walls",
         "containerWidth": "Container width",
         "download": "Download",
         "error": {
@@ -28,6 +30,7 @@
             "plural": "{{n}} errors"
         },
         "free": "Free",
+        "goodLabels": "Good labels",
         "goods": "Goods",
         "groups": "Groups",
         "height": "Height",
@@ -45,6 +48,14 @@
         "noContainer": "No container selected",
         "noDescription": "No description available",
         "solutionValid": "Solution is valid"
+    },
+    "sites": {
+        "left": "Left",
+        "right": "Right",
+        "top": "Top",
+        "bottom": "Bottom",
+        "front": "Front",
+        "rear": "Rear"
     },
     "solutionValidationErrors": {
         "0": "No solution available",
@@ -82,9 +93,12 @@
         "playAnimation": "Play animation",
         "previousStep": "Previous step",
         "resetView": "Reset view",
+        "scene": "Scene",
         "sceneSettings": "Scene settings",
         "showBaseGrid": "Show base grid",
         "showContainerUnloadingArrow": "Show container unloading arrow",
+        "showContainerEdges": "Show container edges",
+        "showGoodEdges": "Show good edges",
         "showSceneInformation": "Show scene information",
         "showSceneSettings": "Show scene settings",
         "stopAnimation": "Stop animation"

@@ -1,0 +1,11 @@
+<div class="body">
+    @if(label()){
+    <label>{{label()}}</label>
+    }
+    <div class="sites-wrapper">
+        @for(site of sites(); track site){
+        <span (click)="toggleSite(site)" [class.active]="activeSites()[site]">{{'sites.' + site|unsafeTranslation|async}}</span>
+        }
+    </div>
+    <mat-icon (click)="clearSelection()" class="clear-control" [matTooltip]="('defaults.clearSelection'|translation|async) ?? ''">clear</mat-icon>
+</div>

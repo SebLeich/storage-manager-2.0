@@ -1,0 +1,45 @@
+@import 'colors';
+
+.body {
+    padding: .25rem .5rem;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+
+    label {
+        color: $slate-grey;
+        font-size: 0.5rem;
+        line-height: 0.6rem;
+        cursor: default;
+        pointer-events: none;
+    }
+
+    .sites-wrapper {
+        display: flex;
+        font-size: .8rem;
+        color: $black;
+
+        > * {
+            cursor: pointer;
+            margin-right: .2rem;
+
+            &:not(.active) {
+                opacity: .4;
+                font-weight: 100;
+            }
+
+            &:hover {
+                color: $active;
+            }
+        }
+    }
+
+    .clear-control {
+        color: $wine-red;
+        position: absolute;
+        top: .5rem;
+        right: 0;
+        cursor: pointer;
+        font-size: .8rem;
+    }
+}

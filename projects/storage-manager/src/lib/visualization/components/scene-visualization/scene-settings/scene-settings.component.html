@@ -3,6 +3,10 @@
 
     <div class="content {{orientation()}}">
 
+        @if(orientation() === 'vertical'){
+        <h4>{{'defaults.container'|translation|async}}</h4>
+        }
+
         <app-input-wrapper [label]="'defaults.containerColor'|translation|async">
             <select (change)="containerColorChanged.emit($any($event.target).value)" [value]="containerColor()">
                 <option value="black">Black</option>
@@ -14,13 +18,35 @@
             </select>
         </app-input-wrapper>
 
-        <app-input-wrapper appearance="outline" [isCheckbox]="true" [label]="'visualization.showBaseGrid'|translation|async">
-            <input [value]="showBaseGrid()" (change)="showBaseGridChanged.emit($any($event.target).checked)" type="checkbox" />
+        <app-object-site-selection [label]="'defaults.containerWalls'|translation|async" [objectSites]="wallObjectSites()"
+            (objectSitesChanged)="wallObjectSitesChanged.emit($event)"></app-object-site-selection>
+
+        <app-input-wrapper appearance="outline" [isCheckbox]="true" [label]="'visualization.showContainerEdges'|translation|async">
+            <input [value]="showContainerEdges()" (change)="showContainerEdgesChanged.emit($any($event.target).checked)" type="checkbox" />
         </app-input-wrapper>
 
         <app-input-wrapper appearance="outline" [isCheckbox]="true" [label]="'visualization.showContainerUnloadingArrow'|translation|async">
             <input [value]="showContainerUnloadingArrow()" (change)="showContainerUnloadingArrowChanged.emit($any($event.target).checked)"
                 type="checkbox" />
+        </app-input-wrapper>
+
+        @if(orientation() === 'vertical'){
+        <h4>{{'defaults.goods'|translation|async}}</h4>
+        }
+
+        <app-object-site-selection [label]="'defaults.goodLabels'|translation|async" [objectSites]="goodLabelObjectSites()"
+            (objectSitesChanged)="goodLabelObjectSitesChanged.emit($event)"></app-object-site-selection>
+
+        <app-input-wrapper appearance="outline" [isCheckbox]="true" [label]="'visualization.showGoodEdges'|translation|async">
+            <input [value]="showGoodEdges()" (change)="showGoodEdgesChanged.emit($any($event.target).checked)" type="checkbox" />
+        </app-input-wrapper>
+
+        @if(orientation() === 'vertical'){
+        <h4>{{'visualization.scene'|translation|async}}</h4>
+        }
+
+        <app-input-wrapper appearance="outline" [isCheckbox]="true" [label]="'visualization.showBaseGrid'|translation|async">
+            <input [value]="showBaseGrid()" (change)="showBaseGridChanged.emit($any($event.target).checked)" type="checkbox" />
         </app-input-wrapper>
 
         <app-input-wrapper appearance="outline" [isColor]="true" [label]="'defaults.backgroundColor'|translation|async">

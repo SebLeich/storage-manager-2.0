@@ -17,14 +17,20 @@
         "calculatedAt": "Berechnet am {{date}}",
         "calculationSteps": "Berechnungsschritte",
         "cameraPosition": "Kameraposition",
+        "clearSelection": "Auswahl löschen",
         "container": "Container",
         "containerColor": "Containerfarbe",
+        "containerHeight": "Containerhöhe",
+        "containerLength": "Containerlänge",
+        "containerWalls": "Containerwände",
+        "containerWidth": "Containerbreite",
         "download": "Download",
         "error": {
             "singular": "Ein Fehler",
             "plural": "{{n}} Fehler"
         },
         "free": "Frei",
+        "goodLabels": "Güterlabels",
         "goods": "Güter",
         "groups": "Gruppen",
         "height": "Höhe",
@@ -42,6 +48,14 @@
         "noContainer": "Kein Container ausgewählt",
         "noDescription": "Keine Beschreibung verfügbar",
         "solutionValid": "Lösung ist zulässig"
+    },
+    "sites": {
+        "left": "Links",
+        "right": "Rechts",
+        "top": "Oben",
+        "bottom": "Unten",
+        "front": "Vorn",
+        "rear": "Hinten"
     },
     "solutionValidationErrors": {
         "0": "Keine Lösung verfügbar",
@@ -79,9 +93,12 @@
         "playAnimation": "Animation abspielen",
         "previousStep": "Vorheriger Schritt",
         "resetView": "Ansicht zurücksetzen",
+        "scene": "Szene",
         "sceneSettings": "Szeneneinstellungen",
         "showBaseGrid": "Grid anzeigen",
+        "showContainerEdges": "Containerkanten anzeigen",
         "showContainerUnloadingArrow": "Container Entladepfeil anzeigen",
+        "showGoodEdges": "Gutkanten anzeigen",
         "showSceneSettings": "Szeneneinstellungen anzeigen",
         "showSceneInformation": "Szeneninformationen anzeigen",
         "stopAnimation": "Animation stoppen"

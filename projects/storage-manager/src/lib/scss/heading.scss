@@ -8,3 +8,14 @@
     font-weight: 500;
     margin-right: .5rem;
 }
+
+@mixin heading-4 {
+    font-family: 'Bebas Neue';
+    display: flex;
+    align-items: center;
+    margin-bottom: .2rem;
+    font-size: 1rem;
+    line-height: 1rem;
+    font-weight: 500;
+    margin-right: .5rem;
+}
