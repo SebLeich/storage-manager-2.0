@@ -11,8 +11,8 @@
 
         <app-input-wrapper [label]="'defaults.containerColor'|translation|async">
             <select (change)="containerColorChanged.emit($any($event.target).value)" [value]="containerColor()">
-                <option value="black">Black</option>
-                <option value="white">White</option>
+                <option value="black">{{'colors.black'|translation|async}}</option>
+                <option value="white">{{'colors.white'|translation|async}}</option>
                 <option value="red">Red</option>
                 <option value="green">Green</option>
                 <option value="blue">Blue</option>

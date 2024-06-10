@@ -24,6 +24,7 @@
         "containerLength": "Container length",
         "containerWalls": "Container walls",
         "containerWidth": "Container width",
+        "description": "Description",
         "download": "Download",
         "error": {
             "singular": "One error",
@@ -36,6 +37,12 @@
         "height": "Height",
         "length": "Length",
         "loadUtilization": "Load Utilization",
+        "orders": "Orders",
+        "placeholders": {
+            "numeric": "123 ...",
+            "text": "Aa ..."
+        },
+        "quantity": "Quantity",
         "validation": "Validation",
         "viewInformation": "View Information",
         "volume": "Volume",
@@ -47,7 +54,13 @@
     "hints": {
         "noContainer": "No container selected",
         "noDescription": "No description available",
+        "orderInvalid": "Order is invalid. Only valid orders are considered for the calculation.",
+        "orderValid": "Order is valid",
         "solutionValid": "Solution is valid"
+    },
+    "navItems": {
+        "calculation": "Data & Calculation",
+        "visualization": "Visualization"
     },
     "sites": {
         "left": "Left",

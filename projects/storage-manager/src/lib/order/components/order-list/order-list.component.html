@@ -1,0 +1,50 @@
+<h3>{{'defaults.orders'|translation|async}} ({{validFormArrayControlCount$|async}})</h3>
+<div class="content">
+
+    <table>
+        @for(formGroup of formArray().controls; track formGroup){
+        <div class="order-wrapper" [formGroup]="formGroup">
+            <span class="index">{{$index + 1}}</span>
+            <ng-container *ngLet="formGroup.controls['description'] as control">
+                <app-input-wrapper [control]="control" [label]="'defaults.description'|translation|async">
+                    <input type="text" formControlName="description" [placeholder]="'defaults.placeholders.text'|translation|async"
+                        (keydown.backspace)="!control?.value? removeOrder($index): $event" />
+                </app-input-wrapper>
+            </ng-container>
+
+            <app-input-wrapper [control]="formGroup.controls['quantity']" [label]="'defaults.quantity'|translation|async">
+                <input class="quantity" type="number" formControlName="quantity" [placeholder]="'defaults.placeholders.numeric'|translation|async" />
+            </app-input-wrapper>
+
+            <app-input-wrapper [control]="formGroup.controls['width']" [label]="'defaults.width'|translation|async">
+                <input class="width" type="number" formControlName="width" [placeholder]="'defaults.placeholders.numeric'|translation|async" />
+            </app-input-wrapper>
+
+            <app-input-wrapper [control]="formGroup.controls['height']" [label]="'defaults.height'|translation|async">
+                <input class="height" type="number" formControlName="height" [placeholder]="'defaults.placeholders.numeric'|translation|async" />
+            </app-input-wrapper>
+
+            <app-input-wrapper [control]="formGroup.controls['length']" [label]="'defaults.length'|translation|async"
+                (keydown.tab)="($index + 1) === formArray().controls.length? addOrder(): $event">
+                <input class="length" type="number" formControlName="length" [placeholder]="'defaults.placeholders.numeric'|translation|async" />
+            </app-input-wrapper>
+
+
+            <app-group-selection formControlName="group"></app-group-selection>
+
+            <mat-icon class="control remove" (click)="removeOrder($index)">delete_forever</mat-icon>
+            <ng-container *ngLet="(formGroup.statusChanges|async) as status">
+                <mat-icon [matTooltip]="('hints.' + (status === 'INVALID'? 'orderInvalid': 'orderValid')|unsafeTranslation|async) ?? ''"
+                    class="hint-icon {{status === 'INVALID'? 'warning': 'success'}}">
+                    {{status === 'INVALID'? 'error': 'done'}}
+                </mat-icon>
+            </ng-container>
+        </div>
+        }
+    </table>
+
+</div>
+
+<div class="add-wrapper">
+    <mat-icon class="add-control" (click)="addOrder()">add</mat-icon>
+</div>

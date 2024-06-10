@@ -68,6 +68,7 @@ rootReducers[fromApplication.featureKey] = fromApplication.reducer;
 
 const routes: Routes = [
     { path: '', pathMatch: 'full', redirectTo: 'visualization' },
+    { path: 'calculation', loadChildren: () => import('src/lib/calculation/calculation.module').then(m => m.CalculationModule) },
     { path: 'visualization', loadChildren: () => import('src/lib/visualization/visualization.module').then(m => m.VisualizationModule) },
     { path: '**', component: ErrorComponent }
 ];

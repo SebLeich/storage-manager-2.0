@@ -1,21 +1,7 @@
 <div class="body">
 
     <div class="navbar">
-
-        <img src="/assets/logo.png" class="logo" />
-
-        <span class="label">{{'defaults.appName'|translation|async}}</span>
-
-        <div class="item-wrapper">
-            @for(item of navbarOptions; track item){
-            <span class="item" [class.active]="item === activeNavItem" (click)="setNavItem(item)">{{item}}</span>
-            }
-        </div>
-
-        <div class="lang-wrapper">
-            <span class="flag-icon fi fi-{{currentLangISO3166$|async}} fis" (click)="setNextLanguage()"></span>
-        </div>
-
+        <app-navbar></app-navbar>
     </div>
 
     <div class="content">
@@ -24,7 +10,7 @@
             <ng-content select="#side-nav"></ng-content>
         </div>
 
-        <div class="main-content">
+        <div class="main-content border-radius-{{mainContentBorderRadius()}}">
             <ng-content select="#main"></ng-content>
         </div>
 

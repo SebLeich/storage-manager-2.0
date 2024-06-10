@@ -24,6 +24,7 @@
         "containerLength": "Containerlänge",
         "containerWalls": "Containerwände",
         "containerWidth": "Containerbreite",
+        "description": "Beschreibung",
         "download": "Download",
         "error": {
             "singular": "Ein Fehler",
@@ -36,6 +37,8 @@
         "height": "Höhe",
         "length": "Länge",
         "loadUtilization": "Auslastung",
+        "orders": "Positionen",
+        "quantity": "Menge",
         "validation": "Validierung",
         "viewInformation": "Ansichtsinformationen",
         "volume": "Volumen",
@@ -48,6 +51,10 @@
         "noContainer": "Kein Container ausgewählt",
         "noDescription": "Keine Beschreibung verfügbar",
         "solutionValid": "Lösung ist zulässig"
+    },
+    "navItems": {
+        "calculation": "Daten & Berechnung",
+        "visualization": "Visualisierung"
     },
     "sites": {
         "left": "Links",

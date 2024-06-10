@@ -7,9 +7,9 @@
         (pauseAnimation)="pauseAnimation()"></app-visualization-sidebar>
 
     <app-scene-visualization @fadeIn #sceneVisualization id="main" (sceneSettingsToggled)="displaySceneSettings.set($event)"
-        [scene]="(scene$ | async)!" [displaySceneInformation]="displaySceneInformation()" [displaySceneSettings]="displaySceneSettings()"
-        (displaySceneInformationChanged)="displaySceneSettings.set($event)" (containerColorChanged)="wallTexture.set($event)"
-        [containerColor]="wallTexture()" [showBaseGrid]="displayBaseGrid()" [showContainerUnloadingArrow]="displayContainerUnloadingArrow()"
+        [scene]="(scene$ | async)!" [displaySceneSettings]="displaySceneSettings()" (displaySceneSettingsChanged)="displaySceneSettings.set($event)"
+        (containerColorChanged)="wallTexture.set($event)" [containerColor]="wallTexture()" [showBaseGrid]="displayBaseGrid()"
+        [showContainerUnloadingArrow]="displayContainerUnloadingArrow()"
         (showContainerUnloadingArrowChanged)="displayContainerUnloadingArrow.set($event)" (showBaseGridChanged)="displayBaseGrid.set($event)"
         [backgroundColor]="backgroundColor()" (backgroundColorChanged)="backgroundColor.set($event)" [wallObjectSites]="wallObjectSites()"
         (wallObjectSitesChanged)="wallObjectSites.set($event)" [showContainerEdges]="displayContainerEdges()"
@@ -20,9 +20,8 @@
     <app-visualization-footer id="footer" (zoomIn)="sceneVisualization.zoomIn()" (zoomOut)="sceneVisualization.zoomOut()"
         (moveDown)="sceneVisualization.move(0, 1, 0)" (moveUp)="sceneVisualization.move(0, -1, 0)" (moveLeft)="sceneVisualization.move(1, 0, 0)"
         (moveRight)="sceneVisualization.move(-1, 0, 0)" (optimizeCameraPosition)="sceneVisualization.autoOptimizeCameraPosition()"
-        (reset)="sceneVisualization.resetCameraPosition()" [showSceneInformation]="displaySceneInformation()"
-        (viewInformationToggled)="displaySceneInformation.set($event)" [showBaseGrid]="displayBaseGrid()"
-        (baseGridToggled)="displayBaseGrid.set($event)" [containerColor]="wallTexture()" (sceneSettingsToggled)="displaySceneSettings.set($event)"
-        [showSceneSettings]="displaySceneSettings()" (downloadSolution)="downloadSolution($event)"></app-visualization-footer>
+        (reset)="sceneVisualization.resetCameraPosition()" [showBaseGrid]="displayBaseGrid()" (baseGridToggled)="displayBaseGrid.set($event)"
+        [containerColor]="wallTexture()" (sceneSettingsToggled)="displaySceneSettings.set($event)" [showSceneSettings]="displaySceneSettings()"
+        (downloadSolution)="downloadSolution($event)"></app-visualization-footer>
 
 </app-scaffold>

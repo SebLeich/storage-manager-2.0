@@ -22,8 +22,7 @@ import { DownloadService } from '@/lib/download/services/download/download.servi
 })
 export class VisualizationComponent implements OnInit {
     public backgroundColor = signal<string>('#ffffff');
-    public displaySceneInformation = signal<boolean>(false);
-    public displaySceneSettings = signal<boolean>(true);
+    public displaySceneSettings = signal<boolean>(false);
     public displayBaseGrid = signal<boolean>(true);
     public displayContainerUnloadingArrow = signal<boolean>(true);
     public displayContainerEdges = signal<boolean>(false);

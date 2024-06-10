@@ -1,0 +1,21 @@
+@import 'box-shadow';
+@import 'colors';
+@import 'sizing';
+
+.main-content {
+    flex: 1;
+    overflow: auto;
+    padding: 1rem;
+
+    > * {
+        width: fit-content;
+    }
+
+    .order-list-wrapper {
+        @include box-shadow;
+        background-color: $light-grey;
+        overflow: hidden;
+        border-radius: 1rem;
+        height: 400px;
+    }
+}

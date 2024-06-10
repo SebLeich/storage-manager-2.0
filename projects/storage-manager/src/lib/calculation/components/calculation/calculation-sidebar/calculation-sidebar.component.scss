@@ -1,0 +1,33 @@
+@import 'colors';
+@import 'heading';
+@import 'line-clamp';
+
+:host {
+    overflow: auto;
+}
+
+h3 {
+    @include heading-3;
+}
+
+.item {
+    margin: 0px .5rem .25rem;
+    padding: .5rem;
+    border-radius: 3px;
+    background-color: $white;
+
+    &.main {
+        background: linear-gradient(246deg, $shiny-red 0%, $wine-red);
+        color: $white;
+        position: sticky;
+        top: 0px;
+        z-index: 1;
+
+        .title {
+            font-family: 'Bebas Neue';
+            font-size: 1.5rem;
+            font-weight: 500;
+            display: block;
+        }
+    }
+}

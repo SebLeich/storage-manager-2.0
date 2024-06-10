@@ -1,4 +1,6 @@
-import { AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, input } from '@angular/core';
+import { AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, Injector, computed, input } from '@angular/core';
+import { AbstractControl } from '@angular/forms';
+import { of } from 'rxjs';
 
 @Component({
     selector: 'app-input-wrapper',
@@ -8,10 +10,20 @@ import { AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, E
 })
 export class InputWrapperComponent implements AfterViewInit {
     public label = input<string | null | undefined>(null);
+    public labelBadgeColor = input<string | null | undefined>(null);
     public isCheckbox = input<boolean>(false);
     public isColor = input<boolean>(false);
+    public control = input<AbstractControl | null | undefined>(null);
+    public formControlStatus = computed(() => {
+        const formControl = this.control();
+        if (!formControl) {
+            return of('VALID');
+        }
 
-    constructor(private elementRef: ElementRef<HTMLDivElement>, private _changeDetectorRef: ChangeDetectorRef) { }
+        return formControl.statusChanges;
+    });
+
+    constructor(private elementRef: ElementRef<HTMLDivElement>, private _changeDetectorRef: ChangeDetectorRef, private _injector: Injector) { }
 
     public labelClicked(): void {
         const projectedContent = this.projectedContent;

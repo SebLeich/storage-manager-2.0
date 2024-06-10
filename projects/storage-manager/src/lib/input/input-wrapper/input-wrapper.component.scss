@@ -1,3 +1,4 @@
+@import 'sizing';
 @import 'colors';
 
 :host {
@@ -19,6 +20,14 @@
                 line-height: 1rem;
                 cursor: default;
                 pointer-events: none;
+
+                .label-badge {
+                    display: inline-block;
+                    border-radius: 50%;
+                    height: .4rem;
+                    width: .4rem;
+                    background-color: black;
+                }
             }
         }
 
@@ -28,6 +37,10 @@
                 padding: 1rem .25rem .25rem;
                 background-color: #fafafa;
                 border-radius: 3px;
+            }
+
+            input {
+                padding: 1rem .45rem .25rem;
             }
         }
 
@@ -110,6 +123,16 @@
                     outline: none;
                     padding: 0px;
                     background-color: transparent;
+                }
+            }
+        }
+
+        &.invalid {
+            ::ng-deep {
+                input {
+                    border: 2px solid $wine-red;
+                    outline-color: $wine-red;
+                    border-radius: $border-radius;
                 }
             }
         }

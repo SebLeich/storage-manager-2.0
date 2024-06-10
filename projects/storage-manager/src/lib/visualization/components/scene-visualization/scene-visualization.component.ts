@@ -37,13 +37,12 @@ export class SceneVisualizationComponent implements OnChanges, OnInit {
     @Output() public showBaseGridChanged = new EventEmitter<boolean>();
     @Output() public showContainerUnloadingArrowChanged = new EventEmitter<boolean>();
     @Output() public backgroundColorChanged = new EventEmitter<string>();
-    @Output() public displaySceneInformationChanged = new EventEmitter<boolean>();
+    @Output() public displaySceneSettingsChanged = new EventEmitter<boolean>();
     @Output() public wallObjectSitesChanged = new EventEmitter<ObjectSite[]>();
     @Output() public goodLabelObjectSitesChanged = new EventEmitter<ObjectSite[]>();
     @Output() public showContainerEdgesChanged = new EventEmitter<boolean>();
     @Output() public showGoodEdgesChanged = new EventEmitter<boolean>();
 
-    public displaySceneInformation = input<boolean>(true);
     public backgroundColor = input<string>('#ffffff');
     public showBaseGrid = input<boolean>(false);
     public showContainerUnloadingArrow = input<boolean>(false);

@@ -1,0 +1,15 @@
+<div class="item main">
+
+    <span class="title">{{'navItems.calculation'|translation|async}}</span>
+
+</div>
+
+@for(solution of (solutions$|async); track solution){
+<div class="item">
+    <h3>{{solution.calculationSource.title}}</h3>
+    <div>
+        <span>Length</span>
+        <span>{{solution.container.length}} m</span>
+    </div>
+</div>
+}
