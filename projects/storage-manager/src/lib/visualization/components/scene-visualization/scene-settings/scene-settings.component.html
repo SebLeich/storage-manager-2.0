@@ -23,8 +23,13 @@
         <app-object-site-selection [label]="'defaults.containerWalls'|translation|async" [objectSites]="wallObjectSites()"
             (objectSitesChanged)="wallObjectSitesChanged.emit($event)"></app-object-site-selection>
 
+        <app-input-wrapper appearance="outline" [isCheckbox]="true" [label]="'visualization.showContainer'|translation|async">
+            <input [value]="showContainer()" (change)="showContainerChanged.emit($any($event.target).checked)" type="checkbox" />
+        </app-input-wrapper>
+
         <app-input-wrapper appearance="outline" [isCheckbox]="true" [label]="'visualization.showContainerEdges'|translation|async">
-            <input [value]="showContainerEdges()" (change)="showContainerEdgesChanged.emit($any($event.target).checked)" type="checkbox" />
+            <input [value]="showContainerEdges()" [disabled]="!showContainer()" (change)="showContainerEdgesChanged.emit($any($event.target).checked)"
+                type="checkbox" />
         </app-input-wrapper>
 
         <app-input-wrapper appearance="outline" [isCheckbox]="true" [label]="'visualization.showContainerUnloadingArrow'|translation|async">
@@ -39,13 +44,40 @@
         <app-object-site-selection [label]="'defaults.goodLabels'|translation|async" [objectSites]="goodLabelObjectSites()"
             (objectSitesChanged)="goodLabelObjectSitesChanged.emit($event)"></app-object-site-selection>
 
+        <app-input-wrapper appearance="outline" [isCheckbox]="true" [label]="'visualization.showGoods'|translation|async">
+            <input [value]="showGoods()" (change)="showGoodsChanged.emit($any($event.target).checked)" type="checkbox" />
+        </app-input-wrapper>
+
         <app-input-wrapper appearance="outline" [isCheckbox]="true" [label]="'visualization.showGoodEdges'|translation|async">
-            <input [value]="showGoodEdges()" (change)="showGoodEdgesChanged.emit($any($event.target).checked)" type="checkbox" />
+            <input [value]="showGoodEdges()" [disabled]="!showGoods()" (change)="showGoodEdgesChanged.emit($any($event.target).checked)"
+                type="checkbox" />
+        </app-input-wrapper>
+
+        @if(orientation() === 'vertical'){
+        <h4>{{'visualization.emptySpace'|translation|async}}</h4>
+        }
+
+        <app-input-wrapper appearance="outline" [isCheckbox]="true" [label]="'visualization.showEmptySpace'|translation|async">
+            <input [value]="showEmptySpace()" (change)="showEmptySpaceChanged.emit($any($event.target).checked)" type="checkbox" />
+        </app-input-wrapper>
+
+        <app-input-wrapper appearance="outline" [isCheckbox]="true" [label]="'visualization.fillEmptySpace'|translation|async">
+            <input [value]="fillEmptySpace()" [disabled]="!showEmptySpace()" (change)="fillEmptySpaceChanged.emit($any($event.target).checked)"
+                type="checkbox" />
+        </app-input-wrapper>
+
+        <app-input-wrapper appearance="outline" [isCheckbox]="true" [label]="'visualization.showEmptySpaceEdges'|translation|async">
+            <input [value]="showEmptySpaceEdges()" [disabled]="!showEmptySpace()"
+                (change)="showEmptySpaceEdgesChanged.emit($any($event.target).checked)" type="checkbox" />
         </app-input-wrapper>
 
         @if(orientation() === 'vertical'){
         <h4>{{'visualization.scene'|translation|async}}</h4>
         }
+
+        <app-input-wrapper appearance="outline" [isCheckbox]="true" [label]="'visualization.addLights'|translation|async">
+            <input [value]="addLights()" (change)="addLightsChanged.emit($any($event.target).checked)" type="checkbox" />
+        </app-input-wrapper>
 
         <app-input-wrapper appearance="outline" [isCheckbox]="true" [label]="'visualization.showBaseGrid'|translation|async">
             <input [value]="showBaseGrid()" (change)="showBaseGridChanged.emit($any($event.target).checked)" type="checkbox" />

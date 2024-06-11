@@ -18,6 +18,7 @@
         "calculationSteps": "Berechnungsschritte",
         "cameraPosition": "Kameraposition",
         "clearSelection": "Auswahl löschen",
+        "color": "Farbe",
         "container": "Container",
         "containerColor": "Containerfarbe",
         "containerHeight": "Containerhöhe",
@@ -38,6 +39,10 @@
         "length": "Länge",
         "loadUtilization": "Auslastung",
         "orders": "Positionen",
+        "placeholders": {
+            "numeric": "123 ...",
+            "text": "Aa ..."
+        },
         "quantity": "Menge",
         "validation": "Validierung",
         "viewInformation": "Ansichtsinformationen",
@@ -79,13 +84,16 @@
         "11": "Das Gut {{good}} ist zu hoch für den Container"
     },
     "visualization": {
+        "addLights": "Lichter hinzufügen",
         "animationStatus": {
             "paused": "Pausiert",
             "playing": "Wiedergabe",
             "stopped": "Gestoppt"
         },
+        "emptySpace": "Leerraum",
         "fastForward": "Vorwärtsspulen (letzter Schritt)",
         "fastRewind": "Rückwärtsspulen (erster Schritt)",
+        "fillEmptySpace": "Leerraum füllen",
         "hideBaseGrid": "Grid ausblenden",
         "hideSceneSettings": "Szeneneinstellungen ausblenden",
         "hideSceneInformation": "Szeneneinstellungen ausblenden",
@@ -103,8 +111,12 @@
         "scene": "Szene",
         "sceneSettings": "Szeneneinstellungen",
         "showBaseGrid": "Grid anzeigen",
+        "showContainer": "Container anzeigen",
         "showContainerEdges": "Containerkanten anzeigen",
         "showContainerUnloadingArrow": "Container Entladepfeil anzeigen",
+        "showEmptySpace": "Leerraum anzeigen",
+        "showEmptySpaceEdges": "Raumkanten Leerraum anzeigen",
+        "showGoods": "Güter anzeigen",
         "showGoodEdges": "Gutkanten anzeigen",
         "showSceneSettings": "Szeneneinstellungen anzeigen",
         "showSceneInformation": "Szeneninformationen anzeigen",

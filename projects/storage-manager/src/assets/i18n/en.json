@@ -18,6 +18,7 @@
         "calculationSteps": "Calculation Steps",
         "cameraPosition": "Camera Position",
         "clearSelection": "Clear selection",
+        "color": "Color",
         "container": "Container",
         "containerColor": "Container color",
         "containerHeight": "Container height",
@@ -85,13 +86,16 @@
         "11": "The good {{good}} is too tall for the container"
     },
     "visualization": {
+        "addLights": "Add lights",
         "animationStatus": {
             "paused": "Paused",
             "playing": "Playing",
             "stopped": "Stopped"
         },
+        "emptySpace": "Empty space",
         "fastForward": "Fast forward (last step)",
         "fastRewind": "Fast rewind (first step)",
+        "fillEmptySpace": "Fill empty space",
         "hideBaseGrid": "Hide base grid",
         "hideSceneSettings": "Hide scene settings",
         "hideSceneInformation": "Hide scene information",
@@ -109,8 +113,12 @@
         "scene": "Scene",
         "sceneSettings": "Scene settings",
         "showBaseGrid": "Show base grid",
+        "showContainer": "Show container",
         "showContainerUnloadingArrow": "Show container unloading arrow",
         "showContainerEdges": "Show container edges",
+        "showEmptySpace": "Show empty space",
+        "showEmptySpaceEdges": "Show empty space edges",
+        "showGoods": "Show goods",
         "showGoodEdges": "Show good edges",
         "showSceneInformation": "Show scene information",
         "showSceneSettings": "Show scene settings",

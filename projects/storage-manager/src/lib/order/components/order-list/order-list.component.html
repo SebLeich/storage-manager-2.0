@@ -7,7 +7,7 @@
             <span class="index">{{$index + 1}}</span>
             <ng-container *ngLet="formGroup.controls['description'] as control">
                 <app-input-wrapper [control]="control" [label]="'defaults.description'|translation|async">
-                    <input type="text" formControlName="description" [placeholder]="'defaults.placeholders.text'|translation|async"
+                    <input class="description" type="text" formControlName="description" [placeholder]="'defaults.placeholders.text'|translation|async"
                         (keydown.backspace)="!control?.value? removeOrder($index): $event" />
                 </app-input-wrapper>
             </ng-container>

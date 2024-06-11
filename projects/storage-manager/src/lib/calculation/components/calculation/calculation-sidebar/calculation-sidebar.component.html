@@ -2,6 +2,18 @@
 
     <span class="title">{{'navItems.calculation'|translation|async}}</span>
 
+    <div class="container-data-wrapper">
+        <app-input-wrapper [label]="'defaults.containerHeight'|translation|async">
+            <input #containerHeight type="number" [value]="containerHeight$|async" (blur)="updateContainer(containerHeight.value)"
+                (keyup.enter)="updateContainer(containerHeight.value)" />
+        </app-input-wrapper>
+
+        <app-input-wrapper [label]="'defaults.containerWidth'|translation|async">
+            <input #containerWidth type="number" [value]="containerWidth$|async" (blur)="updateContainer(undefined, containerWidth.value)"
+                (keyup.enter)="updateContainer(undefined, containerWidth.value)" />
+        </app-input-wrapper>
+    </div>
+
 </div>
 
 @for(solution of (solutions$|async); track solution){
@@ -11,5 +23,8 @@
         <span>Length</span>
         <span>{{solution.container.length}} m</span>
     </div>
+    <button (click)="showCalculatedSolution(solution)">
+        Show
+    </button>
 </div>
 }

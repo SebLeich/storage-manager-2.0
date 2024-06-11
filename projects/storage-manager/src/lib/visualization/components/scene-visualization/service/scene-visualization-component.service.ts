@@ -1,4 +1,4 @@
-import { Camera, Intersection, Mesh, PerspectiveCamera, Raycaster, Scene, WebGLRenderer } from 'three';
+import { Camera, Intersection, Mesh, PCFSoftShadowMap, PerspectiveCamera, Raycaster, Scene, Vector2, WebGLRenderer } from 'three';
 import { Injectable, signal } from '@angular/core';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 import { Observable, fromEvent, of, switchMap, map, startWith } from 'rxjs';
@@ -21,7 +21,7 @@ export class SceneVisualizationComponentService {
 
     public cameraChanged$: Observable<PerspectiveCamera | undefined> = toObservable(this._controls)
         .pipe(
-            switchMap(controls => controls ? fromEvent(controls, 'change').pipe(startWith(1)) : of(undefined)),
+            switchMap((controls: any) => controls ? fromEvent(controls, 'change').pipe(startWith(1)) : of(undefined)),
             map(() => this._camera)
         );
 
@@ -36,15 +36,17 @@ export class SceneVisualizationComponentService {
         return this._controls();
     }
 
-    constructor(){
-        this._initTextures();
+    constructor() {
+        this._init();
     }
 
     public getPointedElement(event: MouseEvent, scene: Scene): null | Intersection {
         const meshes = scene.children.filter(child => child instanceof Mesh) as Mesh[];
         const x = (event.offsetX / (event.target as HTMLCanvasElement).offsetWidth) * 2 - 1;
         const y = - (event.clientY / window.innerHeight) * 2 + 1;
-        this._ray.setFromCamera({ x: x, y: y }, this._camera as Camera);
+
+        const vector = new Vector2(x, y);
+        this._ray.setFromCamera(vector, this._camera as Camera);
         const intersects = this._ray.intersectObjects(meshes);
         let found: null | Intersection = null;
         intersects.forEach(function (object) {
@@ -169,7 +171,9 @@ export class SceneVisualizationComponentService {
         this._renderer.render(scene, this._camera);
     }
 
-    private _initTextures(){
+    private _init() {
+        this._renderer.shadowMap.enabled = true;
+        this._renderer.shadowMap.type = PCFSoftShadowMap;
     }
 
 }

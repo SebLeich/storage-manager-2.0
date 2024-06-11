@@ -41,6 +41,7 @@
 
             input {
                 padding: 1rem .45rem .25rem;
+                width: 100%;
             }
         }
 
@@ -92,6 +93,17 @@
                             -webkit-transform: translateX(calc(1rem - 4px));
                             -ms-transform: translateX(calc(1rem - 4px));
                             transform: translateX(calc(1rem - 4px));
+                        }
+                    }
+
+                    &:disabled {
+
+                        &~label {
+                            opacity: .5;
+                        }
+
+                        &~.switch .slider {
+                            opacity: .5;
                         }
                     }
                 }

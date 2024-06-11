@@ -26,28 +26,40 @@ export class SceneVisualizationComponent implements OnChanges, OnInit {
     @ViewChild('visualizationWrapper', { static: true }) public visualizerWrapperRef!: ElementRef<HTMLDivElement>;
 
     @Input() public scene!: Scene;
-    @Input() public responsive = true;
-    @Input() public interactable = true;
 
+    @Output() public addLightsToggled = new EventEmitter<boolean>();
+    @Output() public fillEmptySpaceToggled = new EventEmitter<boolean>();
     @Output() public sceneSettingsToggled = new EventEmitter<boolean>();
     @Output() public sceneRendered = new EventEmitter<{ canvas: HTMLCanvasElement }>();
     @Output() public hoveredGood = new EventEmitter<string | null>();
     @Output() public selectGood = new EventEmitter<string | null>();
     @Output() public containerColorChanged = new EventEmitter<WallTexture>();
     @Output() public showBaseGridChanged = new EventEmitter<boolean>();
-    @Output() public showContainerUnloadingArrowChanged = new EventEmitter<boolean>();
     @Output() public backgroundColorChanged = new EventEmitter<string>();
     @Output() public displaySceneSettingsChanged = new EventEmitter<boolean>();
     @Output() public wallObjectSitesChanged = new EventEmitter<ObjectSite[]>();
     @Output() public goodLabelObjectSitesChanged = new EventEmitter<ObjectSite[]>();
+    @Output() public showContainerChanged = new EventEmitter<boolean>();
     @Output() public showContainerEdgesChanged = new EventEmitter<boolean>();
+    @Output() public showContainerUnloadingArrowChanged = new EventEmitter<boolean>();
+    @Output() public showEmptySpaceChanged = new EventEmitter<boolean>();
+    @Output() public showEmptySpaceEdgesChanged = new EventEmitter<boolean>();
+    @Output() public showGoodsChanged = new EventEmitter<boolean>();
     @Output() public showGoodEdgesChanged = new EventEmitter<boolean>();
 
+    public addLights = input<boolean>(true);
     public backgroundColor = input<string>('#ffffff');
+    public fillEmptySpace = input<boolean>(false);
     public showBaseGrid = input<boolean>(false);
+    public showContainer = input<boolean>(false);
     public showContainerUnloadingArrow = input<boolean>(false);
     public showContainerEdges = input<boolean>(false);
+    public showEmptySpace = input<boolean>(false);
+    public showEmptySpaceEdges = input<boolean>(false);
+    public showGoods = input<boolean>(true);
     public showGoodEdges = input<boolean>(false);
+    public responsive = input<boolean>(true);
+    public interactable = input<boolean>(true);
     public displaySceneSettings = input<boolean>(true);
     public displaySceneSettingsDirection = signal<'top' | 'right' | 'bottom' | 'left' | 'none'>('right');
     public wallObjectSites = input<ObjectSite[]>([]);
@@ -77,7 +89,7 @@ export class SceneVisualizationComponent implements OnChanges, OnInit {
         )
     );
 
-    private _settingsToggled = effect(() => {
+    private _ = effect(() => {
         this.displaySceneSettings(),
             this.displaySceneSettingsDirection();
 
@@ -191,7 +203,7 @@ export class SceneVisualizationComponent implements OnChanges, OnInit {
     }
 
     public async onClick(event: MouseEvent) {
-        if (!this.interactable) {
+        if (!this.interactable()) {
             return;
         }
 
@@ -219,7 +231,7 @@ export class SceneVisualizationComponent implements OnChanges, OnInit {
     }
 
     public async onMousemove(event: MouseEvent) {
-        if (!this.interactable) {
+        if (!this.interactable()) {
             return;
         }
 
@@ -258,7 +270,7 @@ export class SceneVisualizationComponent implements OnChanges, OnInit {
     }
 
     public onResize() {
-        if (!this.responsive) {
+        if (!this.responsive()) {
             return;
         }
 

@@ -11,6 +11,7 @@
     width: 5rem;
     text-align: center;
     font-weight: 200 !important;
+    border: none;
 
     &:hover {
         opacity: 0.8;
@@ -36,7 +37,7 @@
 
 @mixin default-button() {
     @include button;
-    @include gradient-darkblue;
+    @include gradient-darkgrey;
     color: $white;
 }
 

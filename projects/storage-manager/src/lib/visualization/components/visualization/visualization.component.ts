@@ -11,6 +11,8 @@ import { takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop';
 import { ObjectSite } from '@/lib/storage-manager/types/object-site.type';
 import { WallTexture } from '@/lib/storage-manager/types/wall-texture.type';
 import { DownloadService } from '@/lib/download/services/download/download.service';
+import { Router } from '@angular/router';
+import { SolutionWrapper } from '@/lib/storage-manager/types/solution-wrapper.type';
 
 @Component({
     selector: 'app-visualization',
@@ -22,11 +24,17 @@ import { DownloadService } from '@/lib/download/services/download/download.servi
 })
 export class VisualizationComponent implements OnInit {
     public backgroundColor = signal<string>('#ffffff');
+    public addLights = signal<boolean>(true);
     public displaySceneSettings = signal<boolean>(false);
     public displayBaseGrid = signal<boolean>(true);
+    public displayContainer = signal<boolean>(true);
     public displayContainerUnloadingArrow = signal<boolean>(true);
     public displayContainerEdges = signal<boolean>(false);
+    public displayEmptySpace = signal<boolean>(false);
+    public displayEmptySpaceEdges = signal<boolean>(false);
+    public displayGoods = signal<boolean>(true);
     public displayGoodEdges = signal<boolean>(false);
+    public fillEmptySpace = signal<boolean>(false);
     public animationStepIndex = signal<number | null>(null);
     public intervalSpeed = signal<number>(1000);
     public playStatus = signal<'playing' | 'paused' | 'stopped'>('stopped');
@@ -43,41 +51,59 @@ export class VisualizationComponent implements OnInit {
         toObservable(this.labelObjectSites),
         toObservable(this.wallObjectSites),
         toObservable(this.wallTexture),
+        toObservable(this.addLights),
         toObservable(this.backgroundColor),
+        toObservable(this.displayContainer),
         toObservable(this.displayContainerUnloadingArrow),
         toObservable(this.displayContainerEdges),
-        toObservable(this.displayGoodEdges)
+        toObservable(this.displayGoodEdges),
+        toObservable(this.displayGoods),
+        toObservable(this.displayEmptySpace),
+        toObservable(this.displayEmptySpaceEdges),
+        toObservable(this.fillEmptySpace)
     ]).pipe(
         scan(
-            (scene: Scene, [solutionWrapper, displayBaseGrid, animationStepIndex, labelObjectSites, wallObjectSites, wallTexture, backgroundColor, displayContainerUnloadingArrow, displayContainerEdges, displayGoodEdges]) => {
+            (scene: Scene, [solutionWrapper, displayBaseGrid, animationStepIndex, labelObjectSites, wallObjectSites, wallTexture, addLights, backgroundColor, displayContainer, displayContainerUnloadingArrow, displayContainerEdges, displayGoodEdges, displayGoods, displayEmptySpace, displayEmptySpaceEdges, fillEmptySpace]) => {
                 if (solutionWrapper) {
                     if (animationStepIndex === null) this._visualizationService.configureSolutionScene(
                         solutionWrapper.solution,
                         scene,
                         solutionWrapper.groups,
+                        addLights,
                         backgroundColor,
                         displayBaseGrid,
+                        displayContainer,
                         displayContainerUnloadingArrow,
                         labelObjectSites,
                         wallObjectSites,
                         wallTexture,
                         displayContainerEdges,
-                        displayGoodEdges
+                        displayGoods,
+                        displayGoodEdges,
+                        displayEmptySpace,
+                        displayEmptySpaceEdges,
+                        fillEmptySpace
                     );
                     else this._visualizationService.configureSolutionStepScene(
                         scene,
                         solutionWrapper.solution.container,
                         solutionWrapper.groups,
+                        addLights,
                         solutionWrapper.calculationSteps,
                         animationStepIndex,
                         backgroundColor,
                         displayBaseGrid,
+                        displayContainer,
                         displayContainerUnloadingArrow,
                         labelObjectSites,
                         wallObjectSites,
                         wallTexture,
                         displayContainerEdges,
-                        displayGoodEdges
+                        displayGoods,
+                        displayGoodEdges,
+                        displayEmptySpace,
+                        displayEmptySpaceEdges,
+                        fillEmptySpace
                     );
                 }
 
@@ -91,6 +117,7 @@ export class VisualizationComponent implements OnInit {
 
     constructor(
         private _store: Store,
+        private _router: Router,
         private _visualizationService: VisualizationService,
         private _destroyRef: DestroyRef,
         private _downloadService: DownloadService
@@ -98,7 +125,7 @@ export class VisualizationComponent implements OnInit {
 
     public async downloadSolution(format: 'json' | 'xml' = 'json'): Promise<void> {
         const solutionWrapper = await firstValueFrom(this.solutionWrapper$);
-        if(!solutionWrapper) return;
+        if (!solutionWrapper) return;
 
         if (format === 'json') {
             this._downloadService.downloadJSONContentsAsFile(solutionWrapper, 'solution.json');
@@ -132,256 +159,12 @@ export class VisualizationComponent implements OnInit {
     }
 
     public ngOnInit(): void {
-        // debugging only
-        this._store.dispatch(setSolution({
-            solutionWrapper: {
-                groups: [
-                    {
-                        id: '1',
-                        color: '#ff0000',
-                        desc: 'Cloths',
-                        sequenceNumber: 0
-                    },
-                    {
-                        id: '2',
-                        color: '#00ff00',
-                        desc: 'Dishes',
-                        sequenceNumber: 1
-                    },
-                    {
-                        id: '3',
-                        color: '#0000ff',
-                        desc: 'Supply',
-                        sequenceNumber: 2
-                    },
-                ],
-                solution: {
-                    calculated: new Date().toISOString(),
-                    calculationSource: {
-                        title: 'Super Flo'
-                    },
-                    container: {
-                        goods: [
-                            {
-                                group: '1',
-                                xCoord: 0,
-                                yCoord: 0,
-                                zCoord: 0,
-                                length: 500,
-                                width: 500,
-                                height: 200,
-                                sequenceNr: 0,
-                                desc: "shirt"
-                            },
-                            {
-                                group: '1',
-                                xCoord: 0,
-                                yCoord: 200,
-                                zCoord: 0,
-                                length: 500,
-                                width: 500,
-                                height: 200,
-                                sequenceNr: 0,
-                                desc: "shirt"
-                            },
-                            {
-                                group: '1',
-                                xCoord: 0,
-                                yCoord: 400,
-                                zCoord: 0,
-                                length: 500,
-                                width: 500,
-                                height: 200,
-                                sequenceNr: 0,
-                                desc: "shirt"
-                            },
-                            {
-                                group: '1',
-                                xCoord: 0,
-                                yCoord: 600,
-                                zCoord: 0,
-                                length: 500,
-                                width: 500,
-                                height: 200,
-                                sequenceNr: 0,
-                                desc: "shirt"
-                            },
-                            {
-                                group: '1',
-                                xCoord: 0,
-                                yCoord: 0,
-                                zCoord: 500,
-                                length: 500,
-                                width: 500,
-                                height: 500,
-                                sequenceNr: 1,
-                                desc: "jeans"
-                            },
-                            {
-                                group: '1',
-                                xCoord: 0,
-                                yCoord: 500,
-                                zCoord: 500,
-                                length: 500,
-                                width: 500,
-                                height: 100,
-                                sequenceNr: 1,
-                                desc: "jeans abcdefghijklmnopqrstuvwxyz"
-                            },
-                            {
-                                group: '2',
-                                xCoord: 0,
-                                yCoord: 0,
-                                zCoord: 1000,
-                                length: 500,
-                                width: 500,
-                                height: 500,
-                                sequenceNr: 2,
-                                desc: "glas"
-                            },
-                            {
-                                group: '2',
-                                xCoord: 0,
-                                yCoord: 0,
-                                zCoord: 1500,
-                                length: 500,
-                                width: 500,
-                                height: 500,
-                                sequenceNr: 3,
-                                desc: "Good 4"
-                            },
-                            {
-                                group: '3',
-                                xCoord: 500,
-                                yCoord: 0,
-                                zCoord: 0,
-                                length: 500,
-                                width: 500,
-                                height: 500,
-                                sequenceNr: 6,
-                                desc: "Good 5"
-                            },
-                            {
-                                group: '3',
-                                xCoord: 500,
-                                yCoord: 500,
-                                zCoord: 0,
-                                length: 500,
-                                width: 200,
-                                height: 100,
-                                sequenceNr: 6,
-                                desc: "Good 5"
-                            }
-                        ],
-                        length: 2000,
-                        width: 1000,
-                        height: 1000,
-                        xCoord: 0,
-                        yCoord: 0,
-                        zCoord: 0
-                    },
-                    description: 'Super Flo Solution'
-                },
-                calculationSteps: [
-                    {
-                        sequenceNumber: 0,
-                        messages: ['Step 1', 'Calculated'],
-                        positions: [
-                            {
-                                xCoord: 0,
-                                yCoord: 0,
-                                zCoord: 0,
-                                length: 500,
-                                width: 500,
-                                height: 500,
-                                fCoord: 500,
-                                groupRestrictedBy: 0,
-                                index: 1,
-                                points: [],
-                                rCoord: 500,
-                                tCoord: 500,
-                                usedPositions: [],
-                                goodDesc: 'Good 4',
-                                goodId: 4,
-                                groupId: '1'
-                            }
-                        ]
-                    },
-                    {
-                        sequenceNumber: 1,
-                        messages: ['Step 2'],
-                        positions: [
-                            {
-                                xCoord: 0,
-                                yCoord: 0,
-                                zCoord: 500,
-                                length: 500,
-                                width: 500,
-                                height: 500,
-                                fCoord: 500,
-                                groupRestrictedBy: 0,
-                                index: 2,
-                                points: [],
-                                rCoord: 500,
-                                tCoord: 500,
-                                usedPositions: [],
-                                goodDesc: 'Good 4',
-                                goodId: 4,
-                                groupId: '1'
-                            }
-                        ]
-                    },
-                    {
-                        sequenceNumber: 2,
-                        messages: ['Step 3'],
-                        positions: [
-                            {
-                                xCoord: 0,
-                                yCoord: 0,
-                                zCoord: 1000,
-                                length: 500,
-                                width: 500,
-                                height: 500,
-                                fCoord: 500,
-                                groupRestrictedBy: 0,
-                                index: 3,
-                                points: [],
-                                rCoord: 500,
-                                tCoord: 500,
-                                usedPositions: [],
-                                goodDesc: 'Good 4',
-                                goodId: 4,
-                                groupId: '2'
-                            }
-                        ]
-                    },
-                    {
-                        sequenceNumber: 3,
-                        messages: ['Step 4'],
-                        positions: [
-                            {
-                                xCoord: 0,
-                                yCoord: 0,
-                                zCoord: 1500,
-                                length: 500,
-                                width: 500,
-                                height: 500,
-                                fCoord: 500,
-                                groupRestrictedBy: 0,
-                                index: 4,
-                                points: [],
-                                rCoord: 500,
-                                tCoord: 500,
-                                usedPositions: [],
-                                goodDesc: 'Good 4',
-                                goodId: 4,
-                                groupId: '3'
-                            }
-                        ]
-                    }
-                ]
-            } as any
-        }));
+        const { groups, calculationSteps, solution } = history.state;
+        if (groups && solution) {
+            const solutionWrapper = { groups, solution, calculationSteps } as SolutionWrapper;
+            this._store.dispatch(setSolution({ solutionWrapper }));
+        }
+        else this._router.navigate(['/calculation']);
     }
 
     public pauseAnimation(): void {

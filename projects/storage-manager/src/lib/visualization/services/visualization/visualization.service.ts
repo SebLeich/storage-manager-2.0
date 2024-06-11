@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { IPosition } from '@smgr/interfaces';
 import { defaultGoodEdgeColor, infinityReplacement } from 'src/app/globals';
 import getContainerPositionSharedMethods from 'src/app/methods/get-container-position.shared-methods';
-import { ArrowHelper, BoxGeometry, CanvasTexture, Color, DoubleSide, EdgesGeometry, GridHelper, LineBasicMaterial, LineSegments, Mesh, MeshBasicMaterial, PlaneGeometry, Scene, Texture, TextureLoader, Vector3 } from 'three';
+import { AmbientLight, ArrowHelper, BoxGeometry, CanvasTexture, Color, DirectionalLight, DoubleSide, EdgesGeometry, GridHelper, LineBasicMaterial, LineSegments, Matrix4, Mesh, MeshBasicMaterial, MeshStandardMaterial, PlaneGeometry, Scene, Texture, TextureLoader, Vector3 } from 'three';
 import { RoundedBoxGeometry } from 'three/examples/jsm/geometries/RoundedBoxGeometry';
 import { Solution } from '@/lib/storage-manager/types/solution.type';
 import { Group } from '@/lib/storage-manager/types/group.type';
@@ -16,6 +16,7 @@ import { Spatial } from '@/lib/storage-manager/types/spatial.type';
 import { Positioned } from '@/lib/storage-manager/types/positioned.type';
 import { ObjectSite } from '@/lib/storage-manager/types/object-site.type';
 import { WallTexture } from '@/lib/storage-manager/types/wall-texture.type';
+import { CSG } from 'three-csg-ts';
 
 @Injectable()
 export class VisualizationService {
@@ -35,16 +36,24 @@ export class VisualizationService {
         solution: Solution,
         scene: Scene = new Scene(),
         groups: Group[],
+        addLights = true,
         fillColor: boolean | string = false,
         addBaseGrid = true,
+        displayContainer = true,
         addUnloadingArrow = true,
         labelPositions: ObjectSite[] = ['right'],
         wallPositions: ObjectSite[] = ['bottom'],
         wallTexture: WallTexture = 'yellow',
         displayContainerEdges = true,
-        displayGoodEdges = true
+        displayGoods = true,
+        displayGoodEdges = true,
+        displayEmptySpace = false,
+        displayEmptySpaceEdges = false,
+        fillEmptySpace = false
     ) {
         scene.clear();
+
+        addLights && scene.add(...Object.values(VisualizationService.getLights()));
 
         const goodMeshes: { goodId: string, mesh: Mesh }[] = [];
         if (solution?.container) {
@@ -52,28 +61,30 @@ export class VisualizationService {
                 scene.background = new Color(typeof fillColor === 'string' ? fillColor : 'rgb(255,255,255)');
             }
 
-            const containerPosition = getContainerPositionSharedMethods(solution.container);
-            if (displayContainerEdges) {
-                const { edges } = VisualizationService.generateOutlinedBoxMesh({ ...containerPosition, id: 'CT' }, 'container');
-                scene.add(edges);
-            }
+            const containerPosition = getContainerPositionSharedMethods(solution.container),
+                goodCSGs: CSG[] = [];
 
             for (const good of solution.container.goods) {
                 const position = getContainerPositionSharedMethods(good);
                 const group = groups.find((group) => group.id === good.group),
-                    goodResult = VisualizationService.generateFilledBoxMesh(position, 'good', containerPosition);
+                    { basicMesh, mesh, edges } = VisualizationService.generateFilledBoxMesh(position, 'good', containerPosition);
 
-                goodResult.mesh.userData['goodId'] = good.id;
-                goodResult.mesh.userData['groupId'] = good.group;
-                goodMeshes.push({ goodId: good.id, mesh: goodResult.mesh });
-                scene.add(goodResult.mesh);
-                if (displayGoodEdges) {
-                    scene.add(goodResult.edges);
+                if (displayGoods) {
+                    mesh.userData['goodId'] = good.id;
+                    mesh.userData['groupId'] = good.group;
+                    goodMeshes.push({ goodId: good.id, mesh });
+                    scene.add(mesh);
+                    if (displayGoodEdges) {
+                        scene.add(edges);
+                    }
+
+                    const relativePosition = VisualizationService.calculateRelativePosition(position, containerPosition);
+                    const labels = VisualizationService.getGoodLabels(good, relativePosition, group, labelPositions);
+                    labels.length > 0 && scene.add(...labels);
                 }
 
-                const relativePosition = VisualizationService.calculateRelativePosition(position, containerPosition);
-                const labels = VisualizationService.getGoodLabels(good, relativePosition, group, labelPositions);
-                labels.length > 0 && scene.add(...labels);
+                basicMesh.updateMatrixWorld();
+                goodCSGs.push(CSG.fromMesh(basicMesh));
             }
 
             if (addBaseGrid) {
@@ -84,9 +95,40 @@ export class VisualizationService {
                 scene.add(VisualizationService.getContainerUnloadingArrow(solution.container.length, solution.container.height));
             }
 
-            const map = new TextureLoader().load(`assets/textures/container_${wallTexture}.jpg`);
-            const walls = VisualizationService.getContainerWalls(containerPosition, map, wallPositions);
-            walls.length > 0 && scene.add(...walls);
+            let containerCSG: CSG | undefined = undefined,
+                containerMatrix: Matrix4 | undefined = undefined;
+
+            if (displayContainer) {
+                const { edges, mesh } = VisualizationService.generateOutlinedBoxMesh({ ...containerPosition, id: 'CT' }, 'container');
+                displayContainerEdges && scene.add(edges);
+
+                containerCSG = CSG.fromMesh(mesh);
+                containerMatrix = edges.matrix;
+
+                const map = new TextureLoader().load(`assets/textures/container_${wallTexture}.jpg`);
+                const walls = VisualizationService.getContainerWalls(containerPosition, map, wallPositions);
+                walls.length > 0 && scene.add(...walls);
+            }
+
+            if (displayEmptySpace && containerCSG && containerMatrix) {
+                goodCSGs.forEach(goodCSG => containerCSG = containerCSG?.subtract(goodCSG));
+
+                const unusedSpaceMeshMaterial = new MeshStandardMaterial({
+                    color: 0x0000ff,
+                    transparent: true,
+                    opacity: 0.5,
+                    side: DoubleSide
+                });
+                const unusedSpaceMesh = CSG.toMesh(containerCSG, containerMatrix, unusedSpaceMeshMaterial);
+                fillEmptySpace && scene.add(unusedSpaceMesh);
+
+                if (displayEmptySpaceEdges) {
+                    const edgesGeometry = new EdgesGeometry(unusedSpaceMesh.geometry);
+                    const edgesMaterial = new LineBasicMaterial({ color: 0xffffff });
+                    const edgesMesh = new LineSegments(edgesGeometry, edgesMaterial);
+                    scene.add(edgesMesh);
+                }
+            }
         }
 
         return { scene, goodMeshes };
@@ -96,29 +138,32 @@ export class VisualizationService {
         scene: Scene = new Scene(),
         container: Container,
         groups: Group[],
+        addLights = true,
         steps: CalculationStep[] = [],
         stepIndex: number = 0,
         fillColor: boolean | string = false,
         addBaseGrid = true,
+        displayContainer = true,
         addUnloadingArrow = true,
         labelPositions: ObjectSite[] = ['right'],
         wallPositions: ObjectSite[] = ['bottom'],
         wallTexture: WallTexture = 'yellow',
         displayContainerEdges = true,
-        displayGoodEdges = true
+        displayGoods = true,
+        displayGoodEdges = true,
+        displayEmptySpace = false,
+        displayEmptySpaceEdges = false,
+        fillEmptySpace = false
     ) {
         scene.clear();
+
+        addLights && scene.add(...Object.values(VisualizationService.getLights()));
 
         if (fillColor) {
             scene.background = new Color(typeof fillColor === 'string' ? fillColor : 'rgb(255,255,255)');
         }
 
         const containerPosition = ThreeDCalculationService.calculateSpatialPosition(container);
-        if (displayContainerEdges) {
-            const { edges } = VisualizationService.generateOutlinedBoxMesh({ ...containerPosition, id: 'CT' }, 'container');
-            scene.add(edges);
-        }
-
         const appliedSteps = steps.slice(0, stepIndex),
             lastStep = steps[stepIndex],
             goodMeshes: { goodId: string, mesh: Mesh }[] = [];
@@ -144,20 +189,25 @@ export class VisualizationService {
             scene.add(edges);
         }
 
-        for (const position of lastUsedPositions) {
-            const spatial = ThreeDCalculationService.calculateSpatialPosition(position),
-                label = position.goodDesc,
-                group = groups.find(group => group.id === position.groupId);
+        let goodCSGs: CSG[] = [];
+        if (displayGoods) {
+            for (const position of lastUsedPositions) {
+                const spatial = ThreeDCalculationService.calculateSpatialPosition(position),
+                    label = position.goodDesc,
+                    group = groups.find(group => group.id === position.groupId);
 
-            const { edges, mesh } = VisualizationService.generateFilledBoxMesh({ ...spatial, id: `${position.goodId}` }, 'good', containerPosition);
-            scene.add(mesh);
-            if (displayGoodEdges) {
-                scene.add(edges);
+                const { edges, mesh } = VisualizationService.generateFilledBoxMesh({ ...spatial, id: `${position.goodId}` }, 'good', containerPosition);
+                scene.add(mesh);
+                if (displayGoodEdges) {
+                    scene.add(edges);
+                }
+
+                goodCSGs.push(CSG.fromGeometry(edges.geometry));
+
+                const relativePosition = VisualizationService.calculateRelativePosition(position, containerPosition);
+                const labels = VisualizationService.getGoodLabels({ ...spatial, desc: label }, relativePosition, group, labelPositions);
+                labels.length > 0 && scene.add(...labels);
             }
-
-            const relativePosition = VisualizationService.calculateRelativePosition(position, containerPosition);
-            const labels = VisualizationService.getGoodLabels({ ...spatial, desc: label }, relativePosition, group, labelPositions);
-            labels.length > 0 && scene.add(...labels);
         }
 
         if (addBaseGrid) {
@@ -168,9 +218,29 @@ export class VisualizationService {
             scene.add(VisualizationService.getContainerUnloadingArrow(container.length, container.height));
         }
 
-        const map = new TextureLoader().load(`assets/textures/container_${wallTexture}.jpg`);
-        const walls = VisualizationService.getContainerWalls(containerPosition, map, wallPositions);
-        walls.length > 0 && scene.add(...walls);
+        let containerCSG: CSG | undefined = undefined,
+            containerMatrix: any;
+
+        if (displayContainer) {
+            if (displayContainerEdges) {
+                const { edges, mesh } = VisualizationService.generateOutlinedBoxMesh({ ...containerPosition, id: 'CT' }, 'container');
+                scene.add(edges);
+
+                containerCSG = CSG.fromMesh(mesh),
+                    containerMatrix = edges.matrix;
+            }
+
+            const map = new TextureLoader().load(`assets/textures/container_${wallTexture}.jpg`);
+            const walls = VisualizationService.getContainerWalls(containerPosition, map, wallPositions);
+            walls.length > 0 && scene.add(...walls);
+        }
+
+        if (containerCSG) {
+            goodCSGs.forEach(goodCSG => containerCSG = containerCSG?.subtract(goodCSG));
+
+            const unusedSpaceMesh = CSG.toMesh(containerCSG, containerMatrix);
+            scene.add(unusedSpaceMesh);
+        }
 
         return { scene, goodMeshes };
     }
@@ -299,6 +369,24 @@ export class VisualizationService {
         return walls;
     }
 
+    public static getLights(): { ambientLight: AmbientLight, directionalLight: DirectionalLight } {
+        const ambientLight = new AmbientLight(0x404040);
+
+        const directionalLight = new DirectionalLight(0xffffff, 1);
+        directionalLight.position.set(5, 5, 5);
+        directionalLight.castShadow = true;
+        directionalLight.shadow.mapSize.width = 2048;
+        directionalLight.shadow.mapSize.height = 2048;
+        directionalLight.shadow.camera.near = 0.1;
+        directionalLight.shadow.camera.far = 50;
+        directionalLight.shadow.camera.left = -10;
+        directionalLight.shadow.camera.right = 10;
+        directionalLight.shadow.camera.top = 10;
+        directionalLight.shadow.camera.bottom = -10;
+
+        return { ambientLight, directionalLight };
+    }
+
     public static generateFilledBoxMesh(
         position: IPosition | SpatialPositioned & Identifiable,
         type: string,
@@ -319,7 +407,9 @@ export class VisualizationService {
         edges.position.set(relativePosition.xCoord, relativePosition.yCoord, relativePosition.zCoord);
         edges.userData = { type: type, positionId: position.id };
 
-        return { mesh, edges };
+        const basicMesh = new Mesh(new BoxGeometry(position.width, position.height, position.length === Infinity ? infinityReplacement : position.length), new MeshBasicMaterial({ transparent: true, opacity: 0 }));
+        basicMesh.position.set(relativePosition.xCoord, relativePosition.yCoord, relativePosition.zCoord);
+        return { basicMesh, mesh, edges };
     }
 
     public static generateOutlinedBoxMesh(
@@ -329,13 +419,16 @@ export class VisualizationService {
         borderColor: string = defaultGoodEdgeColor,
         borderWidth: number = 1
     ) {
-        const geometry = new BoxGeometry(position.width, position.height, position.length === Infinity ? infinityReplacement : position.length);
-        const edges = new LineSegments(new EdgesGeometry(geometry), new LineBasicMaterial({ color: borderColor, linewidth: borderWidth }));
+        const boxGeometry = new BoxGeometry(position.width, position.height, position.length === Infinity ? infinityReplacement : position.length);
+        const edges = new LineSegments(new EdgesGeometry(boxGeometry), new LineBasicMaterial({ color: borderColor, linewidth: borderWidth }));
         const relativePosition = this.calculateRelativePosition(position, relativeToParent);
         edges.position.set(relativePosition.xCoord, relativePosition.yCoord, relativePosition.zCoord);
         edges.userData = { type, positionId: position.id };
 
-        return { edges };
+        const material = new MeshBasicMaterial({ transparent: false, opacity: 1 });
+        const mesh = new Mesh(boxGeometry, material);
+
+        return { boxGeometry, edges, mesh };
     }
 
     public static createLabel(text: string, subTitle = '', groupColor = 'white'): Mesh {

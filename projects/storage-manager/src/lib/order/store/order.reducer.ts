@@ -3,6 +3,7 @@ import { EntityState, createEntityAdapter } from "@ngrx/entity";
 import { createReducer, on } from "@ngrx/store";
 import { addOrder, removeOrder, setOrders } from "./order.actions";
 import { v4 } from 'uuid';
+import { removeGroup } from "@/lib/groups/store/group.actions";
 
 export const featureKey = 'ORDERS';
 
@@ -19,11 +20,8 @@ const adapter = createEntityAdapter<Order>(
 
 const initialState: State = adapter.getInitialState({
     selectedOrderId: null,
-    entities: {
-        '1': { id: '1', index: 0, description: 'test 1', quantity: 10, group: '1', height: 10, width: 10, length: 10, turningAllowed: true, stackingAllowed: true },
-        '2': { id: '2', index: 1, description: 'test 2', quantity: 20, group: '2', height: 20, width: 20, length: 20, turningAllowed: false, stackingAllowed: false }
-    },
-    ids: ['1', '2'],
+    entities: {},
+    ids: [],
 });
 
 export const reducer = createReducer(
@@ -33,6 +31,21 @@ export const reducer = createReducer(
             index = order.index ?? Math.max(...state.ids.map(id => state.entities[id]?.index ?? 0), 0) + 1;
 
         return adapter.addOne({ ...order, id, index }, state);
+    }),
+    on(removeGroup, (state, { group }) => {
+        const orderIds = state.ids.filter(id => state.entities[id]?.group === group.id);
+
+        return adapter
+            .updateMany(orderIds.map((id) => {
+                return {
+                    id,
+                    changes: {
+                        group: ''
+                    }
+                };
+            }),
+                state
+            );
     }),
     on(removeOrder, (state, { order }) => {
         return adapter.removeOne(order.id, state);

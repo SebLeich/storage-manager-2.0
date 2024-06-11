@@ -10,7 +10,12 @@
             (wallObjectSitesChanged)="wallObjectSitesChanged.emit($event)" [showContainerEdges]="showContainerEdges()"
             (showContainerEdgesChanged)="showContainerEdgesChanged.emit($event)" [showGoodEdges]="showGoodEdges()"
             (showGoodEdgesChanged)="showGoodEdgesChanged.emit($event)" [goodLabelObjectSites]="goodLabelObjectSites()"
-            (goodLabelObjectSitesChanged)="goodLabelObjectSitesChanged.emit($event)"></app-scene-settings>
+            (goodLabelObjectSitesChanged)="goodLabelObjectSitesChanged.emit($event)" [showGoods]="showGoods()"
+            (showGoodsChanged)="showGoodsChanged.emit($event)" [showContainer]="showContainer()"
+            (showContainerChanged)="showContainerChanged.emit($event)" [addLights]="addLights()" (addLightsChanged)="addLightsToggled.emit($event)"
+            [fillEmptySpace]="fillEmptySpace()" (fillEmptySpaceChanged)="fillEmptySpaceToggled.emit($event)" [showEmptySpace]="showEmptySpace()"
+            (showEmptySpaceChanged)="showEmptySpaceChanged.emit($event)" [showEmptySpaceEdges]="showEmptySpaceEdges()"
+            (showEmptySpaceEdgesChanged)="showEmptySpaceEdgesChanged.emit($event)"></app-scene-settings>
     </div>
     }
 
@@ -29,7 +34,12 @@
             (wallObjectSitesChanged)="wallObjectSitesChanged.emit($event)" [showContainerEdges]="showContainerEdges()"
             (showContainerEdgesChanged)="showContainerEdgesChanged.emit($event)" [showGoodEdges]="showGoodEdges()"
             (showGoodEdgesChanged)="showGoodEdgesChanged.emit($event)" [goodLabelObjectSites]="goodLabelObjectSites()"
-            (goodLabelObjectSitesChanged)="goodLabelObjectSitesChanged.emit($event)"></app-scene-settings>
+            (goodLabelObjectSitesChanged)="goodLabelObjectSitesChanged.emit($event)" [showGoods]="showGoods()"
+            (showGoodsChanged)="showGoodsChanged.emit($event)" [showContainer]="showContainer()"
+            (showContainerChanged)="showContainerChanged.emit($event)" [addLights]="addLights()" (addLightsChanged)="addLightsToggled.emit($event)"
+            [fillEmptySpace]="fillEmptySpace()" (fillEmptySpaceChanged)="fillEmptySpaceToggled.emit($event)" [showEmptySpace]="showEmptySpace()"
+            (showEmptySpaceChanged)="showEmptySpaceChanged.emit()" [showEmptySpaceEdges]="showEmptySpaceEdges()"
+            (showEmptySpaceEdgesChanged)="showEmptySpaceEdgesChanged.emit($event)"></app-scene-settings>
     </div>
     }
 

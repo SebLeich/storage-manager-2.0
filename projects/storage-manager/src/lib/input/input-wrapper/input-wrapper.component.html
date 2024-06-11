@@ -4,6 +4,8 @@
     'invalid': (formControlStatus()|async) === 'INVALID'
     }" (click)="onClick($event)">
 
+    <ng-content></ng-content>
+
     @if(label() != null){
     <label (click)="labelClicked()">
         {{label()}}
@@ -12,8 +14,6 @@
         }
     </label>
     }
-
-    <ng-content></ng-content>
 
     <div *ngIf="isCheckbox()" class="switch">
         <span class="slider"></span>

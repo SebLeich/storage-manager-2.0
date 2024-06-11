@@ -3,6 +3,7 @@
 @import 'sizing';
 
 .main-content {
+    display: grid;
     flex: 1;
     overflow: auto;
     padding: 1rem;
@@ -16,6 +17,14 @@
         background-color: $light-grey;
         overflow: hidden;
         border-radius: 1rem;
-        height: 400px;
+        height: 360px;
+    }
+
+    .group-list-wrapper {
+        @include box-shadow;
+        background-color: $light-grey;
+        overflow: hidden;
+        border-radius: 1rem;
+        height: 180px;
     }
 }

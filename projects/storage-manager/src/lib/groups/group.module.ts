@@ -6,16 +6,23 @@ import { TranslationModule } from '../translation';
 import { GroupSelectionComponent } from './components/group-selection/group-selection.component';
 import { InputModule } from '../input/input.module';
 import { ReactiveFormsModule } from '@angular/forms';
+import { GroupListComponent } from './components/group-list/group-list.component';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatIconModule } from '@angular/material/icon';
+import { NgLetModule } from 'ng-let';
 
 
 
 @NgModule({
-    declarations: [GroupSelectionComponent],
-    exports: [GroupSelectionComponent],
+    declarations: [GroupListComponent, GroupSelectionComponent],
+    exports: [GroupListComponent, GroupSelectionComponent],
     imports: [
         CommonModule,
         InputModule,
         ReactiveFormsModule,
+        MatIconModule,
+        MatTooltipModule,
+        NgLetModule,
         StoreModule.forFeature(featureKey, reducer),
         TranslationModule
     ]

@@ -1,3 +1,4 @@
+@import 'button';
 @import 'colors';
 @import 'heading';
 @import 'line-clamp';
@@ -23,11 +24,29 @@ h3 {
         top: 0px;
         z-index: 1;
 
+        .container-data-wrapper {
+            display: flex;
+
+            >app-input-wrapper {
+                flex: 1;
+                overflow: hidden;
+
+                &:not(:last-child) {
+                    margin-right: .15rem;
+                }
+            }
+        }
+
         .title {
             font-family: 'Bebas Neue';
             font-size: 1.5rem;
             font-weight: 500;
             display: block;
+            margin-bottom: .5rem;
         }
     }
+}
+
+button {
+    @include default-button;
 }
