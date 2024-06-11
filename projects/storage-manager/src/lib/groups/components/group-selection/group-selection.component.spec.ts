@@ -1,23 +1,17 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { GroupSelectionComponent } from './group-selection.component';
+import { Spectator, createComponentFactory } from '@ngneat/spectator';
 
 describe('GroupSelectionComponent', () => {
-  let component: GroupSelectionComponent;
-  let fixture: ComponentFixture<GroupSelectionComponent>;
+    let spectator: Spectator<GroupSelectionComponent>;
 
-  beforeEach(async () => {
-    await TestBed.configureTestingModule({
-      imports: [GroupSelectionComponent]
-    })
-    .compileComponents();
-    
-    fixture = TestBed.createComponent(GroupSelectionComponent);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
-  });
+    const createComponent = createComponentFactory({
+        component: GroupSelectionComponent,
+    });
 
-  it('should create', () => {
-    expect(component).toBeTruthy();
-  });
+    beforeEach(() => spectator = createComponent());
+
+    it('should create', () => {
+        expect(spectator.component).toBeTruthy();
+    });
 });

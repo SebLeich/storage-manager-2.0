@@ -1,23 +1,17 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { GroupListComponent } from './group-list.component';
+import { Spectator, createComponentFactory } from '@ngneat/spectator';
 
 describe('GroupListComponent', () => {
-  let component: GroupListComponent;
-  let fixture: ComponentFixture<GroupListComponent>;
+    let spectator: Spectator<GroupListComponent>;
 
-  beforeEach(async () => {
-    await TestBed.configureTestingModule({
-      imports: [GroupListComponent]
-    })
-    .compileComponents();
+    const createComponent = createComponentFactory({
+        component: GroupListComponent,
+    });
 
-    fixture = TestBed.createComponent(GroupListComponent);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
-  });
+    beforeEach(() => spectator = createComponent());
 
-  it('should create', () => {
-    expect(component).toBeTruthy();
-  });
+    it('should create', () => {
+        expect(spectator.component).toBeTruthy();
+    });
 });
