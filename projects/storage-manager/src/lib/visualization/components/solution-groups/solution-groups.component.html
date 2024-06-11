@@ -3,8 +3,8 @@
 </h3>
 
 @for(group of groups(); track group){
-<div class="group-wrapper">
+<div class="group-wrapper" (click)="colorInput.click()">
     <span class="description">{{group.desc}}</span>
-    <input [value]="group.color" type="color" (change)="updateGroupColor(group, $any($event.target).value)" />
+    <input #colorInput [value]="group.color" type="color" (change)="updateGroupColor(group, $any($event.target).value)" />
 </div>
 }

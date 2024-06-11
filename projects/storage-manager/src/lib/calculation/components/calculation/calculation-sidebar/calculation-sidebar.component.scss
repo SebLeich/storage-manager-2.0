@@ -44,6 +44,12 @@ h3 {
             display: block;
             margin-bottom: .5rem;
         }
+
+        mat-spinner {
+            position: absolute;
+            right: .5rem;
+            top: .5rem;
+        }
     }
 }
 

@@ -46,6 +46,7 @@
         "quantity": "Menge",
         "validation": "Validierung",
         "viewInformation": "Ansichtsinformationen",
+        "visualize": "Visualisieren",
         "volume": "Volumen",
         "width": "Breite",
         "zoomFactor": "Zoom Faktor",
@@ -55,6 +56,8 @@
     "hints": {
         "noContainer": "Kein Container ausgewählt",
         "noDescription": "Keine Beschreibung verfügbar",
+        "orderInvalid": "Bestellung ist ungültig. Nur gültige Bestellungen werden für die Berechnung berücksichtigt.",
+        "orderValid": "Bestellung ist gültig",
         "solutionValid": "Lösung ist zulässig"
     },
     "navItems": {

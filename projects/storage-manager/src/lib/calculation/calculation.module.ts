@@ -9,6 +9,9 @@ import { InputModule } from '../input/input.module';
 import { StoreModule } from '@ngrx/store';
 import { featureKey, reducer } from './store/calculation.reducer';
 import { GroupModule } from '../groups/group.module';
+import { NgLetModule } from 'ng-let';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { SharedModule } from '../shared/shared.module';
 
 
 
@@ -21,6 +24,8 @@ import { GroupModule } from '../groups/group.module';
         CommonModule,
         GroupModule,
         InputModule,
+        MatProgressSpinnerModule,
+        NgLetModule,
         OrderModule,
         RouterModule.forChild([
             {
@@ -29,6 +34,7 @@ import { GroupModule } from '../groups/group.module';
             }
         ]),
         ScaffoldModule,
+        SharedModule,
         StoreModule.forFeature(featureKey, reducer)
     ],
 })

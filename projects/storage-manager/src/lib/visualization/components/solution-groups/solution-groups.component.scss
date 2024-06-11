@@ -1,3 +1,4 @@
+@import 'colors';
 @import 'input';
 @import 'heading';
 
@@ -7,4 +8,12 @@ h3 {
 
 input[type="color"] {
     @include color-picker;
+}
+
+.group-wrapper {
+    display: inline-block;
+    padding: .5rem;
+    margin: 2px;
+    background-color: $light-grey;
+    border-radius: 1rem;
 }

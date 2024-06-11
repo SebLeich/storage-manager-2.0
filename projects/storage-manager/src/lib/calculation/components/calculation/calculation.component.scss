@@ -4,6 +4,7 @@
 
 .main-content {
     display: grid;
+    grid-gap: 1rem;
     flex: 1;
     overflow: auto;
     padding: 1rem;
@@ -17,7 +18,7 @@
         background-color: $light-grey;
         overflow: hidden;
         border-radius: 1rem;
-        height: 360px;
+        min-height: 360px;
     }
 
     .group-list-wrapper {
@@ -25,6 +26,6 @@
         background-color: $light-grey;
         overflow: hidden;
         border-radius: 1rem;
-        height: 180px;
+        min-height: 180px;
     }
 }

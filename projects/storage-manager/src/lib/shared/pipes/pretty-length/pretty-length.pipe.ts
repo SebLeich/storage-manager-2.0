@@ -1,6 +1,5 @@
 import { Pipe, PipeTransform } from '@angular/core';
 import { Store } from '@ngrx/store';
-import { selectSnapshot } from 'src/lib/process-builder/globals/select-snapshot';
 import { selectUnit } from '@smgr/store';
 
 @Pipe({
@@ -10,14 +9,10 @@ export class PrettyLengthPipe implements PipeTransform {
 
     constructor(private _store: Store) { }
 
-    public async transform(value: number | null | undefined, decimalDigits: number = 2, hideDecimalDigitsWhenZero: boolean = false, unit?: string): Promise<string> {
-        if (!value) {
-            return 'no entries';
-        }
-
-        let converted = value;
+    public transform(value: number | null | undefined, decimalDigits: number = 2, hideDecimalDigitsWhenZero: boolean = false, unit?: string): string {
+        let converted = value ?? 0;
         if (!unit) {
-            unit = await selectSnapshot(this._store.select(selectUnit));
+            unit = this._store.selectSignal(selectUnit)();
         }
 
         let index = this._units.findIndex(entry => entry.unit === unit);

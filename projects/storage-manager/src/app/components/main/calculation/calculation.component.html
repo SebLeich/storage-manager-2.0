@@ -91,7 +91,7 @@
                     </div>
 
                     <div *ngIf="wrapper.status === AlgorithmCalculationStatus.Calculated">
-                        length: {{wrapper.solution?.container?.length|prettyLength:2:true|async}}
+                        length: {{wrapper.solution?.container?.length|prettyLength:2:true}}
                     </div>
 
                     <ng-container *ngIf="wrapper.status === AlgorithmCalculationStatus.Error">

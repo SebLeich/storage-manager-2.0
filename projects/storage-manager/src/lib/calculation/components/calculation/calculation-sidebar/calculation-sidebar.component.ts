@@ -6,7 +6,7 @@ import { AllInOneRowSolver, StartLeftBottomSolver, SuperFloSolver } from '@/lib/
 import { SolutionWrapper } from '@/lib/storage-manager/types/solution-wrapper.type';
 import { ChangeDetectionStrategy, Component, EventEmitter, Output } from '@angular/core';
 import { Store } from '@ngrx/store';
-import { combineLatest, debounceTime, map } from 'rxjs';
+import { combineLatest, debounceTime, map, startWith, switchMap, timer } from 'rxjs';
 
 @Component({
     selector: 'app-calculation-sidebar',
@@ -21,18 +21,19 @@ export class CalculationSidebarComponent {
     public containerWidth$ = this._store.select(selectContainerWidth);
     public groups$ = this._store.select(selectGroups);
     public orders$ = this._store.select(selectOrders);
-    public solutionWrappers$ = combineLatest([this.orders$, this.groups$, this.containerHeight$, this.containerWidth$])
-        .pipe(
-            debounceTime(500),
-            map(([orders, groups, height, width]) => {
-                const solutions = [];
-                solutions.push(new AllInOneRowSolver().solve(height, width, groups, orders));
-                solutions.push(new StartLeftBottomSolver().solve(height, width, groups, orders));
-                solutions.push(new SuperFloSolver().solve(height, width, groups, orders));
+    public recalculate$ = combineLatest([this.orders$, this.groups$, this.containerHeight$, this.containerWidth$]);
+    public recalculationTriggered$ = this.recalculate$.pipe(switchMap(() => timer(2000).pipe(map(() => false), startWith(true))));
+    public solutionWrappers$ = this.recalculate$.pipe(
+        debounceTime(2000),
+        map(([orders, groups, height, width]) => {
+            const solutions = [];
+            solutions.push(new AllInOneRowSolver().solve(height, width, groups, orders));
+            solutions.push(new StartLeftBottomSolver().solve(height, width, groups, orders));
+            solutions.push(new SuperFloSolver().solve(height, width, groups, orders));
 
-                return solutions;
-            })
-        );
+            return solutions;
+        })
+    );
 
     constructor(private _store: Store) { }
 

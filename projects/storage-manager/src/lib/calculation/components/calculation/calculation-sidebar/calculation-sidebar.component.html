@@ -2,6 +2,10 @@
 
     <span class="title">{{'navItems.calculation'|translation|async}}</span>
 
+    @if(recalculationTriggered$|async){
+    <mat-spinner diameter="20"></mat-spinner>
+    }
+
     <div class="container-data-wrapper">
         <app-input-wrapper [label]="'defaults.containerHeight'|translation|async">
             <input #containerHeight type="number" [value]="containerHeight$|async" (blur)="updateContainer(containerHeight.value)"
@@ -17,14 +21,14 @@
 </div>
 
 @for(solutionWrapper of (solutionWrappers$|async); track solutionWrapper){
-<div class="item">
+<div *ngLet="solutionWrapper.solution.container as container" class="item">
     <h3>{{solutionWrapper.solution.calculationSource.title}}</h3>
     <div>
-        <span>Length</span>
-        <span>{{solutionWrapper.solution.container.length}} m</span>
+        <span>{{'defaults.length'|translation|async}}</span>
+        <span>{{container.length|prettyLength:3:true:container.unit}}</span>
     </div>
     <button (click)="showCalculatedSolution(solutionWrapper)">
-        Show
+        {{'defaults.visualize'|translation|async}}
     </button>
 </div>
 }

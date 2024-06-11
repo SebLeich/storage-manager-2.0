@@ -8,7 +8,6 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { MatTableModule } from '@angular/material/table';
 import { MatDialogModule } from '@angular/material/dialog';
-import { MatSortModule } from '@angular/material/sort';
 import { MatInputModule } from '@angular/material/input';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatSelectModule } from '@angular/material/select';
@@ -49,7 +48,7 @@ import { ApplicationEffects } from './store/effects/application.effects';
 import { StorageManagerModule } from 'src/lib/storage-manager/storage-manager.module';
 import { RouterModule, Routes } from '@angular/router';
 import { ErrorComponent } from 'src/lib/shared/components/error/error.component';
-import { GoodPreviewComponent, GoodsPanelComponent, GroupsPanelComponent } from '@smgr/components';
+import { GoodPreviewComponent, GoodsPanelComponent } from '@smgr/components';
 import { AboutComponent, CalculationComponent, LocalDataComponent } from '@main-components';
 import { APP_BASE_HREF, PlatformLocation } from '@angular/common';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
@@ -77,7 +76,6 @@ const routes: Routes = [
         GoodPreviewComponent,
         EditDataDialogComponent,
         GoodsPanelComponent,
-        GroupsPanelComponent,
         SortedFormArrayPipe,
         CalculationComponent,
         ApiCallConfiguratorDialogComponent,
@@ -114,7 +112,6 @@ const routes: Routes = [
         HttpClientModule,
         FormsModule,
         ReactiveFormsModule,
-        MatSortModule,
         MatFormFieldModule,
         MatInputModule,
         MatCheckboxModule,
