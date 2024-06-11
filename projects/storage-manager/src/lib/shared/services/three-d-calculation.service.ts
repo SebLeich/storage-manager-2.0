@@ -2,6 +2,7 @@ import { Positioned } from '@/lib/storage-manager/types/positioned.type';
 import { Spatial } from '@/lib/storage-manager/types/spatial.type';
 import { SpatialPositioned } from '@/lib/storage-manager/types/spatial-positioned.type';
 import { Injectable } from '@angular/core';
+import { UnusedPosition } from '@/lib/storage-manager/types/unused-position.type';
 
 @Injectable()
 export class ThreeDCalculationService {
@@ -33,6 +34,15 @@ export class ThreeDCalculationService {
             tCoord,
             fCoord,
             points
+        };
+    }
+
+    public static spatialPositionedToUnusedPosition(spatialPositioned: SpatialPositioned, index: number = 0, groupRestrictedBy: number | null = null, rotated: boolean = false): UnusedPosition {
+        return {
+            ...spatialPositioned,
+            index,
+            groupRestrictedBy,
+            rotated
         };
     }
 }

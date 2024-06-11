@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import { IPosition } from '@smgr/interfaces';
 import { defaultGoodEdgeColor, infinityReplacement } from 'src/app/globals';
-import getContainerPositionSharedMethods from 'src/app/methods/get-container-position.shared-methods';
 import { AmbientLight, ArrowHelper, BoxGeometry, CanvasTexture, Color, DirectionalLight, DoubleSide, EdgesGeometry, GridHelper, LineBasicMaterial, LineSegments, Matrix4, Mesh, MeshBasicMaterial, MeshStandardMaterial, PlaneGeometry, Scene, Texture, TextureLoader, Vector3 } from 'three';
 import { RoundedBoxGeometry } from 'three/examples/jsm/geometries/RoundedBoxGeometry';
 import { Solution } from '@/lib/storage-manager/types/solution.type';
@@ -17,6 +16,7 @@ import { Positioned } from '@/lib/storage-manager/types/positioned.type';
 import { ObjectSite } from '@/lib/storage-manager/types/object-site.type';
 import { WallTexture } from '@/lib/storage-manager/types/wall-texture.type';
 import { CSG } from 'three-csg-ts';
+import { v4 } from 'uuid';
 
 @Injectable()
 export class VisualizationService {
@@ -61,13 +61,13 @@ export class VisualizationService {
                 scene.background = new Color(typeof fillColor === 'string' ? fillColor : 'rgb(255,255,255)');
             }
 
-            const containerPosition = getContainerPositionSharedMethods(solution.container),
+            const containerPosition = ThreeDCalculationService.spatialPositionedToUnusedPosition(ThreeDCalculationService.calculateSpatialPosition(solution.container)),
                 goodCSGs: CSG[] = [];
 
             for (const good of solution.container.goods) {
-                const position = getContainerPositionSharedMethods(good);
+                const position = ThreeDCalculationService.calculateSpatialPosition(good);
                 const group = groups.find((group) => group.id === good.group),
-                    { basicMesh, mesh, edges } = VisualizationService.generateFilledBoxMesh(position, 'good', containerPosition);
+                    { basicMesh, mesh, edges } = VisualizationService.generateFilledBoxMesh({ ...position, id: v4() }, 'good', containerPosition);
 
                 if (displayGoods) {
                     mesh.userData['goodId'] = good.id;

@@ -4,10 +4,9 @@ import { selectGroups } from '@/lib/groups/store/group.selectors';
 import { selectOrders } from '@/lib/order/store/order.selectors';
 import { AllInOneRowSolver, StartLeftBottomSolver, SuperFloSolver } from '@/lib/storage-manager/solvers';
 import { SolutionWrapper } from '@/lib/storage-manager/types/solution-wrapper.type';
-import { Solution } from '@/lib/storage-manager/types/solution.type';
 import { ChangeDetectionStrategy, Component, EventEmitter, Output } from '@angular/core';
 import { Store } from '@ngrx/store';
-import { combineLatest, debounceTime, firstValueFrom, map } from 'rxjs';
+import { combineLatest, debounceTime, map } from 'rxjs';
 
 @Component({
     selector: 'app-calculation-sidebar',
@@ -20,15 +19,16 @@ export class CalculationSidebarComponent {
 
     public containerHeight$ = this._store.select(selectContainerHeight);
     public containerWidth$ = this._store.select(selectContainerWidth);
+    public groups$ = this._store.select(selectGroups);
     public orders$ = this._store.select(selectOrders);
-    public solutions$ = combineLatest([this.orders$, this.containerHeight$, this.containerWidth$])
+    public solutionWrappers$ = combineLatest([this.orders$, this.groups$, this.containerHeight$, this.containerWidth$])
         .pipe(
             debounceTime(500),
-            map(([orders, height, width]) => {
+            map(([orders, groups, height, width]) => {
                 const solutions = [];
-                solutions.push(new AllInOneRowSolver().solve(height, width, [{ id: '1', desc: 'G1', sequenceNumber: 0, color: '#fff' }], [...orders.map(order => ({ ...order, group: '1' }))]));
-                solutions.push(new StartLeftBottomSolver().solve(height, width, [{ id: '1', desc: 'G1', sequenceNumber: 0, color: '#fff' }], [...orders.map(order => ({ ...order, group: '1' }))]));
-                solutions.push(new SuperFloSolver().solve(height, width, [{ id: '1', desc: 'G1', sequenceNumber: 0, color: '#fff' }], [...orders.map(order => ({ ...order, group: '1' }))]));
+                solutions.push(new AllInOneRowSolver().solve(height, width, groups, orders));
+                solutions.push(new StartLeftBottomSolver().solve(height, width, groups, orders));
+                solutions.push(new SuperFloSolver().solve(height, width, groups, orders));
 
                 return solutions;
             })
@@ -43,12 +43,11 @@ export class CalculationSidebarComponent {
         this._store.dispatch(setContainerDimensions({ containerHeight, containerWidth }));
     }
 
-    public async showCalculatedSolution(solution: Solution): Promise<void> {
-        const groups = await firstValueFrom(this._store.select(selectGroups));
+    public showCalculatedSolution({ solution, groups, calculationSteps }: SolutionWrapper): void {
         this.showSolution.emit({
             solution,
             groups,
-            calculationSteps: []
+            calculationSteps
         });
     }
 }

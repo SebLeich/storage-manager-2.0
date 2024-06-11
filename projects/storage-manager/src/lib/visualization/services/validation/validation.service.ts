@@ -2,8 +2,10 @@ import { Injectable } from '@angular/core';
 import { IPosition } from '@smgr/interfaces';
 import { SolutionValidationErrorWrapper } from '@/lib/shared/types/solution-validation-error-wrapper.type';
 import { SolutionValidationError } from '@/lib/shared/enums/solution-validation-error.enum';
-import getContainerPositionSharedMethods from '@/app/methods/get-container-position.shared-methods';
 import { Solution } from '@/lib/storage-manager/types/solution.type';
+import { ThreeDCalculationService } from '@/lib/shared/services/three-d-calculation.service';
+import { Positioned } from '@/lib/storage-manager/types/positioned.type';
+import { Spatial } from '@/lib/storage-manager/types/spatial.type';
 
 @Injectable()
 export class ValidationService {
@@ -21,17 +23,17 @@ export class ValidationService {
             goodsXError1 = solution.container.goods.filter(({ xCoord }) => xCoord < 0),
             goodsXError2 = solution.container.goods.filter(({ xCoord, width }) => (xCoord + width) > solution.container.width),
             goodsYError1 = solution.container.goods.filter(({ yCoord }) => yCoord < 0),
-            dimensions = solution.container.goods.map((good) => ({ good, dimension: getContainerPositionSharedMethods(good) })),
+            dimensions = solution.container.goods.map((good) => ({ good, dimension: ThreeDCalculationService.calculateSpatialPosition(good) })),
             goodsYError2 = solution.container.goods.filter(x => (x.yCoord + x.height) > solution.container!.height),
             goodsZError1 = solution.container.goods.filter(x => x.zCoord < 0),
             goodsZError2 = solution.container.goods.filter((good) => (good.zCoord + good.length) > solution.container!.length);
 
-        for(let error of goodsXError1) output.push({ error: SolutionValidationError.GoodBeforeContainerXCoord, args: { good: error.desc, id: error.id } });
-        for(let error of goodsXError2) output.push({ error: SolutionValidationError.GoodOutOfContainerXCoord, args: { good: error.desc, id: error.id } });
-        for(let error of goodsYError1) output.push({ error: SolutionValidationError.GoodBeforeContainerYCoord, args: { good: error.desc, id: error.id } });
-        for(let error of goodsYError2) output.push({ error: SolutionValidationError.GoodOutOfContainerYCoord, args: { good: error.desc, id: error.id } });
-        for(let error of goodsZError1) output.push({ error: SolutionValidationError.GoodBeforeContainerZCoord, args: { good: error.desc, id: error.id } });
-        for(let error of goodsZError2) output.push({ error: SolutionValidationError.GoodOutOfContainerZCoord, args: { good: error.desc, id: error.id } });
+        for (let error of goodsXError1) output.push({ error: SolutionValidationError.GoodBeforeContainerXCoord, args: { good: error.desc, id: error.id } });
+        for (let error of goodsXError2) output.push({ error: SolutionValidationError.GoodOutOfContainerXCoord, args: { good: error.desc, id: error.id } });
+        for (let error of goodsYError1) output.push({ error: SolutionValidationError.GoodBeforeContainerYCoord, args: { good: error.desc, id: error.id } });
+        for (let error of goodsYError2) output.push({ error: SolutionValidationError.GoodOutOfContainerYCoord, args: { good: error.desc, id: error.id } });
+        for (let error of goodsZError1) output.push({ error: SolutionValidationError.GoodBeforeContainerZCoord, args: { good: error.desc, id: error.id } });
+        for (let error of goodsZError2) output.push({ error: SolutionValidationError.GoodOutOfContainerZCoord, args: { good: error.desc, id: error.id } });
 
         const pastOverlapping: string[] = [];
         for (let wrapper of dimensions) {
@@ -58,18 +60,18 @@ export class ValidationService {
             goodsWiderThanContainer = solution.container.goods.filter(good => good.width > solution.container!.width),
             goodsHigherThanContainer = solution.container.goods.filter(good => good.height > solution.container!.height);
 
-        for(let error of goodsLongerThanContainer) output.push({ error: SolutionValidationError.GoodLongerThanContainer, args: { good: error.desc, id: error.id } });
-        for(let error of goodsWiderThanContainer) output.push({ error: SolutionValidationError.GoodWiderThanContainer, args: { good: error.desc, id: error.id } });
-        for(let error of goodsHigherThanContainer) output.push({ error: SolutionValidationError.GoodHigherThanContainer, args: { good: error.desc, id: error.id } });
-        
+        for (let error of goodsLongerThanContainer) output.push({ error: SolutionValidationError.GoodLongerThanContainer, args: { good: error.desc, id: error.id } });
+        for (let error of goodsWiderThanContainer) output.push({ error: SolutionValidationError.GoodWiderThanContainer, args: { good: error.desc, id: error.id } });
+        for (let error of goodsHigherThanContainer) output.push({ error: SolutionValidationError.GoodHigherThanContainer, args: { good: error.desc, id: error.id } });
+
         return output;
     }
 
-    private static _cubeIsInAnotherCube(cube: IPosition, cubeSet: IPosition[]): IPosition[] {
+    private static _cubeIsInAnotherCube(cube: (IPosition|(Positioned & Spatial)), cubeSet: (IPosition|(Positioned & Spatial))[]): (IPosition|(Positioned & Spatial))[] {
         return cubeSet.filter(x => this._cubeIsInCube(cube, x));
     }
 
-    private static _cubeIsInCube(cube1: IPosition, cube2: IPosition) {
+    private static _cubeIsInCube(cube1: (IPosition | (Positioned & Spatial)), cube2: (IPosition | (Positioned & Spatial))) {
         let c1 = (cube1.xCoord + cube1.width) <= cube2.xCoord;
         let c2 = (cube2.xCoord + cube2.width) <= cube1.xCoord;
         let c3 = (cube1.yCoord + cube1.height) <= cube2.yCoord;

@@ -1,10 +1,18 @@
 import { v4 as generateGuid } from 'uuid';
 import { Solver } from './solver';
-import { IGood, IGroup, IOrder, IPosition, IPossibilities, ISolution, IStep } from '@smgr/interfaces';
+import { IPossibilities } from '@smgr/interfaces';
 import moment from 'moment';
 import { ISolver } from 'src/lib/storage-manager/interfaces/solver.interface';
 import { Algorithm } from 'src/app/globals';
-import getContainerPosition from 'src/app/methods/get-container-position.shared-methods';
+import { Solution } from '../types/solution.type';
+import { SolutionWrapper } from '../types/solution-wrapper.type';
+import { CalculationStep } from '../types/calculation-step.type';
+import { Group } from '../types/group.type';
+import { Order } from '../types/order.type';
+import { UnusedPosition } from '../types/unused-position.type';
+import { ThreeDCalculationService } from '@/lib/shared/services/three-d-calculation.service';
+import { Identifiable } from '../types/identifiable.type';
+import { Good } from '../types/good.type';
 
 export class SuperFloSolver extends Solver implements ISolver {
 
@@ -12,7 +20,7 @@ export class SuperFloSolver extends Solver implements ISolver {
         super();
     }
 
-    public solve(containerHeight: number, containerWidth: number, groups: IGroup[], orders: IOrder[]): ISolution {
+    public solve(containerHeight: number, containerWidth: number, groups: Group[], orders: Order[]): SolutionWrapper {
 
         const solution = {
             id: generateGuid(),
@@ -34,12 +42,14 @@ export class SuperFloSolver extends Solver implements ISolver {
                 title: this._description,
                 staticAlgorithm: Algorithm.SuperFlo
             }
-        } as ISolution;
+        } as Solution,
+            calculationSteps: CalculationStep[] = [];
 
-        const containerPosition = getContainerPosition(solution.container);
-        let positions: IPosition[] = [containerPosition];
-        let positionBacklog: IPosition[] = [containerPosition];
-        let sequenceNumber = 1;
+        const containerPosition = ThreeDCalculationService.calculateSpatialPosition(solution.container);
+        const unusedPosition = ThreeDCalculationService.spatialPositionedToUnusedPosition(containerPosition);
+        let positions: (UnusedPosition & Identifiable)[] = [{ ...unusedPosition, id: generateGuid() }],
+            positionBacklog: UnusedPosition[] = [ThreeDCalculationService.spatialPositionedToUnusedPosition(containerPosition)],
+            sequenceNumber = 1;
 
         for (const group of groups) {
 
@@ -61,36 +71,39 @@ export class SuperFloSolver extends Solver implements ISolver {
                         continue;
                     }
 
-                    positions = [...positions.filter(position => position.id !== addOrderResult.usedPosition?.id), ...addOrderResult.createdPositions];
-                    positionBacklog = [...positionBacklog, ...addOrderResult.createdPositions];
-                    solution.container.goods.push({
-                        ...addOrderResult.placedAtPosition,
-                        desc: order.description,
-                        group: order.group,
-                        stackedOnGood: null,
-                        sequenceNr: sequenceNumber,
-                        id: generateGuid(),
-                        stackingAllowed: order.stackingAllowed,
-                        turningAllowed: order.turningAllowed,
-                        turned: addOrderResult.placedAtPosition?.rotated,
-                        orderGuid: order.id
-                    } as IGood);
-                    solution.steps.push({ ...addOrderResult, sequenceNumber: sequenceNumber });
+                    positions = [...positions.filter(position => position.id !== addOrderResult.usedPosition?.id), ...addOrderResult.positions];
+                    positionBacklog = [...positionBacklog, ...addOrderResult.positions];
+                    solution.container.goods
+                        .push({
+                            ...addOrderResult.usedPosition,
+                            desc: order.description,
+                            group: order.group,
+                            stackedOnGood: null,
+                            sequenceNr: sequenceNumber,
+                            id: generateGuid(),
+                            stackingAllowed: order.stackingAllowed,
+                            turningAllowed: order.turningAllowed,
+                            turned: addOrderResult.usedPosition?.rotated,
+                            orderGuid: order.id
+                        } as Good);
+
+                    calculationSteps.push({ ...addOrderResult, sequenceNumber: sequenceNumber });
                     sequenceNumber++;
 
                     const mergingResult = this.mergePositions(positions, sequenceNumber);
                     positions = mergingResult.positions;
                     sequenceNumber = mergingResult.sequenceNumber;
-                    solution.steps = [...solution.steps, ...mergingResult.steps];
+                    calculationSteps.push(...mergingResult.steps);
                 }
             }
         }
 
         solution.container.length = Math.max(...solution.container.goods.map(good => good.zCoord + good.length), 0);
-        return solution;
+
+        return { solution, calculationSteps, groups, orders, products: [] };
     }
 
-    private addOrder(order: IOrder, orderGroup: IGroup, availablePositions: IPosition[], index: number, positionBacklog: IPosition[]): false | IStep {
+    private addOrder(order: Order, orderGroup: Group, availablePositions: (UnusedPosition & Identifiable)[], index: number, positionBacklog: UnusedPosition[]): false | (CalculationStep & { usedPosition: (UnusedPosition & Identifiable) }) {
         const possibilities: IPossibilities = {
             notRotated: availablePositions
                 .filter(availablePosition => {
@@ -100,7 +113,7 @@ export class SuperFloSolver extends Solver implements ISolver {
                         && (order.stackingAllowed || availablePosition.yCoord === 0)
                         && (availablePosition.groupRestrictedBy == null || orderGroup.sequenceNumber == null || availablePosition.groupRestrictedBy <= orderGroup.sequenceNumber)
                 }),
-            rotated: [] as IPosition[]
+            rotated: []
         }
 
         if (order.turningAllowed) {
@@ -125,9 +138,9 @@ export class SuperFloSolver extends Solver implements ISolver {
         }
 
         const bestPosition = this.getOptimalPosition(possibilities);
-        const putted = this.putOrderIntoPosition(order, orderGroup.sequenceNumber!, bestPosition, index, positionBacklog);
+        const putted = this.putOrderIntoPosition(order, orderGroup.sequenceNumber!, bestPosition, index);
 
-        const recursiveGroupRestricted: IPosition[] = [];
+        const recursiveGroupRestricted: UnusedPosition[] = [];
         for (let position of availablePositions.filter(availablePosition => availablePosition.zCoord < bestPosition.zCoord && (availablePosition.groupRestrictedBy == null || availablePosition.groupRestrictedBy < orderGroup.sequenceNumber!))) {
 
             const overlapping = this.positionIsBehindOrInfrontFirstPosition(bestPosition, position);
@@ -138,30 +151,30 @@ export class SuperFloSolver extends Solver implements ISolver {
         }
 
         return {
+            sequenceNumber: index,
             messages: putted.messages,
             usedPosition: bestPosition,
-            placedAtPosition: putted.goodPosition,
-            createdPositions: putted.createdPositions,
+            positions: putted.createdPositions,
         };
     }
 
-    private getOptimalPosition(possibilities: IPossibilities) {
+    private getOptimalPosition(possibilities: IPossibilities): (UnusedPosition & Identifiable) {
         const minResult1 = [...possibilities.notRotated].sort((p1, p2) => this.minimizationFunction1(p1, p2))[0];
         //const minResult2 = [...possibilities.notRotated, ...possibilities.rotated].sort((p1, p2) => this.minimizationFunction2(p1, p2));
         //return minResult1.zCoord > minResult2.zCoord ? minResult2 : minResult1;
         return minResult1;
     }
 
-    private mergePositions(availablePositions: IPosition[], startingSequenceNumber: number) {
+    private mergePositions(availablePositions: (UnusedPosition & Identifiable)[], startingSequenceNumber: number) {
         let positions = [...availablePositions];
-        const steps: IStep[] = [];
+        const steps: CalculationStep[] = [];
         let found = true;
         let sequenceNumber = startingSequenceNumber;
 
         while (found) {
 
             found = false;
-            let mergedPosition: IPosition | false = false;
+            let mergedPosition: (UnusedPosition & Identifiable) | false = false;
 
             for (const position of positions) {
 
@@ -175,7 +188,7 @@ export class SuperFloSolver extends Solver implements ISolver {
                     mergedPosition = this.mergeIfPossible(position, candidate);
                     if (mergedPosition) {
                         steps.push({
-                            createdPositions: [mergedPosition],
+                            positions: [mergedPosition],
                             messages: [`merged positions to new position`],
                             sequenceNumber: sequenceNumber
                         });
@@ -196,14 +209,14 @@ export class SuperFloSolver extends Solver implements ISolver {
         return { positions, steps, sequenceNumber };
     }
 
-    private minimizationFunction1(position1: IPosition, position2: IPosition) {
+    private minimizationFunction1(position1: UnusedPosition, position2: UnusedPosition) {
         if (position1.zCoord === position2.zCoord) {
             return position1.xCoord > position2.xCoord ? 1 : -1;
         }
         return position1.zCoord > position2.zCoord ? 1 : -1;
     }
 
-    private minimizationFunction2(position1: IPosition, position2: IPosition, orderWidth: number, orderLength: number) {
+    private minimizationFunction2(position1: UnusedPosition, position2: UnusedPosition, orderWidth: number, orderLength: number) {
         const position1Rest = position1.width % orderWidth;
         const position2Rest = position2.width % orderWidth;
         if (position1Rest === position2Rest) {
@@ -212,7 +225,7 @@ export class SuperFloSolver extends Solver implements ISolver {
         return position1Rest > position2Rest ? 1 : -1;
     }
 
-    private putOrderIntoPosition(order: IOrder, orderGroup: number, position: IPosition, start: number, positionBacklog: IPosition[]) {
+    private putOrderIntoPosition(order: Order, orderGroup: number, position: UnusedPosition, start: number) {
         let index = start;
         let groupRestrictedBy = orderGroup;
         if (position.groupRestrictedBy && position.groupRestrictedBy < groupRestrictedBy) {
@@ -227,22 +240,23 @@ export class SuperFloSolver extends Solver implements ISolver {
             z: position.rotated ? position.length - order.width : position.length - order.length
         };
 
-        let createdPositions: IPosition[] = [];
+        let createdPositions: (UnusedPosition & Identifiable)[] = [];
 
         if (diff.y > 0 && order.stackingAllowed) {
             index++;
             const addPosition = {
                 ...position,
+                id: generateGuid(),
                 fCoord: position.zCoord + order.length,
                 yCoord: position.yCoord + order.height,
                 height: diff.y,
                 length: order.length,
                 index: index,
                 groupRestrictedBy: orderGroup,
-                stackedOnPosition: position.id,
                 width: order.width,
                 rCoord: position.xCoord + order.width
-            } as IPosition;
+            };
+
             createdPositions.push(addPosition);
             messages.push(`added space at (${addPosition.xCoord}, ${addPosition.yCoord}, ${addPosition.zCoord}) | w: ${addPosition.width}, h: ${addPosition.height}, l: ${addPosition.length}`);
         }
@@ -275,8 +289,9 @@ export class SuperFloSolver extends Solver implements ISolver {
             messages.push(`added space at (${addPosition.xCoord}, ${addPosition.yCoord}, ${addPosition.zCoord}) | w: ${addPosition.width}, h: ${addPosition.height}, l: ${addPosition.length}`);
         }
 
-        const goodPosition: IPosition = {
+        const goodPosition = {
             ...position,
+            id: generateGuid(),
             fCoord: position.fCoord === Infinity || diff.z === Infinity ? Infinity : position.fCoord - diff.z,
             rCoord: position.rCoord - diff.x,
             tCoord: position.tCoord - diff.y,
@@ -288,13 +303,13 @@ export class SuperFloSolver extends Solver implements ISolver {
         return { createdPositions, messages, goodPosition };
     }
 
-    private positionIsBehindOrInfrontFirstPosition(firstPosition: IPosition, position: IPosition): boolean {
+    private positionIsBehindOrInfrontFirstPosition(firstPosition: UnusedPosition, position: UnusedPosition): boolean {
         if ((firstPosition.tCoord <= position.yCoord) || (firstPosition.yCoord >= position.tCoord)) return false;
         if ((firstPosition.rCoord <= position.xCoord) || (firstPosition.xCoord >= position.rCoord)) return false;
         return true;
     }
 
-    private mergeIfPossible(source: IPosition, candidate: IPosition): false | IPosition {
+    private mergeIfPossible(source: UnusedPosition, candidate: UnusedPosition): false | UnusedPosition & Identifiable {
         if (
             source.yCoord === candidate.yCoord &&
             source.xCoord === candidate.xCoord &&

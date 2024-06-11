@@ -10,6 +10,7 @@ import { CalculationError } from "./enumerations/calculation-error";
 import { IAlgorithmStatusWrapper } from "./interfaces/i-algorithm-calculation-status-wrapper.interface";
 import { selectSnapshot } from "src/lib/process-builder/globals/select-snapshot";
 import { setCurrentSolution, selectCalculationAttributesValid, selectGroups, selectContainerHeight, selectContainerWidth, selectSolutions, selectOrders, updateAlgorithmSolution } from "@smgr/store";
+import { Solution } from "@/lib/storage-manager/types/solution.type";
 
 @Injectable()
 export class CalculationComponentService {
@@ -27,7 +28,7 @@ export class CalculationComponentService {
         wrapper.errors.splice(0, wrapper.errors.length);
         wrapper.status = AlgorithmCalculationStatus.PrepareCalculation;
 
-        let result: ISolution | undefined;
+        let result: Solution | undefined;
         const calculationAttributesValid = await selectSnapshot(this._store.select(selectCalculationAttributesValid));
         if (!calculationAttributesValid) {
             this._calculationCallback.error({
@@ -46,22 +47,22 @@ export class CalculationComponentService {
 
             case Algorithm.AllInOneRow:
                 wrapper.status = AlgorithmCalculationStatus.Calculating;
-                result = await new AllInOneRowSolver(wrapper.solutionDescription).solve(containerHeight, containerWidth, groups, orders);
+                result = await new AllInOneRowSolver(wrapper.solutionDescription).solve(containerHeight, containerWidth, groups, orders).solution;
                 break;
 
             case Algorithm.StartLeftBottom:
                 wrapper.status = AlgorithmCalculationStatus.Calculating;
-                result = await new StartLeftBottomSolver(wrapper.solutionDescription).solve(containerHeight, containerWidth, groups, orders);
+                result = await new StartLeftBottomSolver(wrapper.solutionDescription).solve(containerHeight, containerWidth, groups, orders).solution;
                 break;
 
             case Algorithm.SuperFlo:
                 wrapper.status = AlgorithmCalculationStatus.Calculating;
-                result = await new SuperFloSolver(wrapper.solutionDescription).solve(containerHeight, containerWidth, groups, orders);
+                result = await new SuperFloSolver(wrapper.solutionDescription).solve(containerHeight, containerWidth, groups, orders).solution;
                 break;
 
         }
 
-        this._calculationCallback.next([wrapper, result!]);
+        this._calculationCallback.next([wrapper, result as ISolution]);
     }
 
     visualizeSolution(solution: ISolution) {

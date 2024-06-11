@@ -159,9 +159,9 @@ export class VisualizationComponent implements OnInit {
     }
 
     public ngOnInit(): void {
-        const { groups, calculationSteps, solution } = history.state;
+        const { groups, calculationSteps, solution, orders, products } = history.state as SolutionWrapper;
         if (groups && solution) {
-            const solutionWrapper = { groups, solution, calculationSteps } as SolutionWrapper;
+            const solutionWrapper = { groups, solution, calculationSteps, orders, products };
             this._store.dispatch(setSolution({ solutionWrapper }));
         }
         else this._router.navigate(['/calculation']);

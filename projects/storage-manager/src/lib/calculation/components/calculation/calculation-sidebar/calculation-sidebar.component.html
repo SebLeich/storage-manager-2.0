@@ -16,14 +16,14 @@
 
 </div>
 
-@for(solution of (solutions$|async); track solution){
+@for(solutionWrapper of (solutionWrappers$|async); track solutionWrapper){
 <div class="item">
-    <h3>{{solution.calculationSource.title}}</h3>
+    <h3>{{solutionWrapper.solution.calculationSource.title}}</h3>
     <div>
         <span>Length</span>
-        <span>{{solution.container.length}} m</span>
+        <span>{{solutionWrapper.solution.container.length}} m</span>
     </div>
-    <button (click)="showCalculatedSolution(solution)">
+    <button (click)="showCalculatedSolution(solutionWrapper)">
         Show
     </button>
 </div>
