@@ -36,7 +36,6 @@
                         "styles": [
                             "@angular/material/prebuilt-themes/deeppurple-amber.css",
                             "src/theme.scss",
-                            "src/styles.css",
                             "./node_modules/bpmn-js/dist/assets/diagram-js.css",
                             "./node_modules/bpmn-js/dist/assets/bpmn-font/css/bpmn.css",
                             "./node_modules/jsoneditor/dist/jsoneditor.min.css",
@@ -129,7 +128,6 @@
                         "styles": [
                             "@angular/material/prebuilt-themes/deeppurple-amber.css",
                             "src/theme.scss",
-                            "src/styles.css",
                             "./node_modules/bpmn-js/dist/assets/diagram-js.css",
                             "./node_modules/bpmn-js/dist/assets/bpmn-font/css/bpmn.css",
                             "./node_modules/jsoneditor/dist/jsoneditor.min.css",

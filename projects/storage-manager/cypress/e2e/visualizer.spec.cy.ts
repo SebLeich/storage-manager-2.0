@@ -19,7 +19,6 @@ describe('Test visualizer', () => {
         cy.get('@setExemplarySolution').click();
 
         cy.get(`router-outlet + app-visualizer`).should('exist');
-        cy.get(`app-solution-preview`).should('exist');
         cy.get(`app-scene-visualization`).should('exist');
     });
 

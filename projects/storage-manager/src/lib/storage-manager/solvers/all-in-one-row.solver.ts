@@ -8,6 +8,7 @@ import { Order } from '../types/order.type';
 import { SolutionWrapper } from '../types/solution-wrapper.type';
 import { Solution } from '../types/solution.type';
 import { Good } from '../types/good.type';
+import { CalculationStep } from '../types/calculation-step.type';
 
 export class AllInOneRowSolver extends Solver implements ISolver {
 
@@ -35,7 +36,7 @@ export class AllInOneRowSolver extends Solver implements ISolver {
                 staticAlgorithm: Algorithm.AllInOneRow,
                 title: this._description
             },
-        };
+        }, calculationSteps: CalculationStep[] = [];
 
         let currentPosition = { x: 0, y: 0, z: 0 };
         let sequenceNumber = 0;

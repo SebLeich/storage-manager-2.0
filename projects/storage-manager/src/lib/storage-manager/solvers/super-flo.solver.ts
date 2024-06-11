@@ -13,6 +13,7 @@ import { UnusedPosition } from '../types/unused-position.type';
 import { ThreeDCalculationService } from '@/lib/shared/services/three-d-calculation.service';
 import { Identifiable } from '../types/identifiable.type';
 import { Good } from '../types/good.type';
+import { UsedPosition } from '../types/used-position.type';
 
 export class SuperFloSolver extends Solver implements ISolver {
 
@@ -22,8 +23,7 @@ export class SuperFloSolver extends Solver implements ISolver {
 
     public solve(containerHeight: number, containerWidth: number, groups: Group[], orders: Order[]): SolutionWrapper {
 
-        const solution = {
-            id: generateGuid(),
+        const solution: Solution = {
             description: this._description,
             container: {
                 id: generateGuid(),
@@ -36,19 +36,17 @@ export class SuperFloSolver extends Solver implements ISolver {
                 goods: [],
                 unit: 'mm'
             },
-            steps: [],
             calculated: moment().format(),
             calculationSource: {
                 title: this._description,
                 staticAlgorithm: Algorithm.SuperFlo
             }
-        } as Solution,
-            calculationSteps: CalculationStep[] = [];
+        }, calculationSteps: CalculationStep[] = [];
 
         const containerPosition = ThreeDCalculationService.calculateSpatialPosition(solution.container);
         const unusedPosition = ThreeDCalculationService.spatialPositionedToUnusedPosition(containerPosition);
         let positions: (UnusedPosition & Identifiable)[] = [{ ...unusedPosition, id: generateGuid() }],
-            positionBacklog: UnusedPosition[] = [ThreeDCalculationService.spatialPositionedToUnusedPosition(containerPosition)],
+            positionBacklog: UnusedPosition[] = [unusedPosition],
             sequenceNumber = 1;
 
         for (const group of groups) {
@@ -73,9 +71,10 @@ export class SuperFloSolver extends Solver implements ISolver {
 
                     positions = [...positions.filter(position => position.id !== addOrderResult.usedPosition?.id), ...addOrderResult.positions];
                     positionBacklog = [...positionBacklog, ...addOrderResult.positions];
-                    solution.container.goods
+                    solution.container
+                        .goods
                         .push({
-                            ...addOrderResult.usedPosition,
+                            ...addOrderResult.goodPosition,
                             desc: order.description,
                             group: order.group,
                             stackedOnGood: null,
@@ -103,7 +102,7 @@ export class SuperFloSolver extends Solver implements ISolver {
         return { solution, calculationSteps, groups, orders, products: [] };
     }
 
-    private addOrder(order: Order, orderGroup: Group, availablePositions: (UnusedPosition & Identifiable)[], index: number, positionBacklog: UnusedPosition[]): false | (CalculationStep & { usedPosition: (UnusedPosition & Identifiable) }) {
+    private addOrder(order: Order, orderGroup: Group, availablePositions: (UnusedPosition & Identifiable)[], index: number, positionBacklog: UnusedPosition[]): false | (CalculationStep & { usedPosition: (UnusedPosition & Identifiable), goodPosition: UsedPosition }) {
         const possibilities: IPossibilities = {
             notRotated: availablePositions
                 .filter(availablePosition => {
@@ -138,7 +137,7 @@ export class SuperFloSolver extends Solver implements ISolver {
         }
 
         const bestPosition = this.getOptimalPosition(possibilities);
-        const putted = this.putOrderIntoPosition(order, orderGroup.sequenceNumber!, bestPosition, index);
+        const { messages, createdPositions, goodPosition } = this.putOrderIntoPosition(order, orderGroup.sequenceNumber!, bestPosition, index);
 
         const recursiveGroupRestricted: UnusedPosition[] = [];
         for (let position of availablePositions.filter(availablePosition => availablePosition.zCoord < bestPosition.zCoord && (availablePosition.groupRestrictedBy == null || availablePosition.groupRestrictedBy < orderGroup.sequenceNumber!))) {
@@ -152,9 +151,16 @@ export class SuperFloSolver extends Solver implements ISolver {
 
         return {
             sequenceNumber: index,
-            messages: putted.messages,
+            messages,
             usedPosition: bestPosition,
-            positions: putted.createdPositions,
+            positions: createdPositions,
+            goodPosition: {
+                ...goodPosition,
+                goodId: generateGuid(),
+                goodDesc: order.description ?? 'unnamed order',
+                groupId: orderGroup.id,
+                usedPositions: createdPositions.map(position => position.index)
+            }
         };
     }
 

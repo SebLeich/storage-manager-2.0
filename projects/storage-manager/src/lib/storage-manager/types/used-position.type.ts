@@ -1,7 +1,7 @@
 import { UnusedPosition } from "./unused-position.type";
 
 export type UsedPosition = UnusedPosition & {
-    goodId: number;
+    goodId: string;
     goodDesc: string;
     groupId: string;
     usedPositions: number[];

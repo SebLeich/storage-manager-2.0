@@ -3,7 +3,6 @@ import { isDevMode, NgModule } from '@angular/core';
 import { HttpClientModule } from '@angular/common/http';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { AppComponent } from './app.component';
-import { NavbarComponent } from './components/navbar/navbar.component';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatExpansionModule } from '@angular/material/expansion';
@@ -20,7 +19,6 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { EditDataDialogComponent } from './components/dialog/edit-data-dialog/edit-data-dialog.component';
-import { SolutionPreviewComponent } from './components/solution-preview/solution-preview.component';
 import { NgChartsModule } from 'ng2-charts';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { SortedFormArrayPipe } from './pipes/sorted-form-array.pipe';
@@ -76,10 +74,8 @@ const routes: Routes = [
 @NgModule({
     declarations: [
         AppComponent,
-        NavbarComponent,
         GoodPreviewComponent,
         EditDataDialogComponent,
-        SolutionPreviewComponent,
         GoodsPanelComponent,
         GroupsPanelComponent,
         SortedFormArrayPipe,
