@@ -1,0 +1,1 @@
+export type GoodTexture = 'cardboard' | 'glass' | 'wood' | 'wood_light';

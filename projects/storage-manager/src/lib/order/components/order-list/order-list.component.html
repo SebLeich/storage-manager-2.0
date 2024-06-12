@@ -7,7 +7,8 @@
             <span class="index">{{$index + 1}}</span>
             <ng-container *ngLet="formGroup.controls['description'] as control">
                 <app-input-wrapper [control]="control" [label]="'defaults.description'|translation|async">
-                    <input class="description" type="text" formControlName="description" [placeholder]="'defaults.placeholders.text'|translation|async"
+                    <input class="description" type="text" formControlName="description"
+                        [placeholder]="'defaults.placeholders.text'|translation|async"
                         (keydown.backspace)="!control?.value? removeOrder($index): $event" />
                 </app-input-wrapper>
             </ng-container>
@@ -29,10 +30,18 @@
                 <input class="length" type="number" formControlName="length" [placeholder]="'defaults.placeholders.numeric'|translation|async" />
             </app-input-wrapper>
 
-
             <app-group-selection formControlName="group"></app-group-selection>
 
-            <mat-icon class="control remove" (click)="removeOrder($index)">delete_forever</mat-icon>
+            <app-input-wrapper [label]="'defaults.texture'|translation|async">
+                <select formControlName="texture">
+                    <option value="cardboard">{{'goodTextures.cardboard'|translation|async}}</option>
+                    <option value="glass">{{'goodTextures.glass'|translation|async}}</option>
+                    <option value="wood">{{'goodTextures.wood'|translation|async}}</option>
+                    <option value="woodLight">{{'goodTextures.woodLight'|translation|async}}</option>
+                </select>
+            </app-input-wrapper>
+
+            <mat-icon class=" control remove" (click)="removeOrder($index)">delete_forever</mat-icon>
             <ng-container *ngLet="(formGroup.statusChanges|async) as status">
                 <mat-icon [matTooltip]="('hints.' + (status === 'INVALID'? 'orderInvalid': 'orderValid')|unsafeTranslation|async) ?? ''"
                     class="hint-icon {{status === 'INVALID'? 'warning': 'success'}}">

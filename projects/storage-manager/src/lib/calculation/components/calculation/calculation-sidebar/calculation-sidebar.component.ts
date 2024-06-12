@@ -1,7 +1,7 @@
 import { setContainerDimensions } from '@/lib/calculation/store/calculation.actions';
 import { selectContainerHeight, selectContainerWidth } from '@/lib/calculation/store/calculation.selectors';
 import { selectGroups } from '@/lib/groups/store/group.selectors';
-import { selectOrders } from '@/lib/order/store/order.selectors';
+import { selectValidOrders } from '@/lib/order/store/order.selectors';
 import { AllInOneRowSolver, StartLeftBottomSolver, SuperFloSolver } from '@/lib/storage-manager/solvers';
 import { SolutionWrapper } from '@/lib/storage-manager/types/solution-wrapper.type';
 import { ChangeDetectionStrategy, Component, EventEmitter, Output } from '@angular/core';
@@ -20,7 +20,7 @@ export class CalculationSidebarComponent {
     public containerHeight$ = this._store.select(selectContainerHeight);
     public containerWidth$ = this._store.select(selectContainerWidth);
     public groups$ = this._store.select(selectGroups);
-    public orders$ = this._store.select(selectOrders);
+    public orders$ = this._store.select(selectValidOrders);
     public recalculate$ = combineLatest([this.orders$, this.groups$, this.containerHeight$, this.containerWidth$]);
     public recalculationTriggered$ = this.recalculate$.pipe(switchMap(() => timer(2000).pipe(map(() => false), startWith(true))));
     public solutionWrappers$ = this.recalculate$.pipe(

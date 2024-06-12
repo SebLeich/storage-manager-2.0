@@ -17,6 +17,7 @@ import { ObjectSite } from '@/lib/storage-manager/types/object-site.type';
 import { WallTexture } from '@/lib/storage-manager/types/wall-texture.type';
 import { CSG } from 'three-csg-ts';
 import { v4 } from 'uuid';
+import { GoodTexture } from '@/lib/storage-manager/types/good-texture.type';
 
 @Injectable()
 export class VisualizationService {
@@ -67,7 +68,7 @@ export class VisualizationService {
             for (const good of solution.container.goods) {
                 const position = ThreeDCalculationService.calculateSpatialPosition(good);
                 const group = groups.find((group) => group.id === good.group),
-                    { basicMesh, mesh, edges } = VisualizationService.generateFilledBoxMesh({ ...position, id: v4() }, 'good', containerPosition);
+                    { basicMesh, mesh, edges } = VisualizationService.generateFilledBoxMesh({ ...position, id: v4() }, 'good', containerPosition, undefined, undefined, good.texture);
 
                 if (displayGoods) {
                     mesh.userData['goodId'] = good.id;
@@ -392,12 +393,18 @@ export class VisualizationService {
         type: string,
         relativeToParent?: IPosition | SpatialPositioned,
         borderColor: string = defaultGoodEdgeColor,
-        borderWidth = 1
+        borderWidth = 1,
+        goodTexture: GoodTexture = 'cardboard'
     ) {
         const geometry = new RoundedBoxGeometry(position.width, position.height, position.length === Infinity ? infinityReplacement : position.length, 4, 10),
-            texture = new TextureLoader().load('assets/textures/cardboard.jpg');
+            texture = new TextureLoader().load(`assets/textures/${goodTexture}.jpg`);
 
         const material = new MeshBasicMaterial({ map: texture });
+        if(goodTexture === 'glass'){
+            material.transparent = true;
+            material.opacity = 0.5;
+        }
+
         const mesh = new Mesh(geometry, material);
         const relativePosition = this.calculateRelativePosition(position, relativeToParent);
         mesh.position.set(relativePosition.xCoord, relativePosition.yCoord, relativePosition.zCoord);
@@ -458,7 +465,7 @@ export class VisualizationService {
         context.fillText(subTitle, 6, canvas.height - 20);
 
         const texture = new CanvasTexture(canvas);
-        const material = new MeshBasicMaterial({ map: texture, transparent: true });
+        const material = new MeshBasicMaterial({ map: texture, transparent: true, side: DoubleSide });
 
         const geometry = new PlaneGeometry(canvas.width, canvas.height);
         const mesh = new Mesh(geometry, material);

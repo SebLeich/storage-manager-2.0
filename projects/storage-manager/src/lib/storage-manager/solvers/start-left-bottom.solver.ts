@@ -59,7 +59,8 @@ export class StartLeftBottomSolver extends Solver implements ISolver {
                         turningAllowed: order.turningAllowed,
                         stackingAllowed: order.stackingAllowed,
                         sequenceNr: sequenceNumber,
-                        orderGuid: order.id
+                        orderGuid: order.id,
+                        texture: order.texture ?? 'cardboard'
                     };
                     solution.container!.goods.push(lastGood);
                     sequenceNumber++;

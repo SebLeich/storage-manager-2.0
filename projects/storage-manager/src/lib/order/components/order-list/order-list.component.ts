@@ -51,6 +51,7 @@ export class OrderListComponent implements OnDestroy, OnInit {
             quantity: new FormControl(order.quantity, { nonNullable: true, validators: [Validators.min(1), Validators.required] }),
             stackingAllowed: new FormControl(order.stackingAllowed ?? false, { nonNullable: true }),
             turningAllowed: new FormControl(order.turningAllowed ?? false, { nonNullable: true }),
+            texture: new FormControl(order.texture, { nonNullable: true, validators: [Validators.required] })
         }));
 
         return new FormArray(formGroups);

@@ -43,7 +43,7 @@ export class SolutionVisualizationDialogComponent implements OnInit {
 
   private async _updateScene() {
     const groups: Group[] = [];
-    this._visualizationService.configureSolutionScene(this.solution, this.scene, groups, true, '#ffffff');
+    this._visualizationService.configureSolutionScene(this.solution as any, this.scene, groups, true, '#ffffff');
   }
 
 }

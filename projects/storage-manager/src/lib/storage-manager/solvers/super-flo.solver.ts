@@ -12,7 +12,6 @@ import { Order } from '../types/order.type';
 import { UnusedPosition } from '../types/unused-position.type';
 import { ThreeDCalculationService } from '@/lib/shared/services/three-d-calculation.service';
 import { Identifiable } from '../types/identifiable.type';
-import { Good } from '../types/good.type';
 import { UsedPosition } from '../types/used-position.type';
 
 export class SuperFloSolver extends Solver implements ISolver {
@@ -83,8 +82,9 @@ export class SuperFloSolver extends Solver implements ISolver {
                             stackingAllowed: order.stackingAllowed,
                             turningAllowed: order.turningAllowed,
                             turned: addOrderResult.usedPosition?.rotated,
-                            orderGuid: order.id
-                        } as Good);
+                            orderGuid: order.id,
+                            texture: order.texture ?? 'cardboard'
+                        });
 
                     calculationSteps.push({ ...addOrderResult, sequenceNumber: sequenceNumber });
                     sequenceNumber++;

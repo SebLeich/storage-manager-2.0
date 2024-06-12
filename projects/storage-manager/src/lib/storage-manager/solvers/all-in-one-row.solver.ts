@@ -61,7 +61,8 @@ export class AllInOneRowSolver extends Solver implements ISolver {
                         group: group.id,
                         stackingAllowed: order.stackingAllowed,
                         turningAllowed: order.turningAllowed,
-                        orderGuid: order.id
+                        orderGuid: order.id,
+                        texture: order.texture ?? 'cardboard'
                     };
                     solution.container!.goods.push(good);
                     sequenceNumber++;

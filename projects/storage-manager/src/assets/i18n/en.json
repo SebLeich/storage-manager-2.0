@@ -43,6 +43,7 @@
             "numeric": "123 ...",
             "text": "Aa ..."
         },
+        "texture": "Texture",
         "quantity": "Quantity",
         "validation": "Validation",
         "viewInformation": "View Information",
@@ -52,6 +53,12 @@
         "zoomFactor": "Zoom Factor",
         "zoomIn": "Zoom In",
         "zoomOut": "Zoom Out"
+    },
+    "goodTextures": {
+        "cardboard": "Cardboard",
+        "glass": "Glass",
+        "wood": "Wood",
+        "woodLight": "Light Wood"
     },
     "hints": {
         "noContainer": "No container selected",

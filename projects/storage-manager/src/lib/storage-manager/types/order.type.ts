@@ -1,3 +1,4 @@
+import { GoodTexture } from "./good-texture.type";
 import { Identifiable } from "./identifiable.type";
 import { Spatial } from "./spatial.type";
 
@@ -8,4 +9,5 @@ export type Order = Spatial & Identifiable & {
     turningAllowed: boolean;
     stackingAllowed: boolean;
     group: string;
+    texture?: GoodTexture;
 }

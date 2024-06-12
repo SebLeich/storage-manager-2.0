@@ -13,10 +13,10 @@
             <select (change)="containerColorChanged.emit($any($event.target).value)" [value]="containerColor()">
                 <option value="black">{{'colors.black'|translation|async}}</option>
                 <option value="white">{{'colors.white'|translation|async}}</option>
-                <option value="red">Red</option>
-                <option value="green">Green</option>
-                <option value="blue">Blue</option>
-                <option value="yellow">Yellow</option>
+                <option value="red">{{'colors.red'|translation|async}}</option>
+                <option value="green">{{'colors.green'|translation|async}}</option>
+                <option value="blue">{{'colors.blue'|translation|async}}</option>
+                <option value="yellow">{{'colors.yellow'|translation|async}}</option>
             </select>
         </app-input-wrapper>
 

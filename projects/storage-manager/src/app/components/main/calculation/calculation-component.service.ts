@@ -62,7 +62,7 @@ export class CalculationComponentService {
 
         }
 
-        this._calculationCallback.next([wrapper, result as ISolution]);
+        this._calculationCallback.next([wrapper, result as any]);
     }
 
     visualizeSolution(solution: ISolution) {
