@@ -159,7 +159,13 @@ export class VisualizationComponent implements OnInit {
     }
 
     public ngOnInit(): void {
-        const { groups, calculationSteps, solution, orders, products } = history.state as SolutionWrapper;
+        const state = history.state as SolutionWrapper;
+        const groups = state?.groups,
+            solution = state?.solution,
+            calculationSteps = state?.calculationSteps,
+            orders = state?.orders,
+            products = state?.products;
+            
         if (groups && solution) {
             const solutionWrapper = { groups, solution, calculationSteps, orders, products };
             this._store.dispatch(setSolution({ solutionWrapper }));

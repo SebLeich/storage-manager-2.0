@@ -1,3 +1,4 @@
+import { TranslationModule } from '@/lib/translation';
 import { SolutionGroupsComponent } from './solution-groups.component';
 import { Spectator, createComponentFactory } from '@ngneat/spectator';
 
@@ -6,6 +7,9 @@ describe('SolutionGroupsComponent', () => {
 
     const createComponent = createComponentFactory({
         component: SolutionGroupsComponent,
+        imports: [
+            TranslationModule
+        ]
     });
 
     beforeEach(() => spectator = createComponent());

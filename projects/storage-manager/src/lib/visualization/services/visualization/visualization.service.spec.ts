@@ -30,7 +30,7 @@ describe('SolutionVisualizationService', () => {
 
         expect(gridHelper instanceof GridHelper).toBeTruthy();
         expect(gridHelper.position.x).toBe(0);
-        expect(gridHelper.position.y).toBe(containerWidth / -2);
+        expect(gridHelper.position.y).toBe((containerWidth / -2)  - (3 * VisualizationService._glitchMargin));
         expect(gridHelper.position.z).toBe(0);
     });
 
