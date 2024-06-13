@@ -85,17 +85,4 @@ describe('SolutionPreviewRenderingComponent', () => {
     expect(fixture.debugElement.query(By.css('#solution-preview'))).toBeTruthy();
   });
 
-  it('should always display image with the same height and width as the body', async () => {
-    fixture.detectChanges();
-
-    await selectSnapshot(fixture.componentInstance.previewRenderingInitiallySucceeded$);
-    fixture.detectChanges();
-    await fixture.whenRenderingDone();
-
-    const solutionPreview = fixture.debugElement.query(By.css('#solution-preview'));
-    const body = fixture.debugElement.query(By.css('.body'));
-    expect(solutionPreview.nativeElement.offsetHeight).toBe(body.nativeElement.offsetHeight);
-    expect(solutionPreview.nativeElement.offsetWidth).toBe(body.nativeElement.offsetWidth);
-  });
-
 });

@@ -1,17 +1,11 @@
+import { Unit } from '@/app/types/unit.type';
 import { Pipe, PipeTransform } from '@angular/core';
-import { Store } from '@ngrx/store';
-import { selectSnapshot } from 'src/lib/process-builder/globals/select-snapshot';
-import { selectUnit } from '@smgr/store';
 
 @Pipe({
     name: 'prettyVolume'
 })
 export class PrettyVolumePipe implements PipeTransform {
-
-    constructor(private _store: Store) { }
-
-    public async transform(value: number, prettify: boolean = true, decimalDigits: number = 2, hideDecimalDigitsWhenZero: boolean = false): Promise<string> {
-        let unit = await selectSnapshot(this._store.select(selectUnit));
+    public transform(value: number, unit: Unit, prettify: boolean = true, decimalDigits: number = 2, hideDecimalDigitsWhenZero: boolean = false): string {
         if (!prettify) {
             return `${value} ${unit}³`;
         }

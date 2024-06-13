@@ -16,7 +16,7 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatDialogModule } from '@angular/material/dialog';
-import { calculationAttributeState, groupState, orderState, productState, solutionState, solutionPreviewState, ICalculationAttributesEffects, IGroupEffects, IOrderEffects, IPendingProcedureEffects, IProductEffects, ISolutionEffects, ISolutionPreviewEffects } from '@smgr/store';
+import { calculationAttributeState, groupState, orderState, productState, solutionState, solutionPreviewState, ICalculationAttributesEffects, IOrderEffects, IPendingProcedureEffects, IProductEffects, ISolutionEffects, ISolutionPreviewEffects } from '@smgr/store';
 
 import { pendingProcedureState } from '@procedure';
 import { bpmnJsModelState, functionState, IBpmnJSModelEffects, IFunctionEffects, IInterfaceEffects, injectionContextState, interfaceState, IParamEffects, paramState } from '@process-builder/store';
@@ -58,7 +58,6 @@ export default [
     StoreModule.forRoot(rootStoreFeatures, { }),
     EffectsModule.forRoot([
         ICalculationAttributesEffects,
-        IGroupEffects,
         IOrderEffects,
         IPendingProcedureEffects,
         IProductEffects,

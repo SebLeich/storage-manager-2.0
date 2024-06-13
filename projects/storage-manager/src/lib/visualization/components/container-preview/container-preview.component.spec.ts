@@ -1,14 +1,16 @@
 import { By } from '@angular/platform-browser';
 import { ContainerPreviewComponent } from './container-preview.component';
-import { SharedModule } from '@/lib/shared/shared.module';
 import { Spectator, createComponentFactory } from '@ngneat/spectator';
 import { Container } from '@/lib/storage-manager/types/container.type';
+import { TranslationModule } from '@/lib/translation';
 
 describe('ContainerPreviewComponent', () => {
     let spectator: Spectator<ContainerPreviewComponent>;
     const createComponent = createComponentFactory({
         component: ContainerPreviewComponent,
-        imports: [SharedModule],
+        imports: [
+            TranslationModule
+        ],
     });
 
     beforeEach(() => spectator = createComponent());

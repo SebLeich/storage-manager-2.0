@@ -21,7 +21,7 @@
         <div class="property">
             <div class="attribute">{{'defaults.volume'|unsafeTranslation|async}}</div>
             <div class="value">
-                {{ selectedContainer.length * selectedContainer.height * selectedContainer.width | prettyVolume: true | async }}
+                {{ selectedContainer.length * selectedContainer.height * selectedContainer.width | prettyVolume:unit():true }}
             </div>
         </div>
     </div>

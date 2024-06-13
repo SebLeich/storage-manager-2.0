@@ -1,27 +1,15 @@
-import { TestBed } from '@angular/core/testing';
-import { AppModule } from '../app.module';
-import defaultImportsConstant from '../default-imports.constant';
+import { SpectatorService, createServiceFactory } from '@ngneat/spectator';
+import { ValidationService } from './validation.service';
 
-import { SolutionValidationService } from './solution-validation.service';
-
-describe('SolutionValidationService', () => {
-  let service: SolutionValidationService;
-
-  beforeEach(() => {
-    TestBed.configureTestingModule({
-      imports: [
-        ...defaultImportsConstant,
-
-        AppModule
-      ],
-      providers: [
-        SolutionValidationService
-      ]
+describe('ValidationService', () => {
+    let spectator: SpectatorService<ValidationService>;
+    const createService = createServiceFactory({
+        service: ValidationService
     });
-    service = TestBed.inject(SolutionValidationService);
-  });
 
-  it('should be created', () => {
-    expect(service).toBeTruthy();
-  });
+    beforeEach(() => spectator = createService());
+
+    it('should create', () => {
+        expect(spectator.service).toBeTruthy();
+    });
 });

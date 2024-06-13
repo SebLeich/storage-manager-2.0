@@ -23,7 +23,6 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { SortedFormArrayPipe } from './pipes/sorted-form-array.pipe';
 import { ApiCallConfiguratorDialogComponent } from './components/dialog/api-call-configurator-dialog/api-call-configurator-dialog.component';
 import { AutomationModule } from 'src/lib/automation/automation.module';
-import { CalculationErrorPipe } from './pipes/calculation-error.pipe';
 import { SolutionAnimationComponent } from './components/solution-animation/solution-animation.component';
 import { NoSolutionDialogComponent } from './components/dialog/no-solution-dialog/no-solution-dialog.component';
 import { PROCESS_BUILDER_CONFIG_TOKEN } from 'src/lib/process-builder/interfaces/process-builder-config.interface';
@@ -48,8 +47,8 @@ import { ApplicationEffects } from './store/effects/application.effects';
 import { StorageManagerModule } from 'src/lib/storage-manager/storage-manager.module';
 import { RouterModule, Routes } from '@angular/router';
 import { ErrorComponent } from 'src/lib/shared/components/error/error.component';
-import { GoodPreviewComponent, GoodsPanelComponent } from '@smgr/components';
-import { AboutComponent, CalculationComponent, LocalDataComponent } from '@main-components';
+import { GoodsPanelComponent } from '@smgr/components';
+import { AboutComponent, LocalDataComponent } from '@main-components';
 import { APP_BASE_HREF, PlatformLocation } from '@angular/common';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 
@@ -73,13 +72,10 @@ const routes: Routes = [
 @NgModule({
     declarations: [
         AppComponent,
-        GoodPreviewComponent,
         EditDataDialogComponent,
         GoodsPanelComponent,
         SortedFormArrayPipe,
-        CalculationComponent,
         ApiCallConfiguratorDialogComponent,
-        CalculationErrorPipe,
         SolutionAnimationComponent,
         NoSolutionDialogComponent,
         LocalDataComponent,

@@ -1,3 +1,4 @@
+import { MatIconModule } from '@angular/material/icon';
 import { ObjectSiteSelectionComponent } from './object-site-selection.component';
 import { Spectator, createComponentFactory } from '@ngneat/spectator';
 
@@ -6,6 +7,9 @@ describe('ObjectSitePreviewComponent', () => {
 
     const createComponent = createComponentFactory({
         component: ObjectSiteSelectionComponent,
+        imports: [
+            MatIconModule
+        ]
     });
 
     beforeEach(() => spectator = createComponent());

@@ -3,6 +3,7 @@ import { ChartConfiguration } from 'chart.js';
 import { TranslationService } from '@/lib/translation';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { Container } from '@/lib/storage-manager/types/container.type';
+import { Unit } from '@/app/types/unit.type';
 
 @Component({
     selector: 'app-container-preview',
@@ -12,6 +13,8 @@ import { Container } from '@/lib/storage-manager/types/container.type';
 })
 export class ContainerPreviewComponent {
     public container = input<Container | null | undefined>();
+    public unit = input<Unit>('mm');
+
     public goodsCount = computed(() => this.container()?.goods.length ?? 0);
     public usedSpace = computed(() => {
         const container = this.container();

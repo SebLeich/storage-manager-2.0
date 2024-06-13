@@ -1,13 +1,14 @@
-import defaultImportsConstant from '../../../app/default-imports.constant';
 import { VisualizationService } from './visualization.service';
 import { ArrowHelper, GridHelper } from 'three';
 import { IPositionedElement, ISpace } from '@/lib/storage-manager/interfaces';
 import { infinityReplacement } from '@/app/globals';
 import { SpectatorService, createServiceFactory } from '@ngneat/spectator';
+import defaultImportsConstant from '@/app/default-imports.constant';
 
 describe('SolutionVisualizationService', () => {
-    const containerLength = 500;
-    const containerWidth = 1000;
+    const containerLength = 500,
+        containerWidth = 1000,
+        containerHeight = 1000;
 
     let spectator: SpectatorService<VisualizationService>;
 
@@ -34,7 +35,7 @@ describe('SolutionVisualizationService', () => {
     });
 
     it('should create unloading arrow', () => {
-        const unloadingArrow = VisualizationService.getContainerUnloadingArrow(containerLength);
+        const unloadingArrow = VisualizationService.getContainerUnloadingArrow(containerLength, containerHeight);
 
         expect(unloadingArrow instanceof ArrowHelper).toBeTruthy();
     });

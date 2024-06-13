@@ -133,6 +133,11 @@
                             "./node_modules/jsoneditor/dist/jsoneditor.min.css",
                             "./node_modules/flag-icons/css/flag-icons.min.css"
                         ],
+                        "stylePreprocessorOptions": {
+                            "includePaths": [
+                                "src/lib/scss"
+                            ]
+                        },
                         "scripts": []
                     }
                 },

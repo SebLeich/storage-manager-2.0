@@ -1,4 +1,5 @@
 
+import { MatIconModule } from '@angular/material/icon';
 import { CalculationFooterComponent } from './calculation-footer.component';
 import { Spectator, createComponentFactory } from '@ngneat/spectator';
 
@@ -7,6 +8,9 @@ describe('CalculationFooterComponent', () => {
 
     const createComponent = createComponentFactory({
         component: CalculationFooterComponent,
+        imports: [
+            MatIconModule,
+        ]
     });
 
     beforeEach(() => spectator = createComponent());

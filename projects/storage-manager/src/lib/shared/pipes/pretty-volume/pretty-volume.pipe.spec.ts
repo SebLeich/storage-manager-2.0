@@ -1,4 +1,3 @@
-import { Store } from '@ngrx/store';
 import { PrettyVolumePipe } from './pretty-volume.pipe';
 import { SpectatorPipe, createPipeFactory } from '@ngneat/spectator';
 
@@ -7,10 +6,7 @@ describe('PrettyVolumePipe', () => {
     let spectator: SpectatorPipe<PrettyVolumePipe>;
 
     const createPipe = createPipeFactory({
-        pipe: PrettyVolumePipe,
-        providers: [
-            { provide: Store, useValue: {} }
-        ]
+        pipe: PrettyVolumePipe
     });
 
     [
@@ -28,11 +24,7 @@ describe('PrettyVolumePipe', () => {
     ].forEach(({ volume, unit, prettify, decimalDigits, hideDigitsWhenZero, expectation }) => {
 
         it(`should display volume representation ${volume} ${unit}, ${prettify ? 'prettified' : 'not prettified'}, ${decimalDigits} decimal digits, ${hideDigitsWhenZero ? 'hide decimal digits when zero' : 'show decimal digits even if zero'}`, async () => {
-            createPipe(`{{ ${volume} | prettyVolume:${prettify}:${decimalDigits} | async }}`);
-
-            await spectator.fixture.whenStable();
-            spectator.fixture.detectChanges();
-
+            createPipe(`{{ ${volume} | prettyVolume:${unit}:${prettify}:${decimalDigits} }}`);
             expect(spectator.element).toHaveText(expectation);
         });
 
