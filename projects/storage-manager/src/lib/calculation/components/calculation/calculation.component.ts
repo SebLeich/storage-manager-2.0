@@ -1,6 +1,12 @@
+import { selectValidOrders } from '@/lib/order/store/order.selectors';
+import { AllInOneRowSolver, StartLeftBottomSolver, SuperFloSolver } from '@/lib/storage-manager/solvers';
 import { SolutionWrapper } from '@/lib/storage-manager/types/solution-wrapper.type';
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { Router } from '@angular/router';
+import { Store } from '@ngrx/store';
+import { setSolutionWrappers } from '../../store/calculation.actions';
+import { selectGroups } from '@/lib/groups/store/group.selectors';
+import { selectContainerHeight, selectContainerWidth } from '../../store/calculation.selectors';
 
 @Component({
     selector: 'app-calculation',
@@ -9,7 +15,21 @@ import { Router } from '@angular/router';
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CalculationComponent {
-    constructor(private _router: Router) { }
+    constructor(private _router: Router, private _store: Store) { }
+
+    public recalculate(): void {
+        const orders = this._store.selectSignal(selectValidOrders)(),
+            groups = this._store.selectSignal(selectGroups)(),
+            containerHeight = this._store.selectSignal(selectContainerHeight)(),
+            containerWidth = this._store.selectSignal(selectContainerWidth)();
+
+        const solutionWrappers = [];
+        solutionWrappers.push(new AllInOneRowSolver().solve(containerHeight, containerWidth, groups, orders));
+        solutionWrappers.push(new StartLeftBottomSolver().solve(containerHeight, containerWidth, groups, orders));
+        solutionWrappers.push(new SuperFloSolver().solve(containerHeight, containerWidth, groups, orders));
+
+        this._store.dispatch(setSolutionWrappers({ solutionWrappers }));
+    }
 
     public visualizeSolution(wrapper: Partial<SolutionWrapper>): void {
         this._router.navigate(['/visualization'], { state: { ...wrapper } });

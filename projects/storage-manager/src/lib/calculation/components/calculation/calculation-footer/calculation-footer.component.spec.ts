@@ -1,12 +1,12 @@
 
-import { CalculationComponent } from './calculation.component';
+import { CalculationFooterComponent } from './calculation-footer.component';
 import { Spectator, createComponentFactory } from '@ngneat/spectator';
 
-describe('CalculationComponent', () => {
-    let spectator: Spectator<CalculationComponent>;
+describe('CalculationFooterComponent', () => {
+    let spectator: Spectator<CalculationFooterComponent>;
 
     const createComponent = createComponentFactory({
-        component: CalculationComponent,
+        component: CalculationFooterComponent,
     });
 
     beforeEach(() => spectator = createComponent());

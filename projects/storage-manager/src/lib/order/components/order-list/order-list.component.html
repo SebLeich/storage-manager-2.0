@@ -55,5 +55,5 @@
 </div>
 
 <div class="add-wrapper">
-    <mat-icon class="add-control" (click)="addOrder()">add</mat-icon>
+    <mat-icon class="add-control" [class.disabled]="formArray().length >= 10" (click)="addOrder()">add</mat-icon>
 </div>

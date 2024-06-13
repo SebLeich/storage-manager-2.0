@@ -44,14 +44,23 @@
             "text": "Aa ..."
         },
         "quantity": "Menge",
+        "recalculate": "Neu berechnen",
+        "steps": "Schritte",
+        "texture": "Textur",
         "validation": "Validierung",
         "viewInformation": "Ansichtsinformationen",
-        "visualize": "Visualisieren",
+        "visualize": "Anzeigen",
         "volume": "Volumen",
         "width": "Breite",
         "zoomFactor": "Zoom Faktor",
         "zoomIn": "Hineinzoomen",
         "zoomOut": "Herauszoomen"
+    },
+    "goodTextures": {
+        "cardboard": "Pappe",
+        "glass": "Glas",
+        "wood": "Holz",
+        "woodLight": "Helles Holz"
     },
     "hints": {
         "noContainer": "Kein Container ausgewählt",

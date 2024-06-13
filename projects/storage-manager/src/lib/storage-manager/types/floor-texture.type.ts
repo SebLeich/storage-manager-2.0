@@ -1,0 +1,1 @@
+export type FloorTexture = 'concrete' | 'grass' | 'grassLight' | 'sand' | 'wood';

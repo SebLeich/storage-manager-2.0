@@ -9,9 +9,11 @@
 
         <div class="group-list-wrapper">
             <app-group-list></app-group-list>
-        </div> 
+        </div>
     </div>
 
-    <div id="footer">test</div>
+    <div id="footer">
+        <app-calculation-footer (recalculate)="recalculate()"></app-calculation-footer>
+    </div>
 
 </app-scaffold>

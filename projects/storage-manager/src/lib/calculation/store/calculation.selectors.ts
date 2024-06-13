@@ -12,3 +12,8 @@ export const selectContainerWidth = createSelector(
     selectCalculationState,
     state => state.containerWidth
 );
+
+export const selectSolutionWrappers = createSelector(
+    selectCalculationState,
+    state => state.solutionWrappers
+);

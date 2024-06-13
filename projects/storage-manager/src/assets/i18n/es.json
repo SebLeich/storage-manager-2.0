@@ -44,6 +44,8 @@
             "text": "Aa ..."
         },
         "quantity": "Cantidad",
+        "steps": "Pasos",
+        "texture": "Textura",
         "validation": "Validación",
         "viewInformation": "Ver Información",
         "visualize": "Visualizar",
@@ -52,6 +54,12 @@
         "zoomFactor": "Factor de Zoom",
         "zoomIn": "Acercar",
         "zoomOut": "Alejar"
+    },
+    "goodTextures": {
+        "cardboard": "Cartón",
+        "glass": "Vidrio",
+        "wood": "Madera",
+        "woodLight": "Madera Clara"
     },
     "hints": {
         "noContainer": "Ningún contenedor seleccionado",

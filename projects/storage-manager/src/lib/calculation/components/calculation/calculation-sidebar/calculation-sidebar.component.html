@@ -21,14 +21,6 @@
 </div>
 
 @for(solutionWrapper of (solutionWrappers$|async); track solutionWrapper){
-<div *ngLet="solutionWrapper.solution.container as container" class="item">
-    <h3>{{solutionWrapper.solution.calculationSource.title}}</h3>
-    <div>
-        <span>{{'defaults.length'|translation|async}}</span>
-        <span>{{container.length|prettyLength:3:true:container.unit}}</span>
-    </div>
-    <button (click)="showCalculatedSolution(solutionWrapper)">
-        {{'defaults.visualize'|translation|async}}
-    </button>
-</div>
+<app-solution-wrapper-preview [solutionWrapper]="solutionWrapper"
+    (showSolution)="showCalculatedSolution(solutionWrapper)"></app-solution-wrapper-preview>
 }

@@ -1,10 +1,11 @@
-import { setContainerDimensions } from '@/lib/calculation/store/calculation.actions';
-import { selectContainerHeight, selectContainerWidth } from '@/lib/calculation/store/calculation.selectors';
+import { setContainerDimensions, setSolutionWrappers } from '@/lib/calculation/store/calculation.actions';
+import { selectContainerHeight, selectContainerWidth, selectSolutionWrappers } from '@/lib/calculation/store/calculation.selectors';
 import { selectGroups } from '@/lib/groups/store/group.selectors';
 import { selectValidOrders } from '@/lib/order/store/order.selectors';
 import { AllInOneRowSolver, StartLeftBottomSolver, SuperFloSolver } from '@/lib/storage-manager/solvers';
 import { SolutionWrapper } from '@/lib/storage-manager/types/solution-wrapper.type';
-import { ChangeDetectionStrategy, Component, EventEmitter, Output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, DestroyRef, EventEmitter, OnInit, Output } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Store } from '@ngrx/store';
 import { combineLatest, debounceTime, map, startWith, switchMap, timer } from 'rxjs';
 
@@ -14,7 +15,7 @@ import { combineLatest, debounceTime, map, startWith, switchMap, timer } from 'r
     styleUrl: './calculation-sidebar.component.scss',
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class CalculationSidebarComponent {
+export class CalculationSidebarComponent implements OnInit {
     @Output() public showSolution = new EventEmitter<Partial<SolutionWrapper>>();
 
     public containerHeight$ = this._store.select(selectContainerHeight);
@@ -23,19 +24,22 @@ export class CalculationSidebarComponent {
     public orders$ = this._store.select(selectValidOrders);
     public recalculate$ = combineLatest([this.orders$, this.groups$, this.containerHeight$, this.containerWidth$]);
     public recalculationTriggered$ = this.recalculate$.pipe(switchMap(() => timer(2000).pipe(map(() => false), startWith(true))));
-    public solutionWrappers$ = this.recalculate$.pipe(
-        debounceTime(2000),
-        map(([orders, groups, height, width]) => {
-            const solutions = [];
-            solutions.push(new AllInOneRowSolver().solve(height, width, groups, orders));
-            solutions.push(new StartLeftBottomSolver().solve(height, width, groups, orders));
-            solutions.push(new SuperFloSolver().solve(height, width, groups, orders));
+    public solutionWrappers$ = this._store.select(selectSolutionWrappers);
 
-            return solutions;
-        })
-    );
+    constructor(private _store: Store, private _destroyRef: DestroyRef) { }
 
-    constructor(private _store: Store) { }
+    public ngOnInit(): void {
+        this.recalculate$
+            .pipe(takeUntilDestroyed(this._destroyRef), debounceTime(2000))
+            .subscribe(([orders, groups, height, width]) => {
+                const solutionWrappers = [];
+                solutionWrappers.push(new AllInOneRowSolver().solve(height, width, groups, orders));
+                solutionWrappers.push(new StartLeftBottomSolver().solve(height, width, groups, orders));
+                solutionWrappers.push(new SuperFloSolver().solve(height, width, groups, orders));
+
+                this._store.dispatch(setSolutionWrappers({ solutionWrappers }));
+            });
+    }
 
     public updateContainer(height?: string, width?: string): void {
         const containerHeight = height ? parseInt(height, 10) : 0,

@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { IPosition } from '@smgr/interfaces';
 import { defaultGoodEdgeColor, infinityReplacement } from 'src/app/globals';
-import { AmbientLight, ArrowHelper, BoxGeometry, CanvasTexture, Color, DirectionalLight, DoubleSide, EdgesGeometry, GridHelper, LineBasicMaterial, LineSegments, Matrix4, Mesh, MeshBasicMaterial, MeshStandardMaterial, PlaneGeometry, Scene, Texture, TextureLoader, Vector3 } from 'three';
+import { AmbientLight, ArrowHelper, BoxGeometry, CanvasTexture, Color, DirectionalLight, DoubleSide, EdgesGeometry, GridHelper, LineBasicMaterial, LineSegments, Matrix4, Mesh, MeshBasicMaterial, MeshStandardMaterial, PlaneGeometry, RepeatWrapping, Scene, Texture, TextureLoader, Vector3 } from 'three';
 import { RoundedBoxGeometry } from 'three/examples/jsm/geometries/RoundedBoxGeometry';
 import { Solution } from '@/lib/storage-manager/types/solution.type';
 import { Group } from '@/lib/storage-manager/types/group.type';
@@ -18,6 +18,8 @@ import { WallTexture } from '@/lib/storage-manager/types/wall-texture.type';
 import { CSG } from 'three-csg-ts';
 import { v4 } from 'uuid';
 import { GoodTexture } from '@/lib/storage-manager/types/good-texture.type';
+import { createNoise2D } from 'simplex-noise';
+import { FloorTexture } from '@/lib/storage-manager/types/floor-texture.type';
 
 @Injectable()
 export class VisualizationService {
@@ -370,6 +372,43 @@ export class VisualizationService {
         return walls;
     }
 
+    public static getFloor(containerHeight: number, texture: FloorTexture = 'grassLight'): Mesh {
+        const width = 4000,
+            height = 4000,
+            widthSegments = 4000,
+            heightSegments = 4000;
+            
+        const planeGeometry = new PlaneGeometry(width, height, widthSegments, heightSegments);
+        planeGeometry.rotateX(-Math.PI / 2);
+
+        const noise = createNoise2D();
+        const scale = 5;
+        for (let i = 0; i < planeGeometry.attributes.position.count; i++) {
+            const x = planeGeometry.attributes.position.getX(i),
+                z = planeGeometry.attributes.position.getZ(i);
+
+            const y = noise(x / scale, z / scale) * 10;
+
+            planeGeometry.attributes.position.setY(i, y);
+        }
+
+        planeGeometry.computeVertexNormals();
+
+        const textureLoader = new TextureLoader();
+        const grassTexture = textureLoader.load(`assets/textures/${texture}.jpg`);
+        grassTexture.wrapS = grassTexture.wrapT = RepeatWrapping;
+        grassTexture.repeat.set(8, 8);
+
+        const grassMaterial = new MeshStandardMaterial({
+            map: grassTexture,
+            side: DoubleSide,
+        });
+
+        const terrain = new Mesh(planeGeometry, grassMaterial);
+        terrain.position.set(0, (containerHeight / -2) - this._glitchMargin * 4, 0);
+        return terrain;
+    }
+
     public static getLights(): { ambientLight: AmbientLight, directionalLight: DirectionalLight } {
         const ambientLight = new AmbientLight(0x404040);
 
@@ -400,7 +439,7 @@ export class VisualizationService {
             texture = new TextureLoader().load(`assets/textures/${goodTexture}.jpg`);
 
         const material = new MeshBasicMaterial({ map: texture });
-        if(goodTexture === 'glass'){
+        if (goodTexture === 'glass') {
             material.transparent = true;
             material.opacity = 0.5;
         }

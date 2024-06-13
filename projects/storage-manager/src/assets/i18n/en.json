@@ -43,8 +43,10 @@
             "numeric": "123 ...",
             "text": "Aa ..."
         },
+        "steps": "Steps",
         "texture": "Texture",
         "quantity": "Quantity",
+        "recalculate": "Recalculate",
         "validation": "Validation",
         "viewInformation": "View Information",
         "visualize": "Visualize",

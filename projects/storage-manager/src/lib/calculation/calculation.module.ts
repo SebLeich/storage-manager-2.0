@@ -12,19 +12,27 @@ import { GroupModule } from '../groups/group.module';
 import { NgLetModule } from 'ng-let';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { SharedModule } from '../shared/shared.module';
+import { CalculationFooterComponent } from './components/calculation/calculation-footer/calculation-footer.component';
+import { MatIconModule } from '@angular/material/icon';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { SolutionWrapperPreviewComponent } from './components/calculation/calculation-sidebar/solution-wrapper-preview/solution-wrapper-preview.component';
 
 
 
 @NgModule({
     declarations: [
         CalculationComponent,
-        CalculationSidebarComponent
+        CalculationFooterComponent,
+        CalculationSidebarComponent,
+        SolutionWrapperPreviewComponent
     ],
     imports: [
         CommonModule,
         GroupModule,
         InputModule,
+        MatIconModule,
         MatProgressSpinnerModule,
+        MatTooltipModule,
         NgLetModule,
         OrderModule,
         RouterModule.forChild([

@@ -36,23 +36,19 @@ export class OrderListComponent implements OnDestroy, OnInit {
 
     public formArray = computed(() => {
         const orders = this.orders() as Order[];
-        if(orders.length === 0) {
-            orders.push({ id: v4(), quantity: 1, width: 0, height: 0, length: 0, stackingAllowed: true, turningAllowed: true } as Order);
-        }
-        
         const formGroups = orders.map(order => new FormGroup<Partial<{ [key in keyof Order]: FormControl<Order[key]> }>>({
             id: new FormControl(order.id, { nonNullable: true }),
             description: new FormControl(order.description, { validators: [Validators.required] }),
-            height: new FormControl(order.height, { nonNullable: true, validators: [Validators.min(1), Validators.required] }),
-            width: new FormControl(order.width, { nonNullable: true, validators: [Validators.min(1), Validators.required] }),
-            length: new FormControl(order.length, { nonNullable: true, validators: [Validators.min(1), Validators.required] }),
+            height: new FormControl(order.height, { nonNullable: true, validators: [Validators.min(100), Validators.max(1000), Validators.required] }),
+            width: new FormControl(order.width, { nonNullable: true, validators: [Validators.min(100), Validators.max(1000), Validators.required] }),
+            length: new FormControl(order.length, { nonNullable: true, validators: [Validators.min(100), Validators.max(1000), Validators.required] }),
             group: new FormControl(order.group, { nonNullable: true, validators: [Validators.required] }),
             index: new FormControl(order.index, { nonNullable: true }),
-            quantity: new FormControl(order.quantity, { nonNullable: true, validators: [Validators.min(1), Validators.required] }),
+            quantity: new FormControl(order.quantity, { nonNullable: true, validators: [Validators.min(1), Validators.max(30), Validators.required] }),
             stackingAllowed: new FormControl(order.stackingAllowed ?? false, { nonNullable: true }),
             turningAllowed: new FormControl(order.turningAllowed ?? false, { nonNullable: true }),
             texture: new FormControl(order.texture, { nonNullable: true, validators: [Validators.required] })
-        }));
+        }), [Validators.minLength(1), Validators.maxLength(10)]);
 
         return new FormArray(formGroups);
     });
@@ -70,6 +66,10 @@ export class OrderListComponent implements OnDestroy, OnInit {
     constructor(private _store: Store, private _elementRef: ElementRef, private _injector: Injector, private _destroyRef: DestroyRef) { }
 
     public async addOrder(): Promise<void> {
+        if(this.formArray().length >= 10) {
+            return;
+        }
+        
         this._syncOrders();
 
         const order = { id: v4(), quantity: 1, width: 0, height: 0, length: 0, stackingAllowed: true, turningAllowed: true } as Order;
