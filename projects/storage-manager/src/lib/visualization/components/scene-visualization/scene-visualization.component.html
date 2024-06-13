@@ -1,3 +1,46 @@
-<div class="visualization-wrapper" #visualizationWrapper (mousemove)="onMousemove($event)" (click)="onClick($event)"
-    [ngClass]="{ 'cursor-pointer': !!(hoveredGood$|async) }">
+<div cdkDropListGroup class="body fixed-scene-settings-{{displaySceneSettingsDirection()}}">
+    @if(displaySceneSettings() && displaySceneSettingsDirection() !== 'none'){
+    <div class="fixed-scene-settings" cdkDropList [cdkDropListConnectedTo]="[scene]">
+        <mat-icon class="close-control" (click)="displaySceneSettingsChanged.emit(false)">clear</mat-icon>
+        <app-scene-settings cdkDrag (visibilityChanged)="sceneSettingsToggled.emit($event)" [containerColor]="containerColor()"
+            [orientation]="orientation()" [showBaseGrid]="showBaseGrid()" (containerColorChanged)="containerColorChanged.emit($event)"
+            (showBaseGridChanged)="showBaseGridChanged.emit($event)" [showContainerUnloadingArrow]="showContainerUnloadingArrow()"
+            (showContainerUnloadingArrowChanged)="showContainerUnloadingArrowChanged.emit($event)" [backgroundColor]="backgroundColor()"
+            (backgroundColorChanged)="backgroundColorChanged.emit($event)" [wallObjectSites]="wallObjectSites()"
+            (wallObjectSitesChanged)="wallObjectSitesChanged.emit($event)" [showContainerEdges]="showContainerEdges()"
+            (showContainerEdgesChanged)="showContainerEdgesChanged.emit($event)" [showGoodEdges]="showGoodEdges()"
+            (showGoodEdgesChanged)="showGoodEdgesChanged.emit($event)" [goodLabelObjectSites]="goodLabelObjectSites()"
+            (goodLabelObjectSitesChanged)="goodLabelObjectSitesChanged.emit($event)" [showGoods]="showGoods()"
+            (showGoodsChanged)="showGoodsChanged.emit($event)" [showContainer]="showContainer()"
+            (showContainerChanged)="showContainerChanged.emit($event)" [addLights]="addLights()" (addLightsChanged)="addLightsToggled.emit($event)"
+            [fillEmptySpace]="fillEmptySpace()" (fillEmptySpaceChanged)="fillEmptySpaceToggled.emit($event)" [showEmptySpace]="showEmptySpace()"
+            (showEmptySpaceChanged)="showEmptySpaceChanged.emit($event)" [showEmptySpaceEdges]="showEmptySpaceEdges()"
+            (showEmptySpaceEdgesChanged)="showEmptySpaceEdgesChanged.emit($event)"></app-scene-settings>
+    </div>
+    }
+
+    <div class="visualization-wrapper" cdkDropList #scene="cdkDropList" #visualizationWrapper (mousemove)="onMousemove($event)"
+        (cdkDropListDropped)="putSceneSettingsOnScene()" (click)="onClick($event)" [ngClass]="{ 'cursor-pointer': !!(hoveredGood$|async) }">
+    </div>
+
+    @if(displaySceneSettings() && displaySceneSettingsDirection() === 'none'){
+    <div @show class="overlay" appBoundaryDraggable (onDroppedEdge)="moveSceneSettings($event)" cdkDragBoundary="app-scene-visualization"
+        [autoRenderEdges]="true">
+        <app-scene-settings #sceneSettings (visibilityChanged)="sceneSettingsToggled.emit($event)" [containerColor]="containerColor()"
+            [orientation]="orientation()" [showBaseGrid]="showBaseGrid()" (containerColorChanged)="containerColorChanged.emit($event)"
+            (showBaseGridChanged)="showBaseGridChanged.emit($event)" [showContainerUnloadingArrow]="showContainerUnloadingArrow()"
+            (showContainerUnloadingArrowChanged)="showContainerUnloadingArrowChanged.emit($event)" [backgroundColor]="backgroundColor()"
+            (backgroundColorChanged)="backgroundColorChanged.emit($event)" [wallObjectSites]="wallObjectSites()"
+            (wallObjectSitesChanged)="wallObjectSitesChanged.emit($event)" [showContainerEdges]="showContainerEdges()"
+            (showContainerEdgesChanged)="showContainerEdgesChanged.emit($event)" [showGoodEdges]="showGoodEdges()"
+            (showGoodEdgesChanged)="showGoodEdgesChanged.emit($event)" [goodLabelObjectSites]="goodLabelObjectSites()"
+            (goodLabelObjectSitesChanged)="goodLabelObjectSitesChanged.emit($event)" [showGoods]="showGoods()"
+            (showGoodsChanged)="showGoodsChanged.emit($event)" [showContainer]="showContainer()"
+            (showContainerChanged)="showContainerChanged.emit($event)" [addLights]="addLights()" (addLightsChanged)="addLightsToggled.emit($event)"
+            [fillEmptySpace]="fillEmptySpace()" (fillEmptySpaceChanged)="fillEmptySpaceToggled.emit($event)" [showEmptySpace]="showEmptySpace()"
+            (showEmptySpaceChanged)="showEmptySpaceChanged.emit()" [showEmptySpaceEdges]="showEmptySpaceEdges()"
+            (showEmptySpaceEdgesChanged)="showEmptySpaceEdgesChanged.emit($event)"></app-scene-settings>
+    </div>
+    }
+
 </div>

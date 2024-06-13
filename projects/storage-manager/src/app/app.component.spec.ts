@@ -1,35 +1,16 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { By } from '@angular/platform-browser';
 import { AppComponent } from './app.component';
-import { AppModule } from './app.module';
-import defaultImportsConstant from './default-imports.constant';
+import { Spectator, createComponentFactory } from '@ngneat/spectator';
 
 describe('AppComponent', () => {
-  let fixture: ComponentFixture<AppComponent>;
+    let spectator: Spectator<AppComponent>;
 
-  beforeEach(async () => {
-    await TestBed.configureTestingModule({
-      imports: [
-        ...defaultImportsConstant,
+    const createComponent = createComponentFactory({
+        component: AppComponent,
+    });
 
-        AppModule
-      ],
-      declarations: [
-        AppComponent
-      ],
-    }).compileComponents();
-    fixture = TestBed.createComponent(AppComponent);
-  });
+    beforeEach(() => spectator = createComponent());
 
-  it('should create the app', () => {
-    expect(fixture.componentInstance).toBeTruthy();
-  });
-
-  it('should display navbar', () => {
-    expect(fixture.debugElement.query(By.css('app-navbar'))).toBeTruthy();
-  });
-
-  it('should contain router outlet', () => {
-    expect(fixture.debugElement.query(By.css('router-outlet'))).toBeTruthy();
-  });
+    it('should create', () => {
+        expect(spectator.component).toBeTruthy();
+    });
 });

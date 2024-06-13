@@ -6,6 +6,10 @@
     background: linear-gradient(135deg, #00aed4, #00aed4b0, #00aed4);
 }
 
+@mixin gradient-purple() {
+    background: linear-gradient(135deg, #83128d, #b84dc2, #83128d);
+}
+
 @mixin gradient-turqoise() {
     background: linear-gradient(135deg, #47968a, #47968ad2, #47968a);
 }

@@ -1,9 +1,14 @@
-import { IGood, IGroup, IOrder, ISolution } from '@smgr/interfaces';
 import moment from 'moment';
 import { v4 as generateGuid } from 'uuid';
 import { Algorithm } from '../../../app/globals';
 import { ISolver } from '../interfaces/solver.interface';
 import { Solver } from "./solver";
+import { Group } from '../types/group.type';
+import { Order } from '../types/order.type';
+import { SolutionWrapper } from '../types/solution-wrapper.type';
+import { Solution } from '../types/solution.type';
+import { Good } from '../types/good.type';
+import { CalculationStep } from '../types/calculation-step.type';
 
 export class AllInOneRowSolver extends Solver implements ISolver {
 
@@ -11,10 +16,9 @@ export class AllInOneRowSolver extends Solver implements ISolver {
         super();
     }
 
-    public solve(containerHeight: number, containerWidth: number, groups: IGroup[], orders: IOrder[]): ISolution {
+    public solve(containerHeight: number, containerWidth: number, groups: Group[], orders: Order[]): SolutionWrapper {
 
-        const solution: ISolution & { groups: IGroup[], algorithm: string } = {
-            id: generateGuid(),
+        const solution: Solution = {
             description: this._description,
             container: {
                 id: generateGuid(),
@@ -27,16 +31,13 @@ export class AllInOneRowSolver extends Solver implements ISolver {
                 goods: [],
                 unit: 'mm'
             },
-            groups: groups,
-            algorithm: this._description,
             calculated: moment().format(),
             calculationSource: {
                 staticAlgorithm: Algorithm.AllInOneRow,
                 title: this._description
             },
-            steps: []
-        };
-        
+        }, calculationSteps: CalculationStep[] = [];
+
         let currentPosition = { x: 0, y: 0, z: 0 };
         let sequenceNumber = 0;
 
@@ -45,7 +46,7 @@ export class AllInOneRowSolver extends Solver implements ISolver {
 
             for (let order of groupOrders) {
                 for (let i = 0; i < order.quantity!; i++) {
-                    const good: IGood = {
+                    const good: Good = {
                         id: generateGuid(),
                         xCoord: currentPosition.x,
                         yCoord: currentPosition.y,
@@ -60,7 +61,8 @@ export class AllInOneRowSolver extends Solver implements ISolver {
                         group: group.id,
                         stackingAllowed: order.stackingAllowed,
                         turningAllowed: order.turningAllowed,
-                        orderGuid: order.id
+                        orderGuid: order.id,
+                        texture: order.texture ?? 'cardboard'
                     };
                     solution.container!.goods.push(good);
                     sequenceNumber++;
@@ -70,7 +72,7 @@ export class AllInOneRowSolver extends Solver implements ISolver {
             }
         }
 
-        return solution;
+        return { solution, groups, orders, products: [], calculationSteps: [] };
     }
 
 }

@@ -1,0 +1,76 @@
+@import 'colors';
+@import 'heading';
+@import 'sizing';
+
+.body {
+    padding: .5rem 1rem;
+    box-sizing: border-box;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+h3 {
+    @include heading-3;
+    cursor: move;
+    line-height: 1.6rem;
+}
+
+h4 {
+    @include heading-4;
+    margin-top: .5rem;
+    padding-top: 1rem;
+}
+
+.close-control {
+    cursor: pointer;
+    position: absolute;
+    top: .5rem;
+    right: .5rem;
+    color: $wine-red;
+}
+
+.content {
+    overflow-y: auto;
+    flex: 1;
+    padding-right: .5rem;
+
+    app-input-wrapper {
+        margin-bottom: .5rem;
+        display: block;
+        width: 100%;
+        min-width: 200px;
+    }
+
+    app-object-site-selection {
+        background-color: $white !important;
+        display: block;
+        border-radius: $border-radius;
+        margin-bottom: .5rem;
+    }
+
+    &.horizontal {
+        display: inline-flex;
+        flex-direction: row;
+        overflow-x: auto;
+        width: inherit;
+
+        & > * {
+            margin-right: 0.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: $white;
+            background-color: #ffffff2e;
+            padding: .25rem .5rem;
+            border-radius: 5px;
+            box-sizing: border-box;
+        }
+    }
+
+    &.vertical {
+        display: flex;
+        flex-direction: column;
+    }
+}

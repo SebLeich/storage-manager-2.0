@@ -1,0 +1,30 @@
+<div class="general-options-wrapper">
+    <mat-icon [matMenuTriggerFor]="downloadMenu" fontIcon="download" class="button download"
+        [matTooltip]="('defaults.download'|translation|async) ?? ''"></mat-icon>
+        
+    <mat-icon fontIcon="verified" class="button validation" [matTooltip]="('defaults.validation'|translation|async) ?? ''"></mat-icon>
+</div>
+
+<span class="spacer"></span>
+
+<mat-icon class="control" [matTooltip]="('defaults.zoomIn'|translation|async)??''" (click)="zoomIn.emit()">zoom_in</mat-icon>
+<mat-icon class="control" [matTooltip]="('defaults.zoomOut'|translation|async)??''" (click)="zoomOut.emit()">zoom_out</mat-icon>
+<mat-icon class="control" [matTooltip]="('defaults.autoZoom'|translation|async)??''" (click)="optimizeCameraPosition.emit()">flare</mat-icon>
+
+<div class="orientation-grid margin-l">
+    <mat-icon class="secondary" [matTooltip]="('visualization.moveContainerUpwardLeft'|translation|async) ?? ''">north_west</mat-icon>
+    <mat-icon (click)="moveUp.emit()" [matTooltip]="('visualization.moveContainerUp'|translation|async) ?? ''">north</mat-icon>
+    <mat-icon class="secondary" [matTooltip]="('visualization.moveContainerUpwardRight'|translation|async) ?? ''">north_east</mat-icon>
+    <mat-icon (click)="moveLeft.emit()" [matTooltip]="('visualization.moveContainerLeft'|translation|async) ?? ''">arrow_back</mat-icon>
+    <mat-icon (click)="reset.emit()" [matTooltip]="('visualization.resetView'|translation|async) ?? ''">adjust</mat-icon>
+    <mat-icon (click)="moveRight.emit()">arrow_forward</mat-icon>
+    <mat-icon class="secondary">south_west</mat-icon>
+    <mat-icon (click)="moveDown.emit()">south</mat-icon>
+    <mat-icon class="secondary">south_east</mat-icon>
+</div>
+
+<mat-icon class="control margin-l" [class.is-active]="showSceneSettings" (click)="toggleSceneSettings()">settings</mat-icon>
+
+<mat-menu #downloadMenu="matMenu">
+    <button mat-menu-item (click)="downloadSolution.emit('json')">Download JSON</button>
+</mat-menu>

@@ -1,0 +1,39 @@
+@import 'colors';
+
+.body {
+    height: 100vh;
+    width: 100vw;
+    background-color: $white;
+    padding: 0px 1rem 1rem 1rem;
+    box-sizing: border-box;
+
+    .content {
+        height: calc(100% - 6rem);
+        width: 100%;
+        display: flex;
+
+        .side-nav {
+            width: 300px;
+            background: linear-gradient(180deg, transparent 2rem, $slate-grey 2rem);
+            margin-right: 0.5rem;
+            display: flex;
+            padding-top: 1rem;
+            flex-direction: column;
+            overflow: auto;
+        }
+
+        .main-content {
+            flex: 1;
+            display: flex;
+            overflow: hidden;
+
+            &.border-radius-standard {
+                border-radius: 1rem;
+            }
+        }
+    }
+
+    .footer {
+        margin-top: .5rem;
+    }
+}

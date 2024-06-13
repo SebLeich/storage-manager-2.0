@@ -1,0 +1,76 @@
+@import 'colors';
+@import 'heading';
+
+h3 {
+    @include heading-3;
+}
+
+.property-row {
+    display: flex;
+    align-items: center;
+    margin-bottom: 1rem;
+
+    .property {
+        flex: 1;
+        display: inline-flex;
+        flex-direction: column;
+        align-items: baseline;
+        margin-right: .5rem;
+
+        .attribute {
+            margin-right: .2rem;
+            font-size: .6rem;
+            line-height: .6rem;
+            font-weight: 100;
+        }
+
+        .value {
+            white-space: nowrap;
+            padding: 0.2rem;
+            background-color: $light-grey;
+            border-radius: 3px;
+            font-family: monospace;
+        }
+    }
+}
+
+.chart-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    >* {
+        flex: 1;
+        overflow: hidden;
+    }
+
+    .chart-inner {
+        max-height: 200px;
+    }
+
+    .percentage-wrapper {
+        position: absolute;
+        max-width: 100px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+        z-index: 1000;
+        transform: translate(0px, -1rem);
+
+        .percentage {
+            font-size: 1.5rem;
+            line-height: 1.5rem;
+        }
+
+        .text {
+            font-size: 0.5rem;
+            line-height: .5rem;
+        }
+    }
+}
+
+.no-container-hint {
+    font-family: monospace;
+}

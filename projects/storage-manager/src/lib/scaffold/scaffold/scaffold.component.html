@@ -1,0 +1,23 @@
+<div class="body">
+
+    <div class="navbar">
+        <app-navbar></app-navbar>
+    </div>
+
+    <div class="content">
+
+        <div class="side-nav">
+            <ng-content select="#side-nav"></ng-content>
+        </div>
+
+        <div class="main-content border-radius-{{mainContentBorderRadius()}}">
+            <ng-content select="#main"></ng-content>
+        </div>
+
+    </div>
+
+    <div class="footer">
+        <ng-content select="#footer"></ng-content>
+    </div>
+
+</div>

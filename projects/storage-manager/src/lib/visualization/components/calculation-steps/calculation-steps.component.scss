@@ -1,0 +1,78 @@
+@import 'colors';
+@import 'heading';
+@import 'line-clamp';
+
+:host {
+    display: flex;
+    flex-direction: column;
+}
+
+h3 {
+    @include heading-3;
+    display: flex;
+    align-items: center;
+
+    .text {
+        flex: 1;
+    }
+
+    .status-badge {
+        display: block;
+        padding: 0.15rem 0.35rem;
+        font-size: 10px;
+        font-weight: 100;
+        line-height: 10px;
+        font-family: Roboto, sans-serif;
+        color: white;
+        border-radius: 3px;
+
+        &.stopped {
+            background-color: $wine-red;
+        }
+
+        &.playing {
+            background-color: $green-400;
+        }
+
+        &.paused {
+            background-color: $dark-slate-grey;
+        }
+    }
+}
+
+.messages-wrapper {
+    height: 2.5rem;
+    background-color: $dark-slate-grey;
+    font-family: monospace;
+    font-size: .6rem;
+    line-height: .8rem;
+    padding: .25rem .5rem;
+    color: $white;
+    border-radius: 3px;
+    overflow: hidden;
+
+    .messages-inner {
+        min-height: .6rem;
+        @include line-clamp(5);
+    }
+}
+
+input {
+    margin: 2px 0px;
+}
+
+.control-wrapper {
+    padding: .5rem;
+    display: flex;
+    justify-content: center;
+
+    mat-icon {
+        opacity: .5;
+        cursor: pointer;
+
+        &:hover {
+            transform: scale(1.1);
+            opacity: 1;
+        }
+    }
+}

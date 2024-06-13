@@ -1,0 +1,94 @@
+@import 'colors';
+@import 'disabled';
+@import 'heading';
+
+:host {
+    padding: 1rem 1rem .25rem;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    height: 100%;	
+
+    h3 {
+        @include heading-3;
+    }
+
+    .content {
+        flex: 1;
+        overflow: auto;
+
+        table {
+            border-spacing: .15rem;
+    
+            .order-wrapper {
+                display: table-row;
+                white-space: nowrap;
+    
+                .index {
+                    color: $slate-grey;
+                    padding: .5rem;
+                    font-size: .8rem;
+                }
+    
+                app-input-wrapper, app-group-selection {
+                    display: table-cell;
+                    vertical-align: middle;
+                }
+    
+                input {
+                    &.description {
+                        min-width: 128px;
+                    }
+    
+                    &.quantity,
+                    &.height,
+                    &.width,
+                    &.length {
+                        width: 64px;
+                    }
+                }
+    
+                .control {
+                    cursor: pointer;
+    
+                    &.add {
+                        color: $green-400;
+                    }
+    
+                    &.remove {
+                        color: $wine-red;
+                    }
+    
+                    &.disabled {
+                        @include disabled;
+                    }
+                }
+    
+                .hint-icon {
+                    &.success {
+                        color: $green-400;
+                    }
+    
+                    &.warning {
+                        color: $orange-400;
+                    }
+                }
+            }
+        }
+    }
+
+    .add-wrapper {
+        padding: .5rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        
+        .add-control {
+            cursor: pointer;
+
+            &.disabled {
+                @include disabled;
+            }
+        }
+    }
+}

@@ -1,9 +1,14 @@
-import { IContainer, IGood, IGroup, IOrder, ISolution } from '@smgr/interfaces';
 import moment from 'moment';
 import { Algorithm, compare } from 'src/app/globals';
 import { v4 as generateGuid } from 'uuid';
 import { ISolver } from '../interfaces/solver.interface';
 import { Solver } from './solver';
+import { SolutionWrapper } from '../types/solution-wrapper.type';
+import { Order } from '../types/order.type';
+import { Group } from '../types/group.type';
+import { Container } from '../types/container.type';
+import { Good } from '../types/good.type';
+import { Solution } from '../types/solution.type';
 
 export class StartLeftBottomSolver extends Solver implements ISolver {
 
@@ -11,9 +16,8 @@ export class StartLeftBottomSolver extends Solver implements ISolver {
         super();
     }
 
-    public solve(containerHeight: number, containerWidth: number, groups: IGroup[], orders: IOrder[]): ISolution {
-        const solution: ISolution = {
-            id: generateGuid(),
+    public solve(containerHeight: number, containerWidth: number, groups: Group[], orders: Order[]): SolutionWrapper {
+        const solution: Solution = {
             description: this._description,
             container: {
                 id: generateGuid(),
@@ -30,11 +34,10 @@ export class StartLeftBottomSolver extends Solver implements ISolver {
             calculationSource: {
                 staticAlgorithm: Algorithm.StartLeftBottom,
                 title: this._description
-            },
-            steps: [],
+            }
         };
 
-        let sequenceNumber = 0, lastGood: IGood | null = null;
+        let sequenceNumber = 0, lastGood: Good | null = null;
 
         for (let group of groups) {
             let currentOrders = orders.filter(x => x.group === group.id).sort((a, b) => compare(a.length, b.length, false));
@@ -56,9 +59,10 @@ export class StartLeftBottomSolver extends Solver implements ISolver {
                         turningAllowed: order.turningAllowed,
                         stackingAllowed: order.stackingAllowed,
                         sequenceNr: sequenceNumber,
-                        orderGuid: order.id
+                        orderGuid: order.id,
+                        texture: order.texture ?? 'cardboard'
                     };
-                    solution.container!.goods.push(lastGood as IGood);
+                    solution.container!.goods.push(lastGood);
                     sequenceNumber++;
                 }
             }
@@ -66,10 +70,10 @@ export class StartLeftBottomSolver extends Solver implements ISolver {
 
         solution.container!.length = Math.max(...solution.container!.goods.map(x => x.zCoord + x.length), 0);
 
-        return solution;
+        return { solution, groups, calculationSteps: [], orders, products: [] };
     }
 
-    private _getNextPosition(container: IContainer, order: IOrder, lastGood: IGood): { xCoord: number, yCoord: number, zCoord: number, stackedOn: null | string } {
+    private _getNextPosition(container: Container, order: Order, lastGood: Good): { xCoord: number, yCoord: number, zCoord: number, stackedOn: null | string } {
         if (
             lastGood.orderGuid === order.id
             && lastGood.stackingAllowed

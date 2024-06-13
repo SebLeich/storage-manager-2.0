@@ -1,0 +1,34 @@
+<h3>{{'defaults.groups'|translation|async}} ({{validFormArrayControlCount$|async}})</h3>
+<div class="content">
+
+    <table>
+        @for(formGroup of formArray().controls; track formGroup){
+        <div class="order-wrapper" [formGroup]="formGroup">
+            <span class="index">{{$index + 1}}</span>
+            <ng-container *ngLet="formGroup.controls['desc'] as control">
+                <app-input-wrapper [control]="control" [label]="'defaults.description'|translation|async">
+                    <input class="description" type="text" formControlName="desc" [placeholder]="'defaults.placeholders.text'|translation|async"
+                        (keydown.backspace)="!control?.value? removeGroup($index): $event" />
+                </app-input-wrapper>
+            </ng-container>
+
+            <app-input-wrapper [isColor]="true" [control]="formGroup.controls.color" [label]="'defaults.color'|translation|async">
+                <input class="color" type="color" formControlName="color" [placeholder]="'defaults.placeholders.text'|translation|async" />
+            </app-input-wrapper>
+
+            <mat-icon class="control remove" (click)="removeGroup($index)">delete_forever</mat-icon>
+            <ng-container *ngLet="(formGroup.statusChanges|async) as status">
+                <mat-icon [matTooltip]="('hints.' + (status === 'INVALID'? 'orderInvalid': 'orderValid')|unsafeTranslation|async) ?? ''"
+                    class="hint-icon {{status === 'INVALID'? 'warning': 'success'}}">
+                    {{status === 'INVALID'? 'error': 'done'}}
+                </mat-icon>
+            </ng-container>
+        </div>
+        }
+    </table>
+
+</div>
+
+<div class="add-wrapper">
+    <mat-icon class="add-control" (click)="addGroup()">add</mat-icon>
+</div>

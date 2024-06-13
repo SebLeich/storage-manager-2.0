@@ -1,0 +1,14 @@
+<img src="/assets/logo.png" class="logo" />
+
+<span class="label">{{'defaults.appName'|translation|async}}</span>
+
+<div class="item-wrapper">
+    @for(item of navbarOptions; track item){
+    <span class="item" [class.active]="item.path === (activePath$|async)" (click)="navbarItemClicked(item)">{{'navItems.' + (item.label ??
+        item.path)|unsafeTranslation|async}}</span>
+    }
+</div>
+
+<div class="lang-wrapper">
+    <span class="flag-icon fi fi-{{currentLangISO3166$|async}} fis" (click)="setNextLanguage()"></span>
+</div>

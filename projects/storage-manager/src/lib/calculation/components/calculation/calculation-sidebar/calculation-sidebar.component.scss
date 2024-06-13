@@ -1,0 +1,61 @@
+@import 'button';
+@import 'colors';
+@import 'heading';
+@import 'line-clamp';
+
+:host {
+    overflow: auto;
+}
+
+.item {
+    margin: 0px .5rem .25rem;
+    padding: .5rem;
+    border-radius: 3px;
+
+    &.main {
+        background: linear-gradient(246deg, $shiny-red 0%, $wine-red);
+        color: $white;
+        position: sticky;
+        top: 0px;
+        z-index: 1;
+
+        .container-data-wrapper {
+            display: flex;
+
+            >app-input-wrapper {
+                flex: 1;
+                overflow: hidden;
+
+                &:not(:last-child) {
+                    margin-right: .15rem;
+                }
+            }
+        }
+
+        .title {
+            font-family: 'Bebas Neue';
+            font-size: 1.5rem;
+            font-weight: 500;
+            display: block;
+            margin-bottom: .5rem;
+        }
+
+        mat-spinner {
+            position: absolute;
+            right: .5rem;
+            top: .5rem;
+        }
+    }
+}
+
+app-solution-wrapper-preview {
+    display: block;
+    margin: 0px .5rem .25rem;
+    padding: .5rem;
+    border-radius: 3px;
+    background-color: $white;
+}
+
+button {
+    @include default-button;
+}

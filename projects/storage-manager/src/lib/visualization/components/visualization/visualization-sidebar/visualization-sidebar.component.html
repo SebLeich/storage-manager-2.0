@@ -1,0 +1,35 @@
+<div class="item algorithm">
+
+    <span class="title">{{calculationSourceTitle()}}</span>
+    <span *ngLet="calculationDate() as calcDate" class="calculated-at">
+        {{'defaults.calculatedAt'|translation:{date:(calcDate|date:'dd.MM. HH:mm') ?? ''}|async}}
+    </span>
+
+</div>
+
+<div *ngLet="container() as container" class="item">
+    <app-container-preview [container]="container"></app-container-preview>
+</div>
+
+<ng-container *ngLet="((currentSolutionValidation$|async) ?? []) as validation">
+    @if(validation.length > 0){
+    <div class="item">
+        <app-solution-validation [validation]="validation" (goodHovered)="goodHovered.emit($event)"></app-solution-validation>
+    </div>
+    }
+</ng-container>
+
+<div class="item">
+    <app-solution-groups [groups]="groups()" (groupColorChanged)="groupColorChanged.emit($event)"></app-solution-groups>
+</div>
+
+<ng-container *ngLet="calculationSteps() as steps">
+    @if(steps.length > 0){
+    <div class="item">
+        <app-calculation-steps [calculationSteps]="steps" [currentStepIndex]="currentStepIndex()" [intervalSpeed]="intervalSpeed()"
+            (startAnimation)="startAnimation.emit()" (stopAnimation)="stopAnimation.emit()" (pauseAnimation)="pauseAnimation.emit()"
+            (nextStep)="nextStep.emit()" (previousStep)="previousStep.emit()" (fastForward)="fastForward.emit()" (fastRewind)="fastRewind.emit()"
+            (intervalSpeedChange)="intervalSpeedChange.emit($event)" [playStatus]="playStatus()"></app-calculation-steps>
+    </div>
+    }
+</ng-container>

@@ -1,15 +1,16 @@
 import { Component, Input, OnChanges, OnInit } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { ISolution } from '@smgr/interfaces';
-import getContainerPositionSharedMethods from 'src/app/methods/get-container-position.shared-methods';
 import { selectSnapshot } from 'src/lib/process-builder/globals/select-snapshot';
 import * as ThreeJS from 'three';
 import { SolutionPreviewStatus } from 'src/app/enumerations/solution-preview-status.enumeration';
 import { filter, map, switchMap, take } from 'rxjs';
 import { DomSanitizer } from '@angular/platform-browser';
 import { showAnimation } from 'src/lib/shared/animations/show';
-import { VisualizationService } from 'src/lib/visualization/services/visualization.service';
 import { announceSolutionPreview, selectGroups, selectSolutionPreview, upsertSolutionPreview } from '@smgr/store';
+import { VisualizationService } from '@/lib/visualization/services/visualization/visualization.service';
+import { ThreeDCalculationService } from '@/lib/shared/services/three-d-calculation.service';
+import { v4 } from 'uuid';
 
 @Component({
   selector: 'app-solution-preview-rendering',
@@ -73,13 +74,14 @@ export class SolutionPreviewRenderingComponent implements OnChanges, OnInit {
   private async _updateScene() {
     this._store.dispatch(announceSolutionPreview({ solutionId: this.solution.id }));
     this.scene.background = new ThreeJS.Color(this.backgroundColor);
-    const containerPosition = getContainerPositionSharedMethods(this.solution.container!);
-    const containerResult = VisualizationService.generateOutlinedBoxMesh(containerPosition, 'container');
+    const containerPosition = ThreeDCalculationService.spatialPositionedToUnusedPosition(ThreeDCalculationService.calculateSpatialPosition(this.solution.container!));
+    const containerResult = VisualizationService.generateOutlinedBoxMesh({ ...containerPosition, id: v4() }, 'container');
     this.scene.add(containerResult.edges);
     const groups = await selectSnapshot(this._store.select(selectGroups));
     for (let good of this.solution.container!.goods) {
       const group = groups.find((group) => group.id === good.group);
-      const goodResult = VisualizationService.generateFilledBoxMesh(getContainerPositionSharedMethods(good), group?.color ?? '#ffffff', 'good', containerPosition);
+      const goodPosition = ThreeDCalculationService.spatialPositionedToUnusedPosition(ThreeDCalculationService.calculateSpatialPosition(this.solution.container!));
+      const goodResult = VisualizationService.generateFilledBoxMesh({...goodPosition, id: v4()}, group?.color ?? 'good', containerPosition);
       this.scene.add(goodResult.edges, goodResult.mesh);
     }
   }

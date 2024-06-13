@@ -1,0 +1,10 @@
+<h3>
+    {{'defaults.groups'|translation|async}} ({{groups().length}})
+</h3>
+
+@for(group of groups(); track group){
+<div class="group-wrapper" (click)="colorInput.click()">
+    <span class="description">{{group.desc}}</span>
+    <input #colorInput [value]="group.color" type="color" (change)="updateGroupColor(group, $any($event.target).value)" />
+</div>
+}

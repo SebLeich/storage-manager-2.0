@@ -1,0 +1,7 @@
+<app-input-wrapper [label]="'defaults.groups'|translation|async" [labelBadgeColor]="currentGroupColor()">
+    <select [formControl]="valueControl">
+        @for(group of groups(); track group){
+        <option [value]="group.id">{{group.desc}}</option>
+        }
+    </select>
+</app-input-wrapper>

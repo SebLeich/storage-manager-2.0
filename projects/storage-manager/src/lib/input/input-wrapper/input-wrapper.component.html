@@ -1,0 +1,22 @@
+<div class="body" [ngClass]="{
+    'is-checkbox': isCheckbox(),
+    'is-color': isColor(),
+    'invalid': (formControlStatus()|async) === 'INVALID'
+    }" (click)="onClick($event)">
+
+    <ng-content></ng-content>
+
+    @if(label() != null){
+    <label (click)="labelClicked()">
+        {{label()}}
+        @if(labelBadgeColor()){
+        <span class="label-badge" [style.backgroundColor]="labelBadgeColor()"></span>
+        }
+    </label>
+    }
+
+    <div *ngIf="isCheckbox()" class="switch">
+        <span class="slider"></span>
+    </div>
+
+</div>

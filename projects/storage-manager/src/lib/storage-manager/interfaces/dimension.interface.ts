@@ -1,8 +1,11 @@
-import { IIdentifiable } from "./identifiable.interface";
 import { IPositionedElement } from "./positioned.interface";
 import { ISpace } from "./space.interface";
 
-export interface IDimension extends IIdentifiable, IPositionedElement, ISpace {
+/**
+ * @deprecated
+ * please use spatial positioned type
+ */
+export interface IDimension extends IPositionedElement, ISpace {
     rCoord: number;
     tCoord: number;
     fCoord: number;

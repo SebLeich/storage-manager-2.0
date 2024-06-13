@@ -1,0 +1,45 @@
+<ng-container *ngLet="container() as selectedContainer">
+    @if(selectedContainer){
+    <h3>{{'defaults.container'|translation|async}} ({{goodsCount()}} {{'defaults.goods'|translation|async}})</h3>
+
+    <div class="property-row">
+        <div class="property">
+            <div class="attribute">{{'defaults.width'|unsafeTranslation|async}}</div>
+            <div class="value">{{ selectedContainer.width | prettyLength:unit():3:true }}</div>
+        </div>
+
+        <div class="property">
+            <div class="attribute">{{'defaults.height'|unsafeTranslation|async}}</div>
+            <div class="value">{{ selectedContainer.height | prettyLength:unit():3:true }}</div>
+        </div>
+
+        <div class="property">
+            <div class="attribute">{{'defaults.length'|unsafeTranslation|async}}</div>
+            <div class="value">{{ selectedContainer.length | prettyLength:unit():3:true }}</div>
+        </div>
+
+        <div class="property">
+            <div class="attribute">{{'defaults.volume'|unsafeTranslation|async}}</div>
+            <div class="value">
+                {{ selectedContainer.length * selectedContainer.height * selectedContainer.width | prettyVolume:unit():true }}
+            </div>
+        </div>
+    </div>
+
+    <div class="chart-wrapper">
+        <div class="chart-inner">
+            <canvas baseChart [datasets]="datasets()" [labels]="labels()" type="doughnut" [options]="options"></canvas>
+        </div>
+
+        <div class="percentage-wrapper">
+            <div class="percentage">
+                <span appAnimatedCounter [value]="percentage()" [animationDuration]=1000></span>%
+            </div>
+            <div class="text">{{'defaults.loadUtilization'|translation|async}}</div>
+        </div>
+    </div>
+    }
+    @else {
+    <div class="no-content-available">{{'hints.noContainer'|translation|async}}</div>
+    }
+</ng-container>

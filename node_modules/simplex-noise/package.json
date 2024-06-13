@@ -1,0 +1,82 @@
+{
+  "name": "simplex-noise",
+  "version": "4.0.1",
+  "description": "simplex-noise is a fast simplex noise implementation in Javascript. Works in node and in the browser.",
+  "homepage": "https://github.com/jwagner/simplex-noise.js",
+  "author": "Jonas Wagner <jonas@29a.ch> (http://29a.ch/)",
+  "main": "dist/cjs/simplex-noise.js",
+  "module": "dist/esm/simplex-noise.js",
+  "types": "./dist/esm/simplex-noise.d.ts",
+  "exports": {
+    "require": "./dist/cjs/simplex-noise.js",
+    "import": "./dist/esm/simplex-noise.js"
+  },
+  "sideEffects": false,
+  "files": [
+    "dist/esm/package.json",
+    "dist/esm/simplex-noise.js",
+    "dist/esm/simplex-noise.js.map",
+    "dist/esm/simplex-noise.d.ts",
+    "dist/cjs/simplex-noise.js",
+    "dist/cjs/simplex-noise.js.map",
+    "dist/cjs/simplex-noise.d.ts",
+    "simplex-noise.ts"
+  ],
+  "devDependencies": {
+    "@parcel/packager-ts": "^2.6.2",
+    "@parcel/transformer-typescript-types": "^2.6.2",
+    "@types/chai": "^4.3.1",
+    "@types/mocha": "^9.1.1",
+    "@types/node": "^18.0.6",
+    "@types/pngjs": "^6.0.1",
+    "@typescript-eslint/eslint-plugin": "^5.30.7",
+    "@typescript-eslint/parser": "^5.30.7",
+    "alea": "^1.0.1",
+    "benchmark": "^2.1.4",
+    "chai": "^4.3.6",
+    "eslint": "^8.20.0",
+    "eslint-config-standard": "^17.0.0",
+    "eslint-plugin-import": "^2.26.0",
+    "eslint-plugin-n": "^15.2.4",
+    "eslint-plugin-promise": "^6.0.0",
+    "html-webpack-plugin": "^5.5.0",
+    "microtime": "^3.1.0",
+    "mocha": "^10.0.0",
+    "nyc": "^15.1.0",
+    "parcel": "^2.6.2",
+    "pngjs": "^6.0.0",
+    "source-map-loader": "^4.0.0",
+    "ts-node": "^10.9.1",
+    "typedoc": "^0.23.8",
+    "typescript": "^4.7.4",
+    "webpack": "^5.73.0",
+    "webpack-cli": "^4.10.0"
+  },
+  "bugs": {
+    "url": "https://github.com/jwagner/simplex-noise.js/issues"
+  },
+  "keywords": [
+    "noise",
+    "random",
+    "simplex",
+    "plasma",
+    "procedural",
+    "generation",
+    "gfx",
+    "generative"
+  ],
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/jwagner/simplex-noise.js.git"
+  },
+  "scripts": {
+    "start": "parcel test/visual.html",
+    "test": "eslint simplex-noise.ts && nyc mocha && ./test/module-compatibility.sh",
+    "coverage": "nyc report",
+    "build": "./build.sh",
+    "docs": "typedoc --excludePrivate --out public/docs simplex-noise.ts && cp -R doc public/docs/",
+    "prepare": "npm run-script build",
+    "benchmark": "npm run build && cd perf && ./benchmark.sh"
+  }
+}

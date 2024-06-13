@@ -4,10 +4,6 @@ export enum Algorithm {
     AllInOneRow, StartLeftBottom, SuperFlo, AISupportedSolver
 }
 
-export enum SolutionError {
-    NoSolution, NoContainer, GoodBeforeContainerXCoord, GoodOutOfContainerXCoord, GoodBeforeContainerYCoord, GoodOutOfContainerYCoord, GoodBeforeContainerZCoord, GoodOutOfContainerZCoord, GoodOverlap
-}
-
 export const algorithms = [
     {
         title: 'All In One Row',

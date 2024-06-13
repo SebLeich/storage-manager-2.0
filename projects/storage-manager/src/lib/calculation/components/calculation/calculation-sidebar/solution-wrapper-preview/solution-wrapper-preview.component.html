@@ -1,0 +1,16 @@
+<h3>{{solutionWrapper()?.solution?.calculationSource?.title}}</h3>
+<div class="badge-wrapper">
+    <div class="badge">
+        <span class="label">{{'defaults.calculationSteps'|translation|async}}</span>
+        <span class="value">{{(solutionWrapper()?.calculationSteps ?? []).length}} {{'defaults.steps'|translation|async}}</span>
+    </div>
+    <div class="badge">
+        <span class="label">{{'defaults.length'|translation|async}}</span>
+        <span class="value">{{solutionWrapper()?.solution?.container?.length|prettyLength:solutionWrapper()?.solution?.container?.unit ?? 'mm':3:true}}</span>
+    </div>
+</div>
+<div class="button-wrapper">
+    <button (click)="showSolution.emit()">
+        {{'defaults.visualize'|translation|async}}
+    </button>
+</div>

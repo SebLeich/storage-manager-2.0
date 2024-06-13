@@ -1,0 +1,33 @@
+@if(solutionWrapper$|async){
+<app-scaffold>
+
+    <app-visualization-sidebar id="side-nav" [solutionWrapper]="solutionWrapper$|async" (goodHovered)="sceneVisualization.highlightGood($event)"
+        (groupColorChanged)="updateGroup($event)" [currentStepIndex]="animationStepIndex()" [intervalSpeed]="intervalSpeed()"
+        [playStatus]="playStatus()" (startAnimation)="startAnimation()" (stopAnimation)="stopAnimation()" (nextStep)="nextStep()"
+        (previousStep)="previousStep()" (fastForward)="fastForward()" (fastRewind)="fastRewind()" (intervalSpeedChange)="intervalSpeed.set($event)"
+        (pauseAnimation)="pauseAnimation()"></app-visualization-sidebar>
+
+    <app-scene-visualization @fadeIn #sceneVisualization id="main" [interactable]="false" (sceneSettingsToggled)="displaySceneSettings.set($event)"
+        [scene]="(scene$ | async)!" [displaySceneSettings]="displaySceneSettings()" (displaySceneSettingsChanged)="displaySceneSettings.set($event)"
+        (containerColorChanged)="wallTexture.set($event)" [containerColor]="wallTexture()" [showBaseGrid]="displayBaseGrid()"
+        [showContainerUnloadingArrow]="displayContainerUnloadingArrow()"
+        (showContainerUnloadingArrowChanged)="displayContainerUnloadingArrow.set($event)" (showBaseGridChanged)="displayBaseGrid.set($event)"
+        [backgroundColor]="backgroundColor()" (backgroundColorChanged)="backgroundColor.set($event)" [wallObjectSites]="wallObjectSites()"
+        (wallObjectSitesChanged)="wallObjectSites.set($event)" [showContainerEdges]="displayContainerEdges()"
+        (showContainerEdgesChanged)="displayContainerEdges.set($event)" [showGoodEdges]="displayGoodEdges()"
+        (showGoodEdgesChanged)="displayGoodEdges.set($event)" [goodLabelObjectSites]="labelObjectSites()"
+        (goodLabelObjectSitesChanged)="labelObjectSites.set($event)" [showGoods]="displayGoods()" (showGoodsChanged)="displayGoods.set($event)"
+        [showContainer]="displayContainer()" (showContainerChanged)="displayContainer.set($event)" [addLights]="addLights()"
+        (addLightsToggled)="addLights.set($event)" [fillEmptySpace]="fillEmptySpace()" (fillEmptySpaceToggled)="fillEmptySpace.set($event)"
+        [showEmptySpace]="displayEmptySpace()" (showEmptySpaceChanged)="displayEmptySpace.set($event)"
+        [showEmptySpaceEdges]="displayEmptySpaceEdges()" (showEmptySpaceEdgesChanged)="displayEmptySpaceEdges.set($event)"></app-scene-visualization>
+
+    <app-visualization-footer id="footer" (zoomIn)="sceneVisualization.zoomIn()" (zoomOut)="sceneVisualization.zoomOut()"
+        (moveDown)="sceneVisualization.move(0, 1, 0)" (moveUp)="sceneVisualization.move(0, -1, 0)" (moveLeft)="sceneVisualization.move(1, 0, 0)"
+        (moveRight)="sceneVisualization.move(-1, 0, 0)" (optimizeCameraPosition)="sceneVisualization.autoOptimizeCameraPosition()"
+        (reset)="sceneVisualization.resetCameraPosition()" [showBaseGrid]="displayBaseGrid()" (baseGridToggled)="displayBaseGrid.set($event)"
+        [containerColor]="wallTexture()" (sceneSettingsToggled)="displaySceneSettings.set($event)" [showSceneSettings]="displaySceneSettings()"
+        (downloadSolution)="downloadSolution($event)"></app-visualization-footer>
+
+</app-scaffold>
+}

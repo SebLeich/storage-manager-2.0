@@ -26,7 +26,7 @@
 
                 <div class="preview">
 
-                    <app-solution-preview-rendering [solution]="solution" [backgroundColor]="$any(solutionPreview|computedStyle)"></app-solution-preview-rendering>
+                    REMOVED
 
                 </div>
 
@@ -44,7 +44,7 @@
                     </div>
     
                     <div class="solution-data">
-                        <div class="data">length {{solution.container!.length | prettyLength:3:true:formGroup.controls['unit'].value | async}}</div>
+                        <div class="data">length {{solution.container!.length | prettyLength:formGroup.controls['unit'].value:3:true}}</div>
                         <div class="data">calculated {{solution.calculated|date:'dd.MM.yy HH:mm'}}</div>
                     </div>
 

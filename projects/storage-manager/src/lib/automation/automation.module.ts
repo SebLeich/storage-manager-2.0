@@ -5,7 +5,6 @@ import { ApiConfigurationPreviewComponent } from './components/api-configuration
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
-import { ApiCallConfiguratorComponent } from './components/api-call-configurator/api-call-configurator.component';
 import { SelectApiAuthorizationComponent } from './components/select-api-authorization/select-api-authorization.component';
 import { AccessTokenInputComponent } from './components/dynamic-input/access-token-input/access-token-input.component';
 import { EndpointInputComponent } from './components/dynamic-input/endpoint-input/endpoint-input.component';
@@ -21,7 +20,6 @@ import { NgxJsonViewerModule } from 'ngx-json-viewer';
   declarations: [
     ApiConfigurationPreviewComponent,
     ApiAuthorizationTypePipe,
-    ApiCallConfiguratorComponent,
     ApiLoginTestComponent,
     UsernamePasswordCombinationComponent,
     EndpointInputComponent,
@@ -39,7 +37,6 @@ import { NgxJsonViewerModule } from 'ngx-json-viewer';
     NgxJsonViewerModule
   ],
   exports: [
-    ApiCallConfiguratorComponent,
     ApiConfigurationPreviewComponent
   ]
 })

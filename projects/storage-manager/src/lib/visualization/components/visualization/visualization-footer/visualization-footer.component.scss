@@ -1,0 +1,66 @@
+@import 'button';
+@import 'colors';
+
+:host {
+    display: flex;
+    align-items: center;
+    height: 100%;
+}
+
+.general-options-wrapper {
+    >* {
+        margin-left: 1rem;
+    }
+}
+
+.button {
+    &.download {
+        @include default-icon-button;
+    }
+
+    &.validation {
+        @include purple-icon-button;
+    }
+}
+
+.margin-l {
+    margin-left: 1rem;
+}
+
+.control {
+    cursor: pointer;
+    opacity: .5;
+
+    &:hover {
+        opacity: 1;
+        transform: all .5s ease-in-out;
+    }
+
+    &.is-active {
+        opacity: 1;
+        color: $active;
+    }
+}
+
+.orientation-grid {
+    display: inline-grid;
+    grid-template-columns: 1fr 1fr 1fr;
+
+    mat-icon {
+        font-size: .7rem;
+        height: unset;
+        width: unset;
+        cursor: pointer;
+
+        &.secondary {
+            opacity: .2;
+        }
+
+        &:hover {
+            transform: scale(1.2);
+            color: $wine-red;
+            opacity: 1;
+            transition: all .2s ease-in-out;
+        }
+    }
+}

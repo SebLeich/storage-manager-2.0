@@ -1,26 +1,27 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
-import defaultImportsConstant from 'src/app/default-imports.constant';
+import { provideMockStore } from '@ngrx/store/testing';
 import { SceneVisualizationComponent } from './scene-visualization.component';
+import { Spectator, createComponentFactory } from '@ngneat/spectator';
+import { FEATURE_KEY, INITIAL_STATE } from '../../store/visualization.reducer';
+import { DragDropModule } from '@angular/cdk/drag-drop';
 
 describe('SceneVisualizationComponent', () => {
-  let component: SceneVisualizationComponent;
-  let fixture: ComponentFixture<SceneVisualizationComponent>;
+    let spectator: Spectator<SceneVisualizationComponent>;
 
-  beforeEach(async () => {
-    await TestBed.configureTestingModule({
-      imports: [
-        ...defaultImportsConstant
-      ],
-      declarations: [SceneVisualizationComponent]
-    })
-      .compileComponents();
+    const initialState = { [FEATURE_KEY]: INITIAL_STATE };
 
-    fixture = TestBed.createComponent(SceneVisualizationComponent);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
-  });
+    const createComponent = createComponentFactory({
+        component: SceneVisualizationComponent,
+        imports: [
+            DragDropModule
+        ],
+        providers: [
+            provideMockStore({ initialState })
+        ]
+    });
 
-  it('should create', () => {
-    expect(component).toBeTruthy();
-  });
+    beforeEach(() => spectator = createComponent());
+
+    it('should create', () => {
+        expect(spectator.component).toBeTruthy();
+    });
 });

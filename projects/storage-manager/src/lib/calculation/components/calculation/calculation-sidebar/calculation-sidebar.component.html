@@ -1,0 +1,26 @@
+<div class="item main">
+
+    <span class="title">{{'navItems.calculation'|translation|async}}</span>
+
+    @if(recalculationTriggered$|async){
+    <mat-spinner diameter="20"></mat-spinner>
+    }
+
+    <div class="container-data-wrapper">
+        <app-input-wrapper [label]="'defaults.containerHeight'|translation|async">
+            <input #containerHeight type="number" [value]="containerHeight$|async" (blur)="updateContainer(containerHeight.value)"
+                (keyup.enter)="updateContainer(containerHeight.value)" />
+        </app-input-wrapper>
+
+        <app-input-wrapper [label]="'defaults.containerWidth'|translation|async">
+            <input #containerWidth type="number" [value]="containerWidth$|async" (blur)="updateContainer(undefined, containerWidth.value)"
+                (keyup.enter)="updateContainer(undefined, containerWidth.value)" />
+        </app-input-wrapper>
+    </div>
+
+</div>
+
+@for(solutionWrapper of (solutionWrappers$|async); track solutionWrapper){
+<app-solution-wrapper-preview [solutionWrapper]="solutionWrapper"
+    (showSolution)="showCalculatedSolution(solutionWrapper)"></app-solution-wrapper-preview>
+}

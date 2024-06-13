@@ -1,7 +1,7 @@
-import { IGroup } from "./group.interface";
-import { IOrder } from "./order.interface";
-import { ISolution } from "./solution.interface";
+import { SolutionWrapper } from "../types/solution-wrapper.type";
+import { Order } from "../types/order.type";
+import { Group } from "../types/group.type";
 
 export interface ISolver {
-    solve(containerHeight: number, containerWidth: number, groups: IGroup[], orders: IOrder[]): ISolution;
+    solve(containerHeight: number, containerWidth: number, groups: Group[], orders: Order[]): SolutionWrapper;
 }

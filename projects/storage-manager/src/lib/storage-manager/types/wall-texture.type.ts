@@ -1,0 +1,1 @@
+export type WallTexture = 'black' | 'blue' | 'green' | 'red' | 'white' | 'yellow';

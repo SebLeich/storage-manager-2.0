@@ -7,7 +7,6 @@ export * from './actions/solution-preview.actions';
 export * from './actions/solution.actions';
 
 export * from './effects/calculation-attribute.effects';
-export * from './effects/group.effects';
 export * from './effects/order.effects';
 export * from '../../procedure-store/store/pending-procedure.effects';
 export * from './effects/product.effects';

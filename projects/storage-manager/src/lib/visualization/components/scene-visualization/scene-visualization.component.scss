@@ -1,15 +1,67 @@
+@import 'box-shadow';
+@import 'colors';
+
 :host {
-  flex: 1;
-  display: flex;
-  overflow: hidden;
+    flex: 1;
+    display: flex;
+}
 
-  .visualization-wrapper {
-    height: -webkit-fill-available;
-    width: -webkit-fill-available;
-    box-sizing: border-box;
+.body {
+    flex: 1;
+    display: flex;
+    overflow: hidden;
+    position: relative;
 
-    &.cursor-pointer {
-      cursor: pointer;
+    .fixed-scene-settings {
+        position: relative;
+        color: $white;
+        background-color: $dark-slate-grey;
+        border-radius: 3px;
+
+        .close-control {
+            cursor: pointer;
+            position: absolute;
+            top: .5rem;
+            right: .5rem;
+        }
     }
-  }
+
+    &.fixed-scene-settings-left {
+        flex-direction: row;
+    }
+
+    &.fixed-scene-settings-right {
+        flex-direction: row-reverse;
+    }
+
+    &.fixed-scene-settings-top {
+        flex-direction: column;
+    }
+
+    &.fixed-scene-settings-bottom {
+        flex-direction: column-reverse;
+    }
+
+    .visualization-wrapper {
+        flex: 1;
+        box-sizing: border-box;
+        overflow: hidden;
+
+        &.cursor-pointer {
+            cursor: pointer;
+        }
+    }
+
+    .overlay {
+        @include box-shadow;
+        position: fixed;
+        top: 1rem;
+        left: 1rem;
+        background-color: $dark-slate-grey;
+        color: $white;
+        border-radius: 3px;
+        padding: .5rem;
+        max-height: 200px;
+        overflow-y: auto;
+    }
 }

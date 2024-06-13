@@ -5,7 +5,6 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { selectPipelines, selectSelectedPipeline } from 'src/lib/pipeline-store/store/selectors/pipeline.selectors';
 import { v4 as generateGuid } from 'uuid';
 import * as ThreeJS from 'three';
-import { VisualizationService } from 'src/lib/visualization/services/visualization.service';
 import { MatTabGroup } from '@angular/material/tabs';
 import { ISolution } from '@smgr/interfaces';
 import { FormControl } from '@angular/forms';
@@ -18,6 +17,7 @@ import { showListAnimation } from '@/lib/shared/animations/show-list';
 import { ConsoleService } from '@/lib/console/services/console.service';
 import { LogLevel } from '@/lib/shared/types/log-level.type';
 import { selectSnapshot } from '@/lib/process-builder/globals/select-snapshot';
+import { VisualizationService } from '@/lib/visualization/services/visualization/visualization.service';
 
 @Component({
   selector: 'app-pipe-runner',
@@ -113,9 +113,9 @@ export class PipeRunnerComponent implements OnInit {
       return;
     }
     this._visualizationService.configureSolutionScene(
-      solution,
+      solution as any,
       this.scene,
-      '#ffffff'
+      '#ffffff' as any
     );
     this.tabGroup.selectedIndex = 1;
   }

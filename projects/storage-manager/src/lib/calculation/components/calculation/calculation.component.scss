@@ -1,0 +1,31 @@
+@import 'box-shadow';
+@import 'colors';
+@import 'sizing';
+
+.main-content {
+    display: grid;
+    grid-gap: 1rem;
+    flex: 1;
+    overflow: auto;
+    padding: 1rem;
+
+    > * {
+        width: fit-content;
+    }
+
+    .order-list-wrapper {
+        @include box-shadow;
+        background-color: $light-grey;
+        overflow: hidden;
+        border-radius: 1rem;
+        min-height: 360px;
+    }
+
+    .group-list-wrapper {
+        @include box-shadow;
+        background-color: $light-grey;
+        overflow: hidden;
+        border-radius: 1rem;
+        min-height: 180px;
+    }
+}

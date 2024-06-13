@@ -1,0 +1,19 @@
+@import 'button';
+
+:host {
+    display: flex;
+    align-items: center;
+    height: 100%;
+}
+
+.general-options-wrapper {
+    >* {
+        margin-left: 1rem;
+    }
+}
+
+.button {
+    &.calculation {
+        @include default-icon-button;
+    }
+}

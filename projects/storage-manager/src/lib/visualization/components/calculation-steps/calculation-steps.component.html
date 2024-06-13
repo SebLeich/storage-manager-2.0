@@ -1,0 +1,26 @@
+<h3>
+    <span class="text">{{'defaults.calculationSteps'|translation|async}} ({{calculationSteps().length}})</span>
+    <span class="status-badge" [class]="playStatus()">{{'visualization.animationStatus.' + playStatus()|unsafeTranslation|async}}</span>
+</h3>
+
+<ng-container *ngLet="messages() as messages">
+    @if(playStatus() !== 'stopped'){
+    <div class="messages-wrapper">
+        <div class="messages-inner">
+            @for(message of messages; track message){
+            <span>{{message}}</span><br>
+            }
+        </div>
+    </div>
+    }
+</ng-container>
+
+<div class="control-wrapper">
+    <mat-icon [matTooltip]="('visualization.fastRewind'|translation|async) ?? ''" (click)="fastRewind.emit()">fast_rewind</mat-icon>
+    <mat-icon [matTooltip]="('visualization.previousStep'|translation|async) ?? ''" (click)="previousStep.emit()">chevron_left</mat-icon>
+    <mat-icon [matTooltip]="('visualization.' + (playStatus() !== 'playing'? 'playAnimation': 'pauseAnimation')|unsafeTranslation|async) ?? ''"
+        (click)="togglePlayStatus()">{{playStatus() !== 'playing'? 'play_arrow': 'pause'}}</mat-icon>
+    <mat-icon [matTooltip]="('visualization.stopAnimation'|translation|async) ?? ''" (click)="stopAnimation.emit()">stop</mat-icon>
+    <mat-icon [matTooltip]="('visualization.nextStep'|translation|async) ?? ''" (click)="nextStep.emit()">chevron_right</mat-icon>
+    <mat-icon [matTooltip]="('visualization.fastForward'|translation|async) ?? ''" (click)="fastForward.emit()">fast_forward</mat-icon>
+</div>

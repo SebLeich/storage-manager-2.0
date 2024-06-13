@@ -1,0 +1,19 @@
+<app-scaffold mainContentBorderRadius="none">
+
+    <app-calculation-sidebar id="side-nav" (showSolution)="visualizeSolution($event)"></app-calculation-sidebar>
+
+    <div id="main" class="main-content">
+        <div class="order-list-wrapper">
+            <app-order-list></app-order-list>
+        </div>
+
+        <div class="group-list-wrapper">
+            <app-group-list></app-group-list>
+        </div>
+    </div>
+
+    <div id="footer">
+        <app-calculation-footer (recalculate)="recalculate()"></app-calculation-footer>
+    </div>
+
+</app-scaffold>

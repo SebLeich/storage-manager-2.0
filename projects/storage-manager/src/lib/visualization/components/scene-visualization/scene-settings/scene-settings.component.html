@@ -1,0 +1,91 @@
+<div class="body">
+    <h3>{{'visualization.sceneSettings'|translation|async}}</h3>
+
+    <mat-icon class="close-control" (click)="visibilityChanged.emit(false)">clear</mat-icon>
+
+    <div class="content {{orientation()}}">
+
+        @if(orientation() === 'vertical'){
+        <h4>{{'defaults.container'|translation|async}}</h4>
+        }
+
+        <app-input-wrapper [label]="'defaults.containerColor'|translation|async">
+            <select (change)="containerColorChanged.emit($any($event.target).value)" [value]="containerColor()">
+                <option value="black">{{'colors.black'|translation|async}}</option>
+                <option value="white">{{'colors.white'|translation|async}}</option>
+                <option value="red">{{'colors.red'|translation|async}}</option>
+                <option value="green">{{'colors.green'|translation|async}}</option>
+                <option value="blue">{{'colors.blue'|translation|async}}</option>
+                <option value="yellow">{{'colors.yellow'|translation|async}}</option>
+            </select>
+        </app-input-wrapper>
+
+        <app-object-site-selection [label]="'defaults.containerWalls'|translation|async" [objectSites]="wallObjectSites()"
+            (objectSitesChanged)="wallObjectSitesChanged.emit($event)"></app-object-site-selection>
+
+        <app-input-wrapper appearance="outline" [isCheckbox]="true" [label]="'visualization.showContainer'|translation|async">
+            <input [value]="showContainer()" (change)="showContainerChanged.emit($any($event.target).checked)" type="checkbox" />
+        </app-input-wrapper>
+
+        <app-input-wrapper appearance="outline" [isCheckbox]="true" [label]="'visualization.showContainerEdges'|translation|async">
+            <input [value]="showContainerEdges()" [disabled]="!showContainer()" (change)="showContainerEdgesChanged.emit($any($event.target).checked)"
+                type="checkbox" />
+        </app-input-wrapper>
+
+        <app-input-wrapper appearance="outline" [isCheckbox]="true" [label]="'visualization.showContainerUnloadingArrow'|translation|async">
+            <input [value]="showContainerUnloadingArrow()" (change)="showContainerUnloadingArrowChanged.emit($any($event.target).checked)"
+                type="checkbox" />
+        </app-input-wrapper>
+
+        @if(orientation() === 'vertical'){
+        <h4>{{'defaults.goods'|translation|async}}</h4>
+        }
+
+        <app-object-site-selection [label]="'defaults.goodLabels'|translation|async" [objectSites]="goodLabelObjectSites()"
+            (objectSitesChanged)="goodLabelObjectSitesChanged.emit($event)"></app-object-site-selection>
+
+        <app-input-wrapper appearance="outline" [isCheckbox]="true" [label]="'visualization.showGoods'|translation|async">
+            <input [value]="showGoods()" (change)="showGoodsChanged.emit($any($event.target).checked)" type="checkbox" />
+        </app-input-wrapper>
+
+        <app-input-wrapper appearance="outline" [isCheckbox]="true" [label]="'visualization.showGoodEdges'|translation|async">
+            <input [value]="showGoodEdges()" [disabled]="!showGoods()" (change)="showGoodEdgesChanged.emit($any($event.target).checked)"
+                type="checkbox" />
+        </app-input-wrapper>
+
+        @if(orientation() === 'vertical'){
+        <h4>{{'visualization.emptySpace'|translation|async}}</h4>
+        }
+
+        <app-input-wrapper appearance="outline" [isCheckbox]="true" [label]="'visualization.showEmptySpace'|translation|async">
+            <input [value]="showEmptySpace()" (change)="showEmptySpaceChanged.emit($any($event.target).checked)" type="checkbox" />
+        </app-input-wrapper>
+
+        <app-input-wrapper appearance="outline" [isCheckbox]="true" [label]="'visualization.fillEmptySpace'|translation|async">
+            <input [value]="fillEmptySpace()" [disabled]="!showEmptySpace()" (change)="fillEmptySpaceChanged.emit($any($event.target).checked)"
+                type="checkbox" />
+        </app-input-wrapper>
+
+        <app-input-wrapper appearance="outline" [isCheckbox]="true" [label]="'visualization.showEmptySpaceEdges'|translation|async">
+            <input [value]="showEmptySpaceEdges()" [disabled]="!showEmptySpace()"
+                (change)="showEmptySpaceEdgesChanged.emit($any($event.target).checked)" type="checkbox" />
+        </app-input-wrapper>
+
+        @if(orientation() === 'vertical'){
+        <h4>{{'visualization.scene'|translation|async}}</h4>
+        }
+
+        <app-input-wrapper appearance="outline" [isCheckbox]="true" [label]="'visualization.addLights'|translation|async">
+            <input [value]="addLights()" (change)="addLightsChanged.emit($any($event.target).checked)" type="checkbox" />
+        </app-input-wrapper>
+
+        <app-input-wrapper appearance="outline" [isCheckbox]="true" [label]="'visualization.showBaseGrid'|translation|async">
+            <input [value]="showBaseGrid()" (change)="showBaseGridChanged.emit($any($event.target).checked)" type="checkbox" />
+        </app-input-wrapper>
+
+        <app-input-wrapper appearance="outline" [isColor]="true" [label]="'defaults.backgroundColor'|translation|async">
+            <input [value]="backgroundColor()" (change)="backgroundColorChanged.emit($any($event.target).value)" type="color" />
+        </app-input-wrapper>
+
+    </div>
+</div>
