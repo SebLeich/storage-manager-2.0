@@ -21,9 +21,11 @@ const adapter = createEntityAdapter<Order>(
 export const INITIAL_STATE: State = adapter.getInitialState({
     selectedOrderId: null,
     entities: {
-        '1': { id: '1', index: 0, description: 'Order', group: '1', quantity: 5, width: 400, height: 150, length: 350, stackingAllowed: true, turningAllowed: true, texture: 'cardboard' }
+        '1': { id: '1', index: 0, description: 'Order', group: '1', quantity: 20, width: 400, height: 150, length: 450, stackingAllowed: true, turningAllowed: true, texture: 'cardboard' },
+        '2': { id: '2', index: 0, description: 'Order', group: '2', quantity: 10, width: 350, height: 100, length: 550, stackingAllowed: true, turningAllowed: true, texture: 'wood' },
+        '3': { id: '3', index: 0, description: 'Order', group: '2', quantity: 10, width: 200, height: 135, length: 400, stackingAllowed: true, turningAllowed: true, texture: 'glass' }
     },
-    ids: ['1'],
+    ids: ['1', '2', '3'],
 });
 
 export const reducer = createReducer(

@@ -40,7 +40,7 @@ export class VisualizationComponent implements OnInit {
     public playStatus = signal<'playing' | 'paused' | 'stopped'>('stopped');
     public labelObjectSites = signal<ObjectSite[]>(['right', 'front']);
     public wallObjectSites = signal<ObjectSite[]>(['bottom', 'rear', 'left', 'bottom']);
-    public wallTexture = signal<WallTexture>('yellow');
+    public wallTexture = signal<WallTexture>('black');
 
     public solutionWrapper$ = this._store.select(selectCurrentSolutionWrapper);
     public intervalSpeed$ = toObservable(this.intervalSpeed);

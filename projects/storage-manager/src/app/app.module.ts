@@ -56,6 +56,7 @@ import FUNCTIONS_CONFIG from 'src/config/function-config.constant';
 import INTERFACES_CONFIG from 'src/config/interfaces-config';
 
 import * as fromApplication from './store/reducers/application.reducer';
+import { TranslationModule } from '@/lib/translation';
 
 const rootReducers: { [key: string]: ActionReducer<any, any> } = {};
 rootReducers[fromApplication.featureKey] = fromApplication.reducer;
@@ -128,6 +129,8 @@ const routes: Routes = [
         }),
 
         StoreDevtoolsModule.instrument({ maxAge: 25, logOnly: !isDevMode() }),
+
+        TranslationModule
     ],
     providers: [
         { provide: PROCESS_BUILDER_CONFIG_TOKEN, useValue: PROCESS_BUILDER_CONFIG },
