@@ -3,9 +3,7 @@ import { BehaviorSubject, debounceTime, firstValueFrom, fromEvent, interval, map
 import { Box3, LineSegments, Mesh, PerspectiveCamera, Scene, Vector3 } from 'three';
 import { MeshBasicMaterial } from 'three';
 import { Store } from '@ngrx/store';
-import { selectSnapshot } from 'src/lib/process-builder/globals/select-snapshot';
 import { IVisualizerContextService, VISUALIZER_CONTEXT } from 'src/app/interfaces/i-visualizer-context.service';
-import { selectCurrentSolutionGoods, selectGroups } from '@smgr/store';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { SceneVisualizationComponentService } from './service/scene-visualization-component.service';
 import { Good } from '@/lib/storage-manager/types/good.type';
@@ -13,6 +11,7 @@ import { showAnimation } from '@/lib/shared/animations/show';
 import { WallTexture } from '@/lib/storage-manager/types/wall-texture.type';
 import { CdkDrag } from '@angular/cdk/drag-drop';
 import { ObjectSite } from '@/lib/storage-manager/types/object-site.type';
+import { selectCurrentSolutionGoods, selectCurrentSolutionGroups } from '../../store/visualization.selectors';
 
 @Component({
     selector: 'app-scene-visualization',
@@ -115,8 +114,8 @@ export class SceneVisualizationComponent implements OnChanges, OnInit {
         this._optimizeCameraPosition(mainObject, this.sceneVisualizationComponentService.camera);
     }
 
-    public async highlightGood(arg: Good | string) {
-        const groups = await selectSnapshot(this._store.select(selectGroups));
+    public highlightGood(arg: Good | string) {
+        const groups = this._store.selectSignal(selectCurrentSolutionGroups)();
         const goodId = typeof arg === 'string' ? arg : arg.id;
         const meshes = this.getGoodMeshes();
 
@@ -126,8 +125,8 @@ export class SceneVisualizationComponent implements OnChanges, OnInit {
         }
     }
 
-    public async highlightGoods(arg: Good[] | string[]) {
-        const groups = await selectSnapshot(this._store.select(selectGroups));
+    public highlightGoods(arg: Good[] | string[]) {
+        const groups = this._store.selectSignal(selectCurrentSolutionGroups)();
         const goodIds = arg.map((arg) => (typeof arg === 'string' ? arg : arg.id));
         const meshes = this.getGoodMeshes();
 
@@ -328,8 +327,8 @@ export class SceneVisualizationComponent implements OnChanges, OnInit {
             .subscribe(({ percentage }) => percentage < 50 ? this.zoomIn() : this.zoomOut());
     }
 
-    private async resetGoodColors() {
-        const groups = await selectSnapshot(this._store.select(selectGroups));
+    private resetGoodColors() {
+        const groups = this._store.selectSignal(selectCurrentSolutionGroups)();
         const meshes = this.getGoodMeshes();
         for (const mesh of meshes) {
             const group = groups.find((group) => group.id === mesh.userData['groupId']);

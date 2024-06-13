@@ -1,16 +1,15 @@
-import { TestBed } from '@angular/core/testing';
-
 import { ThreeDCalculationService } from './three-d-calculation.service';
+import { SpectatorService, createServiceFactory } from '@ngneat/spectator';
 
 describe('ThreeDCalculationService', () => {
-  let service: ThreeDCalculationService;
+    let spectator: SpectatorService<ThreeDCalculationService>;
+    const createService = createServiceFactory({
+        service: ThreeDCalculationService
+    });
 
-  beforeEach(() => {
-    TestBed.configureTestingModule({});
-    service = TestBed.inject(ThreeDCalculationService);
-  });
+    beforeEach(() => spectator = createService());
 
-  it('should be created', () => {
-    expect(service).toBeTruthy();
-  });
+    it('should be created', () => {
+        expect(spectator.service).toBeTruthy();
+    });
 });

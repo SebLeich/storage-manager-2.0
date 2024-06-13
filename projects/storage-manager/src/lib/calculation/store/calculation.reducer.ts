@@ -2,7 +2,7 @@ import { createReducer, on } from "@ngrx/store";
 import { setContainerDimensions, setSolutionWrappers } from "./calculation.actions";
 import { SolutionWrapper } from "@/lib/storage-manager/types/solution-wrapper.type";
 
-export const featureKey = 'CALCULATION';
+export const FEATURE_KEY = 'CALCULATION';
 
 export interface State {
     containerHeight: number;
@@ -10,14 +10,14 @@ export interface State {
     solutionWrappers: SolutionWrapper[];
 }
 
-const initialState: State = {
+export const INITIAL_STATE: State = {
     containerHeight: 1000,
     containerWidth: 1000,
     solutionWrappers: []
 };
 
-export const reducer = createReducer(
-    initialState,
+export const REDUCER = createReducer(
+    INITIAL_STATE,
 
     on(setContainerDimensions, (state, { containerHeight, containerWidth }) => ({
         ...state,

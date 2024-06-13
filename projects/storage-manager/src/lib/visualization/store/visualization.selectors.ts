@@ -48,3 +48,8 @@ export const selectCurrentSolutionValidation = createSelector(
     VISUALIZATION_STATE,
     (state: State) => state.validation
 );
+
+export const selectCurrentSolutionGoods = createSelector(
+    selectCurrentSolution,
+    (solution) => solution?.container?.goods ?? []
+);

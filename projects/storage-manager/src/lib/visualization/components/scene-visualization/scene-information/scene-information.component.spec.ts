@@ -1,3 +1,4 @@
+import { TranslationModule } from '@/lib/translation';
 import { SceneInformationComponent } from './scene-information.component';
 import { Spectator, createComponentFactory } from '@ngneat/spectator';
 
@@ -6,6 +7,9 @@ describe('SceneInformationComponent', () => {
 
     const createComponent = createComponentFactory({
         component: SceneInformationComponent,
+        imports: [
+            TranslationModule
+        ]
     });
 
     beforeEach(() => spectator = createComponent());

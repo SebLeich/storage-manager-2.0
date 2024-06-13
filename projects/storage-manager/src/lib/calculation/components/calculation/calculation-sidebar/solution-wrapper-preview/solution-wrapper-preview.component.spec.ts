@@ -1,23 +1,25 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
 
+import { TranslationModule } from '@/lib/translation';
 import { SolutionWrapperPreviewComponent } from './solution-wrapper-preview.component';
+import { Spectator, createComponentFactory } from '@ngneat/spectator';
+import { PrettyLengthPipe } from '@/lib/shared/pipes/pretty-length/pretty-length.pipe';
 
 describe('SolutionWrapperPreviewComponent', () => {
-  let component: SolutionWrapperPreviewComponent;
-  let fixture: ComponentFixture<SolutionWrapperPreviewComponent>;
+    let spectator: Spectator<SolutionWrapperPreviewComponent>;
 
-  beforeEach(async () => {
-    await TestBed.configureTestingModule({
-      imports: [SolutionWrapperPreviewComponent]
-    })
-    .compileComponents();
+    const createComponent = createComponentFactory({
+        component: SolutionWrapperPreviewComponent,
+        declarations: [
+            PrettyLengthPipe
+        ],
+        imports: [
+            TranslationModule
+        ],
+    });
 
-    fixture = TestBed.createComponent(SolutionWrapperPreviewComponent);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
-  });
+    beforeEach(() => spectator = createComponent());
 
-  it('should create', () => {
-    expect(component).toBeTruthy();
-  });
+    it('should create', () => {
+        expect(spectator.component).toBeTruthy();
+    });
 });

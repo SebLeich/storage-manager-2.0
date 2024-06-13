@@ -7,7 +7,7 @@ import { OrderModule } from '../order/order.module';
 import { CalculationSidebarComponent } from './components/calculation/calculation-sidebar/calculation-sidebar.component';
 import { InputModule } from '../input/input.module';
 import { StoreModule } from '@ngrx/store';
-import { featureKey, reducer } from './store/calculation.reducer';
+import { FEATURE_KEY, REDUCER } from './store/calculation.reducer';
 import { GroupModule } from '../groups/group.module';
 import { NgLetModule } from 'ng-let';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
@@ -43,7 +43,7 @@ import { SolutionWrapperPreviewComponent } from './components/calculation/calcul
         ]),
         ScaffoldModule,
         SharedModule,
-        StoreModule.forFeature(featureKey, reducer)
+        StoreModule.forFeature(FEATURE_KEY, REDUCER)
     ],
 })
 export class CalculationModule { }

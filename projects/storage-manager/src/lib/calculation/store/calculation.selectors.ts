@@ -1,7 +1,7 @@
 import { createFeatureSelector, createSelector } from "@ngrx/store";
-import { State, featureKey } from "./calculation.reducer";
+import { State, FEATURE_KEY } from "./calculation.reducer";
 
-export const selectCalculationState = createFeatureSelector<State>(featureKey);
+export const selectCalculationState = createFeatureSelector<State>(FEATURE_KEY);
 
 export const selectContainerHeight = createSelector(
     selectCalculationState,

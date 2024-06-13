@@ -4,7 +4,7 @@ import { createReducer, on } from "@ngrx/store";
 import { v4 } from 'uuid';
 import { addGroup, removeGroup, setGroups } from "./group.actions";
 
-export const featureKey = 'GROUPS';
+export const FEATURE_KEY = 'GROUPS';
 
 export interface State extends EntityState<Group> {
     ids: string[];
@@ -17,7 +17,7 @@ const adapter = createEntityAdapter<Group>(
     }
 );
 
-const initialState: State = adapter.getInitialState({
+export const INITIAL_STATE: State = adapter.getInitialState({
     selectedOrderId: null,
     entities: {
         '1': { color: '#6d2da8', desc: 'test 1', id: '1', sequenceNumber: 0 },
@@ -27,7 +27,7 @@ const initialState: State = adapter.getInitialState({
 });
 
 export const reducer = createReducer(
-    initialState,
+    INITIAL_STATE,
     on(addGroup, (state, { group }) => {
         const id = group.id ?? v4(),
             sequenceNumber = group.sequenceNumber ?? Math.max(...state.ids.map(id => state.entities[id]?.sequenceNumber ?? 0), 0) + 1;

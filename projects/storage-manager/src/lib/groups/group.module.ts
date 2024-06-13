@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { StoreModule } from '@ngrx/store';
-import { featureKey, reducer } from './store/group.reducer';
+import { FEATURE_KEY, reducer } from './store/group.reducer';
 import { TranslationModule } from '../translation';
 import { GroupSelectionComponent } from './components/group-selection/group-selection.component';
 import { InputModule } from '../input/input.module';
@@ -23,7 +23,7 @@ import { NgLetModule } from 'ng-let';
         MatIconModule,
         MatTooltipModule,
         NgLetModule,
-        StoreModule.forFeature(featureKey, reducer),
+        StoreModule.forFeature(FEATURE_KEY, reducer),
         TranslationModule
     ]
 })

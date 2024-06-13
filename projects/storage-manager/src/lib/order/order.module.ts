@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { StoreModule } from '@ngrx/store';
-import { featureKey, reducer } from './store/order.reducer';
+import { FEATURE_KEY, reducer } from './store/order.reducer';
 import { OrderListComponent } from './components/order-list/order-list.component';
 import { TranslationModule } from '../translation';
 import { InputModule } from '../input/input.module';
@@ -24,7 +24,7 @@ import { GroupModule } from '../groups/group.module';
         MatTooltipModule,
         NgLetModule,
         ReactiveFormsModule,
-        StoreModule.forFeature(featureKey, reducer),
+        StoreModule.forFeature(FEATURE_KEY, reducer),
         TranslationModule
     ]
 })

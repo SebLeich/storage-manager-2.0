@@ -1,23 +1,21 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
 
+import { TranslationModule } from '@/lib/translation';
 import { NavbarComponent } from './navbar.component';
+import { Spectator, createComponentFactory } from '@ngneat/spectator';
 
 describe('NavbarComponent', () => {
-  let component: NavbarComponent;
-  let fixture: ComponentFixture<NavbarComponent>;
+    let spectator: Spectator<NavbarComponent>;
 
-  beforeEach(async () => {
-    await TestBed.configureTestingModule({
-      imports: [NavbarComponent]
-    })
-    .compileComponents();
-    
-    fixture = TestBed.createComponent(NavbarComponent);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
-  });
+    const createComponent = createComponentFactory({
+        component: NavbarComponent,
+        imports: [
+            TranslationModule
+        ]
+    });
 
-  it('should create', () => {
-    expect(component).toBeTruthy();
-  });
+    beforeEach(() => spectator = createComponent());
+
+    it('should create', () => {
+        expect(spectator.component).toBeTruthy();
+    });
 });

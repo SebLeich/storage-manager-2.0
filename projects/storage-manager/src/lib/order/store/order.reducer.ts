@@ -5,7 +5,7 @@ import { addOrder, removeOrder, setOrders } from "./order.actions";
 import { v4 } from 'uuid';
 import { removeGroup } from "@/lib/groups/store/group.actions";
 
-export const featureKey = 'ORDERS';
+export const FEATURE_KEY = 'ORDERS';
 
 export interface State extends EntityState<Order> {
     ids: string[];
@@ -18,7 +18,7 @@ const adapter = createEntityAdapter<Order>(
     }
 );
 
-const initialState: State = adapter.getInitialState({
+export const INITIAL_STATE: State = adapter.getInitialState({
     selectedOrderId: null,
     entities: {
         '1': { id: '1', index: 0, description: 'Order', group: '1', quantity: 5, width: 400, height: 150, length: 350, stackingAllowed: true, turningAllowed: true, texture: 'cardboard' }
@@ -27,7 +27,7 @@ const initialState: State = adapter.getInitialState({
 });
 
 export const reducer = createReducer(
-    initialState,
+    INITIAL_STATE,
     on(addOrder, (state, { order }) => {
         const id = order.id ?? v4(),
             index = order.index ?? Math.max(...state.ids.map(id => state.entities[id]?.index ?? 0), 0) + 1;
