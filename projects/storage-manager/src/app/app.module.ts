@@ -46,7 +46,6 @@ import { EffectsModule } from '@ngrx/effects';
 import { ApplicationEffects } from './store/effects/application.effects';
 import { StorageManagerModule } from 'src/lib/storage-manager/storage-manager.module';
 import { RouterModule, Routes } from '@angular/router';
-import { ErrorComponent } from 'src/lib/shared/components/error/error.component';
 import { AboutComponent, LocalDataComponent } from '@main-components';
 import { APP_BASE_HREF, PlatformLocation } from '@angular/common';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
@@ -62,10 +61,10 @@ const rootReducers: { [key: string]: ActionReducer<any, any> } = {};
 rootReducers[fromApplication.featureKey] = fromApplication.reducer;
 
 const routes: Routes = [
-    { path: '', pathMatch: 'full', redirectTo: 'visualization' },
     { path: 'calculation', loadChildren: () => import('src/lib/calculation/calculation.module').then(m => m.CalculationModule) },
     { path: 'visualization', loadChildren: () => import('src/lib/visualization/visualization.module').then(m => m.VisualizationModule) },
-    { path: '**', component: ErrorComponent }
+    { path: '', pathMatch: 'full', redirectTo: 'calculation' },
+    { path: '**', pathMatch: 'full', redirectTo: 'calculation' }
 ];
 
 @NgModule({
