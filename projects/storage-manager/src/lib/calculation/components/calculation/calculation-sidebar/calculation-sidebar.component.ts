@@ -2,6 +2,7 @@ import { setContainerDimensions, setSolutionWrappers } from '@/lib/calculation/s
 import { selectContainerHeight, selectContainerWidth, selectSolutionWrappers } from '@/lib/calculation/store/calculation.selectors';
 import { selectGroups } from '@/lib/groups/store/group.selectors';
 import { selectValidOrders } from '@/lib/order/store/order.selectors';
+import bottomUpFadeInAnimation from '@/lib/shared/animations/bottom-up-fade.animation';
 import { AllInOneRowSolver, StartLeftBottomSolver, SuperFloSolver } from '@/lib/storage-manager/solvers';
 import { SolutionWrapper } from '@/lib/storage-manager/types/solution-wrapper.type';
 import { ChangeDetectionStrategy, Component, DestroyRef, EventEmitter, OnInit, Output } from '@angular/core';
@@ -13,7 +14,8 @@ import { combineLatest, debounceTime, map, startWith, switchMap, timer } from 'r
     selector: 'app-calculation-sidebar',
     templateUrl: './calculation-sidebar.component.html',
     styleUrl: './calculation-sidebar.component.scss',
-    changeDetection: ChangeDetectionStrategy.OnPush
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    animations: [bottomUpFadeInAnimation]
 })
 export class CalculationSidebarComponent implements OnInit {
     @Output() public showSolution = new EventEmitter<Partial<SolutionWrapper>>();

@@ -29,6 +29,7 @@ import { InputModule } from '../input/input.module';
 import { BoundaryDraggableDirective } from './directives/boundary-draggable.directive';
 import { ObjectSiteSelectionComponent } from './components/scene-visualization/scene-settings/object-site-selection/object-site-selection.component';
 import { DownloadModule } from '../download/download.module';
+import { OrdersPreviewComponent } from './components/orders-preview/orders-preview.component';
 
 
 
@@ -38,6 +39,7 @@ import { DownloadModule } from '../download/download.module';
         CalculationStepsComponent,
         ContainerPreviewComponent,
         ObjectSiteSelectionComponent,
+        OrdersPreviewComponent,
         SceneInformationComponent,
         SceneSettingsComponent,
         SceneVisualizationComponent,

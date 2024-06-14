@@ -20,7 +20,11 @@
 
 </div>
 
-@for(solutionWrapper of (solutionWrappers$|async); track solutionWrapper){
-<app-solution-wrapper-preview [solutionWrapper]="solutionWrapper"
-    (showSolution)="showCalculatedSolution(solutionWrapper)"></app-solution-wrapper-preview>
-}
+<ng-container *ngLet="(solutionWrappers$|async) as solutionWrappers">
+    <div @bottomUpFadeIn *ngIf="solutionWrappers?.length">
+        @for(solutionWrapper of (solutionWrappers$|async); track solutionWrapper){
+        <app-solution-wrapper-preview class="widget" [solutionWrapper]="solutionWrapper"
+            (showSolution)="showCalculatedSolution(solutionWrapper)"></app-solution-wrapper-preview>
+        }
+    </div>
+</ng-container>

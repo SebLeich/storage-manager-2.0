@@ -7,12 +7,14 @@ import { Store } from '@ngrx/store';
 import { setSolutionWrappers } from '../../store/calculation.actions';
 import { selectGroups } from '@/lib/groups/store/group.selectors';
 import { selectContainerHeight, selectContainerWidth } from '../../store/calculation.selectors';
+import bottomUpFadeInAnimation from '@/lib/shared/animations/bottom-up-fade.animation';
 
 @Component({
     selector: 'app-calculation',
     templateUrl: './calculation.component.html',
     styleUrl: './calculation.component.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,
+    animations: [bottomUpFadeInAnimation]
 })
 export class CalculationComponent {
     constructor(private _router: Router, private _store: Store) { }
