@@ -5,6 +5,7 @@ import { Spectator, createComponentFactory } from '@ngneat/spectator';
 import { provideMockStore } from '@ngrx/store/testing';
 import { FEATURE_KEY, INITIAL_STATE } from '@/lib/visualization/store/visualization.reducer';
 import { GoodsPreviewComponent } from '../../goods-preview/goods-preview.component';
+import { NgLetModule } from 'ng-let';
 
 describe('VisualizationSidebarComponent', () => {
     let spectator: Spectator<VisualizationSidebarComponent>;
@@ -17,6 +18,7 @@ describe('VisualizationSidebarComponent', () => {
             GoodsPreviewComponent
         ],
         imports: [
+            NgLetModule,
             TranslationModule
         ],
         providers: [

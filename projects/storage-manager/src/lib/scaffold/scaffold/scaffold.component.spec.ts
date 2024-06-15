@@ -7,7 +7,7 @@ describe('ScaffoldComponent', () => {
 
     const createComponent = createComponentFactory({
         component: ScaffoldComponent,
-        componentMocks: [NavbarComponent]
+        declarations: [NavbarComponent]
     });
 
     beforeEach(() => spectator = createComponent());
