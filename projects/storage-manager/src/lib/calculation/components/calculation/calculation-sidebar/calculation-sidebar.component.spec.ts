@@ -6,6 +6,9 @@ import { FEATURE_KEY as GROUP_FEATURE_KEY, INITIAL_STATE as GROUP_INITIAL_STATE 
 import { FEATURE_KEY as ORDER_FEATURE_KEY, INITIAL_STATE as ORDER_INITIAL_STATE } from '@/lib/order/store/order.reducer';
 import { provideMockStore } from '@ngrx/store/testing';
 import { TranslationModule } from '@/lib/translation';
+import { NgLetModule } from 'ng-let';
+import { InputModule } from '@/lib/input/input.module';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 describe('CalculationSidebarComponent', () => {
     let spectator: Spectator<CalculationSidebarComponent>;
@@ -19,6 +22,9 @@ describe('CalculationSidebarComponent', () => {
     const createComponent = createComponentFactory({
         component: CalculationSidebarComponent,
         imports: [
+            InputModule,
+            MatProgressSpinnerModule,
+            NgLetModule,
             TranslationModule
         ],
         providers: [

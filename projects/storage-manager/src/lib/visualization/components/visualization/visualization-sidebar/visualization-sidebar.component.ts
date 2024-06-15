@@ -29,6 +29,7 @@ export class VisualizationSidebarComponent {
     public currentStepIndex = input<number | null>(null);
     public intervalSpeed = input<number>(0);
     public playStatus = input<'playing' | 'paused' | 'stopped'>('stopped');
+    public hoveredGood = input<string | null>(null);
 
     public groups = computed(() => this.solutionWrapper()?.groups ?? []);
     public goods = computed(() => this.solutionWrapper()?.solution?.container.goods ?? []);

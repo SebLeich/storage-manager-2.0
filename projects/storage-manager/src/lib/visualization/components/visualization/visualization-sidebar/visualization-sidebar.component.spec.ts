@@ -4,6 +4,7 @@ import { VisualizationSidebarComponent } from './visualization-sidebar.component
 import { Spectator, createComponentFactory } from '@ngneat/spectator';
 import { provideMockStore } from '@ngrx/store/testing';
 import { FEATURE_KEY, INITIAL_STATE } from '@/lib/visualization/store/visualization.reducer';
+import { GoodsPreviewComponent } from '../../goods-preview/goods-preview.component';
 
 describe('VisualizationSidebarComponent', () => {
     let spectator: Spectator<VisualizationSidebarComponent>;
@@ -12,6 +13,9 @@ describe('VisualizationSidebarComponent', () => {
 
     const createComponent = createComponentFactory({
         component: VisualizationSidebarComponent,
+        declarations: [
+            GoodsPreviewComponent
+        ],
         imports: [
             TranslationModule
         ],

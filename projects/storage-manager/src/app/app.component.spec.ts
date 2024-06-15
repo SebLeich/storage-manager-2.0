@@ -1,3 +1,4 @@
+import { TranslationModule } from '@/lib/translation';
 import { AppComponent } from './app.component';
 import { Spectator, createComponentFactory } from '@ngneat/spectator';
 
@@ -6,6 +7,9 @@ describe('AppComponent', () => {
 
     const createComponent = createComponentFactory({
         component: AppComponent,
+        imports: [
+            TranslationModule
+        ]
     });
 
     beforeEach(() => spectator = createComponent());

@@ -1,0 +1,16 @@
+<h3>{{'defaults.goods'|translation|async}} ({{goods().length}})</h3>
+
+<div class="table-wrapper">
+    <table>
+        @for(good of goods(); track good.id)
+        {
+        <div class="good-wrapper" [class.hovered]="good.id === hoveredGood()">
+            <div class="good-group">
+                <div class="group-badge" [style.backgroundColor]="groupColorMap()[good.group ?? ''] ?? 'grey'"></div>
+            </div>
+            <div>{{good.sequenceNr}}</div>
+            <div>{{good.desc}}</div>
+        </div>
+        }
+    </table>
+</div>

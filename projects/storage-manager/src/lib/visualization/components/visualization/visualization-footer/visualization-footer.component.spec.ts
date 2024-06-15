@@ -3,6 +3,7 @@ import { VisualizationFooterComponent } from './visualization-footer.component';
 import { Spectator, createComponentFactory } from '@ngneat/spectator';
 import { TranslationModule } from '@/lib/translation';
 import { MatMenuModule } from '@angular/material/menu';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 describe('VisualizationFooterComponent', () => {
     let spectator: Spectator<VisualizationFooterComponent>;
@@ -12,6 +13,7 @@ describe('VisualizationFooterComponent', () => {
         imports: [
             MatIconModule,
             MatMenuModule,
+            MatTooltipModule,
             TranslationModule
         ]
     });

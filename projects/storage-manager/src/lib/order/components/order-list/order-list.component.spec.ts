@@ -4,6 +4,8 @@ import { OrderListComponent } from './order-list.component';
 import { Spectator, createComponentFactory } from '@ngneat/spectator';
 import { FEATURE_KEY, INITIAL_STATE } from '../../store/order.reducer';
 import { TranslationModule } from '@/lib/translation';
+import { NgLetModule } from 'ng-let';
+import { InputModule } from '@/lib/input/input.module';
 
 describe('OrderListComponent', () => {
     let spectator: Spectator<OrderListComponent>;
@@ -13,6 +15,8 @@ describe('OrderListComponent', () => {
     const createComponent = createComponentFactory({
         component: OrderListComponent,
         imports: [
+            InputModule,
+            NgLetModule,
             TranslationModule
         ],
         providers: [

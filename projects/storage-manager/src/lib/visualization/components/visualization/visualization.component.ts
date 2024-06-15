@@ -35,6 +35,7 @@ export class VisualizationComponent implements OnInit {
     public displayGoods = signal<boolean>(true);
     public displayGoodEdges = signal<boolean>(false);
     public fillEmptySpace = signal<boolean>(false);
+    public hoveredGood = signal<string | null>(null);
     public animationStepIndex = signal<number | null>(null);
     public intervalSpeed = signal<number>(1000);
     public playStatus = signal<'playing' | 'paused' | 'stopped'>('stopped');
