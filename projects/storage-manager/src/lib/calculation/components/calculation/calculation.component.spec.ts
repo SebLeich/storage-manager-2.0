@@ -9,6 +9,10 @@ import { CalculationSidebarComponent } from './calculation-sidebar/calculation-s
 import { FEATURE_KEY as ORDER_FEATURE_KEY, INITIAL_STATE as ORDER_INITIAL_STATE } from '@/lib/order/store/order.reducer';
 import { FEATURE_KEY as GROUP_FEATURE_KEY, INITIAL_STATE as GROUP_INITIAL_STATE } from '@/lib/groups/store/group.reducer';
 import { ScaffoldModule } from '@/lib/scaffold/scaffold.module';
+import { MatIconModule } from '@angular/material/icon';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { MockComponent } from 'ng-mocks';
+import { CalculationFooterComponent } from './calculation-footer/calculation-footer.component';
 
 describe('CalculationComponent', () => {
     let spectator: Spectator<CalculationComponent>;
@@ -21,8 +25,13 @@ describe('CalculationComponent', () => {
 
     const createComponent = createComponentFactory({
         component: CalculationComponent,
-        declarations: [CalculationSidebarComponent, GroupListComponent, OrderListComponent],
-        imports: [ScaffoldModule],
+        declarations: [
+            MockComponent(CalculationFooterComponent),
+            MockComponent(CalculationSidebarComponent),
+            MockComponent(GroupListComponent),
+            MockComponent(OrderListComponent)
+        ],
+        imports: [MatIconModule, MatTooltipModule, ScaffoldModule],
         providers: [
             provideMockStore({ initialState })
         ]

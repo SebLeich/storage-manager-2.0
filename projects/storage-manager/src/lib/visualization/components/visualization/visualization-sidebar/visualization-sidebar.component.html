@@ -36,6 +36,7 @@
     </div>
 
     <div class="item widget">
-        <app-goods-preview [goods]="goods()" [groups]="groups()" [hoveredGood]="hoveredGood()"></app-goods-preview>
+        <app-goods-preview [goods]="goods()" [groups]="groups()" [hoveredGood]="hoveredGood()" [hiddenGoods]="hiddenGoods()"
+            (toggleGoodVisibility)="toggleGoodVisibility.emit($event)"></app-goods-preview>
     </div>
 </div>

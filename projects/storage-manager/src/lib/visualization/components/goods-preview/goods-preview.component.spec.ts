@@ -2,12 +2,14 @@
 import { TranslationModule } from '@/lib/translation';
 import { Spectator, createComponentFactory } from '@ngneat/spectator';
 import { GoodsPreviewComponent } from './goods-preview.component';
+import { MatIconModule } from '@angular/material/icon';
 
 describe('GoodsPreviewComponent', () => {
     let spectator: Spectator<GoodsPreviewComponent>;
     const createComponent = createComponentFactory({
         component: GoodsPreviewComponent,
         imports: [
+            MatIconModule,
             TranslationModule
         ],
     });

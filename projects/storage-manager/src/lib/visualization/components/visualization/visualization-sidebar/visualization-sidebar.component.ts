@@ -24,12 +24,14 @@ export class VisualizationSidebarComponent {
     @Output() public fastForward = new EventEmitter<void>();
     @Output() public fastRewind = new EventEmitter<void>();
     @Output() public intervalSpeedChange = new EventEmitter<number>();
+    @Output() public toggleGoodVisibility = new EventEmitter<string>();
 
     public solutionWrapper = input<SolutionWrapper | null>(null);
     public currentStepIndex = input<number | null>(null);
     public intervalSpeed = input<number>(0);
     public playStatus = input<'playing' | 'paused' | 'stopped'>('stopped');
     public hoveredGood = input<string | null>(null);
+    public hiddenGoods = input<string[]>([]);
 
     public groups = computed(() => this.solutionWrapper()?.groups ?? []);
     public goods = computed(() => this.solutionWrapper()?.solution?.container.goods ?? []);

@@ -4,6 +4,11 @@ import { Spectator, createComponentFactory } from '@ngneat/spectator';
 import { FEATURE_KEY, INITIAL_STATE } from '../../store/group.reducer';
 import { provideMockStore } from '@ngrx/store/testing';
 import { TranslationModule } from '@/lib/translation';
+import { NgLetModule } from 'ng-let';
+import { ReactiveFormsModule } from '@angular/forms';
+import { MatIconModule } from '@angular/material/icon';
+import { InputModule } from '@/lib/input/input.module';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 describe('GroupListComponent', () => {
     let spectator: Spectator<GroupListComponent>;
@@ -13,6 +18,11 @@ describe('GroupListComponent', () => {
     const createComponent = createComponentFactory({
         component: GroupListComponent,
         imports: [
+            InputModule,
+            MatIconModule,
+            MatTooltipModule,
+            NgLetModule,
+            ReactiveFormsModule,
             TranslationModule
         ],
         providers: [

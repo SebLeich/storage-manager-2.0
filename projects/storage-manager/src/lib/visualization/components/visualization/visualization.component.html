@@ -5,7 +5,8 @@
         (groupColorChanged)="updateGroup($event)" [currentStepIndex]="animationStepIndex()" [intervalSpeed]="intervalSpeed()"
         [playStatus]="playStatus()" (startAnimation)="startAnimation()" (stopAnimation)="stopAnimation()" (nextStep)="nextStep()"
         (previousStep)="previousStep()" (fastForward)="fastForward()" (fastRewind)="fastRewind()" (intervalSpeedChange)="intervalSpeed.set($event)"
-        (pauseAnimation)="pauseAnimation()" [hoveredGood]="hoveredGood()"></app-visualization-sidebar>
+        (pauseAnimation)="pauseAnimation()" [hoveredGood]="hoveredGood()" [hiddenGoods]="hiddenGoods()"
+        (toggleGoodVisibility)="toggleGoodVisibility($event)"></app-visualization-sidebar>
 
     <app-scene-visualization @fadeIn #sceneVisualization id="main" (sceneSettingsToggled)="displaySceneSettings.set($event)"
         [scene]="(scene$ | async)!" [displaySceneSettings]="displaySceneSettings()" (displaySceneSettingsChanged)="displaySceneSettings.set($event)"

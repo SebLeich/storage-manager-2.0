@@ -8,6 +8,7 @@ h3 {
 .table-wrapper {
     max-height: 200px;
     overflow-y: auto;
+    padding: 0px .25rem;
 
     table {
         .good-wrapper {
@@ -23,12 +24,31 @@ h3 {
             &.hovered {
                 font-weight: 500;
             }
+
+            &.hidden {
+                opacity: .8;
+            }
         
             > * {
                 display: table-cell;
                 vertical-align: middle;
                 white-space: nowrap;
                 text-overflow: ellipsis;
+
+                &.description {
+                    width: 100%;
+                }
+            }
+
+            mat-icon {
+                cursor: pointer;
+                opacity: .7;
+                font-size: 1rem;
+                line-height: 1rem;
+
+                &:hover {
+                    opacity: 1;
+                }
             }
         }
     }
