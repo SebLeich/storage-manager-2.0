@@ -1,0 +1,19 @@
+<h3>{{'defaults.goods'|translation|async}} ({{goods().length}})</h3>
+
+<div class="table-wrapper">
+    <table>
+        @for(wrapper of goodWrappers(); track wrapper.good.id)
+        {
+        <div class="good-wrapper" [class.hovered]="wrapper.hovered" [class.hidden]="wrapper.hidden">
+            <div class="good-group">
+                <div class="group-badge" [style.backgroundColor]="groupColorMap()[wrapper.good.group ?? ''] ?? 'grey'"></div>
+            </div>
+            <div>{{wrapper.good.sequenceNr}}</div>
+            <div class="description">{{wrapper.good.desc}}</div>
+            <mat-icon (click)="toggleGoodVisibility.emit(wrapper.good.id)">
+                {{wrapper.hidden ? 'visibility_off' : 'visibility'}}
+            </mat-icon>
+        </div>
+        }
+    </table>
+</div>

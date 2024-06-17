@@ -2,6 +2,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { ObjectSiteSelectionComponent } from './object-site-selection.component';
 import { Spectator, createComponentFactory } from '@ngneat/spectator';
 import { TranslationModule } from '@/lib/translation';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 describe('ObjectSitePreviewComponent', () => {
     let spectator: Spectator<ObjectSiteSelectionComponent>;
@@ -10,6 +11,7 @@ describe('ObjectSitePreviewComponent', () => {
         component: ObjectSiteSelectionComponent,
         imports: [
             MatIconModule,
+            MatTooltipModule,
             TranslationModule
         ]
     });

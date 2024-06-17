@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, DestroyRef, ElementRef, Injector, OnDestroy, OnInit, computed } from '@angular/core';
+import { ChangeDetectionStrategy, Component, DestroyRef, ElementRef, Injector, OnInit, computed } from '@angular/core';
 import { selectOrders } from '../../store/order.selectors';
 import { Store } from '@ngrx/store';
 import { FormArray, FormControl, FormGroup, Validators } from '@angular/forms';
@@ -14,7 +14,7 @@ import { v4 } from 'uuid';
     styleUrl: './order-list.component.scss',
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class OrderListComponent implements OnDestroy, OnInit {
+export class OrderListComponent implements OnInit {
     public ordersChanged$ = this._store
         .select(selectOrders)
         .pipe(
@@ -35,7 +35,9 @@ export class OrderListComponent implements OnDestroy, OnInit {
     public orders = toSignal(this.ordersChanged$, { injector: this._injector, initialValue: [] });
 
     public formArray = computed(() => {
-        const orders = this.orders() as Order[];
+        const orders = this.orders() as Order[],
+            validators = [Validators.minLength(1), Validators.maxLength(10)];
+
         const formGroups = orders.map(order => new FormGroup<Partial<{ [key in keyof Order]: FormControl<Order[key]> }>>({
             id: new FormControl(order.id, { nonNullable: true }),
             description: new FormControl(order.description, { validators: [Validators.required] }),
@@ -48,7 +50,7 @@ export class OrderListComponent implements OnDestroy, OnInit {
             stackingAllowed: new FormControl(order.stackingAllowed ?? false, { nonNullable: true }),
             turningAllowed: new FormControl(order.turningAllowed ?? false, { nonNullable: true }),
             texture: new FormControl(order.texture, { nonNullable: true, validators: [Validators.required] })
-        }), [Validators.minLength(1), Validators.maxLength(10)]);
+        }), validators);
 
         return new FormArray(formGroups);
     });
@@ -80,14 +82,10 @@ export class OrderListComponent implements OnDestroy, OnInit {
         this.formArray().controls.forEach(control => control.updateValueAndValidity());
     }
 
-    public ngOnDestroy(): void {
-        const formArrayValue = this.formArray().value as Order[];
-        this._syncOrders(formArrayValue);
-    }
-
     public ngOnInit(): void {
         this.formArrayValueChanges$
-            .pipe(takeUntilDestroyed(this._destroyRef), debounceTime(1000))
+            .pipe(debounceTime(1000))
+            .pipe(takeUntilDestroyed(this._destroyRef))
             .subscribe(orders => this._syncOrders(orders as Order[]));
     }
 

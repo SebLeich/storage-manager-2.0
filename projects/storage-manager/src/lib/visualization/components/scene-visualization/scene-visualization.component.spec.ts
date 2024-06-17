@@ -3,6 +3,10 @@ import { SceneVisualizationComponent } from './scene-visualization.component';
 import { Spectator, createComponentFactory } from '@ngneat/spectator';
 import { FEATURE_KEY, INITIAL_STATE } from '../../store/visualization.reducer';
 import { DragDropModule } from '@angular/cdk/drag-drop';
+import { SceneSettingsComponent } from './scene-settings/scene-settings.component';
+import { TranslationModule } from '@/lib/translation';
+import { MockComponent } from 'ng-mocks';
+import { MatIconModule } from '@angular/material/icon';
 
 describe('SceneVisualizationComponent', () => {
     let spectator: Spectator<SceneVisualizationComponent>;
@@ -11,8 +15,11 @@ describe('SceneVisualizationComponent', () => {
 
     const createComponent = createComponentFactory({
         component: SceneVisualizationComponent,
+        declarations: [MockComponent(SceneSettingsComponent)],
         imports: [
-            DragDropModule
+            DragDropModule,
+            MatIconModule,
+            TranslationModule
         ],
         providers: [
             provideMockStore({ initialState })

@@ -3,6 +3,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { CalculationFooterComponent } from './calculation-footer.component';
 import { Spectator, createComponentFactory } from '@ngneat/spectator';
 import { TranslationModule } from '@/lib/translation';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 describe('CalculationFooterComponent', () => {
     let spectator: Spectator<CalculationFooterComponent>;
@@ -11,6 +12,7 @@ describe('CalculationFooterComponent', () => {
         component: CalculationFooterComponent,
         imports: [
             MatIconModule,
+            MatTooltipModule,
             TranslationModule
         ]
     });

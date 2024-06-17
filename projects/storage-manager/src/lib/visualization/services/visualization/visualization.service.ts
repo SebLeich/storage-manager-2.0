@@ -50,6 +50,7 @@ export class VisualizationService {
         displayContainerEdges = true,
         displayGoods = true,
         displayGoodEdges = true,
+        hiddenGoods: string[] = [],
         displayEmptySpace = false,
         displayEmptySpaceEdges = false,
         fillEmptySpace = false
@@ -72,7 +73,7 @@ export class VisualizationService {
                 const group = groups.find((group) => group.id === good.group),
                     { basicMesh, mesh, edges } = VisualizationService.generateFilledBoxMesh({ ...position, id: v4() }, 'good', containerPosition, undefined, undefined, good.texture);
 
-                if (displayGoods) {
+                if (displayGoods && hiddenGoods.indexOf(good.id) === -1) {
                     mesh.userData['goodId'] = good.id;
                     mesh.userData['groupId'] = good.group;
                     goodMeshes.push({ goodId: good.id, mesh });
@@ -154,6 +155,7 @@ export class VisualizationService {
         displayContainerEdges = true,
         displayGoods = true,
         displayGoodEdges = true,
+        hiddenGoods: string[] = [],
         displayEmptySpace = false,
         displayEmptySpaceEdges = false,
         fillEmptySpace = false
@@ -193,24 +195,25 @@ export class VisualizationService {
         }
 
         let goodCSGs: CSG[] = [];
-        if (displayGoods) {
-            for (const position of lastUsedPositions) {
-                const spatial = ThreeDCalculationService.calculateSpatialPosition(position),
-                    label = position.goodDesc,
-                    group = groups.find(group => group.id === position.groupId);
+        for (const position of lastUsedPositions) {
+            const spatial = ThreeDCalculationService.calculateSpatialPosition(position),
+                label = position.goodDesc,
+                group = groups.find(group => group.id === position.groupId);
 
-                const { edges, mesh } = VisualizationService.generateFilledBoxMesh({ ...spatial, id: `${position.goodId}` }, 'good', containerPosition);
+            const { edges, mesh } = VisualizationService.generateFilledBoxMesh({ ...spatial, id: `${position.goodId}` }, 'good', containerPosition);
+
+            if (displayGoods && hiddenGoods.indexOf(position.goodId) === -1) {
                 scene.add(mesh);
                 if (displayGoodEdges) {
                     scene.add(edges);
                 }
-
-                goodCSGs.push(CSG.fromGeometry(edges.geometry));
-
-                const relativePosition = VisualizationService.calculateRelativePosition(position, containerPosition);
-                const labels = VisualizationService.getGoodLabels({ ...spatial, desc: label }, relativePosition, group, labelPositions);
-                labels.length > 0 && scene.add(...labels);
             }
+
+            goodCSGs.push(CSG.fromGeometry(edges.geometry));
+
+            const relativePosition = VisualizationService.calculateRelativePosition(position, containerPosition);
+            const labels = VisualizationService.getGoodLabels({ ...spatial, desc: label }, relativePosition, group, labelPositions);
+            labels.length > 0 && scene.add(...labels);
         }
 
         if (addBaseGrid) {
@@ -377,7 +380,7 @@ export class VisualizationService {
             height = 4000,
             widthSegments = 4000,
             heightSegments = 4000;
-            
+
         const planeGeometry = new PlaneGeometry(width, height, widthSegments, heightSegments);
         planeGeometry.rotateX(-Math.PI / 2);
 

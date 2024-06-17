@@ -34,7 +34,9 @@ export class VisualizationComponent implements OnInit {
     public displayEmptySpaceEdges = signal<boolean>(false);
     public displayGoods = signal<boolean>(true);
     public displayGoodEdges = signal<boolean>(false);
+    public hiddenGoods = signal<string[]>([]);
     public fillEmptySpace = signal<boolean>(false);
+    public hoveredGood = signal<string | null>(null);
     public animationStepIndex = signal<number | null>(null);
     public intervalSpeed = signal<number>(1000);
     public playStatus = signal<'playing' | 'paused' | 'stopped'>('stopped');
@@ -58,12 +60,13 @@ export class VisualizationComponent implements OnInit {
         toObservable(this.displayContainerEdges),
         toObservable(this.displayGoodEdges),
         toObservable(this.displayGoods),
+        toObservable(this.hiddenGoods),
         toObservable(this.displayEmptySpace),
         toObservable(this.displayEmptySpaceEdges),
         toObservable(this.fillEmptySpace)
     ]).pipe(
         scan(
-            (scene: Scene, [solutionWrapper, displayBaseGrid, animationStepIndex, labelObjectSites, wallObjectSites, wallTexture, addLights, backgroundColor, displayContainer, displayContainerUnloadingArrow, displayContainerEdges, displayGoodEdges, displayGoods, displayEmptySpace, displayEmptySpaceEdges, fillEmptySpace]) => {
+            (scene: Scene, [solutionWrapper, displayBaseGrid, animationStepIndex, labelObjectSites, wallObjectSites, wallTexture, addLights, backgroundColor, displayContainer, displayContainerUnloadingArrow, displayContainerEdges, displayGoodEdges, displayGoods, hiddenGoods, displayEmptySpace, displayEmptySpaceEdges, fillEmptySpace]) => {
                 if (solutionWrapper) {
                     if (animationStepIndex === null) this._visualizationService.configureSolutionScene(
                         solutionWrapper.solution,
@@ -80,6 +83,7 @@ export class VisualizationComponent implements OnInit {
                         displayContainerEdges,
                         displayGoods,
                         displayGoodEdges,
+                        hiddenGoods,
                         displayEmptySpace,
                         displayEmptySpaceEdges,
                         fillEmptySpace
@@ -101,6 +105,7 @@ export class VisualizationComponent implements OnInit {
                         displayContainerEdges,
                         displayGoods,
                         displayGoodEdges,
+                        hiddenGoods,
                         displayEmptySpace,
                         displayEmptySpaceEdges,
                         fillEmptySpace
@@ -165,7 +170,7 @@ export class VisualizationComponent implements OnInit {
             calculationSteps = state?.calculationSteps,
             orders = state?.orders,
             products = state?.products;
-            
+
         if (groups && solution) {
             const solutionWrapper = { groups, solution, calculationSteps, orders, products };
             this._store.dispatch(setSolution({ solutionWrapper }));
@@ -224,6 +229,14 @@ export class VisualizationComponent implements OnInit {
     public stopAnimation(): void {
         this._clearAnimationInterval();
         this.animationStepIndex.set(null);
+    }
+
+    public toggleGoodVisibility(goodId: string): void {
+        const hiddenGoods = this.hiddenGoods();
+        if (hiddenGoods.includes(goodId)) {
+            this.hiddenGoods.set(hiddenGoods.filter((id) => id !== goodId));
+        }
+        else this.hiddenGoods.set([...hiddenGoods, goodId]);
     }
 
     private _clearAnimationInterval(): void {

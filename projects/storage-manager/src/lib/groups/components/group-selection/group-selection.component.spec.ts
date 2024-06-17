@@ -5,6 +5,8 @@ import { Spectator, createComponentFactory } from '@ngneat/spectator';
 import { FEATURE_KEY, INITIAL_STATE } from '../../store/group.reducer';
 import { TranslationModule } from '@/lib/translation';
 import { InputModule } from '@/lib/input/input.module';
+import { ReactiveFormsModule } from '@angular/forms';
+import { MatIconModule } from '@angular/material/icon';
 
 describe('GroupSelectionComponent', () => {
     let spectator: Spectator<GroupSelectionComponent>;
@@ -15,7 +17,9 @@ describe('GroupSelectionComponent', () => {
         component: GroupSelectionComponent,
         imports: [
             InputModule,
-            TranslationModule
+            MatIconModule,
+            ReactiveFormsModule,
+            TranslationModule,
         ],
         providers: [
             provideMockStore({ initialState })

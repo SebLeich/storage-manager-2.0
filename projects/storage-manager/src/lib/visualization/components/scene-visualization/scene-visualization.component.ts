@@ -120,8 +120,10 @@ export class SceneVisualizationComponent implements OnChanges, OnInit {
         const meshes = this.getGoodMeshes();
 
         for (const mesh of meshes) {
-            const group = groups.find((group) => group.id === mesh.userData['groupId']);
-            (mesh.material as MeshBasicMaterial).color.set(mesh.userData['goodId'] === goodId ? 'white' : group?.color ?? 'black');
+            const group = groups.find((group) => group.id === mesh.userData['groupId']),
+                shouldHighlight = mesh.userData['goodId'] === goodId;
+
+            (mesh.material as MeshBasicMaterial).color.set(shouldHighlight ? 'white' : 'grey');
         }
     }
 
@@ -133,7 +135,7 @@ export class SceneVisualizationComponent implements OnChanges, OnInit {
         for (const mesh of meshes) {
             const group = groups.find((group) => group.id === mesh.userData['groupId']);
             const shouldHighlight = goodIds.indexOf(mesh.userData['goodId']) > -1;
-            (mesh.material as MeshBasicMaterial).color.set(shouldHighlight ? 'white' : group?.color ?? 'black');
+            (mesh.material as MeshBasicMaterial).color.set(shouldHighlight ? 'yellow' : 'white');
         }
     }
 
@@ -246,8 +248,6 @@ export class SceneVisualizationComponent implements OnChanges, OnInit {
             return;
         }
 
-        console.log(hoveredElement);
-
         const goodId = hoveredElement.object.userData['goodId'];
         await this.highlightGood(goodId);
 
@@ -332,7 +332,7 @@ export class SceneVisualizationComponent implements OnChanges, OnInit {
         const meshes = this.getGoodMeshes();
         for (const mesh of meshes) {
             const group = groups.find((group) => group.id === mesh.userData['groupId']);
-            (mesh.material as MeshBasicMaterial).color.set(group?.color ?? 'black');
+            (mesh.material as MeshBasicMaterial).color.set('white');
         }
     }
 

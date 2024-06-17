@@ -2,8 +2,8 @@ import { Spectator, createComponentFactory } from '@ngneat/spectator';
 import { CalculationStepsComponent } from './calculation-steps.component';
 import { TranslationModule } from '@/lib/translation';
 import { MatIconModule } from '@angular/material/icon';
-import { MatToolbarModule } from '@angular/material/toolbar';
 import { NgLetModule } from 'ng-let';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 describe('CalculationStepsComponent', () => {
     let spectator: Spectator<CalculationStepsComponent>;
@@ -12,7 +12,7 @@ describe('CalculationStepsComponent', () => {
         component: CalculationStepsComponent,
         imports: [
             MatIconModule,
-            MatToolbarModule,
+            MatTooltipModule,
             NgLetModule,
             TranslationModule
         ]
