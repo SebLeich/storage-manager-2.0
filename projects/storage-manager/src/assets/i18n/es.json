@@ -64,6 +64,8 @@
         "woodLight": "Madera Clara"
     },
     "hints": {
+        "displayGood": "Mostrar mercancía",
+        "hideGood": "Ocultar mercancía",
         "noContainer": "Ningún contenedor seleccionado",
         "noDescription": "No hay descripción disponible",
         "orderInvalid": "La orden no es válida. Solo se consideran órdenes válidas para el cálculo.",

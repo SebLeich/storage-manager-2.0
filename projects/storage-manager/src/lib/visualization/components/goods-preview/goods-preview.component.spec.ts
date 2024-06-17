@@ -3,6 +3,7 @@ import { TranslationModule } from '@/lib/translation';
 import { Spectator, createComponentFactory } from '@ngneat/spectator';
 import { GoodsPreviewComponent } from './goods-preview.component';
 import { MatIconModule } from '@angular/material/icon';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 describe('GoodsPreviewComponent', () => {
     let spectator: Spectator<GoodsPreviewComponent>;
@@ -10,6 +11,7 @@ describe('GoodsPreviewComponent', () => {
         component: GoodsPreviewComponent,
         imports: [
             MatIconModule,
+            MatTooltipModule,
             TranslationModule
         ],
     });

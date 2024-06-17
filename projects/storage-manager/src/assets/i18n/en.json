@@ -65,6 +65,8 @@
         "woodLight": "Light Wood"
     },
     "hints": {
+        "displayGood": "Display good",
+        "hideGood": "Hide good",
         "noContainer": "No container selected",
         "noDescription": "No description available",
         "orderInvalid": "Order is invalid. Only valid orders are considered for the calculation.",

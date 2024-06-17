@@ -4,13 +4,14 @@
     <table>
         @for(wrapper of goodWrappers(); track wrapper.good.id)
         {
-        <div class="good-wrapper" [class.hovered]="wrapper.hovered" [class.hidden]="wrapper.hidden">
+        <div class="good-wrapper" [attr.data-good-id]="wrapper.good.id" [class.hovered]="wrapper.hovered" [class.hidden]="wrapper.hidden">
             <div class="good-group">
                 <div class="group-badge" [style.backgroundColor]="groupColorMap()[wrapper.good.group ?? ''] ?? 'grey'"></div>
             </div>
             <div>{{wrapper.good.sequenceNr}}</div>
             <div class="description">{{wrapper.good.desc}}</div>
-            <mat-icon (click)="toggleGoodVisibility.emit(wrapper.good.id)">
+            <mat-icon (click)="toggleGoodVisibility.emit(wrapper.good.id)"
+                [matTooltip]="((wrapper.hidden? 'hints.displayGood': 'hints.hideGood')|translation|async)?? ''">
                 {{wrapper.hidden ? 'visibility_off' : 'visibility'}}
             </mat-icon>
         </div>

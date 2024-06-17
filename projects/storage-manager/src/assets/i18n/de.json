@@ -65,6 +65,8 @@
         "woodLight": "Helles Holz"
     },
     "hints": {
+        "displayGood": "Gut anzeigen",
+        "hideGood": "Gut ausblenden",
         "noContainer": "Kein Container ausgewählt",
         "noDescription": "Keine Beschreibung verfügbar",
         "orderInvalid": "Bestellung ist ungültig. Nur gültige Bestellungen werden für die Berechnung berücksichtigt.",
