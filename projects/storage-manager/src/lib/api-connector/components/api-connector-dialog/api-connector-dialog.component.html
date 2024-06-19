@@ -1,0 +1,21 @@
+<div class="header">
+    <mat-icon class="icon">build</mat-icon>
+    <span class="text">
+        {{'apiConnection.configure'|translation|async}}
+    </span>
+    <mat-icon (click)="close()" class="close-control" [matTooltip]="('defaults.close'|translation|async) ?? ''">clear</mat-icon>
+</div>
+
+<div class="content">
+
+</div>
+
+<div class="footer">
+    <button>
+        Test connection
+    </button>
+
+    <button>
+        Create
+    </button>
+</div>

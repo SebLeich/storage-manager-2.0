@@ -16,6 +16,8 @@ import { CalculationFooterComponent } from './components/calculation/calculation
 import { MatIconModule } from '@angular/material/icon';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { SolutionWrapperPreviewComponent } from './components/calculation/calculation-sidebar/solution-wrapper-preview/solution-wrapper-preview.component';
+import { MatMenuModule } from '@angular/material/menu';
+import { ApiConnectorModule } from '../api-connector/api-connector.module';
 
 
 
@@ -27,10 +29,12 @@ import { SolutionWrapperPreviewComponent } from './components/calculation/calcul
         SolutionWrapperPreviewComponent
     ],
     imports: [
+        ApiConnectorModule,
         CommonModule,
         GroupModule,
         InputModule,
         MatIconModule,
+        MatMenuModule,
         MatProgressSpinnerModule,
         MatTooltipModule,
         NgLetModule,

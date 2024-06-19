@@ -9,6 +9,8 @@ import { SolutionWrapper } from '../types/solution-wrapper.type';
 import { Solution } from '../types/solution.type';
 import { Good } from '../types/good.type';
 import { CalculationStep } from '../types/calculation-step.type';
+import { ThreeDCalculationService } from '@/lib/shared/services/three-d-calculation.service';
+import { UsedPosition } from '../types/used-position.type';
 
 export class AllInOneRowSolver extends Solver implements ISolver {
 
@@ -38,24 +40,21 @@ export class AllInOneRowSolver extends Solver implements ISolver {
             },
         }, calculationSteps: CalculationStep[] = [];
 
-        let currentPosition = { x: 0, y: 0, z: 0 };
-        let sequenceNumber = 0;
+        let currentPosition = { x: 0, y: 0, z: 0 },
+            sequenceNumber = 0,
+            lastUsedPosition: UsedPosition | null = null;
 
         for (const group of groups) {
             const groupOrders = orders.filter(order => order.group === group.id);
 
             for (let order of groupOrders) {
                 for (let i = 0; i < order.quantity!; i++) {
+                    const spatialPlaced = ThreeDCalculationService.calculateSpatialPosition({ height: order.height, width: order.width, length: order.length, xCoord: currentPosition.x, yCoord: currentPosition.y, zCoord: currentPosition.z });
                     const good: Good = {
+                        ...spatialPlaced,
                         id: generateGuid(),
-                        xCoord: currentPosition.x,
-                        yCoord: currentPosition.y,
-                        zCoord: currentPosition.z,
                         sequenceNr: sequenceNumber,
                         desc: order.description,
-                        height: order.height,
-                        width: order.width,
-                        length: order.length,
                         stackedOnGood: null,
                         turned: false,
                         group: group.id,
@@ -64,15 +63,33 @@ export class AllInOneRowSolver extends Solver implements ISolver {
                         orderGuid: order.id,
                         texture: order.texture ?? 'cardboard'
                     };
+
                     solution.container!.goods.push(good);
                     sequenceNumber++;
                     currentPosition.z += order.length;
                     solution.container!.length += order.length;
+
+                    lastUsedPosition = {
+                        ...spatialPlaced,
+                        goodDesc: order.description ?? '',
+                        goodId: good.id,
+                        groupId: group.id,
+                        index: i,
+                        groupRestrictedBy: null,
+                        rotated: false,
+                        usedPositions: lastUsedPosition? [lastUsedPosition.index] : []
+                    };
+
+                    calculationSteps.push({
+                        messages: [`Placed order ${order.description} in group ${group.id} at position x: ${currentPosition.x}, y: ${currentPosition.y}, z: ${currentPosition.z}`],
+                        positions: [{ ...lastUsedPosition, id: generateGuid() }],
+                        sequenceNumber: i
+                    });
                 }
             }
         }
 
-        return { solution, groups, orders, products: [], calculationSteps: [] };
+        return { solution, groups, orders, products: [], calculationSteps };
     }
 
 }

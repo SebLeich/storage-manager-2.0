@@ -1,4 +1,10 @@
 {
+    "apiConnection": {
+        "configure": "Conectar con API RESTful"
+    },
+    "calculation": {
+        "connectAPIResource": "Conectar con el recurso de la API"
+    },
     "colors": {
         "black": "Negro",
         "blue": "Azul",
@@ -18,6 +24,7 @@
         "calculationSteps": "Pasos de Cálculo",
         "cameraPosition": "Posición de la Cámara",
         "clearSelection": "Borrar selección",
+        "close": "Cerrar",
         "consent": "Consentimiento",
         "cookieConsent": "Este sitio web utiliza cookies para garantizar que obtenga la mejor experiencia en nuestro sitio web.",
         "color": "Color",
@@ -29,6 +36,7 @@
         "containerWidth": "Ancho del Contenedor",
         "description": "Descripción",
         "download": "Descargar",
+        "downloadJson": "Descargar JSON",
         "error": {
             "singular": "Un error",
             "plural": "{{n}} errores"
@@ -64,6 +72,7 @@
         "woodLight": "Madera Clara"
     },
     "hints": {
+        "addAdditionalSolver": "Agregar un nuevo solucionador",
         "displayGood": "Mostrar mercancía",
         "hideGood": "Ocultar mercancía",
         "noContainer": "Ningún contenedor seleccionado",

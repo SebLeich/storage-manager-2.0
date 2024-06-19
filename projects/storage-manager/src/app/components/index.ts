@@ -1,1 +1,0 @@
-export * from './goods-panel/goods-panel.component';

@@ -53,7 +53,8 @@ export class VisualizationService {
         hiddenGoods: string[] = [],
         displayEmptySpace = false,
         displayEmptySpaceEdges = false,
-        fillEmptySpace = false
+        fillEmptySpace = false,
+        hiddenGroups: string[] = []
     ) {
         scene.clear();
 
@@ -73,7 +74,7 @@ export class VisualizationService {
                 const group = groups.find((group) => group.id === good.group),
                     { basicMesh, mesh, edges } = VisualizationService.generateFilledBoxMesh({ ...position, id: v4() }, 'good', containerPosition, undefined, undefined, good.texture);
 
-                if (displayGoods && hiddenGoods.indexOf(good.id) === -1) {
+                if (displayGoods && hiddenGoods.indexOf(good.id) === -1 && hiddenGroups.indexOf(good.group ?? '') === -1){
                     mesh.userData['goodId'] = good.id;
                     mesh.userData['groupId'] = good.group;
                     goodMeshes.push({ goodId: good.id, mesh });
@@ -158,7 +159,8 @@ export class VisualizationService {
         hiddenGoods: string[] = [],
         displayEmptySpace = false,
         displayEmptySpaceEdges = false,
-        fillEmptySpace = false
+        fillEmptySpace = false,
+        hiddenGroups: string[] = []
     ) {
         scene.clear();
 
@@ -202,7 +204,7 @@ export class VisualizationService {
 
             const { edges, mesh } = VisualizationService.generateFilledBoxMesh({ ...spatial, id: `${position.goodId}` }, 'good', containerPosition);
 
-            if (displayGoods && hiddenGoods.indexOf(position.goodId) === -1) {
+            if (displayGoods && hiddenGoods.indexOf(position.goodId) === -1 && hiddenGroups.indexOf(position.groupId) === -1){
                 scene.add(mesh);
                 if (displayGoodEdges) {
                     scene.add(edges);

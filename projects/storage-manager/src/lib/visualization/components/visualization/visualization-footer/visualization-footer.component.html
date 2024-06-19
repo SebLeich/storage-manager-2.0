@@ -26,5 +26,9 @@
 <mat-icon class="control margin-l" [class.is-active]="showSceneSettings" (click)="toggleSceneSettings()">settings</mat-icon>
 
 <mat-menu #downloadMenu="matMenu">
-    <button mat-menu-item (click)="downloadSolution.emit('json')">Download JSON</button>
+    <button mat-menu-item (click)="downloadSolution.emit('json')">{{'defaults.downloadJson'|translation|async}}</button>
+    <button mat-menu-item (click)="downloadSolution.emit('json')">{{'defaults.downloadJson'|translation|async}}</button>
+    <button mat-menu-item (click)="downloadSolution.emit('json')">{{'defaults.downloadJson'|translation|async}}</button>
+    <button mat-menu-item (click)="downloadSolution.emit('json')">{{'defaults.downloadJson'|translation|async}}</button>
+    <button mat-menu-item (click)="downloadSolution.emit('json')">{{'defaults.downloadJson'|translation|async}}</button>
 </mat-menu>

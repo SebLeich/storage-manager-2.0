@@ -1,3 +1,4 @@
+@import "dialog";
 @import "src/lib/scss/button";
 @import "src/lib/scss/gradients";
 @import '~quill/dist/quill.snow.css';
@@ -5,18 +6,18 @@
 
 html,
 body {
-	height: -webkit-fill-available;
-	width: -webkit-fill-available;
+    height: -webkit-fill-available;
+    width: -webkit-fill-available;
 }
 
 body {
-	margin: 0;
-	font-family: Roboto, "Helvetica Neue", sans-serif;
+    margin: 0;
+    font-family: Roboto, "Helvetica Neue", sans-serif;
 }
 
 .spacer {
-	flex: 1;
-	overflow: hidden;
+    flex: 1;
+    overflow: hidden;
 }
 
 /* width */
@@ -40,4 +41,9 @@ body {
 /* Handle on hover */
 ::-webkit-scrollbar-thumb:hover {
     background: #3b3b3b;
+}
+
+.mat-mdc-menu-item {
+    min-height: unset !important;
+    font-size: .8rem;
 }

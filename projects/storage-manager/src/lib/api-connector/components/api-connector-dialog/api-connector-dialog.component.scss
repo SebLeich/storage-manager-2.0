@@ -1,0 +1,10 @@
+@import 'button';
+@import 'dialog';
+
+:host {
+    @include dialog-host-m;
+
+    button {
+        @include button;
+    }
+}

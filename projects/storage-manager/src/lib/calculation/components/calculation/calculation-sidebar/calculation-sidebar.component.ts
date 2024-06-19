@@ -18,6 +18,8 @@ import { combineLatest, debounceTime, map, startWith, switchMap, timer } from 'r
     animations: [bottomUpFadeInAnimation]
 })
 export class CalculationSidebarComponent implements OnInit {
+    @Output() public connectAPIResource = new EventEmitter<void>();
+    @Output() public designWorkflow = new EventEmitter<void>();
     @Output() public showSolution = new EventEmitter<Partial<SolutionWrapper>>();
 
     public containerHeight$ = this._store.select(selectContainerHeight);

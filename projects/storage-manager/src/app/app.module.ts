@@ -21,7 +21,6 @@ import { EditDataDialogComponent } from './components/dialog/edit-data-dialog/ed
 import { NgChartsModule } from 'ng2-charts';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { SortedFormArrayPipe } from './pipes/sorted-form-array.pipe';
-import { ApiCallConfiguratorDialogComponent } from './components/dialog/api-call-configurator-dialog/api-call-configurator-dialog.component';
 import { AutomationModule } from 'src/lib/automation/automation.module';
 import { SolutionAnimationComponent } from './components/solution-animation/solution-animation.component';
 import { NoSolutionDialogComponent } from './components/dialog/no-solution-dialog/no-solution-dialog.component';
@@ -73,7 +72,6 @@ const routes: Routes = [
         AppComponent,
         EditDataDialogComponent,
         SortedFormArrayPipe,
-        ApiCallConfiguratorDialogComponent,
         SolutionAnimationComponent,
         NoSolutionDialogComponent,
         LocalDataComponent,

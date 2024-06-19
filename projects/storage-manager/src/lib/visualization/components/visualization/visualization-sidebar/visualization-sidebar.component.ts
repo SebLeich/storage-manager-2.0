@@ -25,6 +25,7 @@ export class VisualizationSidebarComponent {
     @Output() public fastRewind = new EventEmitter<void>();
     @Output() public intervalSpeedChange = new EventEmitter<number>();
     @Output() public toggleGoodVisibility = new EventEmitter<string>();
+    @Output() public toggleGroupVisibility = new EventEmitter<string>();
 
     public solutionWrapper = input<SolutionWrapper | null>(null);
     public currentStepIndex = input<number | null>(null);
@@ -32,6 +33,7 @@ export class VisualizationSidebarComponent {
     public playStatus = input<'playing' | 'paused' | 'stopped'>('stopped');
     public hoveredGood = input<string | null>(null);
     public hiddenGoods = input<string[]>([]);
+    public hiddenGroups = input<string[]>([]);
 
     public groups = computed(() => this.solutionWrapper()?.groups ?? []);
     public goods = computed(() => this.solutionWrapper()?.solution?.container.goods ?? []);

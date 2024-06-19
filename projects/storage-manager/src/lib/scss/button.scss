@@ -8,10 +8,12 @@
     border-radius: 2px;
     transition: all 0.3s;
     animation: leaves 0.15s ease-out;
-    width: 5rem;
+    width: 6rem;
     text-align: center;
     font-weight: 200 !important;
     border: none;
+    white-space: nowrap;
+    box-sizing: content-box;
 
     &:hover {
         opacity: 0.8;
