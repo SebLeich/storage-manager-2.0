@@ -7,7 +7,7 @@
 
 .item {
     margin: 0px .5rem .25rem;
-    padding: .5rem;
+    padding: 1rem;
     border-radius: 3px;
     background-color: $white;
 
@@ -16,11 +16,11 @@
         color: $white;
         position: sticky;
         top: 0px;
-        z-index: 1;
+        z-index: 1001;
 
         .title {
             font-family: 'Bebas Neue';
-            font-size: 1.5rem;
+            font-size: 1.8rem;
             font-weight: 500;
             display: block;
         }

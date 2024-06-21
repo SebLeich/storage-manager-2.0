@@ -9,7 +9,6 @@ import { MatExpansionModule } from '@angular/material/expansion';
 import { MatTableModule } from '@angular/material/table';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatInputModule } from '@angular/material/input';
-import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatSelectModule } from '@angular/material/select';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
@@ -21,7 +20,6 @@ import { NgChartsModule } from 'ng2-charts';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { SortedFormArrayPipe } from './pipes/sorted-form-array.pipe';
 import { AutomationModule } from 'src/lib/automation/automation.module';
-import { SolutionAnimationComponent } from './components/solution-animation/solution-animation.component';
 import { PROCESS_BUILDER_CONFIG_TOKEN } from 'src/lib/process-builder/interfaces/process-builder-config.interface';
 import { PARAMS_CONFIG_TOKEN } from 'src/lib/process-builder/interfaces/param.interface';
 import { FUNCTIONS_CONFIG_TOKEN } from 'src/lib/process-builder/interfaces/function.interface';
@@ -35,7 +33,6 @@ import { CalculationContextOverviewComponent } from './components/calculation-co
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { SolutionVisualizationDialogComponent } from './components/dialog/solution-visualization-dialog/solution-visualization-dialog.component';
 import { SolutionPreviewRenderingComponent } from './components/solution-preview-rendering/solution-preview-rendering.component';
-import { ComputedStylePipe } from './pipes/computed-style.pipe';
 import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 import { VisualizationModule } from 'src/lib/visualization/visualization.module';
 import { ActionReducer, StoreModule } from '@ngrx/store';
@@ -69,7 +66,6 @@ const routes: Routes = [
     declarations: [
         AppComponent,
         SortedFormArrayPipe,
-        SolutionAnimationComponent,
         LocalDataComponent,
         WidgetComponent,
         OrdersFormComponent,
@@ -77,8 +73,7 @@ const routes: Routes = [
         ProductFormComponent,
         CalculationContextOverviewComponent,
         SolutionVisualizationDialogComponent,
-        SolutionPreviewRenderingComponent,
-        ComputedStylePipe
+        SolutionPreviewRenderingComponent
     ],
     imports: [
         BrowserModule,
@@ -101,7 +96,6 @@ const routes: Routes = [
         ReactiveFormsModule,
         MatFormFieldModule,
         MatInputModule,
-        MatCheckboxModule,
         MatSelectModule,
         NgChartsModule,
         AutomationModule,
