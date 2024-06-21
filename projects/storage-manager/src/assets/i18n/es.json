@@ -13,11 +13,14 @@
     "colors": {
         "black": "Negro",
         "blue": "Azul",
+        "brass": "Latón",
         "cyan": "Cian",
         "green": "Verde",
         "gold": "Oro",
         "magenta": "Magenta",
         "red": "Rojo",
+        "rusty": "Óxido",
+        "silver": "Plata",
         "white": "Blanco",
         "yellow": "Amarillo"
     },

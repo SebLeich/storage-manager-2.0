@@ -31,6 +31,7 @@ import { ObjectSiteSelectionComponent } from './components/scene-visualization/s
 import { DownloadModule } from '../download/download.module';
 import { GoodsPreviewComponent } from './components/goods-preview/goods-preview.component';
 import { CogwheelIconModule } from '../cogwheel-icon/cogwheel-icon.module';
+import { StatsIconModule } from '../stats-icon/stats-icon.module';
 
 
 
@@ -70,6 +71,7 @@ import { CogwheelIconModule } from '../cogwheel-icon/cogwheel-icon.module';
         ]),
         ScaffoldModule,
         SharedModule,
+        StatsIconModule,
         StoreModule.forFeature(FEATURE_KEY, REDUCER),
         TranslationModule
     ],

@@ -11,10 +11,9 @@
 
         <app-input-wrapper [label]="'defaults.containerColor'|translation|async">
             <select (change)="containerColorChanged.emit($any($event.target).value)" [value]="containerColor()">
-                <option value="black">{{'colors.black'|translation|async}}</option>
-                <option value="blue">{{'colors.blue'|translation|async}}</option>
-                <option value="gold">{{'colors.gold'|translation|async}}</option>
-                <option value="red">{{'colors.red'|translation|async}}</option>
+                @for(texture of wallTextures; track texture){
+                    <option [value]="texture">{{'colors.' + texture|unsafeTranslation|async}}</option>
+                }
             </select>
         </app-input-wrapper>
 
