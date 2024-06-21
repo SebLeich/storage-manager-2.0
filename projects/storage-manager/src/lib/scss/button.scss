@@ -10,7 +10,6 @@
     animation: leaves 0.15s ease-out;
     width: 6rem;
     text-align: center;
-    font-weight: 200 !important;
     border: none;
     white-space: nowrap;
     box-sizing: content-box;
@@ -26,7 +25,6 @@
     transition: all 0.3s;
     animation: leaves 0.15s ease-out;
     width: 2rem;
-    font-weight: 200 !important;
     font-size: 1rem;
     display: inline-flex;
     align-items: center;
@@ -41,6 +39,12 @@
     @include button;
     @include gradient-darkgrey;
     color: $white;
+}
+
+@mixin default-button-outline() {
+    @include button;
+    color: $dark-slate-grey;
+    background-color: $black-20;
 }
 
 @mixin default-icon-button() {
@@ -70,6 +74,12 @@
 @mixin purple-icon-button() {
     @include icon-button;
     @include gradient-purple;
+    color: $white;
+}
+
+@mixin danger-button() {
+    @include button;
+    @include gradient-red;
     color: $white;
 }
 

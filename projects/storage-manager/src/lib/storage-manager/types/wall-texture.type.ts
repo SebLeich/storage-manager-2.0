@@ -1,1 +1,1 @@
-export type WallTexture = 'black' | 'blue' | 'green' | 'red' | 'white' | 'yellow';
+export type WallTexture = 'black' | 'blue' | 'gold' | 'red';

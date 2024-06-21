@@ -1,8 +1,23 @@
 @import 'colors';
 @import 'heading';
 
-h3 {
-    @include heading-3;
+.header-wrapper {
+    display: flex;
+    align-items: flex-start;
+
+    img {
+        width: 50px;
+        height: 50px;
+    }
+
+    .header-info-wrapper {
+        display: flex;
+        flex-direction: column;
+
+        h3 {
+            @include heading-3;
+        }
+    }
 }
 
 .property-row {
@@ -39,6 +54,9 @@ h3 {
     display: flex;
     align-items: center;
     justify-content: center;
+    background-image: radial-gradient($dark-slate-grey, 0.5px, #ffffff 0.5px);
+    background-size: 10px 10px;
+    padding: .5rem;
 
     >* {
         flex: 1;

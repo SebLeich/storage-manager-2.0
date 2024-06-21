@@ -5,17 +5,22 @@ import { TranslationModule } from '../translation';
 import { MatIconModule } from '@angular/material/icon';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { InputModule } from '../input/input.module';
+import { ReactiveFormsModule } from '@angular/forms';
+import { ApiConnectorIconComponent } from './components/api-connector-dialog/api-connector-icon/api-connector-icon.component';
 
 
 
 @NgModule({
-    declarations: [ApiConnectorDialogComponent],
+    declarations: [ApiConnectorIconComponent, ApiConnectorDialogComponent],
     exports: [ApiConnectorDialogComponent],
     imports: [
         CommonModule,
+        InputModule,
         MatDialogModule,
         MatIconModule,
         MatTooltipModule,
+        ReactiveFormsModule,
         TranslationModule
     ]
 })

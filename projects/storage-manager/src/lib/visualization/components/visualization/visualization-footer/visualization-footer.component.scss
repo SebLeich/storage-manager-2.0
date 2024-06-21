@@ -64,3 +64,17 @@
         }
     }
 }
+
+.clickable {
+    cursor: pointer;
+    transition: all .2s ease-in-out;
+    scale: .8;
+
+    &:hover {
+        opacity: .8;
+    }
+
+    &.active {
+        scale: 1;
+    }
+}

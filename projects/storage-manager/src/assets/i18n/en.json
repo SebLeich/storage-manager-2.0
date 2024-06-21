@@ -1,6 +1,10 @@
 {
     "apiConnection": {
-        "configure": "Connect RESTful API"
+        "configure": "Connect RESTful API",
+        "method": "Method",
+        "methodPlaceholder": "Default method: POST",
+        "url": "URL service endpoint",
+        "urlPlaceholder": "https://localhost:1234/endpoint"
     },
     "calculation": {
         "connectAPIResource": "Connect to RESTful API",
@@ -11,6 +15,7 @@
         "blue": "Blue",
         "cyan": "Cyan",
         "green": "Green",
+        "gold": "Gold",
         "magenta": "Magenta",
         "red": "Red",
         "white": "White",
@@ -23,6 +28,7 @@
         "blocked": "Blocked",
         "calculatedAt": "Calculated at {{date}}",
         "calculationSteps": "Calculation Steps",
+        "cancel": "Cancel",
         "cameraPosition": "Camera Position",
         "clearSelection": "Clear selection",
         "close": "Close",
@@ -77,6 +83,7 @@
         "addAdditionalSolver": "Add additional solver",
         "displayGood": "Display good",
         "hideGood": "Hide good",
+        "iconsHint": "Some icons taken from",
         "noContainer": "No container selected",
         "noDescription": "No description available",
         "orderInvalid": "Order is invalid. Only valid orders are considered for the calculation.",

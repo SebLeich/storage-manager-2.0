@@ -1,27 +1,70 @@
 <ng-container *ngLet="container() as selectedContainer">
     @if(selectedContainer){
-    <h3>{{'defaults.container'|translation|async}} ({{goodsCount()}} {{'defaults.goods'|translation|async}})</h3>
+    <div class="header-wrapper">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" style="enable-background:new 0 0 256 256" xml:space="preserve">
+            <style>
+                .st1 {
+                    fill: #fc657e
+                }
 
-    <div class="property-row">
-        <div class="property">
-            <div class="attribute">{{'defaults.width'|unsafeTranslation|async}}</div>
-            <div class="value">{{ selectedContainer.width | prettyLength:unit():3:true }}</div>
-        </div>
+                .st5 {
+                    fill: #f5c84c
+                }
 
-        <div class="property">
-            <div class="attribute">{{'defaults.height'|unsafeTranslation|async}}</div>
-            <div class="value">{{ selectedContainer.height | prettyLength:unit():3:true }}</div>
-        </div>
+                .st6 {
+                    fill: #87d147
+                }
 
-        <div class="property">
-            <div class="attribute">{{'defaults.length'|unsafeTranslation|async}}</div>
-            <div class="value">{{ selectedContainer.length | prettyLength:unit():3:true }}</div>
-        </div>
+                .st7 {
+                    fill: #70d6f9
+                }
+            </style>
+            <g id="Layer_74">
+                <path class="st1" d="M75.362 130.515H60.007a2.632 2.632 0 0 0-2.632 2.632v87.651h20.621v-87.651a2.634 2.634 0 0 0-2.634-2.632z" />
+                <path class="st5" d="M116.604 110.925h-15.356a2.633 2.633 0 0 0-2.633 2.632v107.241h20.621v-107.24a2.632 2.632 0 0 0-2.632-2.633z" />
+                <path class="st6" d="M157.845 152.167h-15.356a2.632 2.632 0 0 0-2.632 2.633v65.999h20.621V154.8a2.633 2.633 0 0 0-2.633-2.633z" />
+                <path class="st7" d="M199.086 88.243H183.73a2.633 2.633 0 0 0-2.633 2.632v129.923h20.621V90.875a2.63 2.63 0 0 0-2.632-2.632z" />
+                <path class="st5"
+                    d="M118.444 8.882c-4.498-.837-8.043-4.31-8.898-8.716a.2.2 0 0 0-.395 0c-.855 4.406-4.4 7.879-8.898 8.716a.195.195 0 0 0 0 .387c4.498.838 8.043 4.311 8.898 8.717a.2.2 0 0 0 .395 0c.855-4.406 4.4-7.879 8.898-8.717a.195.195 0 0 0 0-.387z" />
+                <path class="st1"
+                    d="M227.364 120.851c-3.469-.646-6.203-3.324-6.862-6.723-.033-.17-.271-.17-.305 0-.66 3.398-3.394 6.077-6.863 6.723a.15.15 0 0 0 0 .298c3.469.646 6.203 3.325 6.863 6.723.033.17.271.17.305 0 .659-3.398 3.393-6.077 6.862-6.723a.15.15 0 0 0 0-.298z" />
+                <path class="st7"
+                    d="M85.155 244.198h-2.329v-2.33a3.156 3.156 0 1 0-6.314 0v2.33h-2.33a3.156 3.156 0 1 0 0 6.314h2.33v2.33a3.156 3.156 0 1 0 6.314 0v-2.33h2.329a3.156 3.156 0 1 0 0-6.314z" />
+                <path class="st6" d="M91.461 21a3.377 3.377 0 1 0 0 6.754 3.377 3.377 0 0 0 0-6.754z" />
+                <path class="st5" d="M109.461 237a3.377 3.377 0 1 0 0 6.754 3.377 3.377 0 0 0 0-6.754z" />
+                <path d="M32.046 20.077a2.5 2.5 0 0 0-2.5 2.5v204.534a2.5 2.5 0 1 0 5 0V22.577a2.5 2.5 0 0 0-2.5-2.5z" />
+                <path d="M230.267 218.298H25.733a2.5 2.5 0 1 0 0 5h204.533a2.5 2.5 0 0 0 .001-5z" />
+                <path
+                    d="M75.362 128.015H60.007a5.14 5.14 0 0 0-5.133 5.133v86.645a2.5 2.5 0 1 0 5 0v-86.645c0-.073.06-.133.133-.133h15.355c.073 0 .133.06.133.133v86.561a2.5 2.5 0 1 0 5 0v-86.561a5.139 5.139 0 0 0-5.133-5.133zM116.604 108.426h-15.355a5.138 5.138 0 0 0-5.133 5.132v106.349a2.5 2.5 0 1 0 5 0V113.558c0-.072.06-.132.133-.132h15.355c.073 0 .133.06.133.132v106.349a2.5 2.5 0 1 0 5 0V113.558a5.139 5.139 0 0 0-5.133-5.132zM157.845 149.667H142.49a5.138 5.138 0 0 0-5.133 5.132v64.951a2.5 2.5 0 1 0 5 0v-64.951c0-.072.06-.132.133-.132h15.355c.073 0 .133.06.133.132v64.951a2.5 2.5 0 1 0 5 0v-64.951a5.138 5.138 0 0 0-5.133-5.132zM199.086 85.742H183.73a5.138 5.138 0 0 0-5.132 5.133v129a2.5 2.5 0 1 0 5 0v-129c0-.073.06-.133.132-.133h15.355c.073 0 .133.06.133.133v129.094a2.5 2.5 0 1 0 5 0V90.875a5.138 5.138 0 0 0-5.132-5.133zM192.764 35.621a2.502 2.502 0 0 0-3.456.745l-39.541 61.29-39.052-40.028a2.496 2.496 0 0 0-2.861-.512L66.612 76.705a2.5 2.5 0 0 0 2.144 4.516L108.383 62.4l39.994 40.993a2.502 2.502 0 0 0 3.89-.391l41.241-63.925a2.498 2.498 0 0 0-.744-3.456z" />
+                <path
+                    d="m198.148 50.984-3.413-15.169a2.505 2.505 0 0 0-2.988-1.891l-15.169 3.413a2.502 2.502 0 0 0-1.891 2.988 2.503 2.503 0 0 0 2.988 1.891l12.729-2.864 2.864 12.729a2.503 2.503 0 0 0 2.989 1.89 2.5 2.5 0 0 0 1.891-2.987zM68 219.854a2.5 2.5 0 0 0-2.5 2.5v4.58a2.5 2.5 0 1 0 5 0v-4.58a2.5 2.5 0 0 0-2.5-2.5zM109.5 219.997a2.5 2.5 0 0 0-2.5 2.5v4.58a2.5 2.5 0 1 0 5 0v-4.58a2.5 2.5 0 0 0-2.5-2.5zM150.5 219.997a2.5 2.5 0 0 0-2.5 2.5v4.58a2.5 2.5 0 1 0 5 0v-4.58a2.5 2.5 0 0 0-2.5-2.5zM191.5 219.997a2.5 2.5 0 0 0-2.5 2.5v4.58a2.5 2.5 0 1 0 5 0v-4.58a2.5 2.5 0 0 0-2.5-2.5z" />
+            </g>
 
-        <div class="property">
-            <div class="attribute">{{'defaults.volume'|unsafeTranslation|async}}</div>
-            <div class="value">
-                {{ selectedContainer.length * selectedContainer.height * selectedContainer.width | prettyVolume:unit():true }}
+        </svg>
+        <div class="header-info-wrapper">
+            <h3>{{'defaults.container'|translation|async}} ({{goodsCount()}} {{'defaults.goods'|translation|async}})</h3>
+            <div class="property-row">
+                <div class="property">
+                    <div class="attribute">{{'defaults.width'|unsafeTranslation|async}}</div>
+                    <div class="value">{{ selectedContainer.width | prettyLength:unit():3:true }}</div>
+                </div>
+
+                <div class="property">
+                    <div class="attribute">{{'defaults.height'|unsafeTranslation|async}}</div>
+                    <div class="value">{{ selectedContainer.height | prettyLength:unit():3:true }}</div>
+                </div>
+
+                <div class="property">
+                    <div class="attribute">{{'defaults.length'|unsafeTranslation|async}}</div>
+                    <div class="value">{{ selectedContainer.length | prettyLength:unit():3:true }}</div>
+                </div>
+
+                <div class="property">
+                    <div class="attribute">{{'defaults.volume'|unsafeTranslation|async}}</div>
+                    <div class="value">
+                        {{ selectedContainer.length * selectedContainer.height * selectedContainer.width | prettyVolume:unit():true }}
+                    </div>
+                </div>
             </div>
         </div>
     </div>

@@ -1,7 +1,7 @@
 <div class="general-options-wrapper">
     <mat-icon [matMenuTriggerFor]="downloadMenu" fontIcon="download" class="button download"
         [matTooltip]="('defaults.download'|translation|async) ?? ''"></mat-icon>
-        
+
     <mat-icon fontIcon="verified" class="button validation" [matTooltip]="('defaults.validation'|translation|async) ?? ''"></mat-icon>
 </div>
 
@@ -23,7 +23,8 @@
     <mat-icon class="secondary">south_east</mat-icon>
 </div>
 
-<mat-icon class="control margin-l" [class.is-active]="showSceneSettings" (click)="toggleSceneSettings()">settings</mat-icon>
+<app-cogwheel-icon class="margin-l clickable" [class.active]="showSceneSettings" [width]="40"
+    (click)="toggleSceneSettings()"></app-cogwheel-icon>
 
 <mat-menu #downloadMenu="matMenu">
     <button mat-menu-item (click)="downloadSolution.emit('json')">{{'defaults.downloadJson'|translation|async}}</button>

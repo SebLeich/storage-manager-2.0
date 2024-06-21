@@ -1,7 +1,7 @@
 import { NgModule, isDevMode } from '@angular/core';
 import { TranslationPipe } from './pipes/translation/translation.pipe';
 import { TranslationService } from './services/translation.service';
-import { HttpClientModule, provideHttpClient } from '@angular/common/http';
+import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 import { UnsafeTranslationPipe } from './pipes/unsafe-translation/unsafe-translation.pipe';
 import { TranslocoModule, provideTransloco } from '@jsverse/transloco';
 import { GetLangParams, cookiesStorage, provideTranslocoPersistLang } from '@jsverse/transloco-persist-lang';
@@ -14,13 +14,13 @@ export function getPreviouslySelectedLanguage({ cachedLang, browserLang, default
 @NgModule({
     declarations: [TranslationPipe, UnsafeTranslationPipe],
     exports: [TranslocoModule, TranslationPipe, UnsafeTranslationPipe],
-    imports: [HttpClientModule, TranslocoModule],
+    imports: [TranslocoModule],
     providers: [
         TranslationService,
-        provideHttpClient(),
+        provideHttpClient(withInterceptorsFromDi()),
         provideTransloco({
             config: {
-                availableLangs: ['de', 'en', 'es'],
+                availableLangs: ['de', 'en', 'es', 'fr'],
                 defaultLang: 'de',
                 prodMode: !isDevMode(),
             },

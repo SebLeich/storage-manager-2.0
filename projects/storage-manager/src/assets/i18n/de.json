@@ -1,6 +1,10 @@
 {
     "apiConnection": {
-        "configure": "RESTful API anbinden"
+        "configure": "RESTful API anbinden",
+        "method": "HTTP Methode",
+        "methodPlaceholder": "Standard Methode: POST",
+        "url": "URL Service Endpunkt",
+        "urlPlaceholder": "https://localhost:1234/endpoint"
     },
     "calculation": {
         "connectAPIResource": "RESTful API anbinden",
@@ -10,6 +14,7 @@
         "black": "Schwarz",
         "blue": "Blau",
         "cyan": "Cyan",
+        "gold": "Gold",
         "green": "Grün",
         "magenta": "Magenta",
         "red": "Rot",
@@ -24,6 +29,7 @@
         "calculatedAt": "Berechnet am {{date}}",
         "calculationSteps": "Berechnungsschritte",
         "cameraPosition": "Kameraposition",
+        "cancel": "Abbrechen",
         "clearSelection": "Auswahl löschen",
         "close": "Schließen",
         "consent": "Einwilligung",
@@ -77,6 +83,7 @@
         "addAdditionalSolver": "Zusätzlichen Solver hinzufügen",
         "displayGood": "Gut anzeigen",
         "hideGood": "Gut ausblenden",
+        "iconsHint": "Einige Icons sind von",
         "noContainer": "Kein Container ausgewählt",
         "noDescription": "Keine Beschreibung verfügbar",
         "orderInvalid": "Bestellung ist ungültig. Nur gültige Bestellungen werden für die Berechnung berücksichtigt.",
