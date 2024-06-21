@@ -18,9 +18,11 @@
         "green": "Vert",
         "gold": "Or",
         "magenta": "Magenta",
+        "orange": "Orange",
         "red": "Rouge",
         "rusty": "Rouille",
         "silver": "Argent",
+        "turquoise": "Turquoise",
         "white": "Blanc",
         "yellow": "Jaune"
     },

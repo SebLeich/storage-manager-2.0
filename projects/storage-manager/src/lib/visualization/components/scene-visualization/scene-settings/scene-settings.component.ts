@@ -41,5 +41,5 @@ export class SceneSettingsComponent {
     public showGoodEdges = input<boolean>(false);
     public wallObjectSites = input<ObjectSite[]>([]);
 
-    public wallTextures: WallTexture[] = ['black', 'blue', 'brass', 'green', 'gold', 'red', 'rusty', 'silver', 'white'];
+    public wallTextures: WallTexture[] = ['black', 'blue', 'brass', 'green', 'gold', 'red', 'rusty', 'silver', 'turquoise', 'white', 'yellow'];
 }

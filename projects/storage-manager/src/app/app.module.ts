@@ -17,13 +17,11 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { EditDataDialogComponent } from './components/dialog/edit-data-dialog/edit-data-dialog.component';
 import { NgChartsModule } from 'ng2-charts';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { SortedFormArrayPipe } from './pipes/sorted-form-array.pipe';
 import { AutomationModule } from 'src/lib/automation/automation.module';
 import { SolutionAnimationComponent } from './components/solution-animation/solution-animation.component';
-import { NoSolutionDialogComponent } from './components/dialog/no-solution-dialog/no-solution-dialog.component';
 import { PROCESS_BUILDER_CONFIG_TOKEN } from 'src/lib/process-builder/interfaces/process-builder-config.interface';
 import { PARAMS_CONFIG_TOKEN } from 'src/lib/process-builder/interfaces/param.interface';
 import { FUNCTIONS_CONFIG_TOKEN } from 'src/lib/process-builder/interfaces/function.interface';
@@ -45,9 +43,10 @@ import { EffectsModule } from '@ngrx/effects';
 import { ApplicationEffects } from './store/effects/application.effects';
 import { StorageManagerModule } from 'src/lib/storage-manager/storage-manager.module';
 import { RouterModule, Routes } from '@angular/router';
-import { AboutComponent, LocalDataComponent } from '@main-components';
+import { LocalDataComponent } from '@main-components';
 import { APP_BASE_HREF, PlatformLocation } from '@angular/common';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
+import { TranslationModule } from '@/lib/translation';
 
 import PROCESS_BUILDER_CONFIG from 'src/config/process-builder-config';
 import PARAMS_CONFIG from 'src/config/params-config';
@@ -55,7 +54,6 @@ import FUNCTIONS_CONFIG from 'src/config/function-config.constant';
 import INTERFACES_CONFIG from 'src/config/interfaces-config';
 
 import * as fromApplication from './store/reducers/application.reducer';
-import { TranslationModule } from '@/lib/translation';
 
 const rootReducers: { [key: string]: ActionReducer<any, any> } = {};
 rootReducers[fromApplication.featureKey] = fromApplication.reducer;
@@ -70,10 +68,8 @@ const routes: Routes = [
 @NgModule({
     declarations: [
         AppComponent,
-        EditDataDialogComponent,
         SortedFormArrayPipe,
         SolutionAnimationComponent,
-        NoSolutionDialogComponent,
         LocalDataComponent,
         WidgetComponent,
         OrdersFormComponent,
@@ -82,8 +78,7 @@ const routes: Routes = [
         CalculationContextOverviewComponent,
         SolutionVisualizationDialogComponent,
         SolutionPreviewRenderingComponent,
-        ComputedStylePipe,
-        AboutComponent
+        ComputedStylePipe
     ],
     imports: [
         BrowserModule,
