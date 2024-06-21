@@ -1,27 +1,31 @@
 <ng-container *ngLet="container() as selectedContainer">
     @if(selectedContainer){
-    <h3>{{'defaults.container'|translation|async}} ({{goodsCount()}} {{'defaults.goods'|translation|async}})</h3>
+    <div class="header-wrapper">
+        <app-stats-icon [width]="60"></app-stats-icon>
+        <div class="header-info-wrapper">
+            <h3>{{'defaults.container'|translation|async}} ({{goodsCount()}} {{'defaults.goods'|translation|async}})</h3>
+            <div class="property-row">
+                <div class="property">
+                    <div class="attribute">{{'defaults.width'|unsafeTranslation|async}}</div>
+                    <div class="value">{{ selectedContainer.width | prettyLength:unit():3:true }}</div>
+                </div>
 
-    <div class="property-row">
-        <div class="property">
-            <div class="attribute">{{'defaults.width'|unsafeTranslation|async}}</div>
-            <div class="value">{{ selectedContainer.width | prettyLength:unit():3:true }}</div>
-        </div>
+                <div class="property">
+                    <div class="attribute">{{'defaults.height'|unsafeTranslation|async}}</div>
+                    <div class="value">{{ selectedContainer.height | prettyLength:unit():3:true }}</div>
+                </div>
 
-        <div class="property">
-            <div class="attribute">{{'defaults.height'|unsafeTranslation|async}}</div>
-            <div class="value">{{ selectedContainer.height | prettyLength:unit():3:true }}</div>
-        </div>
+                <div class="property">
+                    <div class="attribute">{{'defaults.length'|unsafeTranslation|async}}</div>
+                    <div class="value">{{ selectedContainer.length | prettyLength:unit():3:true }}</div>
+                </div>
 
-        <div class="property">
-            <div class="attribute">{{'defaults.length'|unsafeTranslation|async}}</div>
-            <div class="value">{{ selectedContainer.length | prettyLength:unit():3:true }}</div>
-        </div>
-
-        <div class="property">
-            <div class="attribute">{{'defaults.volume'|unsafeTranslation|async}}</div>
-            <div class="value">
-                {{ selectedContainer.length * selectedContainer.height * selectedContainer.width | prettyVolume:unit():true }}
+                <div class="property">
+                    <div class="attribute">{{'defaults.volume'|unsafeTranslation|async}}</div>
+                    <div class="value">
+                        {{ selectedContainer.length * selectedContainer.height * selectedContainer.width | prettyVolume:unit():true }}
+                    </div>
+                </div>
             </div>
         </div>
     </div>

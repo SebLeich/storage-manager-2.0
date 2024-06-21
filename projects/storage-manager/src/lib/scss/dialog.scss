@@ -1,0 +1,52 @@
+@import 'colors';
+
+@mixin dialog-host {
+    display: flex;
+    flex-direction: column;
+    background-color: #f5f5f5;
+
+    .header {
+        height: 64px;
+        display: flex;
+        align-items: center;
+        padding: 0px 1rem;
+    
+        .text {
+            flex: 1;
+            padding-left: .5rem;
+            font-family: 'Bebas Neue';
+            font-size: 1.5rem;
+        }
+    
+        mat-icon {
+            &.close-control {
+                cursor: pointer;
+                color: $wine-red;
+            }
+        }
+    }
+
+    .content {
+        flex: 1;
+        overflow: auto;
+        padding: 1rem;
+        background-color: $white;
+    }
+
+    .footer {
+        display: flex;
+        justify-content: flex-end;
+        padding: 1rem;
+        border-top: 1px solid #e0e0e0;
+        
+        button  {
+            margin-left: .25rem;
+        }
+    }
+}
+
+@mixin dialog-host-m {
+    @include dialog-host;
+    width: min(90vw, 600px);
+    height: min(90vh, 600px);
+}

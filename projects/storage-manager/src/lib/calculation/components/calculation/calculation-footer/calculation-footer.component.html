@@ -1,4 +1,7 @@
 <div class="general-options-wrapper">
-    <mat-icon (click)="recalculate.emit()" fontIcon="calculate" class="button calculation"
-        [matTooltip]="('defaults.recalculate'|translation|async) ?? ''"></mat-icon>
+    <app-calculation-icon [width]="24" (click)="recalculate.emit()"></app-calculation-icon>
 </div>
+
+<span class="spacer"></span>
+
+<app-cogwheel-icon class="margin-l disabled" [width]="40"></app-cogwheel-icon>

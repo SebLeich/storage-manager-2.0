@@ -1,4 +1,3 @@
-@import 'button';
 @import 'colors';
 @import 'heading';
 @import 'line-clamp';
@@ -56,6 +55,25 @@ app-solution-wrapper-preview {
     background-color: $white;
 }
 
-button {
-    @include default-button;
+.add-control-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 1rem;
+
+    mat-icon {
+        background-color: $white-30;
+        padding: 0.25rem;
+        border-radius: 50%;
+        cursor: pointer;
+        font-size: 1.7rem;
+        color: $white;
+        height: unset;
+        width: unset;
+        opacity: .6;
+
+        &:hover {
+            opacity: 1;
+        }
+    }
 }

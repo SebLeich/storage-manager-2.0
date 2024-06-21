@@ -17,7 +17,17 @@
     </div>
 
     <div class="footer">
-        <ng-content select="#footer"></ng-content>
+
+        <div class="footer-content">
+            <ng-content select="#footer"></ng-content>
+        </div>
     </div>
 
 </div>
+
+@if(displayIconsHint()){
+<div class="icons-reference">
+    {{'hints.iconsHint'|translation|async}} <a href="https://www.reshot.com/free-svg-icons/">redshot</a>.
+    <mat-icon (click)="hideIconsHint()">clear</mat-icon>
+</div>
+}

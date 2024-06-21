@@ -122,11 +122,9 @@ export class SceneVisualizationComponentService {
         }
 
         const controls = new OrbitControls(this._camera, this._renderer.domElement);
-        controls.enableDamping = true;
+        controls.enableDamping = false;
         controls.dampingFactor = 0.25;
         controls.screenSpacePanning = false;
-        controls.minDistance = 5000;
-        controls.maxDistance = 50000;
         controls.rotateSpeed = .5;
         controls.enableZoom = true;
         controls.update();

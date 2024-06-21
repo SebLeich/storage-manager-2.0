@@ -1,11 +1,28 @@
 {
+    "apiConnection": {
+        "configure": "Connect RESTful API",
+        "method": "Method",
+        "methodPlaceholder": "Default method: POST",
+        "url": "URL service endpoint",
+        "urlPlaceholder": "https://localhost:1234/endpoint"
+    },
+    "calculation": {
+        "connectAPIResource": "Connect to RESTful API",
+        "designWorkflow": "Design Workflow"
+    },
     "colors": {
         "black": "Black",
         "blue": "Blue",
+        "brass": "Brass",
         "cyan": "Cyan",
         "green": "Green",
+        "gold": "Gold",
         "magenta": "Magenta",
+        "orange": "Orange",
         "red": "Red",
+        "rusty": "Rusty",
+        "silver": "Silver",
+        "turquoise": "Turquoise",
         "white": "White",
         "yellow": "Yellow"
     },
@@ -16,8 +33,10 @@
         "blocked": "Blocked",
         "calculatedAt": "Calculated at {{date}}",
         "calculationSteps": "Calculation Steps",
+        "cancel": "Cancel",
         "cameraPosition": "Camera Position",
         "clearSelection": "Clear selection",
+        "close": "Close",
         "consent": "Consent",
         "cookieConsent": "This website uses cookies to ensure you get the best experience on our website.",
         "color": "Color",
@@ -29,6 +48,7 @@
         "containerWidth": "Container width",
         "description": "Description",
         "download": "Download",
+        "downloadJson": "Download JSON",
         "error": {
             "singular": "One error",
             "plural": "{{n}} errors"
@@ -65,8 +85,10 @@
         "woodLight": "Light Wood"
     },
     "hints": {
+        "addAdditionalSolver": "Add additional solver",
         "displayGood": "Display good",
         "hideGood": "Hide good",
+        "iconsHint": "Some icons taken from",
         "noContainer": "No container selected",
         "noDescription": "No description available",
         "orderInvalid": "Order is invalid. Only valid orders are considered for the calculation.",

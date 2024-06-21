@@ -9,7 +9,6 @@ import { MatExpansionModule } from '@angular/material/expansion';
 import { MatTableModule } from '@angular/material/table';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatInputModule } from '@angular/material/input';
-import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatSelectModule } from '@angular/material/select';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
@@ -17,14 +16,10 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { EditDataDialogComponent } from './components/dialog/edit-data-dialog/edit-data-dialog.component';
 import { NgChartsModule } from 'ng2-charts';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { SortedFormArrayPipe } from './pipes/sorted-form-array.pipe';
-import { ApiCallConfiguratorDialogComponent } from './components/dialog/api-call-configurator-dialog/api-call-configurator-dialog.component';
 import { AutomationModule } from 'src/lib/automation/automation.module';
-import { SolutionAnimationComponent } from './components/solution-animation/solution-animation.component';
-import { NoSolutionDialogComponent } from './components/dialog/no-solution-dialog/no-solution-dialog.component';
 import { PROCESS_BUILDER_CONFIG_TOKEN } from 'src/lib/process-builder/interfaces/process-builder-config.interface';
 import { PARAMS_CONFIG_TOKEN } from 'src/lib/process-builder/interfaces/param.interface';
 import { FUNCTIONS_CONFIG_TOKEN } from 'src/lib/process-builder/interfaces/function.interface';
@@ -38,7 +33,6 @@ import { CalculationContextOverviewComponent } from './components/calculation-co
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { SolutionVisualizationDialogComponent } from './components/dialog/solution-visualization-dialog/solution-visualization-dialog.component';
 import { SolutionPreviewRenderingComponent } from './components/solution-preview-rendering/solution-preview-rendering.component';
-import { ComputedStylePipe } from './pipes/computed-style.pipe';
 import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 import { VisualizationModule } from 'src/lib/visualization/visualization.module';
 import { ActionReducer, StoreModule } from '@ngrx/store';
@@ -46,9 +40,10 @@ import { EffectsModule } from '@ngrx/effects';
 import { ApplicationEffects } from './store/effects/application.effects';
 import { StorageManagerModule } from 'src/lib/storage-manager/storage-manager.module';
 import { RouterModule, Routes } from '@angular/router';
-import { AboutComponent, LocalDataComponent } from '@main-components';
+import { LocalDataComponent } from '@main-components';
 import { APP_BASE_HREF, PlatformLocation } from '@angular/common';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
+import { TranslationModule } from '@/lib/translation';
 
 import PROCESS_BUILDER_CONFIG from 'src/config/process-builder-config';
 import PARAMS_CONFIG from 'src/config/params-config';
@@ -56,7 +51,6 @@ import FUNCTIONS_CONFIG from 'src/config/function-config.constant';
 import INTERFACES_CONFIG from 'src/config/interfaces-config';
 
 import * as fromApplication from './store/reducers/application.reducer';
-import { TranslationModule } from '@/lib/translation';
 
 const rootReducers: { [key: string]: ActionReducer<any, any> } = {};
 rootReducers[fromApplication.featureKey] = fromApplication.reducer;
@@ -71,11 +65,7 @@ const routes: Routes = [
 @NgModule({
     declarations: [
         AppComponent,
-        EditDataDialogComponent,
         SortedFormArrayPipe,
-        ApiCallConfiguratorDialogComponent,
-        SolutionAnimationComponent,
-        NoSolutionDialogComponent,
         LocalDataComponent,
         WidgetComponent,
         OrdersFormComponent,
@@ -83,9 +73,7 @@ const routes: Routes = [
         ProductFormComponent,
         CalculationContextOverviewComponent,
         SolutionVisualizationDialogComponent,
-        SolutionPreviewRenderingComponent,
-        ComputedStylePipe,
-        AboutComponent
+        SolutionPreviewRenderingComponent
     ],
     imports: [
         BrowserModule,
@@ -108,7 +96,6 @@ const routes: Routes = [
         ReactiveFormsModule,
         MatFormFieldModule,
         MatInputModule,
-        MatCheckboxModule,
         MatSelectModule,
         NgChartsModule,
         AutomationModule,

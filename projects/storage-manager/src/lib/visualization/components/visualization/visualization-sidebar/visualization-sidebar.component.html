@@ -32,7 +32,8 @@
     </ng-container>
 
     <div class="item widget">
-        <app-solution-groups [groups]="groups()" (groupColorChanged)="groupColorChanged.emit($event)"></app-solution-groups>
+        <app-solution-groups [groups]="groups()" (groupColorChanged)="groupColorChanged.emit($event)" [hiddenGroups]="hiddenGroups()"
+            (toggleGroupVisibility)="toggleGroupVisibility.emit($event)"></app-solution-groups>
     </div>
 
     <div class="item widget">

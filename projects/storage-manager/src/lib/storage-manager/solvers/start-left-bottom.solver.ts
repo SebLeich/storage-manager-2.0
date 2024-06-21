@@ -9,6 +9,9 @@ import { Group } from '../types/group.type';
 import { Container } from '../types/container.type';
 import { Good } from '../types/good.type';
 import { Solution } from '../types/solution.type';
+import { ThreeDCalculationService } from '@/lib/shared/services/three-d-calculation.service';
+import { Positioned } from '../types/positioned.type';
+import { Spatial } from '../types/spatial.type';
 
 export class StartLeftBottomSolver extends Solver implements ISolver {
 
@@ -43,16 +46,14 @@ export class StartLeftBottomSolver extends Solver implements ISolver {
             let currentOrders = orders.filter(x => x.group === group.id).sort((a, b) => compare(a.length, b.length, false));
             for (let order of currentOrders) {
                 for (let index = 0; index < (order.quantity ?? 0); index++) {
-                    let position: { xCoord: number, yCoord: number, zCoord: number, stackedOn: null | string } = lastGood === null ? { xCoord: 0, yCoord: 0, zCoord: 0, stackedOn: null } : this._getNextPosition(solution.container!, order, lastGood);
+                    const position: Positioned & Spatial & { stackedOn: string | null } = lastGood === null
+                        ? { xCoord: 0, yCoord: 0, zCoord: 0, height: order.height, width: order.width, length: order.length, stackedOn: null }
+                        : this._getNextPosition(solution.container!, order, lastGood);
+
                     lastGood = {
+                        ...ThreeDCalculationService.calculateSpatialPosition(position),
                         desc: order.description,
-                        height: order.height,
                         id: generateGuid(),
-                        length: order.length,
-                        width: order.width,
-                        xCoord: position.xCoord,
-                        yCoord: position.yCoord,
-                        zCoord: position.zCoord,
                         stackedOnGood: position.stackedOn,
                         turned: false,
                         group: group.id,
@@ -62,6 +63,7 @@ export class StartLeftBottomSolver extends Solver implements ISolver {
                         orderGuid: order.id,
                         texture: order.texture ?? 'cardboard'
                     };
+                    
                     solution.container!.goods.push(lastGood);
                     sequenceNumber++;
                 }
@@ -73,7 +75,7 @@ export class StartLeftBottomSolver extends Solver implements ISolver {
         return { solution, groups, calculationSteps: [], orders, products: [] };
     }
 
-    private _getNextPosition(container: Container, order: Order, lastGood: Good): { xCoord: number, yCoord: number, zCoord: number, stackedOn: null | string } {
+    private _getNextPosition(container: Container, order: Order, lastGood: Good): Spatial & Positioned & { stackedOn: string | null } {
         if (
             lastGood.orderGuid === order.id
             && lastGood.stackingAllowed
@@ -81,17 +83,33 @@ export class StartLeftBottomSolver extends Solver implements ISolver {
             && lastGood.width >= order.width
             && container.height >= lastGood.yCoord + order.height + lastGood.height
         ) {
-            return { xCoord: lastGood.xCoord, yCoord: lastGood.yCoord + lastGood.height, zCoord: lastGood.zCoord, stackedOn: lastGood.id };
+            return {
+                xCoord: lastGood.xCoord,
+                yCoord: lastGood.yCoord + lastGood.height,
+                zCoord: lastGood.zCoord,
+                height: order.height,
+                width: order.width,
+                length: order.length,
+                stackedOn: lastGood.id
+            };
         }
         else {
             if (lastGood.stackedOnGood === null) {
-                let space = {
+                const space = {
                     width: container.width - lastGood.xCoord - lastGood.width,
                     height: container.height,
                     length: lastGood.length
                 };
                 if (super.canPlaceOrderIntoSpace(order, space).notTurned) {
-                    return { xCoord: lastGood.xCoord + lastGood.width, yCoord: lastGood.yCoord, zCoord: lastGood.zCoord, stackedOn: null };
+                    return { 
+                        xCoord: lastGood.xCoord + lastGood.width, 
+                        yCoord: lastGood.yCoord, 
+                        zCoord: lastGood.zCoord,
+                        stackedOn: null,
+                        height: order.height,
+                        width: order.width,
+                        length: order.length
+                    };
                 }
             }
             else {
@@ -103,7 +121,15 @@ export class StartLeftBottomSolver extends Solver implements ISolver {
                         length: underneath.length - lastGood.zCoord - lastGood.length
                     };
                     if (super.canPlaceOrderIntoSpace(order, space).notTurned) {
-                        return { xCoord: lastGood.xCoord + lastGood.width, yCoord: lastGood.yCoord, zCoord: lastGood.zCoord, stackedOn: underneath.id };
+                        return { 
+                            xCoord: lastGood.xCoord + lastGood.width, 
+                            yCoord: lastGood.yCoord, 
+                            zCoord: lastGood.zCoord, 
+                            stackedOn: underneath.id,
+                            height: order.height,    
+                            width: order.width,
+                            length: order.length
+                        };
                     }
                     if (typeof underneath.stackedOnGood !== 'number') break;
                     underneath = container.goods.find((good) => good.id === underneath!.stackedOnGood);
@@ -115,11 +141,28 @@ export class StartLeftBottomSolver extends Solver implements ISolver {
                         length: underneath.length
                     };
                     if (super.canPlaceOrderIntoSpace(order, space).notTurned) {
-                        return { xCoord: underneath.xCoord + underneath.width, yCoord: 0, zCoord: underneath.zCoord, stackedOn: null };
+                        return { 
+                            xCoord: underneath.xCoord + underneath.width, 
+                            yCoord: 0, 
+                            zCoord: underneath.zCoord, 
+                            stackedOn: null,
+                            height: order.height,
+                            width: order.width,
+                            length: order.length
+                        };
                     }
                 }
             }
-            return { xCoord: 0, yCoord: 0, zCoord: lastGood.zCoord + lastGood.length, stackedOn: null };
+
+            return { 
+                xCoord: 0, 
+                yCoord: 0, 
+                zCoord: lastGood.zCoord + lastGood.length, 
+                stackedOn: null,
+                height: order.height,
+                width: order.width,
+                length: order.length
+            };
         }
     }
 

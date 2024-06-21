@@ -1,9 +1,8 @@
 import { GoodTexture } from "./good-texture.type";
 import { Identifiable } from "./identifiable.type";
-import { Positioned } from "./positioned.type";
-import { Spatial } from "./spatial.type";
+import { SpatialPositioned } from "./spatial-positioned.type";
 
-export type Good = Positioned & Spatial & Identifiable & {
+export type Good = SpatialPositioned & Identifiable & {
     desc: string | null;
     group: string | null;
     turningAllowed: boolean;

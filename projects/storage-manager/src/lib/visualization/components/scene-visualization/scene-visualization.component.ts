@@ -217,6 +217,7 @@ export class SceneVisualizationComponent implements OnChanges, OnInit {
             if (this.visualizerComponentService) {
                 this.visualizerComponentService.selectGood(null);
             }
+            
             return;
         }
 

@@ -1,0 +1,23 @@
+@import "colors";
+
+:host {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.st1 {
+    fill: $wine-red;
+}
+
+.st5 {
+    fill: #fff
+}
+
+.st7 {
+    fill: #40c4df
+}
+
+.st8 {
+    fill: #491352
+}

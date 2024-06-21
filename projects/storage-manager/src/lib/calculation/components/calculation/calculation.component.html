@@ -1,6 +1,7 @@
 <app-scaffold mainContentBorderRadius="none">
 
-    <app-calculation-sidebar id="side-nav" (showSolution)="visualizeSolution($event)"></app-calculation-sidebar>
+    <app-calculation-sidebar id="side-nav" (showSolution)="visualizeSolution($event)"
+        (connectAPIResource)="connectAPIResource()"></app-calculation-sidebar>
 
     <div id="main" class="main-content" @bottomUpFadeIn>
         <div class="widget order-list-wrapper">

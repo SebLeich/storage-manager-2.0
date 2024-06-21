@@ -26,5 +26,14 @@
         <app-solution-wrapper-preview class="widget" [solutionWrapper]="solutionWrapper"
             (showSolution)="showCalculatedSolution(solutionWrapper)"></app-solution-wrapper-preview>
         }
+
+        <div class="add-control-wrapper" [matTooltip]="('hints.addAdditionalSolver'|translation|async) ?? ''">
+            <mat-icon [matMenuTriggerFor]="addSolverMenu">add</mat-icon>
+        </div>
     </div>
 </ng-container>
+
+<mat-menu #addSolverMenu="matMenu">
+    <button mat-menu-item (click)="connectAPIResource.emit()">{{'calculation.connectAPIResource'|translation|async}}</button>
+    <button mat-menu-item [disabled]="true" (click)="designWorkflow.emit()">{{'calculation.designWorkflow'|translation|async}}</button>
+</mat-menu>

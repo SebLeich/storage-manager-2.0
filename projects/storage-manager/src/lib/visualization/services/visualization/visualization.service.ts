@@ -46,14 +46,15 @@ export class VisualizationService {
         addUnloadingArrow = true,
         labelPositions: ObjectSite[] = ['right'],
         wallPositions: ObjectSite[] = ['bottom'],
-        wallTexture: WallTexture = 'yellow',
+        wallTexture: WallTexture = 'black',
         displayContainerEdges = true,
         displayGoods = true,
         displayGoodEdges = true,
         hiddenGoods: string[] = [],
         displayEmptySpace = false,
         displayEmptySpaceEdges = false,
-        fillEmptySpace = false
+        fillEmptySpace = false,
+        hiddenGroups: string[] = []
     ) {
         scene.clear();
 
@@ -73,7 +74,7 @@ export class VisualizationService {
                 const group = groups.find((group) => group.id === good.group),
                     { basicMesh, mesh, edges } = VisualizationService.generateFilledBoxMesh({ ...position, id: v4() }, 'good', containerPosition, undefined, undefined, good.texture);
 
-                if (displayGoods && hiddenGoods.indexOf(good.id) === -1) {
+                if (displayGoods && hiddenGoods.indexOf(good.id) === -1 && hiddenGroups.indexOf(good.group ?? '') === -1){
                     mesh.userData['goodId'] = good.id;
                     mesh.userData['groupId'] = good.group;
                     goodMeshes.push({ goodId: good.id, mesh });
@@ -151,14 +152,15 @@ export class VisualizationService {
         addUnloadingArrow = true,
         labelPositions: ObjectSite[] = ['right'],
         wallPositions: ObjectSite[] = ['bottom'],
-        wallTexture: WallTexture = 'yellow',
+        wallTexture: WallTexture = 'black',
         displayContainerEdges = true,
         displayGoods = true,
         displayGoodEdges = true,
         hiddenGoods: string[] = [],
         displayEmptySpace = false,
         displayEmptySpaceEdges = false,
-        fillEmptySpace = false
+        fillEmptySpace = false,
+        hiddenGroups: string[] = []
     ) {
         scene.clear();
 
@@ -202,7 +204,7 @@ export class VisualizationService {
 
             const { edges, mesh } = VisualizationService.generateFilledBoxMesh({ ...spatial, id: `${position.goodId}` }, 'good', containerPosition);
 
-            if (displayGoods && hiddenGoods.indexOf(position.goodId) === -1) {
+            if (displayGoods && hiddenGoods.indexOf(position.goodId) === -1 && hiddenGroups.indexOf(position.groupId) === -1){
                 scene.add(mesh);
                 if (displayGoodEdges) {
                     scene.add(edges);
@@ -212,7 +214,7 @@ export class VisualizationService {
             goodCSGs.push(CSG.fromGeometry(edges.geometry));
 
             const relativePosition = VisualizationService.calculateRelativePosition(position, containerPosition);
-            const labels = VisualizationService.getGoodLabels({ ...spatial, desc: label }, relativePosition, group, labelPositions);
+            const labels = VisualizationService.getGoodLabels({ ...spatial, id: position.goodId, desc: label }, relativePosition, group, labelPositions);
             labels.length > 0 && scene.add(...labels);
         }
 
@@ -269,45 +271,45 @@ export class VisualizationService {
         return gridHelper;
     }
 
-    public static getGoodLabels(good: Spatial & { desc: string | null }, { xCoord, yCoord, zCoord }: Positioned, group?: Group, positions: ObjectSite[] = []): Mesh[] {
+    public static getGoodLabels(good: Spatial & Identifiable & { desc: string | null }, { xCoord, yCoord, zCoord }: Positioned, group?: Group, positions: ObjectSite[] = []): Mesh[] {
         const labels: Mesh[] = [];
 
         if (positions.indexOf('right') > -1) {
-            const label = VisualizationService.createLabel(`${good.desc}`, `${group?.desc}`, group?.color ?? 'white');
+            const label = VisualizationService.createLabel(`${good.desc}`, good.id, `${group?.desc}`, group?.color ?? 'white');
             label.position.set(xCoord + (good.width / 2) + this._glitchMargin, yCoord, zCoord);
             label.rotateY(Math.PI / 2);
             labels.push(label);
         }
 
         if (positions.indexOf('left') > -1) {
-            const label = VisualizationService.createLabel(`${good.desc}`, `${group?.desc}`, group?.color ?? 'white');
+            const label = VisualizationService.createLabel(`${good.desc}`, good.id, `${group?.desc}`, group?.color ?? 'white');
             label.position.set(xCoord - (good.width / 2) - this._glitchMargin, yCoord, zCoord);
             label.rotateY(Math.PI / -2);
             labels.push(label);
         }
 
         if (positions.indexOf('front') > -1) {
-            const label = VisualizationService.createLabel(`${good.desc}`, `${group?.desc}`, group?.color ?? 'white');
+            const label = VisualizationService.createLabel(`${good.desc}`, good.id, `${group?.desc}`, group?.color ?? 'white');
             label.position.set(xCoord, yCoord, zCoord + (good.length / 2) + this._glitchMargin);
             labels.push(label);
         }
 
         if (positions.indexOf('rear') > -1) {
-            const label = VisualizationService.createLabel(`${good.desc}`, `${group?.desc}`, group?.color ?? 'white');
+            const label = VisualizationService.createLabel(`${good.desc}`, good.id, `${group?.desc}`, group?.color ?? 'white');
             label.position.set(xCoord, yCoord, zCoord - (good.length / 2) - this._glitchMargin);
             label.rotateY(Math.PI);
             labels.push(label);
         }
 
         if (positions.indexOf('bottom') > -1) {
-            const label = VisualizationService.createLabel(`${good.desc}`, `${group?.desc}`, group?.color ?? 'white');
+            const label = VisualizationService.createLabel(`${good.desc}`, good.id, `${group?.desc}`, group?.color ?? 'white');
             label.position.set(xCoord, yCoord - (good.height / 2) - this._glitchMargin, zCoord);
             label.rotateX(Math.PI / 2);
             labels.push(label);
         }
 
         if (positions.indexOf('top') > -1) {
-            const label = VisualizationService.createLabel(`${good.desc}`, `${group?.desc}`, group?.color ?? 'white');
+            const label = VisualizationService.createLabel(`${good.desc}`, good.id, `${group?.desc}`, group?.color ?? 'white');
             label.position.set(xCoord, yCoord + (good.height / 2) + this._glitchMargin, zCoord);
             label.rotateX(Math.PI / -2);
             labels.push(label);
@@ -480,7 +482,7 @@ export class VisualizationService {
         return { boxGeometry, edges, mesh };
     }
 
-    public static createLabel(text: string, subTitle = '', groupColor = 'white'): Mesh {
+    public static createLabel(text: string, goodId: string, subTitle = '', groupColor = 'white'): Mesh {
         const canvas = document.createElement('canvas'),
             context = canvas.getContext('2d');
 
@@ -511,6 +513,7 @@ export class VisualizationService {
 
         const geometry = new PlaneGeometry(canvas.width, canvas.height);
         const mesh = new Mesh(geometry, material);
+        mesh.userData['goodId'] = goodId;
         return mesh;
     }
 

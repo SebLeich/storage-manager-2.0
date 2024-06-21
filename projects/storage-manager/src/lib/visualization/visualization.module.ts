@@ -30,6 +30,8 @@ import { BoundaryDraggableDirective } from './directives/boundary-draggable.dire
 import { ObjectSiteSelectionComponent } from './components/scene-visualization/scene-settings/object-site-selection/object-site-selection.component';
 import { DownloadModule } from '../download/download.module';
 import { GoodsPreviewComponent } from './components/goods-preview/goods-preview.component';
+import { CogwheelIconModule } from '../cogwheel-icon/cogwheel-icon.module';
+import { StatsIconModule } from '../stats-icon/stats-icon.module';
 
 
 
@@ -50,6 +52,7 @@ import { GoodsPreviewComponent } from './components/goods-preview/goods-preview.
         VisualizationSidebarComponent
     ],
     imports: [
+        CogwheelIconModule,
         CommonModule,
         DownloadModule,
         DragDropModule,
@@ -68,6 +71,7 @@ import { GoodsPreviewComponent } from './components/goods-preview/goods-preview.
         ]),
         ScaffoldModule,
         SharedModule,
+        StatsIconModule,
         StoreModule.forFeature(FEATURE_KEY, REDUCER),
         TranslationModule
     ],

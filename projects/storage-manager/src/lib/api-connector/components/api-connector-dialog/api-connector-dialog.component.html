@@ -1,0 +1,32 @@
+<div class="header">
+    <app-api-connector-icon [width]="40"></app-api-connector-icon>
+    <span class="text">
+        {{'apiConnection.configure'|translation|async}}
+    </span>
+    <mat-icon (click)="close()" class="close-control" [matTooltip]="('defaults.close'|translation|async) ?? ''">clear</mat-icon>
+</div>
+
+<div class="content" [formGroup]="formGroup">
+
+    <app-input-wrapper [label]="'apiConnection.url'|translation|async">
+        <input type="text" formControlName="url" [placeholder]="'apiConnection.urlPlaceholder'|translation|async" />
+    </app-input-wrapper>
+
+    <app-input-wrapper [label]="'apiConnection.method'|translation|async">
+        <input type="text" formControlName="method" [placeholder]="'apiConnection.methodPlaceholder'|translation|async" />
+    </app-input-wrapper>
+
+</div>
+
+<div class="footer">
+    <button class="danger" (click)="close()">
+        {{'defaults.cancel'|translation|async}}
+    </button>
+    <div class="spacer"></div>
+    <button class="primary-outline">
+        Test connection
+    </button>
+    <button class="primary">
+        Create
+    </button>
+</div>

@@ -8,6 +8,8 @@ import { setSolutionWrappers } from '../../store/calculation.actions';
 import { selectGroups } from '@/lib/groups/store/group.selectors';
 import { selectContainerHeight, selectContainerWidth } from '../../store/calculation.selectors';
 import bottomUpFadeInAnimation from '@/lib/shared/animations/bottom-up-fade.animation';
+import { MatDialog } from '@angular/material/dialog';
+import { ApiConnectorDialogComponent } from '@/lib/api-connector/components/api-connector-dialog/api-connector-dialog.component';
 
 @Component({
     selector: 'app-calculation',
@@ -17,7 +19,11 @@ import bottomUpFadeInAnimation from '@/lib/shared/animations/bottom-up-fade.anim
     animations: [bottomUpFadeInAnimation]
 })
 export class CalculationComponent {
-    constructor(private _router: Router, private _store: Store) { }
+    constructor(private _router: Router, private _store: Store, private _matDialog: MatDialog) { }
+
+    public connectAPIResource(): void {
+        this._matDialog.open(ApiConnectorDialogComponent);
+    }
 
     public recalculate(): void {
         const orders = this._store.selectSignal(selectValidOrders)(),

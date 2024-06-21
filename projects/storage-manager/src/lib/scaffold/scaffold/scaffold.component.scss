@@ -13,7 +13,7 @@
         display: flex;
 
         .side-nav {
-            width: 300px;
+            width: 320px;
             background: linear-gradient(180deg, transparent 2rem, $slate-grey 2rem);
             margin-right: 0.5rem;
             display: flex;
@@ -32,8 +32,27 @@
             }
         }
     }
+}
 
-    .footer {
-        margin-top: .5rem;
+.icons-reference {
+    font-family: 'Bebas Neue';
+    position: absolute;
+    bottom: 0px;
+    width: 200px;
+    left: calc(50% - 100px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    a {
+        margin-left: .25rem;
+    }
+
+    mat-icon {
+        height: unset;
+        width: unset;
+        font-size: 1rem;
+        margin-left: .25rem;
+        opacity: .8;
     }
 }

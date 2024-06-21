@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, DestroyRef, OnInit, signal } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { setSolution, updateGroup } from '../../store/visualization.actions';
-import { Subscription, combineLatest, finalize, firstValueFrom, interval, scan, switchMap, take, takeWhile } from 'rxjs';
+import { Subscription, combineLatest, debounceTime, finalize, firstValueFrom, interval, scan, switchMap, take, takeWhile } from 'rxjs';
 import { VisualizationService } from '../../services/visualization/visualization.service';
 import { selectCurrentSolutionWrapper } from '../../store/visualization.selectors';
 import { Scene } from 'three';
@@ -34,6 +34,7 @@ export class VisualizationComponent implements OnInit {
     public displayEmptySpaceEdges = signal<boolean>(false);
     public displayGoods = signal<boolean>(true);
     public displayGoodEdges = signal<boolean>(false);
+    public hiddenGroups = signal<string[]>([]);
     public hiddenGoods = signal<string[]>([]);
     public fillEmptySpace = signal<boolean>(false);
     public hoveredGood = signal<string | null>(null);
@@ -63,10 +64,12 @@ export class VisualizationComponent implements OnInit {
         toObservable(this.hiddenGoods),
         toObservable(this.displayEmptySpace),
         toObservable(this.displayEmptySpaceEdges),
-        toObservable(this.fillEmptySpace)
+        toObservable(this.fillEmptySpace),
+        toObservable(this.hiddenGroups)
     ]).pipe(
+        debounceTime(1),
         scan(
-            (scene: Scene, [solutionWrapper, displayBaseGrid, animationStepIndex, labelObjectSites, wallObjectSites, wallTexture, addLights, backgroundColor, displayContainer, displayContainerUnloadingArrow, displayContainerEdges, displayGoodEdges, displayGoods, hiddenGoods, displayEmptySpace, displayEmptySpaceEdges, fillEmptySpace]) => {
+            (scene: Scene, [solutionWrapper, displayBaseGrid, animationStepIndex, labelObjectSites, wallObjectSites, wallTexture, addLights, backgroundColor, displayContainer, displayContainerUnloadingArrow, displayContainerEdges, displayGoodEdges, displayGoods, hiddenGoods, displayEmptySpace, displayEmptySpaceEdges, fillEmptySpace, hiddenGroups]) => {
                 if (solutionWrapper) {
                     if (animationStepIndex === null) this._visualizationService.configureSolutionScene(
                         solutionWrapper.solution,
@@ -86,7 +89,8 @@ export class VisualizationComponent implements OnInit {
                         hiddenGoods,
                         displayEmptySpace,
                         displayEmptySpaceEdges,
-                        fillEmptySpace
+                        fillEmptySpace,
+                        hiddenGroups
                     );
                     else this._visualizationService.configureSolutionStepScene(
                         scene,
@@ -108,7 +112,8 @@ export class VisualizationComponent implements OnInit {
                         hiddenGoods,
                         displayEmptySpace,
                         displayEmptySpaceEdges,
-                        fillEmptySpace
+                        fillEmptySpace,
+                        hiddenGroups
                     );
                 }
 
@@ -175,7 +180,9 @@ export class VisualizationComponent implements OnInit {
             const solutionWrapper = { groups, solution, calculationSteps, orders, products };
             this._store.dispatch(setSolution({ solutionWrapper }));
         }
-        else this._router.navigate(['/calculation']);
+        else if(!this._store.selectSignal(selectCurrentSolutionWrapper)()) {
+            this._router.navigate(['/calculation']);
+        }
     }
 
     public pauseAnimation(): void {
@@ -237,6 +244,14 @@ export class VisualizationComponent implements OnInit {
             this.hiddenGoods.set(hiddenGoods.filter((id) => id !== goodId));
         }
         else this.hiddenGoods.set([...hiddenGoods, goodId]);
+    }
+
+    public toggleGroupVisibility(groupId: string): void {
+        const hiddenGroups = this.hiddenGroups();
+        if (hiddenGroups.includes(groupId)) {
+            this.hiddenGroups.set(hiddenGroups.filter((id) => id !== groupId));
+        }
+        else this.hiddenGroups.set([...hiddenGroups, groupId]);
     }
 
     private _clearAnimationInterval(): void {

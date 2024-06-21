@@ -1,0 +1,29 @@
+@import 'button';
+@import 'dialog';
+
+:host {
+    @include dialog-host-m;
+
+    .content {
+        > * {
+            margin-bottom: .25rem;
+            display: block;
+        }
+    }
+
+    button {
+        @include button;
+
+        &.danger {
+            @include danger-button;
+        }
+
+        &.primary {
+            @include default-button;
+        }
+
+        &.primary-outline {
+            @include default-button-outline;
+        }
+    }
+}

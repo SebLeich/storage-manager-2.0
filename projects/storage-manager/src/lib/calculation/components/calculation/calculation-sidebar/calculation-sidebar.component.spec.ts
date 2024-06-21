@@ -9,6 +9,7 @@ import { TranslationModule } from '@/lib/translation';
 import { NgLetModule } from 'ng-let';
 import { InputModule } from '@/lib/input/input.module';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatMenuModule } from '@angular/material/menu';
 
 describe('CalculationSidebarComponent', () => {
     let spectator: Spectator<CalculationSidebarComponent>;
@@ -23,6 +24,7 @@ describe('CalculationSidebarComponent', () => {
         component: CalculationSidebarComponent,
         imports: [
             InputModule,
+            MatMenuModule,
             MatProgressSpinnerModule,
             NgLetModule,
             TranslationModule
